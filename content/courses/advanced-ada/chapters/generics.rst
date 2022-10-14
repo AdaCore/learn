@@ -1219,7 +1219,7 @@ Formal incomplete type
 .. admonition:: Relevant topics
 
     - Formal incomplete type mentioned in
-      `Formal Types <http://www.ada-auth.org/standards/2xrm/html/RM-12-5.html>`_
+      :arm:`Formal Types <12-5>`
 
 .. todo::
 
@@ -1232,7 +1232,7 @@ Default subtype mark
 .. admonition:: Relevant topics
 
     - Default subtype mark (:ada:`or use`) mentioned in
-      `Formal Types <http://www.ada-auth.org/standards/2xrm/html/RM-12-5.html>`_
+      :arm:`Formal Types <12-5>`
 
 .. todo::
 
@@ -1244,7 +1244,7 @@ Formal private and derived types
 
 .. admonition:: Relevant topics
 
-    - `Formal Private and Derived Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-12-5-1.html>`_
+    - :arm:`Formal Private and Derived Types <12-5-1>`
 
 .. todo::
 
@@ -2650,7 +2650,7 @@ Generic Renaming
 
 .. admonition:: Relevant topics
 
-    - `Generic Renaming Declarations <http://www.ada-auth.org/standards/2xrm/html/RM-8-5-5.html>`_
+    - :arm:`Generic Renaming Declarations <8-5-5>`
 
 .. todo::
 

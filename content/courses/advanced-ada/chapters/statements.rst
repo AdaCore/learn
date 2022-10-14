@@ -24,7 +24,7 @@ Here are some examples from each category:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `5.1 Simple and Compound Statements - Sequences of Statements <http://www.ada-auth.org/standards/12rm/html/RM-5-1.html>`_
+    - :arm:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
 
 Labels
 ------
@@ -56,7 +56,7 @@ statement.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `5.1 Simple and Compound Statements - Sequences of Statements <http://www.ada-auth.org/standards/12rm/html/RM-5-1.html>`_
+    - :arm:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
 
 Labels and :ada:`goto` statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -324,7 +324,7 @@ condition :ada:`Cond` is met, even if we're actually within the inner loop.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `5.7 Exit Statements <http://www.ada-auth.org/standards/12rm/html/RM-5-7.html>`_
+    - :arm:`5.7 Exit Statements <5-7>`
 
 
 Block Statements
@@ -379,7 +379,7 @@ Block statement identifiers are useful:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `5.6 Block Statements <http://www.ada-auth.org/standards/12rm/html/RM-5-6.html>`_
+    - :arm:`5.6 Block Statements <5-6>`
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
@@ -389,7 +389,7 @@ Block statement identifiers are useful:
 
     .. admonition:: Relevant topics
 
-        - `Parallel Block Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-6-1.html>`_
+        - :arm22:`Parallel Block Statements <5-6-1>`
 
 .. _Adv_Ada_Extended_Return_Statements:
 
@@ -448,7 +448,7 @@ as the function result.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.5 Return Statements <http://www.ada-auth.org/standards/12rm/html/RM-6-5.html>`_
+    - :arm:`6.5 Return Statements <6-5>`
 
 
 Other usages of extended return statements
@@ -513,4 +513,4 @@ the :ada:`Make_String` function.
     .. admonition:: Relevant topics
 
         - Parallel loops mentioned in
-        `Loop Statements <http://www.ada-auth.org/standards/2xrm/html/RM-5-5.html>`_
+        :arm22:`Loop Statements <5-5>`

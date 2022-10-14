@@ -18,8 +18,8 @@ Parameter Modes and Associations
 
 .. admonition:: Relevant topics
 
-   - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`_
-   - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`_
+   - :arm:`6.2 Formal Parameter Modes <6-2>`
+   - :arm:`6.4.1 Parameter Associations <6-4-1>`
 
 
 .. _Adv_Ada_Operators:
@@ -56,7 +56,7 @@ Many primitive operators exist for scalar types. We classify them as follows:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.5 Operators and Expression Evaluation <http://www.ada-auth.org/standards/12rm/html/RM-4-5.html>`_
+    - :arm:`4.5 Operators and Expression Evaluation <4-5>`
 
 User-defined operators
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -324,7 +324,7 @@ In this example, we're using the primitive :ada:`=` operator for the
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`_
+    - :arm:`6.1 Subprogram Declarations <6-1>`
 
 Expression functions
 --------------------
@@ -474,7 +474,7 @@ instead:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.8 Expression functions <http://www.ada-auth.org/standards/12rm/html/RM-6-8.html>`_
+    - :arm:`6.8 Expression functions <6-8>`
 
 
 .. _Adv_Ada_Overloading:
@@ -727,8 +727,8 @@ package.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.6 Overloading of Operators <http://www.ada-auth.org/standards/12rm/html/RM-6-6.html>`_
-    - `G.1.1 Complex Types <http://www.ada-auth.org/standards/12rm/html/RM-G-1-1.html>`_
+    - :arm:`6.6 Overloading of Operators <6-6>`
+    - :arm:`G.1.1 Complex Types <G-1-1>`
 
 Operator Overriding
 -------------------
@@ -999,7 +999,7 @@ Here, :ada:`Program_Error` is raised when :ada:`Log_And_Raise` returns to the
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.5.1 Nonreturning Subprograms <http://www.ada-auth.org/standards/12rm/html/RM-6-5-1.html>`_
+    - :arm:`6.5.1 Nonreturning Subprograms <6-5-1>`
 
 
 Inline subprograms
@@ -1108,7 +1108,7 @@ instances of that generic subprogram.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.3.2 Inline Expansion of Subprograms <http://www.ada-auth.org/standards/12rm/html/RM-6-3-2.html>`_
+    - :arm:`6.3.2 Inline Expansion of Subprograms <6-3-2>`
 
 
 .. _Adv_Ada_Null_Procedures:
@@ -1262,4 +1262,4 @@ that makes use of null procedures.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.7 Null Procedures <http://www.ada-auth.org/standards/12rm/html/RM-6-7.html>`_
+    - :arm:`6.7 Null Procedures <6-7>`

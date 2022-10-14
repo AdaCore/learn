@@ -121,10 +121,9 @@ Here is the complete code snippet:
 References
 ----------
 
-* `ARM B.3 Interfacing with C and C++`_
+* :aarm22:`ARM B.3 Interfacing with C and C++ <B-3>`
 * AI12-0028-1_
 
-.. _`ARM B.3 Interfacing with C and C++`: http://www.ada-auth.org/standards/2xaarm/html/AA-B-3.html
 .. _AI12-0028-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0028-1.TXT
 
 .. _`variadic functions`: https://en.cppreference.com/w/c/variadic

@@ -329,7 +329,7 @@ configured at runtime, you can use the subprograms from the
 Details about the :ada:`Ada.Interrupts` package are out of scope for this
 course. We'll discuss them in a separate, more advanced course in the future.
 You can find some information about it in the
-`Interrupts appendix of the Ada Reference Manual <https://www.adaic.org/resources/add_content/standards/12aarm/html/AA-C-3-2.html>`_.
+:aarm:`Interrupts appendix of the Ada Reference Manual <C-3-2>`.
 
 .. todo::
 

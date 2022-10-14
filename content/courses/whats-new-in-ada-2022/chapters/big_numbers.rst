@@ -154,17 +154,15 @@ Here is the complete code snippet:
 Big Reals
 ---------
 
-In addition to :ada:`Big_Integer`, Ada 2022 provides `Big Reals`_.
+In addition to :ada:`Big_Integer`, Ada 2022 provides
+:aarm22:`Big Reals <A-5-7>`.
 
-.. _`Big Reals`: http://www.ada-auth.org/standards/2xaarm/html/AA-A-5-7.html
 
 References
 ----------
 
-* `ARM A.5.6 Big Integers`_
-* `ARM A.5.7 Big Reals`_
+* :aarm22:`ARM A.5.6 Big Integers <A-5-6>`
+* :aarm22:`ARM A.5.7 Big Reals <A-5-7>`
 * AI12-0208-1_
 
- .. _`ARM A.5.6 Big Integers`: http://www.ada-auth.org/standards/2xaarm/html/AA-13-4.html
- .. _`ARM A.5.7 Big Reals`: http://www.ada-auth.org/standards/2xaarm/html/AA-A-5-7.html
  .. _AI12-0208-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0208-1.TXT

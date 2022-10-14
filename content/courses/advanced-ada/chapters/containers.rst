@@ -8,7 +8,7 @@ Linked lists
 
 .. admonition:: Relevant topics
 
-    - `Containers.Doubly_Linked_Lists <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-3.html>`_
+    - :arm:`Containers.Doubly_Linked_Lists <A-18-3>`
 
 .. todo::
 
@@ -19,7 +19,7 @@ Trees
 
 .. admonition:: Relevant topics
 
-    - `Containers.Multiway_Trees <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-25.html>`_
+    - :arm:`Containers.Multiway_Trees <A-18-25>`
 
 .. todo::
 
@@ -30,9 +30,11 @@ Queue containers
 
 .. admonition:: Relevant topics
 
-    - `Containers.Synchronized_Queue_Interfaces <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-27.html>`_
-    - `Containers.Unbounded_Synchronized_Queues <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-28.html>`_ / `Containers.Bounded_Synchronized_Queues <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-29.html>`_
-    - `Containers.Unbounded_Priority_Queues <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-30.html>`_ / `Containers.Bounded_Priority_Queues <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-31.htmll>`_
+    - :arm:`Containers.Synchronized_Queue_Interfaces <A-18-27>`
+    - :arm:`Containers.Unbounded_Synchronized_Queues <A-18-28>`
+    - :arm:`Containers.Bounded_Synchronized_Queues <A-18-29>`
+    - :arm:`Containers.Unbounded_Priority_Queues <A-18-30>`
+    - :arm:`Containers.Bounded_Priority_Queues <A-18-31>`
 
 .. todo::
 
@@ -44,7 +46,7 @@ Indefinite containers
 
 .. admonition:: Relevant topics
 
-    - `Indefinite containers <https://www.adaic.org/resources/add_content/standards/05rat/html/Rat-8-5.html>`_
+    - :rat05:`Indefinite containers <8-5>`
 
 .. todo::
 
@@ -56,7 +58,7 @@ Holder container
 
 .. admonition:: Relevant topics
 
-    - `Containers.Indefinite_Holders <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-A-18-18.html>`_
+    - :arm:`Containers.Indefinite_Holders <A-18-18>`
 
 .. todo::
 
@@ -68,9 +70,9 @@ User-Defined Iterator Types
 
 .. admonition:: Relevant topics
 
-    - `User-Defined Iterator Types <http://www.ada-auth.org/standards/12rm/html/RM-5-5-1.html>`_
-    - `Generalized Loop Iteration <http://www.ada-auth.org/standards/12rm/html/RM-5-5-2.html>`_
-    - `Procedural Iterators <http://www.ada-auth.org/standards/2xrm/html/RM-5-5-3.html>`_
+    - :arm:`User-Defined Iterator Types <5-5-1>`
+    - :arm:`Generalized Loop Iteration <5-5-2>`
+    - :arm22:`Procedural Iterators <5-5-3>`
 
 .. todo::
 

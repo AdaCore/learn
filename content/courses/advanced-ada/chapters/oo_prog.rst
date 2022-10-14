@@ -18,7 +18,7 @@ Overriding indicators
 
     - **Briefly** discuss :ada:`overriding` and :ada:`not overriding` mentioned
       in
-      `Overriding Indicators <http://www.ada-auth.org/standards/2xrm/html/RM-8-3-1.html>`_
+      :arm:`Overriding Indicators <8-3-1>`
     - Mention that :ada:`not overriding` is not recommended.
 
 .. todo::
@@ -724,7 +724,7 @@ Controlled types
 
     .. admonition:: Relevant topics
 
-        - `User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
+        - :arm:`User-Defined References <4-1-5>`
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2022:
@@ -734,4 +734,4 @@ Controlled types
 
     .. admonition:: Relevant topics
 
-        - `User-Defined Indexing <http://www.ada-auth.org/standards/2xrm/html/RM-4-1-6.html>`_
+        - :arm:`User-Defined Indexing <4-1-6>`

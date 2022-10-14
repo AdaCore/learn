@@ -8,7 +8,7 @@ Freezing rules
 
 .. admonition:: Relevant topics
 
-    - `Freezing rules <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-14.html>`_
+    - :arm:`Freezing rules <13-14>`
 
 .. todo::
 

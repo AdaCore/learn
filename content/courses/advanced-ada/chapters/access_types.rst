@@ -64,7 +64,7 @@ then assign an array aggregate to it |mdash| this becomes
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.1 Names <http://www.ada-auth.org/standards/12rm/html/RM-4-1.html>`_
+    - :arm:`4.1 Names <4-1>`
 
 
 .. _Adv_Ada_Implicit_Dereferencing:
@@ -328,11 +328,11 @@ supported:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.1 Names <http://www.ada-auth.org/standards/12rm/html/RM-4-1.html>`_
-    - `4.1.1 Indexed Components <http://www.ada-auth.org/standards/12rm/html/RM-4-1-1.html>`_
-    - `4.1.2 Slices <http://www.ada-auth.org/standards/12rm/html/RM-4-1-2.html>`_
-    - `4.1.3 Selected Components <http://www.ada-auth.org/standards/12rm/html/RM-4-1-3.html>`_
-    - `4.1.4 Attributes <http://www.ada-auth.org/standards/12rm/html/RM-4-1-4.html>`_
+    - :arm:`4.1 Names <4-1>`
+    - :arm:`4.1.1 Indexed Components <4-1-1>`
+    - :arm:`4.1.2 Slices <4-1-2>`
+    - :arm:`4.1.3 Selected Components <4-1-3>`
+    - :arm:`4.1.4 Attributes <4-1-4>`
 
 
 .. _Adv_Ada_Ragged_Arrays:
@@ -617,7 +617,7 @@ words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`__
+    - :arm:`3.10 Access Types <3-10>`
 
 
 Aliased objects
@@ -687,8 +687,8 @@ In the next sections, we discuss these features in more details.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.3.1 Object Declarations <http://www.ada-auth.org/standards/12rm/html/RM-3-3-1.html>`__
-    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`__
+    - :arm:`3.3.1 Object Declarations <3-3-1>`
+    - :arm:`3.10 Access Types <3-10>`
 
 General access modifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -797,7 +797,7 @@ write :ada:`I_Var := 22;`, but we cannot write :ada:`I_Var_C_Ptr.all := 22;`.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10.2 Operations of Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10-2.html>`__
+    - :arm:`3.10.2 Operations of Access Types <3-10-2>`
 
 
 Non-aliased objects
@@ -945,7 +945,7 @@ address we're specifying (instead of assigning registers for those components).
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.6 Array Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6.html>`__
+    - :arm:`3.6 Array Types <3-6>`
 
 
 Aliased parameters
@@ -1047,9 +1047,9 @@ it as :ada:`aliased Integer`, it is passed by reference.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`__
-    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
-    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
+    - :arm:`6.1 Subprogram Declarations <6-1>`
+    - :arm:`6.2 Formal Parameter Modes <6-2>`
+    - :arm:`6.4.1 Parameter Associations <6-4-1>`
 
 
 .. _Adv_Ada_Anonymous_Access_Types:
@@ -1118,7 +1118,7 @@ type, as we did in previous code examples.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+    - :arm:`3.10 Access Types <3-10>`
 
 
 Relation to named types
@@ -1304,7 +1304,7 @@ Anonymous Access-To-Object Types
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+    - :arm:`3.10 Access Types <3-10>`
 
 .. todo::
 
@@ -1483,7 +1483,7 @@ However, we could use other forms |mdash| such as :ada:`not null access`
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.1.5 User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
+    - :arm:`4.1.5 User-Defined References <4-1-5>`
 
 Dereferencing of tagged types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1844,7 +1844,7 @@ type) and display its information by calling the :ada:`Show` procedure.
 
     .. admonition:: In the Ada Reference Manual
 
-        - `A.18.2 The Generic Package Containers.Vectors <http://www.ada-auth.org/standards/12rm/html/RM-A-18-2.html>`_
+        - :arm:`A.18.2 The Generic Package Containers.Vectors <A-18-2>`
 
 
 .. _Adv_Ada_Accessibility_Levels_Intro:
@@ -1862,7 +1862,7 @@ and build intuition on how to best use access types in your code.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10.2 Operations of Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10-2.html>`_
+    - :arm:`3.10.2 Operations of Access Types <3-10-2>`
 
 Lifetime of objects
 ~~~~~~~~~~~~~~~~~~~
@@ -2579,7 +2579,7 @@ Unchecked Access
 
 .. admonition:: Relevant topics
 
-    - `Unchecked Access Value Creation <http://www.ada-auth.org/standards/2xrm/html/RM-13-10.html>`__
+    - :arm:`Unchecked Access Value Creation <13-10>`
 
 .. todo::
 
@@ -2759,8 +2759,8 @@ third calls to :ada:`Free` don't have any effect.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.8 Allocators <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-4-8.html>`__
-    - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+    - :arm:`4.8 Allocators <4-8>`
+    - :arm:`13.11.2 Unchecked Storage Deallocation <13-11-2>`
 
 
 .. _Adv_Ada_Unchecked_Deallocation_Dangling_References:
@@ -2960,8 +2960,8 @@ unchecked deallocation: avoid creating dangling references!
 
 .. admonition:: In the Ada Reference Manual
 
-   - `13.9.1 Data Validity <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-9-1.html>`__
-   - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+   - :arm:`13.9.1 Data Validity <13-9-1>`
+   - :arm:`13.11.2 Unchecked Storage Deallocation <13-11-2>`
 
 
 Restrictions for :ada:`Ada.Unchecked_Deallocation`
@@ -3390,7 +3390,7 @@ Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+    - :arm:`3.10 Access Types <3-10>`
 
 
 Selecting subprograms

@@ -105,7 +105,7 @@ best choice, as it covers all possible use-cases.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.6.3 String Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6-3.html>`_
+    - :arm:`3.6.3 String Types <3-6-3>`
 
 Text I/O
 ~~~~~~~~
@@ -311,7 +311,7 @@ and other requirements.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `A.4.11 String Encoding <http://www.ada-auth.org/standards/12rm/html/RM-A-4-11.html>`_
+    - :arm:`A.4.11 String Encoding <A-4-11>`
 
 UTF-8 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -644,7 +644,7 @@ the :ada:`Wide_Wide_String` types.
 
 .. admonition:: Relevant topics
 
-    - `String Encoding <http://www.ada-auth.org/standards/2xrm/html/RM-A-4-11.html>`_
+    - :arm:`String Encoding <A-4-11>`
 
 .. todo::
 
@@ -659,7 +659,7 @@ the :ada:`Wide_Wide_String` types.
 
     .. admonition:: Relevant topics
 
-        - `Universal Text Buffers <http://www.ada-auth.org/standards/2xrm/html/RM-A-4-12.html>`_
+        - :arm22:`Universal Text Buffers <A-4-12>`
 
 
 ..
@@ -671,7 +671,7 @@ the :ada:`Wide_Wide_String` types.
     .. admonition:: Relevant topics
 
         - Image attribute mentioned in
-        `Image Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-4-10.html>`_
+        :arm22:`Image Attributes <4-10>`
 
     .. todo::
 
@@ -687,7 +687,7 @@ the :ada:`Wide_Wide_String` types.
     .. admonition:: Relevant topics
 
         - :ada:`Put_Image` aspect mentioned in
-        `Image Attributes <http://www.ada-auth.org/standards/2xrm/html/RM-4-10.html>`_
+        :arm22:`Image Attributes <4-10>`
 
     .. todo::
 

@@ -154,7 +154,7 @@ This is the test application in this case:
 
 .. admonition:: Relevant topics
 
-    - `Subunits of Compilation Units <http://www.ada-auth.org/standards/2xrm/html/RM-10-1-3.html>`_
+    - :arm:`Subunits of Compilation Units <10-1-3>`
 
 .. todo::
 

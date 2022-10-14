@@ -166,7 +166,7 @@ information is copied to multiple objects of the same type.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`_
+    - :arm:`7.5 Limited Types <7-5>`
 
 
 Assignments
@@ -1476,9 +1476,9 @@ by copy is made by the compiler.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
-    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
-    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`__
+    - :arm:`6.2 Formal Parameter Modes <6-2>`
+    - :arm:`6.4.1 Parameter Associations <6-4-1>`
+    - :arm:`7.5 Limited Types <7-5>`
 
 
 Limited record elements
