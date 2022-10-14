@@ -123,8 +123,7 @@ components.
 References
 ----------
 
-* `ARM 5.2.1 Target Name Symbols`_
+* :aarm22:`ARM 5.2.1 Target Name Symbols <5-2-1>`
 * AI12-0125-3_
 
- .. _`ARM 5.2.1 Target Name Symbols`: http://www.ada-auth.org/standards/2xaarm/html/AA-5-2-1.html
  .. _AI12-0125-3: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0125-3.TXT

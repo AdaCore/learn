@@ -36,7 +36,7 @@ vice-versa.
 
 **Remarks**:
 
-    #. The `Decibel <https://en.wikipedia.org/wiki/Decibel>`_ is used to
+    #. The :wikipedia:`Decibel <Decibel>` is used to
        express the ratio of two values on a logarithmic scale.
 
         #. For example, an increase of 6 dB corresponds roughly to a
@@ -167,8 +167,8 @@ of values.
 
 **Remarks**:
 
-    #. The `root-mean-square <https://en.wikipedia.org/wiki/Root_mean_square>`_
-       (RMS) value is an important information associated with sequences of
+    #. The :wikipedia:`root-mean-square <Root_mean_square>`
+       (RMS) value is an important information associated with    sequences of
        values.
 
         #. It's used, for example, as a measurement for signal processing.

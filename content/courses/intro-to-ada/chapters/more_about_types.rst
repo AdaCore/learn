@@ -88,7 +88,7 @@ the same name, but different types for their parameters.
     end Pkg;
 
 This is a common concept in programming languages, called
-`overloading <https://en.m.wikipedia.org/wiki/Function_overloading>`_, or name
+:wikipedia:`overloading <Function_overloading>`, or name
 overloading.
 
 One of the novel aspects of Ada's overloading facility is the ability to

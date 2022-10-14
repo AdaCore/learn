@@ -154,8 +154,7 @@ users because they've been in the GNAT compiler for many years.
 References
 ----------
 
-* `ARM 13.4 Enumeration Representation Clauses`_
+* :aarm22:`ARM 13.4 Enumeration Representation Clauses <13-4>`
 * AI12-0237-1_
 
- .. _`ARM 13.4 Enumeration Representation Clauses`: http://www.ada-auth.org/standards/2xaarm/html/AA-13-4.html
  .. _AI12-0237-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0237-1.TXT

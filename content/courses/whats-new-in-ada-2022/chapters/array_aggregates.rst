@@ -127,10 +127,9 @@ Complete code snippet:
 References
 ----------
 
-* `ARM 4.3.3 Array Aggregates`_
+* :aarm22:`ARM 4.3.3 Array Aggregates <4-3-3>`
 * AI12-0212-1_
 * AI12-0306-1_
 
- .. _`ARM 4.3.3 Array Aggregates`: http://www.ada-auth.org/standards/2xaarm/html/AA-4-3-3.html
  .. _AI12-0212-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0212-1.TXT
  .. _AI12-0306-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0306-1.TXT

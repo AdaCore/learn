@@ -124,10 +124,9 @@ Jokes aside, this feature is very useful. For example it allows a
 References
 ----------
 
-* `ARM 4.2.1 User-Defined Literals`_
+* :arm22:`ARM 4.2.1 User-Defined Literals <4-2-1>`
 * AI12-0249-1_
 * AI12-0342-1_
 
- .. _`ARM 4.2.1 User-Defined Literals`: http://www.ada-auth.org/standards/2xaarm/html/AA-4-2-1.html
  .. _AI12-0249-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0249-1.TXT
  .. _AI12-0342-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0342-1.TXT

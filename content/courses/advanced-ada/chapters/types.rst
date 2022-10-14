@@ -53,7 +53,7 @@ course.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.5 Scalar types <http://www.ada-auth.org/standards/12rm/html/RM-3-5.html>`_
+    - :arm:`3.5 Scalar types <3-5>`
 
 Ranges
 ~~~~~~
@@ -511,7 +511,7 @@ enumeration renaming, enumeration overloading and representation clauses.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.5.1 Enumeration Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-1.html>`_
+    - :arm:`3.5.1 Enumeration Types <3-5-1>`
 
 Enumerations as functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1790,7 +1790,7 @@ default values, since we haven't assigned any value to them.
 
     .. admonition:: Relevant topics
 
-        - `Stable Properties of a Type <http://www.ada-auth.org/standards/2xrm/html/RM-7-3-4.html>`_
+        - :arm22:`Stable Properties of a Type <7-3-4>`
 
 
 Deferred Constants
@@ -1912,7 +1912,7 @@ declaration of the :ada:`Light` constant.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `7.4 Deferred Constants <http://www.ada-auth.org/standards/12rm/html/RM-7-4.html>`_
+    - :arm:`7.4 Deferred Constants <7-4>`
 
 
 User-defined literals
@@ -2265,5 +2265,5 @@ when using a preprocessor or a domain-specific language.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.2.1 User-Defined Literals <http://www.ada-auth.org/standards/12rm/html/RM-4-2-1.html>`_
+    - :arm:`4.2.1 User-Defined Literals <4-2-1>`
 

@@ -226,7 +226,7 @@ library APIs.
        avoid pointers, because container memory is automatically managed.
 
     2. A container to note in this context is the
-       `Indefinite holder <http://www.ada-auth.org/standards/12rat/html/Rat12-8-5.html>`_.
+       :rat12:`Indefinite holder <8-5>`.
        This container allows you to store a value of an indefinite type such as
        String.
 

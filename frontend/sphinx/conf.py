@@ -101,6 +101,7 @@ extensions = [
 #    'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.graphviz',
+    'sphinx.ext.extlinks',
     'widget_extension',
     'sphinx_rtd_theme',
     'sphinx_reredirects',
@@ -169,6 +170,30 @@ show_authors = True
 pygments_style = 'sphinx'
 
 nitpicky = True
+
+# sphinx.ext.extlinks: markup to shorten external links
+extlinks = {
+    'arm': ('http://www.ada-auth.org/standards/12rm/html/RM-%s.html',
+            '[Ada Reference Manual; section %s]'),
+    'aarm': ('http://www.ada-auth.org/standards/12aarm/html/AA-%s.html',
+            '[Annotated Ada Reference Manual; section %s]'),
+    'arm22': ('http://www.ada-auth.org/standards/22rm/html/RM-%s.html',
+              '[Ada Reference Manual; section %s]'),
+    'aarm22': ('http://www.ada-auth.org/standards/22aarm/html/AA-%s.html',
+              '[Annotated Ada Reference Manual; section %s]'),
+    'rat05': ('https://www.adaic.org/resources/add_content/standards/05rat/html/Rat-%s.html',
+              '[Rationale for Ada 2005; section %s]'),
+    'rat12': ('http://www.ada-auth.org/standards/12rat/html/Rat12-%s.html',
+              '[Rationale for Ada 2012; section %s]'),
+    'wikipedia': ('https://en.wikipedia.org/wiki/%s',
+               '[Wikipedia page: %s]'),
+    'spark_ug': ('https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/%s.html',
+                 '[SPARK User\'s Guide: %s]'),
+    'spark_ugs': ('https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/%s',
+                 '[SPARK User\'s Guide: %s]'),
+    }
+
+extlinks_detect_hardcoded_links = True
 
 
 # -- Options for HTML output -------------------------------------------------

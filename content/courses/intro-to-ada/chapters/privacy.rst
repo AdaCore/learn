@@ -4,7 +4,8 @@ Privacy
 .. include:: ../../global.txt
 
 One of the main principles of modular programming, as well as object oriented
-programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`_.
+programming, is
+:wikipedia:`encapsulation <Encapsulation_(computer_programming)>`.
 
 Encapsulation, briefly, is the concept that the implementer of a piece of
 software will distinguish between the code's public interface and its private
@@ -222,7 +223,7 @@ Ada does allow you to overload the comparison operators :ada:`=` and :ada:`/=` f
 types (and to override the built-in declarations for non-limited types).
 
 Ada also allows you to implement special semantics for assignment via
-`controlled types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-7-6.html>`_. However, in some cases
+:arm:`controlled types <7-6>`. However, in some cases
 assignment is simply inappropriate; one example is the :ada:`File_Type` from the
 :ada:`Ada.Text_IO` package, which is declared as a limited type and thus
 attempts to assign one file to another would be detected as illegal.

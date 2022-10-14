@@ -68,7 +68,7 @@ subprograms for it. For example, we could specify an addition operation for it:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.3.1 Record Aggregates <http://www.ada-auth.org/standards/12rm/html/RM-4-3-1.html>`_
+    - :arm:`4.3.1 Record Aggregates <4-3-1>`
 
 Simple Prototyping
 ~~~~~~~~~~~~~~~~~~
@@ -542,7 +542,7 @@ ancestor type's components.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.3.2 Extension Aggregates <http://www.ada-auth.org/standards/12rm/html/RM-4-3-2.html>`_
+    - :arm:`4.3.2 Extension Aggregates <4-3-2>`
 
 Assignments to objects of derived types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -881,7 +881,7 @@ descendent type (:ada:`Point_3D`), which contains more components.
 
     .. admonition:: Relevant topics
 
-        - `Delta Aggregates <http://www.ada-auth.org/standards/2xrm/html/RM-4-3-4.html>`_
+        - :arm22:`Delta Aggregates <4-3-4>`
 
     .. todo::
 
@@ -893,7 +893,7 @@ descendent type (:ada:`Point_3D`), which contains more components.
 
     .. admonition:: Relevant topics
 
-        - `Container Aggregates <http://www.ada-auth.org/standards/2xrm/html/RM-4-3-5.html>`_
+        - :arm22:`Container Aggregates <4-3-5>`
 
     .. todo::
 

@@ -133,7 +133,7 @@ semicolons.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.5.7 Conditional Expressions <http://www.ada-auth.org/standards/12rm/html/RM-4-5-7.html>`_
+    - :arm:`4.5.7 Conditional Expressions <4-5-7>`
 
 .. _Adv_Ada_Quantified_Expressions:
 
@@ -316,7 +316,7 @@ comparing them against zero.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.5.8 Quantified Expressions <http://www.ada-auth.org/standards/12rm/html/RM-4-5-8.html>`_
+    - :arm:`4.5.8 Quantified Expressions <4-5-8>`
 
 
 Declare Expressions
@@ -324,7 +324,7 @@ Declare Expressions
 
 .. admonition:: Relevant topics
 
-    - `Declare Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-9.html>`_
+    - :arm22:`Declare Expressions <4-5-9>`
 
 .. todo::
 
@@ -336,7 +336,7 @@ Reduction Expressions
 
 .. admonition:: Relevant topics
 
-    - `Reduction Expressions <http://www.ada-auth.org/standards/2xrm/html/RM-4-5-10.html>`_
+    - :arm22:`Reduction Expressions <4-5-10>`
 
 .. todo::
 

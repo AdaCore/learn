@@ -99,10 +99,9 @@ For those versions, :ada:`My_Put_Image` looks like:
 References
 ----------
 
-* `ARM 4.10 Image Attributes`_
+* :aarm22:`ARM 4.10 Image Attributes <4-10>`
 * AI12-0020-1_
 * AI12-0384-2_
 
- .. _`ARM 4.10 Image Attributes`: http://www.ada-auth.org/standards/2xaarm/html/AA-4-10.html
  .. _AI12-0020-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0020-1.TXT
  .. _AI12-0384-2: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/AI12-0384-2.TXT

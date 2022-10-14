@@ -552,7 +552,7 @@ compile the program when the restriction is used:
     end Main;
 
 Restrictions are especially useful for high-integrity applications. In fact,
-the Ada Reference Manual has `a separate section for them <http://www.ada-auth.org/standards/12rm/html/RM-H-4.html>`_.
+the Ada Reference Manual has :arm:`a separate section for them <H-4>`.
 
 When creating a project, it is practical to list all configuration pragmas in a
 separate file. This is called a configuration pragma file, and it usually has

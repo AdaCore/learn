@@ -87,5 +87,5 @@ not in the :ada:`Test_Data_Processing` procedure).
 
 .. admonition:: In the Ada Reference Manual
 
-    - `10.1.1 Compilation Units - Library Units <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-1-1.html>`_
-    - `10.1.2 Context Clauses - With Clauses <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-1-2.html>`_
+    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
+    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
