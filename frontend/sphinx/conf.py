@@ -187,6 +187,10 @@ extlinks = {
               '[Rationale for Ada 2012; section %s]'),
     'wikipedia': ('https://en.wikipedia.org/wiki/%s',
                '[Wikipedia page: %s]'),
+    'spark_ug': ('https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/%s.html',
+                 '[SPARK User\'s Guide: %s]'),
+    'spark_ugs': ('https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/%s',
+                 '[SPARK User\'s Guide: %s]'),
     }
 
 extlinks_detect_hardcoded_links = True
