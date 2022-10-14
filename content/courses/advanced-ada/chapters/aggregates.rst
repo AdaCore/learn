@@ -873,28 +873,26 @@ appropriate view, we're able to initialize an object of ascending type
 (:ada:`Point_2D`), which contains less components, using an object of a
 descendent type (:ada:`Point_3D`), which contains more components.
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
 
-    Delta Aggregates
-    ----------------
+Delta Aggregates
+----------------
 
-    .. admonition:: Relevant topics
+.. admonition:: Relevant topics
 
-        - :arm22:`Delta Aggregates <4-3-4>`
+   - :arm22:`Delta Aggregates <4-3-4>`
 
-    .. todo::
+.. todo::
 
-        Complete section!
+   Complete section!
 
 
-    Container Aggregates
-    --------------------
+Container Aggregates
+--------------------
 
-    .. admonition:: Relevant topics
+.. admonition:: Relevant topics
 
-        - :arm22:`Container Aggregates <4-3-5>`
+   - :arm22:`Container Aggregates <4-3-5>`
 
-    .. todo::
+.. todo::
 
-        Complete section!
+   Complete section!

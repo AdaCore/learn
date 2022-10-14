@@ -36,15 +36,16 @@ Entry index attribute
     Complete section!
 
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+Global Aspect Definition
+------------------------
 
-    Global Aspect Definition
-    ------------------------
+.. admonition:: Relevant topics
 
-    .. admonition:: Relevant topics
+    - :arm22:`The Global and Global'Class Aspects <6-1-2.html>`
 
-        - :arm22:`The Global and Global'Class Aspects <6-1-2.html>`
+.. todo::
+
+    Complete section!
 
 
 Predicate failure

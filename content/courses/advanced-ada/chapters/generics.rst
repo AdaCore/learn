@@ -1201,10 +1201,6 @@ Formal definite and indefinite types
 .. admonition:: Relevant topics
 
     - definite and indefinite (sub)types in the context of generics
-
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
-
     - discriminants
         - :ada:`A'Constrained`
 

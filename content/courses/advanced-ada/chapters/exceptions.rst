@@ -226,14 +226,23 @@ assertion policy (:ada:`Assertion_Policy (Assert => Ignore)`). For example:
 Here, the :ada:`pragma Assert` is ignored due to the assertion policy. However,
 the call to :ada:`Assert` is not ignored.
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
-
-    :ada:`Default_Initial_Condition` policy
-
 .. admonition:: In the Ada Reference Manual
 
     - :arm:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+
+
+:ada:`Default_Initial_Condition` policy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`7.3.3 Default Initial Conditions <11-4-2>`
+    - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+
+.. todo::
+
+    Complete section!
+
 
 Checks and exceptions
 ---------------------
@@ -271,14 +280,24 @@ This table shows all language-defined checks and the associated exceptions:
 In addition, we can use :ada:`All_Checks` to refer to all those checks above at
 once.
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
-
-    :ada:`Program_Error_Check` and :ada:`Tasking_Check`
-
 Let's discuss each check and see code examples where those checks are
 performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
+
+
+:ada:`Program_Error_Check` and :ada:`Tasking_Check`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`11.5 Suppressing Checks <11-5>`
+
+.. todo::
+
+   - Add to previous section:
+      - :ada:`Program_Error_Check`
+      - :ada:`Tasking_Check`
+
 
 .. _Adv_Ada_Access_Check:
 

@@ -2468,21 +2468,28 @@ these array declarations are equivalent:
 
     end Shared_Var_Types;
 
-..
-    REMOVED FROM THIS SECTION, TO BE RE-EVALUATED:
 
-    .. admonition:: Relevant topics
+:ada:`Full_Access_Only`
+~~~~~~~~~~~~~~~~~~~~~~~
 
-        - **Briefly** discuss :ada:`Full_Access_Only`
-        - :arm22:`The Package System.Atomic_Operations <C-6-1>`
+.. admonition:: Relevant topics
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+   - **Briefly** discuss :ada:`Full_Access_Only`
+   - :arm22:`The Package System.Atomic_Operations <C-6-1>`
 
-    Discarding names
-    ----------------
+.. todo::
 
-    .. admonition:: Relevant topics
+    Add to previous section!
 
-        - **Briefly** discuss discarding name mentioned in
-        :arm22:`Aspect Discard_Names <C-5>`
+
+Discarding names
+----------------
+
+.. admonition:: Relevant topics
+
+   - **Briefly** discuss discarding name mentioned in
+     :arm22:`Aspect Discard_Names <C-5>`
+
+.. todo::
+
+    Add to previous section!

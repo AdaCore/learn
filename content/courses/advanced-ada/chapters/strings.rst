@@ -664,53 +664,40 @@ specify the UTF-16 code for an emoji |mdash| the "🌐" symbol. We're then using
 the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
 the :ada:`Wide_Wide_String` types.
 
+
+Universal text buffer
+---------------------
+
 .. admonition:: Relevant topics
 
-    - :arm:`String Encoding <A-4-11>`
+    - :arm22:`Universal Text Buffers <A-4-12>`
 
 .. todo::
 
     Complete section!
 
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+Image attribute
+---------------
 
-    Universal text buffer
-    ---------------------
+.. admonition:: Relevant topics
 
-    .. admonition:: Relevant topics
+    - Image attribute mentioned in
+      :arm22:`Image Attributes <4-10>`
 
-        - :arm22:`Universal Text Buffers <A-4-12>`
+.. todo::
 
-
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
-
-    Image attribute
-    ---------------
-
-    .. admonition:: Relevant topics
-
-        - Image attribute mentioned in
-        :arm22:`Image Attributes <4-10>`
-
-    .. todo::
-
-        Complete section!
+    Complete section!
 
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+:ada:`Put_Image` aspect
+-----------------------
 
-    :ada:`Put_Image` aspect
-    -----------------------
+.. admonition:: Relevant topics
 
-    .. admonition:: Relevant topics
+    - :ada:`Put_Image` aspect mentioned in
+      :arm22:`Image Attributes <4-10>`
 
-        - :ada:`Put_Image` aspect mentioned in
-        :arm22:`Image Attributes <4-10>`
+.. todo::
 
-    .. todo::
-
-        Complete section!
+    Complete section!
