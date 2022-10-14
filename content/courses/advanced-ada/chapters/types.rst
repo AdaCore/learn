@@ -1149,6 +1149,10 @@ for :ada:`A_Plus`.
 We'll see later how definite and indefinite types apply to
 :ref:`formal parameters <Adv_Ada_Formal_Definite_Indefinite_Subtypes>`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.3 Objects and Named Numbers <3-3>`
+
 Constrained Attribute
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -1298,6 +1302,11 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 :ada:`Reset`, the :ada:`Extended` discriminant of :ada:`R1` changes from
 :ada:`False` to :ada:`True`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.7.2 Operations of Discriminated Types <3-7-2>`
+
+
 .. _Adv_Ada_Incomplete_Types:
 
 Incomplete types
@@ -1386,6 +1395,11 @@ Incomplete types are useful to declare mutually dependent types, as we'll
 see in the next section. Also, we can also have formal incomplete types, as
 we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.10.1 Incomplete Type Declarations <3-10-1>`
+
+
 .. _Adv_Ada_Mutually_Dependent_Types:
 
 Mutually dependent types
@@ -1472,6 +1486,10 @@ code:
 
 Later on, we'll see that these code examples can be written using
 :ref:`anonymous access types <Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types>`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.10.1 Incomplete Type Declarations <3-10-1>`
 
 
 .. _Adv_Ada_Type_View:
@@ -1670,6 +1688,10 @@ want to declare objects of this type.
            A := A + B;
         end Show_Private_Integers;
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`7.3 Private Types and Private Extensions <7-3>`
+
 
 Default initial values
 ----------------------
@@ -1780,6 +1802,11 @@ In the example below, we declare variables of the types from the
 
 As we see in the :ada:`Use_Defaults` procedure, all variables still have their
 default values, since we haven't assigned any value to them.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.5 Scalar Types <3-5>`
+    - :arm:`3.6 Array Types <3-6>`
 
 
 ..
