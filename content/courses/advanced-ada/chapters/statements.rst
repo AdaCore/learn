@@ -207,7 +207,7 @@ a :ada:`for` loop:
        Put_Line ("Found: " & Found'Image);
     end Show_Statement_Identifier;
 
-.. admonition:: Relevant topics
+.. admonition:: For further reading...
 
     In addition to labels, loops and block statements allow us to use a
     statement identifier. In simple terms, instead of writing
