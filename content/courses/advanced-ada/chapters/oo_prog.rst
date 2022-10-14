@@ -711,7 +711,7 @@ Controlled types
     Complete section!
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2023:
 
     References
     ----------

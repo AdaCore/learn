@@ -18,7 +18,7 @@ Pragmas, Aspects and Attributes
           chapter nor mentioned elsewhere in the book.
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Pragmas
     -------
@@ -29,7 +29,7 @@ Pragmas, Aspects and Attributes
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Aspects
     -------
@@ -43,7 +43,7 @@ Pragmas, Aspects and Attributes
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Attributes
     ----------

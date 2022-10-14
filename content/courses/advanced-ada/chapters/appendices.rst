@@ -7,7 +7,7 @@ Appendices
     legacy
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     system_annexes
     pragmas_aspects_attributes

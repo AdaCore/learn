@@ -6,7 +6,7 @@ System Annexes
 .. include:: ../../global.txt
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Real-Time Systems Annex
     -----------------------
@@ -17,7 +17,7 @@ System Annexes
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Distributed Systems Annex
     -------------------------
@@ -28,7 +28,7 @@ System Annexes
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     High Integrity Systems Annex
     ----------------------------

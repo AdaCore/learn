@@ -103,7 +103,7 @@ Protected Subprograms and Protected Actions
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Multiprocessors
     ---------------
@@ -121,7 +121,7 @@ Protected Subprograms and Protected Actions
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Policies
     --------
@@ -133,7 +133,7 @@ Protected Subprograms and Protected Actions
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Interrupts
     ----------

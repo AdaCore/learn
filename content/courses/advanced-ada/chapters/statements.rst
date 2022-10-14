@@ -382,7 +382,7 @@ Block statement identifiers are useful:
     - :arm:`5.6 Block Statements <5-6>`
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Parallel Block Statements
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -505,7 +505,7 @@ the :ada:`Make_String` function.
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Parallel loops
     --------------
