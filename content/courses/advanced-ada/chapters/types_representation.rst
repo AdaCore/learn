@@ -2492,4 +2492,4 @@ Discarding names
 
 .. todo::
 
-    Add to previous section!
+    Complete section!
