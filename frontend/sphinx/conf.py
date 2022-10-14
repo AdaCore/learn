@@ -101,6 +101,7 @@ extensions = [
 #    'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.graphviz',
+    'sphinx.ext.extlinks',
     'widget_extension',
     'sphinx_rtd_theme',
     'sphinx_reredirects',
