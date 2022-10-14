@@ -36,7 +36,14 @@ Advanced Journey With Ada: A Flight In Progress
 
 .. container:: content-description
 
-    **THIS IS WORK IN PROGRESS!**
+    .. warning::
+
+        **This is work in progress!**
+
+        Information in this document is subject to change at any time without
+        prior notification.  The editors/authors exclude all liability for the
+        topicality, correctness, completeness or quality of the information
+        provided in this course.
 
     This course will teach you advanced topics of the Ada programming language.
     The
