@@ -4,7 +4,7 @@ Introduction
 .. include:: ../../global.txt
 
 This is a collection of short code examples demonstrating new
-features of the `Ada 2022 Standard`_ as they are implemented
+features of the :aarm22:`Ada 2022 Standard <TTL>` as they are implemented
 in GNAT Ada compiler.
 
 To use some of these features, you may need to use a compiler command
