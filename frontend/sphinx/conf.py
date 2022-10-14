@@ -185,6 +185,8 @@ extlinks = {
               '[Rationale for Ada 2005; section %s]'),
     'rat12': ('http://www.ada-auth.org/standards/12rat/html/Rat12-%s.html',
               '[Rationale for Ada 2012; section %s]'),
+    'wikipedia': ('https://en.wikipedia.org/wiki/%s',
+               '[Wikipedia page: %s]'),
     }
 
 extlinks_detect_hardcoded_links = True
