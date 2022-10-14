@@ -69,7 +69,6 @@
         :caption: Courses
 
         Introduction to Ada <courses/intro-to-ada/index>
-        Advanced Journey With Ada <courses/advanced-ada/index>
         Introduction to SPARK <courses/intro-to-spark/index>
         What's New in Ada 2022 <courses/whats-new-in-ada-2022/index>
         Ada for the C++ or Java Developer <courses/Ada_For_The_CPP_Java_Developer/index>
@@ -83,6 +82,7 @@
             :maxdepth: 1
             :caption: Upcoming Courses
 
+            Advanced Journey With Ada <courses/advanced-ada/index>
             Advanced SPARK <courses/advanced-spark/index>
             Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
 
