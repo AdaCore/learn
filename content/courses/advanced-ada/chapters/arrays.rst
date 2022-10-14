@@ -53,6 +53,11 @@ bounds are fixed for the whole lifetime of :ada:`M`. We cannot *add* another
 component to this array. In other words, :ada:`M` will have 10 components for
 its whole lifetime.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.6 Array Types <3-6>`
+
+
 Unconstrained Arrays vs. Vectors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -105,6 +110,11 @@ we add an element that doesn't fit in the current capacity of the vector, the
 container has to reallocate memory in the background due to that new element.
 Therefore, arrays are more efficient, as the memory allocation only happens
 once for each object.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.6 Array Types <3-6>`
+    - :arm:`A.18.2 The Generic Package Containers.Vectors <A-18-2>`
 
 
 Multidimensional Arrays
@@ -296,6 +306,11 @@ to highlight the following aspects:
 
 - To reset all values of the multidimensional array, we use an aggregate with
   this form: :ada:`(others => (others => 0.0))`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.6 Array Types <3-6>`
+
 
 Unconstrained Multidimensional Arrays
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

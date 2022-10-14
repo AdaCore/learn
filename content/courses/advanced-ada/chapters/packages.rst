@@ -28,6 +28,11 @@ We've seen in the
 :doc:`Introduction to Ada course </courses/intro-to-ada/chapters/modular_programming>`
 that we can :ref:`rename packages <Intro_Ada_Package_Renaming>`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
+
+
 Grouping packages
 ~~~~~~~~~~~~~~~~~
 

@@ -169,6 +169,15 @@ and :ada:`Float_IO`:
 |                          | - :ada:`Ada.Wide_Wide_Text_IO.Float_IO`          |
 +--------------------------+--------------------------------------------------+
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`A.10 Text Input-Output <A-10>`
+    - :arm:`A.10.1 The Package Text_IO <A-10-1>`
+    - :arm:`A.10.8 Input-Output for Integer Types <A-10-8>`
+    - :arm:`A.10.9 Input-Output for Real Types <A-10-9>`
+    - :arm:`A.11 Wide Text Input-Output and Wide Wide Text Input-Output <A-11>`
+
+
 Wide and Wide-Wide String Handling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -231,6 +240,13 @@ In this example, we're using the :ada:`Find_Token` procedure to find the words
 from the phrase stored in the :ada:`S` constant. All the operations we're using
 here are similar to the ones for :ada:`String` type, but making use of the
 :ada:`Wide_Wide_String` type instead.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`A.4.6 String-Handling Sets and Mappings <A-4-6>`
+    - :arm:`A.4.7 Wide_String Handling <A-4-7>`
+    - :arm:`A.4.8 Wide_Wide_String Handling <A-4-8>`
+
 
 Bounded and Unbounded Wide and Wide-Wide Strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -297,6 +313,12 @@ the word "Hello." Then, we're concatenating it with " hello" and displaying it.
 All the operations we're using here are similar to the ones for
 :ada:`Unbounded_String` type, but they've been adapted for the
 :ada:`Unbounded_Wide_Wide_String` type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`A.4.7 Wide_String Handling <A-4-7>`
+    - :arm:`A.4.8 Wide_Wide_String Handling <A-4-8>`
+    - :arm:`A.11 Wide Text Input-Output and Wide Wide Text Input-Output <A-11>`
 
 
 String Encoding
