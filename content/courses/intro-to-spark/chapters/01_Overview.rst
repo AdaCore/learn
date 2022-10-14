@@ -261,7 +261,7 @@ No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Another restriction imposed by the SPARK subset concerns `aliasing
-<https://en.wikipedia.org/wiki/Aliasing_(computing)>`_. We say that two
+:wikipedia:`aliasing <Aliasing_(computing)>`. We say that two
 names are `aliased` if they refer to the same object. There are two reasons
 why aliasing is forbidden in SPARK:
 
@@ -328,7 +328,7 @@ postcondition is checked before the copy-back from the formal
 parameters to the actual arguments.
 
 Aliasing can also occur as a result of using access types (`pointers
-<https://en.m.wikipedia.org/wiki/Pointer_(computer_programming)>`_ in Ada).
+:wikipedia:`pointers <Pointer_(computer_programming)>` in Ada).
 These are restricted in SPARK so that only benign aliasing is allowed, when
 both names are only used to read the data. In particular, assignment between
 access objects operates a transfer of ownership, where the source object loses

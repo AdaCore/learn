@@ -11,9 +11,9 @@ Tasks
 
 A task can be thought as an application that runs *concurrently* with the
 main application. In other programming languages, a task might be called a
-`thread <https://en.wikipedia.org/wiki/Thread_(computing)>`_, and tasking
-might be called `multithreading
-<https://en.wikipedia.org/wiki/Thread_(computing)#Multithreading>`_.
+:wikipedia:`thread <Thread_(computing)>`, and tasking
+might be called
+:wikipedia:`multithreading <Thread_(computing)#Multithreading>`.
 
 Tasks may synchronize with the main application but may also process
 information completely independently from the main application. Here we show

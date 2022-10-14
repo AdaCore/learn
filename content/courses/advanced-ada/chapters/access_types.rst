@@ -559,7 +559,7 @@ automatically has the correct range.
 Aliasing
 --------
 
-The term `aliasing <https://en.wikipedia.org/wiki/Aliasing_(computing)>`_
+The term :wikipedia:`aliasing <Aliasing_(computing)>`
 refers to objects in memory that we can access using more than a single
 reference. In Ada, if we allocate an object via :ada:`new`, we have a
 potentially aliased object. We can then have multiple references to this
@@ -1868,7 +1868,7 @@ Lifetime of objects
 ~~~~~~~~~~~~~~~~~~~
 
 First, let's talk a bit about
-`lifetime of objects <https://en.wikipedia.org/wiki/Variable_(computer_science)#Scope_and_extent>`_.
+:wikipedia:`lifetime of objects <Variable_(computer_science)#Scope_and_extent>`.
 We assume you understand the concept, so this section is very short.
 
 In very simple terms, the lifetime of an object indicates when an object still
@@ -3164,7 +3164,7 @@ In many, perhaps most cases, :ada:`null` is just a tripping hazard. It's
 a good idea to put in :ada:`not null` when possible. In fact, a good
 argument can be made that :ada:`not null` should be the default, with
 extra syntax required when :ada:`null` is wanted. This is the way
-`Standard ML <https://en.wikipedia.org/wiki/Standard_ML>`_ works, for
+:wikipedia:`Standard ML <Standard_ML>` works, for
 example |mdash| you don't get any special null-like value unless you ask
 for it. Of course, because Ada 2005 needs to be compatible with previous
 versions of the language, :ada:`not null` cannot be the default for Ada.

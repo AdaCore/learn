@@ -4,7 +4,8 @@ Privacy
 .. include:: ../../global.txt
 
 One of the main principles of modular programming, as well as object oriented
-programming, is `encapsulation <https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)>`_.
+programming, is
+:wikipedia:`encapsulation <Encapsulation_(computer_programming)>`.
 
 Encapsulation, briefly, is the concept that the implementer of a piece of
 software will distinguish between the code's public interface and its private

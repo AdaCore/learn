@@ -1005,7 +1005,7 @@ Here, :ada:`Program_Error` is raised when :ada:`Log_And_Raise` returns to the
 Inline subprograms
 ------------------
 
-`Inlining <https://en.wikipedia.org/wiki/Inline_expansion>`_ refers to a kind
+:wikipedia:`Inlining <Inline_expansion>` refers to a kind
 of optimization where the code of a subprogram is expanded at the point of
 the call in place of the call itself.
 

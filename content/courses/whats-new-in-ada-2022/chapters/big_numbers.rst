@@ -44,7 +44,7 @@ Tiny RSA implementation
    vulnerable to timing side-channels attacks.
 
 We can implement the `RSA algorithm
-<https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_ in a few lines of
+:wikipedia:`RSA algorithm <RSA_(cryptosystem)>` in a few lines of
 code. The main operation of RSA is (m\ :sup:`d`) mod n.  But you can't just
 write :ada:`m ** d`, because these are really big numbers and the result
 won't fit into memory. However, if you keep intermediate result :ada:`mod
@@ -81,7 +81,7 @@ as a function:
    end Power_Mod;
 
 Let's check this with the example from
-`Wikipedia <https://en.wikipedia.org/wiki/RSA_(cryptosystem)>`_.
+:wikipedia:`Wikipedia <RSA_(cryptosystem)>`.
 In that example, the `public key` is (n = 3233, e = 17) and the message
 is m = 65. The encrypted message is
 m\ :sup:`e` mod n = 65\ :sup:`17` mod 3233 = 2790 = c.

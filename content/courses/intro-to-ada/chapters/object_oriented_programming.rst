@@ -172,8 +172,7 @@ Tagged types are very similar to normal records except that some
 functionality is added:
 
 - Types have a *tag*, stored inside each object, that identifies the
-  `runtime type
-  <https://en.wikipedia.org/wiki/Run-time_type_information>`_ of that
+  :wikipedia:`runtime type <Run-time_type_information>` of that
   object.
 
 - Primitives can dispatch. A primitive on a tagged type is what you

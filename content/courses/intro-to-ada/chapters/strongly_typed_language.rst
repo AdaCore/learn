@@ -189,7 +189,7 @@ specification, you can rely on it to implement portable code. Also, being able
 to leverage the wrapping on arbitrary bounds is very useful |mdash| the modulus
 does not need to be a power of 2 |mdash| to implement certain algorithms and
 data structures, such as
-`ring buffers <https://en.m.wikipedia.org/wiki/Circular_buffer>`_.
+:wikipedia:`ring buffers <Circular_buffer>`.
 
 .. _Intro_Ada_Enum_Types:
 

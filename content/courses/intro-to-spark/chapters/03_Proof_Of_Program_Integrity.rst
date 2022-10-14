@@ -22,8 +22,8 @@ compilation to occur during a program's execution. These errors, called
 runtime errors, are those targeted by GNATprove.
 
 There are various kinds of runtime errors, the most common being references
-that are out of the range of an array (`buffer overflow
-<https://en.wikipedia.org/wiki/Buffer_overflow>`_ in Ada), subtype range
+that are out of the range of an array (
+:wikipedia:`buffer overflow <Buffer_overflow>` in Ada), subtype range
 violations, overflows in computations, and divisions by zero. The code
 below illustrates many examples of possible runtime errors, all within a
 single statement.  Look at the assignment statement setting the

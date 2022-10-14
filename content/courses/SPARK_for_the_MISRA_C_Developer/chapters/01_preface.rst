@@ -16,8 +16,8 @@ very large margin.
 The popularity of the C programming language, as well as its many traps and
 pitfalls, have led to the huge success of MISRA C
 in domains where C is used for high-integrity sofware. This success has driven
-tool vendors to propose `many competing implementations of MISRA C checkers
-<https://en.wikipedia.org/wiki/MISRA_C>`_. Tools compete in particular on the
+tool vendors to propose many competing implementations of
+:wikipedia:`MISRA C <MISRA_C>` checkers. Tools compete in particular on the
 coverage of MISRA C guidelines that they help enforce, as it is
 impossible to enforce the 16 directives and 143 rules (collectively referred to
 as guidelines) of MISRA C.

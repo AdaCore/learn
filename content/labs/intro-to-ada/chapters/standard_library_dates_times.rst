@@ -16,7 +16,7 @@ Holocene calendar
 
     #. The :ada:`To_Holocene_Year` extracts the year from a time object
        (:ada:`Time` type) and returns the corresponding year for the
-       `Holocene calendar <https://en.wikipedia.org/wiki/Holocene_calendar>`_.
+       :wikipedia:`Holocene calendar <Holocene_calendar>`.
 
         #. For positive (AD) years, the Holocene year is calculated by adding
            10,000 to the year number.

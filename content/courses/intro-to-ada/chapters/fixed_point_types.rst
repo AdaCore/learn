@@ -166,7 +166,8 @@ In this example, we are defining a 32-bit fixed-point data type for our
 normalized range. When running the application, we notice that the upper
 bound is close to one, but not exact one. This is a typical effect of
 fixed-point data types |mdash| you can find more details in this discussion
-about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
+about the :wikipedia:`Q format <Q_(number_format)>`.
+
 We may also rewrite this code with an exact type definition:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Normalized_Adapted_Fixed_Point_Type

@@ -828,8 +828,7 @@ way it's treated for proofs. GNATprove performs the proof of a loop
 invariant in two steps: first, it checks that it holds for the first
 iteration of the loop and then it checks that it holds in an arbitrary
 iteration assuming it held in the previous iteration.  This is called
-`proof by induction
-<https://en.wikipedia.org/wiki/Mathematical_induction>`_.
+:wikipedia:`proof by induction <Mathematical_induction>`.
 
 As an example, let's add a loop invariant to the :ada:`Find` function stating
 that the first element of :ada:`A` is not :ada:`E`.

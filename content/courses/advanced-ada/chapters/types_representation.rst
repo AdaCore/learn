@@ -2042,14 +2042,14 @@ start by discussing volatile objects.
 Volatile
 ~~~~~~~~
 
-A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
+A :wikipedia:`volatile <Volatile_(computer_programming)>`
 object can be described as an object in memory whose value may change between
 two consecutive memory accesses of a process A |mdash| even if process A itself
 hasn't changed the value. This situation may arise when an object in memory is
 being shared by multiple threads. For example, a thread *B* may modify the
 value of that object between two read accesses of a thread *A*. Another typical
 example is the one of
-`memory-mapped I/O <https://en.wikipedia.org/wiki/Memory-mapped_I/O>`_, where
+:wikipedia:`memory-mapped I/O <Memory-mapped_I/O>`, where
 the hardware might be constantly changing the value of an object in memory.
 
 Because the value of a volatile object may be constantly changing, a compiler
