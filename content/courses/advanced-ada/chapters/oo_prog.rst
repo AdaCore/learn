@@ -711,7 +711,7 @@ Controlled types
     Complete section!
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2023:
 
     References
     ----------
@@ -722,16 +722,14 @@ Controlled types
         published as blog post
         `Using reference types to handle persistent objects <http://blog.adacore.com/use-ref-types-to-persistent-object>`_.
 
-    .. admonition:: Relevant topics
 
-        - :arm:`User-Defined References <4-1-5>`
+User-defined indexing
+---------------------
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+.. admonition:: Relevant topics
 
-    User-defined indexing
-    ---------------------
+   - :arm:`User-Defined Indexing <4-1-6>`
 
-    .. admonition:: Relevant topics
+.. todo::
 
-        - :arm:`User-Defined Indexing <4-1-6>`
+    Complete section!

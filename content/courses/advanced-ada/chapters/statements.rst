@@ -207,7 +207,7 @@ a :ada:`for` loop:
        Put_Line ("Found: " & Found'Image);
     end Show_Statement_Identifier;
 
-.. admonition:: Relevant topics
+.. admonition:: For further reading...
 
     In addition to labels, loops and block statements allow us to use a
     statement identifier. In simple terms, instead of writing
@@ -382,7 +382,7 @@ Block statement identifiers are useful:
     - :arm:`5.6 Block Statements <5-6>`
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Parallel Block Statements
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -505,7 +505,7 @@ the :ada:`Make_String` function.
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Parallel loops
     --------------
