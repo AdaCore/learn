@@ -956,6 +956,7 @@ diagrams illustrates this:
 
 .. uml::
    :align: center
+   :width: 440pt
 
    allow_mixing
 
@@ -1048,6 +1049,7 @@ package :ada:`A` (using :ada:`with B`):
 
 .. uml::
    :align: center
+   :width: 280pt
 
    allow_mixing
 
@@ -1089,6 +1091,7 @@ part of package :ada:`A` (using :ada:`private with B`):
 
 .. uml::
    :align: center
+   :width: 280pt
 
    allow_mixing
 
@@ -1124,6 +1127,7 @@ package :ada:`B` in the body of package :ada:`A`:
 
 .. uml::
    :align: center
+   :width: 280pt
 
    allow_mixing
 
@@ -1167,6 +1171,7 @@ below:
 
 .. uml::
    :align: center
+   :width: 240pt
 
    allow_mixing
 
@@ -1218,6 +1223,7 @@ package :ada:`A` and its descendants in the :ada:`Test` procedure:
 
 .. uml::
    :align: center
+   :width: 320pt
 
    allow_mixing
 
@@ -1262,6 +1268,7 @@ Within the package hierarchy itself, we cannot refer to the private package
 
 .. uml::
    :align: center
+   :width: 500pt
 
    allow_mixing
 
