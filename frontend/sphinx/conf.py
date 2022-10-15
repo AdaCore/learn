@@ -303,7 +303,7 @@ latex_elements = {
 
     # Latex figure (float) alignment
     #
-    'figure_align': 'htbp',
+    'figure_align': 'H',
 
     # Avoid blank page for chapters on odd pages
     # 'extraclassoptions': 'openany',
