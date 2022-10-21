@@ -553,7 +553,8 @@ schemes exist and are supported as well. In fact, the
 
     type Encoding_Scheme is (UTF_8, UTF_16BE, UTF_16LE);
 
-For example, instead of using UTF-8 encoding, we can use UTF-16 encoding.
+For example, instead of using UTF-8 encoding, we can use UTF-16 encoding
+|mdash| either in the big-endian or in the little-endian version.
 To convert between UTF-8 and UTF-16 encoding schemes, we can make use of the
 conversion functions from the :ada:`Ada.Strings.UTF_Encoding.Conversions`
 package.
