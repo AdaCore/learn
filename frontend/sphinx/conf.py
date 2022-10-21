@@ -279,6 +279,7 @@ latex_elements = {
     'preamble': r'''
 \usepackage{pmboxdraw} \usepackage{unicode-math}
 \usepackage{pdfpages}
+\usepackage{fontspec}
 \fvset{fontsize=\small}
 \makeatletter
   \fancypagestyle{normal}{
@@ -296,8 +297,10 @@ latex_elements = {
     # Font package inclusion
     #
     'fontpkg': r'''
-\setmainfont{Open Sans}
-\setsansfont{Open Sans}
+% \setmainfont{Open Sans}
+% \setsansfont{Open Sans}
+\setmainfont{DejaVu Sans}
+\setsansfont{DejaVu Sans}
 \setmonofont{DejaVu Sans Mono}
 ''',
 
