@@ -464,7 +464,7 @@ This difference in sizes might not always be the case. In fact, the sizes
 match when encoding a symbol in UTF-8 that requires four 8-bit characters. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Emoji
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8
 
     with Ada.Text_IO;              use Ada.Text_IO;
     with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
@@ -472,28 +472,32 @@ example:
     with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
     use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
 
-    procedure Show_Emoji is
+    procedure Show_UTF_8 is
 
-       Emoji_Symbol     : constant UTF_8_String := "😀";
-       WWS_Emoji_Symbol : constant Wide_Wide_String :=
-                            Decode (Emoji_Symbol);
+       Symbol_UTF_8 : constant UTF_8_String := "𝚡";
+       Symbol_WWS   : constant Wide_Wide_String :=
+                        Decode (Symbol_UTF_8);
 
     begin
        Put_Line ("Wide_Wide_String Length: "
-                 & WWS_Emoji_Symbol'Length'Image);
+                 & Symbol_WWS'Length'Image);
        Put_Line ("Wide_Wide_String Size:   "
-                 & WWS_Emoji_Symbol'Size'Image);
+                 & Symbol_WWS'Size'Image);
        Put_Line ("UTF-8 String Length:     "
-                 & Emoji_Symbol'Length'Image);
+                 & Symbol_UTF_8'Length'Image);
        Put_Line ("UTF-8 String Size:       "
-                 & Emoji_Symbol'Size'Image);
+                 & Symbol_UTF_8'Size'Image);
        New_Line;
        Put_Line ("UTF-8 String:            "
-                 & Emoji_Symbol);
-    end Show_Emoji;
+                 & Symbol_UTF_8);
+    end Show_UTF_8;
 
 In this case, both strings |mdash| using the :ada:`Wide_Wide_String` type or
-the :ada:`UTF_8_String` type |mdash| have the same size: 32 bits.
+the :ada:`UTF_8_String` type |mdash| have the same size: 32 bits. (Here, we're
+using the :ada:`𝚡` symbol from the
+:wikipedia:`Mathematical Alphanumeric Symbols block <Mathematical_Alphanumeric_Symbols>`,
+not the standard "x" from the
+:wikipedia:`Basic Latin block <Basic_Latin_(Unicode_block)>`.)
 
 Portability of UTF-8 in source-code files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -504,11 +508,11 @@ the source-code file itself is UTF-8. This allows us to simply use emojis
 
 .. code-block:: ada
 
-    Emoji_Symbol : constant UTF_8_String := "😀";
+    Symbol_UTF_8 : constant UTF_8_String := "★";
 
 This approach, however, might not be portable. For example, if the compiler
 uses a different string encoding for source-code files, it might interpret that
-Unicode symbol as something else |mdash| or just throw a compilation error.
+Unicode character as something else |mdash| or just throw a compilation error.
 
 If you're afraid that format mismatches might happen in your compilation
 environment, you may want to write strings in your code in a completely
@@ -516,27 +520,27 @@ portable fashion, which consists in entering the exact sequence of codes in
 bytes |mdash| using the :ada:`Character'Val` function |mdash| for the symbols
 you want to use.
 
-We can reuse parts of the previous example and replace the UTF-8 symbol with
+We can reuse parts of the previous example and replace the UTF-8 character with
 the corresponding UTF-8 code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Emoji
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8
 
     with Ada.Text_IO;              use Ada.Text_IO;
     with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
 
-    procedure Show_Emoji is
+    procedure Show_UTF_8 is
 
-       Emoji_Symbol     : constant UTF_8_String
-         := Character'Val (16#f0#) & Character'Val (16#9f#) &
-            Character'Val (16#98#) & Character'Val (16#80#);
+       Symbol_UTF_8     : constant UTF_8_String
+         := Character'Val (16#e2#) & Character'Val (16#98#) &
+            Character'Val (16#85#);
 
     begin
        Put_Line ("UTF-8 String:            "
-                 & Emoji_Symbol);
-    end Show_Emoji;
+                 & Symbol_UTF_8);
+    end Show_UTF_8;
 
-Here, we use a sequence of four calls to the :ada:`Character'Val(code)`
-function for the UTF-8 code that corresponds to the "😀" symbol.
+Here, we use a sequence of three calls to the :ada:`Character'Val(code)`
+function for the UTF-8 code that corresponds to the "★" symbol.
 
 UTF-16 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -549,7 +553,8 @@ schemes exist and are supported as well. In fact, the
 
     type Encoding_Scheme is (UTF_8, UTF_16BE, UTF_16LE);
 
-For example, instead of using UTF-8 encoding, we can use UTF-16 encoding.
+For example, instead of using UTF-8 encoding, we can use UTF-16 encoding
+|mdash| either in the big-endian or in the little-endian version.
 To convert between UTF-8 and UTF-16 encoding schemes, we can make use of the
 conversion functions from the :ada:`Ada.Strings.UTF_Encoding.Conversions`
 package.
@@ -575,15 +580,15 @@ Let's see a code example that makes use of both :ada:`UTF_String` and
     use  Ada.Strings.UTF_Encoding.Conversions;
 
     procedure Show_UTF16_Types is
-       World_Emoji_UTF_8    : constant UTF_8_String := "🌐";
+       Symbols_UTF_8  : constant UTF_8_String := "♥♫";
 
-       World_Emoji_UTF_16   : constant UTF_16_Wide_String
-         := Convert (World_Emoji_UTF_8);
+       Symbols_UTF_16 : constant UTF_16_Wide_String
+         := Convert (Symbols_UTF_8);
        --   ^ Calling Convert for UTF_8_String
        --     to UTF_16_Wide_String conversion.
 
-       World_Emoji_UTF_16BE : constant UTF_String
-         := Convert (Item          => World_Emoji_UTF_8,
+       Symbols_UTF_16BE : constant UTF_String
+         := Convert (Item          => Symbols_UTF_8,
                      Input_Scheme  => UTF_8,
                      Output_Scheme => UTF_16BE);
        --   ^ Calling Convert for UTF_8_String
@@ -591,21 +596,21 @@ Let's see a code example that makes use of both :ada:`UTF_String` and
        --     encoding.
     begin
        Put_Line ("UTF_8_String:          "
-                 & World_Emoji_UTF_8);
+                 & Symbols_UTF_8);
 
        Put_Line ("UTF_16_Wide_String:    "
-                 & Convert (World_Emoji_UTF_16));
+                 & Convert (Symbols_UTF_16));
        --          ^ Calling Convert for UTF_16_Wide_String
        --            to UTF_8_String conversion.
 
        Put_Line ("UTF_String / UTF_16BE: "
-                 & Convert (Item          => World_Emoji_UTF_16BE,
+                 & Convert (Item          => Symbols_UTF_16BE,
                             Input_Scheme  => UTF_16BE,
                             Output_Scheme => UTF_8));
     end Show_UTF16_Types;
 
 In this example, we're declaring a UTF-8 encoded string and storing it in the
-:ada:`World_Emoji_UTF_8` constant. Then, we're calling the :ada:`Convert`
+:ada:`Symbols_UTF_8` constant. Then, we're calling the :ada:`Convert`
 functions to convert between UTF-8 and UTF-16 encoding schemes. We're using two
 versions of this function:
 
@@ -637,30 +642,31 @@ example:
     use  Ada.Strings.UTF_Encoding.Conversions;
 
     procedure Show_WW_UTF16_String is
-       World_Emoji_UTF_16   : constant UTF_16_Wide_String
-         := Wide_Character'Val (16#D83C#) &
-            Wide_Character'Val (16#DF10#);
+       Symbols_UTF_16 : constant UTF_16_Wide_String
+         := Wide_Character'Val (16#2665#) &
+            Wide_Character'Val (16#266B#);
        --   ^ Calling Wide_Character'Val
-       --     to specify the UTF-16 code for "🌐"
+       --     to specify the UTF-16 BE code
+       --     for "♥" and "♫".
 
-       WWS_World_Emoji      : constant Wide_Wide_String
-         := Decode (World_Emoji_UTF_16);
+       Symbols_WWS : constant Wide_Wide_String
+         := Decode (Symbols_UTF_16);
        --   ^ Calling Decode for UTF_16_Wide_String
        --     to Wide_Wide_String conversion.
     begin
        Put_Line ("UTF_16_Wide_String: "
-                 & Convert (World_Emoji_UTF_16));
+                 & Convert (Symbols_UTF_16));
        --          ^ Calling Convert for UTF_16_Wide_String
        --            to UTF_8_String conversion.
 
        Put_Line ("Wide_Wide_String:   "
-                 & Encode (WWS_World_Emoji));
+                 & Encode (Symbols_WWS));
        --          ^ Calling Encode for Wide_Wide_String
        --            to UTF_8_String conversion.
     end Show_WW_UTF16_String;
 
 In this example, we're calling the :ada:`Wide_Character'Val` function to
-specify the UTF-16 code for an emoji |mdash| the "🌐" symbol. We're then using
+specify the UTF-16 BE code of the "♥" and "♫" symbols. We're then using
 the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
 the :ada:`Wide_Wide_String` types.
 
