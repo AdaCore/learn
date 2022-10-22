@@ -499,6 +499,165 @@ using the :ada:`𝚡` symbol from the
 not the standard "x" from the
 :wikipedia:`Basic Latin block <Basic_Latin_(Unicode_block)>`.)
 
+
+UTF-8 encoding in source-code files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the past, it was common to use different character sets in text files when
+writing in different (human) languages. By default, Ada source-code files are
+expected to use the Latin-1 coding, which is a 8-bit character set.
+
+Nowadays, however, using UTF-8 coding for text files |mdash| including
+source-code files |mdash| is very common. If your Ada code only uses standard
+ASCII characters, but you're saving it in a UTF-8 coded file, there's no need
+to worry about character sets, as UTF-8 is backwards compatible with ASCII.
+
+However, you might want to use Unicode symbols in your Ada source code to
+declare constants |mdash| as we did in the previous sections |mdash| and store
+the source code in a UTF-8 coded file. In this case, you need be careful about
+how this file is parsed by the compiler.
+
+Let's look at this source-code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8_Strings
+
+    with Ada.Text_IO;              use Ada.Text_IO;
+    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
+
+    procedure Show_UTF_8_Strings is
+
+        Symbols_UTF_8 : constant UTF_8_String := "♥♫";
+
+    begin
+        Put_Line ("UTF_8_String: "
+                  & Symbols_UTF_8);
+
+        Put_Line ("Length:       "
+                  & Symbols_UTF_8'Length'Image);
+
+    end Show_UTF_8_Strings;
+
+Here, we're using Unicode symbols to initialize the :ada:`Symbols_UTF_8`
+constant of :ada:`UTF_8_String` type.
+
+Now, let's assume this source-code example is stored in a UTF-8 coded file.
+Because the :ada:`"♥♫"` string makes use of non-ASCII Unicode symbols,
+representing this string in UTF-8 format will require more than 2 bytes.
+In fact, each one of those Unicode symbols requires 2 bytes to be encoded in
+UTF-8. (Keep in mind that Unicode symbols may require
+:wikipedia:`between 1 to 4 bytes <UTF-8>` to be encoded in UTF-8 format.) Also,
+in this case, the UTF-8 encoding process is using two additional bytes.
+Therefore, the total length of the string is six, which matches what we see
+when running the :ada:`Show_UTF_8_Strings` procedure. In other words, the
+length of the :ada:`Symbols_UTF_8` string doesn't refer to those two characters
+(:ada:`"♥♫"`) that we were using in the constant declaration, but the length of
+the encoded bytes in its UTF-8 representation.
+
+The UTF-8 format is very useful for storing and transmitting texts. However, if
+we want to process Unicode symbols, it's probably better to use string types
+with 32-bit characters |mdash| such as :ada:`Wide_Wide_String`. For example,
+let's say we want to use the :ada:`"♥♫"` string again to initialize a constant
+of :ada:`Wide_Wide_String` type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Strings.WWS_Strings_W8
+
+    with Ada.Text_IO;
+    with Ada.Wide_Wide_Text_IO;
+
+    procedure Show_WWS_Strings is
+
+       package TIO   renames Ada.Text_IO;
+       package WWTIO renames Ada.Wide_Wide_Text_IO;
+
+       Symbols_WWS : constant Wide_Wide_String := "♥♫";
+
+    begin
+       WWTIO.Put_Line ("Wide_Wide_String: "
+                       & Symbols_WWS);
+
+       TIO.Put_Line ("Length:           "
+                     & Symbols_WWS'Length'Image);
+
+    end Show_WWS_Strings;
+
+In this case, as mentioned above, if we store this source code in a text file
+using UTF-8 format, we need to ensure that the UTF-8 coded symbols are
+correctly interpreted by the compiler when it parses the text file.
+Otherwise, we might get erroneous behavior. (Interpreting the characters in
+UTF-8 format as Latin-1 format is certainly an example of what we want to avoid
+here.)
+
+.. admonition:: In the GNAT toolchain
+
+    You can use UTF-8 coding in your source-code file and initialize strings of
+    32-bit characters. However, as we just mentioned, you need to make sure
+    that the UTF-8 coded symbols are correctly interpreted by the compiler when
+    dealing with types such as :ada:`Wide_Wide_String`. For this case, GNAT
+    offers the ``-gnatW8`` switch. Let's run the previous example using this
+    switch:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WWS_Strings_W8 switches=Compiler(-gnatW8);
+
+        with Ada.Text_IO;
+        with Ada.Wide_Wide_Text_IO;
+
+        procedure Show_WWS_Strings is
+
+           package TIO   renames Ada.Text_IO;
+           package WWTIO renames Ada.Wide_Wide_Text_IO;
+
+           Symbols_WWS : constant Wide_Wide_String := "♥♫";
+
+        begin
+           WWTIO.Put_Line ("Wide_Wide_String: "
+                           & Symbols_WWS);
+
+           TIO.Put_Line ("Length:           "
+                         & Symbols_WWS'Length'Image);
+
+        end Show_WWS_Strings;
+
+    Because the :ada:`Wide_Wide_String` type has 32-bit characters. we expect
+    the length of the string to match the number of symbols that we're using.
+    Indeed, when running the :ada:`Show_WWS_Strings` procedure, we see that
+    the :ada:`Symbols_WWS` string has a length of two characters, which matches
+    the number of characters of the :ada:`"♥♫"` string.
+
+    When we use the `-gnatW8` switch, GNAT converts the UTF-8-coded string
+    (:ada:`"♥♫"`) to UTF-32 format, so we get two 32-bit characters. It then
+    uses the UTF-32-coded string to initialize the :ada:`Symbols_WWS` string.
+
+    If we don't use the `-gnatW8` switch, however, we get wrong results. Let's
+    look at the same example again without the switch:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WWS_Strings_No_W8
+
+        with Ada.Text_IO;
+        with Ada.Wide_Wide_Text_IO;
+
+        procedure Show_WWS_Strings is
+
+           package TIO   renames Ada.Text_IO;
+           package WWTIO renames Ada.Wide_Wide_Text_IO;
+
+           Symbols_WWS : constant Wide_Wide_String := "♥♫";
+
+        begin
+           WWTIO.Put_Line ("Wide_Wide_String: "
+                           & Symbols_WWS);
+
+           TIO.Put_Line ("Length:           "
+                         & Symbols_WWS'Length'Image);
+
+        end Show_WWS_Strings;
+
+    Now, the :ada:`"♥♫"` string is being interpreted as a string of six 8-bit
+    characters. (In other words, the UTF-8-coded string isn't converted to
+    the UTF-32 format.) Each of those 8-bit characters is then stored in a
+    32-bit character of the :ada:`Wide_Wide_String` type. This explains why
+    the :ada:`Show_WWS_Strings` procedure reports a length of 6 components for
+    the :ada:`Symbols_WWS` string.
+
 Portability of UTF-8 in source-code files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
