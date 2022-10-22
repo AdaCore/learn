@@ -623,12 +623,12 @@ here.)
     the :ada:`Symbols_WWS` string has a length of two characters, which matches
     the number of characters of the :ada:`"♥♫"` string.
 
-    When we use the `-gnatW8` switch, GNAT converts the UTF-8-coded string
+    When we use the ``-gnatW8`` switch, GNAT converts the UTF-8-coded string
     (:ada:`"♥♫"`) to UTF-32 format, so we get two 32-bit characters. It then
     uses the UTF-32-coded string to initialize the :ada:`Symbols_WWS` string.
 
-    If we don't use the `-gnatW8` switch, however, we get wrong results. Let's
-    look at the same example again without the switch:
+    If we don't use the ``-gnatW8`` switch, however, we get wrong results.
+    Let's look at the same example again without the switch:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WWS_Strings_No_W8
 
