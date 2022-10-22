@@ -500,7 +500,7 @@ not the standard "x" from the
 :wikipedia:`Basic Latin block <Basic_Latin_(Unicode_block)>`.)
 
 Portability of UTF-8 in source-code files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the previous code example, we were assuming that the format that we use for
 the source-code file itself is UTF-8. This allows us to simply use emojis
