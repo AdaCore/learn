@@ -530,17 +530,18 @@ the corresponding UTF-8 code:
 
     procedure Show_UTF_8 is
 
-       Symbol_UTF_8     : constant UTF_8_String
+       Symbol_UTF_8 : constant UTF_8_String
          := Character'Val (16#e2#) & Character'Val (16#98#) &
             Character'Val (16#85#);
 
     begin
-       Put_Line ("UTF-8 String:            "
+       Put_Line ("UTF-8 String: "
                  & Symbol_UTF_8);
     end Show_UTF_8;
 
 Here, we use a sequence of three calls to the :ada:`Character'Val(code)`
 function for the UTF-8 code that corresponds to the "★" symbol.
+
 
 UTF-16 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
