@@ -502,9 +502,9 @@ not the standard "x" from the
 Portability of UTF-8 in source-code files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In the previous code example, we were assuming that the format that we use for
-the source-code file itself is UTF-8. This allows us to simply use emojis
-|mdash| and other Unicode symbols |mdash| directly in strings:
+In a previous code example, we were assuming that the format that we use for
+the source-code file is UTF-8. This allows us to simply use Unicode symbols
+directly in strings:
 
 .. code-block:: ada
 
