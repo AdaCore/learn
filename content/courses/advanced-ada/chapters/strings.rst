@@ -450,18 +450,18 @@ we have different sizes and lengths depending on the string type:
 The size needed for storing the string when using the :ada:`Wide_Wide_String`
 type is bigger than the one when using the :ada:`UTF_8_String` type. This is
 expected, as the :ada:`Wide_Wide_String` uses 32-bit characters, while the
-:ada:`UTF_8_String` type uses 8-bit characters to store the string in a more
+:ada:`UTF_8_String` type uses 8-bit codes to store the string in a more
 efficient way (memory-wise).
 
 The length of the string using the :ada:`Wide_Wide_String` type is equivalent
 to the number of symbols we have in the original string: 26 characters /
-symbols. When using UTF-8, however, we may need more 8-bit characters to
+symbols. When using UTF-8, however, we may need more 8-bit codes to
 represent one symbol from the original string, so we may end up with a length
 value that is bigger than the actual number of symbols from the original string
 |mdash| as it is the case in this source-code example.
 
 This difference in sizes might not always be the case. In fact, the sizes
-match when encoding a symbol in UTF-8 that requires four 8-bit characters. For
+match when encoding a symbol in UTF-8 that requires four 8-bit codes. For
 example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8
