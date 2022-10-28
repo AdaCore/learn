@@ -322,8 +322,8 @@
 
             .. container:: frontpage-ebook-and-buttons-block
 
-                .. image:: images/page-1-of-advanced-ada.jpeg
-                    :alt: Advanced Ada (e-book)
+                .. image:: images/page-1-of-advanced-ada-temp.jpeg
+                    :alt: Advanced Journey With Ada: A Flight In Progress (e-book)
                     :width: 149pt
 
                 .. raw:: html
