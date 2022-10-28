@@ -1641,7 +1641,7 @@ is safe.
 When we're sure that an access assignment cannot possibly generate dangling
 references, we can the use :ada:`'Unchecked_Access` attribute. For instance, we
 can use this attribute to circumvent the compilation error in the previous code
-example, since we know that the erroneous assignment is actually safe:
+example, since we know that the assignment is actually safe:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Dangling_Reference_Rules
 
