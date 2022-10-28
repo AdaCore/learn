@@ -7,7 +7,7 @@ charset-normalizer==2.1.1
 coverage==6.5.0
 decorator==5.1.1
 docutils==0.17.1
-executing==1.1.0
+executing==1.1.1
 graphviz==0.20.1
 idna==3.4
 imagesize==1.4.1
@@ -28,11 +28,11 @@ pure-eval==0.2.2
 pydot-ng==2.0.0
 Pygments==2.13.0
 pyparsing==3.0.9
-pytz==2022.2.1
+pytz==2022.5
 requests==2.28.1
 six==1.16.0
 snowballstemmer==2.2.0
-Sphinx==5.2.2
+Sphinx==5.3.0
 sphinx-reredirects==0.1.1
 sphinx-rtd-dark-mode==1.2.4
 sphinx-rtd-theme==1.0.0
@@ -44,7 +44,7 @@ sphinxcontrib-plantuml==0.24
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
 stack-data==0.5.1
-traitlets==5.4.0
+traitlets==5.5.0
 urllib3==1.26.12
 wcwidth==0.2.5
 websocket-client==1.4.1
