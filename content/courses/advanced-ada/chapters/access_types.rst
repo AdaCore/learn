@@ -1666,7 +1666,7 @@ example, since we know that the assignment is actually safe:
        Put_Line ("A.all: " & Integer'Image (A.all));
     end Show_Access_Issue;
 
-When we use the :ada:`'Unchecked_Access` attribute, most rules still apply .
+When we use the :ada:`'Unchecked_Access` attribute, most rules still apply.
 The only difference to the standard :ada:`'Access` attribute is that unchecked
 access applies the rules as if the object we're getting access to was being
 declared at library level. (For the code example we've just seen, the check
