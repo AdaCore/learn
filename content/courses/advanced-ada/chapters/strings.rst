@@ -583,7 +583,7 @@ of :ada:`Wide_Wide_String` type:
 In this case, as mentioned above, if we store this source code in a text file
 using UTF-8 format, we need to ensure that the UTF-8 coded symbols are
 correctly interpreted by the compiler when it parses the text file.
-Otherwise, we might get erroneous behavior. (Interpreting the characters in
+Otherwise, we might get unexpected behavior. (Interpreting the characters in
 UTF-8 format as Latin-1 format is certainly an example of what we want to avoid
 here.)
 
