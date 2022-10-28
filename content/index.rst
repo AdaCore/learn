@@ -148,6 +148,7 @@
                             </a>
                         </div>
 
+
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-intro-to-ada-labs.jpeg
@@ -171,24 +172,6 @@
 
             .. container:: frontpage-ebook-and-buttons-block
 
-                .. image:: images/page-1-of-advanced-ada-temp.jpeg
-                    :alt: Advanced Journey With Ada: A Flight In Progress (e-book)
-                    :width: 149pt
-
-                .. raw:: html
-
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
-                                EPUB
-                            </a>
-                        </div>
-
-            .. container:: frontpage-ebook-and-buttons-block
-
                 .. image:: images/page-1-of-intro-to-spark.jpeg
                     :alt: Introduction to SPARK (e-book)
                     :width: 149pt
@@ -205,8 +188,6 @@
                             </a>
                         </div>
 
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -225,6 +206,9 @@
                                 EPUB
                             </a>
                         </div>
+
+
+        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -245,8 +229,6 @@
                         </div>
 
 
-        .. container:: frontpage-ebooks-row
-
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
@@ -264,6 +246,9 @@
                                 EPUB
                             </a>
                         </div>
+
+
+        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -283,8 +268,6 @@
                             </a>
                         </div>
 
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -335,6 +318,26 @@
                                 EPUB
                             </a>
                         </div>
+
+
+            .. container:: frontpage-ebook-and-buttons-block
+
+                .. image:: images/page-1-of-advanced-ada.jpeg
+                    :alt: Advanced Ada (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
+                                EPUB
+                            </a>
+                        </div>
+
 
             .. container:: frontpage-ebook-and-buttons-block
 
