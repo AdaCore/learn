@@ -1,2 +1,3 @@
+courses/advanced-ada
 courses/advanced-spark
 courses/intro-to-embedded-sys-prog
