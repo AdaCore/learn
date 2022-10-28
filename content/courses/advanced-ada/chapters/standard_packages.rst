@@ -19,7 +19,7 @@ Standard Packages
 
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     :ada:`Ada` packages
     -------------------
@@ -34,7 +34,7 @@ Standard Packages
             - Include link to parts of the book where these packages are explained.
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     :ada:`System` packages
     ----------------------
@@ -49,7 +49,7 @@ Standard Packages
             - Include link to parts of the book where these packages are explained.
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     :ada:`Interfaces` packages
     --------------------------

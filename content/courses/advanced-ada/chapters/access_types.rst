@@ -64,7 +64,7 @@ then assign an array aggregate to it |mdash| this becomes
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.1 Names <http://www.ada-auth.org/standards/12rm/html/RM-4-1.html>`_
+    - :arm:`4.1 Names <4-1>`
 
 
 .. _Adv_Ada_Implicit_Dereferencing:
@@ -328,11 +328,11 @@ supported:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.1 Names <http://www.ada-auth.org/standards/12rm/html/RM-4-1.html>`_
-    - `4.1.1 Indexed Components <http://www.ada-auth.org/standards/12rm/html/RM-4-1-1.html>`_
-    - `4.1.2 Slices <http://www.ada-auth.org/standards/12rm/html/RM-4-1-2.html>`_
-    - `4.1.3 Selected Components <http://www.ada-auth.org/standards/12rm/html/RM-4-1-3.html>`_
-    - `4.1.4 Attributes <http://www.ada-auth.org/standards/12rm/html/RM-4-1-4.html>`_
+    - :arm:`4.1 Names <4-1>`
+    - :arm:`4.1.1 Indexed Components <4-1-1>`
+    - :arm:`4.1.2 Slices <4-1-2>`
+    - :arm:`4.1.3 Selected Components <4-1-3>`
+    - :arm:`4.1.4 Attributes <4-1-4>`
 
 
 .. _Adv_Ada_Ragged_Arrays:
@@ -559,7 +559,7 @@ automatically has the correct range.
 Aliasing
 --------
 
-The term `aliasing <https://en.wikipedia.org/wiki/Aliasing_(computing)>`_
+The term :wikipedia:`aliasing <Aliasing_(computing)>`
 refers to objects in memory that we can access using more than a single
 reference. In Ada, if we allocate an object via :ada:`new`, we have a
 potentially aliased object. We can then have multiple references to this
@@ -617,7 +617,7 @@ words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`__
+    - :arm:`3.10 Access Types <3-10>`
 
 
 Aliased objects
@@ -687,8 +687,8 @@ In the next sections, we discuss these features in more details.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.3.1 Object Declarations <http://www.ada-auth.org/standards/12rm/html/RM-3-3-1.html>`__
-    - `3.10 Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10.html>`__
+    - :arm:`3.3.1 Object Declarations <3-3-1>`
+    - :arm:`3.10 Access Types <3-10>`
 
 General access modifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -797,7 +797,7 @@ write :ada:`I_Var := 22;`, but we cannot write :ada:`I_Var_C_Ptr.all := 22;`.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10.2 Operations of Access Types <http://www.ada-auth.org/standards/12rm/html/RM-3-10-2.html>`__
+    - :arm:`3.10.2 Operations of Access Types <3-10-2>`
 
 
 Non-aliased objects
@@ -945,7 +945,7 @@ address we're specifying (instead of assigning registers for those components).
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.6 Array Types <http://www.ada-auth.org/standards/12rm/html/RM-3-6.html>`__
+    - :arm:`3.6 Array Types <3-6>`
 
 
 Aliased parameters
@@ -1047,9 +1047,9 @@ it as :ada:`aliased Integer`, it is passed by reference.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `6.1 Subprogram Declarations <http://www.ada-auth.org/standards/12rm/html/RM-6-1.html>`__
-    - `6.2 Formal Parameter Modes <http://www.ada-auth.org/standards/12rm/html/RM-6-2.html>`__
-    - `6.4.1 Parameter Associations <http://www.ada-auth.org/standards/12rm/html/RM-6-4-1.html>`__
+    - :arm:`6.1 Subprogram Declarations <6-1>`
+    - :arm:`6.2 Formal Parameter Modes <6-2>`
+    - :arm:`6.4.1 Parameter Associations <6-4-1>`
 
 
 .. _Adv_Ada_Anonymous_Access_Types:
@@ -1057,13 +1057,244 @@ it as :ada:`aliased Integer`, it is passed by reference.
 Anonymous Access Types
 ----------------------
 
+So far, most of the sections in this chapter dealt with access type
+declarations such as this one:
+
+.. code-block:: ada
+
+   type Integer_Access is access all Integer;
+
+   procedure Add_One (A : Integer_Access);
+
+In addition to named access type declarations such as the one in this example,
+Ada also supports anonymous access types, which, as the name implies, don't
+have an actual type declaration.
+
+To declare an access object of anonymous type, we just specify the subtype of
+the object or subprogram we want to have access to. For example:
+
+.. code-block:: ada
+
+   procedure Add_One (A : access Integer);
+
+When we compare this example with the previous one, we see that the declaration
+:ada:`A : Integer_Access` becomes :ada:`A : access Integer`. Here,
+:ada:`access Integer` is the anonymous access type declaration, and :ada:`A` is
+an access object of this anonymous type.
+
+To be more precise, :ada:`A : access Integer` is an
+:ref:`access parameter <Adv_Ada_Anonymous_Access_Parameter>` and it's
+specifying an
+:ref:`anonymous access-to-object type <Adv_Ada_Anonymous_Access_To_Object_Types>`.
+Another flavor of anonymous access types are
+:ref:`anonymous access-to-subprograms <Adv_Ada_Anonymous_Access_To_Subprograms>`.
+We discuss all these topics in more details later.
+
+Let's see a complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Simple_Anonymous_Access_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Anonymous_Access_Types is
+       I_Var : aliased Integer;
+
+       A     : access Integer;
+       --      ^ Anonymous access type
+    begin
+       A := I_Var'Access;
+       --   ^ Assignment to object of
+       --     anonymous access type.
+
+       A.all := 22;
+
+       Put_Line ("A.all: " & Integer'Image (A.all));
+    end Show_Anonymous_Access_Types;
+
+Here, :ada:`A` is an access object whose value is initialized with the access
+to :ada:`I_Var`. Because the declaration of :ada:`A` includes the declaration
+of an anonymous access type, we don't declare an extra :ada:`Integer_Access`
+type, as we did in previous code examples.
+
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+    - :arm:`3.10 Access Types <3-10>`
 
-.. todo::
 
-    Complete section!
+Relation to named types
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Anonymous access types were not part of the first version of the Ada standard,
+which only had support for named access types. They were introduced later to
+cover some use-cases that were difficult |mdash| or even impossible |mdash|
+with access types.
+
+In this sense, anonymous access types aren't just access types without names.
+Certain accessibility rules for anonymous access types are a bit less strict.
+In those cases, it might be interesting to consider using them instead of named
+access types.
+
+In general, however, we should only use anonymous access types in those
+specific cases where using named access types becomes too cumbersome. As a
+general recommendation, we should give preference to named access types
+whenever possible. (Anonymous access-to-object types have
+:ref:`drawbacks that we discuss later <Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types>`.)
+
+
+Benefits of anonymous access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One of the main benefits of anonymous access types is their flexibility:
+since there isn't an explicit access type declaration associated with them,
+we only have to worry about the subtype :ada:`S` we intend to access.
+
+Also, as long as the subtype :ada:`S` in a declaration :ada:`access S` is
+always the same, no conversion is needed between two access objects of that
+anonymous type, and the :ada:`S'Access` attribute always works.
+
+Let's see an example:
+
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Access_Types.Anonymous_Access_Object_Assignment
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show (Name : String;
+                    V    : access Integer) is
+    begin
+       Put_Line (Name & ".all: "
+                 & Integer'Image (V.all));
+    end Show;
+
+    with Show;
+
+    procedure Show_Anonymous_Access_Types is
+       I_Var : aliased Integer;
+       A     : access Integer;
+       B     : access Integer;
+    begin
+       A := I_Var'Access;
+       B := A;
+
+       A.all := 22;
+
+       Show ("A", A);
+       Show ("B", B);
+    end Show_Anonymous_Access_Types;
+
+In this example, we have two access objects :ada:`A` and :ada:`B`. Since
+they're objects of anonymous access types that refer to the same subtype
+:ada:`Integer`, we can assign :ada:`A` to :ada:`B` without a type conversion,
+and pass those access objects as an argument to the :ada:`Show` procedure.
+
+(Note that the use of an access parameter in the :ada:`Show` procedure is for
+demonstration purpose only: a simply :ada:`Integer` as the type of this input
+parameter would have been more than sufficient to implement the procedure.
+Actually, in this case, avoiding the access parameter would be the recommended
+approach in terms of clean Ada software design.)
+
+In contrast, if we had used named type declarations, the code would be more
+complicated and more limited:
+
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Access_Types.Anonymous_Access_Object_Assignment
+
+    package Aux is
+
+       type Integer_Access is access all Integer;
+
+       procedure Show (Name : String;
+                       V    : Integer_Access);
+
+    end Aux;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Aux is
+
+       procedure Show (Name : String;
+                       V    : Integer_Access) is
+       begin
+          Put_Line (Name & ".all: "
+                    & Integer'Image (V.all));
+       end Show;
+
+    end Aux;
+
+    with Aux; use Aux;
+
+    procedure Show_Anonymous_Access_Types is
+       --  I_Var : aliased Integer;
+
+       A : Integer_Access;
+       B : Integer_Access;
+    begin
+       --  A := I_Var'Access;
+       --       ^ ERROR: non-local pointer cannot
+       --                point to local object.
+
+       A := new Integer;
+       B := A;
+
+       A.all := 22;
+
+       Show ("A", A);
+       Show ("B", B);
+    end Show_Anonymous_Access_Types;
+
+Here, apart from the access type declaration (:ada:`Integer_Access`), we had to
+make two adaptations to convert the previous code example:
+
+1. We had to move the :ada:`Show` procedure to a package (which we simply
+   called :ada:`Aux`) because of the access type declaration.
+
+2. Also, we had to allocate an object for :ada:`A` instead of retrieving the
+   access attribute of :ada:`I_Var` because we cannot use a pointer to a local
+   object in the assignment to a non-local pointer, as indicate in the
+   comments.
+
+This restriction regarding non-local pointer assignments is an example of the
+stricter accessibility rules that apply to named access types. As
+mentioned earlier, the :ada:`S'Access` attribute always works when we use
+anonymous access types |mdash| this is not always the case for named access
+types.
+
+.. admonition:: Important
+
+    As mentioned earlier, if we want to use two access objects in an operation,
+    the rule says that the subtype :ada:`S` of the anonymous type used in their
+    corresponding declaration must match. In the following example, we can see
+    how this rule works:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Anonymous_Access_Subtype_Error
+        :class: ada-expect-compile-error
+
+        procedure Show_Anonymous_Access_Subtype_Error is
+           subtype Integer_1_10 is Integer range 1 .. 10;
+
+           I_Var : aliased Integer;
+           A     : access Integer := I_Var'Access;
+           B     : access Integer_1_10;
+        begin
+           A := I_Var'Access;
+
+           B := A;
+           --  ^ ERROR: subtype doesn't match!
+
+           B := I_Var'Access;
+           --  ^ ERROR: subtype doesn't match!
+        end Show_Anonymous_Access_Subtype_Error;
+
+   Even though :ada:`Integer_1_10` is a subtype of :ada:`Integer`, we cannot
+   assign :ada:`A` to :ada:`B` because the subtype that their access type
+   declarations refer to |mdash| :ada:`Integer` and :ada:`Integer_1_10`,
+   respectively |mdash| doesn't match. The same issue occurs when
+   retrieving the access attribute of :ada:`I_Var` in the assignment to
+   :ada:`B`.
+
+The later sections on
+:ref:`anonymous access-to-object type <Adv_Ada_Anonymous_Access_To_Object_Types>`
+and
+:ref:`anonymous access-to-subprograms <Adv_Ada_Anonymous_Access_To_Subprograms>`
+cover more specific details on anonymous access types.
 
 
 .. _Adv_Ada_Anonymous_Access_To_Object_Types:
@@ -1073,20 +1304,58 @@ Anonymous Access-To-Object Types
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+    - :arm:`3.10 Access Types <3-10>`
 
 .. todo::
 
     Complete section!
 
 
+.. _Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types:
+
+
 Drawbacks of Anonymous Access-To-Object Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+.. _Adv_Ada_Anonymous_Access_Discriminants:
+
 Anonymous Access discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+.. _Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types:
+
+Mutually dependent types using anonymous access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the section on
+:ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`, we've seen
+a code example that was using named access types. We could now rewrite it using
+anonymous access types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Mutually_Dependent_Anonymous_Access_Types
+
+    package Mutually_Dependent is
+
+       type T2;
+
+       type T1 is record
+          B : access T2;
+       end record;
+
+       type T2 is record
+          A : access T1;
+       end record;
+
+    end Mutually_Dependent;
+
+In this example, :ada:`T1` and :ada:`T2` are mutually dependent types. We're
+using anonymous access types in the declaration of the :ada:`B` and :ada:`A`
+components.
+
+
+.. _Adv_Ada_Anonymous_Access_Parameter:
 
 Anonymous Access parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1114,7 +1383,8 @@ To do this, we have to declare:
 
 Also, for the reference type, we have to:
 
-- specify the reference discriminant as an access discriminant; and
+- specify the reference discriminant as an
+  :ref:`access discriminant <Adv_Ada_Anonymous_Access_Discriminants>`; and
 
 - indicate the name of the reference discriminant when specifying the
   :ada:`Implicit_Dereference` aspect.
@@ -1213,7 +1483,7 @@ However, we could use other forms |mdash| such as :ada:`not null access`
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.1.5 User-Defined References <http://www.ada-auth.org/standards/12rm/html/RM-4-1-5.html>`_
+    - :arm:`4.1.5 User-Defined References <4-1-5>`
 
 Dereferencing of tagged types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1574,20 +1844,735 @@ type) and display its information by calling the :ada:`Show` procedure.
 
     .. admonition:: In the Ada Reference Manual
 
-        - `A.18.2 The Generic Package Containers.Vectors <http://www.ada-auth.org/standards/12rm/html/RM-A-18-2.html>`_
+        - :arm:`A.18.2 The Generic Package Containers.Vectors <A-18-2>`
 
 
-Accessibility Levels: An Introduction
--------------------------------------
+.. _Adv_Ada_Accessibility_Levels_Intro:
+
+Accessibility Levels and Rules: An Introduction
+-----------------------------------------------
+
+This section provides an introduction to accessibility levels and accessibility
+rules. This topic can be very complicated, and by no means do we intend to
+cover all the details here. (In fact, discussing all the details about
+accessibility levels and rules could be a long chapter on its own. If you're
+interested in them, please refer to the Ada Reference Manual.) In any case, the
+goal of this section is to present the intention behind the accessibility rules
+and build intuition on how to best use access types in your code.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10.2 Operations of Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10-2.html>`_
+    - :arm:`3.10.2 Operations of Access Types <3-10-2>`
 
-.. todo::
+Lifetime of objects
+~~~~~~~~~~~~~~~~~~~
 
-    Complete section!
+First, let's talk a bit about
+:wikipedia:`lifetime of objects <Variable_(computer_science)#Scope_and_extent>`.
+We assume you understand the concept, so this section is very short.
 
+In very simple terms, the lifetime of an object indicates when an object still
+has relevant information. For example, if a variable :ada:`V` gets out of
+scope, we say that its lifetime has ended. From this moment on, :ada:`V`
+no longer exists.
+
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Lifetime
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Lifetime is
+       I_Var_1 : Integer := 22;
+    begin
+
+       Inner_Block : declare
+          I_Var_2 : Integer := 42;
+       begin
+          Put_Line ("I_Var_1: " & Integer'Image (I_Var_1));
+          Put_Line ("I_Var_2: " & Integer'Image (I_Var_2));
+
+          --  I_Var_2 will get out of scope
+          --  when the block finishes.
+       end Inner_Block;
+
+       --  I_Var_2 is now out of scope...
+
+       Put_Line ("I_Var_1: " & Integer'Image (I_Var_1));
+       Put_Line ("I_Var_2: " & Integer'Image (I_Var_2));
+       --                                     ^^^^^^^
+       --  ERROR: lifetime of I_Var_2 has ended!
+    end Show_Lifetime;
+
+In this example, we declare :ada:`I_Var_1` in the :ada:`Show_Lifetime`
+procedure, and :ada:`I_Var_2` in its :ada:`Inner_Block`.
+
+This example doesn't compile because we're trying to use :ada:`I_Var_2` after
+its lifetime has ended. However, if such a code could compile and run, the last
+call to :ada:`Put_Line` would potentially display garbage to the user.
+(In fact, the actual behavior would be undefined.)
+
+
+.. _Adv_Ada_Accessibility_Levels:
+
+Accessibility Levels
+~~~~~~~~~~~~~~~~~~~~
+
+In basic terms, accessibility levels are a mechanism to assess the lifetime
+of objects (as we've just discussed). The starting point is the library level:
+this is the base level, and no level can be deeper than that. We start "moving"
+to deeper levels when we use a library in a subprogram or call other
+subprograms for example.
+
+Suppose we have a procedure :ada:`Proc` that makes use of a package :ada:`Pkg`,
+and there's a block in the :ada:`Proc` procedure:
+
+.. code-block:: ada
+
+    package Pkg is
+
+       --  Library level
+
+    end Pkg;
+
+    with Pkg; use Pkg;
+
+    procedure Proc is
+
+       --  One level deeper than
+       --  library level
+
+    begin
+
+       declare
+          --  Two levels deeper than
+          --  library level
+      begin
+          null;
+       end;
+
+    end Proc;
+
+For this code, we can say that:
+
+- the specification of :ada:`Pkg` is at library level;
+
+- the declarative part of :ada:`Proc` is one level deeper than the library
+  level; and
+
+- the block is two levels deeper than the library level.
+
+(Note that this is still a very simplified overview of accessibility levels.
+Things start getting more complicated when we use information from :ada:`Pkg`
+in :ada:`Proc`. Those details will become more clear in the next sections.)
+
+The levels themselves are not visible to the programmer. For example, there's
+no :ada:`'Access_Level` attribute that returns an integer value indicating the
+level. Also, you cannot write a user message that displays the level at a
+certain point. In this sense, accessibility levels are assessed relatively to
+each other: we can only say that a specific operation is at the same or at a
+deeper level than another one.
+
+
+.. _Adv_Ada_Accessibility_Rules:
+
+Accessibility Rules
+~~~~~~~~~~~~~~~~~~~
+
+The accessibility rules determine whether a specific use of access types or
+objects is legal (or not). Actually, accessibility rules exist to prevent
+:ref:`dangling references <Adv_Ada_Dangling_References>`, which we discuss
+later. Also, they are based on the
+:ref:`accessibility levels <Adv_Ada_Accessibility_Levels>` we discussed
+earlier.
+
+
+.. _Adv_Ada_Accessibility_Rules_Code_Example:
+
+Code example
+^^^^^^^^^^^^
+
+As mentioned earlier, the accessibility level at a specific point isn't visible
+to the programmer. However, to illustrate which level we have at each point in
+the following code example, we use a prefix (:ada:`L0`, :ada:`L1`, and
+:ada:`L2`)  to indicate whether we're at the library level (:ada:`L0`) or at a
+deeper level.
+
+Let's now look at the complete code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Accessibility_Library_Level
+    :class: ada-expect-compile-error
+
+    package Library_Level is
+
+       type L0_Integer_Access is access all Integer;
+
+       L0_IA  : L0_Integer_Access;
+
+       L0_Var : aliased Integer;
+
+    end Library_Level;
+
+    with Library_Level; use Library_Level;
+
+    procedure Show_Library_Level is
+       type L1_Integer_Access is access all Integer;
+
+       L0_IA_2 : L0_Integer_Access;
+       L1_IA   : L1_Integer_Access;
+
+       L1_Var : aliased Integer;
+
+       procedure Test is
+          type L2_Integer_Access is access all Integer;
+
+          L2_IA  : L2_Integer_Access;
+
+          L2_Var : aliased Integer;
+       begin
+          L1_IA := L2_Var'Access;
+          --       ^^^^^^
+          --       ILLEGAL: L2 object to
+          --                L1 access object
+
+          L2_IA := L2_Var'Access;
+          --       ^^^^^^
+          --       LEGAL: L2 object to
+          --              L2 access object
+       end Test;
+
+    begin
+       L0_IA := new Integer'(22);
+       --       ^^^^^^^^^^^
+       --       LEGAL: L0 object to
+       --              L0 access object
+
+       L0_IA_2 := new Integer'(22);
+       --         ^^^^^^^^^^^
+       --         LEGAL: L0 object to
+       --                L0 access object
+
+       L0_IA := L1_Var'Access;
+       --       ^^^^^^
+       --       ILLEGAL: L1 object to
+       --                L0 access object
+
+       L0_IA_2 := L1_Var'Access;
+       --         ^^^^^^
+       --         ILLEGAL: L1 object to
+       --                  L0 access object
+
+       L1_IA := L0_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L0 object to
+       --              L1 access object
+
+       L1_IA := L1_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L1 object to
+       --              L1 access object
+
+       L0_IA := L1_IA;
+       --       ^^^^^
+       --       ILLEGAL: type mismatch
+
+       L0_IA := L0_Integer_Access (L1_IA);
+       --       ^^^^^^^^^^^^^^^^^
+       --       ILLEGAL: cannot convert
+       --                L1 access object to
+       --                L0 access object
+
+       Test;
+    end Show_Library_Level;
+
+In this example, we declare
+
+- in the :ada:`Library_Level` package: the :ada:`L0_Integer_Access` type, the
+  :ada:`L0_IA` access object, and the :ada:`L0_Var` aliased variable;
+
+- in the :ada:`Show_Library_Level` procedure: the :ada:`L1_Integer_Access`
+  type, the :ada:`L0_IA_2` and :ada:`L1_IA` access objects, and the
+  :ada:`L1_Var` aliased variable;
+
+- in the nested :ada:`Test` procedure: the :ada:`L2_Integer_Access` type, the
+  :ada:`L2_IA`, and the :ada:`L2_Var` aliased variable.
+
+As mentioned earlier, the :ada:`Ln` prefix indicates the level of each type or
+object. Here, the :ada:`n` value is zero at library level. We then increment
+the :ada:`n` value each time we refer to a deeper level.
+
+For instance:
+
+- when we declare the :ada:`L1_Integer_Access` type in the
+  :ada:`Show_Library_Level` procedure, that declaration is one level deeper
+  than the level of the :ada:`Library_Level` package |mdash| so it has the
+  :ada:`L1` prefix.
+
+- when we declare the :ada:`L2_Integer_Access` type in the :ada:`Test`
+  procedure, that declaration is one level deeper than the level of the
+  :ada:`Show_Library_Level` procedure |mdash| so it has the :ada:`L2` prefix.
+
+Types and Accessibility Levels
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It's very important to highlight the fact that:
+
+- types themselves also have an associated level, and
+
+- objects have the same accessibility level as their types.
+
+When we declare the :ada:`L0_IA_2` object in the code example, its
+accessibility level is at library level because its type
+(the :ada:`L0_Integer_Access` type) is at library level. Even though this
+declaration is in the :ada:`Show_Library_Level` procedure |mdash| whose
+declarative part is one level deeper than the library level |mdash|, the object
+itself has the same accessibility level as its type.
+
+Now that we've discussed the accessibility levels of this code example, let's
+see how the accessibility rules use those levels.
+
+
+Operations on Access Types
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In very simple terms, the accessibility rules say that:
+
+- operations on access types at the same accessibility level are legal;
+
+- assigning or converting to a deeper level is legal;
+
+Otherwise, operations targeting objects at a *less-deep* level are illegal.
+
+For example, :ada:`L0_IA := new Integer'(22)` and :ada:`L1_IA := L1_Var'Access`
+are legal because we're operating at the same accessibility level. Also,
+:ada:`L1_IA := L0_Var'Access` is legal because :ada:`L1_IA` is at a deeper
+level than :ada:`L0_Var'Access`.
+
+However, many operations in the code example are illegal. For instance,
+:ada:`L0_IA := L1_Var'Access` and :ada:`L0_IA_2 := L1_Var'Access` are illegal
+because the target objects in the assignment are *less* deep.
+
+Note that the :ada:`L0_IA := L1_IA` assignment is mainly illegal because the
+access types don't match. (Of course, in addition to that, assigning
+:ada:`L1_Var'Access` to :ada:`L0_IA` is also illegal in terms of accessibility
+rules.)
+
+
+Conversion between Access Types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The same rules apply to the conversion between access types. In the
+code example, the :ada:`L0_Integer_Access (L1_IA)` conversion is illegal
+because the resulting object is less deep. That being said, conversions on the
+same level are fine:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Same_Level_Conversion
+
+    procedure Show_Same_Level_Conversion is
+       type L1_Integer_Access is access all Integer;
+       type L1_B_Integer_Access is access all Integer;
+
+       L1_IA   : L1_Integer_Access;
+       L1_B_IA : L1_B_Integer_Access;
+
+       L1_Var  : aliased Integer;
+    begin
+       L1_IA := L1_Var'Access;
+
+       L1_B_IA := L1_B_Integer_Access (L1_IA);
+       --         ^^^^^^^^^^^^^^^^^^^
+       --         LEGAL: conversion from
+       --                L1 access object to
+       --                L1 access object
+    end Show_Same_Level_Conversion;
+
+Here, we're converting from the :ada:`L1_Integer_Access` type to the
+:ada:`L1_B_Integer_Access`, which are both at the same level.
+
+
+.. _Adv_Ada_Dangling_References:
+
+Dangling References
+~~~~~~~~~~~~~~~~~~~
+
+An access value that points to a non-existent object is called a dangling
+reference. Later on, we'll discuss how dangling references may occur using
+:ref:`unchecked deallocation <Adv_Ada_Unchecked_Deallocation_Dangling_References>`.
+
+Dangling references are created when we have an access value pointing to an
+object whose lifetime has ended, so it becomes a  non-existent object. This
+could occur, for example, when an access value still points to an object
+:ada:`X` that has gone out of scope.
+
+As mentioned in the previous section, the accessibility rules of the Ada
+language ensure that such situations never happen! In fact, whenever possible,
+the compiler applies those rules to detect potential dangling references at
+compile time. When this detection isn't possible at compile time, the compiler
+introduces an :ref:`accessibility check <Adv_Ada_Accessibility_Check>`. If this
+check fails at runtime, it raises a :ada:`Program_Error` exception |mdash|
+thereby preventing that a dangling reference gets used.
+
+Let's see an example of how dangling references could occur:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Dangling_Reference_Rules
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Dangling_Reference is
+
+       type Integer_Access is access all Integer;
+
+       I_Var_1 : aliased Integer := 22;
+
+       A1    : Integer_Access;
+    begin
+       A1 := I_Var_1'Access;
+       Put_Line ("A1.all: " & Integer'Image (A1.all));
+
+       Put_Line ("Inner_Block will start now!");
+
+       Inner_Block : declare
+          --
+          --  I_Var_2 only exists in Inner_Block
+          --
+          I_Var_2 : aliased Integer := 42;
+
+          --
+          --  A2 only exists in Inner_Block
+          --
+          A2      : Integer_Access;
+       begin
+          A2 := I_Var_1'Access;
+          Put_Line ("A2.all: " & Integer'Image (A2.all));
+
+          A1 := I_Var_2'Access;
+          --   PROBLEM: A1 and Integer_Access type have longer
+          --            lifetime than I_Var_2
+
+          Put_Line ("A1.all: " & Integer'Image (A1.all));
+
+          A2 := I_Var_2'Access;
+          --   PROBLEM: A2 has the same lifetime as I_Var_2,
+          --            but Integer_Access type has a longer
+          --            lifetime.
+
+          Put_Line ("A2.all: " & Integer'Image (A2.all));
+       end Inner_Block;
+
+       Put_Line ("Inner_Block has ended!");
+       Put_Line ("A1.all: " & Integer'Image (A1.all));
+
+    end Show_Dangling_Reference;
+
+Here, we declare the access objects :ada:`A1` and :ada:`A2` of
+:ada:`Integer_Access` type, and the :ada:`I_Var_1` and :ada:`I_Var_2` objects.
+Moreover, :ada:`A1` and :ada:`I_Var_1` are declared in the scope of the
+:ada:`Show_Dangling_Reference` procedure, while :ada:`A2` and :ada:`I_Var_2`
+are declared in the :ada:`Inner_Block`.
+
+When we try to compile this code, we get two compilation errors due to
+violation of accessibility rules. Let's now discuss these accessibility rules
+in terms of lifetime, and see which problems they are preventing in each case.
+
+1. In the :ada:`A1 := I_Var_2'Access` assignment, the main problem is that
+   :ada:`A1` has a longer lifetime than :ada:`I_Var_2`. After the
+   :ada:`Inner_Block` finishes |mdash| when :ada:`I_Var_2` gets out of scope
+   and its lifetime has ended |mdash|, :ada:`A1` would still be pointing to an
+   object that does not longer exist.
+
+2. In the :ada:`A2 := I_Var_2'Access` assignment, however, both :ada:`A2` and
+   :ada:`I_Var_2` have the same lifetime. In that sense, the assignment may
+   actually look pretty much OK.
+
+   - However, as mentioned in the previous section, Ada also cares about the
+     lifetime of access types. In fact, since the :ada:`Integer_Access` type is
+     declared outside of the :ada:`Inner_Block`, it has a longer lifetime than
+     :ada:`A2` and :ada:`I_Var_2`.
+
+   - To be more precise, the accessibility rules detect that :ada:`A2` is an
+     access object of a type that has a longer lifetime than :ada:`I_Var_2`.
+
+At first glance, this last accessibility rule may seem too strict, as both
+:ada:`A2` and :ada:`I_Var_2` have the same lifetime |mdash| so nothing bad
+could occur when dereferencing :ada:`A2`. However, consider the following
+change to the code:
+
+.. code-block:: ada
+
+          A2 := I_Var_2'Access;
+
+          A1 := A2;
+          --    PROBLEM: A1 will still be referring to
+          --             I_Var_2 after the Inner_Block,
+          --             i.e. when the lifetime of
+          --             I_Var_2 has ended!
+
+Here, we're introducing the :ada:`A1 := A2` assignment. The problem with this
+is that :ada:`I_Var_2`\ 's lifetime ends when the :ada:`Inner_Block` finishes,
+but :ada:`A1` would continue to refer to an :ada:`I_Var_2` object that doesn't
+exist anymore |mdash| thereby creating a dangling reference.
+
+Even though we're actually not assigning :ada:`A2` to :ada:`A1` in the original
+code, we could have done it. The accessibility rules ensure that such an error
+is never introduced into the program.
+
+.. admonition:: For further reading...
+
+    In the original code, we can consider the :ada:`A2 := I_Var_2'Access`
+    assignment to be safe, as we're not using the :ada:`A1 := A2` assignment
+    there. Since we're confident that no error could ever occur in the
+    :ada:`Inner_Block` due to the assignment to :ada:`A2`, we could replace it
+    with :ada:`A2 := I_Var_2'Unchecked_Access`, so that the compiler accepts
+    it. We discuss more about the unchecked access attribute
+    :ref:`later in this chapter <Adv_Ada_Unchecked_Access>`.
+
+    Alternatively, we could have solved the compilation issue that we see in
+    the :ada:`A2 := I_Var_2'Access` assignment by declaring another access type
+    locally in the :ada:`Inner_Block`:
+
+    .. code-block:: ada
+
+           Inner_Block : declare
+              type Integer_Local_Access is access all Integer;
+
+              I_Var_2 : aliased Integer := 42;
+
+              A2      : Integer_Local_Access;
+           begin
+              A2 := I_Var_2'Access;
+              --   This assignment is fine because
+              --   the Integer_Local_Access type has
+              --   the same lifetime as I_Var_2.
+           end Inner_Block;
+
+    With this change, :ada:`A2` becomes an access object of a type that has the
+    same lifetime as :ada:`I_Var_2`, so that the assignment doesn't violate the
+    rules anymore.
+
+    (Note that in the :ada:`Inner_Block`, we could have simply named the local
+    access type :ada:`Integer_Access` instead of :ada:`Integer_Local_Access`,
+    thereby masking the :ada:`Integer_Access` type of the outer block.)
+
+We discuss the effects of dereferencing dangling references
+:ref:`later in this chapter <Adv_Ada_Dereferencing_Dangling_References>`.
+
+
+Anonymous Access Types and Accessibility Rules
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In general, the :ref:`accessibility rules <Adv_Ada_Accessibility_Rules>` we've
+seen earlier also apply to anonymous access types. However, there are some
+subtle differences, which we discuss in this section.
+
+Let's adapt the
+:ref:`code example from that section <Adv_Ada_Accessibility_Rules_Code_Example>`
+to make use of anonymous access types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Accessibility_Library_Level
+    :class: ada-expect-compile-error
+
+    package Library_Level is
+
+       L0_AO  : access Integer;
+
+       L0_Var : aliased Integer;
+
+    end Library_Level;
+
+    with Library_Level; use Library_Level;
+
+    procedure Show_Library_Level is
+       L1_Var : aliased Integer;
+
+       L1_AO  : access Integer;
+
+       procedure Test is
+          L2_AO  : access Integer;
+
+          L2_Var : aliased Integer;
+       begin
+          L1_AO := L2_Var'Access;
+          --       ^^^^^^
+          --       ILLEGAL: L2 object to
+          --                L1 access object
+
+          L2_AO := L2_Var'Access;
+          --       ^^^^^^
+          --       LEGAL: L2 object to
+          --              L2 access object
+       end Test;
+
+    begin
+       L0_AO := new Integer'(22);
+       --       ^^^^^^^^^^^
+       --       LEGAL: L0 object to
+       --              L0 access object
+
+       L0_AO := L1_Var'Access;
+       --       ^^^^^^
+       --       ILLEGAL: L1 object to
+       --                L0 access object
+
+       L1_AO := L0_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L0 object to
+       --              L1 access object
+
+       L1_AO := L1_Var'Access;
+       --       ^^^^^^
+       --       LEGAL: L1 object to
+       --              L1 access object
+
+       L0_AO := L1_AO;  -- legal!!
+       --       ^^^^^
+       --       LEGAL:   L1 access object to
+       --                L0 access object
+       --
+       --       ILLEGAL: L1 object
+       --                (L1_AO = L1_Var'Access)
+       --                to
+       --                L0 access object
+       --
+       --       This is actually OK at compile time,
+       --       but the accessibility check fails at
+       --       runtime.
+
+       Test;
+    end Show_Library_Level;
+
+As we see in the code, in general, most accessibility rules are the same as the
+ones we've discussed when using named access types. For example, an assignment
+such as :ada:`L0_AO := L1_Var'Access` is illegal because we're trying to assign
+to an access object of less deep level.
+
+However, assignment such as :ada:`L0_AO := L1_AO` are possible now: we don't
+get a type mismatch |mdash| as we did with named access types |mdash| because
+both objects are of anonymous access types. Note that the accessibility level
+cannot be determined at compile time: :ada:`L1_AO` can hold an access value at
+library level (which would make the assignment legal) or at a deeper level.
+Therefore, the compiler introduces an accessibility check here.
+
+However, the accessibility check used in :ada:`L0_AO := L1_AO` fails at runtime
+because the corresponding access value (:ada:`L1_Var'Access`) is of a deeper
+level than :ada:`L0_AO`, which is illegal. (If you comment out the
+:ada:`L1_AO := L1_Var'Access` assignment prior to the :ada:`L0_AO := L1_AO`
+assignment, this accessibility check doesn't fail anymore.)
+
+
+Conversions between Anonymous and Named Access Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous sections, we've discussed accessibility rules for named and
+anonymous access types separately. In this section, we see that the same
+accessibility rules apply when mixing both flavors together and converting
+objects of anonymous to named access types.
+
+Let's adapt parts of the previous
+:ref:`code example <Adv_Ada_Accessibility_Rules_Code_Example>` and add
+anonymous access types to it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Accessibility_Conversions_Named_Anonymous_Access_Types
+    :class: ada-expect-compile-error
+
+    package Library_Level is
+
+       type L0_Integer_Access is access all Integer;
+
+       L0_Var : aliased Integer;
+
+       L0_IA  : L0_Integer_Access;
+       L0_AO  : access Integer;
+
+    end Library_Level;
+
+    with Library_Level; use Library_Level;
+
+    procedure Show_Library_Level is
+       type L1_Integer_Access is access all Integer;
+
+       L1_IA  : L1_Integer_Access;
+       L1_AO  : access Integer;
+
+       L1_Var : aliased Integer;
+
+    begin
+       ---------------------------------------
+       --  From named type to anonymous type
+       ---------------------------------------
+
+       L0_IA := new Integer'(22);
+       L1_IA := new Integer'(42);
+
+       L0_AO := L0_IA;
+       --       ^^^^^
+       --       LEGAL: assignment from
+       --              L0 access object (named type) to
+       --              L0 access object (anonymous type)
+
+       L0_AO := L1_IA;
+       --       ^^^^^
+       --       ILLEGAL: assignment from
+       --                L1 access object (named type)
+       --                to
+       --                L0 access object (anonymous type)
+
+       L1_AO := L0_IA;
+       --       ^^^^^
+       --       LEGAL: assignment from
+       --              L0 access object (named type) to
+       --              L1 access object (anonymous type)
+
+       L1_AO := L1_IA;
+       --       ^^^^^
+       --       LEGAL: assignment from
+       --              L1 access object (named type) to
+       --              L1 access object (anonymous type)
+
+       ---------------------------------------
+       --  From anonymous type to named type
+       ---------------------------------------
+
+       L0_AO := L0_Var'Access;
+       L1_AO := L1_Var'Access;
+
+       L0_IA := L0_Integer_Access (L0_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       LEGAL: conversion / assignment from
+       --              L0 access object (anonymous type) to
+       --              L0 access object (named type)
+
+       L0_IA := L0_Integer_Access (L1_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       ILLEGAL: conversion / assignment from
+       --                L1 access object (anonymous type)
+       --                to
+       --                L0 access object (named type)
+       --                (accessibility check fails)
+
+       L1_IA := L1_Integer_Access (L0_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       LEGAL: conversion / assignment from
+       --              L0 access object (anonymous type) to
+       --              L1 access object (named type)
+
+       L1_IA := L1_Integer_Access (L1_AO);
+       --       ^^^^^^^^^^^^^^^^^
+       --       LEGAL: conversion / assignment from
+       --              L1 access object (anonymous type) to
+       --              L1 access object (named type)
+    end Show_Library_Level;
+
+As we can see in this code example, mixing access objects of named and
+anonymous access types doesn't change the accessibility rules. Again, the rules
+are only violated when the target object in the assignment is *less* deep. This
+is the case in the :ada:`L0_AO := L1_IA` and the
+:ada:`L0_IA := L0_Integer_Access (L1_AO)` assignments. Otherwise, mixing those
+access objects doesn't impose additional hurdles.
+
+
+.. _Adv_Ada_Unchecked_Access:
 
 Unchecked Access
 ----------------
@@ -1684,8 +2669,7 @@ encapsulating access types in well-designed abstract data types.
 
 .. admonition:: In the Ada Reference Manual
 
-   - `13.10 Unchecked Access Value Creation <http://www.ada-auth.org/standards/12rm/html/RM-13-10.html>`_
-
+    - :arm:`Unchecked Access Value Creation <13-10>`
 
 Unchecked Deallocation
 ----------------------
@@ -1860,16 +2844,18 @@ third calls to :ada:`Free` don't have any effect.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.8 Allocators <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-4-8.html>`__
-    - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+    - :arm:`4.8 Allocators <4-8>`
+    - :arm:`13.11.2 Unchecked Storage Deallocation <13-11-2>`
 
 
-Dangling References
-~~~~~~~~~~~~~~~~~~~
+.. _Adv_Ada_Unchecked_Deallocation_Dangling_References:
 
-An access value that points to a non-existent object is called a dangling
-reference. In this section, we discuss the issues of having dangling
-references.
+Unchecked Deallocation and Dangling References
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We've discussed :ref:`dangling references <Adv_Ada_Dangling_References>`
+before. In this section, we discuss how unchecked deallocation can create
+dangling references and the issues of having them in an application.
 
 Let's reuse the last example and introduce :ada:`I_2`, which will point to the
 same object as :ada:`I`:
@@ -1983,6 +2969,8 @@ design strategies later on.
     available! (See PR #752 for details.)
 
 
+.. _Adv_Ada_Dereferencing_Dangling_References:
+
 Dereferencing dangling references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2057,8 +3045,8 @@ unchecked deallocation: avoid creating dangling references!
 
 .. admonition:: In the Ada Reference Manual
 
-   - `13.9.1 Data Validity <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-9-1.html>`__
-   - `13.11.2 Unchecked Storage Deallocation <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-13-11-2.html>`__
+   - :arm:`13.9.1 Data Validity <13-9-1>`
+   - :arm:`13.11.2 Unchecked Storage Deallocation <13-11-2>`
 
 
 Restrictions for :ada:`Ada.Unchecked_Deallocation`
@@ -2261,7 +3249,7 @@ In many, perhaps most cases, :ada:`null` is just a tripping hazard. It's
 a good idea to put in :ada:`not null` when possible. In fact, a good
 argument can be made that :ada:`not null` should be the default, with
 extra syntax required when :ada:`null` is wanted. This is the way
-`Standard ML <https://en.wikipedia.org/wiki/Standard_ML>`_ works, for
+:wikipedia:`Standard ML <Standard_ML>` works, for
 example |mdash| you don't get any special null-like value unless you ask
 for it. Of course, because Ada 2005 needs to be compatible with previous
 versions of the language, :ada:`not null` cannot be the default for Ada.
@@ -2487,7 +3475,7 @@ Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`_
+    - :arm:`3.10 Access Types <3-10>`
 
 
 Selecting subprograms
@@ -3169,6 +4157,16 @@ the :ada:`Valid_Work_Handler` type.
 
 Anonymous Access-To-Subprograms
 -------------------------------
+
+
+.. _Adv_Ada_Accessibility_Rules_Access_To_Subprograms:
+
+Accessibility Rules and Access-To-Subprograms
+---------------------------------------------
+
+.. todo::
+
+    Complete section!
 
 
 ..

@@ -54,10 +54,6 @@ Introduction to GNAT Toolchain
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/courses/GNAT_Toolchain_Intro.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
     :maxdepth: 4
     :caption: Contents:

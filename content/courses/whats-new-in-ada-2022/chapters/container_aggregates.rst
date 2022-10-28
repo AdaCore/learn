@@ -18,7 +18,7 @@ as maps, the aggregate must use named assоciations to provide keys and values.
 For other containers it uses positional assоciations.  Only square brackets
 are allowed.  Here's an example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates_1
 
    pragma Ada_2022;
 
@@ -48,7 +48,7 @@ new :ada:`Aggregate` aspect to enable container aggregates for your
 container and let the compiler know what subprograms to use to construct the
 aggregate:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates_2
 
    pragma Ada_2022;
 
@@ -92,7 +92,7 @@ aggregate:
 
 The equivalent for maps is:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates_3
 
    pragma Ada_2022;
 
@@ -141,7 +141,7 @@ both array and object aggregates present. But we can define conversion
 functions for array and object and get code almost as dense as the same
 code in native JSON.  For example:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Container_Aggregates_4
 
    pragma Ada_2022;
 
@@ -237,8 +237,7 @@ The :ada:`Offices` variable is supposed to contain this value:
 References
 ----------
 
-* `ARM 4.3.5 Container Aggregates`_
+* :aarm22:`ARM 4.3.5 Container Aggregates <4-3-5>`
 * AI12-0212-1_
 
- .. _`ARM 4.3.5 Container Aggregates`: http://www.ada-auth.org/standards/2xaarm/html/AA-4-3-5.html
  .. _AI12-0212-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0212-1.TXT

@@ -689,8 +689,7 @@ A slice of an array is of the same type as the array, but has a different
 subtype, constrained by the bounds of the slice.
 
 .. attention::
-    Ada has `multidimensional arrays
-    <http://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-6.html>`_,
+    Ada has :arm:`multidimensional arrays <3-6>`,
     which are not covered in this course. Slices will only work on one
     dimensional arrays.
 

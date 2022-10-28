@@ -329,7 +329,7 @@ configured at runtime, you can use the subprograms from the
 Details about the :ada:`Ada.Interrupts` package are out of scope for this
 course. We'll discuss them in a separate, more advanced course in the future.
 You can find some information about it in the
-`Interrupts appendix of the Ada Reference Manual <https://www.adaic.org/resources/add_content/standards/12aarm/html/AA-C-3-2.html>`_.
+:aarm:`Interrupts appendix of the Ada Reference Manual <C-3-2>`.
 
 .. todo::
 
@@ -430,7 +430,7 @@ In this example, we are defining a 32-bit fixed-point data type for our
 normalized range. When running the application, we notice that the upper
 bound is close to one, but not exactly one. This is a typical effect of
 fixed-point data types |mdash| you can find more details in this discussion
-about the `Q format <https://en.wikipedia.org/wiki/Q_(number_format)>`_.
+about the :wikipedia:`Q format <Q_(number_format)>`.
 We may also rewrite this code with an exact type definition:
 
 [Ada]
@@ -567,14 +567,14 @@ start by discussing volatile objects.
 Volatile
 ~~~~~~~~
 
-A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
+A :wikipedia:`volatile <Volatile_(computer_programming)>`
 object can be described as an object in memory whose value may change between
 two consecutive memory accesses of a process A |mdash| even if process A itself
 hasn't changed the value. This situation may arise when an object in memory is
 being shared by multiple threads. For example, a thread *B* may modify the
 value of that object between two read accesses of a thread *A*. Another typical
 example is the one of
-`memory-mapped I/O <https://en.wikipedia.org/wiki/Memory-mapped_I/O>`_, where
+:wikipedia:`memory-mapped I/O <Memory-mapped_I/O>`, where
 the hardware might be constantly changing the value of an object in memory.
 
 Because the value of a volatile object may be constantly changing, a compiler

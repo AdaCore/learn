@@ -52,10 +52,6 @@ Ada for the C++ or Java Developer
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/courses/Ada_For_The_CPP_Java_Developer.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
     :maxdepth: 4
     :caption: Contents:

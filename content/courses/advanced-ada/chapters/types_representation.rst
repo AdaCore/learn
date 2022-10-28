@@ -22,9 +22,9 @@ To read a thorough overview on this topic, please refer to the
 
 .. admonition:: In the Ada Reference Manual
 
-    - `13.2 Packed Types <http://www.ada-auth.org/standards/12rm/html/RM-13-2.html>`_
-    - `13.3 Operational and Representation Attributes <http://www.ada-auth.org/standards/12rm/html/RM-13-3.html>`_
-    - `13.5.3 Bit Ordering <http://www.ada-auth.org/standards/12rm/html/RM-13-5-3.html>`_
+    - :arm:`13.2 Packed Types <13-2>`
+    - :arm:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm:`13.5.3 Bit Ordering <13-5-3>`
 
 Sizes
 ~~~~~
@@ -974,7 +974,7 @@ bits span over four storage units (positions #0 .. #3).
 
 .. admonition:: In the Ada Reference Manual
 
-    - `13.5.1 Record Representation Clauses <http://www.ada-auth.org/standards/12rm/html/RM-13-5-1.html>`_
+    - :arm:`13.5.1 Record Representation Clauses <13-5-1>`
 
 Storage Place Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1056,7 +1056,7 @@ seen above.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `13.5.2 Storage Place Attributes <http://www.ada-auth.org/standards/12rm/html/RM-13-5-2.html>`_
+    - :arm:`13.5.2 Storage Place Attributes <13-5-2>`
 
 Using Representation Clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1784,7 +1784,7 @@ when we know that information stored in memory might be corrupted.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `13.9.2 The Valid Attribute <http://www.ada-auth.org/standards/12rm/html/RM-13-9-2.html>`_
+    - :arm:`13.9.2 The Valid Attribute <13-9-2>`
 
 Unchecked Union
 ---------------
@@ -2027,7 +2027,7 @@ solving very specific problems when doing low-level programming.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `B.3.3 Unchecked Union Types <http://www.ada-auth.org/standards/12rm/html/RM-B-3-3.html>`_
+    - :arm:`B.3.3 Unchecked Union Types <B-3-3>`
 
 Shared variable control
 -----------------------
@@ -2037,19 +2037,19 @@ start by discussing volatile objects.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `C.6 Shared Variable Control <http://www.ada-auth.org/standards/12rm/html/RM-C-6.html>`_
+    - :arm:`C.6 Shared Variable Control <C-6>`
 
 Volatile
 ~~~~~~~~
 
-A `volatile <https://en.wikipedia.org/wiki/Volatile_(computer_programming)>`_
+A :wikipedia:`volatile <Volatile_(computer_programming)>`
 object can be described as an object in memory whose value may change between
 two consecutive memory accesses of a process A |mdash| even if process A itself
 hasn't changed the value. This situation may arise when an object in memory is
 being shared by multiple threads. For example, a thread *B* may modify the
 value of that object between two read accesses of a thread *A*. Another typical
 example is the one of
-`memory-mapped I/O <https://en.wikipedia.org/wiki/Memory-mapped_I/O>`_, where
+:wikipedia:`memory-mapped I/O <Memory-mapped_I/O>`, where
 the hardware might be constantly changing the value of an object in memory.
 
 Because the value of a volatile object may be constantly changing, a compiler
@@ -2468,21 +2468,28 @@ these array declarations are equivalent:
 
     end Shared_Var_Types;
 
-..
-    REMOVED FROM THIS SECTION, TO BE RE-EVALUATED:
 
-    .. admonition:: Relevant topics
+:ada:`Full_Access_Only`
+~~~~~~~~~~~~~~~~~~~~~~~
 
-        - **Briefly** discuss :ada:`Full_Access_Only`
-        - `The Package System.Atomic_Operations <http://www.ada-auth.org/standards/2xrm/html/RM-C-6-1.html>`_
+.. admonition:: Relevant topics
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+   - **Briefly** discuss :ada:`Full_Access_Only`
+   - :arm22:`The Package System.Atomic_Operations <C-6-1>`
 
-    Discarding names
-    ----------------
+.. todo::
 
-    .. admonition:: Relevant topics
+    Add to previous section!
 
-        - **Briefly** discuss discarding name mentioned in
-        `Aspect Discard_Names <http://www.ada-auth.org/standards/2xrm/html/RM-C-5.html>`_
+
+Discarding names
+----------------
+
+.. admonition:: Relevant topics
+
+   - **Briefly** discuss discarding name mentioned in
+     :arm22:`Aspect Discard_Names <C-5>`
+
+.. todo::
+
+    Complete section!

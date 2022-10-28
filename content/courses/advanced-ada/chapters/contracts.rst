@@ -16,7 +16,7 @@ Default initial conditions
 
 .. admonition:: Relevant topics
 
-    - `Default Initial Conditions <http://www.ada-auth.org/standards/2xrm/html/RM-7-3-3.html>`_
+    - :arm:`Default Initial Conditions <7-3-3>`
 
 .. todo::
 
@@ -29,22 +29,23 @@ Entry index attribute
 .. admonition:: Relevant topics
 
     - :ada:`E'Index` mentioned in
-      `Preconditions and Postconditions <http://www.ada-auth.org/standards/2xrm/html/RM-6-1-1.html>`_
+      :arm:`Preconditions and Postconditions <6-1-1>`
 
 .. todo::
 
     Complete section!
 
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+Global Aspect Definition
+------------------------
 
-    Global Aspect Definition
-    ------------------------
+.. admonition:: Relevant topics
 
-    .. admonition:: Relevant topics
+    - :arm22:`The Global and Global'Class Aspects <6-1-2.html>`
 
-        - `The Global and Global'Class Aspects <http://www.ada-auth.org/standards/2xrm/html/RM-6-1-2.html>`_
+.. todo::
+
+    Complete section!
 
 
 Predicate failure
@@ -53,7 +54,7 @@ Predicate failure
 .. admonition:: Relevant topics
 
     - :ada:`Predicate_Failure` mentioned in
-      `Subtype Predicates <http://www.ada-auth.org/standards/2xrm/html/RM-3-2-4.html>`_
+      :arm:`Subtype Predicates <3-2-4>`
 
 .. todo::
 

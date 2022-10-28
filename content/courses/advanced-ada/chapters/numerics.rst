@@ -25,7 +25,7 @@ and :ada:`Mod`. We also discuss operations on modular types.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.5.4 Integer Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-4.html>`_
+    - :arm:`3.5.4 Integer Types <3-5-4>`
 
 
 :ada:`Modulus` Attribute
@@ -599,8 +599,8 @@ In this section, we discuss various attributes related to floating-point types.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.5.8 Operations of Floating Point Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-8.html>`_
-    - `A.5.3 Attributes of Floating Point Types <http://www.ada-auth.org/standards/12rm/html/RM-A-5-3.html>`_
+    - :arm:`3.5.8 Operations of Floating Point Types <3-5-8>`
+    - :arm:`A.5.3 Attributes of Floating Point Types <A-5-3>`
 
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -732,8 +732,7 @@ In this section, we discuss attributes that return :ada:`Boolean` values
 indicating whether a feature is available or not in the target architecture:
 
 - :ada:`'Denorm` is an attribute that indicates whether the target architecture
-  uses
-  `denormalized numbers <https://en.wikipedia.org/wiki/Subnormal_number>`_.
+  uses :wikipedia:`denormalized numbers <Subnormal_number>`.
 
 - :ada:`'Signed_Zeros` is an attribute that indicates whether the type uses a
   sign for zero values, so it can represent both -0.0 and 0.0.
@@ -1100,7 +1099,7 @@ defines it:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `G.2.1 Model of Floating Point Arithmetic <http://www.ada-auth.org/standards/12rm/html/RM-G-2-1.html>`_
+    - :arm:`G.2.1 Model of Floating Point Arithmetic <G-2-1>`
 
 Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1148,7 +1147,7 @@ Attributes: :ada:`'Model_Epsilon` and :ada:`Model_Small`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`'Model_Epsilon` is an attribute that returns the
-`epsilon <https://en.wikipedia.org/wiki/Machine_epsilon>`_ of the underlying
+:wikipedia:`epsilon <Machine_epsilon>` of the underlying
 numeric model. For example, for the :ada:`Float` type, the :ada:`Model_Epsilon`
 corresponds to 2\ :sup:`-23` on a typical desktop PC. (Here, 23 comes from the
 mantissa, 24 bits, minus the sign bit.)
@@ -1256,8 +1255,8 @@ fixed-point types.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.5.10 Operations of Fixed Point Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-10.html>`_
-    - `A.5.4 Attributes of Fixed Point Types <http://www.ada-auth.org/standards/12rm/html/RM-A-5-4.html>`_
+    - :arm:`3.5.10 Operations of Fixed Point Types <3-5-10>`
+    - :arm:`A.5.4 Attributes of Fixed Point Types <A-5-4>`
 
 Attributes of fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1643,9 +1642,9 @@ Big Numbers
 
 .. admonition:: Relevant topics
 
-    - `Big Numbers <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-5.html>`_
-    - `Big Integers <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-6.html>`_
-    - `Big Reals <http://www.ada-auth.org/standards/2xrm/html/RM-A-5-7.html>`_
+    - :arm22:`Big Numbers <A-5-5>`
+    - :arm22:`Big Integers <A-5-6>`
+    - :arm22:`Big Reals <A-5-7>`
 
 .. todo::
 

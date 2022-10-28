@@ -39,7 +39,8 @@ Then we call it as a normal Ada function:
    printf_double (Interfaces.C.To_C ("Pi=%f"), Ada.Numerics.π);
 
 Unfortunately, doing it this way doesn't always work because some
-`ABI`_\ s use different calling conventions for variadic functions. For
+:wikipedia:`ABI <Application_binary_interface>`\ s use different calling
+conventions for variadic functions. For
 example, the `AMD64 ABI`_ specifies:
 
  * ``%rax`` |mdash| with variable arguments passes information about the number
@@ -121,12 +122,10 @@ Here is the complete code snippet:
 References
 ----------
 
-* `ARM B.3 Interfacing with C and C++`_
+* :aarm22:`ARM B.3 Interfacing with C and C++ <B-3>`
 * AI12-0028-1_
 
-.. _`ARM B.3 Interfacing with C and C++`: http://www.ada-auth.org/standards/2xaarm/html/AA-B-3.html
 .. _AI12-0028-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0028-1.TXT
 
 .. _`variadic functions`: https://en.cppreference.com/w/c/variadic
-.. _`ABI`: https://en.wikipedia.org/wiki/Application_binary_interface
 .. _`AMD64 ABI`: https://software.intel.com/sites/default/files/article/402129/mpx-linux64-abi.pdf

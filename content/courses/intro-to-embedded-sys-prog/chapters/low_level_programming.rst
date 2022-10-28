@@ -775,7 +775,7 @@ treated as a simple signed integer. One way to do that is to express an
 location as a distinct object of a distinct type, thus overlaying one
 object over the other. Doing so allows you to interact with that memory
 location in more than one way: one way per type, specifically. This is
-known as `type punning <https://en.wikipedia.org/wiki/Type_punning>`_ in
+known as :wikipedia:`type punning <Type_punning>` in
 computer programming. There are other ways to achieve that effect as
 well, but realize that you're circumventing the static strong typing
 used by Ada to protect us from ourselves and from others. Use it with

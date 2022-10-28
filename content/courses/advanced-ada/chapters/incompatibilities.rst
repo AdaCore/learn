@@ -6,7 +6,7 @@ Incompatibilities between Ada standards
 .. include:: ../../global.txt
 
 ..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    REMOVED! TO BE RE-EVALUATED IN 2025:
 
     Incompatibilities between Ada 83 and Ada 95
     -------------------------------------------

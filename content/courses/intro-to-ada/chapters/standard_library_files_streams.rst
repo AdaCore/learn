@@ -27,9 +27,9 @@ This table presents a summary of the features we've just seen:
 +----------------+------------+------------+----------------+
 | Sequential I/O | binary     |            | single type    |
 +----------------+------------+------------+----------------+
-| Direct I/O     | binary     | X          | single type    |
+| Direct I/O     | binary     | |check|    | single type    |
 +----------------+------------+------------+----------------+
-| Stream I/O     | binary     | X          | multiple types |
+| Stream I/O     | binary     | |check|    | multiple types |
 +----------------+------------+------------+----------------+
 
 In the following sections, we discuss details about these I/O approaches.

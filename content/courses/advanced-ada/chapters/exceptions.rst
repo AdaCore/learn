@@ -79,7 +79,7 @@ roughly corresponds to this:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `11.4.2 Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/12rm/html/RM-11-4-2.html>`_
+    - :arm:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
 
 
 Assertion policies
@@ -226,14 +226,23 @@ assertion policy (:ada:`Assertion_Policy (Assert => Ignore)`). For example:
 Here, the :ada:`pragma Assert` is ignored due to the assertion policy. However,
 the call to :ada:`Assert` is not ignored.
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+.. admonition:: In the Ada Reference Manual
 
-    :ada:`Default_Initial_Condition` policy
+    - :arm:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+
+
+:ada:`Default_Initial_Condition` policy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. admonition:: In the Ada Reference Manual
 
-    - `11.4.2 Pragmas Assert and Assertion_Policy <http://www.ada-auth.org/standards/12rm/html/RM-11-4-2.html>`_
+    - :arm22:`7.3.3 Default Initial Conditions <11-4-2>`
+    - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+
+.. todo::
+
+    Complete section!
+
 
 Checks and exceptions
 ---------------------
@@ -271,14 +280,24 @@ This table shows all language-defined checks and the associated exceptions:
 In addition, we can use :ada:`All_Checks` to refer to all those checks above at
 once.
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
-
-    :ada:`Program_Error_Check` and :ada:`Tasking_Check`
-
 Let's discuss each check and see code examples where those checks are
 performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
+
+
+:ada:`Program_Error_Check` and :ada:`Tasking_Check`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`11.5 Suppressing Checks <11-5>`
+
+.. todo::
+
+   - Add to previous section:
+      - :ada:`Program_Error_Check`
+      - :ada:`Tasking_Check`
+
 
 .. _Adv_Ada_Access_Check:
 
@@ -590,15 +609,14 @@ Since the tags don't match, the tag check fails in the assignment of :ada:`A1`
 to :ada:`A2`.
 
 
+.. _Adv_Ada_Accessibility_Check:
+
 Accessibility Check
 ~~~~~~~~~~~~~~~~~~~
 
 The accessibility check verifies that the accessibility level of an entity
-matches the expected level.
-
-.. todo::
-
-    Add link to "Accessibility levels" section once it's available.
+matches the expected level. We discuss accessibility levels
+:ref:`in a later chapter <Adv_Ada_Accessibility_Levels_Intro>`.
 
 Let's look at an example that mixes access types and anonymous access types.
 Here, we use an anonymous access type in the declaration of :ada:`A1` and a
@@ -804,7 +822,7 @@ checks fails and raises a :ada:`Storage_Error` exception.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `11.5 Suppressing Checks <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_
+    - :arm:`11.5 Suppressing Checks <11-5>`
 
 
 ``Ada.Exceptions`` package
@@ -848,7 +866,7 @@ that raises the exception, as in the following code:
 
 .. admonition:: In the Ada Reference Manual
 
-    - `11.4.1 The Package Exceptions <http://www.ada-auth.org/standards/12rm/html/RM-11-4-1.html>`_
+    - :arm:`11.4.1 The Package Exceptions <11-4-1>`
 
 
 Retrieving exception information
@@ -1290,7 +1308,7 @@ package.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `8.5.2 Exception Renaming Declarations <http://www.ada-auth.org/standards/12rm/html/RM-8-5-2.html>`_
+    - :arm:`8.5.2 Exception Renaming Declarations <8-5-2>`
 
 
 Out and Uninitialized
@@ -1451,8 +1469,7 @@ In the case of direct assignments to global variables, the behavior in the
 presence of exceptions is somewhat different. For predefined exceptions, most
 notably :ada:`Constraint_Error`, the optimization permissions allow some
 flexibility in whether a global variable is or is not updated when an exception
-occurs (see
-`Ada RM 11.6 <http://www.ada-auth.org/standards/12rm/html/RM-11-6.html>`_). For
+occurs (see :arm:`Ada RM 11.6 <11-6>`). For
 instance, the following code makes an incorrect assumption:
 
 .. code-block:: none
@@ -1467,7 +1484,7 @@ program are incorrect code which should be fixed.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `11.6 Exceptions and Optimization <http://www.ada-auth.org/standards/12rm/html/RM-11-6.html>`_
+    - :arm:`11.6 Exceptions and Optimization <11-6>`
 
 
 Suppressing checks
@@ -1681,4 +1698,4 @@ the call to this function, which raises a :ada:`Constraint_Error` exception.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `11.5 Suppressing Checks <http://www.ada-auth.org/standards/12rm/html/RM-11-5.html>`_
+    - :arm:`11.5 Suppressing Checks <11-5>`

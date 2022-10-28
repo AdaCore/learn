@@ -545,7 +545,7 @@ Renaming
 Previously, we've mentioned that
 :ref:`subprograms can be renamed <Intro_Ada_Subprogram_Renaming>`. We can rename
 packages, too. Again, we use the :ada:`renames` keyword for that. The following
-example renames the :ada:`Ada.Text_IO` package as :ada:`T_IO`:
+example renames the :ada:`Ada.Text_IO` package as :ada:`TIO`:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Rename_Text_IO
 

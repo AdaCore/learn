@@ -81,8 +81,7 @@ aggregates could be written :ref:`this way <Whats_New_Ada_2022_Array_Aggregates>
 References
 ----------
 
-* `ARM 4.10 Image Attributes`_
+* :aarm22:`ARM 4.10 Image Attributes <4-10>`
 * AI12-0020-1_
 
- .. _`ARM 4.10 Image Attributes`: http://www.ada-auth.org/standards/2xaarm/html/AA-4-10.html
  .. _AI12-0020-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/ai12-0020-1.txt

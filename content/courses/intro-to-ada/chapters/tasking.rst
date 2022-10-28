@@ -4,19 +4,19 @@ Tasking
 .. include:: ../../global.txt
 
 Tasks and protected objects allow the implementation of concurrency in
-Ada. The following sections explain these concepts in more details.
+Ada. The following sections explain these concepts in more detail.
 
 Tasks
 -----
 
 A task can be thought as an application that runs *concurrently* with the
-main application. In other programming languages, a task can be called a
-`thread <https://en.wikipedia.org/wiki/Thread_(computing)>`_, and tasking
-can be called `multithreading
-<https://en.wikipedia.org/wiki/Thread_(computing)#Multithreading>`_.
+main application. In other programming languages, a task might be called a
+:wikipedia:`thread <Thread_(computing)>`, and tasking
+might be called
+:wikipedia:`multithreading <Thread_(computing)#Multithreading>`.
 
 Tasks may synchronize with the main application but may also process
-information completely independent from the main application. Here we show
+information completely independently from the main application. Here we show
 how this is accomplished.
 
 Simple task
@@ -47,16 +47,19 @@ that both calls to :ada:`Put_Line` are performed.
 
 Note that:
 
-- The main application is itself a task (the main task).
+- The main application is itself a task (the main or “environment” task).
 
   - In this example, the subprogram :ada:`Show_Simple_Task` is the main task of
     the application.
 
 - Task :ada:`T` is a subtask.
 
-  - Each subtask has a master task.
+  - Each subtask has a master, which represents the program construct in which
+    the subtask is declared. In this case, the main subprogram
+    :ada:`Show_Simple_Task` is :ada:`T` \'s master.
 
-  - Therefore the main task is also the master task of task :ada:`T`.
+  - The master construct is executed by some enclosing task, which we will
+    refer to as the "master task" of the subtask.
 
 - The number of tasks is not limited to one: we could include a
   task :ada:`T2` in the example above.
@@ -89,13 +92,14 @@ Note that:
 Simple synchronization
 ~~~~~~~~~~~~~~~~~~~~~~
 
-As we've just seen, as soon as the main task starts, its subtasks also
-start automatically. The main task continues its processing until it has
+As we've just seen, as soon as the master construct reaches its “begin”,
+its subtasks also
+start automatically. The master continues its processing until it has
 nothing more to do. At that point, however, it will not terminate. Instead,
-the task waits until its subtasks have finished before it allows itself to
-terminate. In other words, this waiting process provides synchronization
-between the main task and its subtasks.  After this synchronization, the
-main task will terminate. For example:
+the master waits until its subtasks have finished before it allows itself to
+complete. In other words, this waiting process provides synchronization
+between the master task and its subtasks.  After this synchronization, the
+master construct  will complete. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Sync
 
@@ -116,9 +120,9 @@ main task will terminate. For example:
     end Show_Simple_Sync;
 
 The same mechanism is used for other subprograms that contain subtasks: the
-subprogram's master task will wait for its subtasks to finish.  So this
-mechanism is not limited to the main application and also applies to any
-subprogram called by the main application or its subprograms.
+subprogram execution will wait for its subtasks to finish.  So this
+mechanism is not limited to the main subprogram and also applies to any
+subprogram called by the main subprogram, directly or indirectly.
 
 Synchronization also occurs if we move the task to a separate package. In
 the example below, we declare a task :ada:`T` in the package
@@ -147,7 +151,7 @@ This is the corresponding package body:
     end Simple_Sync_Pkg;
 
 Because the package is :ada:`with`'ed by the main procedure, the task :ada:`T`
-defined in the package is part of the main task. For example:
+defined in the package will become a subtask of the main task. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Simple_Sync_Pkg
 
@@ -160,14 +164,15 @@ defined in the package is part of the main task. For example:
        --  have terminated
     end Test_Simple_Sync_Pkg;
 
-Again, as soon as the main task reaches its end, it synchronizes with task
-:ada:`T` from :ada:`Simple_Sync_Pkg` before terminating.
+As soon as the main subprogram returns, the main task synchronizes with any
+subtasks spawned by packages
+:ada:`T` from :ada:`Simple_Sync_Pkg` before finally terminating.
 
 Delay
 ~~~~~
 
 We can introduce a delay by using the keyword :ada:`delay`. This puts the
-task to sleep for the length of time (in seconds) specified in the delay
+current task to sleep for the length of time (in seconds) specified in the delay
 statement. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Delay
@@ -195,27 +200,28 @@ In this example, we're making the task :ada:`T` wait one second after each
 time it displays the "hello" message. In addition, the main task is waiting
 1.5 seconds before displaying its own "hello" message
 
-Synchronization: rendez-vous
+Synchronization: rendezvous
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The only type of synchronization we've seen so far is the one that happens
-automatically at the end of the main task. You can also define custom
+automatically at the end of a master construct with a subtask.
+You can also define custom
 synchronization points using the keyword :ada:`entry`. An *entry* can be
-viewed as a special kind of subprogram, which is called by the master task
+viewed as a special kind of subprogram, which is called by another task
 using a similar syntax, as we will see later.
 
-In the task definition, you define which part of the task will accept the
+In the task body definition, you define which part of the task will accept the
 entries by using the keyword :ada:`accept`. A task proceeds until it
-reaches an :ada:`accept` statement and then waits for the master task to
+reaches an :ada:`accept` statement and then waits for some other task to
 synchronize with it. Specifically,
 
-- The subtask waits at that point (in the :ada:`accept` statement),
+- The task with the entry waits at that point (in the :ada:`accept` statement),
   ready to accept a call to the corresponding entry from the master task.
 
-- The master task calls the task entry, in a manner similar to a procedure
-  call, to synchronize with the subtask.
+- The other task calls the task entry, in a manner similar to a procedure
+  call, to synchronize with the entry.
 
-This synchronization between tasks is called *rendez-vous*. Let's see an
+This synchronization between tasks is called a *rendezvous*. Let's see an
 example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous
@@ -246,10 +252,11 @@ example:
 
 In this example, we declare an entry :ada:`Start` for task :ada:`T`.  In the task
 body, we implement this entry using :ada:`accept Start`. When task :ada:`T`
-reaches this point, it waits for the master task. This synchronization
-occurs in the :ada:`T.Start` statement. After the synchronization completes,
+reaches this point, it waits for some other task to call its entry.
+This synchronization
+occurs in the :ada:`T.Start` statement. After the rendezvous completes,
 the main task and task :ada:`T` again run concurrently until they synchronize
-one final time when the main task finishes.
+one final time when the main subprogram :ada:`Show_Rendezvous` finishes.
 
 An entry may be used to perform more than a simple task synchronization: it
 also may perform multiple statements during the time both tasks are
@@ -263,11 +270,11 @@ Select loop
 There's no limit to the number of times an entry can be accepted. We could
 even create an infinite loop in the task and accept calls to the same entry
 over and over again. An infinite loop, however, prevents the subtask from
-finishing, so it blocks the master task when it reaches the end of its
+finishing, so it blocks its master task when it reaches the end of its
 processing. Therefore, a loop containing :ada:`accept` statements in a task
-body is normally used in conjunction with a :ada:`select ... or terminate`
-statement. In simple terms, this statement allows the master task to
-automatically terminate the subtask when the master task finishes.  For
+body can be used in conjunction with a :ada:`select ... or terminate`
+statement. In simple terms, this statement allows its master task to
+automatically terminate the subtask when the master construct reaches its end.  For
 example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous_Loop
@@ -329,15 +336,17 @@ observations:
       main task waits for the block to complete.
 
 - The main task is calling the :ada:`Increment` entry multiple times in the
-  loop from :ada:`1 .. 4`. It is also calling the :ada:`Reset` entry before and
-  the loop.
+  loop from :ada:`1 .. 4`. It is also calling the :ada:`Reset` entry before
+  the second loop.
 
     - Because task :ada:`T` contains an infinite loop, it always accepts calls
       to the :ada:`Reset` and :ada:`Increment` entries.
 
-    - When the main task finishes, it checks the status of the :ada:`T`
+    - When the master construct of the subtask (the :ada:`Show_Rendezvous_Loop`
+      subprogram) completes, it checks the status of the :ada:`T`
       task. Even though task :ada:`T` could accept new calls to the
-      :ada:`Reset` or :ada:`Increment` entries, the master task is allowed to
+      :ada:`Reset` or :ada:`Increment` entries, the master construct is
+      allowed to
       terminate task :ada:`T` due to the :ada:`or terminate` part of the
       :ada:`select` statement.
 
@@ -515,12 +524,13 @@ in a coordinated way, we use *protected objects*.
 Protected objects encapsulate data and provide access to that data by means
 of *protected operations*, which may be subprograms or protected
 entries. Using protected objects ensures that data is not corrupted by race
-conditions or other simultaneous access.
+conditions or other concurrent access.
 
 .. admonition:: Important
 
-    Protected objects can be implemented using Ada tasks. In fact, this was
-    the *only* possible way of implementing them in Ada 83 (the first
+    Objects can be protected from concurrent access using Ada tasks.
+    In fact, this was the *only* way of protecting objects from concurrent
+    access in Ada 83 (the first
     version of the Ada language). However, the use of protected objects is
     much simpler than using similar mechanisms implemented using only
     tasks. Therefore, you should use protected objects when your main goal
@@ -679,7 +689,7 @@ Task types
 A task type is a generalization of a task. The declaration is similar to
 simple tasks: you replace :ada:`task` with :ada:`task type`. The
 difference between simple tasks and task types is that task types don't
-create actual tasks that automatically start. Instead, a task declaration
+create actual tasks that automatically start. Instead, a task object declaration
 is needed. This is exactly the way normal variables and types work:
 objects are only created by variable definitions, not type definitions.
 
@@ -778,14 +788,14 @@ We can reuse a previous example and rewrite it to use a protected type:
 
     procedure Show_Protected_Object_Type is
 
-       protected type Obj_Type is
+       protected type P_Obj_Type is
           procedure Set (V : Integer);
           function Get return Integer;
        private
           Local : Integer := 0;
-       end Obj_Type;
+       end P_Obj_Type;
 
-       protected body Obj_Type is
+       protected body P_Obj_Type is
           procedure Set (V : Integer) is
           begin
              Local := V;
@@ -795,9 +805,9 @@ We can reuse a previous example and rewrite it to use a protected type:
           begin
              return Local;
           end Get;
-       end Obj_Type;
+       end P_Obj_Type;
 
-       Obj : Obj_Type;
+       Obj : P_Obj_Type;
     begin
        Obj.Set (5);
        Put_Line ("Number is: "
@@ -805,7 +815,7 @@ We can reuse a previous example and rewrite it to use a protected type:
     end Show_Protected_Object_Type;
 
 In this example, instead of directly defining the protected object
-:ada:`Obj`, we first define a protected type :ada:`Obj_Type` and then
+:ada:`Obj`, we first define a protected type :ada:`P_Obj_Type` and then
 declare :ada:`Obj` as an object of that protected type. Note that the
 main application hasn't changed: we still use :ada:`Obj.Set` and
 :ada:`Obj.Get` to access the protected object, just like in the original

@@ -33,8 +33,7 @@ The timer is almost certainly memory-mapped, so querying the timer
 amounts to a memory access.
 
 In some cases, we even offload communication with these external devices
-onto other external devices. For example, the
-`I2C <https://en.wikipedia.org/wiki/I%C2%B2C>`_
+onto other external devices. For example, the :wikipedia:`I2C <I%C2%B2C>`
 (Inter-Integrated Circuit) protocol is a popular two-wire serial protocol for
 communicating between low-level hardware devices. Individual bits of the
 data are sent by driving the data line high and low in time with the
@@ -50,8 +49,8 @@ destination address. The rest is done in the transceiver hardware.
 Receiving data is of course also possible. I2C transceivers are
 ubiquitous because the protocol is so common among device
 implementations. A
-`USART <https://en.wikipedia.org/wiki/Universal_synchronous_and_asynchronous_receiver-transmitter>`_
-/ `UART <https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter>`_
+:wikipedia:`USART <Universal_synchronous_and_asynchronous_receiver-transmitter>`
+/ :wikipedia:`UART <Universal_asynchronous_receiver-transmitter>`
 is a similar example.
 
 Having offloaded some of the work, the application must have some way to
@@ -106,7 +105,7 @@ Now, ideally in the USART case, we would further offload the work from
 the internal processor. Instead of having the processor copy each
 arriving character from the USART into an application buffer, we would
 have another external hardware device |mdash| a
-`direct memory access (DMA) <https://en.wikipedia.org/wiki/Direct_memory_access>`_
+:wikipedia:`direct memory access (DMA) <Direct_memory_access>`
 device |mdash| copy each arriving character from the USART to the
 buffer. A DMA device copies data from one location to another, in this
 case from the address of the USART's one-character memory-mapped
@@ -125,7 +124,7 @@ response can be sufficiently and predictably quick.
 Fortunately, computers already have such a mechanism: interrupts. The
 details vary considerably with the hardware architecture, but the
 overall idea is independent of the
-`ISA <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_: an
+:wikipedia:`ISA <Instruction_set_architecture>`: an
 external event can trigger a
 response from the processor by becoming "active." The current state of
 the application is temporarily stored, and then an interrupt response

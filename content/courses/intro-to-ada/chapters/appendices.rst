@@ -174,8 +174,8 @@ Many of the examples above can be used for formal indefinite types:
 |                                                              | type,                   |
 | **Format**: :ada:`type T (<>) is tagged;`                    | indefinite or definite  |
 +--------------------------------------------------------------+-------------------------+
-| Indefinite tagged private type                               | Any concrete, limited   |
-|                                                              | tagged type,            |
+| Indefinite tagged private type                               | Any concrete,           |
+|                                                              | nonlimited tagged type, |
 | **Format**: :ada:`type T (<>) is tagged private;`            | indefinite or definite  |
 +--------------------------------------------------------------+-------------------------+
 | Indefinite tagged limited private type                       | Any concrete tagged     |
@@ -239,8 +239,9 @@ including their versions (standard, bounded, unbounded, indefinite):
 | Queue     | ``Priority Queues``                |     |    Y    |     Y     |            |
 +-----------+------------------------------------+-----+---------+-----------+------------+
 
-NOTE: to get the correct container name, replace the whitespace by ``_`` in the
-names above. (For example, ``Hashed Maps`` becomes :ada:`Hashed_Maps`.)
+.. note::
+    To get the correct container name, replace the whitespace by ``_`` in the
+    names above. (For example, ``Hashed Maps`` becomes :ada:`Hashed_Maps`.)
 
 The following table presents the prefixing applied to the container
 name that depends on its version. As indicated in the table, the

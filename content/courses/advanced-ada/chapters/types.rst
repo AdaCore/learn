@@ -53,7 +53,7 @@ course.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.5 Scalar types <http://www.ada-auth.org/standards/12rm/html/RM-3-5.html>`_
+    - :arm:`3.5 Scalar types <3-5>`
 
 Ranges
 ~~~~~~
@@ -511,7 +511,7 @@ enumeration renaming, enumeration overloading and representation clauses.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.5.1 Enumeration Types <http://www.ada-auth.org/standards/12rm/html/RM-3-5-1.html>`_
+    - :arm:`3.5.1 Enumeration Types <3-5-1>`
 
 Enumerations as functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1149,6 +1149,10 @@ for :ada:`A_Plus`.
 We'll see later how definite and indefinite types apply to
 :ref:`formal parameters <Adv_Ada_Formal_Definite_Indefinite_Subtypes>`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.3 Objects and Named Numbers <3-3>`
+
 Constrained Attribute
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -1298,6 +1302,11 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 :ada:`Reset`, the :ada:`Extended` discriminant of :ada:`R1` changes from
 :ada:`False` to :ada:`True`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.7.2 Operations of Discriminated Types <3-7-2>`
+
+
 .. _Adv_Ada_Incomplete_Types:
 
 Incomplete types
@@ -1386,6 +1395,11 @@ Incomplete types are useful to declare mutually dependent types, as we'll
 see in the next section. Also, we can also have formal incomplete types, as
 we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.10.1 Incomplete Type Declarations <3-10-1>`
+
+
 .. _Adv_Ada_Mutually_Dependent_Types:
 
 Mutually dependent types
@@ -1416,10 +1430,9 @@ declaring an incomplete type (:ada:`type T2;`) before the declaration of
 :ada:`T1`. This, however, doesn't solve all the problems in the code: the
 compiler still doesn't know the size of :ada:`T2`, so we cannot create a
 component of this type. We could, instead, declare an access type and use it
-here, or simply use an anonymous access to :ada:`T2`. By doing this, even
-though the compiler doesn't know the size of :ada:`T2`, it knows the
-size of an access type designating :ada:`T2`, so the record component
-can be of such an access type (anonymous or not).
+here. By doing this, even though the compiler doesn't know the size of
+:ada:`T2`, it knows the size of an access type designating :ada:`T2`, so the
+record component can be of such an access type.
 
 To summarize, in order to solve the compilation error above, we need to:
 
@@ -1435,9 +1448,10 @@ This is the corrected version:
     package Mutually_Dependent is
 
        type T2;
+       type T2_Access is access T2;
 
        type T1 is record
-          B : access T2;
+          B : T2_Access;
        end record;
 
        type T2 is record
@@ -1455,17 +1469,28 @@ code:
     package Mutually_Dependent is
 
        type T1;
+       type T1_Access is access T1;
+
        type T2;
+       type T2_Access is access T2;
 
        type T1 is record
-          B : access T2;
+          B : T2_Access;
        end record;
 
        type T2 is record
-          A : access T1;
+          A : T1_Access;
        end record;
 
     end Mutually_Dependent;
+
+Later on, we'll see that these code examples can be written using
+:ref:`anonymous access types <Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types>`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.10.1 Incomplete Type Declarations <3-10-1>`
+
 
 .. _Adv_Ada_Type_View:
 
@@ -1592,6 +1617,82 @@ subprograms of the package body that make use of this type. Again, the partial
 view of the private type contains the most important information for users that
 want to declare objects of this type.
 
+.. admonition:: Important
+
+    Although it's very common to declare private types as record types, this is
+    not the only option. In fact, we could declare any type in the full view
+    |mdash| scalars, for example |mdash|, so we could declare a "private
+    integer" type:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Private_Integer
+
+        package Private_Integers is
+
+           --  Partial view of private Integer type:
+           type Private_Integer is private;
+
+        private
+
+           --  Full view of private Integer type:
+           type Private_Integer is new Integer;
+
+        end Private_Integers;
+
+    This code compiles as expected, but isn't very useful. We can improve it by
+    adding operators to it, for example:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Private_Integer
+
+        package Private_Integers is
+
+           --  Partial view of private Integer type:
+           type Private_Integer is private;
+
+           function "+" (Left, Right : Private_Integer)
+                         return Private_Integer;
+
+        private
+
+           --  Full view of private Integer type:
+           type Private_Integer is new Integer;
+
+        end Private_Integers;
+
+        package body Private_Integers is
+
+           function "+" (Left, Right : Private_Integer)
+                         return Private_Integer is
+              Res : constant Integer := Integer (Left)
+                                        + Integer (Right);
+              --  Note that we're converting Left and Right to
+              --  Integer, which calls the "+" operator of the
+              --  Integer type. Writing "Left + Right" would
+              --  have called the "+" operator of Private_Integer,
+              --  which leads to recursive calls, as this is the
+              --  operator we're currently in.
+           begin
+              return Private_Integer (Res);
+           end "+";
+
+        end Private_Integers;
+
+    Now, we can use the :ada:`+` operator as a common integer variable:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Private_Integer
+
+        with Private_Integers; use Private_Integers;
+
+        procedure Show_Private_Integers is
+           A, B : Private_Integer;
+        begin
+           A := A + B;
+        end Show_Private_Integers;
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`7.3 Private Types and Private Extensions <7-3>`
+
+
 Default initial values
 ----------------------
 
@@ -1702,16 +1803,22 @@ In the example below, we declare variables of the types from the
 As we see in the :ada:`Use_Defaults` procedure, all variables still have their
 default values, since we haven't assigned any value to them.
 
+.. admonition:: In the Ada Reference Manual
 
-..
-    REMOVED! TO BE RE-EVALUATED IN 2022:
+    - :arm:`3.5 Scalar Types <3-5>`
+    - :arm:`3.6 Array Types <3-6>`
 
-    Stable Properties of a Type
-    ---------------------------
 
-    .. admonition:: Relevant topics
+Stable Properties of a Type
+---------------------------
 
-        - `Stable Properties of a Type <http://www.ada-auth.org/standards/2xrm/html/RM-7-3-4.html>`_
+.. admonition:: Relevant topics
+
+   - :arm22:`Stable Properties of a Type <7-3-4>`
+
+.. todo::
+
+    Complete section!
 
 
 Deferred Constants
@@ -1833,7 +1940,7 @@ declaration of the :ada:`Light` constant.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `7.4 Deferred Constants <http://www.ada-auth.org/standards/12rm/html/RM-7-4.html>`_
+    - :arm:`7.4 Deferred Constants <7-4>`
 
 
 User-defined literals
@@ -2186,5 +2293,5 @@ when using a preprocessor or a domain-specific language.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `4.2.1 User-Defined Literals <http://www.ada-auth.org/standards/12rm/html/RM-4-2-1.html>`_
+    - :arm:`4.2.1 User-Defined Literals <4-2-1>`
 

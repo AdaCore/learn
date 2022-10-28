@@ -10,8 +10,8 @@ Pure program and library units
 
 .. admonition:: Relevant topics
 
-    - `C.4 Preelaboration Requirements <http://www.ada-auth.org/standards/12rm/html/RM-C-4.html>`_
-    - `10.2.1 Elaboration Control <http://www.ada-auth.org/standards/12rm/html/RM-10-2-1.html>`_
+    - :arm:`C.4 Preelaboration Requirements <C-4>`
+    - :arm:`10.2.1 Elaboration Control <10-2-1>`
     - Add link to :ref:`Adv_Ada_Preelaboration` section
 
 .. todo::
@@ -27,6 +27,11 @@ Package renaming
 We've seen in the
 :doc:`Introduction to Ada course </courses/intro-to-ada/chapters/modular_programming>`
 that we can :ref:`rename packages <Intro_Ada_Package_Renaming>`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
+
 
 Grouping packages
 ~~~~~~~~~~~~~~~~~
@@ -522,7 +527,7 @@ Note that subprograms can also be declared private. We'll see this
 
 .. admonition:: In the Ada Reference Manual
 
-    - `10.1.1 Compilation Units - Library Units <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-10-1-1.html>`_
+    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
 
 
 .. _Adv_Ada_Private_With_Clauses:
@@ -704,7 +709,7 @@ of a non-private child package.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `10.1.2 Context Clauses - With Clauses <http://www.ada-auth.org/standards/12rm/html/RM-10-1-2.html>`_
+    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
 
 
 Limited Visibility
@@ -828,7 +833,7 @@ Now, both packages :ada:`A` and :ada:`B` have limited visibility to each other.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `10.1.2 Context Clauses - With Clauses <http://www.ada-auth.org/standards/12rm/html/RM-10-1-2.html>`_
+    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
 
 Limited visibility and private with clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -951,6 +956,7 @@ diagrams illustrates this:
 
 .. uml::
    :align: center
+   :width: 440pt
 
    allow_mixing
 
@@ -1043,6 +1049,7 @@ package :ada:`A` (using :ada:`with B`):
 
 .. uml::
    :align: center
+   :width: 280pt
 
    allow_mixing
 
@@ -1084,6 +1091,7 @@ part of package :ada:`A` (using :ada:`private with B`):
 
 .. uml::
    :align: center
+   :width: 280pt
 
    allow_mixing
 
@@ -1119,6 +1127,7 @@ package :ada:`B` in the body of package :ada:`A`:
 
 .. uml::
    :align: center
+   :width: 280pt
 
    allow_mixing
 
@@ -1162,6 +1171,7 @@ below:
 
 .. uml::
    :align: center
+   :width: 240pt
 
    allow_mixing
 
@@ -1213,6 +1223,7 @@ package :ada:`A` and its descendants in the :ada:`Test` procedure:
 
 .. uml::
    :align: center
+   :width: 320pt
 
    allow_mixing
 
@@ -1257,6 +1268,7 @@ Within the package hierarchy itself, we cannot refer to the private package
 
 .. uml::
    :align: center
+   :width: 500pt
 
    allow_mixing
 
@@ -1338,7 +1350,7 @@ introduce two specific forms of use clauses: :ada:`use type` and
 
 .. admonition:: In the Ada Reference Manual
 
-    - `8.4 Use Clauses <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-8-4.html>`_
+    - :arm:`8.4 Use Clauses <8-4>`
 
 Another use clause example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1467,7 +1479,7 @@ they're not directly visible anymore, even if we have a use clause.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `8.4 Use Clauses <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-8-4.html>`_
+    - :arm:`8.4 Use Clauses <8-4>`
 
 Code example
 ~~~~~~~~~~~~

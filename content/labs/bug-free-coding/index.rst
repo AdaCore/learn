@@ -50,10 +50,6 @@ Bug Free Coding with SPARK Ada
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/labs/bug-free-coding.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
     :maxdepth: 4
     :caption: Contents:

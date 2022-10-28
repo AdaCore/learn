@@ -166,7 +166,7 @@ subprogram. For example:
          (A * A)
          with
               Pre  => (Integer'Size >= Int_8'Size * 2
-                       and Integer (A) * Integer (A) <
+                       and Integer (A) * Integer (A) <=
                            Integer (Int_8'Last)),
               Post => (if abs A in 0 | 1
                        then Square'Result = abs A

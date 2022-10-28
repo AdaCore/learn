@@ -59,10 +59,6 @@ Introduction to Ada
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/courses/intro-to-ada.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
     :maxdepth: 4
     :caption: Contents:

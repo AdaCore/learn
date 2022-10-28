@@ -453,7 +453,7 @@ during execution and use the :ada:`To_Unbounded_String` and :ada:`To_String`
 functions to convert back-and-forth between fixed-length strings and
 unbounded strings. However, in this case, truncation is not needed.
 
-And, just like for bounded strings, you can use the :ada:`Append` function and
+And, just like for bounded strings, you can use the :ada:`Append` procedure and
 the :ada:`&` operator for unbounded strings. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String_Op

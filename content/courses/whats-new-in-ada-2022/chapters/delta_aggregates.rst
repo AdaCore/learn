@@ -55,7 +55,7 @@ brackets for record aggregates.
 
 Here is the complete code snippet:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Delta_Aggregates
 
    pragma Ada_2022;
 
@@ -89,9 +89,8 @@ Here is the complete code snippet:
 References
 ----------
 
-* `ARM 4.3.4 Delta Aggregates`_
+* :aarm22:`ARM 4.3.4 Delta Aggregates <4-3-4>`
 * AI12-0127-1_
 
- .. _`ARM 4.3.4 Delta Aggregates`: http://www.ada-auth.org/standards/2xaarm/html/AA-4-3-4.html
  .. _AI12-0127-1: http://www.ada-auth.org/cgi-bin/cvsweb.cgi/AI12s/AI12-0127-1.TXT
 

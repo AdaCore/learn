@@ -50,10 +50,6 @@ Advanced SPARK
                 Download EPUB
             </a>
 
-            <a class="ebook-download-button" href="/mobi_books/courses/advanced-spark.mobi">
-                Download MOBI
-            </a>
-
 .. toctree::
     :maxdepth: 4
     :caption: Contents:

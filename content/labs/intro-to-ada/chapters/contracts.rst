@@ -108,7 +108,7 @@ Pythagorean Theorem: Predicate
 **Remarks**:
 
     #. As you probably remember, the
-       `Pythagoras' theorem <https://en.wikipedia.org/wiki/Pythagorean_theorem>`_
+       :wikipedia:`Pythagoras' theorem <Pythagorean_theorem>`
        states that the square of the hypotenuse of a right triangle is equal to
        the sum of the squares of the other two sides.
 
