@@ -279,10 +279,10 @@ Classification
 ~~~~~~~~~~~~~~
 
 We've already discussed basic characteristics of numeric literals in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/strongly_typed_language>`.
-We've seen that there are two kinds of numeric literals in Ada: integer
-literals and real literals. They are distinguished by the absence or presence
-of a radix point. For example:
+Introduction to Ada course |mdash| although we haven't used this terminology
+there. There are two kinds of numeric literals in Ada: integer literals and
+real literals. They are distinguished by the absence or presence of a radix
+point. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Real_Integer_Literals
 
