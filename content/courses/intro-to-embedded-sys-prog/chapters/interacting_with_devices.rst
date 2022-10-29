@@ -33,15 +33,9 @@ code, where :c:`temp` and :c:`temp2` are unsigned 32-bit integers:
 
 .. code-block:: c
 
-   temp = ((uint32_t)(GPIO_AF)
-           << ((uint32_t)((uint32_t)GPIO_PinSource
-                          & (uint32_t)0x07) * 4));
-   GPIOx->AFR[GPIO_PinSource >> 0x03] &=
-       ~((uint32_t)0xF
-         << ((uint32_t)((uint32_t)GPIO_PinSource
-             & (uint32_t)0x07) * 4));
-   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03]
-            | temp;
+   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
    GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
 
 That's unfair to ask, absent any context. The code configures a general
@@ -49,18 +43,30 @@ purpose I/O (GPIO) pin on an Arm microcontroller for one of the
 "alternate functions". :c:`GPIOx` is a pointer to a GPIO port,
 :c:`GPIO_PinSource` is a GPIO pin number, and :c:`GPIO_AF` is the
 alternate function number. But let's say you knew that. Is the code
-correct? The longer it takes to know, the less productive you are. (By
-the way, the fact that the code above is in C is beside the point. If we
-wrote it the same way in Ada it would be equally opaque.) There are more
-readable approaches. Judicious use of record and array types is one. We'll
-say more about that shortly.
+correct? The longer it takes to know, the less productive you are.
+
+The fact that the code above is in C is beside the point. If we wrote it the
+same way in Ada it would be equally opaque, if not more so. There are
+simpler approaches. Judicious use of record and array types is one. We'll
+say more about that later, but the underlying idea is to let the compiler do
+as much work for us as possible. For example, the data structures used in
+the code above require explicit shifting whenever they are accessed. If we
+can avoid that at the source code level |mdash| by having the compiler do it
+for us |mdash| we will have simplified the code considerably. Furthermore,
+letting the compiler do the work for us makes the code more maintainable
+(which is where the money is). For example, if the code does the shifting
+explicitly and the data structures are changed, we'll have to change the
+number of bits to shift left or right. Constants will help there, but we
+still have to remember to change them; the compiler won't complain if we
+forget. In contrast, if we let the compiler do this shifting for us, the
+amounts to shift will be changed automatically.
 
 Some devices are very simple. In these cases the application may
 interact directly with the device without unduly affecting productivity.
 For example, there was a board that had a user-accessible rotary switch
 with sixteen distinct positions. Users could set the switch to whatever
 the application code required, e.g., to indicate some configuration
-information. The entire interface to this device was a single read-only
+information. The entire software interface to this device consisted of a single read-only
 8-bit byte in memory. That's all there was to it: you read the memory
 and thus got the numeric setting of the switch.
 
@@ -83,9 +89,7 @@ suppose we called a function:
 
 .. code-block:: c
 
-   GPIO_PinAFConfig(USARTx_TX_GPIO_PORT,
-                    USARTx_TX_SOURCE,
-                    USARTx_TX_AF);
+   GPIO_PinAFConfig(USARTx_TX_GPIO_PORT, USARTx_TX_SOURCE, USARTx_TX_AF);
 
 The :c:`GPIO_PinAFConfig` function is part of the GPIO device driver
 provided by the STM32 Standard Peripherals Library (SPL). Even though
@@ -99,12 +103,12 @@ Note the first parameter to the call above: :c:`USARTx_TX_GPIO_PORT`.
 There are multiple GPIO ports on an Arm implementation; the vendor
 decides how many. In this case one of them has been connected to a USART
 (Universal Synchronous Asynchronous Receiver Transmitter), an external
-device for sending and receiving serial data. When there are multiple devices,
-good software engineering suggests that the device driver present a given
-device as one of a type. That's what an "abstract data type" (ADT) provides for
+device for sending and receiving serial data. When there are multiple devices, good software
+engineering suggests that the device driver present a given device as
+one of a type. That's what an "abstract data type" (ADT) provides for
 software and so the device driver applies the same design. An ADT is
-essentially a class, in class-oriented languages. In Ada, an ADT is represented
-as a private type declared in a package, along with subprograms that take
+essentially a class, in class-oriented languages. In Ada, an ADT is represented as a
+private type declared in a package, along with subprograms that take
 the type as a parameter.
 
 The Ada Drivers Library (ADL) provided by AdaCore and the Ada community
@@ -118,8 +122,8 @@ https://github.com/AdaCore/Ada_Drivers_Library. We are going to use some
 of these drivers as illustrations in the following sections.
 
 
-Non-Memory-Mapped Abstractions
-------------------------------
+Non-Memory-Mapped Devices
+-------------------------
 
 Some devices are connected to the processor on a dedicated bus that is
 separate from the memory bus. The Intel processors, for example, used to
@@ -141,28 +145,22 @@ these can be invoked in Ada via machine-code insertions. For example:
 
 .. code-block:: ada
 
-   procedure Send_Control (Device : Port;
-                           Data   : Unsigned_16) is
+   procedure Send_Control (Device : Port;  Data : Unsigned_16) is
       pragma Suppress (All_Checks);
    begin
       asm ("outw %1, (%0)",
-           Inputs  =>
-             (Port'Asm_Input("dx",Device),
-              Unsigned_16'Asm_Input("ax",Data)),
+           Inputs  => (Port'Asm_Input("dx",Device),
+                       Unsigned_16'Asm_Input("ax",Data)),
            Clobber => "ax, dx");
    end Send_Control;
 
 
-   procedure Receive_Control (Device : Port;
-                              Data   : out Unsigned_16)
-   is
+   procedure Receive_Control (Device : Port;  Data : out Unsigned_16) is
       pragma Suppress (All_Checks);
    begin
       asm ("inw (%1), %0",
-           Inputs   =>
-             (Port'Asm_Input("dx",Device)),
-           Outputs  =>
-             (Unsigned_16'Asm_Output("=ax",Data)),
+           Inputs   => (Port'Asm_Input("dx",Device)),
+           Outputs  => (Unsigned_16'Asm_Output("=ax",Data)),
            Clobber  => "ax, dx",
            Volatile => True);
    end Receive_Control;
@@ -188,8 +186,8 @@ statements might clear that condition code before your code can check
 it. Fortunately, the annex guarantees that sort of thing cannot happen.
 
 
-Memory-Mapped Abstractions
---------------------------
+Memory-Mapped Devices
+---------------------
 
 In :doc:`another earlier chapter <./low_level_programming>`,
 we said that we could query the address of some object, and we also
@@ -210,7 +208,7 @@ and a 32-bit array object:
    type Bits32 is array (0 .. 31) of Boolean
       with Component_Size => 1;
 
-   X : Integer_32;
+   X : aliased Integer_32;
    Y : Bits32 with Address => X'Address;
 
 Because one view is as an integer and the other as an array, we can
@@ -236,9 +234,8 @@ simple input to the software running on the computer.
 
 .. code-block:: ada
 
-   Rotary_Switch : Unsigned_8
-     with Address =>
-       System.Storage_Elements.To_Address (16#FFC0_0801#);
+   Rotary_Switch : Unsigned_8 with
+     Address => System.Storage_Elements.To_Address (16#FFC0_0801#);
 
 We declare the object and also specify the address, but not by querying
 some entity. We already know the address from the hardware
@@ -271,7 +268,7 @@ It depends on the hardware. But in this case, assigning a value to the
 programmers. It looks like a variable, after all. We wouldn't declare it
 as a constant because the human user could rotate the switch, resulting
 in a different value read. Therefore, we would hide the Ada variable
-behind a function, precluding the entire question. Clients of the
+behind a function, precluding the entire issue. Clients of the
 function can then use it for whatever purpose they require, e.g., as the
 unique identifier for a computer in a rack.
 
@@ -296,8 +293,8 @@ In addition, we might want to apply more than one type, at any one time,
 to a given memory-mapped device. Doing so allows the client code some
 flexibility, or it might facilitate an internal implementation. For
 example, the STM32 boards from ST Microelectronics include a 96-bit
-device unique identifier on each board. The identifier starts at a fixed memory
-location. In this example we provide two different views |mdash|
+device unique identifier on each board. The identifier starts at a fixed memory location.
+In this example we provide two different views |mdash|
 types |mdash| for the value. One type provides the
 identifier as a String containing twelve characters, whereas another
 type provides the value as an array of three 32-bit unsigned words
@@ -335,21 +332,16 @@ same shared memory:
 
    package body STM32.Device_Id is
 
-      ID_Address : constant System.Address
-        := System'To_Address (16#1FFF_7A10#);
+      ID_Address : constant System.Address := System'To_Address (16#1FFF_7A10#);
 
       function Unique_Id return Device_Id_Image is
-         Result : Device_Id_Image
-           with Address => ID_Address,
-                Import;
+         Result : Device_Id_Image with Address => ID_Address, Import;
       begin
          return Result;
       end Unique_Id;
 
       function Unique_Id return Device_Id_Tuple is
-         Result : Device_Id_Tuple
-           with Address => ID_Address,
-                Import;
+         Result : Device_Id_Tuple with Address => ID_Address, Import;
       begin
          return Result;
       end Unique_Id;
@@ -389,16 +381,9 @@ the complete code for the function body:
      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
      assert_param(IS_GPIO_AF(GPIO_AF));
 
-     temp = ((uint32_t)(GPIO_AF)
-             << ((uint32_t)((uint32_t)GPIO_PinSource
-                            & (uint32_t)0x07)
-               * 4)) ;
-     GPIOx->AFR[GPIO_PinSource >> 0x03] &=
-         ~((uint32_t)0xF
-           << ((uint32_t)((uint32_t)GPIO_PinSource
-                          & (uint32_t)0x07) * 4));
-     temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03]
-              | temp;
+     temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+     GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+     temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
      GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
    }
 
@@ -420,7 +405,7 @@ the alternate function required for our application.
 These 16 4-bit alternate function fields are contiguous in the
 register (hence memory) so we can represent them as an array with a
 total size of 64-bits (i.e., 16 times 4). In the C version this array
-has as two components of type :c:`uint32_t` so it must compute where the
+has two components of type :c:`uint32_t` so it must compute where the
 corresponding 4-bit value for the pin is located within those two words.
 In contrast, the Ada version of the array has components of the 4-bit
 type, rather than two 32-bit components, and simply uses the pin number
@@ -446,8 +431,7 @@ First, in Ada we can declare a 4-bit numeric type:
 
 .. code-block:: ada
 
-   type Bits_4 is mod 2**4
-     with Size => 4;
+   type Bits_4 is mod 2**4 with Size => 4;
 
 The :ada:`Bits_4` type was already globally defined elsewhere so we just
 derive our 4-bit "alternate function code" type from it. Doing so allows the
@@ -458,8 +442,8 @@ for the reader:
 .. code-block:: ada
 
    type GPIO_Alternate_Function_Code is new Bits_4;
-   --  We cannot use an enumeration type because
-   --  there are duplicate binary values
+   --  We cannot use an enumeration type because there are duplicate binary
+   --  values
 
 Hence type :ada:`GPIO_Alternate_Function_Code` is a copy of
 :ada:`Bits_4` in terms of operations and values, but is not the same
@@ -472,9 +456,7 @@ of the :ada:`AFR`:
 
    type Alternate_Function_Fields is
      array (GPIO_Pin) of GPIO_Alternate_Function_Code
-       with Component_Size => 4,
-            Size => 64;
-            -- both in units of bits
+     with Component_Size => 4, Size => 64;  -- both in units of bits
 
 Note that we can use the GPIO :ada:`Pin` parameter directly as the index into
 the array type, obviating any need to massage the :ada:`Pin` value in
@@ -484,10 +466,8 @@ enumeration type:
 .. code-block:: ada
 
    type GPIO_Pin is
-     (Pin_0, Pin_1, Pin_2,  Pin_3,
-      Pin_4, Pin_5, Pin_6,  Pin_7,
-      Pin_8, Pin_9, Pin_10, Pin_11,
-      Pin_12, Pin_13, Pin_14, Pin_15);
+     (Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
+      Pin_8, Pin_9, Pin_10, Pin_11, Pin_12, Pin_13, Pin_14, Pin_15);
 
    for GPIO_Pin use
      (Pin_0  => 16#0001#,
@@ -523,20 +503,12 @@ Type :ada:`Alternate_Function_Fields` is then used to declare the
       Reserved_1 : Half_Word;
       OSPEEDR    : Output_Speeds_Register;
       PUPDR      : Resistors_Register;
-      IDR        : Half_Word;
-      --  input data register
-
+      IDR        : Half_Word;       --  input data register
       Reserved_2 : Half_Word;
-      ODR        : Half_Word;
-      --  output data register
-
+      ODR        : Half_Word;       --  output data register
       Reserved_3 : Half_Word;
-      BSRR_Set   : Half_Word;
-      --  bit set register
-
-      BSRR_Reset : Half_Word;
-      --  bit reset register
-
+      BSRR_Set   : Half_Word;       --  bit set register
+      BSRR_Reset : Half_Word;       --  bit reset register
       LCKR       : Word with Atomic;
       AFR        : Alternate_Function_Fields;
       Unused     : Unaccessed_Gap;
@@ -580,15 +552,9 @@ convenience:
      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
      assert_param(IS_GPIO_AF(GPIO_AF));
 
-     temp = ((uint32_t)(GPIO_AF)
-             << ((uint32_t)((uint32_t)GPIO_PinSource
-                            & (uint32_t)0x07) * 4));
-     GPIOx->AFR[GPIO_PinSource >> 0x03] &=
-        ~((uint32_t)0xF
-          << ((uint32_t)((uint32_t)GPIO_PinSource
-                         & (uint32_t)0x07) * 4));
-     temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03]
-              | temp;
+     temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+     GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+     temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
      GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
    }
 
@@ -668,15 +634,15 @@ should check, therefore, that the documented starting addresses of the
 second and subsequent array components are what you will get with a
 simple array object having components of that record type.
 
-For example, the datasheet for the GPIO ports on the STM32F407 Arm
-implementation start at address :ada:`16#4002_0000#`. That's where ``GPIO_A``
-begins. The next port, ``GPIO_B``, starts at address :ada:`16#4002_0400#`, or a
-byte offset of 1024 in decimal (1K). In the STM32F4 Reference Manual, however,
-the GPIO port register layout indicates a size for any one port that is much
+For example, the datasheet for the STM32F407 Arm implementation indicates
+that the GPIO ports start at address 16#4002_0000#. That's where GPIO_A begins.
+The next port, GPIO_B, starts at address 16#4002_0400#, or a byte offset
+of 1024 in decimal. In the STM32F4 Reference Manual, however, the
+GPIO port register layout indicates a size for any one port that is much
 less than 1024 bytes. As you saw earlier in the corresponding record type
 declaration, on the STM32F4 each port only requires 40 (decimal) bytes.
 Hence there's a gap of unused memory between the ports, including after
-the last port, of 984 bytes (or 7872 bits).
+the last port, of 984 bytes (7872 bits).
 
 To represent the gap, an "extra", unused record component was added,
 with the necessary location and size specified within the record type,
@@ -696,26 +662,17 @@ convenience:
       Reserved_1 : Half_Word;
       OSPEEDR    : Output_Speeds_Register;
       PUPDR      : Resistors_Register;
-      IDR        : Half_Word;
-      --  input data register
-
+      IDR        : Half_Word;       --  input data register
       Reserved_2 : Half_Word;
-      ODR        : Half_Word;
-      --  output data register
-
+      ODR        : Half_Word;       --  output data register
       Reserved_3 : Half_Word;
-      BSRR_Set   : Half_Word;
-      --  bit set register
-
-      BSRR_Reset : Half_Word;
-      --  bit reset register
-
+      BSRR_Set   : Half_Word;       --  bit set register
+      BSRR_Reset : Half_Word;       --  bit reset register
       LCKR       : Word with Atomic;
       AFR        : Alternate_Function_Fields;
-      Unused     : Unaccessed_Gap
-        with Unreferenced;
-   end record
-     with Size => 16#400# * 8;
+      Unused     : Unaccessed_Gap with Unreferenced;
+   end record with
+      Size => 16#400# * 8;
 
    for GPIO_Port use record
       MODER      at 0  range 0 .. 31;
@@ -740,31 +697,22 @@ bytes so we declared an array like so:
 .. code-block:: ada
 
    Gap_Size : constant := 984;  -- bytes
-   --  There is a gap of unused, reserved memory
-   --  after the end of the bytes used by any given
-   --  memory-mapped GPIO port. The size of the gap
-   --  is indicated in the STM32F405xx etc.
-   --  Reference Manual, RM 0090.
-   --  Specifically, Table 1 shows the starting and
-   --  ending addresses mapped to the GPIO ports,
-   --  for an allocated size of 16#400#, or 1024
-   --  (decimal) bytes per port. However, in the
-   --  same document, the register map for these
-   --  ports shows only 40 bytes currently in use.
-   --  Presumably this gap is for future expansion
-   --  when additional functionality or capacity is
-   --  added, such as more pins per port.
+   --  There is a gap of unused, reserved memory after the end of the
+   --  bytes used by any given memory-mapped GPIO port. The size of the
+   --  gap is indicated in the STM32F405xx etc. Reference Manual, RM 0090.
+   --  Specifically, Table 1 shows the starting and ending addresses mapped
+   --  to the GPIO ports, for an allocated size of 16#400#, or 1024 (decimal)
+   --  bytes per port. However, in the same document, the register map for
+   --  these ports shows only 40 bytes currently in use. Presumably this gap is
+   --  for future expansion when additional functionality or capacity is added,
+   --  such as more pins per port.
 
-   type Unaccessed_Gap is
-     array (1 .. Gap_Size) of Unsigned_8
-       with Component_Size => Unsigned_8'Size,
-            Size           => Gap_Size *
-                              Unsigned_8'Size;
-   --  This type is used to represent the necessary
-   --  gaps between GPIO ports in memory. We
-   --  explicitly allocate a record component of
-   --  this type at the end of the record type for
-   --  that purpose.
+   type Unaccessed_Gap is array (1 .. Gap_Size) of Unsigned_8 with
+      Component_Size => Unsigned_8'Size,
+      Size           => Gap_Size * Unsigned_8'Size;
+   --  This type is used to represent the necessary gaps between GPIO
+   --  ports in memory. We explicitly allocate a record component of
+   --  this type at the end of the record type for that purpose.
 
 We also set the size of the entire record type to :ada:`16#400#` bytes since
 that is the total of the required bytes plus the gap, as per the
@@ -835,8 +783,7 @@ The incomplete implementation using the conversion idiom could be like so:
    procedure Swap2 (Location : System.Address) is
       X : Word renames To_Pointer (Location).all;
    begin
-      X :=  Shift_Left (X, 8) or
-            Shift_Right (X, 8);
+      X :=  Shift_Left (X, 8) or Shift_Right (X, 8);
    end Swap2;
 
 The declaration of :ada:`X` is the pertinent part.
@@ -851,11 +798,10 @@ in :ada:`Location` into an access value designating :ada:`Word` values.
 We'll explain how to do that momentarily. The :ada:`.all` explicitly
 dereferences the access value resulting from the function call.
 
-Finally, :ada:`X` renames the :ada:`Word` value designated by the
-converted access value. (Functions return objects, so this renaming is
-allowed.) The benefit of the renaming, in addition to the simpler name,
-is that the function is only called once, and the access value deference
-is only evaluated once.
+Finally, :ada:`X` renames the :ada:`Word` designated by the
+converted access value. The benefit of the renaming, in addition to the
+simpler name, is that the function is only called once, and the access value
+deference is only evaluated once.
 
 Now for the rest of the implementation not shown earlier.
 
@@ -863,8 +809,7 @@ Now for the rest of the implementation not shown earlier.
 
    type Word is new Interfaces.Unsigned_16;
 
-   package Word_Ops is new
-     System.Address_To_Access_Conversions (Word);
+   package Word_Ops is new System.Address_To_Access_Conversions (Word);
    use Word_Ops;
 
 :ada:`System.Address_To_Access_Conversions` is a language-defined
@@ -880,11 +825,8 @@ direction:
 
       type Object_Pointer is access all Object;
 
-      function To_Pointer (Value : Address)
-                           return Object_Pointer;
-
-      function To_Address (Value : Object_Pointer)
-                           return Address;
+      function To_Pointer (Value : Address) return Object_Pointer;
+      function To_Address (Value : Object_Pointer) return Address;
 
       pragma Convention (Intrinsic, To_Pointer);
       pragma Convention (Intrinsic, To_Address);
@@ -917,15 +859,13 @@ Let's look at the code again, this time with the additional declarations:
 
    type Word is new Interfaces.Unsigned_16;
 
-   package Word_Ops is new
-     System.Address_To_Access_Conversions (Word);
+   package Word_Ops is new System.Address_To_Access_Conversions (Word);
    use Word_Ops;
 
    procedure Swap2 (Location : System.Address) is
       X : Word renames To_Pointer(Location).all;
    begin
-      X := Shift_Left (X, 8) or
-           Shift_Right (X, 8);
+      X :=  Shift_Left (X, 8) or Shift_Right (X, 8);
    end Swap2;
 
 :ada:`Word_Ops` is the generic instance, followed immediately by a
@@ -962,31 +902,16 @@ array types, such as :ada:`String`, are represented as two addresses,
 known as "fat pointers". One address points to the bounds for the
 specific array object, since they can vary. The other address designates
 the characters. Therefore, conversions of a single address to an access
-value requiring fat pointers will not work, using either unchecked
-conversions or :ada:`System.Address_To_Access_Conversions`. (There is a
-way, however, to tell GNAT to use a single address value, but it is an
-explicit step in the code. Once done, though, conversions would then
-work correctly.)
+value requiring fat pointers will not work using unchecked
+conversions. (There is a way, however, to tell GNAT to use a single address
+value, but it is an explicit step in the code. Once done, though, unchecked
+conversions would then work correctly.)
 
-To at least warn users of the possibility of this problem, the GNAT
-implementation of :ada:`System.Address_To_Access_Conversions` includes
-the following:
-
-.. code-block:: ada
-
-     pragma Compile_Time_Warning
-        (Object'Unconstrained_Array,
-         "Object is unconstrained array type"
-          & ASCII.LF
-          & "To_Pointer results may not have bounds");
-
-:ada:`Object` is the generic formal type parameter, i.e., the type we
-want our converted addresses to designate via the type
-:ada:`Object_Pointer`. The pragma instructs the compiler to issue the
-indicated warning text if :ada:`Object` is an unconstrained array type,
-e.g. :ada:`String`. The instantiation will still compile, unless you
-also have the compiler treat warnings as errors. Treating them as errors
-is not a bad idea.
+You can alternatively use generic package
+:ada:`System.Address_To_Access_Conversions`.  That generic is defined for the
+purpose of converting addresses to access values, and vice versa. But note
+that the implementation of the generic's routines must account for the
+representation their compiler uses for unbounded types like :ada:`String`.
 
 
 Address Arithmetic
@@ -995,8 +920,9 @@ Address Arithmetic
 Part of "letting the compiler do the work for you" is not doing address
 arithmetic in the source code if you can avoid it. Instead, for
 instance, use the normal "dot notation" to reference components, and let
-the compiler compute the offsets to those components. Doing so may
-require an additional view, but you've seen how to do that now.
+the compiler compute the offsets to those components. The approach to
+implementing procedure Configure_Alternate_Function for a GPIO_Port is a
+good example.
 
 That said, sometimes address arithmetic is the most direct expression of
 what you're trying to implement. For example, when implementing your own
@@ -1018,17 +944,14 @@ arithmetic other languages provide. Nevertheless, you should prefer
 having the compiler do these computations for you, if possible.
 
 Here's an example illustrating the facilities. The procedure defines an
-array of record values, then walks the array, printing the array
+array of record values, then traverses the array, printing the array
 components as it goes. (This is not the way to really implement such code.
 It's just an illustration for address arithmetic.)
 
 .. code-block:: ada
 
-   with Ada.Text_IO; use Ada.Text_IO;
-
-   with System.Storage_Elements;
-   use  System.Storage_Elements;
-
+   with Ada.Text_IO;               use Ada.Text_IO;
+   with System.Storage_Elements;   use System.Storage_Elements;
    with System.Address_To_Access_Conversions;
 
    procedure Demo_Address_Arithmetic is
@@ -1038,30 +961,24 @@ It's just an illustration for address arithmetic.)
          Y : Integer;
       end record;
 
-      R_Size : constant Storage_Offset
-        := R'Object_Size / System.Storage_Unit;
+      R_Size : constant Storage_Offset := R'Object_Size / System.Storage_Unit;
 
-      Objects : aliased array (1 .. 10) of aliased R;
-      --  arbitrary bounds
+      Objects : aliased array (1 .. 10) of aliased R;     --  arbitrary bounds
 
-      Objects_Base : System.Address;
+      Objects_Base : constant System.Address := Objects'Address;
 
       Offset : Storage_Offset;
 
-      --  display the object of type R at the
-      --  address specified by Location
-      procedure Display_R (Location : in System.Address)
-      is
+      --  display the object of type R at the address specified by Location
+      procedure Display_R (Location : in System.Address) is
 
-         package R_Pointers is new
-           System.Address_To_Access_Conversions (R);
+         package R_Pointers is new System.Address_To_Access_Conversions (R);
          use R_Pointers;
 
           Value : R renames To_Pointer (Location).all;
-         --  The above converts the address to a
-         --  pointer designating an R value and
-         --  dereferences it, using the name Value to
-         --  refer to the dereferenced R value.
+         --  The above converts the address to a pointer designating an R value
+         --  and dereferences it, using the name Value to refer to the
+         --  dereferenced R value.
       begin
          Put (Integer'Image (Value.X));
          Put (", ");
@@ -1074,11 +991,9 @@ It's just an illustration for address arithmetic.)
                   (5,5), (6,6), (7,7), (8,8), (9,9));
 
       Offset := 0;
-      Objects_Base := Objects'Address;
 
-      --  walk the array of R objects, displaying each
-      --  one individually by adding the offset to the
-      --  base address of the array
+      --  walk the array of R objects, displaying each one individually by
+      --  adding the offset to the base address of the array
       for K in Objects'Range loop
          Display_R (Objects_Base + Offset);
          Offset := Offset + R_Size;
