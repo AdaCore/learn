@@ -167,6 +167,8 @@ values via the dot notation.
     array, but it is not limited to that, and could be used, for example, to
     determine the size of a nested discriminated record.
 
+.. _Intro_Ada_Variant_Records:
+
 Variant records
 ---------------
 

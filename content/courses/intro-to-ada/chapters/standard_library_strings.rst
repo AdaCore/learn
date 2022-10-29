@@ -22,6 +22,8 @@ text processing. Ada offers alternative approaches for these cases:
 The following sections present an overview of the different string types and
 common operations for string types.
 
+.. _Intro_Ada_String_Operations:
+
 String operations
 -----------------
 
@@ -73,6 +75,8 @@ We initialize the string :ada:`S` using a multiplication. Writing
 We then call the function ``Count`` to get the number of instances
 of the word :ada:`World` in :ada:`S`.  Next we call the function :ada:`Index` in a
 loop to find the index of each instance of :ada:`World` in :ada:`S`.
+
+.. _Intro_Ada_String_Operations_Show_Find_Words:
 
 That example looked for instances of a specific substring.  In the next
 example, we retrieve all the words in the string. We do this using
@@ -291,6 +295,8 @@ When strings are initialized or manipulated at run-time, it's usually
 better to use bounded or unbounded strings. An important feature of these
 types is that they aren't arrays, so the difficulties presented above don't
 apply. Let's start with bounded strings.
+
+.. _Intro_Ada_Bounded_Strings:
 
 Bounded strings
 ---------------
