@@ -254,6 +254,8 @@ After writing package definition, we create the instance :ada:`I` of the
 :ada:`Element`. We use the instance by calling the package subprograms
 (:ada:`Set`, :ada:`Reset`, and :ada:`Get`).
 
+.. _Intro_Ada_Formal_Subprograms:
+
 Formal subprograms
 ------------------
 
@@ -732,6 +734,8 @@ the algorithm:
     - the range used for the array (:ada:`Integer` range in the example)
 
     - the actual array type (:ada:`Color_Array` type in the example)
+
+.. _Intro_Ada_Generic_Reverse_Colors_Example:
 
 This is a generic version of the algorithm:
 

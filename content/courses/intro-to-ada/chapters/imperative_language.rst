@@ -292,6 +292,8 @@ A few things to note:
    program's perspective it is constant. An attempt to modify its value
    is illegal; the compiler would reject the program.
 
+.. _Intro_Ada_Image_Attribute:
+
 -  :ada:`Integer'Image` is a function that takes an Integer and converts it to
    a :ada:`String`.  It is an example of a language construct known as an
    *attribute*, indicated by the :ada:`'` syntax, which will be covered in more
@@ -348,6 +350,8 @@ Thus no output is produced in the following example:
 
 The :ada:`for` loop is more general than what we illustrated here;
 more on that later.
+
+.. _Intro_Ada_Bare_Loops:
 
 Bare loops
 ~~~~~~~~~~
@@ -569,6 +573,8 @@ Let's look at an example of a nested procedure:
        Nested;
        --  Call to Nested
     end Main;
+
+.. _Intro_Ada_Block_Statement:
 
 A declaration cannot appear as a statement. If you need to declare a local
 variable amidst the statements, you can introduce a new declarative region with

@@ -183,7 +183,7 @@ Wide and Wide-Wide String Handling
 
 As we've just seen, we have different versions of the :ada:`Ada.Text_IO`
 package. The same applies to string handling packages. As we've seen in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`,
+:ref:`Introduction to Ada course <Intro_Ada_String_Operations>`,
 we can use the :ada:`Ada.Strings.Fixed` and :ada:`Ada.Strings.Maps` packages
 for string handling. For other formats, we have these packages:
 
@@ -192,9 +192,9 @@ for string handling. For other formats, we have these packages:
 - :ada:`Ada.Strings.Wide_Maps`,
 - :ada:`Ada.Strings.Wide_Wide_Maps`.
 
-Let's look at this example from the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`,
-which we adapted for wide-wide strings:
+Let's look at
+:ref:`this example <Intro_Ada_String_Operations_Show_Find_Words>` from the
+Introduction to Ada course, which we adapted for wide-wide strings:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_String_Handling
 
@@ -251,11 +251,11 @@ here are similar to the ones for :ada:`String` type, but making use of the
 Bounded and Unbounded Wide and Wide-Wide Strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We've seen in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/standard_library_strings>`
+We've seen in the Introduction to Ada course
 that other kinds of :ada:`String` types are available. For example, we can
-use bounded and unbounded strings |mdash| those correspond to the
-:ada:`Bounded_String` and :ada:`Unbounded_String` types.
+use :ref:`bounded <Intro_Ada_Bounded_Strings>` and
+:ref:`unbounded strings <Intro_Ada_Unbounded_Strings>` |mdash| those correspond
+to the :ada:`Bounded_String` and :ada:`Unbounded_String` types.
 
 Those kinds of string types are available for :ada:`Wide_String`, and
 :ada:`Wide_Wide_String`. The following table shows the available types and

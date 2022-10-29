@@ -254,6 +254,8 @@ iteration variable is also :ada:`Integer`, so you can use :ada:`I` to index
 
 You can also use a named subtype for the bounds for an array.
 
+.. _Intro_Ada_Range_Attribute:
+
 Range attribute
 ---------------
 
@@ -390,6 +392,8 @@ arrow association. :ada:`1 => 2` thus means
     they are accessible via the :ada:`'First`, :ada:`'Last`, :ada:`'Range` and
     :ada:`'Length` attributes explained earlier.
 
+.. _Intro_Ada_Unconstrained_Array_Type_Instance_Bound:
+
 Although different instances of the same unconstrained array type can have different
 bounds, a specific instance has the same bounds throughout its lifetime.
 This allows Ada to implement unconstrained arrays efficiently; instances can be
@@ -524,6 +528,8 @@ cases like this one, it is impossible for a compiler to know in the general
 case if you are assigning a value of the correct length, so this violation will
 generally result in a run-time error.
 
+.. _Intro_Ada_Indefinite_Subtype:
+
 .. admonition:: Attention
 
     While we will learn more about this later, it is important to know
@@ -557,6 +563,9 @@ generally result in a run-time error.
         begin
            null;
         end Indefinite_Subtypes;
+
+   Here, the :ada:`'Value` attribute converts the string to an integer.
+
 
 Returning unconstrained arrays
 ------------------------------

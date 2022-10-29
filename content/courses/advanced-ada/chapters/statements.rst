@@ -242,7 +242,7 @@ Exit loop statement
 -------------------
 
 We've introduced bare loops back in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/imperative_language>`.
+:ref:`Introduction to Ada course <Intro_Ada_Bare_Loops>`.
 In this section, we'll briefly discuss loop names and exit loop statements.
 
 A bare loop has this form:
@@ -331,7 +331,7 @@ Block Statements
 ----------------
 
 We've introduced block statements back in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/imperative_language>`.
+:ref:`Introduction to Ada course <Intro_Ada_Block_Statement>`.
 They have this simple form:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Statements.Simple_Block_Statement

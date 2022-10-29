@@ -44,6 +44,8 @@ additional constraints when supplying the subtype of the field.
        --                                 ^ Default value
     end record;
 
+.. _Intro_Ada_Record_Default_Values:
+
 Record components can have default values. When a variable having the record
 type is declared, a field with a default initialization will be automatically
 set to this value. The value can be any expression of the component type, and

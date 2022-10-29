@@ -29,6 +29,8 @@ you can reason about the correctness of the objects' values.
 
     Expand / clarify (on section: "what is a type?")
 
+.. _Intro_Ada_Integers:
+
 Integers
 --------
 
@@ -152,6 +154,8 @@ Type level overflow will only be checked at specific points in the execution.
 The result, as we see above, is that you might have an operation that overflows
 in an intermediate computation, but no exception will be raised because the
 final result does not overflow.
+
+.. _Intro_Ada_Unsigned_Types:
 
 Unsigned types
 --------------

@@ -5,6 +5,8 @@ Appendices
 
 .. include:: ../../global.txt
 
+.. _Intro_Ada_Generic_Formal_Types:
+
 Appendix A: Generic Formal Types
 --------------------------------
 

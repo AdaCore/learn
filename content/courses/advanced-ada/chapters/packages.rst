@@ -24,8 +24,7 @@ Pure program and library units
 Package renaming
 ----------------
 
-We've seen in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/modular_programming>`
+We've seen in the Introduction to Ada course
 that we can :ref:`rename packages <Intro_Ada_Package_Renaming>`.
 
 .. admonition:: In the Ada Reference Manual
