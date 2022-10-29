@@ -83,11 +83,11 @@
     "webpack-watch-files-plugin": "^1.2.1"
   },
   "resolutions": {
-    "minimist": "^1.2.2",
-    "acorn": "^8.8.0",
+    "minimist": "^1.2.7",
+    "acorn": "^8.8.1",
     "is-svg": "^4.3.2",
-    "ssri": "^9.0.1",
-    "whatwg-url": "10"
+    "ssri": "^10.0.0",
+    "whatwg-url": "11"
   },
   "scripts": {
     "dev": "webpack serve --open --config webpack.dev.js",
