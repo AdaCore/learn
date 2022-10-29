@@ -7,7 +7,7 @@ Unconstrained Arrays
 --------------------
 
 In the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/arrays>`,
+:ref:`Introduction to Ada course <Intro_Ada_Unconstrained_Array_Types>`,
 we've seen that we can declare array types whose bounds are not fixed: in that
 case, the bounds are provided when creating objects of those types. For
 example:
@@ -39,7 +39,7 @@ In this example, the :ada:`Measurements` array type from the
 :ada:`Show_Measurements` procedure, we declare a constrained object (:ada:`M`)
 of this type.
 
-The :doc:`Introduction to Ada course </courses/intro-to-ada/chapters/arrays>`
+The :ref:`Introduction to Ada course <Intro_Ada_Unconstrained_Array_Type_Instance_Bound>`
 also highlights the fact that the bounds are fixed once an object is declared:
 
     Although different instances of the same unconstrained array type can

@@ -6,10 +6,9 @@ Numerics
 Modular Types
 -------------
 
-In the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/strongly_typed_language>`,
-we've seen that Ada has two kinds of integer type: signed and modular. For
-example:
+In the Introduction to Ada course, we've seen that Ada has two kinds of integer
+type: :ref:`signed <Intro_Ada_Integers>` and
+:ref:`modular <Intro_Ada_Unsigned_Types>` types. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Modular_1
 

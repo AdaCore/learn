@@ -1790,7 +1790,7 @@ Unchecked Union
 ---------------
 
 We've introduced variant records back in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/more_about_types>`.
+:ref:`Introduction to Ada course <Intro_Ada_Variant_Records>`.
 In simple terms, a variant record is a record with discriminants that allows
 for changing its structure. Basically, it's a record containing a :ada:`case`.
 

@@ -46,8 +46,10 @@ string type. The following table presents the main attributes for scalar types:
 |            | :ada:`Value`    | Value of a subtype based on input string.    |
 +------------+-----------------+----------------------------------------------+
 
-We already discussed most of these attributes in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/index>`. In this
+We already discussed some of these attributes in the
+Introduction to Ada course (in the sections about
+:ref:`range and related attributes <Intro_Ada_Range_Attribute>` and
+:ref:`image attribute <Intro_Ada_Image_Attribute>`). In this
 section, we'll discuss some aspects that have been left out of the previous
 course.
 
@@ -505,7 +507,7 @@ Enumerations
 ------------
 
 We've introduced enumerations back in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/strongly_typed_language>`.
+:ref:`Introduction to Ada course <Intro_Ada_Enum_Types>`.
 In this section, we'll discuss a few useful features of enumerations, such as
 enumeration renaming, enumeration overloading and representation clauses.
 
@@ -920,7 +922,7 @@ Definite and Indefinite Subtypes
 --------------------------------
 
 Indefinite types were mentioned back in the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/more_about_types>`.
+:ref:`Introduction to Ada course <Intro_Ada_Indefinite_Subtype>`.
 In this section, we'll recapitulate and extend on both definite and indefinite
 types.
 
@@ -1697,7 +1699,7 @@ Default initial values
 ----------------------
 
 In the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/records>`,
+:ref:`Introduction to Ada course <Intro_Ada_Record_Default_Values>`,
 we've seen that record components can have default values. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Defaults_1
