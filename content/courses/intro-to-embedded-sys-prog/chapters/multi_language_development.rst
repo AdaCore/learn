@@ -21,7 +21,7 @@ Ada code, and to "export" Ada entities to code in foreign languages. The
 facilities are so useful that Ada has been used purely as "glue code" to allow
 code written in two other programming languages to be used together.
 
-You're already seen an introduction to Ada and C code working together in the
+You've already seen an introduction to Ada and C code working together in the
 :doc:`"Interfacing" section of the Ada introductory course </courses/intro-to-ada/chapters/interfacing_with_c>`.
 If you have not seen that material, be sure to see it first. We will cover some
 further details not already discussed there, and then go into the details of
@@ -138,15 +138,15 @@ the type. For example:
    type Matrix is array (Rows, Columns) of Float
      with Convention => Fortran;
 
-(Rows and Columns are user-defined discrete subtypes.)
+(:ada:`Rows` and :ada:`Columns` are user-defined discrete subtypes.)
 
-As a result when we declare Matrix objects the Ada compiler will use the
+As a result when we declare :ada:`Matrix` objects the Ada compiler will use the
 column-major layout. That makes it possible to pass objects of the type to
 imported Fortran subprograms because the formal parameter will also be of type
-Matrix. The imported Fortran routine will then see the parameter in memory as
-it expects to see it. So although you wouldn't need to import or export a type
-itself, you might very well import or export an object of the type, or pass it
-as a argument.
+:ada:`Matrix`. The imported Fortran routine will then see the parameter in
+memory as it expects to see it. So although you wouldn't need to import or
+export a type itself, you might very well import or export an object of the
+type, or pass it as a argument.
 
 When :ada:`Convention` is applied to subprograms, a natural mistake is to think
 that we are specifying the programming language used to implement the
@@ -168,10 +168,10 @@ implementation is in assembler.
 
 .. code-block:: ada
 
-   procedure P (X : Integer)
-     with ...
-          Convention => Ada,
-          ...
+   procedure P (X : Integer) with
+      ...
+      Convention => Ada,
+      ...
 
 In the example above, :ada:`Ada` is known as a convention identifier, as is
 :ada:`Fortran` in the earlier example. Convention identifiers are defined by
@@ -247,8 +247,7 @@ For example:
      (Value  : Unsigned_16;
       Amount : Natural)
      return Unsigned_16
-       with ...,
-            Convention => Intrinsic;
+       with ..., Convention => Intrinsic;
 
 The effect is much like a subprogram call that is always in-lined, except that
 there's no body for the subprogram. In this example the compiler simply issues
@@ -262,29 +261,25 @@ subprograms. For example:
    generic
       type Source(<>) is limited private;
       type Target(<>) is limited private;
-   function Ada.Unchecked_Conversion (S : Source)
-                                      return Target
-      with ...,
-           Convention => Intrinsic;
+   function Ada.Unchecked_Conversion(S : Source) return Target
+      with ..., Convention => Intrinsic;
 
 Thus when we call an instantiation of :ada:`Ada.Unchecked_Conversion` there is
 no actual call made to some subprogram. The compiler just treats the bits of
 :ada:`S` as a value of type :ada:`Target`.
 
 Intrinsic subprograms are a good way to access interesting capabilities of the
-target hardware, without having to write the assembly language yourself (in
-Ada, although we will show how to do that, later). For example, some targets
-provide an instruction that atomically compares and swaps a value in memory.
-Ada 2022 just added a standard package for this, but before that we could use
-the following to access a gcc built-in:
+target hardware, without having to write the assembly language yourself
+(although we will show how to do that, later, directly in Ada). For example,
+some targets provide an instruction that atomically compares and swaps a value
+in memory. Ada 2022 just added a standard package for this, but before that we
+could use the following to access a gcc built-in:
 
 .. code-block:: ada
 
-   --  Perform an atomic compare and swap: if the
-   --  current value of Destination.all is Comparand,
-   --  then write New_Value into Destination.all.
-   --  Returns an indication of whether the swap took
-   --  place.
+   -- Perform an atomic compare and swap: if the current value of
+   -- Destination.all is Comparand, then write New_Value into Destination.all.
+   -- Returns an indication of whether the swap took place.
 
    function Sync_Val_Compare_And_Swap_Bool_8
      (Destination : access Unsigned_8;
@@ -314,9 +309,9 @@ because their value is either :ada:`True` or :ada:`False`. For example:
 
 .. code-block:: ada
 
-   Obj : Matrix
-     with Export => True,
-          ...
+   Obj : Matrix with
+      Export => True,
+      ...
 
 For any Boolean-valued aspect the default is :ada:`True` so you only need to
 give the value explicitly if that value is :ada:`False`. There would be no
@@ -325,9 +320,9 @@ aspect name:
 
 .. code-block:: ada
 
-   Obj : Matrix
-     with Export,
-          ...
+   Obj : Matrix with
+      Export,
+      ...
 
 Recall that objects of some types are initialized automatically during the
 objects' elaboration, unless they are explicitly initialized as part of their
@@ -446,11 +441,9 @@ Here's that same built-in function, using the pragma to import it:
 
 .. code-block:: ada
 
-   --  Perform an atomic compare and swap: if the
-   --  current value of Destination.all is Comparand,
-   --  then write New_Value into Destination.all.
-   --  Returns an indication of whether the swap took
-   --  place.
+   -- Perform an atomic compare and swap: if the current value of
+   -- Destination.all is Comparand, then write New_Value into Destination.all.
+   -- Returns an indication of whether the swap took place.
 
    function Sync_Val_Compare_And_Swap_Bool_8
      (Destination : access Unsigned_8;
@@ -526,41 +519,22 @@ The resulting package declaration might look something like this:
 
       type Unsigned_8 is mod 2 ** 8;
 
-      function Shift_Left   (Value  : Unsigned_8;
-                             Amount : Natural)
-                             return Unsigned_8;
-      function Shift_Right  (Value  : Unsigned_8;
-                             Amount : Natural)
-                             return Unsigned_8;
-      function Rotate_Left  (Value  : Unsigned_8;
-                             Amount : Natural)
-                             return Unsigned_8;
-      function Rotate_Right (Value  : Unsigned_8;
-                             Amount : Natural)
-                             return Unsigned_8;
-      function Shift_Right_Arithmetic
-        (Value  : Unsigned_8;
-         Amount : Natural)
-         return Unsigned_8;
+      function Shift_Left   (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
+      function Shift_Right  (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
+      function Rotate_Left  (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
+      function Rotate_Right (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
+      function Shift_Right_Arithmetic (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
 
       type Unsigned_16 is mod 2 ** 16;
 
-      function Shift_Left  (Value  : Unsigned_16;
-                            Amount : Natural)
-                            return Unsigned_16;
-      function Shift_Right (Value  : Unsigned_16;
-                            Amount : Natural)
-                            return Unsigned_16;
+      function Shift_Left  (Value : Unsigned_16;  Amount : Natural) return Unsigned_16;
+      function Shift_Right (Value : Unsigned_16;  Amount : Natural) return Unsigned_16;
       ...
 
       type Unsigned_32 is mod 2 ** 32;
 
-      function Shift_Left  (Value  : Unsigned_32;
-                            Amount : Natural)
-                            return Unsigned_32;
-      function Shift_Right (Value  : Unsigned_32;
-                            Amount : Natural)
-                            return Unsigned_32;
+      function Shift_Left  (Value : Unsigned_32;  Amount : Natural) return Unsigned_32;
+      function Shift_Right (Value : Unsigned_32;  Amount : Natural) return Unsigned_32;
       ...
 
       type IEEE_Float_32 is digits 6;
@@ -586,15 +560,15 @@ shift/rotate operations, use inheritance:
 
    type UInt32 is new Interfaces.Unsigned_32;
 
-
-GNAT also defines a pragma:
+GNAT also defines a pragma, as an alternative to inheritance:
 
 .. code-block:: ada
 
    type UInt32 is mod 2 ** 32;
    pragma Provide_Shift_Operators (UInt32);
 
-Of course, the portable approach is preferable, all other things being equal.
+The approach using inheritance is preferable because it is portable, all other
+things being equal.
 
 One reason to make up your own unsigned type is that you need one that does not
 in fact reflect the target hardware's numeric types. For example, a hardware
@@ -679,20 +653,13 @@ bring up the source code in GNAT Studio.
       SCHAR_MAX : constant := 127;
       UCHAR_MAX : constant := 255;
 
-      --  Signed and Unsigned Integers. Note that
-      --  in GNAT, we have ensured that the standard
-      --  predefined Ada types correspond to the
-      --  standard C types
+      --  Signed and Unsigned Integers. Note that in GNAT, we have ensured that
+      --  the standard predefined Ada types correspond to the standard C types
 
       type int   is new Integer;
       type short is new Short_Integer;
-      type long  is range
-        -(2 ** (System.Parameters.long_bits
-                - Integer'(1))
-         )
-        .. +(2 ** (System.Parameters.long_bits
-                   - Integer'(1))
-            ) - 1;
+      type long  is range -(2 ** (System.Parameters.long_bits - Integer'(1)))
+        .. +(2 ** (System.Parameters.long_bits - Integer'(1))) - 1;
       type long_long is new Long_Long_Integer;
 
       type signed_char is range SCHAR_MIN .. SCHAR_MAX;
@@ -719,20 +686,17 @@ bring up the source code in GNAT Studio.
 
       nul : constant char := char'First;
 
-      function To_C   (Item : Character)
-                       return char;
-      function To_Ada (Item : char)
-                       return Character;
+      function To_C   (Item : Character) return char;
+      function To_Ada (Item : char)      return Character;
 
-      type char_array is
-        array (size_t range <>) of aliased char;
+      type char_array is array (size_t range <>) of aliased char;
       for char_array'Component_Size use CHAR_BIT;
 
       ...
 
    end Interfaces.C;
 
-The primary purpose of these types is for use as formal parameters for Ada
+The primary purpose of these types is for use in the formal parameters of Ada
 subprograms imported from C or exported to C. The various conversion functions
 can be called from within Ada to manipulate the actual parameters.
 
@@ -772,8 +736,7 @@ enumeration type declaration is a good idea:
 
 .. code-block:: ada
 
-   type Small_Enum is (A, B, C)
-     with Convention => C;
+   type Small_Enum is (A, B, C) with Convention => C;
 
 Now the object size will be 32, the same as :ada:`int`.
 
@@ -833,11 +796,11 @@ child package under :ada:`Interfaces`.
 The rules are expressed in terms of scalar types, "elementary" types, array
 types, and record types. Remember that scalar types are composed of the
 discrete types and the real types, so we're talking about the signed and
-modular integers, enumerations, floating-point, and the two fixed-point types.
-The "elementary" types consist of the scalars and access types. The rules are
-fairly intuitive, but throw in Ada's access parameters and parameter modes and
-some subtleties arise. We won't cover all the various rules but will explore
-some of the subtleties.
+modular integers, enumerations, floating-point, and the two kinds of
+fixed-point types. The "elementary" types consist of the scalars and access
+types. The rules are fairly intuitive, but throw in Ada's access parameters and
+parameter modes and some subtleties arise. We won't cover all the various rules
+but will explore some of the subtleties.
 
 First, the easy cases: mode :ada:`in` scalar parameters, such as :ada:`int`,
 as simply passed by copy. Scalar parameters are passed by copy anyway in Ada so
@@ -856,22 +819,22 @@ Now to the more complicated cases. First, some C ABIs (application binary
 interfaces) pass small structs by copy instead of by reference. That can make
 sense, in particular when the struct is small, say the size of an address or
 smaller. In that case there's no performance benefit to be had by passing a
-reference. When that situation applies, there is another convention we have not
-yet mentioned: :ada:`C_Pass_By_Copy`. As a result the record parameter will be
-passed by copy instead of the default, by reference, as long as the mode is
-:ada:`in`. For example:
+reference. When that situation applies, there is another convention we have
+not yet mentioned: :ada:`C_Pass_By_Copy`. As a result the record parameter
+will be passed by copy instead of the default, by reference (i.e., :ada:`T`
+rather than :ada:`*T`), as long as the mode is :ada:`in`. For example:
 
 .. code-block:: ada
 
    type R2 is record
       V : int;
    end record
-     with Convention => C_Pass_By_Copy;
+   with Convention => C_Pass_By_Copy;
 
-   procedure F2 (P : R2)
-     with Import,
-          Convention => C,
-          External_Name => "f2";
+   procedure F2 (P : R2) with
+      Import,
+      Convention => C,
+      External_Name => "f2";
 
 
 .. code-block:: c
@@ -882,9 +845,11 @@ passed by copy instead of the default, by reference, as long as the mode is
 
    void f2 (R2 p);
 
-On the C side we expect that p is passed by copy and indeed that is how we find
-it. That said, passing record values to structs by reference is the more common
-mechanism. Like arrays, records are typically larger than an address.
+On the C side we expect that :c:`p` is passed by copy and indeed that is how we
+find it. That said, passing record values to structs by reference is the more
+common programmer choice. Like arrays, records are typically larger than an
+address. The point here is that the Ada code can be configured easily to match
+the C code.
 
 Next, consider passing array values, both to and from C. When passing an array
 value to C, remember that Ada array types have bounds. Those bounds are either
@@ -900,17 +865,14 @@ along with the array object itself.
 
 .. code-block:: ada
 
-   type List is
-     array (Integer range <>) of Interfaces.C.int;
+   type List is array (Integer range <>) of Interfaces.C.int;
 
    subtype Constrained_List is List (1 .. 100);
 
-   procedure P (V    : Constrained_List;
-                Size : Interfaces.C.int);
+   procedure P (V : Constrained_List;  Size : Interfaces.C.int);
    pragma Import (C, P, "p");
 
-   Obj : Constrained_List := (others => 42);
-   -- arbitrary values
+   Obj : Constrained_List := (others => 42);  -- arbitrary values
 
 
 With that, we can just pass the value by reference as usual on the C side:
@@ -930,11 +892,9 @@ parameter type instead:
 
 .. code-block:: ada
 
-   type List is
-     array (Integer range <>) of Interfaces.C.int;
+   type List is array (Integer range <>) of Interfaces.C.int;
 
-   procedure P (V    : List;
-                Size : Interfaces.C.int);
+   procedure P (V : List;  Size : Interfaces.C.int);
    pragma Import (C, P, "p");
 
 The C function parameter profile wouldn't change. But why does this work? With
@@ -957,12 +917,10 @@ pass the bounds explicitly:
    type List is array (Natural) of int;
    --  DO NOT DECLARE AN OBJECT OF THIS TYPE
 
-   procedure P (V    : List;
-                Size : Interfaces.C.int);
+   procedure P (V : List; Size : Interfaces.C.int);
    pragma Export (C, P, "p");
 
-   procedure P (V    : List;
-                Size : Interfaces.C.int) is
+   procedure P (V : List; Size : Interfaces.C.int) is
    begin
       for J in 0 .. Size - 1 loop
          -- whatever
@@ -1042,23 +1000,18 @@ C function.  A subset of the package content is as follows:
       type chars_ptr is private;
       ...
 
-      function New_Char_Array (Chars : in char_array)
-                               return chars_ptr;
+      function New_Char_Array (Chars : in char_array) return chars_ptr;
 
-      function New_String (Str : in String)
-                           return chars_ptr;
+      function New_String (Str : in String) return chars_ptr;
 
       procedure Free (Item : in out chars_ptr);
       ...
 
-      function Value (Item : in chars_ptr)
-                      return char_array;
-      function Value (Item : in chars_ptr)
-                      return String;
+      function Value (Item : in chars_ptr) return char_array;
+      function Value (Item : in chars_ptr) return String;
       ...
 
-      function Strlen (Item : in chars_ptr)
-                       return size_t;
+      function Strlen (Item : in chars_ptr) return size_t;
 
       procedure Update (Item   : in chars_ptr;
                         Offset : in size_t;
@@ -1208,7 +1161,6 @@ would be as follows:
 
 
    with System.Machine_Code; use System.Machine_Code;
-
    procedure Halt is
    begin
       Short_Instruction'(Command => HLT);
@@ -1229,10 +1181,8 @@ In GNAT, the content of :ada:`System.Machine_Code` looks something like this:
 
    type Asm_Input_Operand  is ...
    type Asm_Output_Operand is ...
-   type Asm_Input_Operand_List  is
-     array (Integer range <>) of Asm_Input_Operand;
-   type Asm_Output_Operand_List is
-     array (Integer range <>) of Asm_Output_Operand;
+   type Asm_Input_Operand_List  is array (Integer range <>) of Asm_Input_Operand;
+   type Asm_Output_Operand_List is array (Integer range <>) of Asm_Output_Operand;
 
    type Asm_Insn is private;
 
@@ -1240,13 +1190,10 @@ In GNAT, the content of :ada:`System.Machine_Code` looks something like this:
 
    function Asm
       (Template : String;
-       Outputs  : Asm_Output_Operand
-                  := No_Output_Operands;
-       Inputs   : Asm_Input_Operand
-                  := No_Input_Operands;
+       Outputs  : Asm_Output_Operand := No_Output_Operands;
+       Inputs   : Asm_Input_Operand  := No_Input_Operands;
        Clobber  : String  := "";
-       Volatile : Boolean := False)
-       return Asm_Insn;
+       Volatile : Boolean := False) return Asm_Insn;
 
 With this package content, the expression in a code statement is of type
 Asm_Insn, short for "assembly instruction." Multiple overloaded functions named
@@ -1282,10 +1229,7 @@ follows:
 
    type GPIO_Port is limited record
       ...
-
-      LCKR : Word with Atomic;
-      -- lock register
-
+      LCKR : Word with Atomic;  -- lock register
       ...
    end record with ...
 
@@ -1306,8 +1250,7 @@ Per the ST Micro Reference Manual, the lock control bit is referred to as
 
 .. code-block:: ada
 
-   LCCK : constant Word := 16#0001_0000#;
-   -- the "lock control bit"
+   LCCK : constant Word := 16#0001_0000#;  -- the "lock control bit"
 
 That bit is also known as the "Lock Key" (hence the abbreviation) because it is
 used to control the locking of port/pin configurations.
@@ -1327,10 +1270,8 @@ Therefore, the Ada types are:
 .. code-block:: ada
 
    type GPIO_Pin is
-      (Pin_0, Pin_1, Pin_2,  Pin_3,
-       Pin_4, Pin_5, Pin_6,  Pin_7,
-       Pin_8, Pin_9, Pin_10, Pin_11,
-       Pin_12, Pin_13, Pin_14, Pin_15);
+      (Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
+       Pin_8, Pin_9, Pin_10, Pin_11, Pin_12, Pin_13, Pin_14, Pin_15);
 
    for GPIO_Pin use (Pin_0  => 16#0001#,
                      Pin_1  => 16#0002#,
@@ -1344,20 +1285,20 @@ bit in the bit-mask.
 
 With that in place, let's lock a pin. A specific sequence is required to set a
 pin's lock bit. The sequence writes and reads values from the port's LCKR
-register. Remember that this 32-bit register has 16 bits for the pin mask (0 ..
-15), with bit #16 used as the "lock control bit".
+register. Remember that this 32-bit register has 16 bits for the pin mask (0
+.. 15), with bit #16 used as the "lock control bit".
 
-1. write a 1 to the lock control bit with a 1 in the pin bit mask for the pin
+#. write a 1 to the lock control bit with a 1 in the pin bit mask for the pin
    to be locked
 
-2. write a 0 to the lock control bit with a 1 in the pin bit mask
-   for the pin to be locked
+#. write a 0 to the lock control bit with a 1 in the pin bit mask for the pin
+   to be locked
 
-3. do step 1 again
+#. do step 1 again
 
-4. read the entire LCKR register
+#. read the entire LCKR register
 
-5. read the entire LCKR register again (optional)
+#. read the entire LCKR register again (optional)
 
 Throughout the sequence the same value for the lower 16 bits of the word must
 be maintained (i.e., the pin mask), including when clearing the LCCK bit in the
@@ -1367,26 +1308,19 @@ If we wrote this in Ada it would look like this:
 
 .. code-block:: ada
 
-   procedure Lock (Port : in out GPIO_Port;
-                   Pin  :        GPIO_Pin) is
+   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
       Temp : Word with Volatile;
    begin
-      --  set the lock control bit and the
-      --  pin bit, clear the others
+      --  set the lock control bit and the pin bit, clear the others
       Temp := LCCK or Pin'Enum_Rep;
-
       --  write the lock and pin bits
       Port.LCKR := Temp;
-
       --  clear the lock bit in the upper half
       Port.LCKR := Pin'Enum_Rep;
-
       --  write the lock bit again
       Port.LCKR := Temp;
-
       --  read the lock bit
       Temp := Port.LCKR;
-
       --  read the lock bit again
       Temp := Port.LCKR;
    end Lock;
@@ -1394,7 +1328,7 @@ If we wrote this in Ada it would look like this:
 :ada:`Pin'Enum_Rep` gives us the underlying value for the enumeration value. We
 cannot use :ada:`'Pos` because that attribute provides the logical position
 number within the enumerated values, and as such always increases
-monotonically. We need the underlying representation value that we specified
+consecutively. We need the underlying representation value that we specified
 explicitly.
 
 The Ada procedure works, but only if the optimizer is enabled (which also
@@ -1409,31 +1343,14 @@ is appropriate for all the reasons presented earlier:
                    Pin  :        GPIO_Pin) is
       use System.Machine_Code, ASCII, System;
    begin
-      Asm ("orr  r3, %1, #65536"  & LF & HT &
-           -- 0) Temp := LCCK or Pin, ie both
-           --    set (others 0)
-
-           "str  r3, [%0, #28]"   & LF & HT &
-           -- 1) Port.LCKR := Temp
-
-           "str  %1, [%0, #28]"   & LF & HT &
-           -- 2) Port.LCKR := Pin alone,
-           --    clearing LCCK bit
-
-           "str  r3, [%0, #28]"   & LF & HT &
-           -- 3) Port.LCKR := Temp
-
-           "ldr  r3, [%0, #28]"   & LF & HT &
-           -- 4) Temp := Port.LCKR
-
-           "ldr  r3, [%0, #28]"   & LF & HT,
-           -- 5) Temp := Port.LCKR
-
-           Inputs =>
-             (Address'Asm_Input ("r", This'Address),
-              -- %0
-             (GPIO_Pin'Asm_Input ("r", Pin))),
-              -- %1
+      Asm ("orr  r3, %1, #65536"  & LF & HT &  -- 0) Temp := LCCK or Pin, ie both set (others 0)
+           "str  r3, [%0, #28]"   & LF & HT &  -- 1) Port.LCKR := Temp
+           "str  %1, [%0, #28]"   & LF & HT &  -- 2) Port.LCKR := Pin alone, clearing LCCK bit
+           "str  r3, [%0, #28]"   & LF & HT &  -- 3) Port.LCKR := Temp
+           "ldr  r3, [%0, #28]"   & LF & HT &  -- 4) Temp := Port.LCKR
+           "ldr  r3, [%0, #28]"   & LF & HT,   -- 5) Temp := Port.LCKR
+           Inputs => (Address'Asm_Input ("r", This'Address), -- %0
+                     (GPIO_Pin'Asm_Input ("r", Pin))),       -- %1
            Volatile => True,
            Clobber  => ("r3"));
    end Lock;
