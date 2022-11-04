@@ -523,18 +523,23 @@ The resulting package declaration might look something like this:
       function Shift_Right  (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
       function Rotate_Left  (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
       function Rotate_Right (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
-      function Shift_Right_Arithmetic (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
+      function Shift_Right_Arithmetic (Value : Unsigned_8;  Amount : Natural) 
+        return Unsigned_8;
 
       type Unsigned_16 is mod 2 ** 16;
 
-      function Shift_Left  (Value : Unsigned_16;  Amount : Natural) return Unsigned_16;
-      function Shift_Right (Value : Unsigned_16;  Amount : Natural) return Unsigned_16;
+      function Shift_Left  (Value : Unsigned_16;  Amount : Natural) 
+        return Unsigned_16;
+      function Shift_Right (Value : Unsigned_16;  Amount : Natural) 
+        return Unsigned_16;
       ...
 
       type Unsigned_32 is mod 2 ** 32;
 
-      function Shift_Left  (Value : Unsigned_32;  Amount : Natural) return Unsigned_32;
-      function Shift_Right (Value : Unsigned_32;  Amount : Natural) return Unsigned_32;
+      function Shift_Left  (Value : Unsigned_32;  Amount : Natural) 
+        return Unsigned_32;
+      function Shift_Right (Value : Unsigned_32;  Amount : Natural) 
+        return Unsigned_32;
       ...
 
       type IEEE_Float_32 is digits 6;
@@ -1343,12 +1348,12 @@ is appropriate for all the reasons presented earlier:
                    Pin  :        GPIO_Pin) is
       use System.Machine_Code, ASCII, System;
    begin
-      Asm ("orr  r3, %1, #65536"  & LF & HT &  -- 0) Temp := LCCK or Pin, ie both set (others 0)
-           "str  r3, [%0, #28]"   & LF & HT &  -- 1) Port.LCKR := Temp
-           "str  %1, [%0, #28]"   & LF & HT &  -- 2) Port.LCKR := Pin alone, clearing LCCK bit
-           "str  r3, [%0, #28]"   & LF & HT &  -- 3) Port.LCKR := Temp
-           "ldr  r3, [%0, #28]"   & LF & HT &  -- 4) Temp := Port.LCKR
-           "ldr  r3, [%0, #28]"   & LF & HT,   -- 5) Temp := Port.LCKR
+      Asm ("orr  r3, %1, #65536" & LF & HT &  -- 0) Temp := LCCK or Pin'Enum_Rep
+           "str  r3, [%0, #28]"  & LF & HT &  -- 1) Port.LCKR := Temp
+           "str  %1, [%0, #28]"  & LF & HT &  -- 2) Port.LCKR := Pin'Enum_Rep
+           "str  r3, [%0, #28]"  & LF & HT &  -- 3) Port.LCKR := Temp
+           "ldr  r3, [%0, #28]"  & LF & HT &  -- 4) Temp := Port.LCKR
+           "ldr  r3, [%0, #28]"  & LF & HT,   -- 5) Temp := Port.LCKR
            Inputs => (Address'Asm_Input ("r", This'Address), -- %0
                      (GPIO_Pin'Asm_Input ("r", Pin))),       -- %1
            Volatile => True,

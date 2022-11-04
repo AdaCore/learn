@@ -824,20 +824,6 @@ using the reserved word :ada:`aliased`:
       X : aliased Integer;
    end P;
 
-And for completeness, strictly complying with the "letter of the law," we
-should do so in the first example:
-
-.. code-block:: ada
-
-   type Bits32 is array (0 .. 31) of Boolean with
-     Component_Size => 1;
-
-   X : aliased Integer;
-   Y : Bits32 with Address => X'Address;
-
-Now we can be sure that :ada:`X'Address` will not return
-:ada:`System.Null_Address`.
-
 But in the case of the declaration of :ada:`X` in the package declaration, how
 did the developer of the package know that some other unit, a client of the
 package, would query the address of :ada:`X`, such that it needed to be
@@ -861,7 +847,8 @@ That said, you could at least verify the assumption:
 
 .. code-block:: ada
 
-   pragma Compile_Time_Error (Integer'Object_Size /= 32, "Integers expected to be 32 bits");
+   pragma Compile_Time_Error (Integer'Object_Size /= 32, 
+                              "Integers expected to be 32 bits");
    X : aliased Integer;
    Y : Bits32 with Address => X'Address;
 
