@@ -1288,11 +1288,17 @@ pin's lock bit. The sequence writes and reads values from the port's LCKR
 register. Remember that this 32-bit register has 16 bits for the pin mask (0
 .. 15), with bit #16 used as the "lock control bit".
 
-1) write a 1 to the lock control bit with a 1 in the pin bit mask for the pin to be locked
-2) write a 0 to the lock control bit with a 1 in the pin bit mask for the pin to be locked
-3) do step 1 again
-4) read the entire LCKR register
-5) read the entire LCKR register again (optional)
+#. write a 1 to the lock control bit with a 1 in the pin bit mask for the pin
+   to be locked
+
+#. write a 0 to the lock control bit with a 1 in the pin bit mask for the pin
+   to be locked
+
+#. do step 1 again
+
+#. read the entire LCKR register
+
+#. read the entire LCKR register again (optional)
 
 Throughout the sequence the same value for the lower 16 bits of the word must
 be maintained (i.e., the pin mask), including when clearing the LCCK bit in the
