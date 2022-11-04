@@ -821,8 +821,8 @@ sense, in particular when the struct is small, say the size of an address or
 smaller. In that case there's no performance benefit to be had by passing a
 reference. When that situation applies, there is another convention we have
 not yet mentioned: :ada:`C_Pass_By_Copy`. As a result the record parameter
-will be passed by copy instead of the default, by reference (i.e., "T" rather
-than "*T"), as long as the mode is :ada:`in`. For example:
+will be passed by copy instead of the default, by reference (i.e., :ada:`T`
+rather than :ada:`*T`), as long as the mode is :ada:`in`. For example:
 
 .. code-block:: ada
 
