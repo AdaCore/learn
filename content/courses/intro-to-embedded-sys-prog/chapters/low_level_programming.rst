@@ -154,8 +154,8 @@ for the numeric limits of an Ada compiler for an Arm 32-bit SoC:
 :ada:`Min_Int` and :ada:`Max_Int` supply the most-negative and most-positive
 integer values supported by the machine.
 
-:ada:`Max_Binary_Modulus` is the largest power of two allowed as the modulus of a
-modular type definition.
+:ada:`Max_Binary_Modulus` is the largest power of two allowed as the modulus of
+a modular type definition.
 
 But a modular type need not be defined in terms of powers of two. An
 arbitrary modulus is allowed, as long as it is not bigger than the
@@ -276,8 +276,8 @@ least significant bit.
 Strictly speaking, this constant gives us the default order for bits
 within storage elements in record representation clauses, not the order
 of bytes within words. However, we can usually use it for the byte order
-too. In particular, if :ada:`Word_Size` is greater than :ada:`Storage_Unit`, a word
-necessarily consists of multiple storage elements, so the default bit
+too. In particular, if :ada:`Word_Size` is greater than :ada:`Storage_Unit`, a
+word necessarily consists of multiple storage elements, so the default bit
 ordering is the same as the ordering of storage elements in a word.
 
 Let's take that example of swapping the bytes in a received Ethernet
@@ -389,10 +389,10 @@ likewise, if we misunderstand the result the postcondition will let us
 know (at least to the extent that the return value does that).
 
 For a sample call to our imported routine, imagine that we have a
-procedure that copies the bytes of a :ada:`String` parameter into a :ada:`Buffer`
-parameter, which is just a contiguous array of bytes. We need to tell
-:ada:`MemCopy` the addresses of the arguments passed so we apply the :ada:`'Address`
-attribute accordingly:
+procedure that copies the bytes of a :ada:`String` parameter into a
+:ada:`Buffer` parameter, which is just a contiguous array of bytes. We need to
+tell :ada:`MemCopy` the addresses of the arguments passed so we apply the
+:ada:`'Address` attribute accordingly:
 
 .. code-block:: ada
 
@@ -412,14 +412,14 @@ Although we assign :ada:`Result` we don't otherwise use it, so we tell the
 compiler this is not a mistake via the :ada:`Unreferenced` aspect. And if we
 do turn around and reference it the compiler will complain, as it should.
 Note that :ada:`Unreferenced` is defined by GNAT, so usage is not necessarily
-portable. Other vendors may or may not implement something like it, perhaps with
-a different name.
+portable. Other vendors may or may not implement something like it, perhaps
+with a different name.
 
 (We don't show the preconditions for :ada:`Put`, but they would have specified
 that :ada:`Start` must be a valid index into this particular buffer, and that
 there must be room in the :ada:`Buffer` argument for the number of bytes in
-:ada:`Value` when starting at the :ada:`Start` index, so that we don't copy past the
-end of the :ada:`Buffer` argument.)
+:ada:`Value` when starting at the :ada:`Start` index, so that we don't copy
+past the end of the :ada:`Buffer` argument.)
 
 There are other characteristics we might want to query too.
 
@@ -784,10 +784,10 @@ care!
 We can query the addresses of objects, and other things too, but
 objects, especially variables, are the most common case. In the above,
 we say :ada:`X'Address` to query the starting address of object
-:ada:`X`. With that information we know what starting address to specify for our
-bit-mask overlay :ada:`Y`. Now :ada:`X` and :ada:`Y` are aliases, and therefore we can
-manipulate those memory bytes as either an integer or as an array of
-individual bits. (Note that we could have used a modular type as the
+:ada:`X`. With that information we know what starting address to specify for
+our bit-mask overlay :ada:`Y`. Now :ada:`X` and :ada:`Y` are aliases, and
+therefore we can manipulate those memory bytes as either an integer or as an
+array of individual bits. (Note that we could have used a modular type as the
 overlay if all we wanted was an unsigned view. (Marking
 :ada:`X` as :ada:`aliased` ensures that :ada:`'Address` is well-defined.)
 
@@ -807,13 +807,13 @@ the same compilation unit. Most compilers will be friendly in this scenario,
 representing :ada:`X` in such a way that querying the address will return a
 non-null address value. But suppose, instead, that :ada:`X` was declared
 in some other compilation unit, in the visible part of a package declaration.
-That package declaration can be (and usually will be) compiled independently of clients,
-with the result that :ada:`X` might be represented in some way that cannot
-supporting querying the address meaningfully. The compiler might very well
-place the object in a register, for example, for the sake of the performance
-increase (another way of being "friendly"). But in that case :ada:`System.Null_Address`
-will be returned by the query and, consequently, the declaration for :ada:`Y`
-will not result in the desired overlaying.
+That package declaration can be (and usually will be) compiled independently of
+clients, with the result that :ada:`X` might be represented in some way that
+cannot supporting querying the address meaningfully. The compiler might very
+well place the object in a register, for example, for the sake of the
+performance increase (another way of being "friendly"). But in that case
+:ada:`System.Null_Address` will be returned by the query and, consequently, the
+declaration for :ada:`Y` will not result in the desired overlaying.
 
 Therefore, the declaration of :ada:`X` should be marked as aliased,
 using the reserved word :ada:`aliased`:
@@ -835,24 +835,25 @@ should do so in the first example:
    X : aliased Integer;
    Y : Bits32 with Address => X'Address;
 
-Now we can be sure that :ada:`X'Address` will not return :ada:`System.Null_Address`.
+Now we can be sure that :ada:`X'Address` will not return
+:ada:`System.Null_Address`.
 
 But in the case of the declaration of :ada:`X` in the package declaration, how
 did the developer of the package know that some other unit, a client of the
-package, would query the address of :ada:`X`, such that it needed to be aliased?
-Indeed, the package developer might not know. The programmer is responsible for
-ensuring a valid and appropriate :ada:`Address` value is used in the declaration
-of :ada:`Y`. Execution is erroneous otherwise, so we can't say what would happen
-in that case. Maybe an exception is raised or a machine trap, maybe not. Worse,
-the compiler switches applied when building can make a difference: :ada:`P.X` might not
-be placed in a register unless the optimizer is enabled. Hence the code might
-work as expected when built for debugging, with the optimizer disabled, and then
-not do so when re-built for the final release. You'd probably have to find this
-issue by debugging the application.
+package, would query the address of :ada:`X`, such that it needed to be
+aliased? Indeed, the package developer might not know. The programmer is
+responsible for ensuring a valid and appropriate :ada:`Address` value is used
+in the declaration of :ada:`Y`. Execution is erroneous otherwise, so we can't
+say what would happen in that case. Maybe an exception is raised or a machine
+trap, maybe not. Worse, the compiler switches applied when building can make a
+difference: :ada:`P.X` might not be placed in a register unless the optimizer
+is enabled. Hence the code might work as expected when built for debugging,
+with the optimizer disabled, and then not do so when re-built for the final
+release. You'd probably have to find this issue by debugging the application.
 
-On a related note, you may be asking yourself how to know that type :ada:`Integer` is 32 bits
-wide, so that we know what size array to use for the bit-mask. The
-answer is that you just have to know the target well when doing
+On a related note, you may be asking yourself how to know that type
+:ada:`Integer` is 32 bits wide, so that we know what size array to use for the
+bit-mask. The answer is that you just have to know the target well when doing
 low-level programming, and that portability is not the controlling
 requirement. The hardware becomes much more visible, as we mentioned.
 
@@ -987,9 +988,9 @@ enumerals, accidentally? Our size clause set to 8 would not compile, and
 we'd be told that something is amiss.
 
 However, note that if your supposedly "confirming" size clause actually
-specifies a size larger than what the compiler would have chosen, you won't know,
-because the compiler will silently accept sizes larger than necessary. It just
-won't accept sizes that are too small.
+specifies a size larger than what the compiler would have chosen, you won't
+know, because the compiler will silently accept sizes larger than necessary. It
+just won't accept sizes that are too small.
 
 There are other confirming representation clauses as well. Thinking
 again of enumeration types, the underlying numeric values are
@@ -1035,14 +1036,14 @@ otherwise the relational operators won't work correctly. For example,
 for type Commands above, Off is less than On, so the specified encoding
 value for Off must be less than that of On.
 
-Note that the values given in the example no longer increase consecutively, i.e.,
-there's a gap. That gap is OK, in itself. As long as we use the two
+Note that the values given in the example no longer increase consecutively,
+i.e., there's a gap. That gap is OK, in itself. As long as we use the two
 enumerals the same way we'd use named constants, all is well. Otherwise,
 there is both a storage issue and a performance issue possible. Let's
 say that we use that enumeration type as the index for an array type.
 Perfectly legal, but how much storage is allocated to objects of this
-array type? Enough for exactly two components? Four, with two unused? The answer
-depends on the compiler, and is therefore not portable. The bigger the
+array type? Enough for exactly two components? Four, with two unused? The
+answer depends on the compiler, and is therefore not portable. The bigger the
 gaps, the bigger the overall storage difference possible. Likewise,
 imagine we have a for-loop iterating over the index values of one of
 these array objects. The for-loop parameter cannot be coded by the
@@ -1189,12 +1190,13 @@ allocating 4 bytes to the prior component :ada:`X`: bytes 0 through 3
 specifically. :ada:`M` just occupies one storage element so the next component,
 :ada:`B`, starts at offset 5. Likewise, component :ada:`C` starts at offset 6.
 
-Note that there is no requirement for the components in the record representation
-clause to be in any particular textual order. The offsets alone specify the
-components' order in memory. A good style, though, is to order the components in
-the representation specification so that their textual order corresponds to their
-order in memory. Doing so facilitates our verifying that the offsets are correct
-because the offsets will be increasing as we read the specification.
+Note that there is no requirement for the components in the record
+representation clause to be in any particular textual order. The offsets alone
+specify the components' order in memory. A good style, though, is to order the
+components in the representation specification so that their textual order
+corresponds to their order in memory. Doing so facilitates our verifying that
+the offsets are correct because the offsets will be increasing as we read the
+specification.
 
 An individual component may occupy part of a single storage element, all
 of a single storage element, multiple contiguous storage elements, or a
@@ -1431,8 +1433,8 @@ the alignment of the :ada:`Temperature` component is 2. Wouldn't it slow down
 the code, or even trap? Well, maybe. It depends on the machine. If it
 doesn't work we would just have to use 32 bits for the record type, with
 the original alignment of 2, for a larger total array size. Of course, if the
-compiler recognizes that a representation cannot be supported it must reject the code,
-but the compiler might not recognize the problem.
+compiler recognizes that a representation cannot be supported it must reject
+the code, but the compiler might not recognize the problem.
 
 We said earlier that there are only a small number of reasons to specify
 :ada:`'Size` for a type. We can mention one of them now. Setting :ada:`'Size`
@@ -1508,7 +1510,8 @@ is to increase the allocation, as shown above. How much? Depends on the
 application code. The quick-and-dirty approach is to iteratively
 increase the allocation until the task runs properly. Then, reverse the
 approach until it starts to fail again. Add a little back until it runs,
-and leave it there. We'll mention a much better approach momentarily (:program:`GNATstack`).
+and leave it there. We'll mention a much better approach momentarily
+(:program:`GNATstack`).
 
 Even if the task doesn't seem to run out of task stack, you might want
 to reduce it anyway, to the extent possible, because the total amount of
@@ -1601,8 +1604,8 @@ strictly with aliased objects, never doing any allocations, you can have
 the compiler enforce your intent. There are application domains that
 prohibit dynamic allocations due to the difficulties in analyzing their
 behavior, including issues of fragmentation and exhaustion. Access types
-themselves are allowed in these domans. You'd simply use them to designate aliased
-objects alone. In addition, in this usage scenario, if the
+themselves are allowed in these domains. You'd simply use them to designate
+aliased objects alone. In addition, in this usage scenario, if the
 implementation associates an actual pool with each access type, the
 pool's storage would be wasted since you never intend to allocate any
 storage from it. Specifying a size of 0 tells the implementation not to
@@ -1983,7 +1986,8 @@ left. See the GNAT RM for the other details.
 The next requirement concerns alignment. As we mentioned earlier, modern
 architectures tend to have strict alignment requirements. We can
 meaningfully convert to a type with a stricter alignment, or to a type
-with no alignment requirement, but converting in the other direction would require a copy.
+with no alignment requirement, but converting in the other direction would
+require a copy.
 
 Next, recall that objects of unconstrained types, such as unconstrained
 array types or discriminated record types, must have their constraints
@@ -2289,8 +2293,8 @@ we could get an invalid value from a sensor. Hardware sensors are
 frequently unreliable and noisy. We might get an invalid value from a
 call to an imported function implemented in some other language.
 Whenever an assignment is aborted, the target of the assignment might
-not be fully assigned, leading to so-called "abnormal" values. Other causes are also
-possible. The problem is not unusual in low-level programming.
+not be fully assigned, leading to so-called "abnormal" values. Other causes are
+also possible. The problem is not unusual in low-level programming.
 
 How do we avoid the resulting bounded errors and erroneous execution?
 
@@ -2348,8 +2352,8 @@ erroneous execution can be prevented too. (It also checks that any
 subtype predicate defined for the :ada:`Target` type is also satisfied, but
 that's a lesson for another day.)
 
-However, the :ada:`Valid` attribute can be applied only to scalar objects. There
-is no language-defined attribute for checking objects of composite types.
+However, the :ada:`Valid` attribute can be applied only to scalar objects.
+There is no language-defined attribute for checking objects of composite types.
 That's because it would be very hard to implement for some types, if not
 impossible. For example, given a typical run-time model, it is
 impossible to check the validity of an access value component.

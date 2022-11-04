@@ -175,8 +175,8 @@ assumption. Besides, active polling consumes power. On an embedded
 platform, conserving power is often important.
 
 That loop polling the device will never exit if the device can fail to
-signal completion. Or maybe it might take too long in some odd case. If you don't
-want to be potentially stuck in the loop indefinitely, chewing up cycles
+signal completion. Or maybe it might take too long in some odd case. If you
+don't want to be potentially stuck in the loop indefinitely, chewing up cycles
 and power, you can add an upper bound on the number of attempts, i.e.,
 loop iterations. For example:
 
@@ -721,9 +721,9 @@ location is purely a matter of choice (unlike the variables), but there
 is a good reason to hide it: application software can call an interrupt
 handler procedure too. If you don't ever intend for that to happen, have
 the compiler enforce your intent. An alert code reader will then recognize that
-clients cannot call that procedure. If, on the other hand, the handler is declared in
-the visible part, the reader must examine more of the code to determine
-whether there are any callers in the application code. Granted, a
+clients cannot call that procedure. If, on the other hand, the handler is
+declared in the visible part, the reader must examine more of the code to
+determine whether there are any callers in the application code. Granted, a
 software call to an interrupt handler is rare, but not illegal, so you
 should state your intent in the code in an enforceable manner.
 

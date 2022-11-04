@@ -80,9 +80,9 @@ of the smallest addressable memory unit on the machine, which is to say,
 smaller than the machine instructions can read/write memory
 individually. A Boolean record component is a good example, and very
 common. The machine cannot usually read/write single bits in memory, so
-the generated code will almost certainly read or write a byte to get the enclosed
-single-bit Boolean component. It might use a larger sized access too, a
-half-word or word. Then the generated code masks off the bits that are
+the generated code will almost certainly read or write a byte to get the
+enclosed single-bit Boolean component. It might use a larger sized access too,
+a half-word or word. Then the generated code masks off the bits that are
 not of interest and does some shifts to get the desired component.
 
 Reading and writing the bytes surrounding the component accessed in the
@@ -607,8 +607,8 @@ internally as required by the hardware. We don't show that part.
 
 The aspect :ada:`Atomic` is applied to the entire record type, ensuring that
 the memory mapped to the hardware register is loaded and stored only as
-32-bit quantities. In this example it isn't that we want the loads and stores to be
-indivisible. Rather, we want the generated machine instructions that load
+32-bit quantities. In this example it isn't that we want the loads and stores
+to be indivisible. Rather, we want the generated machine instructions that load
 and store the object to use 32-bit word instructions, even if we are only
 reading or updating a component of the object. That's what the hardware
 requires for all accesses.

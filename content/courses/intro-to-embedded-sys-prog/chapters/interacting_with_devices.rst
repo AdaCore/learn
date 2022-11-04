@@ -66,8 +66,8 @@ interact directly with the device without unduly affecting productivity.
 For example, there was a board that had a user-accessible rotary switch
 with sixteen distinct positions. Users could set the switch to whatever
 the application code required, e.g., to indicate some configuration
-information. The entire software interface to this device consisted of a single read-only
-8-bit byte in memory. That's all there was to it: you read the memory
+information. The entire software interface to this device consisted of a single
+read-only 8-bit byte in memory. That's all there was to it: you read the memory
 and thus got the numeric setting of the switch.
 
 More complex devices, however, usually rely on software abstraction to
@@ -103,12 +103,12 @@ Note the first parameter to the call above: :c:`USARTx_TX_GPIO_PORT`.
 There are multiple GPIO ports on an Arm implementation; the vendor
 decides how many. In this case one of them has been connected to a USART
 (Universal Synchronous Asynchronous Receiver Transmitter), an external
-device for sending and receiving serial data. When there are multiple devices, good software
-engineering suggests that the device driver present a given device as
-one of a type. That's what an "abstract data type" (ADT) provides for
+device for sending and receiving serial data. When there are multiple devices,
+good software engineering suggests that the device driver present a given
+device as one of a type. That's what an "abstract data type" (ADT) provides for
 software and so the device driver applies the same design. An ADT is
-essentially a class, in class-oriented languages. In Ada, an ADT is represented as a
-private type declared in a package, along with subprograms that take
+essentially a class, in class-oriented languages. In Ada, an ADT is represented
+as a private type declared in a package, along with subprograms that take
 the type as a parameter.
 
 The Ada Drivers Library (ADL) provided by AdaCore and the Ada community
@@ -293,8 +293,8 @@ In addition, we might want to apply more than one type, at any one time,
 to a given memory-mapped device. Doing so allows the client code some
 flexibility, or it might facilitate an internal implementation. For
 example, the STM32 boards from ST Microelectronics include a 96-bit
-device unique identifier on each board. The identifier starts at a fixed memory location.
-In this example we provide two different views |mdash|
+device unique identifier on each board. The identifier starts at a fixed memory
+location. In this example we provide two different views |mdash|
 types |mdash| for the value. One type provides the
 identifier as a String containing twelve characters, whereas another
 type provides the value as an array of three 32-bit unsigned words
