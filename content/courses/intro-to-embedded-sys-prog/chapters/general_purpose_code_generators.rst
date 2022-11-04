@@ -230,7 +230,7 @@ due to the usual machine accessibility limitation we've been discussing.
 Similarly, a record component that is of some by-reference type, such as
 any tagged type, introduces the same issues as an aliased component. That's
 because the underlying implementation of by-reference parameter passing is
-much like a 'Access attribute reference.
+much like a :ada:`'Access` attribute reference.
 
 As important as the effect of this aspect is, you probably won't see it
 specified. There are other aspects that are more typically required.

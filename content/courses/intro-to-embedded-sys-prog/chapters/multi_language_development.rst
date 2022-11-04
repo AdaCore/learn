@@ -138,15 +138,15 @@ the type. For example:
    type Matrix is array (Rows, Columns) of Float
      with Convention => Fortran;
 
-(Rows and Columns are user-defined discrete subtypes.)
+(:ada:`Rows` and :ada:`Columns` are user-defined discrete subtypes.)
 
-As a result when we declare Matrix objects the Ada compiler will use the
+As a result when we declare :ada:`Matrix` objects the Ada compiler will use the
 column-major layout. That makes it possible to pass objects of the type to
 imported Fortran subprograms because the formal parameter will also be of type
-Matrix. The imported Fortran routine will then see the parameter in memory as
-it expects to see it. So although you wouldn't need to import or export a type
-itself, you might very well import or export an object of the type, or pass it
-as a argument.
+:ada:`Matrix`. The imported Fortran routine will then see the parameter in
+memory as it expects to see it. So although you wouldn't need to import or
+export a type itself, you might very well import or export an object of the
+type, or pass it as a argument.
 
 When :ada:`Convention` is applied to subprograms, a natural mistake is to think
 that we are specifying the programming language used to implement the

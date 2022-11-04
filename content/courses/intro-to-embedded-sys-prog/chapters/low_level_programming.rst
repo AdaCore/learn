@@ -1967,7 +1967,7 @@ As a result, one of the few reasons for setting the size of a type (as
 opposed to the size of an object) is for the sake of well-defined unchecked
 conversions. We might make the size larger than it would need to be
 because we want to convert a value of that type to what would otherwise
-be a larger Target type.
+be a larger :ada:`Target` type.
 
 Because converting between types that are not the same size is so open
 to interpretation, most compilers will issue a warning when the sizes

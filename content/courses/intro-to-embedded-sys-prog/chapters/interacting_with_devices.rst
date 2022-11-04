@@ -921,8 +921,8 @@ Part of "letting the compiler do the work for you" is not doing address
 arithmetic in the source code if you can avoid it. Instead, for
 instance, use the normal "dot notation" to reference components, and let
 the compiler compute the offsets to those components. The approach to
-implementing procedure Configure_Alternate_Function for a GPIO_Port is a
-good example.
+implementing procedure :ada:`Configure_Alternate_Function` for a
+:ada:`GPIO_Port` is a good example.
 
 That said, sometimes address arithmetic is the most direct expression of
 what you're trying to implement. For example, when implementing your own
