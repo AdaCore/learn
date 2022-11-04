@@ -201,7 +201,7 @@ object containing Boolean flags. The if-statement queries one of those
 flags. Thus the loop either detects the desired device status or raises
 an exception after the maximum number of attempts have been made. In
 this version, the maximum is a known upper bound so a local constant will
-suffice. The maximum could be passed as a parameter instead.
+suffice. The maximum could be passed as a parameter instead, or declared in a global "configuration" package containing such constants.
 
 Presumably, the upper bound on the attempts is either specified by the
 device documentation or empirically determined. Sometimes, however, the
@@ -281,7 +281,6 @@ incomplete example):
       Next_Release := Clock;
       loop
          exit when Status (...);
-
          Next_Release := Next_Release + Period;
          delay until Next_Release;
       end loop;
@@ -854,7 +853,8 @@ compiler for an Arm Cortex M4 target:
 
    subtype Any_Priority       is Integer      range 0 .. 255;
    subtype Priority           is Any_Priority range Any_Priority'First .. 240;
-   subtype Interrupt_Priority is Any_Priority range Priority'Last + 1  .. Any_Priority'Last;
+   subtype Interrupt_Priority is Any_Priority range 
+      Priority'Last + 1  .. Any_Priority'Last;
 
 Although the ranges are compiler-defined, when the Systems
 Programming Annex is implemented the range of

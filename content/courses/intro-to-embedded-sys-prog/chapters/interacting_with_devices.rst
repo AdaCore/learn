@@ -33,8 +33,10 @@ code, where :c:`temp` and :c:`temp2` are unsigned 32-bit integers:
 
 .. code-block:: c
 
-   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+   temp = ((uint32_t)(GPIO_AF) << 
+             ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
+   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF <<
+             ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
    temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
    GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
 
@@ -381,8 +383,10 @@ the complete code for the function body:
      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
      assert_param(IS_GPIO_AF(GPIO_AF));
 
-     temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-     GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+     temp = ((uint32_t)(GPIO_AF) << 
+               ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
+     GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF <<
+               ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
      temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
      GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
    }
@@ -552,8 +556,10 @@ convenience:
      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
      assert_param(IS_GPIO_AF(GPIO_AF));
 
-     temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
-     GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
+     temp = ((uint32_t)(GPIO_AF) << 
+               ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
+     GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF <<
+               ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
      temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;
      GPIOx->AFR[GPIO_PinSource >> 0x03] = temp_2;
    }
@@ -579,7 +585,7 @@ statements that we should always try to achieve. Ada just makes that
 easier to achieve than in some other languages.
 
 Of course, the underlying hardware likely has no machine-supported 4-bit
-unsigned type so larger hardware numeric types are used. Hence there are
+unsigned type so larger hardware numeric types are used in the generated code. Hence there are
 shifts and masking being done in the Ada version as well, but they do
 not appear in the source code. The developer has let the compiler do
 that work. An additional benefit of this approach is that the compiler

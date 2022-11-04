@@ -847,7 +847,8 @@ That said, you could at least verify the assumption:
 
 .. code-block:: ada
 
-   pragma Compile_Time_Error (Integer'Object_Size /= 32, "Integers expected to be 32 bits");
+   pragma Compile_Time_Error (Integer'Object_Size /= 32, 
+                              "Integers expected to be 32 bits");
    X : aliased Integer;
    Y : Bits32 with Address => X'Address;
 
