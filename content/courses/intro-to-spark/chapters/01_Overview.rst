@@ -260,7 +260,7 @@ the global variable :ada:`Call_Count`.
 No aliasing of names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another restriction imposed by the SPARK subset concerns `aliasing
+Another restriction imposed by the SPARK subset concerns aliasing
 :wikipedia:`aliasing <Aliasing_(computing)>`. We say that two
 names are `aliased` if they refer to the same object. There are two reasons
 why aliasing is forbidden in SPARK:
