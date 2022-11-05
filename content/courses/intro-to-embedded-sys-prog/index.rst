@@ -38,7 +38,8 @@ Introduction to Embedded Systems Programming
     using Ada.
 
     This document was written by Patrick Rogers, with review by
-    Gustavo A. Hoffmann.
+    Stephen Baird, Tucker Taft, Filip Gajowniczek, and Gustavo A. Hoffmann.
+
 
 .. only:: builder_html
 
