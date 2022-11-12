@@ -117,7 +117,8 @@ a {
 
 // theme overrides
 // widget
-widget {
+pre.widget {
+    white-space: normal;
     padding-bottom: 10px;
     position: relative;
 }
@@ -159,6 +160,7 @@ widget {
 
 .settings-bar {
     background-color: $color-settingsbar-bg;
+    font-family: $lato-sans-serif-font;
     padding-left: 13px;
     display: block;
     margin-top: 0px;
@@ -294,6 +296,7 @@ div {
         margin-top: 8px;
         max-height: 250px;
         overflow-y: auto;
+        line-height: normal;
     }
     &.output-row {
         margin-right: 0px;
