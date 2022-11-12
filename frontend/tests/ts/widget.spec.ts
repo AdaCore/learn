@@ -90,7 +90,7 @@ describe('Widget', () => {
   describe('Single Widget', () => {
     before(() => {
       fillDOM('single.html');
-      inTest = getElemsByTag(document, 'widget');
+      inTest = getElemsByClass(document, 'widget');
       widgetFactory(inTest as Array<HTMLDivElement>);
       root = inTest[0];
     });
@@ -441,7 +441,7 @@ describe('Widget', () => {
   describe('Lab Widget', () => {
     before(() => {
       fillDOM('lab.html');
-      inTest = getElemsByTag(document, 'widget');
+      inTest = getElemsByClass(document, 'widget');
       widgetFactory(inTest as Array<HTMLDivElement>);
       root = inTest[0];
     });
