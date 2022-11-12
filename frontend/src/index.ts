@@ -1,5 +1,5 @@
 import './styles/learn.scss';
-import {getElemsByTag, getElemById} from './ts/dom-utils';
+import {getElemsByClass, getElemById} from './ts/dom-utils';
 import {widgetFactory} from './ts/widget';
 import {scrollTop} from './ts/scrolltop';
 
@@ -13,7 +13,8 @@ import {stagingRedirect} from './ts/staging';
  */
 function entrypoint(): void {
   // get list of all widgets on the page
-  const we = getElemsByTag(document, 'widget');
+  const we = getElemsByClass(document, 'widget');
+
   widgetFactory(we as Array<HTMLDivElement>);
 
   // register scroll to top btn functionality
