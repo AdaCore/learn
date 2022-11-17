@@ -1180,9 +1180,9 @@ specifically. :ada:`M` just occupies one storage element so the next component,
 Note that there is no requirement for the components in the record
 representation clause to be in any particular textual order. The offsets alone
 specify the components' order in memory. A good style, though, is to order the
-components in the representation specification so that their textual order
+components in the representation clause so that their textual order
 corresponds to their order in memory. Doing so facilitates our verifying that
-the offsets are correct because the offsets will be increasing as we read the
+the layout is correct because the offsets will be increasing as we read the
 specification.
 
 An individual component may occupy part of a single storage element, all
