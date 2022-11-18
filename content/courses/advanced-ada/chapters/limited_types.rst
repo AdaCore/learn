@@ -465,7 +465,7 @@ and full views can have non-matching declarations.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`_
+    - :arm:`7.5 Limited Types <7-5>`
 
 
 Partial and full view of limited types
@@ -685,8 +685,8 @@ tagged types. We discuss this topic in another chapter.)
 
 .. admonition:: In the Ada Reference Manual
 
-    - `7.3 Private Types and Private Extensions <http://www.ada-auth.org/standards/12rm/html/RM-7-3.html>`_
-    - `7.5 Limited Types <http://www.ada-auth.org/standards/12rm/html/RM-7-5.html>`_
+    - :arm:`7.3 Private Types and Private Extensions <7-3>`
+    - :arm:`7.5 Limited Types <7-5>`
 
 
 Deriving from limited private types
@@ -1012,7 +1012,7 @@ Here, the compiler indicates that the assignment is forbidden because the
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.8 Record Types <http://www.ada-auth.org/standards/12rm/html/RM-3-8.html>`_
+    - :arm:`3.8 Record Types <3-8>`
 
 
 Limited types and aggregates
