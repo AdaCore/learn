@@ -46,7 +46,7 @@ objects and then convert these objects to strings and print them:
    procedure Main is
       type Vector is array (Positive range <>) of Integer;
 
-      V1 : aliased Vector := (1, 2, 3);
+      V1 : aliased Vector := [1, 2, 3];
 
       type Text_Position is record
          Line, Column : Positive;

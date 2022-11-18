@@ -32,7 +32,7 @@ As an example, let's calculate some statistics for :ada:`My_Data` array:
          Total : Float := 0.0;
       end record;
 
-      My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
+      My_Data : array (1 .. 5) of Float := [for J in 1 .. 5 => Float (J)];
 
       Statistic_For_My_Data : Statistic;
 
@@ -53,7 +53,7 @@ To do this, we loop over :ada:`My_Data` elements:
       end record;
 
       My_Data : constant array (1 .. 5) of Float :=
-        (for J in 1 .. 5 => Float (J));
+        [for J in 1 .. 5 => Float (J)];
 
       Statistic_For_My_Data : Statistic;
 
@@ -77,7 +77,7 @@ prints a line each time it's called:
 
    procedure Main is
 
-      My_Data : array (1 .. 5) of Float := (for J in 1 .. 5 => Float (J));
+      My_Data : array (1 .. 5) of Float := [for J in 1 .. 5 => Float (J)];
 
       function To_Index (Value : Positive) return Positive is
       begin

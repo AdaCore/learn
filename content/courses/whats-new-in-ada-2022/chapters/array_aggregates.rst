@@ -113,10 +113,10 @@ Complete code snippet:
         [for J in 1 .. 3 =>
           [for K in 1 .. 3 => J * 10 + K]];
 
-      Data : Integer_Array (1 .. 5) :=
+      Data : constant Integer_Array (1 .. 5) :=
         [for J in 2 .. 3 => J, 5 => 5, others => 0];
 
-      Vector_2 : Integer_Array := [for X of Vector => X / 2];
+      Vector_2 : constant Integer_Array := [for X of Vector => X / 2];
    begin
       Ada.Text_IO.Put_Line (Vector'Image);
       Ada.Text_IO.Put_Line (Matrix'Image);
