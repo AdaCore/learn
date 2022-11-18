@@ -618,6 +618,11 @@ example and try to compile it.)
    types via the partial view presented by the root type, without knowing which
    specific tagged type is involved.
 
+.. todo::
+
+    Add link to section that explains this topic in more details (once it's
+    available).
+
 
 Deriving from limited types
 ---------------------------
