@@ -512,7 +512,12 @@ full view as :ada:`limited private` |mdash| is not possible. For example:
 
     end Simple_Recs;
 
-As expected, we get a compilation error in this case.
+As expected, we get a compilation error in this case. The issue is that the
+partial view cannot be allowed to mislead the client about what's possible.
+In this case, if the partial view allows assignment, then the full view must
+actually provide assignment. But the partial view can restrict what is actually
+possible, so a limited partial view need not be completed in the full view as a
+limited type.
 
 
 Limited and nonlimited in full view
@@ -603,6 +608,16 @@ Any mismatch in one of the views triggers a compilation error. (As an
 exercise, you may remove any of the :ada:`limited` keywords from the code
 example and try to compile it.)
 
+.. admonition:: For further reading...
+
+   This rule is for the sake of dynamic dispatching and classwide types. The
+   compiler must not allow any of the types in a derivation class |mdash| the
+   set of types related by inheritance |mdash| to be different regarding
+   assignment and equality (and thus inequality). That's necessary because we
+   are meant to be able to manipulate objects of any type in the entire set of
+   types via the partial view presented by the root type, without knowing which
+   specific tagged type is involved.
+
 
 Deriving from limited types
 ---------------------------
@@ -658,6 +673,10 @@ Note that we cannot derive a limited type from a nonlimited ancestor:
     end Simple_Recs;
 
 As expected, the compiler indicates that :ada:`Rec` should be of limited type.
+
+In fact, all the types in a derivation class are the same |mdash| either
+limited or not. (That is especially important with dynamic dispatching via
+tagged types. We discuss this topic in another chapter.)
 
 .. admonition:: In the Ada Reference Manual
 
