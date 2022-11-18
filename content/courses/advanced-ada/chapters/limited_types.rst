@@ -213,7 +213,13 @@ Assignments are forbidden when using objects of limited types. For example:
        B := A;
     end Show_Limited_Assignment;
 
-As expected, we get a compilation error for the :ada:`B := A` statement. If we
+In this example, we declare the limited private type :ada:`Simple_Rec` and two
+objects of this type (:ada:`A` and :ada:`B`) in the
+:ada:`Show_Limited_Assignment` procedure. (We discuss more about limited
+private types :ref:`later <Adv_Ada_Limited_Private_Types>`).
+
+As expected, we get a compilation error for the :ada:`B := A` statement (in the
+:ada:`Show_Limited_Assignment` procedure). If we
 need to copy two objects of limited type, we have to provide a custom procedure
 to do that. For example, we can implement a :ada:`Copy` procedure for the
 :ada:`Simple_Rec` type:
@@ -423,6 +429,590 @@ required.
            -- ...
 
         end Limited_Types;
+
+
+.. _Adv_Ada_Limited_Private_Types:
+
+Limited private types
+---------------------
+
+As we've seen in code examples from the previous section, we can apply
+:ref:`information hiding <Adv_Ada_Type_View>` to limited types. In other words,
+we can declare a type as :ada:`limited private` instead of just :ada:`limited`.
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Private
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+In this case, in addition to the fact that assignments are forbidden for
+objects of this type (because :ada:`Rec` is limited), we cannot access the
+record components.
+
+Note that in this example, both partial and full views of the :ada:`Rec`
+record are of limited type. In the next sections, we discuss how the partial
+and full views can have non-matching declarations.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`7.5 Limited Types <7-5>`
+
+
+Partial and full view of limited types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous example, both partial and full views of the :ada:`Rec` type
+were limited. We may actually declare a type as :ada:`limited private` (in the
+public part of a package), while its full view is nonlimited. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+       --  Partial view of Rec is limited
+
+    private
+
+       type Rec is record
+       --  Full view of Rec is nonlimited
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+In this case, only the partial view of :ada:`Rec` is limited, while its full
+view is nonlimited.
+
+Note that the opposite |mdash| declaring a type as :ada:`private` and its full
+full view as :ada:`limited private` |mdash| is not possible. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is private;
+
+    private
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+As expected, we get a compilation error in this case. The issue is that the
+partial view cannot be allowed to mislead the client about what's possible.
+In this case, if the partial view allows assignment, then the full view must
+actually provide assignment. But the partial view can restrict what is actually
+possible, so a limited partial view need not be completed in the full view as a
+limited type.
+
+
+Limited and nonlimited in full view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Declaring the full view of a type as limited or nonlimited has implications in
+the way we can use objects of this type in the package body. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec_Limited_Full is limited private;
+       type Rec_Nonlimited_Full is limited private;
+
+       procedure Copy (From :        Rec_Limited_Full;
+                       To   : in out Rec_Limited_Full);
+       procedure Copy (From :        Rec_Nonlimited_Full;
+                       To   : in out Rec_Nonlimited_Full);
+
+    private
+
+       type Rec_Limited_Full is limited record
+          I : Integer;
+       end record;
+
+       type Rec_Nonlimited_Full is record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+    package body Simple_Recs is
+
+       procedure Copy (From :        Rec_Limited_Full;
+                       To   : in out Rec_Limited_Full) is
+       begin
+          To := From;
+          --  ERROR: assignment is forbidden because
+          --         Rec_Limited_Full is limited in
+          --         its full view.
+       end Copy;
+
+       procedure Copy (From :        Rec_Nonlimited_Full;
+                       To   : in out Rec_Nonlimited_Full) is
+       begin
+          To := From;
+          --  OK: assignment is allowed because
+          --      Rec_Nonlimited_Full is
+          --      nonlimited in its full view.
+       end Copy;
+
+    end Simple_Recs;
+
+Here, both :ada:`Rec_Limited_Full` and :ada:`Rec_Nonlimited_Full` are declared
+as :ada:`private limited`. However, :ada:`Rec_Limited_Full` type is limited in
+its full view, while :ada:`Rec_Nonlimited_Full` is nonlimited. As expected,
+the compiler complains about the :ada:`To := From` assignment in the
+:ada:`Copy` procedure for the :ada:`Rec_Limited_Full` type because its full
+view is limited (so no assignment is possible). Of course, in the case of the
+objects of :ada:`Rec_Nonlimited_Full` type, this assignment is perfectly fine.
+
+
+Tagged limited private types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For tagged private types, the partial and full views must match: if a tagged
+type is limited in the partial view, it must be limited in the full view. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Tagged_Limited_Private_Types
+
+    package Simple_Recs is
+
+       type Rec is tagged limited private;
+
+    private
+
+       type Rec is tagged limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+Here, the tagged :ada:`Rec` type is limited both in its partial and full views.
+Any mismatch in one of the views triggers a compilation error. (As an
+exercise, you may remove any of the :ada:`limited` keywords from the code
+example and try to compile it.)
+
+.. admonition:: For further reading...
+
+   This rule is for the sake of dynamic dispatching and classwide types. The
+   compiler must not allow any of the types in a derivation class |mdash| the
+   set of types related by inheritance |mdash| to be different regarding
+   assignment and equality (and thus inequality). That's necessary because we
+   are meant to be able to manipulate objects of any type in the entire set of
+   types via the partial view presented by the root type, without knowing which
+   specific tagged type is involved.
+
+.. todo::
+
+    Add link to section that explains this topic in more details (once it's
+    available).
+
+
+Deriving from limited types
+---------------------------
+
+In this section, we discuss the implications of deriving from limited types.
+As usual, let's start with a simple example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type
+
+    package Simple_Recs is
+
+       type Rec is limited null record;
+
+       type Rec_Derived is new Rec;
+
+    end Simple_Recs;
+
+In this example, the :ada:`Rec_Derived` type is derived from the :ada:`Rec`
+type. Note that the :ada:`Rec_Derived` type is limited because its ancestor is
+limited, even though the :ada:`limited` keyword doesn't show up in the
+declaration of the :ada:`Rec_Derived` type. Note that we could have actually
+used the :ada:`limited` keyword here:
+
+.. code-block:: ada
+
+       type Rec_Derived is limited new Rec;
+
+Therefore, we cannot use the assignment operator for objects of
+:ada:`Rec_Derived` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type
+    :class: ada-expect-compile-error
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+Note that we cannot derive a limited type from a nonlimited ancestor:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type_Nonlimited_Ancestor
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is null record;
+
+       type Rec_Derived is limited new Rec;
+
+    end Simple_Recs;
+
+As expected, the compiler indicates that :ada:`Rec` should be of limited type.
+
+In fact, all the types in a derivation class are the same |mdash| either
+limited or not. (That is especially important with dynamic dispatching via
+tagged types. We discuss this topic in another chapter.)
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`7.3 Private Types and Private Extensions <7-3>`
+    - :arm:`7.5 Limited Types <7-5>`
+
+
+Deriving from limited private types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Of course, we can also derive from limited private types. However, there are
+more rules in this case than the ones we've seen so far. Let's start with an
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is limited null record;
+
+    end Simple_Recs;
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is new Rec;
+
+       --  OR:
+       --
+       --  type Rec_Derived is
+       --    limited new Rec;
+
+    end Simple_Recs.Ext;
+
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+Here, :ada:`Rec_Derived` is a limited type derived from the (limited private)
+:ada:`Rec` type. We can verify that :ada:`Rec_Derived` type is limited
+because the compilation of the :ada:`Test_Limitedness` procedure fails.
+
+Any type derived from a limited type is always limited, even if the full view
+of its ancestor is nonlimited. For example, let's modify the full view of
+:ada:`Rec` and make it nonlimited:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is null record;
+
+    end Simple_Recs;
+
+Here, :ada:`Rec_Derived` is a limited type because the partial view of
+:ada:`Rec` is limited. The fact that the full view of :ada:`Rec` is nonlimited
+doesn't affect the :ada:`Rec_Derived` type |mdash| as we can verify with the
+compilation error in the :ada:`Test_Limitedness` procedure.
+
+Note, however, that a derived type becomes nonlimited in the private part or
+the body of a child package if it isn't explicitly limited. For example,
+because we're declaring :ada:`Rec_Derived` as :ada:`is new Rec` in the child
+package (:ada:`Simple_Recs.Ext`), we're saying that :ada:`Rec_Derived` is
+limited *outside* this package, but nonlimited in the :ada:`Simple_Recs.Ext`
+package. We can verify this by copying the code from the :ada:`Test_Limitedness`
+procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+
+    package Simple_Recs.Ext
+      with Elaborate_Body is
+
+      --  Rec_Derived is derived from Rec, which is a
+      --  limited private type that is nonlimited in
+      --  its full view.
+      --
+      --  Rec_Derived isn't explicitly limited.
+      --  Therefore, it's nonlimited in the private
+      --  part of Simple_Recs.Ext and its package
+      --  body.
+      --
+      type Rec_Derived is new Rec;
+
+    end Simple_Recs.Ext;
+
+    package body Simple_Recs.Ext is
+
+       procedure Test_Child_Limitedness is
+          Dummy_1, Dummy_2 : Rec_Derived;
+       begin
+          --  Here, Rec_Derived is a nonlimited
+          --  type because Rec is nonlimited in
+          --  its full view.
+
+          Dummy_2 := Dummy_1;
+       end Test_Child_Limitedness;
+
+    end Simple_Recs.Ext;
+
+    --  Copied the code to the
+    --  Test_Child_Limitedness procedure (in the
+    --  body of the Simple_Recs.Ext package) and
+    --  commented it out here.
+    --
+    --  You may uncomment the code to verify
+    --  that Rec_Derived is limited in this
+    --  procedure.
+    --
+
+    --  with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       --  Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       --  Dummy_2 := Dummy_1;
+       null;
+    end Test_Limitedness;
+
+In the :ada:`Test_Child_Limitedness` procedure of the :ada:`Simple_Recs.Ext`
+package, we can use the :ada:`Rec_Derived` as a nonlimited type because its
+ancestor :ada:`Rec` is nonlimited in its full view. (Of course, if we uncomment
+the code in the :ada:`Test_Limitedness` procedure, compilation fails there
+because :ada:`Rec_Derived` is viewed as descending from a limited type.)
+
+
+Deriving from tagged limited private types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The rules for deriving from tagged limited private types are slightly different
+than ones we've seen in the previous section. Let's look at an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Tagged_Rec is tagged limited private;
+
+    private
+
+       type Tagged_Rec is tagged limited null record;
+
+    end Simple_Recs;
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is new
+         Tagged_Rec with private;
+
+    private
+
+       type Rec_Derived is new
+         Tagged_Rec with null record;
+
+    end Simple_Recs.Ext;
+
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+In this example, :ada:`Rec_Derived` is a tagged limited type derived from the
+:ada:`Tagged_Rec` type. (Again, we can verify the limitedness of the
+:ada:`Rec_Derived` type with the :ada:`Test_Limitedness` procedure.)
+
+As explained previously, the derived type (:ada:`Rec_Derived`) is a limited
+type, even though the :ada:`limited` keyword doesn't appear in its
+declaration. We could, of course, include the :ada:`limited` keyword in the
+declaration of :ada:`Rec_Derived`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+    :class: ada-expect-compile-error
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is limited new Tagged_Rec with private;
+
+    private
+
+       type Rec_Derived is limited new Tagged_Rec with null record;
+
+    end Simple_Recs.Ext;
+
+(Obviously, if we include the :ada:`limited` keyword in the partial view of
+the derived type, we must include it in its full view as well.)
+
+
+Deriving from limited interfaces
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The rules for limited interfaces are different from the ones for limited tagged
+types. In contrast to the rule we've seen in the previous section, a type that
+is derived from a limited type isn't automatically limited. In other words, it
+doesn't inherit the *limitedness* from the interface. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Interface_Limited_Private
+
+    package Simple_Recs is
+
+       type Limited_IF is limited interface;
+
+    end Simple_Recs;
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is new
+         Limited_IF with private;
+
+    private
+
+       type Rec_Derived is new
+         Limited_IF with null record;
+
+    end Simple_Recs.Ext;
+
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+Here, :ada:`Rec_Derived` is derived from the limited :ada:`Limited_IF`
+interface. As we can see, the :ada:`Test_Limitedness` compiles fine because
+:ada:`Rec_Derived` is nonlimited.
+
+Of course, if we want :ada:`Rec_Derived` to be limited, we can make this
+explicit in the type declaration:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Interface_Limited_Private
+    :class: ada-expect-compile-error
+
+    package Simple_Recs.Ext is
+
+       type Rec_Derived is limited new
+         Limited_IF with private;
+
+    private
+
+       type Rec_Derived is limited new
+         Limited_IF with null record;
+
+    end Simple_Recs.Ext;
+
+    with Simple_Recs.Ext; use Simple_Recs.Ext;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Rec_Derived;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+Now, compilation of :ada:`Test_Limitedness` fails because :ada:`Rec_Derived` is
+explicitly limited.
+
+
+Record components of limited type
+---------------------------------
+
+In this section, we discuss the implications of using components of limited
+type. Let's start by declaring a record component of limited type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Record_Components_Limited_Type
+
+    package Simple_Recs is
+
+       type Int_Rec is limited record
+          V : Integer;
+       end record;
+
+       type Rec is limited record
+          IR : Int_Rec;
+       end record;
+
+    end Simple_Recs;
+
+As soon as we declare a record component of some limited type, the whole record
+is limited. In this example, the :ada:`Rec` record is limited due to the
+presence of the :ada:`IR` component of limited type.
+
+Also, if we change the declaration of the :ada:`Rec` record from the previous
+example and remove the :ada:`limited` keyword, the type itself remains
+implicitly limited. We can see that when trying to assign to objects of
+:ada:`Rec` type in the :ada:`Show_Implicitly_Limited` procedure:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Record_Components_Limited_Type
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Int_Rec is limited record
+          V : Integer;
+       end record;
+
+       type Rec is record
+          IR : Int_Rec;
+       end record;
+
+    end Simple_Recs;
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Show_Implicitly_Limited is
+       A, B : Rec;
+    begin
+       B := A;
+    end Show_Implicitly_Limited;
+
+Here, the compiler indicates that the assignment is forbidden because the
+:ada:`Rec` type has a component of limited type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.8 Record Types <3-8>`
 
 
 Limited types and aggregates
@@ -1479,21 +2069,4 @@ by copy is made by the compiler.
     - :arm:`6.2 Formal Parameter Modes <6-2>`
     - :arm:`6.4.1 Parameter Associations <6-4-1>`
     - :arm:`7.5 Limited Types <7-5>`
-
-
-Limited record elements
------------------------
-
-.. todo::
-
-    Complete section!
-
-
-Private implementation of limited types
----------------------------------------
-
-.. todo::
-
-    Complete section!
-
 
