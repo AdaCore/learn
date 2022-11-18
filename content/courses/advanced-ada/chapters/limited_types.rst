@@ -437,8 +437,8 @@ Limited private types
 ---------------------
 
 As we've seen in code examples from the previous section, we can apply
-:ref:`encapsulation <Adv_Ada_Type_View>` to limited types. In other words, we
-can declare a type as :ada:`limited private` instead of just :ada:`limited`.
+:ref:`information hiding <Adv_Ada_Type_View>` to limited types. In other words,
+we can declare a type as :ada:`limited private` instead of just :ada:`limited`.
 For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Private
@@ -951,9 +951,9 @@ type. Let's start by declaring a record component of limited type:
 
     end Simple_Recs;
 
-As soon as we declare a record component of limited type, the whole record is
-limited. In this example, the :ada:`Rec` record is limited due to the presence
-of the :ada:`IR` component of limited type.
+As soon as we declare a record component of some limited type, the whole record
+is limited. In this example, the :ada:`Rec` record is limited due to the
+presence of the :ada:`IR` component of limited type.
 
 Also, if we change the declaration of the :ada:`Rec` record from the previous
 example and remove the :ada:`limited` keyword, the type itself remains
