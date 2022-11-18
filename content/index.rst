@@ -70,6 +70,7 @@
 
         Introduction to Ada <courses/intro-to-ada/index>
         Introduction to SPARK <courses/intro-to-spark/index>
+        Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
         What's New in Ada 2022 <courses/whats-new-in-ada-2022/index>
         Ada for the C++ or Java Developer <courses/Ada_For_The_CPP_Java_Developer/index>
         Ada for the Embedded C Developer <courses/Ada_For_The_Embedded_C_Developer/index>
@@ -84,7 +85,6 @@
 
             Advanced Journey With Ada <courses/advanced-ada/index>
             Advanced SPARK <courses/advanced-spark/index>
-            Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
 
     .. toctree::
         :maxdepth: 1
@@ -191,6 +191,27 @@
 
             .. container:: frontpage-ebook-and-buttons-block
 
+                .. image:: images/page-1-of-intro-to-embedded-sys-prog.jpeg
+                    :alt: Introduction to Embedded Systems Programming (e-book)
+                    :width: 149pt
+
+                .. raw:: html
+
+                        <div class="frontpage-ebook-download">
+                            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
+                                PDF
+                            </a>
+
+                            <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
+                                EPUB
+                            </a>
+                        </div>
+
+
+        .. container:: frontpage-ebooks-row
+
+            .. container:: frontpage-ebook-and-buttons-block
+
                 .. image:: images/page-1-of-whats-new-in-ada-2022.jpeg
                     :alt: What's New in Ada 2022 (e-book)
                     :width: 149pt
@@ -207,8 +228,6 @@
                             </a>
                         </div>
 
-
-        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -229,6 +248,8 @@
                         </div>
 
 
+        .. container:: frontpage-ebooks-row
+
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
@@ -248,8 +269,6 @@
                         </div>
 
 
-        .. container:: frontpage-ebooks-row
-
             .. container:: frontpage-ebook-and-buttons-block
 
                 .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
@@ -268,6 +287,8 @@
                             </a>
                         </div>
 
+
+        .. container:: frontpage-ebooks-row
 
             .. container:: frontpage-ebook-and-buttons-block
 
@@ -300,25 +321,6 @@
     .. container:: frontpage-ebooks
 
         .. container:: frontpage-ebooks-row
-
-            .. container:: frontpage-ebook-and-buttons-block
-
-                .. image:: images/page-1-of-intro-to-embedded-sys-prog.jpeg
-                    :alt: Introduction to Embedded Systems Programming (e-book)
-                    :width: 149pt
-
-                .. raw:: html
-
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
-                                EPUB
-                            </a>
-                        </div>
-
 
             .. container:: frontpage-ebook-and-buttons-block
 
