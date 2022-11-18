@@ -425,6 +425,23 @@ required.
         end Limited_Types;
 
 
+Private implementation of limited types
+---------------------------------------
+
+.. todo::
+
+    Complete section!
+
+
+
+Limited record elements
+-----------------------
+
+.. todo::
+
+    Complete section!
+
+
 Limited types and aggregates
 ----------------------------
 
@@ -1479,21 +1496,4 @@ by copy is made by the compiler.
     - :arm:`6.2 Formal Parameter Modes <6-2>`
     - :arm:`6.4.1 Parameter Associations <6-4-1>`
     - :arm:`7.5 Limited Types <7-5>`
-
-
-Limited record elements
------------------------
-
-.. todo::
-
-    Complete section!
-
-
-Private implementation of limited types
----------------------------------------
-
-.. todo::
-
-    Complete section!
-
 
