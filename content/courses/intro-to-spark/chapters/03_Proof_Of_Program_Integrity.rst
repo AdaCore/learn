@@ -682,7 +682,7 @@ option of GNATprove (e.g., by using the dialog box in GNAT Studio). In this
 example, increasing it to one minute, which is relatively high, doesn't
 help. We can also specify an alternative automatic prover |mdash| if we have
 one |mdash| using the option ``--prover`` of GNATprove (or the dialog box). For
-our postcondition, we tried Alt-Ergo, CVC4, and Z3 without any luck.
+our postcondition, we tried Alt-Ergo, cvc5, and Z3 without any luck.
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Program_Integrity.Failed_Proof_Attempt_5
     :class: ada-expect-prove-error
@@ -730,7 +730,7 @@ both :ada:`A` - :ada:`B` and :ada:`B` can be divided by :ada:`Result` so can :ad
 may seem surprising, but non-linear arithmetic, involving, for example,
 multiplication, modulo, or exponentiation, is a difficult topic for provers
 and is not handled very well in practice by any of the general-purpose ones
-like Alt-Ergo, CVC4, or Z3.
+like Alt-Ergo, cvc5, or Z3.
 
 .. note::
 
