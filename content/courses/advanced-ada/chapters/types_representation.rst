@@ -2485,11 +2485,117 @@ these array declarations are equivalent:
 Discarding names
 ----------------
 
-.. admonition:: Relevant topics
+As we know, we can use the :ada:`'Image` attribute of a type to get a string
+associated with this type. This is useful for example when we want to display a
+user message for an enumeration type:
 
-   - **Briefly** discuss discarding name mentioned in
-     :arm22:`Aspect Discard_Names <C-5>`
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Image
 
-.. todo::
+    with Ada.Text_IO;      use Ada.Text_IO;
 
-    Complete section!
+    procedure Show_Enumeration_Image is
+
+       type Months is
+         (January, February, March, April,
+          May, June, July, August, September,
+          October, November, December);
+
+       M : constant Months := January;
+    begin
+       Put_Line ("Month: "
+                 & Months'Image (M));
+    end Show_Enumeration_Image;
+
+This is similar to having this code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Image
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    procedure Show_Enumeration_Image is
+
+       type Months is
+         (January, February, March, April,
+          May, June, July, August, September,
+          October, November, December);
+
+       M : constant Months := January;
+
+       function Months_Image (M : Months)
+                              return String is
+       begin
+          case M is
+             when January   => return "JANUARY";
+             when February  => return "FEBRUARY";
+             when March     => return "MARCH";
+             when April     => return "APRIL";
+             when May       => return "MAY";
+             when June      => return "JUNE";
+             when July      => return "JULY";
+             when August    => return "AUGUST";
+             when September => return "SEPTEMBER";
+             when October   => return "OCTOBER";
+             when November  => return "NOVEMBER";
+             when December  => return "DECEMBER";
+          end case;
+       end Months_Image;
+
+    begin
+       Put_Line ("Month: "
+                 & Months_Image (M));
+    end Show_Enumeration_Image;
+
+Here, the :ada:`Months_Image` function associates a string with each month of
+the :ada:`Months` enumeration. As expected, the compiler needs to store the
+strings used in the :ada:`Months_Image` function when compiling this code.
+Similarly, the compiler needs to store strings for the :ada:`Months`
+enumeration for the :ada:`'Image` attribute.
+
+Sometimes, we don't need to call the :ada:`'Image` attribute for a type. In
+this case, we could save some storage by eliminating the strings associated
+with the type. Here, we can use the :ada:`Discard_Names` aspect to request the
+compiler to reduce |mdash| as much as possible |mdash| the amount of storage
+used for storing names for this type. Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Discard_Names
+
+    procedure Show_Discard_Names is
+       pragma Warnings (Off, "is not referenced");
+
+       type Months is
+         (January, February, March, April,
+          May, June, July, August, September,
+          October, November, December)
+         with Discard_Names;
+
+       M : constant Months := January;
+    begin
+       null;
+    end Show_Discard_Names;
+
+In this example, the compiler attempts to not store strings associated with
+the :ada:`Months` type duration compilation.
+
+Note that the :ada:`Discard_Names` aspect is available for enumerations,
+exceptions, and tagged types.
+
+.. admonition:: In the GNAT toolchain
+
+    If we add this statement to the :ada:`Show_Discard_Names` procedure above:
+
+    .. code-block:: ada
+
+        Put_Line ("Month: "
+                  & Months'Image (M));
+
+    we see that the application displays "0" instead of "JANUARY". This is
+    because GNAT doesn't store the strings associated with the :ada:`Months`
+    type when we use the :ada:`Discard_Names` aspect for the :ada:`Months`
+    type. (Therefore, the :ada:`Months'Image` attribute doesn't have that
+    information.) Instead, the compiler uses the integer value of the
+    enumeration, so that :ada:`Months'Image` returns the corresponding string
+    for this integer value.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`Aspect Discard_Names <C-5>`
