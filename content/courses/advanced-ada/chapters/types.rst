@@ -1811,18 +1811,6 @@ default values, since we haven't assigned any value to them.
     - :arm:`3.6 Array Types <3-6>`
 
 
-Stable Properties of a Type
----------------------------
-
-.. admonition:: Relevant topics
-
-   - :arm22:`Stable Properties of a Type <7-3-4>`
-
-.. todo::
-
-    Complete section!
-
-
 Deferred Constants
 ------------------
 
