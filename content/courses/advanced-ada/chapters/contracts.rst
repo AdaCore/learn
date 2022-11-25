@@ -61,3 +61,15 @@ Predicate failure
     Complete section!
 
 
+Stable Properties of a Type
+---------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+   - :arm22:`Stable Properties of a Type <7-3-4>`
+
+.. todo::
+
+    Complete section!
+
+
