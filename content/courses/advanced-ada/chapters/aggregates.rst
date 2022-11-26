@@ -671,8 +671,8 @@ Note that, in the assignment to :ada:`P_1D`, we use a record aggregate.
 Extension aggregates are similar to record aggregates, but they include the
 :ada:`with` keyword |mdash| for example: :ada:`(Obj1 with Y => 0.5)`. This
 allows us to assign to an object with information from another object
-:ada:`Obj1` and, in the same expression, set the value of the :ada:`Y`
-component.
+:ada:`Obj1` of a parent type and, in the same expression, set the value of the
+:ada:`Y` component of the type extension.
 
 Let's rewrite the previous :ada:`Show_Points` procedure using extension
 aggregates:
