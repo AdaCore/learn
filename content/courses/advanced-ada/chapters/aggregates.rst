@@ -664,6 +664,8 @@ equivalent to just writing :ada:`P_2D.X := P_1D.X`, as the :ada:`Point_1D` type
 only has the :ada:`X` component.) Finally, in the next line, we initialize the
 :ada:`Y` component with 0.7.
 
+.. _Adv_Ada_Extension_Aggregates:
+
 Using extension aggregates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -877,13 +879,348 @@ descendent type (:ada:`Point_3D`), which contains more components.
 Delta Aggregates
 ----------------
 
-.. admonition:: Relevant topics
+.. note::
+
+   This feature was introduced in Ada 2022.
+
+Previously, we've discussed
+:ref:`extension aggregates <Adv_Ada_Extension_Aggregates>`, which are used to
+assign an object :ada:`Obj_From` of a tagged type to an object :ada:`Obj_To` of
+a descendent type.
+
+We may want also to assign an object :ada:`Obj_From` of to an object
+:ada:`Obj_To` of the same type, but change some of the components in this
+assignment. To do this, we use delta aggregates.
+
+Delta Aggregates for Tagged Records
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's reuse the :ada:`Points` package from the previous example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Tagged
+
+    package Points is
+
+       type Point_1D is tagged record
+          X : Float;
+       end record;
+
+       type Point_2D is new Point_1D with record
+          Y : Float;
+       end record;
+
+       type Point_3D is new Point_2D with record
+          Z : Float;
+       end record;
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put_Line ("(X => " & P.X'Image
+                    & ", Y => " & P.Y'Image
+                    & ", Z => " & P.Z'Image & ")");
+       end Display;
+
+    end Points;
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Points is
+       P1, P2, P3 : Point_3D;
+    begin
+       P1 := (X => 0.5, Y => 0.7, Z => 0.3);
+       Display (P1);
+
+       P2 := (P1 with delta X => 1.0);
+       Display (P2);
+
+       P3 := (P1 with delta X => 0.2, Y => 0.3);
+       Display (P3);
+    end Show_Points;
+
+Here, we assign :ada:`P1` to :ada:`P2`, but change the :ada:`X` component.
+Also, we assign  :ada:`P1` to :ada:`P3`, but change the :ada:`X` and :ada:`Y`
+components.
+
+We can use class-wide types with delta aggregates. Consider this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Tagged
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Points is
+
+       P_3D : Point_3D;
+
+       function Reset (P_2D : Point_2D'Class)
+                       return Point_2D'Class is
+         ((P_2D with delta X | Y => 0.0));
+
+    begin
+       P_3D := [X => 0.1, Y => 0.2, Z => 0.3];
+       Display (P_3D);
+
+       P_3D := Point_3D (Reset (P_3D));
+       Display (P_3D);
+
+    end Show_Points;
+
+In this example, the :ada:`Reset` function returns an object of
+:ada:`Point_2D'Class` where all components of :ada:`Point_2D'Class` type are
+zero. We call the :ada:`Reset` function for the :ada:`P_3D` object of
+:ada:`Point_3D` type, so that only the :ada:`Z` component remains untouched.
+
+Note that we use the syntax :ada:`X | Y` in the body of the :ada:`Reset`
+function and assign the same value to both components.
+
+.. admonition:: For further reading...
+
+    We could have implemented :ada:`Reset` as a procedure |mdash| in this case,
+    without using delta aggregates:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Tagged
+
+        with Points; use Points;
+
+        procedure Show_Points is
+
+           P_3D : Point_3D;
+
+           procedure Reset (P_2D : in out Point_2D'Class) is
+           begin
+              Point_2D (P_2D) := (others => 0.0);
+           end Reset;
+
+        begin
+           P_3D := (X => 0.1, Y => 0.2, Z => 0.3);
+           Display (P_3D);
+
+           Reset (P_3D);
+           Display (P_3D);
+
+        end Show_Points;
+
+
+
+Delta Aggregates for Non-Tagged Records
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The examples above use tagged types. We can also use delta aggregates with
+non-tagged types. Let's rewrite the :ada:`Points` package and convert
+:ada:`Point_3D` to a non-tagged record type.
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Non_Tagged
+
+    package Points is
+
+       type Point_3D is record
+          X : Float;
+          Y : Float;
+          Z : Float;
+       end record;
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put_Line ("(X => " & P.X'Image
+                    & ", Y => " & P.Y'Image
+                    & ", Z => " & P.Z'Image & ")");
+       end Display;
+
+    end Points;
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Points is
+       P1, P2, P3 : Point_3D;
+    begin
+       P1 := (X => 0.5, Y => 0.7, Z => 0.3);
+       Display (P1);
+
+       P2 := (P1 with delta X => 1.0);
+       Display (P2);
+
+       P3 := (P1 with delta X => 0.2, Y => 0.3);
+       Display (P3);
+    end Show_Points;
+
+In this example, :ada:`Point_3D` is a non-tagged type. Note that we haven't
+changed anything in the :ada:`Show_Points` procedure: it still works as it did
+with tagged types.
+
+Delta Aggregates for Arrays
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use delta aggregates for arrays. Let's change the declaration of
+:ada:`Point_3D` and use an array to represent a 3-dimensional point:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Array
+
+    package Points is
+
+       type Float_Array is
+         array (Positive range <>) of Float;
+
+       type Point_3D is new Float_Array (1 .. 3);
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put ("(");
+          for I in P'Range loop
+             Put (I'Image
+                  & " => "
+                  & P (I)'Image);
+          end loop;
+          Put_Line (")");
+       end Display;
+
+    end Points;
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Points is
+       P1, P2, P3 : Point_3D;
+    begin
+       P1 := [0.5, 0.7, 0.3];
+       Display (P1);
+
+       P2 := [P1 with delta 1 => 1.0];
+       Display (P2);
+
+       P3 := [P1 with delta 1 => 0.2, 2 => 0.3];
+       --  Alternatively:
+       --  P3 := [P1 with delta 1 .. 2 => 0.2, 0.3];
+
+       Display (P3);
+    end Show_Points;
+
+The implementation of :ada:`Show_Points` in this example is very similar to the
+version where use a record type. In this case, we:
+
+- assign :ada:`P1` to :ada:`P2`, but change the first component, and
+
+- we assign  :ada:`P1` to :ada:`P3`, but change the first and second
+  components.
+
+Using slices
+^^^^^^^^^^^^
+
+In the assignment to :ada:`P3`, we can either specify each component of the
+delta individually or use a slice: both forms are equivalent. Also, we can use
+slices to assign the same number to multiple components:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Array
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Points is
+       P1, P3 : Point_3D;
+    begin
+       P1 := [0.5, 0.7, 0.3];
+       Display (P1);
+
+       P3 := [P1 with delta P3'First + 1 .. P3'Last => 0.0];
+       Display (P3);
+    end Show_Points;
+
+In this example, we're assigning :ada:`P1` to :ada:`P3`, but resetting all
+components of the array starting by the second one.
+
+Multiple components
+^^^^^^^^^^^^^^^^^^^
+
+We can also assign multiple components or slices:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Array
+
+    package Float_Arrays is
+
+       type Float_Array is
+         array (Positive range <>) of Float;
+
+       procedure Display (P : Float_Array);
+
+    end Float_Arrays;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Float_Arrays is
+
+       procedure Display (P : Float_Array) is
+       begin
+
+          Put ("(");
+          for I in P'Range loop
+             Put (I'Image
+                  & " => "
+                  & P (I)'Image);
+          end loop;
+          Put_Line (")");
+
+       end Display;
+
+    end Float_Arrays;
+
+    pragma Ada_2022;
+
+    with Float_Arrays; use Float_Arrays;
+
+    procedure Show_Multiple_Delta_Slices is
+
+       P1, P2 : Float_Array (1 .. 5);
+
+    begin
+       P1 := [1.0, 2.0, 3.0, 4.0, 5.0];
+       Display (P1);
+
+       P2 := [P1 with delta
+              P2'First + 1 .. P2'Last - 2 => 0.0,
+              P2'Last - 1 .. P2'Last => 0.2];
+       Display (P2);
+    end Show_Multiple_Delta_Slices;
+
+In this example, we have two arrays :ada:`P1` and :ada:`P2` of
+:ada:`Float_Array` type. We assign :ada:`P1` to :ada:`P2`, but change:
+
+- the second to the last-but-two components to 0.0, and
+
+- the last-but-one and last components to 0.2.
+
+.. admonition:: In the Ada Reference Manual
 
    - :arm22:`Delta Aggregates <4-3-4>`
-
-.. todo::
-
-   Complete section!
 
 
 Container Aggregates
