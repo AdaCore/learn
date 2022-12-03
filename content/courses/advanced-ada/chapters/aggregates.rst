@@ -886,6 +886,8 @@ Delta Aggregates
    Complete section!
 
 
+.. _Adv_Ada_Container_Aggregates:
+
 Container Aggregates
 --------------------
 
