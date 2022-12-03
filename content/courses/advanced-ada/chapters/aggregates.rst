@@ -1223,6 +1223,8 @@ In this example, we have two arrays :ada:`P1` and :ada:`P2` of
    - :arm22:`Delta Aggregates <4-3-4>`
 
 
+.. _Adv_Ada_Container_Aggregates:
+
 Container Aggregates
 --------------------
 
