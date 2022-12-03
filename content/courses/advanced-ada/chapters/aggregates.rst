@@ -1228,10 +1228,135 @@ In this example, we have two arrays :ada:`P1` and :ada:`P2` of
 Container Aggregates
 --------------------
 
-.. admonition:: Relevant topics
+A container aggregate is a list of elements |mdash| such as :ada:`[1, 2, 3]`
+|mdash| that we use to initialize or assign to a container. For example:
 
-   - :arm22:`Container Aggregates <4-3-5>`
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Simple_Container_Aggregate
 
-.. todo::
+    pragma Ada_2022;
 
-   Complete section!
+    with Ada.Containers.Vectors;
+
+    procedure Show_Container_Aggregate is
+
+       package Float_Vectors is new
+         Ada.Containers.Vectors (Positive, Float);
+
+       V : constant Float_Vectors.Vector :=
+             [1.0, 2.0, 3.0];
+
+       pragma Unreferenced (V);
+    begin
+       null;
+    end Show_Container_Aggregate;
+
+In this example, :ada:`[1.0, 2.0, 3.0]` is a container aggregate that we use
+to initialize a vector :ada:`V`.
+
+We can specify container aggregates in three forms:
+
+    - as a null container aggregate, which indicates a container without any
+      elements and is represented by the :ada:`[]` syntax;
+
+    - as a positional container aggregate, where the elements are simply
+      listed in a sequence (such as :ada:`[1, 2]`);
+
+    - as a named container aggregate, where a key is indicated for each element
+      of the list (such as :ada:`[1 => 10, 2 => 15]`).
+
+Let's look at a complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Simple_Container_Aggregate
+
+    pragma Ada_2022;
+
+    with Ada.Containers.Vectors;
+
+    procedure Show_Container_Aggregate is
+
+       package Float_Vectors is new
+         Ada.Containers.Vectors (Positive, Float);
+
+       --  Null container aggregate
+       Null_V  : constant Float_Vectors.Vector :=
+                   [];
+
+       --  Positional container aggregate
+       Pos_V   : constant Float_Vectors.Vector :=
+                   [1.0, 2.0, 3.0];
+
+       --  Named container aggregate
+       Named_V : constant Float_Vectors.Vector :=
+                   [1 => 1.0,
+                    2 => 2.0,
+                    3 => 3.0];
+
+       pragma Unreferenced (Null_V, Pos_V, Named_V);
+    begin
+       null;
+    end Show_Container_Aggregate;
+
+In this example, we see the three forms of container aggregates. The difference
+between positional and named container aggregates is that:
+
+    - for positional container aggregates, the vector index is implied by
+      its position; while
+
+    - for named container aggregates, the index (or key) of each element is
+      explicitly indicated.
+
+Also, the named container aggregate in this example (:ada:`Named_V`) is using
+an index as the name (i.e. it's an indexed aggregate). Another option is to use
+non-indexed aggregates, where we use actual keys |mdash| as we do in maps.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Named_Container_Aggregate
+
+    pragma Ada_2022;
+
+    with Ada.Containers.Vectors;
+    with Ada.Containers.Indefinite_Hashed_Maps;
+    with Ada.Strings.Hash;
+
+    procedure Show_Named_Container_Aggregate is
+
+       package Float_Vectors is new
+         Ada.Containers.Vectors (Positive, Float);
+
+       package Float_Hashed_Maps is new
+         Ada.Containers.Indefinite_Hashed_Maps
+           (Key_Type        => String,
+            Element_Type    => Float,
+            Hash            => Ada.Strings.Hash,
+            Equivalent_Keys => "=");
+
+       --  Named container aggregate
+       --  using an index
+       Indexed_Named_V : constant Float_Vectors.Vector :=
+                   [1 => 1.0,
+                    2 => 2.0,
+                    3 => 3.0];
+
+       --  Named container aggregate
+       --  using a key
+       Keyed_Named_V : constant Float_Hashed_Maps.Map :=
+                         ["Key_1" => 1.0,
+                          "Key_2" => 2.0,
+                          "Key_3" => 3.0];
+
+       pragma Unreferenced (Indexed_Named_V, Keyed_Named_V);
+    begin
+       null;
+    end Show_Named_Container_Aggregate;
+
+In this example, :ada:`Indexed_Named_V` and :ada:`Keyed_Named_V` are both
+initialized with a named container aggregate. However:
+
+- the container aggregate for :ada:`Indexed_Named_V` is an indexed aggregate,
+  so we use an index for each element; while
+
+- the container aggregate for :ada:`Keyed_Named_V` has a key for each element.
+
+Later on, we'll talk about the
+:ref:`'Aggregate aspect <Adv_Ada_Aggregate_Aspect>`, which allows for
+defining custom container aggregates for any record type.
