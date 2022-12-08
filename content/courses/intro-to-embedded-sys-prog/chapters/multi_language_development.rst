@@ -474,7 +474,7 @@ Package :ada:`Interfaces` must be provided by all Ada implementations. The
 package is intended to provide types that reflect the actual numeric types
 provided by the target hardware. Of course, the standard has no way to know
 what hardware is involved, therefore the actual content is
-implementation-defined. But even so, it is possible standardize the names for
+implementation-defined. But even so, it is possible to standardize the names for
 these types, and that is what the language standard does.
 
 Specifically, the standard defines the format for the names for the hardware's
