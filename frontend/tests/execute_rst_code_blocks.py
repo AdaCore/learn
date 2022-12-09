@@ -22,7 +22,7 @@ from code_block import CodeBlock, get_blocks
 
 
 FUNCTION_URLS = {'prod': 'wss://api.learn.r53.adacore.com',
-                 'staging': 'wss://api-staging.learn.r53.adacore.com'}
+                 'sandbox': 'wss://api-sandbox.learn.r53.adacore.com'}
 
 EXPECT_FAILURE_CLASSES = {
     'ada': ['ada-expect-compile-error', 'ada-run-expect-failure', 'ada-expect-prove-error'],
@@ -48,8 +48,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('rst_files', type=str, nargs="+", help="The rst file from which to extract doc")
     parser.add_argument('--verbose', '-v', action='store_true', help='Show more information')
-    parser.add_argument('--env', type=str, default='prod', choices=['staging', 'prod'],
-                        help='Whether to use the prod or staging environment to run the code blocks')
+    parser.add_argument('--env', type=str, default='prod', choices=['sandbox', 'prod'],
+                        help='Whether to use the prod or sandbox environment to run the code blocks')
     parser.add_argument('--projects', type=str, default='',
                         help='Comma seperated string of project names to run e.g. Proj_1,Proj_2,Other_proj')
     parser.add_argument('--halt-on-failure', action='store_true', help='Exit with non-zero exit status on test failure')

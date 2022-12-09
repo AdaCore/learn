@@ -20,7 +20,7 @@ TEST_BUILDDIR   = tests/html
 HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 
 WEBSOCKET_URL_PROD      = wss://api.learn.r53.adacore.com
-export CODE_SERVER_URL := wss://api-staging.learn.r53.adacore.com
+export CODE_SERVER_URL := wss://api-sandbox.learn.r53.adacore.com
 
 help:
 	@echo "make test_content  - run the testsuite"
@@ -170,22 +170,6 @@ test_parser:
 	@coverage run --source=widget -m unittest discover --start-directory sphinx
 	@coverage report --fail-under=90 -m
 
-publish-staging:
-	@echo "Publishing current branch to learn-staging..."
-	@if [ ! -d learn-staging-html-pages ] ;\
-	then \
-		git clone -b gh-pages git@github.com:AdaCore/learn-staging-html-pages.git; \
-	fi && \
-	( cd learn-staging-html-pages && \
-	  git checkout gh-pages && git pull && \
-	  rm -rf * && \
-	  git checkout CNAME ) && \
-	cp -R $(BUILDDIR)/html/. learn-staging-html-pages/ && \
-	cp -R $(BUILDDIR)/pdf_books learn-staging-html-pages/ && \
-	( cd learn-staging-html-pages && \
-	  git add -A && git commit -m "Regenerate" && git push origin gh-pages ) && \
-	rm -rf learn-staging-html-pages
-
 publish:
 	@echo "Publishing current branch to learn..."
 	@if [ ! -d learn-html-pages ] ;\
@@ -212,15 +196,15 @@ local:
 webpack-production:
 	yarn run production
 
-webpack-staging:
-	yarn run staging
+webpack-sandbox:
+	yarn run sandbox
 
 sphinx-production:
 	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	CODE_SERVER_URL="$(WEBSOCKET_URL_PROD)" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-sphinx-staging:
+sphinx-sandbox:
 	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
@@ -229,7 +213,7 @@ sphinx-staging:
 site: cleanall webpack-production sphinx-production test_content all_books complete_site_books
 	@echo Building $@
 
-site-staging: cleanall webpack-staging sphinx-staging test_content all_books complete_site_books
+site-sandbox: cleanall webpack-sandbox sphinx-sandbox test_content all_books complete_site_books
 	@echo Building $@
 
 site-testing: cleantest

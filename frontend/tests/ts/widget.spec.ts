@@ -69,7 +69,7 @@ function removeListeners(server: Server): void {
 describe('Widget', () => {
   let inTest: Array<HTMLElement>;
   let root: HTMLElement;
-  const baseURL = 'wss://api-staging.learn.r53.adacore.com';
+  const baseURL = 'wss://api-sandbox.learn.r53.adacore.com';
   const server: Server = new Server(baseURL);
 
   const originalLogFunction = console.log;
