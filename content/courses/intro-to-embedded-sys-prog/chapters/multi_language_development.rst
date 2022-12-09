@@ -523,22 +523,22 @@ The resulting package declaration might look something like this:
       function Shift_Right  (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
       function Rotate_Left  (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
       function Rotate_Right (Value : Unsigned_8;  Amount : Natural) return Unsigned_8;
-      function Shift_Right_Arithmetic (Value : Unsigned_8;  Amount : Natural) 
+      function Shift_Right_Arithmetic (Value : Unsigned_8;  Amount : Natural)
         return Unsigned_8;
 
       type Unsigned_16 is mod 2 ** 16;
 
-      function Shift_Left  (Value : Unsigned_16;  Amount : Natural) 
+      function Shift_Left  (Value : Unsigned_16;  Amount : Natural)
         return Unsigned_16;
-      function Shift_Right (Value : Unsigned_16;  Amount : Natural) 
+      function Shift_Right (Value : Unsigned_16;  Amount : Natural)
         return Unsigned_16;
       ...
 
       type Unsigned_32 is mod 2 ** 32;
 
-      function Shift_Left  (Value : Unsigned_32;  Amount : Natural) 
+      function Shift_Left  (Value : Unsigned_32;  Amount : Natural)
         return Unsigned_32;
-      function Shift_Right (Value : Unsigned_32;  Amount : Natural) 
+      function Shift_Right (Value : Unsigned_32;  Amount : Natural)
         return Unsigned_32;
       ...
 
@@ -725,7 +725,7 @@ You will often need to use user-defined types for the formal parameters, such
 as enumeration types and record types.
 
 Ada enumeration types are compatible with C's enums but note that C requires
-enum values to be the size of an :ada:`int`, whereas Add does not. The Ada
+enum values to be the size of an :ada:`int`, whereas Ada does not. The Ada
 compiler uses whatever sized machine type will support the specified number of
 enumeral values. It might therefore be smaller than an :ada:`int` but it might
 also be larger. (Declaring more enumeration values than would fit in an integer
@@ -816,7 +816,7 @@ component type :ada:`T` would correspond to a C formal parameter :c:`t*` where
 :c:`t` corresponds to :ada:`T`. An Ada access parameter :ada:`access T`
 corresponds on the C side to :c:`t*` where :c:`t` corresponds to :ada:`T`. And
 finally, a private type is passed according to the full definition of the type;
-the fact that it is private is just a matter of the controlling the client
+the fact that it is private is just a matter of controlling the client
 view, being private doesn't affect how it is passed. There are other simple
 cases, such as access-to-subprogram types, but we can leave that to the Annex.
 
@@ -1127,7 +1127,7 @@ inline assembler is intended for cases in which a separate file containing
 assembly language is not simpler.
 
 With those caveats in place, let's first examine how to do it in general and
-then how to express it GNAT specifically.
+then how to express it with GNAT specifically.
 
 The right way to express an arbitrary sequence of one or more assembly language
 statements is to use so-called "code statements." A code statement is an Ada

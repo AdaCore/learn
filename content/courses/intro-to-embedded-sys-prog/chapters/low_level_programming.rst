@@ -703,7 +703,7 @@ must do what you ask, absent some compelling reason to the contrary.
 
 With that in mind, let's examine setting the size for types.
 
-So, how do we specify that the want our array of 16 Boolean components
+So, how do we specify that we want our array of 16 Boolean components
 to be allocated one bit per component, for a total allocation of 16
 bits? There are a couple of ways, one somewhat better than the other.
 
@@ -847,7 +847,7 @@ That said, you could at least verify the assumption:
 
 .. code-block:: ada
 
-   pragma Compile_Time_Error (Integer'Object_Size /= 32, 
+   pragma Compile_Time_Error (Integer'Object_Size /= 32,
                               "Integers expected to be 32 bits");
    X : aliased Integer;
    Y : Bits32 with Address => X'Address;
