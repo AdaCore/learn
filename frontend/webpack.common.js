@@ -10,14 +10,14 @@ const myEslintOptions = {
 };
 
 const ts_rule = function(env) {
-  let staging = false;
+  let sandbox = false;
 
-  if (env && env.staging) {
-    staging = true;
+  if (env && env.sandbox) {
+    sandbox = true;
   }
 
   const ifdef_opts = {
-    STAGING: staging,
+    SANDBOX: sandbox,
     "ifdef-verbose": true,
     "ifdef-triple-slash": false
   };
