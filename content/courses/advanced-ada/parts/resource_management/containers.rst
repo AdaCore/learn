@@ -669,7 +669,7 @@ the following calls:
 In other words, the :ada:`2 => <>` element from the statement allows us to
 allocate a container with more components than we assign to. (There's no
 assignment happening at index 2 in the aggregate above: it'll have the default
-value.)
+value or remain uninitialized.)
 
 
 Combining :ada:`Add_Named` and :ada:`Assign_Indexed`
