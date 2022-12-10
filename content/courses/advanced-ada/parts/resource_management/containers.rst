@@ -621,6 +621,9 @@ Let's look at an example:
        Put_Line ("A := []");
        A := [];
 
+       Put_Line ("A := [""Hello"", ""World""]");
+       A := ["Hello", "World"];
+
        Put_Line ("A := [1 => ""Hello"", "
                  &     "2 => ""World""]");
        A := [1 => "Hello", 2 => "World"];
