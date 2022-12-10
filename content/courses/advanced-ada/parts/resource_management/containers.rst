@@ -52,27 +52,9 @@ The :ada:`'Aggregate` aspect has the following syntax:
 
 Note that the order of the elements must be exactly as shown above.
 
-Basically, there are three ways you can specify the :ada:`'Aggregate` aspect,
-depending on whether you use the :ada:`Add_Named`, the :ada:`Add_Unnamed` or
-the :ada:`Assign_Indexed` elements. The common feature of these elements is
-that they all are used to specify a procedure that is called when adding an
-element to the container. The following table presents the similarities and
-differences between these elements and their typical use-case:
-
-+-----------------------+------------+----------+-----------------------+-----------------+
-| Category              | Positional | Uses key | Indexed               | Typical use     |
-|                       | / named    |          |                       |                 |
-+=======================+============+==========+=======================+=================+
-| :ada:`Add_Named`      | Named      | Yes      | No                    | Maps            |
-+-----------------------+------------+----------+-----------------------+-----------------+
-| :ada:`Add_Unnamed`    | Positional | No       | No (only yes if       | Vectors, lists, |
-|                       |            |          | :ada:`Assign_Indexed` | sets            |
-|                       |            |          | is used)              |                 |
-+-----------------------+------------+----------+-----------------------+-----------------+
-| :ada:`Assign_Indexed` | Named      | No       | Yes                   | Vectors         |
-|                       |            |          |                       |                 |
-|                       |            |          |                       |                 |
-+-----------------------+------------+----------+-----------------------+-----------------+
+Basically, there are three elements you can use in the :ada:`'Aggregate` aspect
+to specify a procedure that is called when adding an element to the container:
+:ada:`Add_Named`, ada:`Add_Unnamed`, and :ada:`Assign_Indexed`.
 
 Some restrictions apply to the :ada:`Aggregate` aspect. For example:
 
@@ -84,6 +66,55 @@ Some restrictions apply to the :ada:`Aggregate` aspect. For example:
 
 We can, however, combine :ada:`Add_Unnamed` and :ada:`Assign_Indexed` in the
 same aspect declaration.
+
+
+Classification
+~~~~~~~~~~~~~~
+
+We can classify container aggregates in two categories:
+
+- whether they are indexed or not; and
+
+- whether they are positional or named.
+
+This classification depends on the elements that were used in the declaration
+of the :ada:`Aggregate` aspect and whether a key is used in the aggregate. The
+following table presents the classification:
+
++---------+-----------------------+------------+-------+-------------------------------------------------+
+| Indexed | Elements in           | Positional | Uses  | Container aggregate: example                    |
+|         | :ada:`Aggregate`      | / named    | key   |                                                 |
++=========+=======================+============+=======+=================================================+
+| No      | :ada:`Add_Named`      | Named      | Yes   | :ada:`["Key_1" => "Hello", "Key_2" => "World"]` |
+|         +-----------------------+------------+-------+-------------------------------------------------+
+|         | :ada:`Add_Unnamed`    | Positional | No    | :ada:`["Hello", "World"]`                       |
+|         +-----------------------+            |       |                                                 +
+|         | :ada:`Assign_Indexed` |            |       |                                                 |
+|         | :ada:`Add_Unnamed`    |            |       |                                                 |
++---------+-----------------------+------------+-------+-------------------------------------------------+
+| Yes     | :ada:`Assign_Indexed` | Named      | Yes   | :ada:`[1 => "Hello", 2 => "World"]`             |
+|         | :ada:`Add_Unnamed`    |            |       |                                                 |
+|         +-----------------------+------------+-------+-------------------------------------------------+
+|         | :ada:`Assign_Indexed` | Named      | Yes   | :ada:`[1 => "Hello", 2 => "World"]`             |
+|         |                       +------------+-------+-------------------------------------------------+
+|         |                       | Positional | No    | :ada:`["Hello", "World"]`                       |
++---------+-----------------------+------------+-------+-------------------------------------------------+
+
+The next table presents the typical use-cases:
+
++-----------------------+-----------------+
+| Category              | Typical use     |
+|                       |                 |
++=======================+=================+
+| :ada:`Add_Named`      | Maps            |
++-----------------------+-----------------+
+| :ada:`Add_Unnamed`    | Lists, sets     |
++-----------------------+-----------------+
+| :ada:`Add_Unnamed`    | Vectors         |
+| :ada:`Assign_Indexed` |                 |
++-----------------------+-----------------+
+| :ada:`Assign_Indexed` | (none)          |
++-----------------------+-----------------+
 
 Before we discuss these approaches, let's first look at the :ada:`Empty`
 element.
@@ -400,8 +431,7 @@ is first created and then assigned to :ada:`A`.
 ~~~~~~~~~~~~~~~~~~
 
 The :ada:`Add_Unnamed` element of the :ada:`Aggregate` aspect refers to a
-procedure that is called when we have a positional container aggregate. (It may
-|mdash| or may not |mdash| use indexing, as we'll discuss later.)
+procedure that is called when we have a positional container aggregate.
 
 Let's look at an example:
 
@@ -493,12 +523,9 @@ following calls:
 ~~~~~~~~~~~~~~~~~~~~~
 
 The :ada:`Assign_Indexed` element of the :ada:`Aggregate` aspect refers to a
-procedure that is called when we have a named container aggregate. In addition
-to being named, this aggregate is also indexed. (Just as a reminder, these are
-aggregates with this form: :ada:`[1 => "Hello", 2 => "World"]`.)
-
-Note that, when we specify the :ada:`Assign_Indexed` element, we must also
-use the :ada:`New_Indexed` element in the same aspect declaration.
+procedure that is called when we have an indexed container aggregate. Note
+that, when we specify the :ada:`Assign_Indexed` element, we must also use the
+:ada:`New_Indexed` element in the same aspect declaration.
 
 Let's look at an example:
 
@@ -761,10 +788,14 @@ example:
        A := [1 => "Hello", 2 => "World"];
     end Show_Unnamed_Indexed_Container_Aggregate;
 
-Now, both positional (:ada:`["Hello", "World"]`) and named
-(:ada:`[1 => "Hello", 2 => "World"]`) forms are possible for container
-aggregates of type :ada:`T`. The same rules that we discussed earlier apply in
-this case as well.
+Now, the subprogram calls depend on whether the container aggregate is
+positional or not:
+
+- for positional aggregates (e.g.: :ada:`["Hello", "World"]`), the
+  :ada:`Add_Unnamed` element is used; while
+
+- for named aggregates (:ada:`[1 => "Hello", 2 => "World"]`), the
+  :ada:`New_Indexed` / :ada:`Assign_Indexed` elements are used.
 
 
 User-Defined Iterator Types
