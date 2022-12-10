@@ -477,7 +477,7 @@ Let's look at an example:
        A := ["Hello", "World"];
     end Show_Unnamed_Container_Aggregate;
 
-The :ada:`A := ["Hello", "World"]` statement of the code above generates the
+The :ada:`A := ["Hello", "World"]` statement from the code above generates the
 following calls:
 
 - a call to :ada:`Empty_Func (2)` that creates an empty container with two
@@ -605,7 +605,7 @@ Let's look at an example:
 
     end Show_Indexed_Container_Aggregate;
 
-The :ada:`A := [1 => "Hello", 2 => "World"]` statement of the code above
+The :ada:`A := [1 => "Hello", 2 => "World"]` statement from the code above
 generates the following calls:
 
 - a call to :ada:`New_Indexed_Func (First => 1, Last => 2)` that creates an
