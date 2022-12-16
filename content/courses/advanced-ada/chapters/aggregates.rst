@@ -1300,7 +1300,9 @@ In this example, we see the three forms of container aggregates. The difference
 between positional and named container aggregates is that:
 
     - for positional container aggregates, the vector index is implied by
-      its position; while
+      its position;
+
+while
 
     - for named container aggregates, the index (or key) of each element is
       explicitly indicated.
@@ -1353,7 +1355,9 @@ In this example, :ada:`Indexed_Named_V` and :ada:`Keyed_Named_V` are both
 initialized with a named container aggregate. However:
 
 - the container aggregate for :ada:`Indexed_Named_V` is an indexed aggregate,
-  so we use an index for each element; while
+  so we use an index for each element;
+
+while
 
 - the container aggregate for :ada:`Keyed_Named_V` has a key for each element.
 
