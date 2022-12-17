@@ -831,18 +831,6 @@ the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
 the :ada:`Wide_Wide_String` types.
 
 
-Universal text buffer
----------------------
-
-.. admonition:: Relevant topics
-
-    - :arm22:`Universal Text Buffers <A-4-12>`
-
-.. todo::
-
-    Complete section!
-
-
 Image attribute
 ---------------
 
@@ -867,3 +855,16 @@ Image attribute
 .. todo::
 
     Complete section!
+
+
+Universal text buffer
+---------------------
+
+.. admonition:: Relevant topics
+
+    - :arm22:`Universal Text Buffers <A-4-12>`
+
+.. todo::
+
+    Complete section!
+
