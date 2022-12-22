@@ -1191,14 +1191,414 @@ the componentless protected object :ada:`PN` and the task :ada:`T1`.
 :ada:`Put_Image` aspect
 -----------------------
 
-.. admonition:: Relevant topics
+.. note::
 
-    - :ada:`Put_Image` aspect mentioned in
-      :arm22:`Image Attributes <4-10>`
+   This feature was introduced in Ada 2022.
 
-.. todo::
+Overview
+~~~~~~~~
 
-    Complete section!
+In the previous section, we discussed many details about the :ada:`'Image`
+attribute. In the code examples from that section, we've seen the default
+behavior of this attribute: the string returned by the calls to :ada:`'Image`
+was always in the format defined by the Ada standard.
+
+In some situations, however, we might want to customize the string that is
+returned by the :ada:`'Image` attribute of a type :ada:`T`. Ada allows us to do
+that via the :ada:`Put_Image` aspect. This is what we have to do:
+
+1. Specify the :ada:`Put_Image` aspect for the type :ada:`T` and indicate a
+   procedure :ada:`P`.
+
+2. Implement the procedure :ada:`P` and write the information we want to use
+   into a buffer (by calling the :ada:`Put` procedure).
+
+We can see these steps performed in the code example below:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Strings.Simple_Put_Image
+
+    pragma Ada_2022;
+
+    with Ada.Strings.Text_Buffers;
+
+    package Show_Put_Image is
+
+       type T is null record
+         with Put_Image => Put_Image_T;
+       --     ^ Custom version of Put_Image
+
+       use Ada.Strings.Text_Buffers;
+
+       procedure Put_Image_T
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T);
+
+    end Show_Put_Image;
+
+    package body Show_Put_Image is
+
+       procedure Put_Image_T
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T) is
+          pragma Unreferenced (Arg);
+       begin
+          --  Call Wide_Wide_Put with customized
+          --  information
+          Buffer.Wide_Wide_Put ("<custom info>");
+       end Put_Image_T;
+
+    end Show_Put_Image;
+
+In the :ada:`Show_Put_Image` package, we use the :ada:`Put_Image` aspect in
+the declaration of the :ada:`T` type. There, we indicate that the
+:ada:`Image` attribute shall use the :ada:`Put_Image_T` procedure instead
+of the default version.
+
+In the body of the :ada:`Put_Image_T` procedure, we implement our custom
+version of the :ada:`Image` attribute. We do that by calling the
+:ada:`Wide_Wide_Put` procedure with the information we want to provide in the
+:ada:`Image` attribute. Here, we access a buffer of :ada:`Root_Buffer_Type`
+type, which is defined in the :ada:`Ada.Strings.Text_Buffers` package. (We
+discuss more about this package
+:ref:`later on <Adv_Ada_Universal_Text_Buffer>`.)
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`Image Attributes <4-10>`
+
+
+Complete Example of :ada:`Put_Image`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's see a complete example in which we use the :ada:`Put_Image` aspect and
+write useful information to the buffer:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Put_Image_Custom_Numerics
+
+    pragma Ada_2022;
+
+    with Ada.Strings.Text_Buffers;
+
+    package Custom_Numerics is
+
+       type Float_Integer is record
+         F : Float;
+         I : Integer;
+       end record
+         with Dynamic_Predicate =>
+                Integer (Float_Integer.F) = Float_Integer.I,
+              Put_Image         => Put_Float_Integer;
+       --     ^ Custom version of Put_Image
+
+       use Ada.Strings.Text_Buffers;
+
+       procedure Put_Float_Integer
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        Float_Integer);
+
+    end Custom_Numerics;
+
+    package body Custom_Numerics is
+
+       procedure Put_Float_Integer
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        Float_Integer) is
+       begin
+          --  Call Wide_Wide_Put with customized
+          --  information
+          Buffer.Wide_Wide_Put
+            ("(F : "  & Arg.F'Wide_Wide_Image & ", "
+             & "I : " & Arg.I'Wide_Wide_Image & ")");
+       end Put_Float_Integer;
+
+    end Custom_Numerics;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with Custom_Numerics; use Custom_Numerics;
+
+    procedure Show_Put_Image is
+       V : Float_Integer;
+    begin
+       V := (F => 100.2,
+             I => 100);
+       Put_Line ("V = "
+                 & V'Image);
+    end Show_Put_Image;
+
+In the :ada:`Custom_Numerics` package of this example, we specify the
+:ada:`Put_Image` aspect and indicate the :ada:`Put_Float_Integer` procedure.
+In that procedure, we display the information of components :ada:`F` and
+:ada:`I`. Then, in the :ada:`Show_Put_Image` procedure, we use the :ada:`Image`
+attribute for the :ada:`V` variable and see the information in the exact format
+we specified. (If you like to see the default version of the
+:ada:`Put_Image` instead, you may comment out the :ada:`Put_Image` aspect part
+in the declaration of :ada:`Float_Integer`.)
+
+
+Relation to the :ada:`Image` attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that we cannot override the :ada:`Image` attribute directly |mdash|
+there's no :ada:`'Image` *aspect* that we could specify. However, as we've just
+seen, we can do this indirectly by using our own version of the
+:ada:`Put_Image` procedure for a type :ada:`T`.
+
+The :ada:`Image` attribute of a type :ada:`T` makes use of the procedure
+indicated in the :ada:`Put_Image` aspect. Let's say we have the following
+declaration:
+
+.. code-block:: ada
+
+    type T is null record
+      with Put_Image => Put_Image_T;
+
+When we then use the :ada:`T'Image` attribute in our code, the custom
+:ada:`Put_Image_T` procedure is automatically called. This is a simplified
+example of how the :ada:`Image` function is implemented:
+
+.. code-block:: ada
+
+   function Image (V : T)
+                   return String is
+      Buffer : Custom_Buffer;
+      --       ^ of Root_Buffer_Type'Class
+   begin
+      --  Calling Put_Image procedure
+      --  for type T
+      Put_Image_T (Buffer, V);
+
+      --  Retrieving the text from the
+      --  buffer as a string
+      return Buffer.Get;
+   end Image;
+
+In other words, the :ada:`Image` attribute basically:
+
+- calls the :ada:`Put_Image` procedure specified in the :ada:`Put_Image`
+  aspect of type :ada:`T`\ 's declaration and passes a buffer;
+
+and
+
+- retrieves the contents of the buffer as a string and returns it.
+
+If the :ada:`Put_Image` aspect of type :ada:`T` isn't specified, the default
+version is used. (We've seen the default version of various types
+:ref:`in the previous section <Adv_Ada_Image_Attribute>` about the :ada:`Image`
+attribute.)
+
+
+:ada:`Put_Image` and derived types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Derived types make use of the :ada:`Put_Image` procedure that was specified for
+their parent type |mdash| either a custom procedure indicated in the
+:ada:`Put_Image` aspect or the default one. Naturally, if a derived type
+has the :ada:`Put_Image` aspect, the procedure indicated in the aspect is used
+instead. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Untagged_Put_Image
+
+    pragma Ada_2022;
+
+    with Ada.Strings.Text_Buffers;
+
+    package Untagged_Put_Image is
+
+       use Ada.Strings.Text_Buffers;
+
+       type T is null record
+         with Put_Image => Put_Image_T;
+
+       procedure Put_Image_T
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T);
+
+       type T_Derived_1 is new T;
+
+       type T_Derived_2 is new T
+         with Put_Image => Put_Image_T_Derived_2;
+
+       procedure Put_Image_T_Derived_2
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T_Derived_2);
+
+    end Untagged_Put_Image;
+
+    package body Untagged_Put_Image is
+
+       procedure Put_Image_T
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T) is
+          pragma Unreferenced (Arg);
+       begin
+          Buffer.Wide_Wide_Put ("Put_Image_T");
+       end Put_Image_T;
+
+       procedure Put_Image_T_Derived_2
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T_Derived_2) is
+          pragma Unreferenced (Arg);
+       begin
+          Buffer.Wide_Wide_Put ("Put_Image_T_Derived_2");
+       end Put_Image_T_Derived_2;
+
+    end Untagged_Put_Image;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;        use Ada.Text_IO;
+
+    with Untagged_Put_Image; use Untagged_Put_Image;
+
+    procedure Show_Untagged_Put_Image is
+       Obj_T           : T;
+       Obj_T_Derived_1 : T_Derived_1;
+       Obj_T_Derived_2 : T_Derived_2;
+    begin
+       Put_Line ("T'Image :           "
+                 & Obj_T'Image);
+       Put_Line ("T_Derived_1'Image : "
+                 & Obj_T_Derived_1'Image);
+       Put_Line ("T_Derived_2'Image : "
+                 & Obj_T_Derived_2'Image);
+    end Show_Untagged_Put_Image;
+
+In this example, we declare the type :ada:`T` and its derived types
+:ada:`T_Derived_1` and :ada:`T_Derived_2`. When running this code, we see that:
+
+- :ada:`T_Derived_1` makes use of the :ada:`Put_Image_T` procedure from its
+  parent.
+
+    - Note that, if we remove the :ada:`Put_Image` aspect from the declaration
+      of :ada:`T`, the default version of the :ada:`Put_Image` procedure is
+      used for both :ada:`T` and :ada:`T_Derived_1` types.
+
+- :ada:`T_Derived_2` makes use of the :ada:`Put_Image_T_Derived_2` procedure,
+  which was indicated in the :ada:`Put_Image` aspect of that type, instead of
+  its parent's procedure.
+
+
+:ada:`Put_Image` and tagged types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Types that are derived from a tagged type may also inherit the :ada:`Put_Image`
+aspect. However, there are a couple of small differences in comparison to
+untagged types, as we can see in the following example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Tagged_Put_Image
+
+    pragma Ada_2022;
+
+    with Ada.Strings.Text_Buffers;
+
+    package Tagged_Put_Image is
+
+       use Ada.Strings.Text_Buffers;
+
+       type T is tagged record
+          I : Integer;
+       end record
+         with Put_Image => Put_Image_T;
+
+       procedure Put_Image_T
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T);
+
+       type T_Child_1 is new T with record
+          I1 : Integer;
+       end record;
+
+       type T_Child_2 is new T with null record;
+
+       type T_Child_3 is new T with record
+          I3 : Integer;
+       end record
+         with Put_Image => Put_Image_T_Child_3;
+
+       procedure Put_Image_T_Child_3
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T_Child_3);
+
+    end Tagged_Put_Image;
+
+    package body Tagged_Put_Image is
+
+       procedure Put_Image_T
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T) is
+          pragma Unreferenced (Arg);
+       begin
+          Buffer.Wide_Wide_Put ("Put_Image_T");
+       end Put_Image_T;
+
+       procedure Put_Image_T_Child_3
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        T_Child_3) is
+          pragma Unreferenced (Arg);
+       begin
+          Buffer.Wide_Wide_Put ("Put_Image_T_Child_3");
+       end Put_Image_T_Child_3;
+
+    end Tagged_Put_Image;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Tagged_Put_Image; use Tagged_Put_Image;
+
+    procedure Show_Tagged_Put_Image is
+       Obj_T         : T;
+       Obj_T_Child_1 : T_Child_1;
+       Obj_T_Child_2 : T_Child_2;
+       Obj_T_Child_3 : T_Child_3;
+    begin
+       Put_Line ("T'Image :         "
+                 & Obj_T'Image);
+       Put_Line ("--------------------");
+       Put_Line ("T_Child_1'Image : "
+                 & Obj_T_Child_1'Image);
+       Put_Line ("--------------------");
+       Put_Line ("T_Child_2'Image : "
+                 & Obj_T_Child_2'Image);
+       Put_Line ("--------------------");
+       Put_Line ("T_Child_3'Image : "
+                 & Obj_T_Child_3'Image);
+       Put_Line ("--------------------");
+       Put_Line ("T'Class'Image :   "
+                 & T'Class (Obj_T_Child_1)'Image);
+    end Show_Tagged_Put_Image;
+
+In this example, we declare the type :ada:`T` and its derived types
+:ada:`T_Child_1`, :ada:`T_Child_2` and :ada:`T_Child_3`. When running this
+code, we see that:
+
+- for both :ada:`T_Child_1` and :ada:`T_Child_2` types, the parent's
+  :ada:`Put_Image` aspect (the :ada:`Put_Image_T` procedure) is called and its
+  information is combined with the information from the type extension;
+
+    - The information from the parent's :ada:`Put_Image_T` procedure is
+      presented in an aggregate syntax |mdash| in this case, this results in
+      ``(Put_Image_T)``.
+
+    - For the :ada:`T_Child_1` type, the :ada:`I1` component of the type
+      extension is displayed by calling a default version of the
+      :ada:`Put_Image` procedure for that component |mdash|
+      ``(Put_Image_T with I1 =>  0)`` is displayed.
+
+    - For the :ada:`T_Child_2` type, no additional information is displayed
+      because this type has a null extension.
+
+- for the :ada:`T_Child_3` type, the :ada:`Put_Image_T_Child_3` procedure,
+  which was indicated in the :ada:`Put_Image` aspect of the type, is used.
+
+Finally, class-wide types (such as :ada:`T'Class`) include additional
+information. Here, the tag of the specific derived type is displayed first
+|mdash| in this case, the tag of the :ada:`T_Child_1` type |mdash| and
+then the actual information for the derived type is displayed.
 
 
 .. _Adv_Ada_Universal_Text_Buffer:
