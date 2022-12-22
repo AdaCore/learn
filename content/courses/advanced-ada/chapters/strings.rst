@@ -903,6 +903,10 @@ We can also apply the :ada:`'Image` attribute to an object directly:
        --  Put_Line ("V: " & Integer'Image (V));
     end Show_Simple_Image;
 
+.. note::
+
+   This feature was introduced in Ada 2022.
+
 In this example, the :ada:`Integer'Image (V)` and :ada:`V'Image` forms are
 equivalent.
 
@@ -955,6 +959,10 @@ string of :ada:`Wide_Wide_String` type for the floating-point variable
 
 :ada:`Image` attribute for non-scalar types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   This feature was introduced in Ada 2022.
 
 In the previous code examples, we were using the :ada:`Image` attribute with
 scalar types, but it isn't restrict to those types. In fact, we can also use
