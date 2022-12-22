@@ -239,7 +239,8 @@ Introduction to Ada course, which we adapted for wide-wide strings:
 In this example, we're using the :ada:`Find_Token` procedure to find the words
 from the phrase stored in the :ada:`S` constant. All the operations we're using
 here are similar to the ones for :ada:`String` type, but making use of the
-:ada:`Wide_Wide_String` type instead.
+:ada:`Wide_Wide_String` type instead. (We talk about the :ada:`Wide_Wide_Image`
+attribute :ref:`later on <Adv_Ada_Wider_Versions_Image_Attribute>`.)
 
 .. admonition:: In the Ada Reference Manual
 
@@ -910,6 +911,44 @@ equivalent.
     always specify the data type of the object in the
     :ada:`Obj_Type'Image (Obj)` form. Starting with Ada 2022, both forms are
     acceptable.
+
+.. _Adv_Ada_Wider_Versions_Image_Attribute:
+
+Wider versions of :ada:`Image`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Although we've been talking only about the :ada:`Image` attribute, it's
+important to mention that each of the wider versions of the string types also
+has a corresponding :ada:`Image` attribute. In fact, this is the attribute for
+each string type:
+
++------------------------+----------------------------+
+| Attribute              | Type of Returned String    |
++========================+============================+
+| :ada:`Image`           | :ada:`String`              |
++------------------------+----------------------------+
+| :ada:`Wide_Image`      | :ada:`Wide_String`         |
++------------------------+----------------------------+
+| :ada:`Wide_Wide_Image` | :ada:`Wide_Wide_String`    |
++------------------------+----------------------------+
+
+Let's see a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_Image
+
+    with Ada.Wide_Wide_Text_IO; use Ada.Wide_Wide_Text_IO;
+
+    procedure Show_Wide_Wide_Image is
+       F : Float;
+    begin
+       F := 100.0;
+       Put_Line ("F = "
+                 & F'Wide_Wide_Image);
+    end Show_Wide_Wide_Image;
+
+In this example, we use the :ada:`Wide_Wide_Image` attribute to retrieve a
+string of :ada:`Wide_Wide_String` type for the floating-point variable
+:ada:`F`.
 
 
 :ada:`Image` attribute for non-scalar types
