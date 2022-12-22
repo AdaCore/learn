@@ -1242,9 +1242,9 @@ We can see these steps performed in the code example below:
           Arg    :        T) is
           pragma Unreferenced (Arg);
        begin
-          --  Call Wide_Wide_Put with customized
+          --  Call Put with customized
           --  information
-          Buffer.Wide_Wide_Put ("<custom info>");
+          Buffer.Put ("<custom info>");
        end Put_Image_T;
 
     end Show_Put_Image;
@@ -1256,7 +1256,7 @@ of the default version.
 
 In the body of the :ada:`Put_Image_T` procedure, we implement our custom
 version of the :ada:`Image` attribute. We do that by calling the
-:ada:`Wide_Wide_Put` procedure with the information we want to provide in the
+:ada:`Put` procedure with the information we want to provide in the
 :ada:`Image` attribute. Here, we access a buffer of :ada:`Root_Buffer_Type`
 type, which is defined in the :ada:`Ada.Strings.Text_Buffers` package. (We
 discuss more about this package
