@@ -832,6 +832,8 @@ the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
 the :ada:`Wide_Wide_String` types.
 
 
+.. _Adv_Ada_Image_Attribute:
+
 Image attribute
 ---------------
 
@@ -1185,6 +1187,8 @@ In this example, we display information about the protected object :ada:`PF`,
 the componentless protected object :ada:`PN` and the task :ada:`T1`.
 
 
+.. _Adv_Ada_Put_Image_Aspect:
+
 :ada:`Put_Image` aspect
 -----------------------
 
@@ -1197,6 +1201,8 @@ the componentless protected object :ada:`PN` and the task :ada:`T1`.
 
     Complete section!
 
+
+.. _Adv_Ada_Universal_Text_Buffer:
 
 Universal text buffer
 ---------------------
