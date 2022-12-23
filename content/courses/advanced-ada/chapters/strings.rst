@@ -1688,11 +1688,3 @@ then the actual information for the derived type is displayed.
 Universal text buffer
 ---------------------
 
-.. admonition:: Relevant topics
-
-    - :arm22:`Universal Text Buffers <A-4-12>`
-
-.. todo::
-
-    Complete section!
-
