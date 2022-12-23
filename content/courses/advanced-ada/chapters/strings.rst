@@ -1688,3 +1688,133 @@ then the actual information for the derived type is displayed.
 Universal text buffer
 ---------------------
 
+In the :ref:`previous section <Adv_Ada_Put_Image_Aspect>`, we've seen that the
+first parameter of the procedure indicated in the :ada:`Put_Image` aspect has
+the :ada:`Root_Buffer_Type'Class` type, which is defined in the
+:ada:`Ada.Strings.Text_Buffers` package. In this section, we talk more about
+this type and additional procedures associated with this type.
+
+.. note::
+
+   This feature was introduced in Ada 2022.
+
+Overview
+~~~~~~~~
+
+We use the :ada:`Root_Buffer_Type'Class` type to implement an universal text
+buffer that is used to store and retrieve information about data types. Because
+this text buffer isn't associated with specific data types, it is universal
+|mdash| in the sense that we can really use it for any data type, regardless of
+the characteristics of this type.
+
+In theory, we could use Ada's universal text buffer to implement applications
+that actually process text in some form |mdash| for example, when implementing
+a text editor. However, in general, Ada programmers are only expected to make
+use of the :ada:`Root_Buffer_Type'Class` type when implementing a procedure for
+the :ada:`Put_Image` aspect. For this reason, we won't discuss any kind of
+type derivation |mdash| or any other kind of usages of this type |mdash| in
+this section. Instead, we'll just focus on additional subprograms from the
+:ada:`Ada.Strings.Text_Buffers` package.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`Universal Text Buffers <A-4-12>`
+
+
+Additional procedures
+~~~~~~~~~~~~~~~~~~~~~
+
+In the previous section, we used the :ada:`Put` procedure |mdash| and the
+related :ada:`Wide_Put` and :ada:`Wide_Wide_Put` procedures |mdash| from the
+:ada:`Ada.Strings.Text_Buffers` package. In addition to these procedures, the
+package also includes:
+
+- the :ada:`New_Line` procedure, which writes a new line marker to the text
+  buffer;
+
+- the :ada:`Increase_Indent` procedure, which increases the indentation in the
+  text buffer; and
+
+- the :ada:`Decrease_Indent` procedure, which decreases the indentation in the
+  text buffer.
+
+The :ada:`Ada.Strings.Text_Buffers` package also includes the
+:ada:`Current_Indent` function, which retrieves the current indentation
+counter.
+
+Let's revisit an example from the previous section and use the procedures
+mentioned above:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Put_Image_Custom_Numerics_Extended
+
+    pragma Ada_2022;
+
+    with Ada.Strings.Text_Buffers;
+
+    package Custom_Numerics is
+
+       type Float_Integer is record
+         F : Float;
+         I : Integer;
+       end record
+         with Dynamic_Predicate =>
+                Integer (Float_Integer.F) = Float_Integer.I,
+              Put_Image         => Put_Float_Integer;
+       --     ^ Custom version of Put_Image
+
+       use Ada.Strings.Text_Buffers;
+
+       procedure Put_Float_Integer
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        Float_Integer);
+
+    end Custom_Numerics;
+
+    package body Custom_Numerics is
+
+       procedure Put_Float_Integer
+         (Buffer : in out Root_Buffer_Type'Class;
+          Arg    :        Float_Integer) is
+       begin
+          Buffer.Wide_Wide_Put ("(");
+          Buffer.New_Line;
+
+          Buffer.Increase_Indent;
+
+          Buffer.Wide_Wide_Put
+            ("F : "
+             & Arg.F'Wide_Wide_Image);
+          Buffer.New_Line;
+
+          Buffer.Wide_Wide_Put
+            ("I : "
+            & Arg.I'Wide_Wide_Image);
+
+          Buffer.Decrease_Indent;
+          Buffer.New_Line;
+
+          Buffer.Wide_Wide_Put (")");
+       end Put_Float_Integer;
+
+    end Custom_Numerics;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with Custom_Numerics; use Custom_Numerics;
+
+    procedure Show_Put_Image is
+       V : Float_Integer;
+    begin
+       V := (F => 100.2,
+             I => 100);
+       Put_Line ("V = "
+                 & V'Image);
+    end Show_Put_Image;
+
+In the body of the :ada:`Put_Float_Integer` procedure, we're using the
+:ada:`New_Line`, :ada:`Increase_Indent` and :ada:`Decrease_Indent` procedures
+to improve the format of the string returned by the :ada:`Float_Integer'Image`
+attribute. Using these procedures, you can write any kind of format for your
+custom type.
