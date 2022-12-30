@@ -181,6 +181,23 @@ class WidgetCodeDirective(Directive):
         return static_nodes
 
 
+    def get_code_block_info(self, code_block_info) -> Dict[str, str]:
+
+        block_info : Dict[str, str] = code_block_info.get_info()
+        results : Dict[str, str] = dict()
+
+        for info_type in sorted(block_info):
+
+            if block_info[info_type] == "":
+                # Do not add empty info blocks
+                continue
+
+            results[info_type] = str(block_info[info_type])
+            print(str(block_info[info_type]))
+
+        return results
+
+
     def run(self) -> List[Node]:
         """The main entrypoint for the WidgetDirective
 
@@ -219,6 +236,12 @@ class WidgetCodeDirective(Directive):
                     lstrip_blocks = False,
                     keep_trailing_newline = True,
                 )
+
+                if 'no_button' in self.arguments[0]:
+                    code_block_info = CodeBlockInfo(project_name=widget.name,
+                                                    filename=self.content.items[0][0],
+                                                    line_number=self.content.items[0][1] - 1)
+                    widget.parseCodeBlockInfo(self.get_code_block_info(code_block_info))
 
                 # insert widget into the template
                 template = jinja_env.get_template('widget.html')

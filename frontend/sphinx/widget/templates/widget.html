@@ -4,6 +4,10 @@
     {% for sf in w.shadow_files %}
         <div class="shadow-file" style="display:none" data-basename="{{ sf.basename }}">{{ sf.content }}</div>
     {% endfor %}
+    {% for cbi in w.code_block_info %}
+        <div class="code-block-info" style="display:none" data-basename="{{ cbi.basename }}">
+{{ cbi.content }}</div>
+    {% endfor %}
     {% for f in w.files %}
         <div class="file" data-basename="{{ f.basename }}">{{ f.content }}</div>
     {% endfor %}
