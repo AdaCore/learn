@@ -218,10 +218,10 @@ sphinx-sandbox:
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
-site: cleanall webpack-production sphinx-production test_content all_books complete_site_books
+site: cleanall test_content webpack-production sphinx-production all_books complete_site_books
 	@echo Building $@
 
-site-sandbox: cleanall webpack-sandbox sphinx-sandbox test_content all_books complete_site_books
+site-sandbox: cleanall test_content webpack-sandbox sphinx-sandbox all_books complete_site_books
 	@echo Building $@
 
 site-testing: cleantest
