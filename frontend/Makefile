@@ -190,8 +190,10 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local:
-	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
-	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
+	  SRC_TEST_DIR="$(SRC_TEST_DIR)" \
+	  $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	  "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:
 	yarn run production
