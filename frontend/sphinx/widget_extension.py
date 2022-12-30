@@ -44,13 +44,14 @@ The files are extracted the following way:
 """
 # System libs
 import os
-from typing import List
+from typing import List, Dict, Any
 
 # HTML Template Libs
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 # Sphinx libs
 from docutils import nodes
+from docutils.nodes import Node
 from docutils.parsers.rst import Directive, directives
 
 # Widget lib
@@ -180,7 +181,7 @@ class WidgetCodeDirective(Directive):
         return static_nodes
 
 
-    def run(self):
+    def run(self) -> List[Node]:
         """The main entrypoint for the WidgetDirective
 
         Raises:
@@ -243,7 +244,7 @@ def on_builder_inited(app):
     app.add_directive('code', WidgetCodeDirective, override=True)
 
 
-def setup(app):
+def setup(app: "Sphinx") -> Dict[str, Any]:
     app.add_config_value('insert_widgets', True, 'html')
 
     app.connect('builder-inited', on_builder_inited)
