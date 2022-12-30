@@ -37,6 +37,10 @@ $frontend = <<-SHELL
   source /vagrant/venv/bin/activate
   pip3 install -r /vagrant/frontend/requirements.txt
 
+  # File system: increase number of user watches
+  # Needed for npm
+  echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
+
   cd /vagrant/frontend
   yarn
 
@@ -105,6 +109,10 @@ $epub = <<-SHELL
   python3 -m venv /vagrant/venv
   source /vagrant/venv/bin/activate
   pip3 install -r /vagrant/frontend/requirements.txt
+
+  # File system: increase number of user watches
+  # Needed for npm
+  echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 
   cd /vagrant/frontend
   yarn

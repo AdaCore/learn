@@ -59,6 +59,10 @@ jobs:
         sudo mv gprbuild-* /usr/local/gprbuild
         sudo echo "/usr/local/gprbuild/bin" >> $GITHUB_PATH
         sudo rm *.tar.gz
+    - name: Increase max user watches
+      run: |
+        echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && \
+        sudo sysctl -p
     - name: Install dependencies
       run: yarn --frozen-lockfile
     - name: Install Python dependencies
