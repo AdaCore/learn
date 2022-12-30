@@ -196,11 +196,6 @@ class WidgetCodeDirective(Directive):
         nodes_latex = []
         nodes_epub = []
 
-        jinja_env = Environment(
-            loader=PackageLoader('widget'),
-            autoescape=select_autoescape(['html', 'xml'])
-        )
-
         try:
             # parse directive arguments
             if self.arguments:
@@ -216,6 +211,14 @@ class WidgetCodeDirective(Directive):
             # Attemping to detect HTML or Latex output by checking for 'html' in tags
             if ('builder_html' in self.state.state_machine.document.settings.env.app.tags.tags
                 and self.state.state_machine.document.settings.env.app.tags.tags['builder_html']):
+
+                jinja_env = Environment(
+                    loader=PackageLoader('widget'),
+                    autoescape=select_autoescape(['html', 'xml']),
+                    trim_blocks = False,
+                    lstrip_blocks = False,
+                    keep_trailing_newline = True,
+                )
 
                 # insert widget into the template
                 template = jinja_env.get_template('widget.html')
