@@ -34,7 +34,7 @@ class Widget:
     """The Widget class defines the layout of a widget
 
     This class will get passed to a jinja template. All instance variables
-    and properties will be accessed via jina template.
+    and properties will be accessed via jinja template.
 
     The count class variable allows widgets to have a unique id on the rendered
     page.
