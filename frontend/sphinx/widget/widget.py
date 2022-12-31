@@ -34,7 +34,7 @@ class Widget:
     """The Widget class defines the layout of a widget
 
     This class will get passed to a jinja template. All instance variables
-    and properties will be accessed via jina template.
+    and properties will be accessed via jinja template.
 
     The count class variable allows widgets to have a unique id on the rendered
     page.
@@ -309,3 +309,23 @@ class Widget:
             self.__files = real_gnatchop(content)
         else:
             raise ChopException('No chop strategy defined')
+
+    def __parse_code_block_info(self, code_block_info: Dict[str, str]) -> List[Resource]:
+        results: List[Resource] = []
+
+        for info_type in code_block_info:
+            name = info_type + " info"
+            contents = code_block_info[info_type].strip().splitlines()
+            contents += "\n"
+            results.append(Resource(name, contents))
+
+        return results
+
+
+    def parseCodeBlockInfo(self, content: Dict[str, str]):
+        """Parse Directive code block info
+
+        Args:
+            content (Dict[str, str]): The dictionary with code block info
+        """
+        self.code_block_info = self.__parse_code_block_info(content)

@@ -28,6 +28,7 @@ class Widget {
   private readonly server: string;
   private readonly id: string;
   private readonly shadowFiles: ResourceList = [];
+  private readonly codeBlockInfo: ResourceList = [];
 
   // view objects
   protected readonly container: HTMLDivElement;
@@ -87,6 +88,15 @@ class Widget {
       this.shadowFiles.push(a);
     }
 
+    // Parse code block info
+    const codeBlockInfo = getElemsByClass(this.container, 'code-block-info');
+    for (const info of codeBlockInfo) {
+      const a: Resource = {
+        basename: info.dataset.basename as string,
+        contents: info.textContent ? info.textContent : '',
+      };
+      this.codeBlockInfo.push(a);
+    }
     // Setup editor tabs
     const tab = this.getElem('tab');
     const headers = getElemsByTag(tab, 'button');
@@ -178,6 +188,12 @@ class Widget {
     // grab reference to output area in the HTML and construct area
     const outputArea = this.getElem('output-area') as HTMLDivElement;
     this.outputArea = new OutputArea(outputArea);
+
+    // add code block info
+    for (const r of this.codeBlockInfo) {
+      this.outputArea.addInfo('---- ' + r.basename + ' ----\n');
+      this.outputArea.addInfo(r.contents);
+    }
   }
 
   /**

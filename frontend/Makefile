@@ -190,8 +190,10 @@ publish:
 # code server.
 # This should only be called from `yarn run dev`
 local:
-	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
-	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
+	  SRC_TEST_DIR="$(SRC_TEST_DIR)" \
+	  $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	  "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:
 	yarn run production
@@ -200,20 +202,26 @@ webpack-sandbox:
 	yarn run sandbox
 
 sphinx-production:
+	SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
+	SRC_TEST_DIR="$(SRC_TEST_DIR)" \
 	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
-	CODE_SERVER_URL="$(WEBSOCKET_URL_PROD)" GEN_LEARN_SITE=yes $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	CODE_SERVER_URL="$(WEBSOCKET_URL_PROD)" \
+	GEN_LEARN_SITE=yes \
+	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 sphinx-sandbox:
+	SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
+	SRC_TEST_DIR="$(SRC_TEST_DIR)" \
 	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
-site: cleanall webpack-production sphinx-production test_content all_books complete_site_books
+site: cleanall test_content webpack-production sphinx-production all_books complete_site_books
 	@echo Building $@
 
-site-sandbox: cleanall webpack-sandbox sphinx-sandbox test_content all_books complete_site_books
+site-sandbox: cleanall test_content webpack-sandbox sphinx-sandbox all_books complete_site_books
 	@echo Building $@
 
 site-testing: cleantest
@@ -336,7 +344,10 @@ cleantest:
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
-	@export SPHINX_LOCAL_BUILD=true; \
+	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
+	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
+	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	  export SPHINX_LOCAL_BUILD=true; \
 	$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 

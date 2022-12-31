@@ -44,13 +44,14 @@ The files are extracted the following way:
 """
 # System libs
 import os
-from typing import List
+from typing import List, Dict, Any
 
 # HTML Template Libs
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 # Sphinx libs
 from docutils import nodes
+from docutils.nodes import Node
 from docutils.parsers.rst import Directive, directives
 
 # Widget lib
@@ -180,7 +181,24 @@ class WidgetCodeDirective(Directive):
         return static_nodes
 
 
-    def run(self):
+    def get_code_block_info(self, code_block_info) -> Dict[str, str]:
+
+        block_info : Dict[str, str] = code_block_info.get_info()
+        results : Dict[str, str] = dict()
+
+        for info_type in sorted(block_info):
+
+            if block_info[info_type] == "":
+                # Do not add empty info blocks
+                continue
+
+            results[info_type] = str(block_info[info_type])
+            print(str(block_info[info_type]))
+
+        return results
+
+
+    def run(self) -> List[Node]:
         """The main entrypoint for the WidgetDirective
 
         Raises:
@@ -194,11 +212,6 @@ class WidgetCodeDirective(Directive):
         nodes_html = []
         nodes_latex = []
         nodes_epub = []
-
-        jinja_env = Environment(
-            loader=PackageLoader('widget'),
-            autoescape=select_autoescape(['html', 'xml'])
-        )
 
         try:
             # parse directive arguments
@@ -215,6 +228,20 @@ class WidgetCodeDirective(Directive):
             # Attemping to detect HTML or Latex output by checking for 'html' in tags
             if ('builder_html' in self.state.state_machine.document.settings.env.app.tags.tags
                 and self.state.state_machine.document.settings.env.app.tags.tags['builder_html']):
+
+                jinja_env = Environment(
+                    loader=PackageLoader('widget'),
+                    autoescape=select_autoescape(['html', 'xml']),
+                    trim_blocks = False,
+                    lstrip_blocks = False,
+                    keep_trailing_newline = True,
+                )
+
+                if 'no_button' in self.arguments[0]:
+                    code_block_info = CodeBlockInfo(project_name=widget.name,
+                                                    filename=self.content.items[0][0],
+                                                    line_number=self.content.items[0][1] - 1)
+                    widget.parseCodeBlockInfo(self.get_code_block_info(code_block_info))
 
                 # insert widget into the template
                 template = jinja_env.get_template('widget.html')
@@ -243,7 +270,7 @@ def on_builder_inited(app):
     app.add_directive('code', WidgetCodeDirective, override=True)
 
 
-def setup(app):
+def setup(app: "Sphinx") -> Dict[str, Any]:
     app.add_config_value('insert_widgets', True, 'html')
 
     app.connect('builder-inited', on_builder_inited)
