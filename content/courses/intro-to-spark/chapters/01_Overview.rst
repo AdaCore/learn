@@ -327,7 +327,7 @@ second call since integer parameters are passed by copy and the
 postcondition is checked before the copy-back from the formal
 parameters to the actual arguments.
 
-Aliasing can also occur as a result of using access types (`pointers
+Aliasing can also occur as a result of using access types (
 :wikipedia:`pointers <Pointer_(computer_programming)>` in Ada).
 These are restricted in SPARK so that only benign aliasing is allowed, when
 both names are only used to read the data. In particular, assignment between
