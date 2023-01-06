@@ -43,7 +43,7 @@ Tiny RSA implementation
    Note that you shouldn't use :ada:`Big_Numbers` for cryptography because it's
    vulnerable to timing side-channels attacks.
 
-We can implement the `RSA algorithm
+We can implement the
 :wikipedia:`RSA algorithm <RSA_(cryptosystem)>` in a few lines of
 code. The main operation of RSA is (m\ :sup:`d`) mod n.  But you can't just
 write :ada:`m ** d`, because these are really big numbers and the result
