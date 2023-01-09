@@ -758,20 +758,83 @@ of the array type will be 16 bits total (plus any padding bits required to
 make objects have a size that is a multiple of Storage_Unit, typically
 zero on modern machines).
 
-Now that we have a bit-mask array type, let's put it to use when
-specifying the address of an object.
+Now that we have a bit-mask array type, let's put it to use.
 
-Let's say you want to access the individual bits of what is usually
-treated as a simple signed integer. One way to do that is to express an
-"overlay," in which an object of one type is placed at the same memory
-location as a distinct object of a distinct type, thus overlaying one
-object over the other. Doing so allows you to interact with that memory
-location in more than one way: one way per type, specifically. This is
-known as :wikipedia:`type punning <Type_punning>` in
-computer programming. There are other ways to achieve that effect as
-well, but realize that you're circumventing the static strong typing
-used by Ada to protect us from ourselves and from others. Use it with
-care!
+Let's say that you have an object that is represented as a simple signed integer because, 
+for most usage, that's the appropriate representation. Sometimes, though, let's say you 
+need to access individual bits of the object instead of the whole numeric value. Signed 
+integer types don't provide bit-level access. In Ada we'd say that the "view" presented by 
+the object's type doesn't include bit-oriented operations. Therefore, we need to add a 
+view to the object that does provide them. A different view will require an additional
+type for the same object.
+
+Applying different types, and thus their operations, to the same object is known as 
+:wikipedia:`type punning <Type_punning>` in computer programming. Realize that doing 
+so circumvents the static strong typing we harness to protect us from ourselves and 
+from others. Use it with care! (For example, limit the compile-time visibility to such 
+code.)
+
+One way to add a view is to express an "overlay," in which an object of one type
+is placed at the same memory location as a distinct object of a different type,
+thus "overlaying" one object over the other in memory. The different types present 
+different views, therefore different operations available for the shared memory 
+cells. Our hypothetical example uses two views, but you can overlay as many 
+different views as needed. (That said, requiring a large number of different views
+of the same object would be suspect.)
+
+There are other ways in Ada to apply different views, some more flexible than others,
+but an overlay is a simple one that will often suffice. 
+
+Here is an implementation of the overlay approach, using our bit-mask array type:
+
+.. code-block:: ada
+
+   type Bits32 is array (0 .. 31) of Boolean with
+     Component_Size => 1;
+
+   X : Integer;
+   Y : Bits32 with Address => X'Address;
+
+We can query the addresses of objects, and other things too, but objects, especially 
+variables, are the most common case. In the above, we say :ada:`X'Address` to query 
+the starting address of object :ada:`X`. With that information we know what address to 
+specify for our bit-mask overlay object :ada:`Y`. Now :ada:`X` and :ada:`Y` are 
+aliases for the same memory cells, and therefore we can manipulate and query that 
+memory as either a signed integer or as an array of bits. Reading or updating individual
+array components accesses the individual bits of the overlaid object.
+
+Instead of the :ada:`Bits32` array type, we could have specified a modular type for 
+the overlay :ada:`Y` to get a view providing bit-oriented operations. Overlaying such 
+an array was a common idiom prior to the introduction of modular "unsigned" types in 
+Ada, and remains useful for accessing individual bits. In other words, using a modular 
+type for :ada:`Y`, you could indeed access an individual bit by passing a mask value to the 
+:ada:`and` operator defined in any modular type's view. Using a bit array 
+representation let's the compiler do that work for you, in the generated code. The 
+source code will be both easier to read and more explicit about what it is doing when 
+using the bit array overlay.
+
+One final issue remains. In our specific overlay example the compiler would likely 
+generate code that works. But strictly speaking it might not.
+
+The Ada language rules say that for such an overlaid object
+|mdash| :ada:`Y` in the example above |mdash| the compiler should not perform
+optimizations regarding :ada:`Y` that it would otherwise apply in the absence of
+aliases. That's necessary, functionally, but may imply degraded performance
+regarding :ada:`Y`, so keep it in mind. Aliasing precludes some desirable
+optimizations.
+
+But what about :ada:`X` in the example above? We're querying that object's
+address, not specifying it, so the RM rule precluding optimizations doesn't
+apply to :ada:`X`. That can be problematic.
+
+The compiler might very well place :ada:`X` in a register, for example, for the
+sake of the significant performance increase (another way of being friendly). But
+in that case :ada:`System.Null_Address` will be returned by the :ada:`X'Address`
+query and, consequently, the declaration for :ada:`Y` will not result in the
+desired overlaying.
+
+Therefore, we should mark :ada:`X` as explicitly :ada:`aliased` to ensure that
+:ada:`X'Address` is well-defined:
 
 .. code-block:: ada
 
@@ -781,42 +844,26 @@ care!
    X : aliased Integer;
    Y : Bits32 with Address => X'Address;
 
-We can query the addresses of objects, and other things too, but
-objects, especially variables, are the most common case. In the above,
-we say :ada:`X'Address` to query the starting address of object
-:ada:`X`. With that information we know what starting address to specify for
-our bit-mask overlay :ada:`Y`. Now :ada:`X` and :ada:`Y` are aliases, and
-therefore we can manipulate those memory bytes as either an integer or as an
-array of individual bits. (Note that we could have used a modular type as the
-overlay if all we wanted was an unsigned view. (Marking
-:ada:`X` as :ada:`aliased` ensures that :ada:`'Address` is well-defined.)
+The only difference in the version above is the addition of :ada:`aliased` in the
+declaration of :ada:`X`. Now we can be certain that the optimizer will not represent
+:ada:`X` in some way incompatible with the idiom, and :ada:`X'Address` will be
+well-defined.
 
-It is worth noting that Ada language rules say that for such an overlaid
-object |mdash| :ada:`Y` in the example above |mdash| the compiler should
-not perform optimizations that it would otherwise apply in the absence of
-aliases. That's necessary, functionally, but may imply degraded performance
-regarding :ada:`Y`, so keep it in mind. Aliasing precludes some desirable
-optimizations.
+In our example :ada:`X` and :ada:`Y` are clearly declared in the same compilation
+unit. Most compilers will be friendly in this scenario, representing :ada:`X` in
+such a way that querying the address will return a non-null address value even if
+:ada:`aliased` is not applied. Indeed, :ada:`aliased' is relatively new to Ada, and
+earlier compilers typically emitted code that would handle the overlay as intended.
 
-But what about :ada:`X` in the example above? We're querying that object's
-address, not specifying it, so the RM rule precluding optimizations doesn't
-apply to :ada:`X`. That can be problematic.
+But suppose, instead of being declared in the same declarative part, that :ada:`X`
+was declared in some other compilation unit. Let's say it is in the visible part
+of a package declaration. (Assume :ada:`X` is visible to clients for some good
+reason.) That package declaration can be, and usually will be, compiled
+independently of clients, with the result that :ada:`X` might be represented in
+some way that cannot supporting querying the address meaningfully. 
 
-For example, in the code above :ada:`X` and :ada:`Y` are clearly declared in
-the same compilation unit. Most compilers will be friendly in this scenario,
-representing :ada:`X` in such a way that querying the address will return a
-non-null address value. But suppose, instead, that :ada:`X` was declared
-in some other compilation unit, in the visible part of a package declaration.
-That package declaration can be (and usually will be) compiled independently of
-clients, with the result that :ada:`X` might be represented in some way that
-cannot supporting querying the address meaningfully. The compiler might very
-well place the object in a register, for example, for the sake of the
-performance increase (another way of being "friendly"). But in that case
-:ada:`System.Null_Address` will be returned by the query and, consequently, the
-declaration for :ada:`Y` will not result in the desired overlaying.
-
-Therefore, the declaration of :ada:`X` should be marked as aliased,
-using the reserved word :ada:`aliased`:
+Therefore, the declaration of :ada:`X` in the package spec should be marked as aliased,
+explicitly:
 
 .. code-block:: ada
 
@@ -824,24 +871,33 @@ using the reserved word :ada:`aliased`:
       X : aliased Integer;
    end P;
 
-But in the case of the declaration of :ada:`X` in the package declaration, how
-did the developer of the package know that some other unit, a client of the
-package, would query the address of :ada:`X`, such that it needed to be
-aliased? Indeed, the package developer might not know. The programmer is
-responsible for ensuring a valid and appropriate :ada:`Address` value is used
-in the declaration of :ada:`Y`. Execution is erroneous otherwise, so we can't
-say what would happen in that case. Maybe an exception is raised or a machine
-trap, maybe not. Worse, the compiler switches applied when building can make a
-difference: :ada:`P.X` might not be placed in a register unless the optimizer
-is enabled. Hence the code might work as expected when built for debugging,
-with the optimizer disabled, and then not do so when re-built for the final
-release. You'd probably have to find this issue by debugging the application.
+Then, in the client code declaring the overlay, we only declare :ada:`Y`, assuming a with-clause for :ada:`P`:
+
+.. code-block:: ada
+
+   type Bits32 is array (0 .. 31) of Boolean with
+     Component_Size => 1;
+
+   Y : Bits32 with Address => P.X'Address;
+
+All well and good, but how did the developer of the package know that some other unit, 
+a client of the package, would query the address of :ada:`X`, such that it needed to 
+be marked as aliased? Indeed, the package developer might not know. Yet the programmer is 
+responsible for ensuring a valid and appropriate :ada:`Address` value is used in the 
+declaration of :ada:`Y`. Execution is erroneous otherwise, so we can't say what would 
+happen in that case. Maybe an exception is raised or a machine trap, maybe not.
+
+Worse, the switches that were applied when compiling the spec for package :ada:`P`
+can make a difference: :ada:`P.X` might not be placed in a register unless the
+optimizer is enabled. Hence the client code using :ada:`Y` might work as expected
+when built for debugging, with the optimizer disabled, and then not do so when
+re-built for the final release. You'd probably have to solve this issue by debugging
+the application.
 
 On a related note, you may be asking yourself how to know that type
 :ada:`Integer` is 32 bits wide, so that we know what size array to use for the
 bit-mask. The answer is that you just have to know the target well when doing
-low-level programming, and that portability is not the controlling
-requirement. The hardware becomes much more visible, as we mentioned.
+low-level programming. The hardware becomes much more visible, as we mentioned.
 
 That said, you could at least verify the assumption:
 
@@ -856,7 +912,68 @@ That's a vendor-defined pragma so this is not fully portable. It isn't
 an unusual pragma, though, so at least you can probably get the same
 functionality even if the pragma name varies.
 
-Let's return, momentarily, to setting the size of entities, but now let's
+Overlays aren't always structured like our example above, i.e., with two objects declared 
+at the same time. We might apply a different type to the same memory locations at 
+different times. Here's an example from the ADL to illustrate the idea. We'll elaborate on 
+this example later, in another section.
+
+First, a package declaration, with two functions that provide a device-specific unique 
+identifier located in shared memory. Each function provides the same Id value in a 
+distinct format. One format is a string of 12 characters, the other is a sequence of three 
+32-bit values. Hence both representations are the same size.
+
+.. code-block:: ada
+
+   package STM32.Device_Id is
+
+      subtype Device_Id_Image is String (1 .. 12);
+
+      function Unique_Id return Device_Id_Image;
+
+      type Device_Id_Tuple is array (1 .. 3) of UInt32
+        with Component_Size => 32;
+
+      function Unique_Id return Device_Id_Tuple;
+
+   end STM32.Device_Id;
+
+In the package body we implement the functions as two ways to access the
+same shared memory, specified by :ada:`ID_Address`:
+
+.. code-block:: ada
+
+   with System;
+
+   package body STM32.Device_Id is
+
+      ID_Address : constant System.Address := System'To_Address (16#1FFF_7A10#);
+
+      function Unique_Id return Device_Id_Image is
+         Result : Device_Id_Image with Address => ID_Address, Import;
+      begin
+         return Result;
+      end Unique_Id;
+
+      function Unique_Id return Device_Id_Tuple is
+         Result : Device_Id_Tuple with Address => ID_Address, Import;
+      begin
+         return Result;
+      end Unique_Id;
+
+   end STM32.Device_Id;
+
+:ada:`System'To_Address` is just a convenient way to convert a numeric value into an 
+:ada:`Address` value. The primary benefit is that the call is a static expression, but we can 
+ignore that here. Using :ada:`Import` is a good idea to ensure that the Ada code does no 
+initialization of the object, since the value is coming from the hardware via the shared 
+memory. Doing so may not be necessary, depending on the type used, but is a good habit to 
+develop.
+
+The point of this example is that we have one object declaration per function, of a type 
+corresponding to the intended function result type. Because each function places their 
+local object at the same address, they are still overlaying the shared memory.
+
+Now let's return, momentarily, to setting the size of entities, but now let's
 focus on setting the size of objects.
 
 We've said that the size of an object is not necessarily the same as the
