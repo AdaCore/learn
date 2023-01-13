@@ -812,12 +812,12 @@ Overlaying such an array was a common idiom prior to the introduction of
 modular "unsigned" types in Ada, and remains useful for accessing individual
 bits. In other words, using a modular type for :ada:`Y`, you could indeed
 access an individual bit by passing a mask value to the :ada:`and` operator
-defined in any modular type's view. Using a bit array representation let's the
+defined in any modular type's view. Using a bit array representation lets the
 compiler do that work for you, in the generated code. The source code will be
 both easier to read and more explicit about what it is doing when using the bit
 array overlay.
 
-One final issue remains. In our specific overlay example the compiler would
+One final issue remains: in our specific overlay example the compiler would
 likely generate code that works. But strictly speaking it might not.
 
 The Ada language rules say that for such an overlaid object
