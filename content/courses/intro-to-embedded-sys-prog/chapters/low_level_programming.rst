@@ -760,30 +760,30 @@ zero on modern machines).
 
 Now that we have a bit-mask array type, let's put it to use.
 
-Let's say that you have an object that is represented as a simple signed integer because, 
-for most usage, that's the appropriate representation. Sometimes, though, let's say you 
-need to access individual bits of the object instead of the whole numeric value. Signed 
-integer types don't provide bit-level access. In Ada we'd say that the "view" presented by 
-the object's type doesn't include bit-oriented operations. Therefore, we need to add a 
+Let's say that you have an object that is represented as a simple signed integer because,
+for most usage, that's the appropriate representation. Sometimes, though, let's say you
+need to access individual bits of the object instead of the whole numeric value. Signed
+integer types don't provide bit-level access. In Ada we'd say that the "view" presented by
+the object's type doesn't include bit-oriented operations. Therefore, we need to add a
 view to the object that does provide them. A different view will require an additional
 type for the same object.
 
-Applying different types, and thus their operations, to the same object is known as 
-:wikipedia:`type punning <Type_punning>` in computer programming. Realize that doing 
-so circumvents the static strong typing we harness to protect us from ourselves and 
-from others. Use it with care! (For example, limit the compile-time visibility to such 
+Applying different types, and thus their operations, to the same object is known as
+:wikipedia:`type punning <Type_punning>` in computer programming. Realize that doing
+so circumvents the static strong typing we harness to protect us from ourselves and
+from others. Use it with care! (For example, limit the compile-time visibility to such
 code.)
 
 One way to add a view is to express an "overlay," in which an object of one type
 is placed at the same memory location as a distinct object of a different type,
-thus "overlaying" one object over the other in memory. The different types present 
-different views, therefore different operations available for the shared memory 
-cells. Our hypothetical example uses two views, but you can overlay as many 
+thus "overlaying" one object over the other in memory. The different types present
+different views, therefore different operations available for the shared memory
+cells. Our hypothetical example uses two views, but you can overlay as many
 different views as needed. (That said, requiring a large number of different views
 of the same object would be suspect.)
 
 There are other ways in Ada to apply different views, some more flexible than others,
-but an overlay is a simple one that will often suffice. 
+but an overlay is a simple one that will often suffice.
 
 Here is an implementation of the overlay approach, using our bit-mask array type:
 
@@ -795,25 +795,25 @@ Here is an implementation of the overlay approach, using our bit-mask array type
    X : Integer;
    Y : Bits32 with Address => X'Address;
 
-We can query the addresses of objects, and other things too, but objects, especially 
-variables, are the most common case. In the above, we say :ada:`X'Address` to query 
-the starting address of object :ada:`X`. With that information we know what address to 
-specify for our bit-mask overlay object :ada:`Y`. Now :ada:`X` and :ada:`Y` are 
-aliases for the same memory cells, and therefore we can manipulate and query that 
+We can query the addresses of objects, and other things too, but objects, especially
+variables, are the most common case. In the above, we say :ada:`X'Address` to query
+the starting address of object :ada:`X`. With that information we know what address to
+specify for our bit-mask overlay object :ada:`Y`. Now :ada:`X` and :ada:`Y` are
+aliases for the same memory cells, and therefore we can manipulate and query that
 memory as either a signed integer or as an array of bits. Reading or updating individual
 array components accesses the individual bits of the overlaid object.
 
-Instead of the :ada:`Bits32` array type, we could have specified a modular type for 
-the overlay :ada:`Y` to get a view providing bit-oriented operations. Overlaying such 
-an array was a common idiom prior to the introduction of modular "unsigned" types in 
-Ada, and remains useful for accessing individual bits. In other words, using a modular 
-type for :ada:`Y`, you could indeed access an individual bit by passing a mask value to the 
-:ada:`and` operator defined in any modular type's view. Using a bit array 
-representation let's the compiler do that work for you, in the generated code. The 
-source code will be both easier to read and more explicit about what it is doing when 
+Instead of the :ada:`Bits32` array type, we could have specified a modular type for
+the overlay :ada:`Y` to get a view providing bit-oriented operations. Overlaying such
+an array was a common idiom prior to the introduction of modular "unsigned" types in
+Ada, and remains useful for accessing individual bits. In other words, using a modular
+type for :ada:`Y`, you could indeed access an individual bit by passing a mask value to the
+:ada:`and` operator defined in any modular type's view. Using a bit array
+representation let's the compiler do that work for you, in the generated code. The
+source code will be both easier to read and more explicit about what it is doing when
 using the bit array overlay.
 
-One final issue remains. In our specific overlay example the compiler would likely 
+One final issue remains. In our specific overlay example the compiler would likely
 generate code that works. But strictly speaking it might not.
 
 The Ada language rules say that for such an overlaid object
@@ -860,7 +860,7 @@ was declared in some other compilation unit. Let's say it is in the visible part
 of a package declaration. (Assume :ada:`X` is visible to clients for some good
 reason.) That package declaration can be, and usually will be, compiled
 independently of clients, with the result that :ada:`X` might be represented in
-some way that cannot supporting querying the address meaningfully. 
+some way that cannot supporting querying the address meaningfully.
 
 Therefore, the declaration of :ada:`X` in the package spec should be marked as aliased,
 explicitly:
@@ -880,11 +880,11 @@ Then, in the client code declaring the overlay, we only declare :ada:`Y`, assumi
 
    Y : Bits32 with Address => P.X'Address;
 
-All well and good, but how did the developer of the package know that some other unit, 
-a client of the package, would query the address of :ada:`X`, such that it needed to 
-be marked as aliased? Indeed, the package developer might not know. Yet the programmer is 
-responsible for ensuring a valid and appropriate :ada:`Address` value is used in the 
-declaration of :ada:`Y`. Execution is erroneous otherwise, so we can't say what would 
+All well and good, but how did the developer of the package know that some other unit,
+a client of the package, would query the address of :ada:`X`, such that it needed to
+be marked as aliased? Indeed, the package developer might not know. Yet the programmer is
+responsible for ensuring a valid and appropriate :ada:`Address` value is used in the
+declaration of :ada:`Y`. Execution is erroneous otherwise, so we can't say what would
 happen in that case. Maybe an exception is raised or a machine trap, maybe not.
 
 Worse, the switches that were applied when compiling the spec for package :ada:`P`
@@ -912,14 +912,14 @@ That's a vendor-defined pragma so this is not fully portable. It isn't
 an unusual pragma, though, so at least you can probably get the same
 functionality even if the pragma name varies.
 
-Overlays aren't always structured like our example above, i.e., with two objects declared 
-at the same time. We might apply a different type to the same memory locations at 
-different times. Here's an example from the ADL to illustrate the idea. We'll elaborate on 
+Overlays aren't always structured like our example above, i.e., with two objects declared
+at the same time. We might apply a different type to the same memory locations at
+different times. Here's an example from the ADL to illustrate the idea. We'll elaborate on
 this example later, in another section.
 
-First, a package declaration, with two functions that provide a device-specific unique 
-identifier located in shared memory. Each function provides the same Id value in a 
-distinct format. One format is a string of 12 characters, the other is a sequence of three 
+First, a package declaration, with two functions that provide a device-specific unique
+identifier located in shared memory. Each function provides the same Id value in a
+distinct format. One format is a string of 12 characters, the other is a sequence of three
 32-bit values. Hence both representations are the same size.
 
 .. code-block:: ada
@@ -962,15 +962,15 @@ same shared memory, specified by :ada:`ID_Address`:
 
    end STM32.Device_Id;
 
-:ada:`System'To_Address` is just a convenient way to convert a numeric value into an 
-:ada:`Address` value. The primary benefit is that the call is a static expression, but we can 
-ignore that here. Using :ada:`Import` is a good idea to ensure that the Ada code does no 
-initialization of the object, since the value is coming from the hardware via the shared 
-memory. Doing so may not be necessary, depending on the type used, but is a good habit to 
+:ada:`System'To_Address` is just a convenient way to convert a numeric value into an
+:ada:`Address` value. The primary benefit is that the call is a static expression, but we can
+ignore that here. Using :ada:`Import` is a good idea to ensure that the Ada code does no
+initialization of the object, since the value is coming from the hardware via the shared
+memory. Doing so may not be necessary, depending on the type used, but is a good habit to
 develop.
 
-The point of this example is that we have one object declaration per function, of a type 
-corresponding to the intended function result type. Because each function places their 
+The point of this example is that we have one object declaration per function, of a type
+corresponding to the intended function result type. Because each function places their
 local object at the same address, they are still overlaying the shared memory.
 
 Now let's return, momentarily, to setting the size of entities, but now let's
