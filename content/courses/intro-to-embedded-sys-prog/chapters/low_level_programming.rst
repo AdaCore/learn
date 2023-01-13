@@ -857,7 +857,7 @@ In our example :ada:`X` and :ada:`Y` are clearly declared in the same
 compilation unit. Most compilers will be friendly in this scenario,
 representing :ada:`X` in such a way that querying the address will return a
 non-null address value even if :ada:`aliased` is not applied. Indeed,
-:ada:`aliased' is relatively new to Ada, and earlier compilers typically
+:ada:`aliased` is relatively new to Ada, and earlier compilers typically
 emitted code that would handle the overlay as intended.
 
 But suppose, instead of being declared in the same declarative part, that
