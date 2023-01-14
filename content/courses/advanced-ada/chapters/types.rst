@@ -1965,6 +1965,8 @@ declaration of the :ada:`Light` constant.
     - :arm:`7.4 Deferred Constants <7-4>`
 
 
+.. _Adv_Ada_User_Defined_Literals:
+
 User-defined literals
 ---------------------
 

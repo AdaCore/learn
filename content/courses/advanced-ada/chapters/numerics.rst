@@ -1639,12 +1639,747 @@ precision, 0.2774 is rounded to 0.277, and 0.2777 is rounded to 0.278.
 Big Numbers
 -----------
 
+As we've seen before, we can define numeric types in Ada with a high degree of
+precision. However, in certain applications, even that precision isn't enough,
+so we have to rely on
+:wikipedia:`arbitrary-precision_arithmetic <arbitrary-precision_arithmetic>`.
+Ada's big numbers allow us to operate with this kind of arithmetic.
+
+Ada supports two categories of big numbers: big integers and big reals |mdash|
+both are specified in child packages of the :ada:`Ada.Numerics.Big_Numbers`
+package:
+
++--------------+----------------------------------------------+
+| Category     | Package                                      |
++==============+==============================================+
+| Big Integers | :ada:`Ada.Numerics.Big_Numbers.Big_Integers` |
++--------------+----------------------------------------------+
+| Big Reals    | :ada:`Ada.Numerics.Big_Numbers.Big_Real`     |
++--------------+----------------------------------------------+
+
 .. admonition:: Relevant topics
 
     - :arm22:`Big Numbers <A-5-5>`
     - :arm22:`Big Integers <A-5-6>`
     - :arm22:`Big Reals <A-5-7>`
 
-.. todo::
+Overview
+~~~~~~~~
 
-    Complete section!
+Let's start with a simple declaration of big numbers:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Simple_Big_Numbers
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    with Ada.Numerics.Big_Numbers.Big_Reals;
+    use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+    procedure Show_Simple_Big_Numbers is
+       BI : Big_Integer;
+       BR : Big_Real;
+    begin
+       BI := 12345678901234567890;
+       BR := 2.0 ** 1234;
+
+       Put_Line ("BI: " & BI'Image);
+       Put_Line ("BR: " & BR'Image);
+
+       BI := @ + 1;
+       BR := @ + 1.0;
+
+       Put_Line ("BI: " & BI'Image);
+       Put_Line ("BR: " & BR'Image);
+    end Show_Simple_Big_Numbers;
+
+In this example, we're declaring the big integer :ada:`BI` and the big real
+:ada:`BR`, and we're incrementing them with one.
+
+Naturally, we're not limited to using the :ada:`+` operator (such as in this
+example). We can use any operators on big numbers in the same as we do with
+integers and floating-point variables. In fact, the common unary operators
+(:ada:`+`, :ada:`-`, :ada:`abs`) and binary operators (:ada:`+`, :ada:`-`,
+:ada:`*`, :ada:`/`, :ada:`**`, :ada:`Min` and :ada:`Max`) are available to us.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Simple_Big_Numbers_Operators
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    procedure Show_Simple_Big_Numbers_Operators is
+       BI : Big_Integer;
+    begin
+       BI := 12345678901234567890;
+
+       Put_Line ("BI: " & BI'Image);
+
+       BI := @ + BI / 2;
+       BI := @ - BI * 2;
+
+       Put_Line ("BI: " & BI'Image);
+    end Show_Simple_Big_Numbers_Operators;
+
+In this example, we're applying the four basic operators (:ada:`+`, :ada:`-`,
+:ada:`*`, :ada:`/`) on big integers.
+
+
+Factorial
+~~~~~~~~~
+
+A typical example is the :wikipedia:`factorial <Factorial>`: a sequence of the
+factorial of consecutive small numbers can quickly lead to big numbers. Let's
+take this implementation as an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Factorial_Integer
+    :class: ada-run-expect-failure
+
+    function Factorial (N : Integer)
+                        return Long_Long_Integer;
+
+    function Factorial (N : Integer)
+                        return Long_Long_Integer is
+       Fact : Long_Long_Integer := 1;
+    begin
+       for I in 2 .. N loop
+          Fact := Fact * Long_Long_Integer (I);
+       end loop;
+
+       return Fact;
+    end Factorial;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Factorial;
+
+    procedure Show_Factorial is
+    begin
+       for I in 1 .. 50 loop
+          Put_Line (I'Image & "! = "
+                    & Factorial (I)'Image);
+       end loop;
+    end Show_Factorial;
+
+Here, we're using :ada:`Long_Long_Integer` for the computation and return type
+of the :ada:`Factorial` function. The last number we're able to calculate
+before getting an exception is `20!`, which basically shows the limitation of
+standard integers for this kind of algorithms. If we use big integers instead,
+we can easily display all numbers up to `50!` (and more!):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Factorial_Big_Numbers
+
+    pragma Ada_2022;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    function Factorial (N : Integer)
+                        return Big_Integer;
+
+    function Factorial (N : Integer)
+                        return Big_Integer is
+       Fact : Big_Integer := 1;
+    begin
+       for I in 2 .. N loop
+          Fact := Fact * To_Big_Integer (I);
+       end loop;
+
+       return Fact;
+    end Factorial;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Factorial;
+
+    procedure Show_Big_Number_Factorial is
+    begin
+       for I in 1 .. 50 loop
+          Put_Line (I'Image & "! = "
+                    & Factorial (I)'Image);
+       end loop;
+    end Show_Big_Number_Factorial;
+
+As we can see in this example, replacing the :ada:`Long_Long_Integer` type by
+the :ada:`Big_Integer` type fixes the problem (the runtime exception) that we
+had in the previous version.
+(Note that we're using the :ada:`To_Big_Integer` function to convert from
+:ada:`Integer` to :ada:`Big_Integer`: we discuss these conversions next.)
+
+
+Conversions
+~~~~~~~~~~~
+
+Most probably, we want to mix big numbers and *standard* numbers (i.e. integer
+and real numbers) in our application. In this section, we talk about the
+conversion between big numbers and standard types.
+
+Validity
+^^^^^^^^
+
+The package specifications of big numbers include subtypes that *ensure*
+that a actual value of a big number is valid:
+
++------------------------------+---------------------------------------------+
+| Type                         | Subtype for valid values                    |
++==============================+=============================================+
+| Big Integers                 | :ada:`Valid_Big_Integer`                    |
++------------------------------+---------------------------------------------+
+| Big Reals                    | :ada:`Valid_Big_Real`                       |
++------------------------------+---------------------------------------------+
+
+These subtypes include a contract for this check. For example, this is the
+definition of the :ada:`Valid_Big_Integer` subtype:
+
+.. code-block:: ada
+
+    subtype Valid_Big_Integer is Big_Integer
+      with Dynamic_Predicate => Is_Valid (Valid_Big_Integer),
+           Predicate_Failure => (raise Program_Error);
+
+Any operation on big numbers is actually performing this validity check (via a
+call to the :ada:`Is_Valid` function). For example, this is the addition
+operator for big integers:
+
+.. code-block:: ada
+
+    function "+" (L, R : Valid_Big_Integer) return Valid_Big_Integer;
+
+As we can see, both the input values to the operator as well as the return
+value are expected to be valid |mdash| the :ada:`Valid_Big_Integer` subtype
+triggers this check, so to say. This approach ensures that an algorithm
+operating on big numbers won't be using invalid values.
+
+
+Conversion functions
+^^^^^^^^^^^^^^^^^^^^
+
+These are the most important functions to convert between big number and
+*standard* types:
+
++--------------+-------------------------------------------------+---------------------------------------+
+| Category     | To big number                                   | From big number                       |
++==============+=================================================+=======================================+
+| Big Integers | * :ada:`To_Big_Integer`                         | * :ada:`To_Integer` (:ada:`Integer`)  |
+|              |                                                 |                                       |
+|              |                                                 | * :ada:`From_Big_Integer`             |
+|              |                                                 |   (other integer types)               |
++--------------+-------------------------------------------------+---------------------------------------+
+| Big Reals    | * :ada:`To_Big_Real` (floating-point types or   | * :ada:`From_Big_Real`                |
+|              |   fixed-point types)                            |                                       |
+|              +-------------------------------------------------+---------------------------------------+
+|              | * :ada:`To_Big_Real` (:ada:`Valid_Big_Integer`) | * :ada:`Numerator`,                   |
+|              |                                                 |   :ada:`Denominator` (:ada:`Integer`) |
+|              | * :ada:`To_Real` (:ada:`Integer`)               |                                       |
++--------------+-------------------------------------------------+---------------------------------------+
+
+In the following sections, we discuss these functions in more details.
+
+
+Big integer to integer
+^^^^^^^^^^^^^^^^^^^^^^
+
+We use the :ada:`To_Big_Integer` and :ada:`To_Integer` functions to convert
+back and forth between :ada:`Big_Integer` and :ada:`Integer` types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Simple_Big_Integer_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    procedure Show_Simple_Big_Integer_Conversion is
+       BI : Big_Integer;
+       I  : Integer := 10000;
+    begin
+       BI := To_Big_Integer (I);
+       Put_Line ("BI: " & BI'Image);
+
+       I := To_Integer (BI + 1);
+       Put_Line ("I:  " & I'Image);
+    end Show_Simple_Big_Integer_Conversion;
+
+In addition, we can use the generic :ada:`Signed_Conversions` and
+:ada:`Unsigned_Conversions` packages to convert between :ada:`Big_Integer` and
+any signed or unsigned integer types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Arbitrary_Big_Integer_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    procedure Show_Arbitrary_Big_Integer_Conversion is
+
+       type Mod_32_Bit is mod 2 ** 32;
+
+       package Long_Long_Integer_Conversions is new
+         Signed_Conversions (Long_Long_Integer);
+       use Long_Long_Integer_Conversions;
+
+       package Mod_32_Bit_Conversions is new
+         Unsigned_Conversions (Mod_32_Bit);
+       use Mod_32_Bit_Conversions;
+
+       BI   : Big_Integer;
+       LLI  : Long_Long_Integer := 10000;
+       U_32 : Mod_32_Bit        := 2 ** 32 + 1;
+
+    begin
+       BI := To_Big_Integer (LLI);
+       Put_Line ("BI:   " & BI'Image);
+
+       LLI := From_Big_Integer (BI + 1);
+       Put_Line ("LLI:  " & LLI'Image);
+
+       BI := To_Big_Integer (U_32);
+       Put_Line ("BI:   " & BI'Image);
+
+       U_32 := From_Big_Integer (BI + 1);
+       Put_Line ("U_32: " & U_32'Image);
+
+    end Show_Arbitrary_Big_Integer_Conversion;
+
+In this examples, we declare the :ada:`Long_Long_Integer_Conversions` and the
+:ada:`Mod_32_Bit_Conversions` to be able to convert between big integers and
+the :ada:`Long_Long_Integer` and the :ada:`Mod_32_Bit` types, respectively.
+
+Note that, when converting from big integer to integer, we used the
+:ada:`To_Integer` function, while, when using the instances of the generic
+packages, the function is named :ada:`From_Big_Integer`.
+
+
+Big real to floating-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When converting between big real and floating-point types, we have to
+instantiate the generic :ada:`Float_Conversions` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Real_Floating_Point_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Reals;
+    use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+    procedure Show_Big_Real_Floating_Point_Conversion is
+
+       type D10 is digits 10;
+
+       package D10_Conversions is new
+         Float_Conversions (D10);
+       use D10_Conversions;
+
+       package Long_Float_Conversions is new
+         Float_Conversions (Long_Float);
+       use Long_Float_Conversions;
+
+       BR  : Big_Real;
+       LF  : Long_Float := 2.0;
+       F10 : D10        := 1.999;
+
+    begin
+       BR := To_Big_Real (LF);
+       Put_Line ("BR:   " & BR'Image);
+
+       LF := From_Big_Real (BR + 1.0);
+       Put_Line ("LF:   " & LF'Image);
+
+       BR := To_Big_Real (F10);
+       Put_Line ("BR:   " & BR'Image);
+
+       F10 := From_Big_Real (BR + 0.1);
+       Put_Line ("F10:  " & F10'Image);
+
+    end Show_Big_Real_Floating_Point_Conversion;
+
+In this example, we declare the :ada:`D10_Conversions` and the
+:ada:`Long_Float_Conversions` to be able to convert between big reals and
+the custom floating-point type :ada:`D10` and the :ada:`Long_Float` type,
+respectively. To do that, we use the :ada:`To_Big_Real` and the
+:ada:`From_Big_Real` functions.
+
+
+Big real to fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When converting between big real and ordinary fixed-point types, we have to
+instantiate the generic :ada:`Fixed_Conversions` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Real_Fixed_Point_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Reals;
+    use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+    procedure Show_Big_Real_Fixed_Point_Conversion is
+
+       D : constant := 2.0 ** (-31);
+       type TQ31 is delta D range -1.0 .. 1.0 - D;
+
+       package TQ31_Conversions is new
+         Fixed_Conversions (TQ31);
+       use TQ31_Conversions;
+
+       BR   : Big_Real;
+       FQ31 : TQ31 := 0.25;
+
+    begin
+       BR := To_Big_Real (FQ31);
+       Put_Line ("BR:   " & BR'Image);
+
+       FQ31 := From_Big_Real (BR * 2.0);
+       Put_Line ("FQ31: " & FQ31'Image);
+
+    end Show_Big_Real_Fixed_Point_Conversion;
+
+In this example, we declare the :ada:`TQ31_Conversions` to be able to convert
+between big reals and the custom fixed-point type :ada:`TQ31` type.
+Again, we use the :ada:`To_Big_Real` and the :ada:`From_Big_Real` functions for
+the conversions.
+
+Note that there's no direct way to convert between decimal fixed-point types
+and big real types. (Of course, you could perform this conversion indirectly
+by using a floating-point or an ordinary fixed-point type in between.)
+
+
+Big reals to (big) integers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can also convert between big reals and big integers (or standard integers):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Real_Big_Integer_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    with Ada.Numerics.Big_Numbers.Big_Reals;
+    use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+    procedure Show_Big_Real_Big_Integer_Conversion is
+
+       I  : Integer;
+       BI : Big_Integer;
+       BR : Big_Real;
+
+    begin
+       I  := 12345;
+       BR := To_Real (I);
+       Put_Line ("BR (from I):  " & BR'Image);
+
+       BI := 123456;
+       BR := To_Big_Real (BI);
+       Put_Line ("BR (from BI): " & BR'Image);
+
+    end Show_Big_Real_Big_Integer_Conversion;
+
+Here, we use the :ada:`To_Real` and the :ada:`To_Big_Real` and functions for
+the conversions.
+
+
+String conversions
+^^^^^^^^^^^^^^^^^^
+
+In addition to that, we can use string conversions:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Number_String_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    with Ada.Numerics.Big_Numbers.Big_Reals;
+    use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+    procedure Show_Big_Number_String_Conversion is
+       BI : Big_Integer;
+       BR : Big_Real;
+    begin
+       BI := From_String ("12345678901234567890");
+       BR := From_String ("12345678901234567890.0");
+
+       Put_Line ("BI: "
+                 & To_String (Arg   => BI,
+                              Width => 5,
+                              Base => 2));
+       Put_Line ("BR: "
+                 & To_String (Arg   => BR,
+                              Fore  => 2,
+                              Aft   => 6,
+                              Exp   => 18));
+    end Show_Big_Number_String_Conversion;
+
+In this example, we use the :ada:`From_String` to convert a string to a big
+number. Note that the :ada:`From_String` function is actually called when
+converting a literal |mdash| because of the corresponding aspect for
+user-defined literals in the definitions of the :ada:`Big_Integer` and the
+:ada:`Big_Real` types.
+
+.. admonition:: For further reading...
+
+    Big numbers are implemented using
+    :ref:`user-defined literals <Adv_Ada_User_Defined_Literals>`, which we
+    discussed previously. In fact, these are the corresponding type
+    declarations:
+
+    .. code-block:: ada
+
+        --  Declaration from
+        --  Ada.Numerics.Big_Numbers.Big_Integers;
+
+        type Big_Integer is private
+          with Integer_Literal => From_Universal_Image,
+               Put_Image       => Put_Image;
+
+        function From_Universal_Image (Arg : String)
+                                       return Valid_Big_Integer
+          renames From_String;
+
+        --  Declaration from
+        --  Ada.Numerics.Big_Numbers.Big_Reals;
+
+        type Big_Real is private
+          with Real_Literal => From_Universal_Image,
+               Put_Image    => Put_Image;
+
+        function From_Universal_Image (Arg : String)
+                                       return Valid_Big_Real
+          renames From_String;
+
+    As we can see in these declarations, the :ada:`From_String` function
+    renames the :ada:`From_Universal_Image` function, which is being used for
+    the user-defined literals.
+
+Also, we call the :ada:`To_String` function to get a string for the big
+numbers. Naturally, using the :ada:`To_String` function instead of the
+:ada:`'Image` attribute |mdash| as we did in previous examples |mdash| allows
+us to customize the format of the string that we display in the user message.
+
+
+Other features of big integers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's look at two additional features of big integers:
+
+- the natural and positive subtypes, and
+
+- other available operators and functions.
+
+Big positive and natural subtypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Similar to integers types, big integers have the :ada:`Big_Natural` and
+:ada:`Big_Positive` subtypes to indicate natural and positive numbers. However,
+in contrast to the :ada:`Natural` and :ada:`Positive` subtypes, the
+:ada:`Big_Natural` and :ada:`Big_Positive` subtypes aren't simple ranges.
+Therefore, we cannot simply use attributes such as :ada:`Big_Natural'First`.
+Instead, these subtypes include contracts to check the corresponding range.
+In any case, we can use them to ensure that a big integer is in the expected
+(natural or positive) range:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Positive_Natural
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    procedure Show_Big_Positive_Natural is
+       BI, D, N : Big_Integer;
+    begin
+       D  := 3;
+       N  := 2;
+       BI := Big_Natural (D / Big_Positive (N));
+
+       Put_Line ("BI: " & BI'Image);
+    end Show_Big_Positive_Natural;
+
+By using the :ada:`Big_Natural` and :ada:`Big_Positive` subtypes in the
+calculation above (in the assignment to :ada:`BI`), we ensure that we don't
+perform a division by zero, and that the result of the calculation is a natural
+number.
+
+
+Other operators for big integers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use the :ada:`mod` and :ada:`rem` operators with big integers:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Integer_Rem_Mod
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    procedure Show_Big_Integer_Rem_Mod is
+       BI : Big_Integer;
+    begin
+       BI := 145 mod (-4);
+       Put_Line ("BI (mod): " & BI'Image);
+
+       BI := 145 rem (-4);
+       Put_Line ("BI (rem): " & BI'Image);
+    end Show_Big_Integer_Rem_Mod;
+
+In this example, we use the :ada:`mod` and :ada:`rem` operators in the
+assignments to :ada:`BI`.
+
+Moreover, there's a :ada:`Greatest_Common_Divisor` function for big
+integers which, as the name suggests, calculates the greatest common divisor of
+two big integer values:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Integer_Greatest_Common_Divisor
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    procedure Show_Big_Integer_Greatest_Common_Divisor is
+       BI : Big_Integer;
+    begin
+       BI := Greatest_Common_Divisor (145, 25);
+       Put_Line ("BI: " & BI'Image);
+
+    end Show_Big_Integer_Greatest_Common_Divisor;
+
+In this example, we retrieve the greatest common divisor of 145 and 25.
+
+
+Big real and quotients
+~~~~~~~~~~~~~~~~~~~~~~
+
+An interesting feature of big reals is that they support quotients. In fact,
+we can simply assign `2/3` to a big real variable:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Real_Quotient_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Reals;
+    use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+    procedure Show_Big_Real_Quotient_Conversion is
+
+       BR   : Big_Real;
+
+    begin
+       BR := 2 / 3;
+       --  Same as:
+       --  BR := From_Quotient_String ("2 / 3");
+
+       Put_Line ("BR:   " & BR'Image);
+
+       Put_Line ("Q:    "
+                 & To_Quotient_String (BR));
+
+       Put_Line ("Q numerator:    "
+                 & Numerator (BR)'Image);
+       Put_Line ("Q denominator:  "
+                 & Denominator (BR)'Image);
+    end Show_Big_Real_Quotient_Conversion;
+
+In this example, we assign :ada:`2 / 3` to :ada:`BR` |mdash| we could have used
+the :ada:`From_Quotient_String` function as well. Also, we use the
+:ada:`To_Quotient_String` to get a string that represents the quotient.
+Finally, we use the :ada:`Numerator` and :ada:`Denominator` functions to
+retrieve the values, respectively, of the numerator and denominator of the
+quotient (as big integers) of the big real variable.
+
+
+Range checks
+~~~~~~~~~~~~
+
+Previously, we've talked about the :ada:`Big_Natural` and :ada:`Big_Positive`
+subtypes. In addition to those subtypes, we have the :ada:`In_Range` function
+for big numbers:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Numbers_In_Range
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Numerics.Big_Numbers.Big_Integers;
+    use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+    with Ada.Numerics.Big_Numbers.Big_Reals;
+    use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+    procedure Show_Big_Numbers_In_Range is
+
+       BI : Big_Integer;
+       BR : Big_Real;
+
+       BI_From : constant Big_Integer := 0;
+       BI_To   : constant Big_Integer := 1024;
+
+       BR_From : constant Big_Real := 0.0;
+       BR_To   : constant Big_Real := 1024.0;
+
+    begin
+       BI := 1023;
+       BR := 1023.9;
+
+       if In_Range (BI, BI_From, BI_To) then
+          Put_Line ("BI ("
+                    & BI'Image
+                    & ") is in the "
+                    & BI_From'Image
+                    & " .. "
+                    & BI_To'Image
+                    & " range");
+       end if;
+
+       if In_Range (BR, BR_From, BR_To) then
+          Put_Line ("BR ("
+                    & BR'Image
+                    & ") is in the "
+                    & BR_From'Image
+                    & " .. "
+                    & BR_To'Image
+                    & " range");
+       end if;
+
+    end Show_Big_Numbers_In_Range;
+
+In this example, we call the :ada:`In_Range` function to check whether the big
+integer number (:ada:`BI`) and the big real number (:ada:`BR`) are in the range
+between 0 and 1024.
