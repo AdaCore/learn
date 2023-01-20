@@ -1723,8 +1723,8 @@ For example:
 
        Put_Line ("BI: " & BI'Image);
 
-       BI := @ + BI / 2;
-       BI := @ - BI * 2;
+       BI := -@ + BI / 2;
+       BI :=  @ - BI * 2;
 
        Put_Line ("BI: " & BI'Image);
     end Show_Simple_Big_Numbers_Operators;
