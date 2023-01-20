@@ -322,13 +322,204 @@ comparing them against zero.
 Declare Expressions
 -------------------
 
-.. admonition:: Relevant topics
+So far, we've seen expressions that make use of existing objects. Sometimes, we
+might want to declare constant objects that we can use in an expression.
+Similarly, we might want to rename an object and use it in an expression. In
+those cases, we can use a declare expression.
 
-    - :arm22:`Declare Expressions <4-5-9>`
+A declare expression allows for declaring or renaming objects within an
+expression:
 
-.. todo::
+.. code:: ada compile_button project=Courses.Advanced_Ada.Expressions.Simple_Declare_Expression
 
-    Complete section!
+    pragma Ada_2022;
+
+    package P is
+
+       function Max (A, B : Integer) return Integer is
+         (declare
+             Bigger_A : constant Boolean := (A >= B);
+          begin
+             (if Bigger_A then A else B));
+
+    end P;
+
+The declare expression starts with the :ada:`declare` keyword and the usual
+object declarations, and it's followed by the :ada:`begin` keyword and the
+body. In this example, the body of the declare expression is a conditional
+expression.
+
+Of course, the code above isn't really useful, so let's look at a more complete
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Integer_Arrays
+
+    pragma Ada_2022;
+
+    package Integer_Arrays is
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       function Sum (Arr : Integer_Array)
+                     return Integer;
+
+       --
+       --  Expression function using
+       --  declare expression:
+       --
+       function Avg (Arr : Integer_Array)
+                     return Float is
+         (declare
+             A :          Integer_Array renames Arr;
+             S : constant Float := Float (Sum (A));
+             L : constant Float := Float (A'Length);
+          begin
+             S / L);
+
+    end Integer_Arrays;
+
+    package body Integer_Arrays is
+
+       function Sum (Arr : Integer_Array)
+                     return Integer is
+       begin
+          return Acc : Integer := 0 do
+             for V of Arr loop
+                Acc := Acc + V;
+             end loop;
+          end return;
+       end Sum;
+
+    end Integer_Arrays;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Integer_Arrays is
+       Arr : constant Integer_Array := [1, 2, 3];
+    begin
+       Put_Line ("Sum: "
+                 & Sum (Arr)'Image);
+       Put_Line ("Avg: "
+                 & Avg (Arr)'Image);
+    end Show_Integer_Arrays;
+
+In this example, the :ada:`Avg` function is implemented using a declare
+expression. In this expression, :ada:`A` renames the :ada:`Arr` array, and
+:ada:`S` is a constant initialized with the value returned by the :ada:`Sum`
+function.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`4.5.9 Declare Expressions <4-5-9>`
+
+
+Restrictions in the declarative part
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The declarative part of a declare expression is more restricted than the
+declarative part of a subprogram or declare block. In fact, we cannot:
+
+- declare variables;
+
+- declare constants of limited types;
+
+- rename an object of limited type that is constructed within the declarative
+  part;
+
+- declare aliased constants;
+
+- declare constants that make use of the :ada:`Access` or
+  :ada:`Unchecked_Access` attributes in the initialization;
+
+- declare constants of anonymous access type.
+
+Let's see some examples of erroneous declarations:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Expressions.Integer_Arrays_Error
+    :class: ada-expect-compile-error
+
+    pragma Ada_2022;
+
+    package Integer_Arrays is
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Integer_Sum is limited private;
+
+       type Const_Integer_Access is
+         access constant Integer;
+
+       function Sum (Arr : Integer_Array)
+                     return Integer;
+
+       function Sum (Arr : Integer_Array)
+                     return Integer_Sum;
+
+       --
+       --  Expression function using
+       --  declare expression:
+       --
+       function Avg (Arr : Integer_Array)
+                     return Float is
+         (declare
+             A  : Integer_Array renames Arr;
+
+             S1 : aliased constant Integer := Sum (A);
+             --  ERROR: aliased constant
+
+             S : Float := Float (S1);
+             L : Float := Float (A'Length);
+             --  ERROR: declaring variables
+
+             S2 : constant Integer_Sum := Sum (A);
+             --  ERROR: declaring constant of
+             --         limited type
+
+             A1 : Const_Integer_Access :=
+                    S1'Unchecked_Access;
+             --  ERROR: using 'Unchecked_Access
+             --         attribute
+
+             A2 : access Integer := null;
+             --  ERROR: declaring object of
+             --         anonymous access type
+          begin
+             S / L);
+
+    private
+
+       type Integer_Sum is new Integer;
+
+    end Integer_Arrays;
+
+    package body Integer_Arrays is
+
+       function Sum (Arr : Integer_Array)
+                     return Integer is
+       begin
+          return Acc : Integer := 0 do
+             for V of Arr loop
+                Acc := Acc + V;
+             end loop;
+          end return;
+       end Sum;
+
+       function Sum (Arr : Integer_Array)
+                     return Integer_Sum is
+         (Integer_Sum (Integer'(Sum (Arr))));
+
+    end Integer_Arrays;
+
+In this version of the :ada:`Avg` function, we see many errors in the
+declarative part of the declare expression. If we convert the declare
+expression into an actual function implementation, however, those declarations
+won't trigger compilation errors. (Feel free to try this out!)
 
 
 Reduction Expressions
