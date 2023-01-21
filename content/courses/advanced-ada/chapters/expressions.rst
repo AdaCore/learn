@@ -322,10 +322,11 @@ comparing them against zero.
 Declare Expressions
 -------------------
 
-So far, we've seen expressions that make use of existing objects. Sometimes, we
-might want to declare constant objects that we can use in an expression.
-Similarly, we might want to rename an object and use it in an expression. In
-those cases, we can use a declare expression.
+So far, we've seen expressions that make use of existing objects declared
+outside of the expression. Sometimes, we might want to declare constant objects
+inside the expression, so we can use them locally in the expression. Similarly,
+we might want to rename an object and use the renamed object in an expression.
+In those cases, we can use a declare expression.
 
 A declare expression allows for declaring or renaming objects within an
 expression:
