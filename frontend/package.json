@@ -4,11 +4,9 @@
   "description": "",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.2.1",
     "acorn": "^8.8.1",
     "brace": "^0.11.1",
     "file-saver": "^2.0.5",
-    "font-awesome": "^4.7.0",
     "js-cookie": "^3.0.1",
     "jszip": "^3.10.1",
     "lato-font": "^3.0.0",
