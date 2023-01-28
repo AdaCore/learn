@@ -1,6 +1,4 @@
 @import 'variables';
-@import '~@fortawesome/fontawesome-free/css/all.css';
-
 
 // theme overrides
 .btn {
@@ -578,7 +576,7 @@ button {
         font-style: normal;
         font-weight: $icon-weight;
         content: $plus-icon;
-        font-size: 9px;
+        font-size: 16px;
         color: $color-font-grey;
         float: right;
         margin-left: 5px;
@@ -588,7 +586,7 @@ button {
         font-style: normal;
         font-weight: $icon-weight;
         content: $minus-icon;
-        font-size: 9px;
+        font-size: 16px;
         color: $color-font-grey;
         float: right;
         margin-left: 5px;
