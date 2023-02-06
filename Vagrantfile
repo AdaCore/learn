@@ -2,11 +2,14 @@ $frontend = <<-SHELL
   #!/bin/sh -eux
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_18.x | bash -
 
   # Add yarn to apt-get
-  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+  curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
+    | gpg --dearmor \
+    | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+  echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" \
+    | tee /etc/apt/sources.list.d/yarn.list
 
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
@@ -50,13 +53,15 @@ $epub = <<-SHELL
   #!/bin/sh -eux
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_18.x | bash -
 
   # Add yarn to apt-get
-  curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-  echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
+  curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
+    | gpg --dearmor \
+    | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+  echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" \
+    | tee /etc/apt/sources.list.d/yarn.list
 
-  apt-get update && sudo apt-get install yarn
 
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
@@ -129,7 +134,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "web" do |web|
     web.vm.box = "bento/ubuntu-22.04"
-    web.vm.box_version = "202206.13.0"
+    web.vm.box_version = "202212.11.0"
     web.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
@@ -140,7 +145,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "epub" do |epub|
     epub.vm.box = "bento/ubuntu-22.04"
-    epub.vm.box_version = "202206.13.0"
+    epub.vm.box_version = "202212.11.0"
 
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'

@@ -16,12 +16,12 @@ defaults:
 jobs:
   typescript-tests:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
         python-version: ['3.10']
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v2
