@@ -62,7 +62,6 @@ $epub = <<-SHELL
   echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" \
     | tee /etc/apt/sources.list.d/yarn.list
 
-  apt-get update && sudo apt-get install yarn
 
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
