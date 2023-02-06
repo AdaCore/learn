@@ -2,7 +2,7 @@ $frontend = <<-SHELL
   #!/bin/sh -eux
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_18.x | bash -
 
   # Add yarn to apt-get
   curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
@@ -53,7 +53,7 @@ $epub = <<-SHELL
   #!/bin/sh -eux
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_18.x | bash -
 
   # Add yarn to apt-get
   curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
