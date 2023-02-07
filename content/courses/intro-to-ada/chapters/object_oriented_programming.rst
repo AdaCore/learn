@@ -233,7 +233,7 @@ Classwide types
 
 To remain consistent with the rest of the language, a new notation
 needed to be introduced to say "This object is of this type or any
-descendent derives tagged type".
+descendant derives tagged type".
 
 In Ada, we call this the *classwide type*. It's used in OOP as soon as
 you need polymorphism. For example, you can't do the following:
@@ -288,7 +288,7 @@ do that:
 
 .. attention::
     Because an object of a classwide type can be the size of any
-    descendent of its base type, it has an unknown size. It's therefore
+    descendant of its base type, it has an unknown size. It's therefore
     an indefinite type, with the expected restrictions:
 
         - It can't be stored as a field/component of a record
