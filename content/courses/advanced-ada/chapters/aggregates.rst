@@ -726,7 +726,7 @@ assignment to :ada:`P_2D` in the previous example by just writing:
 More extension aggregates
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can use extension aggregates for descendents of the :ada:`Point_2D` type as
+We can use extension aggregates for descendants of the :ada:`Point_2D` type as
 well. For example, let's extend our previous code example by declaring an
 object of :ada:`Point_3D` type (called :ada:`P_3D`) and use extension
 aggregates in assignments to this object:
