@@ -3,6 +3,16 @@ Aggregates
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Record_Aggregates:
+
+Record aggregates
+-----------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.3.1 Record Aggregates <4-3-1>`
+
+
 .. _Adv_Ada_Null_Records:
 
 Null records
@@ -502,8 +512,9 @@ Case statements also have full coverage rules, which serve a similar
 purpose.
 
 Of course, we can defeat the full coverage rules by using :ada:`others`
-(usually for array aggregates and case statements, but occasionally useful
-for record aggregates):
+(usually for :ref:`array aggregates <Adv_Ada_Array_Aggregates>` and case
+statements, but occasionally useful for
+:ref:`record aggregates <Adv_Ada_Record_Aggregates>`):
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
@@ -874,6 +885,16 @@ aggregate for the :ada:`Point_2D` type. In summary, by carefully selecting the
 appropriate view, we're able to initialize an object of ascending type
 (:ada:`Point_2D`), which contains less components, using an object of a
 descendent type (:ada:`Point_3D`), which contains more components.
+
+
+.. _Adv_Ada_Array_Aggregates:
+
+Array aggregates
+----------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.3.3 Array Aggregates <4-3-3>`
 
 
 Delta Aggregates
