@@ -11,7 +11,7 @@ executing==1.2.0
 graphviz==0.20.1
 idna==3.4
 imagesize==1.4.1
-ipython==8.9.0
+ipython==8.10.0
 jedi==0.18.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
