@@ -358,6 +358,68 @@ Then, writing :ada:`<>` makes use of those default values we've just specified:
 Now, as expected, the default values of each component (10, 20 and 30) are used
 when we write :ada:`<>`.
 
+Similarly, we can specify a default value for the type of each component. For
+example, let's declare a :ada:`Point_Value` type with a default value |mdash|
+using the :ada:`Default_Value` aspect |mdash| and use it in the :ada:`Point_3D`
+record type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregate_Default_Value
+
+    package Points is
+
+       type Point_Value is new Float
+         with Default_Value => 99.9;
+
+       type Point_3D is record
+          X : Point_Value;
+          Y : Point_Value;
+          Z : Point_Value;
+       end record;
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put_Line ("(X => "
+                    & Point_Value'Image (P.X)
+                    & ",");
+          Put_Line (" Y => "
+                    & Point_Value'Image (P.Y)
+                    & ",");
+          Put_Line (" Z => "
+                    & Point_Value'Image (P.Z)
+                    & ")");
+       end Display;
+
+    end Points;
+
+Then, writing :ada:`<>` makes use of the default value of the :ada:`Point_Value`
+type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregate_Default_Value
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       P : Point_3D := (0.0, 0.0, 0.0);
+    begin
+       --  Using default value of Point_Value
+       --  for all components
+       P := (X => <>,
+             Y => <>,
+             Z => <>);
+       Display (P);
+    end Show_Record_Aggregates;
+
+In this case, the default value of the :ada:`Point_Value` type (99.9) is used
+for all components when we write :ada:`<>`.
+
 
 :ada:`others`
 ~~~~~~~~~~~~~
