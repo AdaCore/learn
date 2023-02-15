@@ -2417,7 +2417,7 @@ assignment. To do this, we use delta aggregates.
 Delta Aggregates for Tagged Records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's reuse the :ada:`Points` package from the previous example:
+Let's reuse the :ada:`Points` package from a previous example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Delta_Aggregates_Tagged
 
