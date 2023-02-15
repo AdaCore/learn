@@ -1201,9 +1201,854 @@ Later on, we'll discuss
 Array aggregates
 ----------------
 
+We've already discussed array aggregates in the
+:ref:`Introduction to Ada <Intro_Ada_Array_Type_Declaration>` course. Therefore,
+this section just presents some details about this topic.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm:`4.3.3 Array Aggregates <4-3-3>`
+
+Positional and named array aggregates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   The array aggregate syntax using brackets (e.g.: :ada:`[1, 2, 3]`), which we
+   mention in this section, was introduced in Ada 2022.
+
+Similar to :ref:`record aggregates <Adv_Ada_Record_Aggregates>`, array
+aggregates can be positional or named. Consider this package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    package Points is
+
+       type Point_3D is array (1 .. 3) of Integer;
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put_Line ("(X => "
+                    & Integer'Image (P (1))
+                    & ",");
+          Put_Line (" Y => "
+                    & Integer'Image (P (2))
+                    & ",");
+          Put_Line (" Z => "
+                    & Integer'Image (P (3))
+                    & ")");
+       end Display;
+
+    end Points;
+
+We can write positional or named aggregates when assigning to an object :ada:`P`
+of :ada:`Point_3D` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D;
+    begin
+       --  Positional component association
+       P := [0, 1, 2];
+
+       Display (P);
+
+       --  Named component association
+       P := [1 => 3,
+             2 => 4,
+             3 => 5];
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+In this example, we assign a positional array aggregate (:ada:`[1, 2, 3]`) to
+:ada:`P`. Then, we assign a named array aggregate
+(:ada:`[1 => 3, 2 => 4, 3 => 5]`) to :ada:`P`. In this case, the *name* is the
+index of  the component we're assigning to.
+
+We can also assign array aggregates to slices:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D := [others => 0];
+    begin
+       --  Positional component association
+       P (2 .. 3) := [1, 2];
+
+       Display (P);
+
+       --  Named component association
+       P (2 .. 3) := [1 => 3,
+                      2 => 4];
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+Note that, when using a named array aggregate, the index (*name*) that we use
+in the aggregate doesn't have to match the slice. In this example, we're
+assigning the component from index 1 of the aggregate to the component of index
+2 of the array :ada:`P` (and so on).
+
+.. admonition:: Historically
+
+   In the first versions of Ada, we could only write array aggregates using
+   parentheses.
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+        pragma Ada_2012;
+
+        with Points; use Points;
+
+        procedure Show_Array_Aggregates is
+           P : Point_3D;
+        begin
+           --  Positional component association
+           P := (0, 1, 2);
+
+           Display (P);
+
+           --  Named component association
+           P := (1 => 3,
+                 2 => 4,
+                 3 => 5);
+
+           Display (P);
+        end Show_Array_Aggregates;
+
+    This syntax is considered obsolescent since Ada 2022: brackets
+    (:ada:`[1, 2, 3]`) should be used instead.
+
+
+Null array aggregate
+~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   This feature was introduced in Ada 2022.
+
+We can also write null array aggregates: :ada:`[]`. As the name implies, this
+kind of array aggregate doesn't have any components.
+
+Consider this package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates_2
+
+    package Integer_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       procedure Display (A : Integer_Array);
+
+    end Integer_Arrays;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Integer_Arrays is
+
+       procedure Display (A : Integer_Array) is
+       begin
+          Put_Line ("Length = "
+                    & A'Length'Image);
+
+          Put_Line ("(");
+          for I in A'Range loop
+             Put ("  "
+                  & I'Image
+                  & " => "
+                  & A (I)'Image);
+             if I /= A'Last then
+                Put_Line (",");
+             else
+                New_Line;
+             end if;
+          end loop;
+          Put_Line (")");
+       end Display;
+
+    end Integer_Arrays;
+
+We can initialize an object :ada:`N` of :ada:`Integer_Array` type with a null
+array aggregate:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates_2
+
+    pragma Ada_2022;
+
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Aggregates is
+       N : constant Integer_Array := [];
+    begin
+       Display (N);
+    end Show_Array_Aggregates;
+
+In this example, when we call the :ada:`Display` procedure, we confirm that
+:ada:`N` doesn't have any components.
+
+
+:ada:`|`, :ada:`<>`, :ada:`others`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We've seen the following syntactic elements when we were discussing
+:ref:`record aggregates <Adv_Ada_Record_Aggregates>`: :ada:`|`, :ada:`<>` and
+:ada:`others`. We can apply them to array aggregates as well:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D;
+    begin
+       --  All components have a value of zero.
+       P := [others => 0];
+
+       Display (P);
+
+       --  Both first and second components have
+       --  a value of three.
+       P := [1 | 2 => 3,
+             3     => 4];
+
+       Display (P);
+
+       --  The default value is used for the first
+       --  component, and all other components
+       --  have a value of five.
+       P := [1      => <>,
+             others => 5];
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+In this example, we use the :ada:`|`, :ada:`<>` and :ada:`others` elements in a
+very similar way as we did with record aggregates. (See the comments in the code
+example for more details.)
+
+Note that, as for record aggregates, the :ada:`<>` makes use of the default
+value (if it is available). We discuss this topic in more details
+:ref:`later on <Adv_Ada_Array_Aggregate_Box_Default_Value>`.
+
+:ada:`..`
+~~~~~~~~~
+
+We can also use the range syntax (:ada:`..`) with array aggregates:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D;
+    begin
+       --  All components have a value of zero.
+       P := [1 .. 3 => 0];
+
+       Display (P);
+
+       --  Both first and second components have
+       --  a value of three.
+       P := [1 .. 2 => 3,
+             3      => 4];
+
+       Display (P);
+
+       --  The default value is used for the first
+       --  component, and all other components
+       --  have a value of five.
+       P := [1      => <>,
+             2 .. 3 => 5];
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+This example is a variation of the previous one. However, in this case, we're
+using ranges instead of the :ada:`|` and :ada:`others` syntax.
+
+
+Missing components
+~~~~~~~~~~~~~~~~~~
+
+All components must have an associated value. If we don't specify a value for a
+certain component, an exception is raised:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+    :class: ada-run-expect-failure
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D;
+    begin
+       P := [1 => 4];
+       --  ERROR: value of components at indices
+       --         2 and 3 are missing
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+We can use :ada:`others` to specify a value to all components that
+haven't been explicitly mentioned in the aggregate:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D;
+    begin
+       P := [1 => 4, others => 0];
+       --  OK: unspecified components have a
+       --      value of zero
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+However, :ada:`others` can only be used when the range is known |mdash|
+compilation fails otherwise:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates_2
+    :class: ada-expect-compile-error
+
+    pragma Ada_2022;
+
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Aggregates is
+       N1 : Integer_Array := [others => 0];
+       --  ERROR: range is unknown
+
+       N2 : Integer_Array (1 .. 3) := [others => 0];
+       --  OK: range is known
+    begin
+       Display (N1);
+       Display (N2);
+    end Show_Array_Aggregates;
+
+Of course, we could fix the declaration of :ada:`N1` by specifying a range
+|mdash| e.g. :ada:`N1 : Integer_Array (1 .. 10) := [others => 0];`.
+
+
+Iterated component association
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   This feature was introduced in Ada 2022.
+
+We can use iterated component association to specify an aggregate. This is the
+general syntax:
+
+.. code-block:: ada
+
+    --  All components have a value of zero
+    P := [for I in 1 .. 3 => 0];
+
+Let's see a complete example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D;
+    begin
+       --  All components have a value of zero
+       P := [for I in 1 .. 3 => 0];
+
+       Display (P);
+
+       --  Both first and second components have
+       --  a value of three
+       P := [for I in 1 .. 3 =>
+               (if I = 1 or I = 2
+                then 3
+                else 4)];
+
+       Display (P);
+
+       --  The first component has a value of 99
+       --  and all other components have a value
+       --  that corresponds to its index
+       P := [1 => 99,
+             for I in 2 .. 3 => I];
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+In this example, we use iterated component associations in different ways:
+
+1. We write a simple iteration (:ada:`[for I in 1 .. 3 => 0]`).
+
+2. We use a conditional expression in the iteration:
+   :ada:`[for I in 1 .. 3 => (if I = 1 or I = 2 then 3 else 4)]`.
+
+3. We use a named association for the first element, and then iterated component
+   association for the remaining components:
+   :ada:`[1 => 99, for I in 2 .. 3 => I]`.
+
+So far, we've used a discrete choice list (in the :ada:`for I in Range` form) in
+the iterated component association. We could use an iterator (in the
+:ada:`for E of` form) instead. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Array_Aggregates is
+       P : Point_3D := [for I in Point_3D'Range => I];
+    begin
+       --  Each component is doubled
+       P := [for E of P => E * 2];
+
+       Display (P);
+
+       --  Each component is increased
+       --  by one
+       P := [for E of P => E + 1];
+
+       Display (P);
+    end Show_Array_Aggregates;
+
+In this example, we use iterators in different ways:
+
+1. We write :ada:`[for E of P => E * 2]` to double the value of each component.
+
+2. We write :ada:`[for E of P => E + 1]` to increase the value of each component
+   by one.
+
+Of course, we could write more complex operations on :ada:`E` in the iterators.
+
+
+Multidimensional array aggregates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+So far, we've discussed one-dimensional array aggregates. We can also use the
+same concepts when dealing with multidimensional arrays. Consider, for example,
+this package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Matrix_Aggregates
+
+    package Matrices is
+
+       type Matrix is array (Positive range <>,
+                             Positive range <>)
+                             of Integer;
+
+       procedure Display (M : Matrix);
+
+    end Matrices;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Matrices is
+
+       procedure Display (M : Matrix) is
+
+          procedure Display_Row (M : Matrix;
+                                 I : Integer) is
+          begin
+             Put_Line ("  (");
+             for J in M'Range (2) loop
+                Put ("    "
+                     & J'Image
+                     & " => "
+                     & M (I, J)'Image);
+                if J /= M'Last (2) then
+                   Put_Line (",");
+                else
+                   New_Line;
+                end if;
+             end loop;
+             Put ("  )");
+          end Display_Row;
+
+       begin
+          Put_Line ("Length (1) = "
+                    & M'Length (1)'Image);
+          Put_Line ("Length (2) = "
+                    & M'Length (2)'Image);
+
+          Put_Line ("(");
+          for I in M'Range (1) loop
+             Display_Row (M, I);
+             if I /= M'Last (1) then
+                Put_Line (",");
+             else
+                New_Line;
+             end if;
+          end loop;
+          Put_Line (")");
+
+       end Display;
+
+    end Matrices;
+
+We can assign multidimensional aggregates to a matrix :ada:`M` using
+positional or named component association:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Matrix_Aggregates
+
+    pragma Ada_2022;
+
+    with Matrices; use Matrices;
+
+    procedure Show_Array_Aggregates is
+       M : Matrix (1 .. 2, 1 .. 3);
+    begin
+       --  Positional component association
+       M := [[0, 1, 2],
+             [3, 4, 5]];
+
+       Display (M);
+
+       --  Named component association
+       M := [[1 => 3,
+              2 => 4,
+              3 => 5],
+             [1 => 6,
+              2 => 7,
+              3 => 8]];
+
+       Display (M);
+
+    end Show_Array_Aggregates;
+
+The first aggregate we use in this example is :ada:`[[0, 1, 2], [3, 4, 5]]`.
+Here, :ada:`[0, 1, 2]` and :ada:`[3, 4, 5]` are subaggregates of the
+multidimensional aggregate. Subaggregates don't have a type themselves, but are
+rather just considered part of a multidimensional aggregate (which, of course,
+has an array type). In this sense, a subaggregate such as :ada:`[0, 1, 2]` is
+different from a one-dimensional aggregate (such as :ada:`[0, 1, 2]`), even
+though they are written in the same way.
+
+Strings in subaggregates
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the case of matrices using characters, we can use strings in the
+corresponding array aggregates. Consider this package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.String_Aggregates
+
+    package String_Lists is
+
+       type String_List is array (Positive range <>,
+                                  Positive range <>)
+                                  of Character;
+
+       procedure Display (SL : String_List);
+
+    end String_Lists;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body String_Lists is
+
+       procedure Display (SL : String_List) is
+
+          procedure Display_Row (SL : String_List;
+                                 I  : Integer) is
+          begin
+             Put ("  (");
+             for J in SL'Range (2) loop
+                Put (SL (I, J));
+             end loop;
+             Put (")");
+          end Display_Row;
+
+       begin
+          Put_Line ("Length (1) = "
+                    & SL'Length (1)'Image);
+          Put_Line ("Length (2) = "
+                    & SL'Length (2)'Image);
+
+          Put_Line ("(");
+          for I in SL'Range (1) loop
+             Display_Row (SL, I);
+             if I /= SL'Last (1) then
+                Put_Line (",");
+             else
+                New_Line;
+             end if;
+          end loop;
+          Put_Line (")");
+       end Display;
+
+    end String_Lists;
+
+Then, when assigning to an object :ada:`SL` of :ada:`String_List` type, we can
+use strings in the aggregates:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.String_Aggregates
+
+    pragma Ada_2022;
+
+    with String_Lists; use String_Lists;
+
+    procedure Show_Array_Aggregates is
+       SL : String_List (1 .. 2, 1 .. 3);
+    begin
+       --  Positional component association
+       SL := ["ABC",
+              "DEF"];
+
+       Display (SL);
+
+       --  Named component association
+       SL := [[1 => 'X',
+               2 => 'Y',
+               3 => 'Z'],
+              [others => ' ']];
+
+       Display (SL);
+    end Show_Array_Aggregates;
+
+In the first assignment to :ada:`SL`, we have the aggregate
+:ada:`["ABC", "DEF"]`, which uses strings as subaggregates. (Of course, we can
+use a named aggregate and assign characters to the individual components.)
+
+
+.. _Adv_Ada_Array_Aggregate_Box_Default_Value:
+
+:ada:`<>` and default values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we indicated earlier, the :ada:`<>` syntax sets a component to its default
+value |mdash| if such a default value is available. If a default value isn't
+defined, however, the component will remain uninitialized, so that the behavior
+is undefined. Let's look at more complex example to illustrate this situation.
+Consider this package, for example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Rec_Array_Aggregates
+
+    package Points is
+
+       subtype Point_Value is Integer;
+
+       type Point_3D is record
+          X, Y, Z : Point_Value;
+       end record;
+
+       procedure Display (P : Point_3D);
+
+       type Point_3D_Array is array (Positive range <>)
+         of Point_3D;
+
+       procedure Display (PA : Point_3D_Array);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put ("      (X => "
+               & Point_Value'Image (P.X)
+               & ",");
+          New_Line;
+          Put ("       Y => "
+               & Point_Value'Image (P.Y)
+               & ",");
+          New_Line;
+          Put ("       Z => "
+               & Point_Value'Image (P.Z)
+               & ")");
+       end Display;
+
+       procedure Display (PA : Point_3D_Array) is
+       begin
+          Put_Line ("(");
+          for I in PA'Range (1) loop
+             Put_Line ("  "
+                       & Integer'Image (I)
+                       & " =>");
+             Display (PA (I));
+             if I /= PA'Last (1) then
+                Put_Line (",");
+             else
+                New_Line;
+             end if;
+          end loop;
+          Put_Line (")");
+       end Display;
+
+    end Points;
+
+Then, let's use :ada:`<>` for the array components:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Rec_Array_Aggregates
+
+    pragma Ada_2022;
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       PA : Point_3D_Array (1 .. 2);
+    begin
+       PA := [(X => 3,
+               Y => 4,
+               Z => 5),
+              (X => 6,
+               Y => 7,
+               Z => 8)];
+       Display (PA);
+
+       --  Array components are
+       --  uninitialized.
+       PA := [1 => <>,
+              2 => <>];
+       Display (PA);
+    end Show_Record_Aggregates;
+
+Because the record components (of the :ada:`Point_3D` type) don't have default
+values, they remain uninitialized when we write :ada:`(1 => <>, 2 => <>)`.
+(In fact, you may see *garbage* in the values displayed by the :ada:`Display`
+procedure.)
+
+When a default value is specified, it is used whenever :ada:`<>` is
+specified. For example, we could use a type that has the :ada:`Default_Value`
+aspect in its specification:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates_2
+
+    package Integer_Arrays is
+
+       type Value is new Integer
+         with Default_Value => 99;
+
+       type Integer_Array is array (Positive range <>) of Value;
+
+       procedure Display (A : Integer_Array);
+
+    end Integer_Arrays;
+
+    pragma Ada_2022;
+
+    with Integer_Arrays; use Integer_Arrays;
+
+    procedure Show_Array_Aggregates is
+       N : Integer_Array (1 .. 4);
+    begin
+       N := [for I in N'Range => Value (I)];
+       Display (N);
+
+       N := [others => <>];
+       Display (N);
+    end Show_Array_Aggregates;
+
+When writing an aggregate for the :ada:`Point_3D` type, any component that has
+:ada:`<>` gets the default value of the :ada:`Point` type (99):
+
+.. admonition:: For further reading...
+
+    Similarly, we could specify the :ada:`Default_Component_Value` aspect in the
+    declaration of the array type:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates_2
+
+        package Integer_Arrays is
+
+           type Value is new Integer;
+
+           type Integer_Array is array (Positive range <>) of Value
+             with Default_Component_Value => 9999;
+
+           procedure Display (A : Integer_Array);
+
+        end Integer_Arrays;
+
+        pragma Ada_2022;
+
+        with Integer_Arrays; use Integer_Arrays;
+
+        procedure Show_Array_Aggregates is
+           N : Integer_Array (1 .. 4);
+        begin
+           N := [for I in N'Range => Value (I)];
+           Display (N);
+
+           N := [others => <>];
+           Display (N);
+        end Show_Array_Aggregates;
+
+    In this case, when writing :ada:`<>` for a component, the value specified in
+    the :ada:`Default_Component_Value` aspect is used.
+
+    Finally, we might want to use both :ada:`Default_Value` and
+    :ada:`Default_Component_Value` aspects at the same time. In this case, the
+    value specified in the :ada:`Default_Component_Value` aspect has higher
+    priority:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates_2
+
+        package Integer_Arrays is
+
+           type Value is new Integer
+             with Default_Value => 99;
+
+           type Integer_Array is array (Positive range <>) of Value
+             with Default_Component_Value => 9999;
+
+           procedure Display (A : Integer_Array);
+
+        end Integer_Arrays;
+
+        pragma Ada_2022;
+
+        with Integer_Arrays; use Integer_Arrays;
+
+        procedure Show_Array_Aggregates is
+           N : Integer_Array (1 .. 4);
+        begin
+           N := [for I in N'Range => Value (I)];
+           Display (N);
+
+           N := [others => <>];
+           Display (N);
+        end Show_Array_Aggregates;
+
+    Here, 9999 is used when we specify :ada:`<>` for a component.
 
 
 Extension Aggregates
