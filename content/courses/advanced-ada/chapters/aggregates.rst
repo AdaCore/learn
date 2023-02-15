@@ -159,9 +159,384 @@ defining custom container aggregates for any record type.
 Record aggregates
 -----------------
 
+We've already seen record aggregates in the
+:ref:`Introduction to Ada <Intro_Ada_Record_Aggregates>` course, so this is just
+a brief overview on the topic.
+
+As we already know, record aggregates can have positional and named component
+associations. For example, consider this package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    package Points is
+
+       type Point_3D is record
+          X, Y, Z : Integer;
+       end record;
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put_Line ("(X => "
+                    & Integer'Image (P.X)
+                    & ",");
+          Put_Line (" Y => "
+                    & Integer'Image (P.Y)
+                    & ",");
+          Put_Line (" Z => "
+                    & Integer'Image (P.Z)
+                    & ")");
+       end Display;
+
+    end Points;
+
+We can use positional or named record aggregates when assigning to an object
+:ada:`P` of :ada:`Point_3D` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       P : Point_3D;
+    begin
+       --  Positional component association
+       P := (0, 1, 2);
+
+       Display (P);
+
+       --  Named component association
+       P := (X => 3,
+             Y => 4,
+             Z => 5);
+
+       Display (P);
+    end Show_Record_Aggregates;
+
+Also, we can have a mixture of both:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       P : Point_3D;
+    begin
+       --  Positional and named component associations
+       P := (3, 4,
+             Z => 5);
+
+       Display (P);
+    end Show_Record_Aggregates;
+
+In this case, only the :ada:`Z` component has a named association, while the
+other components have a positional association.
+
+Note that a positional association cannot follow a named association, so we
+cannot write :ada:`P := (3, Y => 4, 5);`, for example. Once we start using a
+named association for a component, we have to continue using it for the
+remaining components.
+
+In addition, we can choose multiple components at once and assign the same value
+to them. For that, we use the :ada:`|` syntax:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       P : Point_3D;
+    begin
+       --  Multiple component selection
+       P := (X | Y => 5,
+             Z     => 6);
+
+       Display (P);
+    end Show_Record_Aggregates;
+
+Here, we assign 5 to both :ada:`X` and :ada:`Y`.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm:`4.3.1 Record Aggregates <4-3-1>`
+
+
+:ada:`<>`
+~~~~~~~~~
+
+We can use the :ada:`<>` syntax to tell the compiler to use the default value
+for specific components. However, if there's no default value for specific
+components, they are kept unchanged. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       P : Point_3D;
+    begin
+       P := (0, 1, 2);
+       Display (P);
+
+       --  Specifying X component.
+       P := (X => 42,
+             Y => <>,
+             Z => <>);
+       Display (P);
+
+       --  Specifying Y and Z components.
+       P := (X => <>,
+             Y => 10,
+             Z => 20);
+       Display (P);
+    end Show_Record_Aggregates;
+
+Here, as the components of :ada:`Point_3D` don't have a default value,
+:ada:`(X => 42, Y => <>, Z => <>)` keeps the value of :ada:`Y` and
+:ada:`Z` intact, while :ada:`(X => <>, Y => 10, Z => 20)` keeps the value of
+:ada:`X` intact.
+
+If the components of :ada:`Point_3D` had default values, those would have been
+used instead. For example, we may change the type declaration of
+:ada:`Point_3D` to this:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    package Points is
+
+       type Point_3D is record
+          X : Integer := 10;
+          Y : Integer := 20;
+          Z : Integer := 30;
+       end record;
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+Then, using :ada:`<>` makes use of those default values we just specified:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       P : Point_3D := (0, 0, 0);
+    begin
+       --  Using default value for
+       --  all components
+       P := (X => <>,
+             Y => <>,
+             Z => <>);
+       Display (P);
+    end Show_Record_Aggregates;
+
+Now, as expected, the default values of each component (10, 20 and 30) are used
+when we write :ada:`<>`.
+
+
+:ada:`others`
+~~~~~~~~~~~~~
+
+Also, we can use the :ada:`others` selector to assign a value to all components
+that aren't explicitly mentioned in the aggregate. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
+
+    with Points; use Points;
+
+    procedure Show_Record_Aggregates is
+       P : Point_3D;
+    begin
+       --  Specifying X component;
+       --  using 42 for all
+       --  other components.
+       P := (X      => 42,
+             others => 100);
+       Display (P);
+
+       --  Specifying all components
+       P := (others => 256);
+       Display (P);
+    end Show_Record_Aggregates;
+
+When we write :ada:`P := (X => 42, others => 100)`, we're assigning 42 to
+:ada:`X` and 100 to all other components (:ada:`Y` and :ada:`Z` in this case).
+Also, when we write :ada:`P := (others => 256)`, all components have the
+same value (256).
+
+Note that writing a specific value in :ada:`others` |mdash| such as
+:ada:`(others => 256)`  |mdash| only works when all components have the same
+type. In this example, all components of :ada:`Point_3D` have the same type:
+:ada:`Integer`. If we had components with different types in the components
+selected by :ada:`others`, say :ada:`Integer` and :ada:`Float`, then
+:ada:`(others => 256)` would trigger a compilation error. For example, consider
+this package:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregates_Others
+
+    package Custom_Records is
+
+       type Integer_Float is record
+         A, B : Integer := 0;
+         Y, Z : Float   := 0.0;
+       end record;
+
+    end Custom_Records;
+
+If we had written an aggregate such as :ada:`(others => 256)` for an object of
+type :ada:`Integer_Float`, the value (256) would be OK for components :ada:`A`
+and :ada:`B`, but not for components :ada:`Y` and :ada:`Z`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregates_Others
+    :class: ada-expect-compile-error
+
+    with Custom_Records; use Custom_Records;
+
+    procedure Show_Record_Aggregates_Others is
+       Dummy : Integer_Float;
+    begin
+       --  ERROR: components selected by
+       --         others must be of same
+       --         type.
+       Dummy := (others => 256);
+    end Show_Record_Aggregates_Others;
+
+We can fix this compilation error by making sure that :ada:`others` only refers
+to components of the same type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregates_Others
+
+    with Custom_Records; use Custom_Records;
+
+    procedure Show_Record_Aggregates_Others is
+       Dummy : Integer_Float;
+    begin
+       --  OK: components selected by
+       --      others have Integer type.
+       Dummy := (Y | Z  => 256.0,
+                 others => 256);
+    end Show_Record_Aggregates_Others;
+
+In any case, writing :ada:`(others => <>)` is always accepted by the compiler
+because it simply selects the default value of each component, so the type of
+those values is unambiguous:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregates_Others
+
+    with Custom_Records; use Custom_Records;
+
+    procedure Show_Record_Aggregates_Others is
+       Dummy : Integer_Float;
+    begin
+       Dummy := (others => <>);
+    end Show_Record_Aggregates_Others;
+
+This code compiles because :ada:`<>` uses the appropriate default value of each
+component.
+
+
+Record discriminants
+~~~~~~~~~~~~~~~~~~~~
+
+When a record type has discriminants, they must appear as components of an
+aggregate of that type. For example, consider this package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregate_Discriminant
+
+    package Points is
+
+       type Point_Dimension is (Dim_1, Dim_2, Dim_3);
+
+       type Point (D : Point_Dimension) is record
+          case D is
+          when Dim_1 =>
+             X1         : Integer;
+          when Dim_2 =>
+             X2, Y2     : Integer;
+          when Dim_3 =>
+             X3, Y3, Z3 : Integer;
+          end case;
+       end record;
+
+       procedure Display (P : Point);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point) is
+       begin
+          Put_Line (Point_Dimension'Image (P.D));
+
+          case P.D is
+          when Dim_1 =>
+             Put_Line ("  (X => "
+                       & Integer'Image (P.X1)
+                       & ")");
+          when Dim_2 =>
+             Put_Line ("  (X => "
+                       & Integer'Image (P.X2)
+                       & ",");
+             Put_Line ("   Y => "
+                       & Integer'Image (P.Y2)
+                      & ")");
+          when Dim_3 =>
+             Put_Line ("  (X => "
+                       & Integer'Image (P.X3)
+                       & ",");
+             Put_Line ("   Y => "
+                       & Integer'Image (P.Y3)
+                       & ",");
+             Put_Line ("   Z => "
+                       & Integer'Image (P.Z3)
+                       & ")");
+          end case;
+       end Display;
+
+    end Points;
+
+To write aggregates of the :ada:`Point` type, we have to specify the :ada:`D`
+discriminant as a component of the aggregate. Also, this component must be the
+first one if we use positional component association:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregate_Discriminant
+
+    with Points; use Points;
+
+    procedure Show_Rec_Aggregate_Discriminant is
+       --  Positional component association
+       P1 : constant Point := (Dim_1, 0);
+
+       --  Named component association
+       P2 : constant Point := (D  => Dim_2,
+                               X2 => 3,
+                               Y2 => 4);
+
+       --  Positional / named component association
+       P3 : constant Point := (Dim_3,
+                               X3 => 3,
+                               Y3 => 4,
+                               Z3 => 5);
+    begin
+       Display (P1);
+       Display (P2);
+       Display (P3);
+    end Show_Rec_Aggregate_Discriminant;
+
+As we see in this example, we can use any component association in the
+aggregate, as long as we make sure that the discriminants of the type appear as
+components |mdash| and are the first components in the case of positional
+component association.
 
 
 .. _Adv_Ada_Null_Records:

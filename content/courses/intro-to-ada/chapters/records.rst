@@ -56,12 +56,17 @@ addition to that, we discuss more about records in
 :doc:`another chapter <./more_about_records>`.
 
 
+.. _Intro_Ada_Record_Aggregates:
+
 Aggregates
 ----------
 
 .. code-block:: ada
 
+    --  Positional components
     Ada_Birthday    : Date := (10, December, 1815);
+
+    --  Named components
     Leap_Day_2020   : Date := (Day   => 29,
                                Month => February,
                                Year  => 2020);
