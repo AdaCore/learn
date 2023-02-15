@@ -273,7 +273,7 @@ Here, we assign 5 to both :ada:`X` and :ada:`Y`.
 
 We can use the :ada:`<>` syntax to tell the compiler to use the default value
 for specific components. However, if there's no default value for specific
-components, they are kept unchanged. For example:
+components, that component isn't initialized. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
 
@@ -298,14 +298,31 @@ components, they are kept unchanged. For example:
        Display (P);
     end Show_Record_Aggregates;
 
-Here, as the components of :ada:`Point_3D` don't have a default value,
-:ada:`(X => 42, Y => <>, Z => <>)` keeps the value of :ada:`Y` and
-:ada:`Z` intact, while :ada:`(X => <>, Y => 10, Z => 20)` keeps the value of
-:ada:`X` intact.
+Here, as the components of :ada:`Point_3D` don't have a default value, those
+components that have :ada:`<>` are not initialized:
+
+- when we write :ada:`(X => 42, Y => <>, Z => <>)`, only :ada:`X` is
+  initialized;
+
+- when we write :ada:`(X => <>, Y => 10, Z => 20)` instead, only :ada:`X` is
+  uninitialized.
+
+.. admonition:: For further reading...
+
+    As we've just seen, all components that get a :ada:`<>` are uninitialized
+    because the components of :ada:`Point_3D` don't have a default value.
+    As no initialization is taking place for those components of the aggregate,
+    the actual value that is assigned to the record is undefined. In other
+    words, the resulting behavior might dependent on the compiler's
+    implementation.
+
+    When using GNAT, writing :ada:`(X => 42, Y => <>, Z => <>)` keeps the value
+    of :ada:`Y` and :ada:`Z` intact, while :ada:`(X => <>, Y => 10, Z => 20)`
+    keeps the value of :ada:`X` intact.
 
 If the components of :ada:`Point_3D` had default values, those would have been
-used instead. For example, we may change the type declaration of
-:ada:`Point_3D` to this:
+used. For example, we may change the type declaration of :ada:`Point_3D` and use
+default values for each component:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
 
@@ -321,7 +338,7 @@ used instead. For example, we may change the type declaration of
 
     end Points;
 
-Then, using :ada:`<>` makes use of those default values we just specified:
+Then, writing :ada:`<>` makes use of those default values we've just specified:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
 
