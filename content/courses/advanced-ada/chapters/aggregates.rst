@@ -8,6 +8,10 @@ Aggregates
 Container Aggregates
 --------------------
 
+.. note::
+
+   This feature was introduced in Ada 2022.
+
 A container aggregate is a list of elements |mdash| such as :ada:`[1, 2, 3]`
 |mdash| that we use to initialize or assign to a container. For example:
 
@@ -144,6 +148,10 @@ while
 Later on, we'll talk about the
 :ref:`'Aggregate aspect <Adv_Ada_Aggregate_Aspect>`, which allows for
 defining custom container aggregates for any record type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.3.5 Container Aggregates <4-3-5>`
 
 
 .. _Adv_Ada_Record_Aggregates:
