@@ -5,6 +5,8 @@ Arrays
 
 Arrays provide another fundamental family of composite types in Ada.
 
+.. _Intro_Ada_Array_Type_Declaration:
+
 Array type declaration
 ----------------------
 
