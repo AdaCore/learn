@@ -1196,6 +1196,16 @@ Later on, we'll discuss
 :ref:`full coverage rules for limited types <Adv_Ada_Full_Coverage_Rules_Limited_Types>`.
 
 
+.. _Adv_Ada_Array_Aggregates:
+
+Array aggregates
+----------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.3.3 Array Aggregates <4-3-3>`
+
+
 Extension Aggregates
 --------------------
 
@@ -1541,16 +1551,6 @@ aggregate for the :ada:`Point_2D` type. In summary, by carefully selecting the
 appropriate view, we're able to initialize an object of ascending type
 (:ada:`Point_2D`), which contains less components, using an object of a
 descendent type (:ada:`Point_3D`), which contains more components.
-
-
-.. _Adv_Ada_Array_Aggregates:
-
-Array aggregates
-----------------
-
-.. admonition:: In the Ada Reference Manual
-
-    - :arm:`4.3.3 Array Aggregates <4-3-3>`
 
 
 Delta Aggregates
