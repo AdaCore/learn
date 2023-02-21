@@ -1061,26 +1061,114 @@ Let's see some examples:
                  & Float'Leading_Part (1.75, 3)'Image);
     end Show_Copy_Sign_Leading_Part_Machine;
 
-.. todo::
 
-    Add discussion about :ada:`Machine`.
+.. _Adv_Ada_Machine_Attribute:
 
-    .. code-block:: ada
+Attribute: :ada:`'Machine`
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-        with Ada.Text_IO; use Ada.Text_IO;
+Not every real number is directly representable as a floating-point value on a
+specific machine. For example, let's take a value such as 1.0 x 10\ :sup:`15`
+(or 1000000000000000):
 
-        procedure Show_Copy_Sign_Leading_Part_Machine is
-        begin
-           --  NOTE: no clear usage for 'Machine!!
-           Put_Line (Float'(1.000015)'Image);
-           Put_Line (Float'Machine (1.000015)'Image);
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Float_Value
 
-           Put_Line (Float'Image (Float'Machine (1.000015) - Float'(1.0000)));
-           Put_Line (Float'Image (Float'(1.000015) - Float'(1.0000)));
+    with Ada.Text_IO; use Ada.Text_IO;
 
-           Put_Line (Float'Fraction (Float'Machine (1.000015))'Image);
-           Put_Line (Float'Exponent (Float'Machine (1.000015))'Image);
-        end Show_Copy_Sign_Leading_Part_Machine;
+    procedure Show_Float_Value is
+       package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+       V : Float;
+    begin
+       F_IO.Default_Fore := 3;
+       F_IO.Default_Aft  := 1;
+       F_IO.Default_Exp  := 0;
+
+       V := 1.0E+15;
+       Put ("1.0E+15 = ");
+       F_IO.Put (Item => V);
+       New_Line;
+
+    end Show_Float_Value;
+
+If we run this example on a typical PC, we see that the value 1000000000000000.0
+was modified to 999999986991000.0. This is because 1.0 x 10\ :sup:`15` isn't
+directly representable on this machine, so it has to be modified to a value that
+is actually representable (on the machine). This modification can be made
+visible with the :ada:`'Machine (X)` attribute, which returns a version of
+:ada:`X` that is representable on the target machine. This modification is
+performed by rounding or truncating :ada:`X` to either one of the adjacent
+machine numbers for the specific floating-point type of :ada:`X`. (Of course, if
+the real value of :ada:`X` is representable on the target machine, no
+modification is performed.)
+
+In fact, we could rewrite the :ada:`V := 1.0E+15` assignment of the code example
+as :ada:`V := Float'Machine (1.0E+15)`, as we're never assigning a real value
+directly to a floating-pointing variable, but instead first converting it to a
+version of the real value that is representable on the target machine. In this
+case, 999999986991000.0 is a representable version of the real value
+1.0 x 10\ :sup:`15`. Of course, writing :ada:`V := 1.0E+15` or
+:ada:`V := Float'Machine (1.0E+15)` doesn't make any difference to the actual
+value that is assigned to :ada:`V`, as the conversion to a representable value
+happens automatically during the assignment to :ada:`V`.
+
+There are, however, instances where using the :ada:`'Machine` attribute does
+make a difference in the result. For example, let's say we want to calculate
+the difference between the original real value in our example
+(1.0 x 10\ :sup:`15`) and the actual value that is assigned to :ada:`V`. We can
+do this by using the :ada:`'Machine` attribute in the calculation:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Machine_Attribute
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Machine_Attribute is
+       package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+       V : Float;
+    begin
+       F_IO.Default_Fore := 3;
+       F_IO.Default_Aft  := 1;
+       F_IO.Default_Exp  := 0;
+
+       Put_Line ("Original value: 1000000000000000.0");
+
+       V := 1.0E+15;
+       Put ("Machine value:  ");
+       F_IO.Put (Item => V);
+       New_Line;
+
+       V := 1.0E+15 - Float'Machine (1.0E+15);
+       Put ("Difference:     ");
+       F_IO.Put (Item => V);
+       New_Line;
+
+    end Show_Machine_Attribute;
+
+When we run this example on a typical PC, we see that the difference is
+roughly 1.3009 x 10\ :sup:`7`. (Actually, the value that we might see is
+1.3008896 x 10\ :sup:`7`, which is a version of 1.3009 x 10\ :sup:`7` that is
+representable on the target machine.)
+
+When we write :ada:`1.0E+15 - Float'Machine (1.0E+15)`:
+
+- the first value in the operation is the universal real value
+  1.0 x 10\ :sup:`15`, while
+
+- the second value in the operation is a version of the universal real value
+  1.0 x 10\ :sup:`15` that is representable on the target machine.
+
+This also means that, in the assignment to :ada:`V`, we're actually writing
+:ada:`V := Float'Machine (1.0E+15 - Float'Machine (1.0E+15))`, so that:
+
+1. we first get the intermediate real value that represents the difference
+   between these values; and then
+
+2. we get a version of this intermediate real value that is representable on the
+   target machine.
+
+This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
+1.3009 x 10\ :sup:`7` when we run this application.
 
 Model-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1140,6 +1228,24 @@ Let's see an example:
        Put_Line ("Long_Long_Float'Model_Emin:     " &
                  Long_Long_Float'Model_Emin'Image);
     end Show_Model_Mantissa_Emin;
+
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Machine_Mantissa
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Model_Machine_Mantissa_Emin is
+    begin
+       Put_Line ("Float'Model_Mantissa:           " &
+                 Float'Model_Mantissa'Image);
+       Put_Line ("Float'Machine_Mantissa:         " &
+                 Float'Machine_Mantissa'Image);
+
+       Put_Line ("Float'Model_Emin:               " &
+                 Float'Model_Emin'Image);
+       Put_Line ("Float'Machine_Emin:             " &
+                 Float'Machine_Emin'Image);
+    end Show_Model_Machine_Mantissa_Emin;
 
 
 Attributes: :ada:`'Model_Epsilon` and :ada:`Model_Small`
