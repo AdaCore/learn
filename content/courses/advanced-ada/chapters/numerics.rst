@@ -1288,20 +1288,60 @@ Let's see some examples:
                  Long_Long_Float'Model_Small'Image);
     end Show_Model_Epsilon_Small;
 
-.. todo::
+Attribute: :ada:`'Model`
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-    Add discussion about :ada:`'Model`.
+The :ada:`'Model` attribute is similar to the :ada:`'Machine` attribute that
+:ref:`we discussed earlier on <Adv_Ada_Machine_Attribute>`. The difference is
+that, instead of returning a version of :ada:`X` that is representable on the
+target machine (as the :ada:`'Machine (X)` attribute does), :ada:`'Model (X)`
+returns a version of :ada:`X` that is representable on the model that is being
+used. This is performed by rounding or truncating :ada:`X` to either one of the
+adjacent model numbers for the specific floating-point type of :ada:`X`.
+(As expected, if the real value of :ada:`X` is representable in the model, no
+modification is performed.)
 
-    .. code-block:: ada
+For example, let's say we want to calculate the difference between the real
+value in 1.0 x 10\ :sup:`15` and the actual model value, we can use the
+:ada:`'Model` attribute:
 
-        with Ada.Text_IO; use Ada.Text_IO;
+.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Attribute
 
-        procedure Show_Model_Epsilon_Small is
-        begin
-           Put_Line (Float'(1.000015)'Image);
-           Put_Line (Float'Model (1.000015)'Image);
+    with Ada.Text_IO; use Ada.Text_IO;
 
-        end Show_Model_Epsilon_Small;
+    procedure Show_Model_Attribute is
+       package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+       V : Float;
+    begin
+       F_IO.Default_Fore := 3;
+       F_IO.Default_Aft  := 1;
+       F_IO.Default_Exp  := 0;
+
+       Put_Line ("Original value: 1000000000000000.0");
+
+       V := 1.0E+15;
+       Put ("Model value:    ");
+       F_IO.Put (Item => V);
+       New_Line;
+
+       V := 1.0E+15 - Float'Model (1.0E+15);
+       Put ("Difference:     ");
+       F_IO.Put (Item => V);
+       New_Line;
+
+    end Show_Model_Attribute;
+
+When running this example on a typical PC, we see that the difference is
+roughly 1.3009 x 10\ :sup:`7`. (Actually, the value we see is
+1.3008896 x 10\ :sup:`7`.)
+
+Depending on the model that is being used, the subtraction
+:ada:`1.0E+15 - Float'Model (1.0E+15)` might gives us the same value as
+:ada:`1.0E+15 - Float'Machine (1.0E+15)` or not. For example, the result is the
+same if the 32-bit IEEE floating-point model from the ISO/IEC 60559:2020
+standard is being used.
+
 
 Attributes: :ada:`'Safe_First` and :ada:`Safe_Last`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
