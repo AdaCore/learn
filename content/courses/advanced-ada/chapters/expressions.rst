@@ -3,6 +3,358 @@ Expressions
 
 .. include:: ../../global.txt
 
+Expressions: Definition
+-----------------------
+
+According to the Ada Reference Manual, an expression "is a formula that defines
+the computation or retrieval of a value." Also, when an expression is evaluated,
+the computed or retrieved value always has an associated type.
+
+Even though the definition above is very simple, Ada expressions are actually
+very flexible |mdash| and they can also be very complex. In fact, if you read
+the :arm:`corresponding section <4-4>` of the Ada Reference Manual, you'll
+quickly discover that they include elements such as relations, membership
+choices, terms and primaries. In this section, we present examples of just some
+of these elements. For a complete overview, please refer to the Reference
+Manual.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.4 Expressions <4-4>`
+
+
+Relations and simple expressions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Expressions usually consist of relations, which in turn consist of simple
+expressions. (There are more details to this, but we'll keep it simple for the
+moment.) Let's see a code example with a few expressions, which we dissect into
+the corresponding grammatical elements (we're going to discuss them later):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Expression_Elements
+
+    procedure Show_Expression_Elements is
+       type Mode is (Off, A, B, C, D);
+
+       pragma Unreferenced (B, C, D);
+
+       subtype Active_Mode is Mode
+         range Mode'Succ (Off) .. Mode'Last;
+
+       M1, M2 : Mode;
+       Dummy     : Boolean;
+    begin
+       M1 := A;
+
+       Dummy :=
+           M1 in Active_Mode
+                    and then M2 in Off | A;
+       --
+       --   ^^^^^^^^^^^^^^^^^ relation
+       --
+       --                     ^^^^^^^^^^^^^^ relation
+       --   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expression
+
+       Dummy :=
+           M1 in Active_Mode;
+       --  ^^ name
+       --  ^^ primary
+       --  ^^ factor
+       --  ^^ term
+       --  ^^ simple expression
+       --
+       --        ^^^^^^^^^^^ membership choice
+       --        ^^^^^^^^^^^ membership choice list
+       --
+       --  ^^^^^^^^^^^^^^^^^ relation
+       --  ^^^^^^^^^^^^^^^^^ expression
+
+       Dummy :=
+           M2 in Off | A;
+       --  ^^ name
+       --  ^^ primary
+       --  ^^ factor
+       --  ^^ term
+       --  ^^ simple expression
+       --
+       --        ^^^ membership choice
+       --              ^ membership choice
+       --        ^^^^^^^ membership choice list
+       --
+       --  ^^^^^^^^^^^^^ relation
+       --  ^^^^^^^^^^^^^ expression
+
+    end Show_Expression_Elements;
+
+In this code example, we see three expressions. As we mentioned earlier, every
+expression has a type; here, the type of each expression is :ada:`Boolean`.
+
+The first expression (:ada:`M1 in Active_Mode and then M2 in Off | A`) consists
+of two relations: :ada:`M1 in Active_Mode` and :ada:`M2 in Off | A`. Let's
+discuss some of the details.
+
+The :ada:`M1 in Active_Mode` relation consists of the simple expression
+:ada:`M1` and the membership choice list :ada:`Active_Mode`. (Here, the
+:ada:`in` keyword is part of the relation definition.) Also, as we see in the
+comments of the source code, the simple expression :ada:`M1` is, at the same
+time, a term, a factor, a primary and a name.
+
+Let's briefly talk about this chain of syntactic elements for simple
+expressions. Very roughly said, this is how we can break up simple expressions:
+
+- a simple expression consists of terms;
+
+- a term consists of factors;
+
+- a factor consists of primaries;
+
+- a primary can be one of those:
+
+    - a numeric literal;
+
+    - :ada:`null`;
+
+    - a string literal;
+
+    - :doc:`an aggregate <aggregates>`;
+
+    - a name;
+
+    - an allocator (like :ada:`new Integer`);
+
+    - :ref:`a parenthesized expression <Adv_Ada_Parenthesized_Expressions>`;
+
+    - :ref:`a conditional expression <Adv_Ada_Conditional_Expressions>`;
+
+    - :ref:`a quantified expression <Adv_Ada_Quantified_Expressions>`;
+
+    - :ref:`a declare expression <Adv_Ada_Declare_Expressions>`.
+
+.. admonition:: For further reading...
+
+    The definition of simple expressions we've just seen is very simplified. In
+    actuality, these are the grammatical elements specified in the Ada Reference
+    Manual:
+
+    .. code-block:: none
+
+        simple_expression ::=
+          [unary_adding_operator] term {binary_adding_operator term}
+
+        term ::= factor {multiplying_operator factor}
+
+        factor ::= primary [** primary] | abs primary | not primary
+
+        primary ::=
+          numeric_literal | null | string_literal | aggregate
+        | name | allocator | (expression)
+        | (conditional_expression) | (quantified_expression)
+        | (declare_expression)
+
+Later on in this chapter, we discuss
+:ref:`conditional expressions <Adv_Ada_Conditional_Expressions>`,
+:ref:`quantified expressions <Adv_Ada_Quantified_Expressions>` and
+:ref:`declare expressions <Adv_Ada_Declare_Expressions>` in more details.
+
+In the relation :ada:`M2 in Off | A` from the code example, :ada:`Off | A` is
+a membership choice list, and :ada:`Off` and :ada:`A` are membership choices.
+
+.. admonition:: For further reading...
+
+    Relations can actually be much more complicated than the one we just
+    seen. In fact, this is the definition from the Ada Reference Manual:
+
+    .. code-block:: none
+
+        expression ::=
+             relation {and relation} | relation {and then relation}
+           | relation {or relation}  | relation {or else relation}
+           | relation {xor relation}
+
+        relation ::=
+             simple_expression [relational_operator simple_expression]
+           | simple_expression [not] in membership_choice_list
+           | raise_expression
+
+    Again, for more details, please refer to the
+    :arm:`section on expressions <4-4>` of the Ada Reference Manual.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.4 Expressions <4-4>`
+    - :arm:`4.5.2 Relational Operators and Membership Tests <4-5-2>`
+
+
+Numeric expressions
+~~~~~~~~~~~~~~~~~~~
+
+The expressions we've seen so far had the :ada:`Boolean` type. Although much
+of the grammar described in the Manual exists exclusively for Boolean
+operations, we can also write numeric expressions such as the following one:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Numeric_Expressions
+
+    procedure Show_Numeric_Expressions is
+       C1    : constant Integer := 5;
+       Dummy :          Integer;
+    begin
+       Dummy :=
+           -2 ** 4 + 3 * C1 ** 8;
+       --                      ^ numeric literal
+       --                      ^ primary
+       --                ^^      name
+       --                ^^      primary
+       --                ^^^^^^^ factor
+       --              ^ multiplying operator
+       --            ^           numeric literal
+       --            ^           primary
+       --            ^           factor
+       --            ^^^^^^^^^^^ term
+       --
+       --        ^ numeric literal
+       --        ^ primary
+       --   ^ numeric literal
+       --   ^ primary
+       --   ^^^^^^               factor
+       --   ^^^^^^               term
+       --          ^ binary adding operator
+       --  ^ unary adding operator
+       --
+       --  ^^^^^^^^^^^^^^^^^^^^^^ simple expression
+       --
+       --  ^^^^^^^^^^^^^^^^^^^^^^ expression
+    end Show_Numeric_Expressions;
+
+In this code example, the expression :ada:`- 2 ** 4 + 3 * C1 ** 8` consists of
+just a single simple expression. (Note that simple expressions do not have to
+be "simple".) This simple expression consists of two terms: :ada:`2 ** 4` and
+:ada:`3 * C1 ** 8`. While the :ada:`2 ** 4` term is also a single factor, the
+:ada:`3 * C1 ** 8` term consists of two factors: :ada:`3` and :ada:`C1 ** 8`.
+Both the :ada:`2 ** 4` and the :ada:`C1 ** 8` factors consists of two primaries
+each:
+
+- the :ada:`2 ** 4` factor has the primaries :ada:`2` and :ada:`4`,
+
+- the :ada:`C1 ** 8` factor has the primaries :ada:`C1` and :ada:`8`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.4 Expressions <4-4>`
+
+
+Other expressions
+~~~~~~~~~~~~~~~~~
+
+Expressions aren't limited to the :ada:`Boolean` type or to numeric types.
+Indeed, expressions can be of any type, and the definition of primaries we've
+seen earlier on already hints in this direction |mdash| as it includes elements
+such as allocators. Because expressions are very flexible, covering all possible
+variations and combinations in this section is out of scope. Again, please refer
+to the :arm:`section on expressions <4-4>` of the Ada Reference Manual for
+further details.
+
+
+.. _Adv_Ada_Parenthesized_Expressions:
+
+Parenthesized expression
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+An interesting aspect of primaries is that, by using parentheses, we can
+embed an expression inside another expression. As an example, let's discuss the
+following expression and its elements:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Parenthesized_Expressions
+
+    procedure Show_Parenthesized_Expressions is
+       C1 : constant Integer := 4;
+       C2 : constant Integer := 5;
+
+       Dummy : Integer;
+    begin
+       Dummy :=
+           (2 + C1) * C2;
+       --       ^^       name
+       --       ^^       primary
+       --       ^^       factor
+       --       ^^       term
+       --
+       --   ^            numeric literal
+       --   ^            primary
+       --   ^            factor
+       --   ^            term
+       --
+       --     ^          binary adding operator
+       --  ^^^^^^^^      simple expression
+       --
+       --  ^^^^^^^^      expression
+       --  ^^^^^^^^      primary
+       --  ^^^^^^^^      factor
+       --
+       --             ^^ factor
+       --  ^^^^^^^^^^^^^ term
+       --
+       --  ^^^^^^^^^^^^^ simple expression
+       --
+       --  ^^^^^^^^^^^^^ expression
+    end Show_Parenthesized_Expressions;
+
+In this example, we first start with the single expression :ada:`(2 + C1) * C2`,
+which is also a simple expression consisting of just one term, which consists of
+two factors: :ada:`(2 + C1)` and :ada:`C2`. The :ada:`(2 + C1)` factor is also a
+primary. Now, because of the parentheses, we identify that the primary
+:ada:`(2 + C1)` is an expression that is embedded in another expression.
+
+.. admonition:: Important
+
+    To be fair, the existence of parentheses in a primary could also indicate
+    other kinds of expressions, such as conditional or quantified expressions.
+    However, differentiating between them is straightforward, as we'll see later
+    on in this chapter.
+
+We then proceed to parse the :ada:`(2 + C1)` expression, which consists of the
+terms :ada:`2` and :ada:`C1`. As we've seen in the comments of the code example,
+each of these terms consists of one factor, which consists of one primary. In
+the end, after parsing the primaries, we identify that :ada:`2` is a numeric
+literal and :ada:`C1` is a name.
+
+Note that the usage of parentheses might lead to situations where we have
+expressions in potentially unsuspected places. For example, consider the
+following code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Name_In_Expression
+
+    procedure Show_Name_In_Expression is
+       type Mode is (Off, A, B, C, D);
+
+       M1 : Mode;
+    begin
+       M1 := A;
+
+       case M1 is
+         when Off | D   =>
+           null;
+         when A | B | C =>
+           M1 := D;
+       end case;
+
+    end Show_Name_In_Expression;
+
+Here, the case statement expects a selecting expression. In this case, :ada:`M1`
+is identified as a name |mdash| after being identified as a relation, a simple
+expression, a term, a factor and a primary.
+
+However, if we replace :ada:`case M1 is` by :ada:`case (M1) is`, :ada:`(M1)`
+is identified as a parenthesized expression, not as a name! This parenthesized
+expression is first parsed and evaluated, which might have implications in case
+statements, as we'll see in another chapter.
+
+.. todo::
+
+    Add link to subsection on case statements and expressions.
+
+
+.. _Adv_Ada_Conditional_Expressions:
+
 Conditional Expressions
 -----------------------
 
@@ -343,6 +695,8 @@ comparing them against zero.
 
     - :arm:`4.5.8 Quantified Expressions <4-5-8>`
 
+
+.. _Adv_Ada_Declare_Expressions:
 
 Declare Expressions
 -------------------
