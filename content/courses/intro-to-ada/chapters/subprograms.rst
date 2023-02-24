@@ -272,12 +272,14 @@ to explicitly store it in a local variable.
 .. ?? It would be better to show an example where the function's side effect is on
 .. ?? a non-local variable.  Maybe for the next version of the course.
 
+
+.. _Intro_Ada_Parameter_Modes:
+
 Parameter modes
 ---------------
 
 .. amiard TODO: Talk about early returns from procedures, and grouping
    parameters.
-   Talk about the fact that order is unimportant with named parameters (with example)
 
 So far we have seen that Ada is a safety-focused language. There are many ways
 this is realized, but two important points are:
