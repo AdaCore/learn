@@ -364,7 +364,7 @@ Let's look at another example, this time with a subprogram call:
        I := I + 1;
     end Increment_By_One;
 
-    with Increment_By_One ;
+    with Increment_By_One;
 
     procedure Show_Name_In_Expression is
        V : Integer := 0;
