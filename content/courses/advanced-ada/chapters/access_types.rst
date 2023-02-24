@@ -620,6 +620,8 @@ words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
     - :arm:`3.10 Access Types <3-10>`
 
 
+.. _Adv_Ada_Aliased_Objects:
+
 Aliased objects
 ~~~~~~~~~~~~~~~
 

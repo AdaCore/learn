@@ -8,18 +8,629 @@ Subprograms
 Parameter Modes and Associations
 --------------------------------
 
-.. todo::
+In this section, we discuss some details about parameter modes and associations.
+First of all, as we know, parameters can be either formal or actual:
 
-    Brief section on parameter modes:
+- Formal parameters are the ones we see in a subprogram declaration and
+  implementation;
 
-    - Mention by-copy and by-reference types
-    - Mention: parameter modes, formal and actual parameters
-    - Add link to section on "Aliased Parameters"
+- Actual parameters are the ones we see in a subprogram call.
 
-.. admonition:: Relevant topics
+   - Note that actual parameters are also called *subprogram arguments* in other
+     languages.
+
+We define parameter associations as the connection between an actual parameter
+in a subprogram call and its declaration as a formal parameter in a subprogram
+specification or body.
+
+.. admonition:: In the Ada Reference Manual
 
    - :arm:`6.2 Formal Parameter Modes <6-2>`
    - :arm:`6.4.1 Parameter Associations <6-4-1>`
+
+
+Formal Parameter Modes
+~~~~~~~~~~~~~~~~~~~~~~
+
+We already discussed formal parameter modes in the
+:ref:`Introduction to Ada <Intro_Ada_Parameter_Modes>` course:
+
++---------------+--------------------------------------------+
+| :ada:`in`     | Parameter can only be read, not written    |
++---------------+--------------------------------------------+
+| :ada:`out`    | Parameter can be written to, then read     |
++---------------+--------------------------------------------+
+| :ada:`in out` | Parameter can be both read and written     |
++---------------+--------------------------------------------+
+
+As this topic was already discussed in that course |mdash| and we used parameter
+modes extensively in all code examples from that course |mdash|, we won't
+introduce the topic again here. Instead, we'll look into some of the more
+advanced details that have been left.
+
+
+By-copy and by-reference
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the :ref:`Introduction to Ada <Intro_Ada_Parameter_Modes>` course, we saw
+that parameter modes don't correspond directly to how parameters are
+actually passed. In fact, an :ada:`in out` parameter could be passed by copy.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.By_Copy_By_Ref_Params
+
+    with System;
+
+    procedure Check_Param_Passing (Formal : System.Address;
+                                   Actual : System.Address);
+
+    with Ada.Text_IO;          use Ada.Text_IO;
+    with System.Address_Image;
+
+    procedure Check_Param_Passing (Formal : System.Address;
+                                   Actual : System.Address) is
+    begin
+       Put_Line ("Formal parameter at "
+                 & System.Address_Image (Formal));
+       Put_Line ("Actual parameter at "
+                 & System.Address_Image (Actual));
+       if System.Address_Image (Formal) =
+          System.Address_Image (Actual)
+       then
+          Put_Line ("Parameter is passed by reference.");
+       else
+          Put_Line ("Parameter is passed by copy.");
+       end if;
+    end Check_Param_Passing;
+
+    with System;
+
+    package Machine_X is
+
+       procedure Update_Value (V  : in out Integer;
+                               AV :        System.Address);
+
+    end Machine_X;
+
+    with Check_Param_Passing;
+
+    package body Machine_X is
+
+       procedure Update_Value (V  : in out Integer;
+                               AV :        System.Address) is
+       begin
+          V := V + 1;
+          Check_Param_Passing (Formal => V'Address,
+                               Actual => AV);
+       end Update_Value;
+
+    end Machine_X;
+
+    with Machine_X; use Machine_X;
+
+    procedure Show_By_Copy_By_Ref_Params is
+       A : Integer := 5;
+    begin
+       Update_Value (A, A'Address);
+    end Show_By_Copy_By_Ref_Params;
+
+As we can see by running this example,
+
+- the integer variable :ada:`A` in the :ada:`Show_By_Copy_By_Ref_Params`
+  procedure
+
+and
+
+- the :ada:`V` parameter in the :ada:`Update_Value` procedure
+
+have different addresses, so they are different objects. Therefore, we conclude
+that this parameter is being passed by value, even though it has the
+:ada:`in out` mode.
+
+As we know, when a parameter is passed by copy, it is first copied to a
+temporary object. In the case of a parameter with :ada:`in out` mode, the
+temporary object is copied back to the original (actual) parameter at the end of
+the subprogram call. In our example, the temporary object indicated by :ada:`V`
+is copied back to :ada:`A` at the end of the call to :ada:`Update_Value`.
+
+In Ada, it's not the parameter mode that determines whether a parameter is
+passed by copy or by reference, but rather its type. We can distinguish between
+three categories:
+
+1. By-copy types;
+
+2. By-reference types;
+
+3. *Unspecified* types.
+
+Obviously, parameters of by-copy types are passed by copy and parameters of
+by-reference type are passed by reference. However, if a category isn't
+specified |mdash| i.e. when the type is neither a by-copy nor a by-reference
+type |mdash|, the decision is essentially left to the compiler.
+
+As a rule of thumb, we can say that;
+
+- elementary types |mdash| and any type that is essentially elementary, such as
+  a private type whose full view is an elementary type |mdash| are passed by
+  copy;
+
+- tagged and explicitly limited types |mdash| and other types that are
+  essentially tagged, such as task types |mdash| are passed by reference.
+
+The following table provides more details:
+
++--------------------+-------------------+------------------------------------+
+| Type category      | Parameter passing | List of types                      |
++====================+===================+====================================+
+| By copy            | By copy           | - Elementary types                 |
+|                    |                   | - Descendant of a private type     |
+|                    |                   |   whose full type is a by-copy     |
+|                    |                   |   type                             |
++--------------------+-------------------+------------------------------------+
+| By reference       | By reference      | - Tagged types                     |
+|                    |                   | - Task and protected types         |
+|                    |                   | - Explicitly limited record types  |
+|                    |                   | - Composite types with at least    |
+|                    |                   |   one subcomponent of a            |
+|                    |                   |   by-reference type                |
+|                    |                   | - Private types whose full type    |
+|                    |                   |   is a by-reference type           |
+|                    |                   | - Any descendant of the types      |
+|                    |                   |   mentioned above                  |
++--------------------+-------------------+------------------------------------+
+| Unspecified        | Either by copy or | - Any type not mentioned above     |
+|                    | by reference      |                                    |
++--------------------+-------------------+------------------------------------+
+
+Note that, for parameters of limited types, only those parameters whose type is
+*explicitly* limited are always passed by reference. We discuss this topic in
+more details :ref:`in another chapter <Adv_Ada_Limited_Types_As_Parameters>`.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.By_Copy_By_Ref_Params
+
+    with System;
+
+    package Machine_X is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Rec is record
+          A : Integer;
+       end record;
+
+       type Rec_Array is record
+          A   : Integer;
+          Arr : Integer_Array (1 .. 100);
+       end record;
+
+       type Tagged_Rec is tagged record
+          A : Integer;
+       end record;
+
+       procedure Update_Value (R  : in out Rec;
+                               AR :        System.Address);
+
+       procedure Update_Value (RA  : in out Rec_Array;
+                               ARA :        System.Address);
+
+       procedure Update_Value (R  : in out Tagged_Rec;
+                               AR :        System.Address);
+
+    end Machine_X;
+
+    with Check_Param_Passing;
+
+    package body Machine_X is
+
+       procedure Update_Value (R  : in out Rec;
+                               AR :        System.Address) is
+       begin
+          R.A := R.A + 1;
+          Check_Param_Passing (Formal => R'Address,
+                               Actual => AR);
+       end Update_Value;
+
+       procedure Update_Value (RA  : in out Rec_Array;
+                               ARA :        System.Address) is
+       begin
+          RA.A := RA.A + 1;
+          Check_Param_Passing (Formal => RA'Address,
+                               Actual => ARA);
+       end Update_Value;
+
+       procedure Update_Value (R  : in out Tagged_Rec;
+                               AR :        System.Address) is
+       begin
+          R.A := R.A + 1;
+          Check_Param_Passing (Formal => R'Address,
+                               Actual => AR);
+       end Update_Value;
+
+    end Machine_X;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Machine_X;   use Machine_X;
+
+    procedure Show_By_Copy_By_Ref_Params is
+       TR : Tagged_Rec := (A   => 5);
+       R  : Rec        := (A   => 5);
+       RA : Rec_Array  := (A   => 5,
+                           Arr => (others => 0));
+    begin
+       Put_Line ("Tagged record");
+       Update_Value (TR, TR'Address);
+
+       Put_Line ("Untagged record");
+       Update_Value (R,  R'Address);
+
+       Put_Line ("Untagged record with array");
+       Update_Value (RA, RA'Address);
+    end Show_By_Copy_By_Ref_Params;
+
+When we run this example, we see that the object of tagged type
+(:ada:`Tagged_Rec`) is passed by reference to the :ada:`Update_Value` procedure.
+In the case of the objects of untagged record types, you might see this:
+
+- the parameter of :ada:`Rec` type |mdash| which is an untagged record with a
+  single component of integer type |mdash|, the parameter is passed by copy;
+
+- the parameter of :ada:`Rec_Array` type |mdash| which is an untagged record
+  with a large array of 100 components |mdash|, the parameter is passed by
+  reference.
+
+Because :ada:`Rec` and :ada:`Rec_Array` are neither by-copy nor by-reference
+types, the decision about how to pass them to the :ada:`Update_Value` procedure
+is made by the compiler. (Thus, it is possible that you see different results
+when running the code above.)
+
+
+Bounded errors
+~~~~~~~~~~~~~~
+
+When we use parameters of types that are neither by-copy nor by-reference types,
+we might encounter the situation where we have the same object bounded to
+different names in a subprogram. For example, if:
+
+- we use a global object :ada:`Global_R` of a record type :ada:`Rec`
+
+and
+
+- we have a subprogram with an in-out parameter of the same record type
+  :ada:`Rec`
+
+and
+
+- we pass :ada:`Global_R` as the actual parameter for the in-out parameter of
+  this subprogram,
+
+then we have two access paths to this object: one of them using the global
+variable directly, and the other one using it indirectly via the in-out
+parameter. This situation could lead to undefined behavior or to a program
+error. Consider the following code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.By_Copy_By_Ref_Params
+
+    with System;
+
+    package Machine_X is
+
+       type Rec is record
+          A : Integer;
+       end record;
+
+       Global_R : Rec := (A => 0);
+
+       procedure Update_Value (R  : in out Rec;
+                               AR :        System.Address);
+
+    end Machine_X;
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+
+    with Check_Param_Passing;
+
+    package body Machine_X is
+
+       procedure Update_Value (R  : in out Rec;
+                               AR :        System.Address) is
+
+          procedure Show_Vars is
+          begin
+             Put_Line ("Global_R.A: "
+                       & Integer'Image (Global_R.A));
+             Put_Line ("R.A:        "
+                       & Integer'Image (R.A));
+          end Show_Vars;
+       begin
+          Check_Param_Passing (Formal => R'Address,
+                               Actual => AR);
+
+          Put_Line ("Incrementing Global_R.A...");
+          Global_R.A := Global_R.A + 1;
+          Show_Vars;
+
+          Put_Line ("Incrementing R.A...");
+          R.A := R.A + 5;
+          Show_Vars;
+       end Update_Value;
+
+    end Machine_X;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Machine_X;   use Machine_X;
+
+    procedure Show_By_Copy_By_Ref_Params is
+    begin
+       Put_Line ("Calling Update_Value...");
+       Update_Value (Global_R,  Global_R'Address);
+
+       Put_Line ("After call to Update_Value...");
+       Put_Line ("Global_R.A: "
+                 & Integer'Image (Global_R.A));
+    end Show_By_Copy_By_Ref_Params;
+
+In the :ada:`Update_Value` procedure, because :ada:`Global_R` and :ada:`R`
+have a type that is neither a by-pass nor a by-reference type, the language does
+not specify whether the old or the new value would be read in the calls to
+:ada:`Put_Line`. In other words, the actual behavior is undefined. Also, this
+situation might raise the :ada:`Program_Error` exception.
+
+.. admonition:: Important
+
+   As a general advice:
+
+   - you should be very careful when using global variables and
+
+   - you should avoid passing them as parameters in situations such as the one
+     illustrated in the code example above.
+
+
+.. _Adv_Ada_Aliased_Parameters:
+
+Aliased parameters
+~~~~~~~~~~~~~~~~~~
+
+When a parameter is specified as *aliased*, it is always passed by
+reference, independently of the type we're using. In this sense, we can use this
+keyword to circumvent the rules mentioned so far.
+
+Let's rewrite a previous code example that has a parameter of elementary type
+and change it to *aliased*:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.By_Copy_By_Ref_Params
+
+    with System;
+
+    package Machine_X is
+
+       procedure Update_Value (V  : aliased in out Integer;
+                               AV :                System.Address);
+
+    end Machine_X;
+
+    with Check_Param_Passing;
+
+    package body Machine_X is
+
+       procedure Update_Value (V  : aliased in out Integer;
+                               AV :                System.Address) is
+       begin
+          V := V + 1;
+          Check_Param_Passing (Formal => V'Address,
+                               Actual => AV);
+       end Update_Value;
+
+    end Machine_X;
+
+    with Machine_X; use Machine_X;
+
+    procedure Show_By_Copy_By_Ref_Params is
+       A : aliased Integer := 5;
+    begin
+       Update_Value (A, A'Address);
+    end Show_By_Copy_By_Ref_Params;
+
+As we can see, :ada:`A` is now passed by reference. (Note that we can only pass
+aliased objects to aliased parameters. We discuss aliased objects later
+:ref:`in another chapter <Adv_Ada_Aliased_Objects>`.)
+
+
+Parameter Associations
+~~~~~~~~~~~~~~~~~~~~~~
+
+When actual parameters are associated with formal parameters, some rules are
+checked. As a typical example, the type of each actual parameter must match the
+type of the corresponding actual parameter. In this section, we see some details
+about how this association is made and some of the potential errors.
+
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`6.4.1 Parameter Associations <6-4-1>`
+
+
+Parameter order and association
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As we already know, when calling subprograms, we can use positional or named
+parameter association |mdash| or a mixture of both. Also, parameters can have
+default values. Let's see some examples:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Param_Association_1
+
+    package Operations is
+
+       procedure Add (Left  : in out Integer;
+                      Right :        Float := 1.0);
+
+    end Operations;
+
+    package body Operations is
+
+       procedure Add (Left  : in out Integer;
+                      Right :        Float := 1.0) is
+       begin
+          Left := Left + Integer (Right);
+       end Add;
+
+    end Operations;
+
+    with Operations; use Operations;
+
+    procedure Show_Param_Association is
+       A : Integer := 5;
+    begin
+       --  Positional association
+       Add (A, 2.0);
+
+       --  Positional association
+       --  (using default value)
+       Add (A);
+
+       --  Named association
+       Add (Left  => A,
+            Right => 2.0);
+
+       --  Named association (inversed order)
+       Add (Right => 2.0,
+            Left  => A);
+
+       --  Mixed positional / named association
+       Add (A, Right => 2.0);
+    end Show_Param_Association;
+
+This code snippet has examples of positional and name parameter association.
+Also, it has an example of mixed positional / named parameter association. In
+most cases, the actual :ada:`A` parameter is associated with the formal
+:ada:`Left` parameter, and the actual 2.0 parameter is associated with the
+formal :ada:`Right` parameter.
+
+In addition to that, parameters can have default values, so, when we write
+:ada:`Add (A)`, the :ada:`A` variable is associated with the :ada:`Left`
+parameter and the default value (1.0) is associated with the :ada:`Right`
+parameter.
+
+Also, when we use named parameter association, the parameter order is
+irrelevant: we can, for example, write the last parameter as the first one.
+Therefore, we can write :ada:`Add (Right => 2.0, Left  => A)` instead of
+:ada:`Add (Left  => A, Right => 2.0)`.
+
+
+Ambiguous calls
+^^^^^^^^^^^^^^^
+
+Ambiguous calls can be detected by the compiler during parameter association.
+For example, when we have both default values in parameters and subprogram
+overloading, the compiler might be unable to decide which subprogram we're
+calling:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Param_Association_1
+    :class: ada-expect-compile-error
+
+    package Operations is
+
+       procedure Add (Left  : in out Integer);
+
+       procedure Add (Left  : in out Integer;
+                      Right :        Float := 1.0);
+
+    end Operations;
+
+    package body Operations is
+
+       procedure Add (Left  : in out Integer) is
+       begin
+          Left := Left + 1;
+       end Add;
+
+       procedure Add (Left  : in out Integer;
+                      Right :        Float := 1.0) is
+       begin
+          Left := Left + Integer (Right);
+       end Add;
+
+    end Operations;
+
+    with Operations; use Operations;
+
+    procedure Show_Param_Association is
+       A : Integer := 5;
+    begin
+       Add (A);
+       --  ERROR: cannot decide which
+       --         procedure to take
+    end Show_Param_Association;
+
+As we see in this example, the :ada:`Add` procedure is overloaded. The first
+instance has one parameter, and the second instance has two parameters, where
+the second parameter has a default value. When we call :ada:`Add` with just one
+parameter, the compiler cannot decide whether we intend to call
+
+- the first instance of :ada:`Add` with one parameter
+
+or
+
+- the second instance of :ada:`Add` using the default value for the second
+  parameter.
+
+In this specific case, there are multiple options to solve the issue, but all of
+them involve redesigning the package specification:
+
+- we could just rename one of :ada:`Add` procedures (thereby eliminating the
+  subprogram overloading);
+
+- we could rename the first parameter of one of the :ada:`Add` procedures and
+  use named parameter association in the call to the procedure;
+
+   - For example, we could rename the parameter to :ada:`Value` and call
+     :ada:`Add (Value => A)`.
+
+- remove the default value from the second parameter of the second instance of
+  :ada:`Add`.
+
+
+Overlapping actual parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When we have more than one :ada:`out` or :ada:`in out` parameters in a
+subprogram, we might run into the situation where the actual parameter overlaps
+with another parameter. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Subprograms.Illegal_Calls
+    :class: ada-expect-compile-error
+
+    package Machine_X is
+
+       procedure Update_Value (V1 : in out Integer;
+                               V2 :    out Integer);
+
+    end Machine_X;
+
+    package body Machine_X is
+
+       procedure Update_Value (V1 : in out Integer;
+                               V2 :    out Integer) is
+       begin
+          V1 := V1 + 1;
+          V2 := V2 + 1;
+       end Update_Value;
+
+    end Machine_X;
+
+    with Machine_X; use Machine_X;
+
+    procedure Show_By_Copy_By_Ref_Params is
+       A : Integer := 5;
+    begin
+       Update_Value (A, A);
+    end Show_By_Copy_By_Ref_Params;
+
+In this case, we're using :ada:`A` for for output parameters in the call to
+:ada:`Update_Value`. Having one variable in more than one output parameter is
+forbidden in Ada, so this triggers a compilation error. Depending on the
+specific context, you could solve this issue by using temporary variables for
+the other output parameters.
 
 
 .. _Adv_Ada_Operators:
