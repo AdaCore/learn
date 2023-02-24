@@ -352,6 +352,34 @@ statements, as we'll see in another chapter.
 
     Add link to subsection on case statements and expressions.
 
+Let's look at another example, this time with a subprogram call:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Name_In_Expression
+    :class: ada-expect-compile-error
+
+    procedure Increment_By_One (I : in out Integer);
+
+    procedure Increment_By_One (I : in out Integer) is
+    begin
+       I := I + 1;
+    end Increment_By_One;
+
+    with Increment_By_One ;
+
+    procedure Show_Name_In_Expression is
+       V : Integer := 0;
+    begin
+       Increment_By_One ((V));
+    end Show_Name_In_Expression;
+
+The :ada:`Increment_By_One` procedure from this example expects a variable as an
+actual parameter because the parameter mode is :ada:`in out`. However, the
+:ada:`(V)` in the call to the procedure is interpreted as an expression, so we
+end up providing a value |mdash| the result of the expression |mdash| as the
+actual parameter instead of the :ada:`V` variable. Naturally, this is a
+compilation error. (Of course, writing :ada:`Increment_By_One (V)` fixes the
+error.)
+
 
 .. _Adv_Ada_Conditional_Expressions:
 
