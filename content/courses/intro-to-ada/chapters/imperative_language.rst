@@ -111,6 +111,9 @@ the form :ada:`use` *package-name*. As illustrated by the call on
 :ada:`Put_Line`, the effect is that entities from the named package can be
 referenced directly, without the *package-name.* prefix.
 
+
+.. _Intro_Ada_If_Statement:
+
 Imperative language - If/Then/Else
 ----------------------------------
 
@@ -239,6 +242,8 @@ C++, where nested :ada:`else .. if` blocks would be used instead.
 And another difference is the presence of the :ada:`end if` in Ada,
 which avoids the problem known as the "dangling else".
 
+
+.. _Intro_Ada_Loop_Statement:
 
 Imperative language - Loops
 ---------------------------
@@ -441,6 +446,8 @@ This program has the same effect as the previous examples.
     integer that is treated as either :ada:`True` or :ada:`False` depending on
     whether it is non-zero or zero.
 
+
+.. _Intro_Ada_Case_Statement:
 
 Imperative language - Case statement
 ------------------------------------

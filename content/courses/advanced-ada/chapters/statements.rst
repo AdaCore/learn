@@ -327,6 +327,178 @@ condition :ada:`Cond` is met, even if we're actually within the inner loop.
     - :arm:`5.7 Exit Statements <5-7>`
 
 
+If, case and loop statements
+----------------------------
+
+In the Introduction to Ada course, we talked about
+:ref:`if statements <Intro_Ada_If_Statement>`,
+:ref:`loop statements <Intro_Ada_Loop_Statement>`,
+and :ref:`case statements <Intro_Ada_Case_Statement>`. This is a very simple
+code example with these statements:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Statements.If_Case_Loop_Statements
+
+    procedure Show_If_Case_Loop_Statements is
+       pragma Warnings (Off);
+
+       Reset     : Boolean := False;
+       Increment : Boolean := True;
+       Val       : Integer := 0;
+    begin
+       --
+       --  If statement
+       --
+       if Reset then
+          Val := 0;
+       elsif Increment then
+          Val := Val + 1;
+       else
+          Val := Val - 1;
+       end if;
+
+       --
+       --  Loop statement
+       --
+       for I in 1 .. 5 loop
+          Val := Val * 2 - I;
+       end loop;
+
+       --
+       --  Case statement
+       --
+       case Val is
+          when 0 .. 5 =>
+             null;
+          when others =>
+             Val := 5;
+       end case;
+
+    end Show_If_Case_Loop_Statements;
+
+In this section, we'll look into a more advanced detail about the case
+statement.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`5.3 If Statements <5-3>`
+    - :arm:`5.4 Case Statements <5-4>`
+    - :arm:`5.5 Loop Statements <5-5>`
+
+Case statements and expressions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we know, the case statement has a choice expression
+(:ada:`case Choice_Expression is`), which is expected to be a discrete type.
+Also, this expression can be a function call or a type conversion, for example
+|mdash| in additional to being a variable or a constant.
+
+As we discussed earlier on, if we use parentheses, the contents between those
+parentheses is parsed as an expression. In the context of case statements, the
+expression is first evaluated before being used as a choice expression. Consider
+the following code example:
+
+.. todo::
+
+    Add link to Adv_Ada_Parenthesized_Expressions when it's available
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Statements.Case_Statement_Expression
+    :class: ada-expect-compile-error
+
+    package Scales is
+
+       type Satisfaction_Scale is (Very_Dissatisfied,
+                                   Dissatisfied,
+                                   OK,
+                                   Satisfied,
+                                   Very_Satisfied);
+
+       type Scale is range 0 .. 10;
+
+       function To_Satisfaction_Scale (S : Scale)
+                                       return Satisfaction_Scale;
+
+    end Scales;
+
+    package body Scales is
+
+       function To_Satisfaction_Scale (S : Scale)
+                                       return Satisfaction_Scale is
+          Satisfaction : Satisfaction_Scale;
+       begin
+          case (S) is
+             when 0 .. 2  =>
+                Satisfaction := Very_Dissatisfied;
+             when 3 .. 4  =>
+                Satisfaction := Dissatisfied;
+             when 5 .. 6  =>
+                Satisfaction := OK;
+             when 7 .. 8  =>
+                Satisfaction := Satisfied;
+             when 9 .. 10 =>
+                Satisfaction := Very_Satisfied;
+          end case;
+
+          return Satisfaction;
+       end To_Satisfaction_Scale;
+
+    end Scales;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Scales;      use Scales;
+
+    procedure Show_Case_Statement_Expression is
+       Score : constant Scale := 0;
+    begin
+       Put_Line ("Score: "
+                 & Scale'Image (Score)
+                 & Satisfaction_Scale'Image (
+                     To_Satisfaction_Scale (Score)));
+
+    end Show_Case_Statement_Expression;
+
+When we try to compile this code example, the compiler complains about missing
+values in the :ada:`To_Satisfaction_Scale` function. As we mentioned in the
+:ref:`Introduction to Ada course <Intro_Ada_Case_Statement>`, every possible
+value for the choice expression needs to be covered by a unique branch of the
+case statement. In principle, it *seems* that we're actually covering all
+possible values of the :ada:`Scale` type, which ranges from 0 to 10. However,
+we've written :ada:`case (S) is` instead of :ada:`case S is`. Because of the
+parentheses, :ada:`(S)` is evaluated as an expression. In this case, the
+expected range of the case statement is not :ada:`Scale'Range`, but the range of
+its :ref:`base type <Adv_Ada_Base_Attribute>` :ada:`Scale'Base'Range`.
+
+.. admonition:: In other languages
+
+    In C, the switch-case statement requires parentheses for the choice
+    expression:
+
+    .. code:: c manual_chop run_button project=Courses.Advanced_Ada.Statements.Case_Statement_C
+
+        !main.c
+
+        #include <stdio.h>
+
+        int main(int argc, const char * argv[])
+        {
+           int score = 0;
+
+           switch (score)
+           {
+              case 0:
+              case 1:
+                 printf("Value in the 0 -- 1 range\n");
+              default:
+                 printf("Value > 1\n");
+           }
+        }
+
+    In Ada, parentheses aren't expected in the choice expression. Therefore,
+    we shouldn't write :ada:`case (Score) is` in a C-like fashion |mdash|
+    unless, of course, we really want to evaluate an expression in the case
+    statement.
+
+
 Block Statements
 ----------------
 
