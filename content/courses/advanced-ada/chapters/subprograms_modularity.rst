@@ -39,6 +39,15 @@ visible anywhere:
 As expected, since :ada:`Test` is private, we get a compilation error because
 this procedure cannot be referred in the :ada:`Show_Test` procedure.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
+    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
+
+
+Private subprograms of a package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 A more useful example is to declare private subprograms of a package. For
 example:
 
@@ -87,7 +96,4 @@ In this example, we declare :ada:`Calculate` as a private procedure of the
 :ada:`Data_Processing` package. Therefore, it's visible in that package (but
 not in the :ada:`Test_Data_Processing` procedure).
 
-.. admonition:: In the Ada Reference Manual
 
-    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
-    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
