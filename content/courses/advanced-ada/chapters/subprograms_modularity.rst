@@ -97,3 +97,52 @@ In this example, we declare :ada:`Calculate` as a private procedure of the
 not in the :ada:`Test_Data_Processing` procedure).
 
 
+Private subprograms and private packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can also use private subprograms to test private packages. As we know, in
+most cases, we cannot access private packages in external clients |mdash| such
+as external subprograms. However, by declaring a subprogram private, we're
+allowed to access private packages. This can be very useful to create
+applications that we can use to test private packages:
+
+.. code:: ada run_button main=test_private_data_processing.adb project=Courses.Advanced_Ada.Subprograms.Private_Subprogram_Private_Package
+
+    private package Private_Data_Processing is
+
+       type Data is private;
+
+       procedure Process (D : in out Data);
+
+    private
+
+        type Data is null record;
+
+    end Private_Data_Processing;
+
+    package body Private_Data_Processing is
+
+       procedure Process (D : in out Data) is
+       begin
+          null;
+       end Process;
+
+    end Private_Data_Processing;
+
+    private procedure Test_Private_Data_Processing;
+
+    with Private_Data_Processing; use Private_Data_Processing;
+
+    procedure Test_Private_Data_Processing is
+       D : Data;
+    begin
+       Process (D);
+    end Test_Private_Data_Processing;
+
+In this code example, we have the private :ada:`Private_Data_Processing`
+package. In order to test it, we implement the private
+procedure :ada:`Test_Private_Data_Processing`. The fact that this procedure is
+private allows us to use the :ada:`Private_Data_Processing` package as if it
+was a non-private package. We then use the private
+:ada:`Test_Private_Data_Processing` procedure as our main application, so we can
+run it to test application the private package.
