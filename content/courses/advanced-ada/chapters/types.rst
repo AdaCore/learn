@@ -1713,6 +1713,20 @@ Type conversion
     - value conversion
 
 
+Qualified Expressions
+---------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.7 Qualified Expressions <4-7>`
+
+.. todo::
+
+    Complete section!
+
+    Bried discussion on qualified expressions
+
+
 Default initial values
 ----------------------
 
