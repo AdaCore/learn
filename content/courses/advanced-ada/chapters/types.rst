@@ -1695,6 +1695,38 @@ want to declare objects of this type.
     - :arm:`7.3 Private Types and Private Extensions <7-3>`
 
 
+Type conversion
+---------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.6 Type Conversions <4-6>`
+
+.. todo::
+
+    Complete section!
+
+    Bried discussion on:
+
+    - type conversion
+    - view conversion
+    - value conversion
+
+
+Qualified Expressions
+---------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`4.7 Qualified Expressions <4-7>`
+
+.. todo::
+
+    Complete section!
+
+    Bried discussion on qualified expressions
+
+
 Default initial values
 ----------------------
 

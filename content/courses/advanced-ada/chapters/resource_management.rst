@@ -8,4 +8,5 @@ Resource Management
     limited_types
     memory_management
     containers
+    standard_containers
     restrictions
