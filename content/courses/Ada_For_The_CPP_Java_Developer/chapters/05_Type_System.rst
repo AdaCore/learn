@@ -399,7 +399,7 @@ In all of the examples above, the source and destination arrays must have precis
 .. code-block:: ada
 
    declare
-      type Arr_Type is array (Integer range <>) of Integer
+      type Arr_Type is array (Integer range <>) of Integer;
       A1 : Arr_Type (1 .. 10);
       A2 : Arr_Type (1 .. 5);
    begin
