@@ -1578,7 +1578,7 @@ In this example, we declare the type :ada:`T` and its derived types
 :ada:`T_Child_1`, :ada:`T_Child_2` and :ada:`T_Child_3`. When running this
 code, we see that:
 
-- for both :ada:`T_Child_1` and :ada:`T_Child_2` types, the parent's
+- for both :ada:`T_Child_1` and :ada:`T_Child_2`, the parent's
   :ada:`Put_Image` aspect (the :ada:`Put_Image_T` procedure) is called and its
   information is combined with the information from the type extension;
 
