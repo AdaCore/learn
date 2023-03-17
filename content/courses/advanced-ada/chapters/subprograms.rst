@@ -46,7 +46,7 @@ We already discussed formal parameter modes in the
 As this topic was already discussed in that course |mdash| and we used parameter
 modes extensively in all code examples from that course |mdash|, we won't
 introduce the topic again here. Instead, we'll look into some of the more
-advanced details that have been left.
+advanced details.
 
 
 By-copy and by-reference
@@ -627,7 +627,8 @@ with another parameter. For example:
     end Show_By_Copy_By_Ref_Params;
 
 In this case, we're using :ada:`A` for for output parameters in the call to
-:ada:`Update_Value`. Having one variable in more than one output parameter is
+:ada:`Update_Value`.
+Passing one variable to more than one output parameter in a given call is
 forbidden in Ada, so this triggers a compilation error. Depending on the
 specific context, you could solve this issue by using temporary variables for
 the other output parameters.
