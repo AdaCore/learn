@@ -290,7 +290,7 @@ Bounded errors
 ~~~~~~~~~~~~~~
 
 When we use parameters of types that are neither by-copy nor by-reference types,
-we might encounter the situation where we have the same object bounded to
+we might encounter the situation where we have the same object bound to
 different names in a subprogram. For example, if:
 
 - we use a global object :ada:`Global_R` of a record type :ada:`Rec`
