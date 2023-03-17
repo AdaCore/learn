@@ -1395,7 +1395,8 @@ attribute.)
 :ada:`Put_Image` and derived types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Derived types make use of the :ada:`Put_Image` procedure that was specified for
+Types that were derived from untagged types (or null extensions) make use of
+the :ada:`Put_Image` procedure that was specified for
 their parent type |mdash| either a custom procedure indicated in the
 :ada:`Put_Image` aspect or the default one. Naturally, if a derived type
 has the :ada:`Put_Image` aspect, the procedure indicated in the aspect is used
