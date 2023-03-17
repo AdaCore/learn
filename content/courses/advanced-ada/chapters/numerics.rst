@@ -1695,8 +1695,8 @@ Let's start with a simple declaration of big numbers:
        Put_Line ("BI: " & BI'Image);
        Put_Line ("BR: " & BR'Image);
 
-       BI := @ + 1;
-       BR := @ + 1.0;
+       BI := BI + 1;
+       BR := BR + 1.0;
 
        Put_Line ("BI: " & BI'Image);
        Put_Line ("BR: " & BR'Image);
@@ -1728,8 +1728,8 @@ For example:
 
        Put_Line ("BI: " & BI'Image);
 
-       BI := -@ + BI / 2;
-       BI :=  @ - BI * 2;
+       BI := -BI + BI / 2;
+       BI :=  BI - BI * 2;
 
        Put_Line ("BI: " & BI'Image);
     end Show_Simple_Big_Numbers_Operators;
