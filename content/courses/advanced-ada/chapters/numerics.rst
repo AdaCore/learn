@@ -1703,7 +1703,7 @@ Let's start with a simple declaration of big numbers:
     end Show_Simple_Big_Numbers;
 
 In this example, we're declaring the big integer :ada:`BI` and the big real
-:ada:`BR`, and we're incrementing them with one.
+:ada:`BR`, and we're incrementing them by one.
 
 Naturally, we're not limited to using the :ada:`+` operator (such as in this
 example). We can use the same operators on big numbers that we can use with
@@ -1779,7 +1779,7 @@ of the :ada:`Factorial` function. (We're using :ada:`Long_Long_Integer` because
 its range is probably the biggest possible on the machine, although that is not
 necessarily so.) The last number we're able to calculate
 before getting an exception is `20!`, which basically shows the limitation of
-standard integers for this kind of algorithms. If we use big integers instead,
+standard integers for this kind of algorithm. If we use big integers instead,
 we can easily display all numbers up to `50!` (and more!):
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Factorial_Big_Numbers
@@ -1895,7 +1895,7 @@ These are the most important functions to convert between big number and
 |              | * :ada:`To_Real` (:ada:`Integer`)               |                                       |
 +--------------+-------------------------------------------------+---------------------------------------+
 
-In the following sections, we discuss these functions in more details.
+In the following sections, we discuss these functions in more detail.
 
 
 Big integer to integer
@@ -2208,7 +2208,7 @@ Let's look at two additional features of big integers:
 Big positive and natural subtypes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Similar to integers types, big integers have the :ada:`Big_Natural` and
+Similar to integer types, big integers have the :ada:`Big_Natural` and
 :ada:`Big_Positive` subtypes to indicate natural and positive numbers. However,
 in contrast to the :ada:`Natural` and :ada:`Positive` subtypes, the
 :ada:`Big_Natural` and :ada:`Big_Positive` subtypes are defined via predicates
