@@ -905,7 +905,7 @@ We can also apply the :ada:`'Image` attribute to an object directly:
 
 .. note::
 
-   This feature was introduced in Ada 2022.
+    The option to write :ada:`Obj'Image` was introduced in Ada 2022.
 
 In this example, the :ada:`Integer'Image (V)` and :ada:`V'Image` forms are
 equivalent.
