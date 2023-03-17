@@ -965,7 +965,7 @@ string of :ada:`Wide_Wide_String` type for the floating-point variable
    This feature was introduced in Ada 2022.
 
 In the previous code examples, we were using the :ada:`Image` attribute with
-scalar types, but it isn't restrict to those types. In fact, we can also use
+scalar types, but it isn't restricted to those types. In fact, we can also use
 this attribute when dealing with non-scalar types. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Non_Scalar_Image
@@ -1031,7 +1031,7 @@ and :ada:`R_A` is null after the call to :ada:`Free`.
 .. admonition:: Historically
 
     Since Ada 2022, the :ada:`'Image` attribute is available for all types.
-    Prior to this version of the language, it was only available for scalars
+    Prior to this version of the language, it was only available for scalar
     types. (For other kind of types, programmers had to use the :ada:`'Image`
     attribute for each component of a record, for example.)
 
