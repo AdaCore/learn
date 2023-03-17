@@ -1208,10 +1208,12 @@ returned by the :ada:`'Image` attribute of a type :ada:`T`. Ada allows us to do
 that via the :ada:`Put_Image` aspect. This is what we have to do:
 
 1. Specify the :ada:`Put_Image` aspect for the type :ada:`T` and indicate a
-   procedure :ada:`P`.
+   procedure with a specific parameter profile |mdash| let's say, for example,
+   a procedure named :ada:`P`.
 
 2. Implement the procedure :ada:`P` and write the information we want to use
-   into a buffer (by calling the :ada:`Put` procedure).
+   into a buffer (by calling the routines defined for :ada:`Root_Buffer_Type`,
+   such as the :ada:`Put` procedure).
 
 We can see these steps performed in the code example below:
 
