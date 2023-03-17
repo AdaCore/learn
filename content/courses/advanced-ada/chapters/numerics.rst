@@ -1640,10 +1640,15 @@ Big Numbers
 -----------
 
 As we've seen before, we can define numeric types in Ada with a high degree of
-precision. However, in certain applications, even that precision isn't enough,
-so we have to rely on
+precision. However, these normal numeric types in Ada are limited to what
+the underlying hardware actually supports. For example, any signed integer
+type |mdash| whether defined by the language or the user |mdash| cannot have a
+range greater than that of :ada:`System.Min_Int .. System.Max_Int` because
+those constants reflect the actual hardware's signed integer types. In certain
+applications, that precision might not be enough, so we have to rely on
 :wikipedia:`arbitrary-precision_arithmetic <arbitrary-precision_arithmetic>`.
-Ada's big numbers allow us to operate with this kind of arithmetic.
+Ada's big numbers, which are not constrained by the underlying hardware, allow
+us to operate with this kind of arithmetic.
 
 Ada supports two categories of big numbers: big integers and big reals |mdash|
 both are specified in child packages of the :ada:`Ada.Numerics.Big_Numbers`
@@ -1701,8 +1706,8 @@ In this example, we're declaring the big integer :ada:`BI` and the big real
 :ada:`BR`, and we're incrementing them with one.
 
 Naturally, we're not limited to using the :ada:`+` operator (such as in this
-example). We can use any operators on big numbers in the same as we do with
-integers and floating-point variables. In fact, the common unary operators
+example). We can use the same operators on big numbers that we can use with
+normal numeric types. In fact, the common unary operators
 (:ada:`+`, :ada:`-`, :ada:`abs`) and binary operators (:ada:`+`, :ada:`-`,
 :ada:`*`, :ada:`/`, :ada:`**`, :ada:`Min` and :ada:`Max`) are available to us.
 For example:
@@ -1770,7 +1775,9 @@ take this implementation as an example:
     end Show_Factorial;
 
 Here, we're using :ada:`Long_Long_Integer` for the computation and return type
-of the :ada:`Factorial` function. The last number we're able to calculate
+of the :ada:`Factorial` function. (We're using :ada:`Long_Long_Integer` because
+its range is probably the biggest possible on the machine, although that is not
+necessarily so.) The last number we're able to calculate
 before getting an exception is `20!`, which basically shows the limitation of
 standard integers for this kind of algorithms. If we use big integers instead,
 we can easily display all numbers up to `50!` (and more!):
@@ -1815,6 +1822,11 @@ the :ada:`Big_Integer` type fixes the problem (the runtime exception) that we
 had in the previous version.
 (Note that we're using the :ada:`To_Big_Integer` function to convert from
 :ada:`Integer` to :ada:`Big_Integer`: we discuss these conversions next.)
+
+Note that there is a limit to the upper bounds for big integers. However, this
+limit isn't dependent on the hardware types |mdash| as it's the case for normal
+numeric types |mdash|, but rather compiler specific. In other words, the
+compiler can decide how much memory it wants to use to represent big integers.
 
 
 Conversions
@@ -2199,7 +2211,8 @@ Big positive and natural subtypes
 Similar to integers types, big integers have the :ada:`Big_Natural` and
 :ada:`Big_Positive` subtypes to indicate natural and positive numbers. However,
 in contrast to the :ada:`Natural` and :ada:`Positive` subtypes, the
-:ada:`Big_Natural` and :ada:`Big_Positive` subtypes aren't simple ranges.
+:ada:`Big_Natural` and :ada:`Big_Positive` subtypes are defined via predicates
+rather than the simple ranges of normal (ordinary) numeric types.
 Therefore, we cannot simply use attributes such as :ada:`Big_Natural'First`.
 Instead, these subtypes include contracts to check the corresponding range.
 In any case, we can use them to ensure that a big integer is in the expected
@@ -2285,7 +2298,9 @@ Big real and quotients
 ~~~~~~~~~~~~~~~~~~~~~~
 
 An interesting feature of big reals is that they support quotients. In fact,
-we can simply assign `2/3` to a big real variable:
+we can simply assign `2/3` to a big real variable. (Note that we're able to
+omit the decimal points, as we write :ada:`2/3` instead of :ada:`2.0 / 3.0`.)
+For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Big_Real_Quotient_Conversion
 
