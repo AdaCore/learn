@@ -37,7 +37,7 @@ visible anywhere:
     end Show_Test;
 
 As expected, since :ada:`Test` is private, we get a compilation error because
-this procedure cannot be referred in the :ada:`Show_Test` procedure.
+this procedure cannot be referenced in the :ada:`Show_Test` procedure.
 
 .. admonition:: In the Ada Reference Manual
 
