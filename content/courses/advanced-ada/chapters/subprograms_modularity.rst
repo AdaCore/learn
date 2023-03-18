@@ -157,3 +157,57 @@ private allows us to use the :ada:`Private_Data_Processing` package as if it
 was a non-private package. We then use the private
 :ada:`Test_Private_Data_Processing` procedure as our main application, so we can
 run it to test application the private package.
+
+
+Child subprograms of private packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We could also implement the :ada:`Test` subprogram that we use to test a
+private package :ada:`P` as a child subprogram of that package. In other words,
+we could write a procedure :ada:`P.Test` and use it as our main application.
+The advantage here is that this allows us to access the private part of the
+parent package :ada:`P` in the test procedure.
+
+Let's rewrite the :ada:`Test_Private_Data_Processing` procedure from the
+previous example as the child procedure :ada:`Private_Data_Processing.Test`:
+
+.. code:: ada run_button main=private_data_processing-test.adb project=Courses.Advanced_Ada.Subprograms.Private_Package_Child_Subprogram
+
+    private package Private_Data_Processing is
+
+       type Data is private;
+
+       procedure Process (D : in out Data);
+
+    private
+
+        type Data is record
+           F : Float;
+        end record;
+
+    end Private_Data_Processing;
+
+    package body Private_Data_Processing is
+
+       procedure Process (D : in out Data) is
+       begin
+          null;
+       end Process;
+
+    end Private_Data_Processing;
+
+    procedure Private_Data_Processing.Test;
+
+    procedure Private_Data_Processing.Test is
+       D : Data := (F => 0.0);
+    begin
+       Process (D);
+    end Private_Data_Processing.Test;
+
+In this code example, we now implement the :ada:`Test` procedure as a child of
+the :ada:`Private_Data_Processing` package. In this procedure, we're able to
+initialize the private component :ada:`F` of the :ada:`D` object. As we know,
+this initialization of a private component wouldn't be possible if :ada:`Test`
+wasn't a child procedure. (For instance, writing such an initialization in the
+:ada:`Test_Private_Data_Processing` procedure from the previous code example
+would trigger a compilation error.)
