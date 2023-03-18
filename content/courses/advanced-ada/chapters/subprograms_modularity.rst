@@ -104,7 +104,11 @@ We can also use private subprograms to test private packages. As we know, in
 most cases, we cannot access private packages in external clients |mdash| such
 as external subprograms. However, by declaring a subprogram private, we're
 allowed to access private packages. This can be very useful to create
-applications that we can use to test private packages:
+applications that we can use to test private packages. (Note that these
+applications must be library-level parameterless subprograms, because only
+those can be main programs.)
+
+Let's see an example:
 
 .. code:: ada run_button main=test_private_data_processing.adb project=Courses.Advanced_Ada.Subprograms.Private_Subprogram_Private_Package
 
