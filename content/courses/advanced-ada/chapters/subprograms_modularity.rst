@@ -61,7 +61,9 @@ example:
 
     private
 
-        type Data is null record;
+        type Data is record
+           F : Float;
+        end record;
 
     end Data_Processing;
 
@@ -81,7 +83,7 @@ example:
     procedure Data_Processing.Calculate (D : in out Data) is
     begin
        --  Dummy implementation...
-       null;
+       D.F := 0.0;
     end Data_Processing.Calculate;
 
     with Data_Processing; use Data_Processing;
@@ -94,7 +96,10 @@ example:
 
 In this example, we declare :ada:`Calculate` as a private procedure of the
 :ada:`Data_Processing` package. Therefore, it's visible in that package (but
-not in the :ada:`Test_Data_Processing` procedure).
+not in the :ada:`Test_Data_Processing` procedure). Also, in the
+:ada:`Calculate` procedure, we're able to initialize the private component
+:ada:`F` of the :ada:`D` object because the child subprogram has access to the
+private part of its parent package.
 
 
 Private subprograms and private packages
@@ -120,7 +125,9 @@ Let's see an example:
 
     private
 
-        type Data is null record;
+        type Data is record
+           F : Float;
+        end record;
 
     end Private_Data_Processing;
 
@@ -128,7 +135,7 @@ Let's see an example:
 
        procedure Process (D : in out Data) is
        begin
-          null;
+          D.F := 0.0;
        end Process;
 
     end Private_Data_Processing;
