@@ -903,20 +903,9 @@ We can also apply the :ada:`'Image` attribute to an object directly:
        --  Put_Line ("V: " & Integer'Image (V));
     end Show_Simple_Image;
 
-.. note::
-
-    The option to write :ada:`Obj'Image` was introduced in Ada 2022.
-
 In this example, the :ada:`Integer'Image (V)` and :ada:`V'Image` forms are
 equivalent.
 
-.. admonition:: Historically
-
-    Ada 2022 allows us to use the :ada:`Image` attribute directly with objects
-    |mdash| such as :ada:`Obj'Image`. In previous versions of Ada, we had to
-    always specify the data type of the object in the
-    :ada:`Obj_Type'Image (Obj)` form. Starting with Ada 2022, both forms are
-    acceptable.
 
 .. _Adv_Ada_Wider_Versions_Image_Attribute:
 
