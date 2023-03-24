@@ -239,7 +239,8 @@ Introduction to Ada course, which we adapted for wide-wide strings:
 In this example, we're using the :ada:`Find_Token` procedure to find the words
 from the phrase stored in the :ada:`S` constant. All the operations we're using
 here are similar to the ones for :ada:`String` type, but making use of the
-:ada:`Wide_Wide_String` type instead.
+:ada:`Wide_Wide_String` type instead. (We talk about the :ada:`Wide_Wide_Image`
+attribute :ref:`later on <Adv_Ada_Wider_Versions_Image_Attribute>`.)
 
 .. admonition:: In the Ada Reference Manual
 
@@ -831,30 +832,359 @@ the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
 the :ada:`Wide_Wide_String` types.
 
 
-Universal text buffer
----------------------
-
-.. admonition:: Relevant topics
-
-    - :arm22:`Universal Text Buffers <A-4-12>`
-
-.. todo::
-
-    Complete section!
-
+.. _Adv_Ada_Image_Attribute:
 
 Image attribute
 ---------------
 
-.. admonition:: Relevant topics
+Overview
+~~~~~~~~
 
-    - Image attribute mentioned in
-      :arm22:`Image Attributes <4-10>`
+In the :ref:`Introduction to Ada <Intro_Ada_Image_Attribute>` course, we've
+seen that the :ada:`'Image` attribute returns a string that contains a textual
+representation of an object. For example, we write :ada:`Integer'Image (V)` to
+get a string for the integer variable :ada:`V`:
 
-.. todo::
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Simple_Image
 
-    Complete section!
+    with Ada.Text_IO; use Ada.Text_IO;
 
+    procedure Show_Simple_Image is
+       V : Integer;
+    begin
+       V := 10;
+       Put_Line ("V: " & Integer'Image (V));
+    end Show_Simple_Image;
+
+Naturally, we can use the :ada:`Image` attribute with other scalar types. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Simple_Image
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Image is
+       type Status is (Unknown, Off, On);
+
+       V : Float;
+       S : Status;
+    begin
+       V := 10.0;
+       S := Unknown;
+
+       Put_Line ("V: " & Float'Image (V));
+       Put_Line ("S: " & Status'Image (S));
+    end Show_Simple_Image;
+
+In this example, we retrieve a string representing the floating-point
+variable :ada:`V`. Also, we use :ada:`Status'Image (V)` to retrieve a string representing the textual version of the :ada:`Status`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`Image Attributes <4-10>`
+
+
+:ada:`Type'Image` and :ada:`Obj'Image`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can also apply the :ada:`'Image` attribute to an object directly:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Simple_Image
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Image is
+       V : Integer;
+    begin
+       V := 10;
+       Put_Line ("V: " & V'Image);
+
+       --  Equivalent to:
+       --  Put_Line ("V: " & Integer'Image (V));
+    end Show_Simple_Image;
+
+In this example, the :ada:`Integer'Image (V)` and :ada:`V'Image` forms are
+equivalent.
+
+
+.. _Adv_Ada_Wider_Versions_Image_Attribute:
+
+Wider versions of :ada:`Image`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Although we've been talking only about the :ada:`Image` attribute, it's
+important to mention that each of the wider versions of the string types also
+has a corresponding :ada:`Image` attribute. In fact, this is the attribute for
+each string type:
+
++------------------------+----------------------------+
+| Attribute              | Type of Returned String    |
++========================+============================+
+| :ada:`Image`           | :ada:`String`              |
++------------------------+----------------------------+
+| :ada:`Wide_Image`      | :ada:`Wide_String`         |
++------------------------+----------------------------+
+| :ada:`Wide_Wide_Image` | :ada:`Wide_Wide_String`    |
++------------------------+----------------------------+
+
+Let's see a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_Image
+
+    with Ada.Wide_Wide_Text_IO; use Ada.Wide_Wide_Text_IO;
+
+    procedure Show_Wide_Wide_Image is
+       F : Float;
+    begin
+       F := 100.0;
+       Put_Line ("F = "
+                 & F'Wide_Wide_Image);
+    end Show_Wide_Wide_Image;
+
+In this example, we use the :ada:`Wide_Wide_Image` attribute to retrieve a
+string of :ada:`Wide_Wide_String` type for the floating-point variable
+:ada:`F`.
+
+
+:ada:`Image` attribute for non-scalar types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   This feature was introduced in Ada 2022.
+
+In the previous code examples, we were using the :ada:`Image` attribute with
+scalar types, but it isn't restricted to those types. In fact, we can also use
+this attribute when dealing with non-scalar types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Non_Scalar_Image
+
+    package Simple_Records is
+
+       type Rec is limited private;
+
+       type Rec_Access is access Rec;
+
+       function Init return Rec;
+
+       type Null_Rec is null record;
+
+    private
+
+       type Rec is limited record
+          F : Float;
+          I : Integer;
+       end record;
+
+       function Init return Rec is
+          ((F => 10.0, I => 4));
+
+    end Simple_Records;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;                use Ada.Text_IO;
+    with Ada.Unchecked_Deallocation;
+
+    with Simple_Records;             use Simple_Records;
+
+    procedure Show_Non_Scalar_Image is
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Rec,
+            Name   => Rec_Access);
+
+       R_A : Rec_Access :=
+         new Rec'(Init);
+
+       N_R : Null_Rec :=
+         (null record);
+    begin
+       R_A := new Rec'(Init);
+       N_R := (null record);
+
+       Put_Line ("R_A:     " & R_A'Image);
+       Put_Line ("R_A.all: " & R_A.all'Image);
+       Put_Line ("N_R:     " & N_R'Image);
+
+       Free (R_A);
+       Put_Line ("R_A:     " & R_A'Image);
+    end Show_Non_Scalar_Image;
+
+In the :ada:`Show_Non_Scalar_Image` procedure from this example, we display the
+access value of :ada:`R_A` and the contents of the dereferenced access object
+(:ada:`R_A.all`). Also, we see the indication that :ada:`N_R` is a null record
+and :ada:`R_A` is null after the call to :ada:`Free`.
+
+.. admonition:: Historically
+
+    Since Ada 2022, the :ada:`'Image` attribute is available for all types.
+    Prior to this version of the language, it was only available for scalar
+    types. (For other kind of types, programmers had to use the :ada:`'Image`
+    attribute for each component of a record, for example.)
+
+    In fact, prior to Ada 2022, the :ada:`'Image` attribute was described in
+    the :arm22:`3.5 Scalar Types <3-5>` section of the Ada Reference Manual, as
+    it was only applied to those types. Now, it is part of the new
+    :arm22:`Image Attributes <4-10>` section.
+
+Let's see another example, this time with arrays:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Array_Image
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Array_Image is
+
+       type Float_Array is array (Positive range <>) of Float;
+
+       FA_3C   : Float_Array (1 .. 3);
+       FA_Null : Float_Array (1 .. 0);
+
+    begin
+       FA_3C   := [1.0, 3.0, 2.0];
+       FA_Null := [];
+
+       Put_Line ("FA_3C:   " & FA_3C'Image);
+       Put_Line ("FA_Null: " & FA_Null'Image);
+    end Show_Array_Image;
+
+In this example, we display the values of the three components of the
+:ada:`FA_3C` array. Also, we display the null array :ada:`FA_Null`.
+
+
+:ada:`'Image` attribute for tagged types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to untagged types, we can also use the :ada:`'Image` attribute with
+tagged types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Tagged_Image
+
+    package Simple_Records is
+
+       type Rec is tagged limited private;
+
+       function Init return Rec;
+
+       type Rec_Child is new Rec with private;
+
+       overriding function Init return Rec_Child;
+
+    private
+
+       type Status is (Unknown, Off, On);
+
+       type Rec is tagged limited record
+          F : Float;
+          I : Integer;
+       end record;
+
+       function Init return Rec is
+          ((F => 10.0, I => 4));
+
+       type Rec_Child is new Rec with record
+          Z : Status;
+       end record;
+
+       function Init return Rec_Child is
+          (Rec'(Init) with Z => Off);
+
+    end Simple_Records;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Simple_Records; use Simple_Records;
+
+    procedure Show_Tagged_Image is
+       R       : constant Rec       := Init;
+       R_Class : constant Rec'Class := Rec'(Init);
+       R_C     : constant Rec_Child := Init;
+    begin
+       Put_Line ("R:       " & R'Image);
+       Put_Line ("R_Class: " & R_Class'Image);
+       Put_Line ("R_A:     " & R_C'Image);
+    end Show_Tagged_Image;
+
+In the :ada:`Show_Tagged_Image` procedure from this example, we display the
+contents of the :ada:`R` object of :ada:`Rec` type and the :ada:`R_Class`
+object of :ada:`Rec'Class` type. Also, we display the contents of the
+:ada:`R_C` object of the :ada:`Rec_Child` type, which is derived from the
+:ada:`Rec` type.
+
+
+:ada:`'Image` attribute for task and protected types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can also apply the :ada:`'Image` attribute to protected objects and tasks:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Protected_Task_Image
+
+    package Simple_Tasking is
+
+       protected type Protected_Float (I : Integer) is
+
+       private
+          V : Float := Float (I);
+       end Protected_Float;
+
+       protected type Protected_Null is
+       private
+       end Protected_Null;
+
+       task type T is
+          entry Start;
+       end T;
+
+    end Simple_Tasking;
+
+    package body Simple_Tasking is
+
+       protected body Protected_Float is
+
+       end Protected_Float;
+
+       protected body Protected_Null is
+
+       end Protected_Null;
+
+       task body T is
+       begin
+          accept Start;
+       end T;
+
+    end Simple_Tasking;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+
+    with Simple_Tasking; use Simple_Tasking;
+
+    procedure Show_Protected_Task_Image is
+
+       PF : Protected_Float (0);
+       PN : Protected_Null;
+       T1 : T;
+
+    begin
+       Put_Line ("PF: " & PF'Image);
+       Put_Line ("PN: " & PN'Image);
+       Put_Line ("T1: " & T1'Image);
+
+       T1.Start;
+    end Show_Protected_Task_Image;
+
+In this example, we display information about the protected object :ada:`PF`,
+the componentless protected object :ada:`PN` and the task :ada:`T1`.
+
+
+.. _Adv_Ada_Put_Image_Aspect:
 
 :ada:`Put_Image` aspect
 -----------------------
@@ -867,3 +1197,18 @@ Image attribute
 .. todo::
 
     Complete section!
+
+
+.. _Adv_Ada_Universal_Text_Buffer:
+
+Universal text buffer
+---------------------
+
+.. admonition:: Relevant topics
+
+    - :arm22:`Universal Text Buffers <A-4-12>`
+
+.. todo::
+
+    Complete section!
+
