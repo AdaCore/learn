@@ -1186,8 +1186,6 @@ the componentless protected object :ada:`PN` and the task :ada:`T1`.
 
 .. _Adv_Ada_Put_Image_Aspect:
 
-.. _Adv_Ada_Put_Image_Aspect:
-
 :ada:`Put_Image` aspect
 -----------------------
 
