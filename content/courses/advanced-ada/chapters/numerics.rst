@@ -1231,24 +1231,6 @@ Let's see an example:
     end Show_Model_Mantissa_Emin;
 
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Machine_Mantissa
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Show_Model_Machine_Mantissa_Emin is
-    begin
-       Put_Line ("Float'Model_Mantissa:           " &
-                 Float'Model_Mantissa'Image);
-       Put_Line ("Float'Machine_Mantissa:         " &
-                 Float'Machine_Mantissa'Image);
-
-       Put_Line ("Float'Model_Emin:               " &
-                 Float'Model_Emin'Image);
-       Put_Line ("Float'Machine_Emin:             " &
-                 Float'Machine_Emin'Image);
-    end Show_Model_Machine_Mantissa_Emin;
-
-
 Attributes: :ada:`'Model_Epsilon` and :ada:`Model_Small`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
