@@ -1647,8 +1647,8 @@ range greater than that of :ada:`System.Min_Int .. System.Max_Int` because
 those constants reflect the actual hardware's signed integer types. In certain
 applications, that precision might not be enough, so we have to rely on
 :wikipedia:`arbitrary-precision_arithmetic <arbitrary-precision_arithmetic>`.
-Ada's *big* numbers aren't constrained by the underlying hardware, allowing
-us to operate with this kind of arithmetic.
+These so-called "big numbers" are limited conceptually only by available
+memory, in contrast to the underlying hardware-defined numeric types.
 
 Ada supports two categories of big numbers: big integers and big reals |mdash|
 both are specified in child packages of the :ada:`Ada.Numerics.Big_Numbers`
