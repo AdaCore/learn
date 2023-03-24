@@ -626,7 +626,7 @@ with another parameter. For example:
        Update_Value (A, A);
     end Show_By_Copy_By_Ref_Params;
 
-In this case, we're using :ada:`A` for for output parameters in the call to
+In this case, we're using :ada:`A` for both output parameters in the call to
 :ada:`Update_Value`.
 Passing one variable to more than one output parameter in a given call is
 forbidden in Ada, so this triggers a compilation error. Depending on the
