@@ -1091,8 +1091,9 @@ specific machine. For example, let's take a value such as 1.0 x 10\ :sup:`15`
 
     end Show_Float_Value;
 
-If we run this example on a typical PC, we see that the value 1000000000000000.0
-was modified to 999999986991000.0. This is because 1.0 x 10\ :sup:`15` isn't
+If we run this example on a typical PC, we see that the expected value
+1000000000000000.0 was displayed as 999999986991000.0.
+This is because 1.0 x 10\ :sup:`15` isn't
 directly representable on this machine, so it has to be modified to a value that
 is actually representable (on the machine). This modification can be made
 visible with the :ada:`'Machine (X)` attribute, which returns a version of
