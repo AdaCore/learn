@@ -481,9 +481,9 @@ its :ref:`base type <Adv_Ada_Base_Attribute>` :ada:`Scale'Base'Range`.
 
         int main(int argc, const char * argv[])
         {
-           int score = 0;
+           int s = 0;
 
-           switch (score)
+           switch (s)
            {
               case 0:
               case 1:
@@ -494,7 +494,7 @@ its :ref:`base type <Adv_Ada_Base_Attribute>` :ada:`Scale'Base'Range`.
         }
 
     In Ada, parentheses aren't expected in the choice expression. Therefore,
-    we shouldn't write :ada:`case (Score) is` in a C-like fashion |mdash|
+    we shouldn't write :ada:`case (S) is` in a C-like fashion |mdash|
     unless, of course, we really want to evaluate an expression in the case
     statement.
 
