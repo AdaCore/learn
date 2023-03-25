@@ -1716,15 +1716,60 @@ Type conversion
 Qualified Expressions
 ---------------------
 
+We already saw qualified expressions in the
+:ref:`Introduction to Ada <Intro_Ada_Qualified_Expressions>` course. As
+mentioned there, a qualified expression specifies the exact type that the
+target expression will be resolved to, and it can be either any expression
+in parentheses, or an aggregate:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Qualified_Expressions
+
+    package Simple_Integers is
+
+       type Int is new Integer;
+
+       subtype Int_Not_Zero is Int
+         with Dynamic_Predicate => Int_Not_Zero /= 0;
+
+    end Simple_Integers;
+
+    with Simple_Integers; use Simple_Integers;
+
+    procedure Show_Qualified_Expressions is
+       I : Int;
+    begin
+       I := Int'(0);
+    end Show_Qualified_Expressions;
+
+Here, :ada:`Int'(0)` indicates that the value zero is of :ada:`Int` type.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm:`4.7 Qualified Expressions <4-7>`
 
-.. todo::
 
-    Complete section!
+Verifying subtypes
+~~~~~~~~~~~~~~~~~~
 
-    Bried discussion on qualified expressions
+.. note::
+
+   This feature was introduced in Ada 2022.
+
+We can use qualified expressions to verify a subtype's predicate:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Qualified_Expressions
+    :class: ada-run-expect-failure
+
+    with Simple_Integers; use Simple_Integers;
+
+    procedure Show_Qualified_Expressions is
+       I : Int;
+    begin
+       I := Int_Not_Zero'(0);
+    end Show_Qualified_Expressions;
+
+Here, the qualified expression checks the dynamic predicate of
+:ada:`Int_Not_Zero`, which fails at runtime.
 
 
 Default initial values
