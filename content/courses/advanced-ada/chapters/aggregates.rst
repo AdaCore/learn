@@ -273,7 +273,7 @@ Here, we assign 5 to both :ada:`X` and :ada:`Y`.
 
 We can use the :ada:`<>` syntax to tell the compiler to use the default value
 for specific components. However, if there's no default value for specific
-components, that component isn't initialized. For example:
+components, that component isn't initialized to a known value. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Pos_Named_Rec_Aggregates
 
