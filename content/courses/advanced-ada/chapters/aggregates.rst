@@ -585,8 +585,18 @@ aggregate of that type. For example, consider this package:
     end Points;
 
 To write aggregates of the :ada:`Point` type, we have to specify the :ada:`D`
-discriminant as a component of the aggregate. Also, this component must be the
-first one if we use positional component association:
+discriminant as a component of the aggregate. The discriminant must be included
+in the aggregate |mdash| and must be static |mdash| because the compiler must
+be able to examine the aggregate to determine if it is both complete and
+consistent. All components must be accounted for one way or another, as usual
+|mdash| but, in addition, references to those components whose existence
+depends on the discriminant's values must be consistent with the actual
+discriminant value used in the aggregate. For example, for type :ada:`Point`,
+an aggregate can only reference the :ada:`X3`, :ada:`Y3`, and :ada:`Z3`
+components when :ada:`Dim_3` is specified for the discriminant :ada:`D`;
+otherwise, those three components don't exist in that aggregate. Also, the
+discriminant :ada:`D` must be the first one if we use positional component
+association. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Rec_Aggregate_Discriminant
 
