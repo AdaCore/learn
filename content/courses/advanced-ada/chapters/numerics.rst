@@ -1069,7 +1069,7 @@ Attribute: :ada:`'Machine`
 
 Not every real number is directly representable as a floating-point value on a
 specific machine. For example, let's take a value such as 1.0 x 10\ :sup:`15`
-(or 1000000000000000):
+(or 1,000,000,000,000,000):
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Float_Value
 
@@ -1092,7 +1092,7 @@ specific machine. For example, let's take a value such as 1.0 x 10\ :sup:`15`
     end Show_Float_Value;
 
 If we run this example on a typical PC, we see that the expected value
-1000000000000000.0 was displayed as 999999986991000.0.
+:ada:`1_000_000_000_000_000.0` was displayed as :ada:`999_999_986_991_000.0`.
 This is because 1.0 x 10\ :sup:`15` isn't
 directly representable on this machine, so it has to be modified to a value that
 is actually representable (on the machine). This modification can be made
@@ -1132,7 +1132,7 @@ do this by using the :ada:`'Machine` attribute in the calculation:
        F_IO.Default_Aft  := 1;
        F_IO.Default_Exp  := 0;
 
-       Put_Line ("Original value: 1000000000000000.0");
+       Put_Line ("Original value: 1_000_000_000_000_000.0");
 
        V := 1.0E+15;
        Put ("Machine value:  ");
@@ -1301,7 +1301,7 @@ value in 1.0 x 10\ :sup:`15` and the actual model value, we can use the
        F_IO.Default_Aft  := 1;
        F_IO.Default_Exp  := 0;
 
-       Put_Line ("Original value: 1000000000000000.0");
+       Put_Line ("Original value: 1_000_000_000_000_000.0");
 
        V := 1.0E+15;
        Put ("Model value:    ");
