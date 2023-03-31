@@ -121,6 +121,8 @@ resolve overloading based on the return type of a function.
     multiple enumeration literals with the same name. Semantically, an
     enumeration literal is treated like a function that has no parameters.
 
+.. _Intro_Ada_Qualified_Expressions:
+
 However, sometimes an ambiguity makes it impossible to resolve which
 declaration of an overloaded name a given occurrence of the name refers to.
 This is where a qualified expression becomes useful.
