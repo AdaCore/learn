@@ -1718,9 +1718,9 @@ Qualified Expressions
 
 We already saw qualified expressions in the
 :ref:`Introduction to Ada <Intro_Ada_Qualified_Expressions>` course. As
-mentioned there, a qualified expression specifies the exact type that the
-target expression will be resolved to, and it can be either any expression
-in parentheses, or an aggregate:
+mentioned there, a qualified expression specifies the exact type or subtype
+that the target expression will be resolved to, and it can be either any
+expression in parentheses, or an aggregate:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Qualified_Expressions
 
