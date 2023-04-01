@@ -137,7 +137,7 @@ class WidgetCodeDirective(Directive):
 
             if node_format == 'html':
                 known_info_type = {
-                    '_metadata' : r"<div class='literal-block-preamble'>Metadata</div>",
+                    '_metadata' : r"<div class='literal-block-preamble'>Code block metadata</div>",
                     'build'   : r"<div class='literal-block-preamble'>Build output</div>",
                     'run'     : r"<div class='literal-block-preamble'>Runtime output</div>",
                     'compile' : r"<div class='literal-block-preamble'>Compilation output</div>",
