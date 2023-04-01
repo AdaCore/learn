@@ -783,8 +783,7 @@ def analyze_file(rst_file):
                 print(C.col("SUCCESS", C.Colors.GREEN))
 
             # Clean-up source-code examples after compilation
-            if (block.language == "ada" and
-                project_filename is not None):
+            if project_filename is not None:
 
                 try:
                     run("gprclean", "-P", project_filename)
