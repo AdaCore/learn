@@ -33,6 +33,7 @@ import shutil
 import glob
 import re
 import hashlib
+import json
 from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 
 
@@ -361,6 +362,17 @@ def analyze_file(rst_file):
             raise e
 
         return output
+
+    def output_block_info(block):
+        block_info = vars(block)
+
+        with open('block_info.json', u'w') as f:
+            json.dump(block_info, f, indent=4)
+
+        block_info_json_file = "block_info.json"
+        if os.path.isfile(block_info_json_file):
+            with open(block_info_json_file, u'r') as f:
+                block_info_json = json.load(f)
 
     if args.code_block_at:
         for i, block in code_blocks:
