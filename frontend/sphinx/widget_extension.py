@@ -44,6 +44,7 @@ The files are extracted the following way:
 """
 # System libs
 import os
+import hashlib
 from typing import List, Dict, Any
 
 # HTML Template Libs
@@ -241,6 +242,14 @@ class WidgetCodeDirective(Directive):
             if self.options:
                 widget.parseOpts(self.options)
 
+            # Hash of source-code
+            #
+            # str_content: adapting content into format used in
+            #              compile_blocks.py
+            str_content = ('\n'.join(self.content) + "\n").encode("utf-8")
+            text_hash = hashlib.sha512(str_content).hexdigest()
+            text_hash_short = hashlib.md5(str_content).hexdigest()
+
             # chop contents into files
             widget.parseContent(self.content)
 
@@ -259,7 +268,8 @@ class WidgetCodeDirective(Directive):
                 if 'no_button' in self.arguments[0]:
                     code_block_info = CodeBlockInfo(project_name=widget.name,
                                                     filename=self.content.items[0][0],
-                                                    line_number=self.content.items[0][1] - 1)
+                                                    line_number=self.content.items[0][1] - 1,
+                                                    text_hash_short=text_hash_short)
                     widget.parseCodeBlockInfo(self.get_code_block_info(code_block_info))
 
                 # insert widget into the template
@@ -270,7 +280,8 @@ class WidgetCodeDirective(Directive):
             else:
                 code_block_info = CodeBlockInfo(project_name=widget.name,
                                                 filename=self.content.items[0][0],
-                                                line_number=self.content.items[0][1] - 1)
+                                                line_number=self.content.items[0][1] - 1,
+                                                text_hash_short=text_hash_short)
                 if ('builder_latex' in self.state.state_machine.document.settings.env.app.tags.tags
                     and self.state.state_machine.document.settings.env.app.tags.tags['builder_latex']):
                     nodes_latex = self.create_static_node(widget, code_block_info, 'latex')
