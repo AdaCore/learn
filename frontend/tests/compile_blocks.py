@@ -32,12 +32,14 @@ import colors as C
 import shutil
 import glob
 import re
+import hashlib
+import json
 from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 
 
 class Block(object):
     @staticmethod
-    def get_blocks(input_text):
+    def get_blocks(rst_file, input_text):
         lang_re = re.compile("\s*.. code::\s*(\w+)?\s*")
         project_re = re.compile("\s*.. code::.*project=(\S+)?")
         main_re = re.compile("\s*.. code::.*main=(\S+)?")
@@ -80,10 +82,14 @@ class Block(object):
                 cb_indent = indent
 
             if indent < cb_indent and not is_empty(line):
+                text = ("\n".join(l[cb_indent:] for l in lines[cb_start:i]))
+                text = text[1:]     # Remove first newline
+
                 blocks.append(CodeBlock(
+                    rst_file,
                     cb_start,
                     i,
-                    "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
+                    text,
                     lang,
                     project,
                     main_file,
@@ -134,11 +140,11 @@ class Block(object):
                         for l in compiler_switches.groups()[0].split(",")]
 
         def start_config_block(i, line, indent):
-            blocks.append(ConfigBlock(**dict(
-                kv.split('=')
-                for kv
-                in code_config_re.findall(line)[0].split(";")
-            )))
+            blocks.append(ConfigBlock(rst_file,
+                **dict(
+                    kv.split('=')
+                    for kv in code_config_re.findall(line)[0].split(";"))
+            ))
 
 
         for i, (line, indent) in enumerate(zip(lines, indents)):
@@ -167,8 +173,9 @@ class Block(object):
 
 
 class CodeBlock(Block):
-    def __init__(self, line_start, line_end, text, language, project,
+    def __init__(self, rst_file, line_start, line_end, text, language, project,
                  main_file, compiler_switches, classes, manual_chop, buttons):
+        self.rst_file = rst_file
         self.line_start = line_start
         self.line_end = line_end
         self.text = text
@@ -181,6 +188,10 @@ class CodeBlock(Block):
         self.buttons = buttons
         self.run = True
 
+        # Hash of source-code
+        str_text = str(self.text).encode("utf-8")
+        self.text_hash: str = hashlib.sha512(str_text).hexdigest()
+        self.text_hash_short: str = hashlib.md5(str_text).hexdigest()
 
 class ConfigBlock(Block):
     def __init__(self, **opts):
@@ -335,7 +346,7 @@ def analyze_file(rst_file):
 
     blocks = list(enumerate(filter(
         lambda b: b.language in ["ada", "c"] if isinstance(b, CodeBlock) else True,
-        Block.get_blocks(content)
+        Block.get_blocks(rst_file, content)
     )))
 
     code_blocks = [(i, b) for i, b in blocks if isinstance(b, CodeBlock)]
@@ -351,6 +362,17 @@ def analyze_file(rst_file):
             raise e
 
         return output
+
+    def output_block_info(block):
+        block_info = vars(block)
+
+        with open('block_info.json', u'w') as f:
+            json.dump(block_info, f, indent=4)
+
+        block_info_json_file = "block_info.json"
+        if os.path.isfile(block_info_json_file):
+            with open(block_info_json_file, u'r') as f:
+                block_info_json = json.load(f)
 
     if args.code_block_at:
         for i, block in code_blocks:
@@ -412,9 +434,9 @@ def analyze_file(rst_file):
                 if e.errno != errno.EEXIST:
                     raise
 
-            os.chdir(project_dir)
+            return project_dir
 
-        init_project_dir(project)
+        project_dir = init_project_dir(project)
 
         if args.verbose:
             print(header("Checking project {}".format(project)))
@@ -424,6 +446,8 @@ def analyze_file(rst_file):
             if isinstance(block, ConfigBlock):
                 current_config.update(block)
                 continue
+
+            os.chdir(work_dir)  # change to work directory using absolute path
 
             has_error = False
             loc = "at {}:{} (code block #{})".format(
@@ -442,6 +466,64 @@ def analyze_file(rst_file):
                 error(*error_args)
                 print_diags()
 
+            def chdir_project():
+                # combining path to work directory (absolute path)
+                # and current project directory
+                os.chdir(work_dir + "/" + project_dir)
+
+            def update_latest():
+
+                def expand_source_files():
+                    split = block.text.splitlines()
+
+                    source_files = list()
+                    if block.manual_chop:
+                        source_files = manual_chop(split)
+                    else:
+                        source_files = real_gnatchop(split)
+
+                    if len(source_files) == 0:
+                        print_error(loc, "Failed to chop example, skipping\n")
+                        analysis_error = True
+                        raise
+
+                    for source_file in source_files:
+                        with open(source_file.basename, u"w") as code_file:
+                            code_file.write(source_file.content)
+
+                    return source_files
+
+                chdir_project()
+
+                latest_project_dir = "latest"
+                os.makedirs(latest_project_dir, exist_ok=True)
+                os.chdir(latest_project_dir)
+
+                source_files = expand_source_files()
+                chdir_project()
+
+                return latest_project_dir, source_files
+
+
+            def prepare_project_block_dir(latest_project_dir):
+
+                project_block_dir = str(block.text_hash_short)
+                if not os.path.exists(project_block_dir):
+                    # os.makedirs(project_block_dir)
+                    shutil.copytree(latest_project_dir, project_block_dir)
+
+                return project_block_dir
+
+            try:
+                latest_project_dir, source_files = update_latest()
+            except Exception as e:
+                print(e.message)
+                print("Error while updating code for the block, continuing with next one!")
+                continue
+
+            project_block_dir = prepare_project_block_dir(latest_project_dir)
+            os.chdir(project_block_dir)
+
             no_check = any(sphinx_class in ["ada-nocheck", "c-nocheck"]
                            for sphinx_class in block.classes)
             if no_check:
@@ -452,23 +534,8 @@ def analyze_file(rst_file):
             if args.verbose:
                 print(header("Checking code block {}".format(loc)))
 
-            split = block.text.splitlines()
-
-            source_files = list()
-            if block.manual_chop:
-                source_files = manual_chop(split)
-            else:
-                source_files = real_gnatchop(split)
-
-            if len(source_files) == 0:
-                print_error(loc, "Failed to chop example, skipping\n")
-                analysis_error = True
-                continue
-
+            # Syntax check
             for source_file in source_files:
-
-                with open(source_file.basename, u"w") as code_file:
-                    code_file.write(source_file.content)
 
                 try:
                     if block.language == "ada":
@@ -509,18 +576,11 @@ def analyze_file(rst_file):
                     main_file = source_files[-1].basename
                 return main_file
 
-            def make_project_block_dir():
-                project_block_dir = str(block.line_start)
-                if not os.path.exists(project_block_dir):
-                    os.makedirs(project_block_dir)
-
-                return project_block_dir
+            project_filename = None
 
             if compile_block:
 
                 main_file = get_main_filename(block)
-
-                project_block_dir = make_project_block_dir()
 
                 main_file = None
                 if run_block:
@@ -545,7 +605,7 @@ def analyze_file(rst_file):
                         out = str(e.output.decode("utf-8"))
 
                     out = remove_string(out, "using project")
-                    with open(project_block_dir + "/build.log", u"w") as logfile:
+                    with open("build.log", u"w") as logfile:
                         logfile.write(out)
 
                 elif block.language == "c":
@@ -561,7 +621,7 @@ def analyze_file(rst_file):
                             print(e.output)
                             has_error = True
                         out = str(e.output.decode("utf-8"))
-                    with open(project_block_dir + "/build.log", u"w") as logfile:
+                    with open("build.log", u"w") as logfile:
                         logfile.write(out)
 
                 if not compile_error and not has_error and run_block:
@@ -585,7 +645,7 @@ def analyze_file(rst_file):
 
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/run.log", u"w") as logfile:
+                        with open("run.log", u"w") as logfile:
                             logfile.write(out)
 
                     elif block.language == "c":
@@ -607,7 +667,7 @@ def analyze_file(rst_file):
                                 has_error = True
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/run.log", u"w") as logfile:
+                        with open("run.log", u"w") as logfile:
                             logfile.write(out)
 
             if False:
@@ -625,7 +685,7 @@ def analyze_file(rst_file):
                                 has_error = True
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/compile.log", u"w+") as logfile:
+                        with open("compile.log", u"w+") as logfile:
                             logfile.write(out)
 
                     elif block.language == "c":
@@ -639,13 +699,12 @@ def analyze_file(rst_file):
                                 has_error = True
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/compile.log", u"w+") as logfile:
+                        with open("compile.log", u"w+") as logfile:
                             logfile.write(out)
 
             if prove_block:
 
                 if block.language == "ada":
-                    project_block_dir = make_project_block_dir()
 
                     main_file = get_main_filename(block)
                     spark_mode = True
@@ -683,7 +742,7 @@ def analyze_file(rst_file):
                         out = str(e.output.decode("utf-8"))
 
                     out = remove_string(out, "Summary logged in")
-                    with open(project_block_dir + "/prove.log", u"w") as logfile:
+                    with open("prove.log", u"w") as logfile:
                         logfile.write(out)
                 else:
                     print_error(loc, "Wrong language selected for prove button")
@@ -722,6 +781,16 @@ def analyze_file(rst_file):
                 analysis_error = True
             elif args.verbose:
                 print(C.col("SUCCESS", C.Colors.GREEN))
+
+            # Clean-up source-code examples after compilation
+            if project_filename is not None:
+
+                try:
+                    run("gprclean", "-P", project_filename)
+                except S.CalledProcessError as e:
+                    out = str(e.output.decode("utf-8"))
+
+            output_block_info(block)
 
             if args.all_diagnostics:
                 print_diags()

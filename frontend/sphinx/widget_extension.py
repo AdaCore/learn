@@ -44,6 +44,7 @@ The files are extracted the following way:
 """
 # System libs
 import os
+import hashlib
 from typing import List, Dict, Any
 
 # HTML Template Libs
@@ -122,31 +123,50 @@ class WidgetCodeDirective(Directive):
 
             if node_format == 'latex':
                 known_info_type = {
+                    '_metadata' : '\\textbf{Code block metadata}',
                     'build'   : '\\textbf{Build output}',
                     'run'     : '\\textbf{Runtime output}',
                     'compile' : '\\textbf{Compilation output}',
                     'prove'   : '\\textbf{Prover output}'
                 }
+
+                if info_type in known_info_type:
+                    return known_info_type[info_type]
+                else:
+                    return ''
+
             if node_format == 'html':
                 known_info_type = {
+                    '_metadata' : r"<div class='literal-block-preamble'>Code block metadata</div>",
                     'build'   : r"<div class='literal-block-preamble'>Build output</div>",
                     'run'     : r"<div class='literal-block-preamble'>Runtime output</div>",
                     'compile' : r"<div class='literal-block-preamble'>Compilation output</div>",
                     'prove'   : r"<div class='literal-block-preamble'>Prover output</div>"
                 }
 
-            if info_type in known_info_type:
-                return known_info_type[info_type]
-            else:
-                return "Let's " + info_type + " the example:"
+                if info_type in known_info_type:
+                    return known_info_type[info_type]
+                else:
+                    return "Let's " + info_type + " the example:"
 
         block_info : Dict[str, str] = code_block_info.get_info()
 
         for info_type in sorted(block_info):
 
-            if block_info[info_type] == "":
+            if (block_info[info_type] is None or
+                block_info[info_type] == ""):
                 # Do not show empty boxes
                 continue
+
+            output_info = block_info[info_type]
+            if info_type == "_metadata":
+                output_info = ("Project: " +
+                    block_info[info_type]['project'])
+                output_info += '\n'
+                output_info += ("MD5: " +
+                    block_info[info_type]['text_hash_short'])
+                # output_info += '\n'
+                # output_info += str(block_info[info_type])
 
             preamble_node = nodes.container(
                 '', literal_block=False,
@@ -163,7 +183,7 @@ class WidgetCodeDirective(Directive):
                 classes=['literal-block-wrapper'])
 
             literal = nodes.literal_block('',
-                                          block_info[info_type],
+                                          output_info,
                                           format=node_format)
             literal['language'] = 'none'
             literal['source'] = info_type
@@ -188,12 +208,17 @@ class WidgetCodeDirective(Directive):
 
         for info_type in sorted(block_info):
 
+            if info_type == "_metadata":
+                # Do not add metadata block
+                continue
+
             if block_info[info_type] == "":
                 # Do not add empty info blocks
                 continue
 
             results[info_type] = str(block_info[info_type])
-            print(str(block_info[info_type]))
+            # print("---- " + info_type + ":")
+            # print(str(block_info[info_type]))
 
         return results
 
@@ -222,6 +247,14 @@ class WidgetCodeDirective(Directive):
             if self.options:
                 widget.parseOpts(self.options)
 
+            # Hash of source-code
+            #
+            # str_content: adapting content into format used in
+            #              compile_blocks.py
+            str_content = ('\n'.join(self.content) + "\n").encode("utf-8")
+            text_hash = hashlib.sha512(str_content).hexdigest()
+            text_hash_short = hashlib.md5(str_content).hexdigest()
+
             # chop contents into files
             widget.parseContent(self.content)
 
@@ -240,7 +273,8 @@ class WidgetCodeDirective(Directive):
                 if 'no_button' in self.arguments[0]:
                     code_block_info = CodeBlockInfo(project_name=widget.name,
                                                     filename=self.content.items[0][0],
-                                                    line_number=self.content.items[0][1] - 1)
+                                                    line_number=self.content.items[0][1] - 1,
+                                                    text_hash_short=text_hash_short)
                     widget.parseCodeBlockInfo(self.get_code_block_info(code_block_info))
 
                 # insert widget into the template
@@ -251,7 +285,8 @@ class WidgetCodeDirective(Directive):
             else:
                 code_block_info = CodeBlockInfo(project_name=widget.name,
                                                 filename=self.content.items[0][0],
-                                                line_number=self.content.items[0][1] - 1)
+                                                line_number=self.content.items[0][1] - 1,
+                                                text_hash_short=text_hash_short)
                 if ('builder_latex' in self.state.state_machine.document.settings.env.app.tags.tags
                     and self.state.state_machine.document.settings.env.app.tags.tags['builder_latex']):
                     nodes_latex = self.create_static_node(widget, code_block_info, 'latex')

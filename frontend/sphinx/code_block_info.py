@@ -5,6 +5,7 @@ from typing import List, Dict
 import glob
 
 import os
+import json
 
 class CodeBlockInfo():
     """Code block info class
@@ -18,12 +19,14 @@ class CodeBlockInfo():
     def __init__(self,
                  project_name : str,
                  filename : str,
-                 line_number: int):
+                 line_number: int,
+                 text_hash_short: str):
         """Widget constructor
         """
         self.__project_name: str = project_name
         self.__filename: str = filename
         self.__line_number: int = line_number
+        self.__text_hash_short: str = text_hash_short
         self.__src_test_data_dir = ""
         self.__data_available = False
 
@@ -38,7 +41,7 @@ class CodeBlockInfo():
         return (self.__src_test_data_dir + "/" +
                 self.base_project_dir + "/" +
                 self.__get_project_dir() + "/" +
-                str(self.__line_number))
+                self.__text_hash_short)
 
     def get_info(self) -> Dict[str, str]:
         """
@@ -55,5 +58,15 @@ class CodeBlockInfo():
                 content = f.read()
                 log_type = os.path.splitext(os.path.basename(logfile))[0]
                 info[log_type] = content
+
+        block_info_json_file = code_block_dir + "/block_info.json"
+        if os.path.isfile(block_info_json_file):
+            with open(block_info_json_file, u'r') as f:
+                block_info_json = json.load(f)
+                info['_metadata'] = block_info_json
+        else:
+            info['_metadata'] = None
+
+        self.__info = info
 
         return info
