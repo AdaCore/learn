@@ -464,6 +464,40 @@ def analyze_file(rst_file):
                 error(*error_args)
                 print_diags()
 
+            def update_latest():
+
+                def expand_source_files():
+                    split = block.text.splitlines()
+
+                    source_files = list()
+                    if block.manual_chop:
+                        source_files = manual_chop(split)
+                    else:
+                        source_files = real_gnatchop(split)
+
+                    if len(source_files) == 0:
+                        print_error(loc, "Failed to chop example, skipping\n")
+                        analysis_error = True
+                        raise
+
+                    for source_file in source_files:
+                        with open(source_file.basename, u"w") as code_file:
+                            code_file.write(source_file.content)
+
+                    return source_files
+
+                source_files = expand_source_files()
+
+                return source_files
+
+
+            try:
+                source_files = update_latest()
+            except Exception as e:
+                print(e.message)
+                print("Error while updating code for the block, continuing with next one!")
+                continue
+
             no_check = any(sphinx_class in ["ada-nocheck", "c-nocheck"]
                            for sphinx_class in block.classes)
             if no_check:
@@ -474,23 +508,7 @@ def analyze_file(rst_file):
             if args.verbose:
                 print(header("Checking code block {}".format(loc)))
 
-            split = block.text.splitlines()
-
-            source_files = list()
-            if block.manual_chop:
-                source_files = manual_chop(split)
-            else:
-                source_files = real_gnatchop(split)
-
-            if len(source_files) == 0:
-                print_error(loc, "Failed to chop example, skipping\n")
-                analysis_error = True
-                continue
-
             for source_file in source_files:
-
-                with open(source_file.basename, u"w") as code_file:
-                    code_file.write(source_file.content)
 
                 try:
                     if block.language == "ada":
