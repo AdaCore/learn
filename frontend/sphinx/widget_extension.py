@@ -127,6 +127,12 @@ class WidgetCodeDirective(Directive):
                     'compile' : '\\textbf{Compilation output}',
                     'prove'   : '\\textbf{Prover output}'
                 }
+
+                if info_type in known_info_type:
+                    return known_info_type[info_type]
+                else:
+                    return ''
+
             if node_format == 'html':
                 known_info_type = {
                     'build'   : r"<div class='literal-block-preamble'>Build output</div>",
@@ -135,10 +141,10 @@ class WidgetCodeDirective(Directive):
                     'prove'   : r"<div class='literal-block-preamble'>Prover output</div>"
                 }
 
-            if info_type in known_info_type:
-                return known_info_type[info_type]
-            else:
-                return "Let's " + info_type + " the example:"
+                if info_type in known_info_type:
+                    return known_info_type[info_type]
+                else:
+                    return "Let's " + info_type + " the example:"
 
         block_info : Dict[str, str] = code_block_info.get_info()
 
