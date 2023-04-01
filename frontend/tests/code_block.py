@@ -4,8 +4,9 @@ from typing import List, Optional
 from colors import col, Colors
 
 class CodeBlock:
-    def __init__(self, line_start, line_end, text, language, project,
+    def __init__(self, rst_file, line_start, line_end, text, language, project,
                  main_file, compiler_switches, classes, manual_chop, buttons, src_file):
+        self.rst_file: str = rst_file
         self.line_start: int = line_start
         self.line_end: int = line_end
         self.text: str = text

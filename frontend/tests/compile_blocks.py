@@ -37,7 +37,7 @@ from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 
 class Block(object):
     @staticmethod
-    def get_blocks(input_text):
+    def get_blocks(rst_file, input_text):
         lang_re = re.compile("\s*.. code::\s*(\w+)?\s*")
         project_re = re.compile("\s*.. code::.*project=(\S+)?")
         main_re = re.compile("\s*.. code::.*main=(\S+)?")
@@ -81,6 +81,7 @@ class Block(object):
 
             if indent < cb_indent and not is_empty(line):
                 blocks.append(CodeBlock(
+                    rst_file,
                     cb_start,
                     i,
                     "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
@@ -134,11 +135,11 @@ class Block(object):
                         for l in compiler_switches.groups()[0].split(",")]
 
         def start_config_block(i, line, indent):
-            blocks.append(ConfigBlock(**dict(
-                kv.split('=')
-                for kv
-                in code_config_re.findall(line)[0].split(";")
-            )))
+            blocks.append(ConfigBlock(rst_file,
+                **dict(
+                    kv.split('=')
+                    for kv in code_config_re.findall(line)[0].split(";"))
+            ))
 
 
         for i, (line, indent) in enumerate(zip(lines, indents)):
@@ -167,8 +168,9 @@ class Block(object):
 
 
 class CodeBlock(Block):
-    def __init__(self, line_start, line_end, text, language, project,
+    def __init__(self, rst_file, line_start, line_end, text, language, project,
                  main_file, compiler_switches, classes, manual_chop, buttons):
+        self.rst_file = rst_file
         self.line_start = line_start
         self.line_end = line_end
         self.text = text
@@ -335,7 +337,7 @@ def analyze_file(rst_file):
 
     blocks = list(enumerate(filter(
         lambda b: b.language in ["ada", "c"] if isinstance(b, CodeBlock) else True,
-        Block.get_blocks(content)
+        Block.get_blocks(rst_file, content)
     )))
 
     code_blocks = [(i, b) for i, b in blocks if isinstance(b, CodeBlock)]
