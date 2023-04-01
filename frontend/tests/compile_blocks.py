@@ -81,11 +81,14 @@ class Block(object):
                 cb_indent = indent
 
             if indent < cb_indent and not is_empty(line):
+                text = ("\n".join(l[cb_indent:] for l in lines[cb_start:i]))
+                text = text[1:]     # Remove first newline
+
                 blocks.append(CodeBlock(
                     rst_file,
                     cb_start,
                     i,
-                    "\n".join(l[cb_indent:] for l in lines[cb_start:i]),
+                    text,
                     lang,
                     project,
                     main_file,
