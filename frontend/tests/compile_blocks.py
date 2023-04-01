@@ -791,6 +791,8 @@ def analyze_file(rst_file):
                 except S.CalledProcessError as e:
                     out = str(e.output.decode("utf-8"))
 
+            output_block_info(block)
+
             if args.all_diagnostics:
                 print_diags()
 
