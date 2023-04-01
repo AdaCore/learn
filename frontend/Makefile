@@ -22,6 +22,9 @@ HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 WEBSOCKET_URL_PROD      = wss://api.learn.r53.adacore.com
 export CODE_SERVER_URL := wss://api-sandbox.learn.r53.adacore.com
 
+COMPLETE_SITE_BOOK = learning-ada
+
+
 help:
 	@echo "make test_content  - run the testsuite"
 	@echo "make test_engine  - generate the engine test html"
@@ -98,6 +101,11 @@ test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	test_ada_for_the_embedded_c_developer \
 	test_training_fundamentals \
 	test_gnat_toolchain_intro
+	@cd $(SRC_TEST_DIR) \
+		&& zip -9 -r $(COMPLETE_SITE_BOOK)_code.zip . \
+			-x "*.log" -x "*/latest*"
+	@mkdir -p $(BUILDDIR)/zip
+	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
 
 test_lambda_ada_intro:
 	@echo "===== INTRO TO ADA ====="
@@ -229,8 +237,6 @@ site-testing: cleantest
         "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
-
-COMPLETE_SITE_BOOK = learning-ada
 
 PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 
