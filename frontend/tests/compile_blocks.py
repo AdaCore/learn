@@ -32,6 +32,7 @@ import colors as C
 import shutil
 import glob
 import re
+import hashlib
 from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 
 
@@ -183,6 +184,10 @@ class CodeBlock(Block):
         self.buttons = buttons
         self.run = True
 
+        # Hash of source-code
+        str_text = str(self.text).encode("utf-8")
+        self.text_hash: str = hashlib.sha512(str_text).hexdigest()
+        self.text_hash_short: str = hashlib.md5(str_text).hexdigest()
 
 class ConfigBlock(Block):
     def __init__(self, **opts):
