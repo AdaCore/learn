@@ -5,6 +5,7 @@ from typing import List, Dict
 import glob
 
 import os
+import json
 
 class CodeBlockInfo():
     """Code block info class
@@ -56,4 +57,11 @@ class CodeBlockInfo():
                 log_type = os.path.splitext(os.path.basename(logfile))[0]
                 info[log_type] = content
 
+        block_info_json_file = code_block_dir + "/block_info.json"
+        if os.path.isfile(block_info_json_file):
+            with open(block_info_json_file, u'r') as f:
+                block_info_json = json.load(f)
+                info['_metadata'] = block_info_json
+        else:
+            info['_metadata'] = None
         return info
