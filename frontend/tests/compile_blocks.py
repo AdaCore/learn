@@ -508,6 +508,7 @@ def analyze_file(rst_file):
             if args.verbose:
                 print(header("Checking code block {}".format(loc)))
 
+            # Syntax check
             for source_file in source_files:
 
                 try:
