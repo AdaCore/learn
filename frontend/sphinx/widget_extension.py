@@ -208,6 +208,10 @@ class WidgetCodeDirective(Directive):
 
         for info_type in sorted(block_info):
 
+            if info_type == "_metadata":
+                # Do not add metadata block
+                continue
+
             if block_info[info_type] == "":
                 # Do not add empty info blocks
                 continue
