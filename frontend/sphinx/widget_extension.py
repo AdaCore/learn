@@ -213,7 +213,8 @@ class WidgetCodeDirective(Directive):
                 continue
 
             results[info_type] = str(block_info[info_type])
-            print(str(block_info[info_type]))
+            # print("---- " + info_type + ":")
+            # print(str(block_info[info_type]))
 
         return results
 
