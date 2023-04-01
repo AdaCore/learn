@@ -121,6 +121,10 @@
                             <a class="ebook-download-button" href="/epub_books/learning-ada.epub">
                                 EPUB
                             </a>
+
+                            <a class="ebook-download-button" href="/zip/learning-ada_code.zip">
+                                ZIP (source code)
+                            </a>
                         </div>
 
 
