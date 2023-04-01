@@ -94,18 +94,23 @@ test_training_fundamentals:
 	@echo ""
 
 test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
-	test_advanced_ada test_advanced_spark \
 	test_whats_new_in_ada_2022 \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
 	test_ada_for_the_embedded_c_developer \
-	test_training_fundamentals \
 	test_gnat_toolchain_intro
 	@cd $(SRC_TEST_DIR) \
 		&& zip -9 -r $(COMPLETE_SITE_BOOK)_code.zip . \
 			-x "*.log" -x "*/latest*"
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
+
+test_hidden_content: test_advanced_ada test_advanced_spark \
+	test_training_fundamentals
+	@echo ""
+
+test_all_content: test_content test_hidden_content
+	@echo ""
 
 test_lambda_ada_intro:
 	@echo "===== INTRO TO ADA ====="
