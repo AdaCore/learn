@@ -122,6 +122,7 @@ class WidgetCodeDirective(Directive):
 
             if node_format == 'latex':
                 known_info_type = {
+                    '_metadata' : '\\textbf{Code block metadata}',
                     'build'   : '\\textbf{Build output}',
                     'run'     : '\\textbf{Runtime output}',
                     'compile' : '\\textbf{Compilation output}',
@@ -135,6 +136,7 @@ class WidgetCodeDirective(Directive):
 
             if node_format == 'html':
                 known_info_type = {
+                    '_metadata' : r"<div class='literal-block-preamble'>Metadata</div>",
                     'build'   : r"<div class='literal-block-preamble'>Build output</div>",
                     'run'     : r"<div class='literal-block-preamble'>Runtime output</div>",
                     'compile' : r"<div class='literal-block-preamble'>Compilation output</div>",
@@ -150,11 +152,21 @@ class WidgetCodeDirective(Directive):
 
         for info_type in sorted(block_info):
 
-            if block_info[info_type] == "":
+            if (block_info[info_type] is None or
+                block_info[info_type] == ""):
                 # Do not show empty boxes
                 continue
 
             output_info = block_info[info_type]
+            if info_type == "_metadata":
+                output_info = ("Project: " +
+                    block_info[info_type]['project'])
+                output_info += '\n'
+                output_info += ("MD5: " +
+                    block_info[info_type]['text_hash_short'])
+                # output_info += '\n'
+                # output_info += str(block_info[info_type])
+
             preamble_node = nodes.container(
                 '', literal_block=False,
                 classes=[])
