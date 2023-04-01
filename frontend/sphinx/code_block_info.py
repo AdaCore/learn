@@ -64,4 +64,7 @@ class CodeBlockInfo():
                 info['_metadata'] = block_info_json
         else:
             info['_metadata'] = None
+
+        self.__info = info
+
         return info
