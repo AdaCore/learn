@@ -576,6 +576,7 @@ def analyze_file(rst_file):
                     main_file = source_files[-1].basename
                 return main_file
 
+            project_filename = None
 
             if compile_block:
 
@@ -780,6 +781,15 @@ def analyze_file(rst_file):
                 analysis_error = True
             elif args.verbose:
                 print(C.col("SUCCESS", C.Colors.GREEN))
+
+            # Clean-up source-code examples after compilation
+            if (block.language == "ada" and
+                project_filename is not None):
+
+                try:
+                    run("gprclean", "-P", project_filename)
+                except S.CalledProcessError as e:
+                    out = str(e.output.decode("utf-8"))
 
             if args.all_diagnostics:
                 print_diags()
