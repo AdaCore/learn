@@ -434,9 +434,9 @@ def analyze_file(rst_file):
                 if e.errno != errno.EEXIST:
                     raise
 
-            os.chdir(project_dir)
+            return project_dir
 
-        init_project_dir(project)
+        project_dir = init_project_dir(project)
 
         if args.verbose:
             print(header("Checking project {}".format(project)))
@@ -446,6 +446,8 @@ def analyze_file(rst_file):
             if isinstance(block, ConfigBlock):
                 current_config.update(block)
                 continue
+
+            os.chdir(work_dir)  # change to work directory using absolute path
 
             has_error = False
             loc = "at {}:{} (code block #{})".format(
@@ -463,6 +465,11 @@ def analyze_file(rst_file):
             def print_error(*error_args):
                 error(*error_args)
                 print_diags()
+
+            def chdir_project():
+                # combining path to work directory (absolute path)
+                # and current project directory
+                os.chdir(work_dir + "/" + project_dir)
 
             def update_latest():
 
@@ -486,17 +493,36 @@ def analyze_file(rst_file):
 
                     return source_files
 
+                chdir_project()
+
+                latest_project_dir = "latest"
+                os.makedirs(latest_project_dir, exist_ok=True)
+                os.chdir(latest_project_dir)
+
                 source_files = expand_source_files()
+                chdir_project()
 
-                return source_files
+                return latest_project_dir, source_files
 
+
+            def prepare_project_block_dir(latest_project_dir):
+
+                project_block_dir = str(block.text_hash_short)
+                if not os.path.exists(project_block_dir):
+                    # os.makedirs(project_block_dir)
+                    shutil.copytree(latest_project_dir, project_block_dir)
+
+                return project_block_dir
 
             try:
-                source_files = update_latest()
+                latest_project_dir, source_files = update_latest()
             except Exception as e:
                 print(e.message)
                 print("Error while updating code for the block, continuing with next one!")
                 continue
+
+            project_block_dir = prepare_project_block_dir(latest_project_dir)
+            os.chdir(project_block_dir)
 
             no_check = any(sphinx_class in ["ada-nocheck", "c-nocheck"]
                            for sphinx_class in block.classes)
@@ -550,18 +576,10 @@ def analyze_file(rst_file):
                     main_file = source_files[-1].basename
                 return main_file
 
-            def make_project_block_dir():
-                project_block_dir = str(block.line_start)
-                if not os.path.exists(project_block_dir):
-                    os.makedirs(project_block_dir)
-
-                return project_block_dir
 
             if compile_block:
 
                 main_file = get_main_filename(block)
-
-                project_block_dir = make_project_block_dir()
 
                 main_file = None
                 if run_block:
@@ -586,7 +604,7 @@ def analyze_file(rst_file):
                         out = str(e.output.decode("utf-8"))
 
                     out = remove_string(out, "using project")
-                    with open(project_block_dir + "/build.log", u"w") as logfile:
+                    with open("build.log", u"w") as logfile:
                         logfile.write(out)
 
                 elif block.language == "c":
@@ -602,7 +620,7 @@ def analyze_file(rst_file):
                             print(e.output)
                             has_error = True
                         out = str(e.output.decode("utf-8"))
-                    with open(project_block_dir + "/build.log", u"w") as logfile:
+                    with open("build.log", u"w") as logfile:
                         logfile.write(out)
 
                 if not compile_error and not has_error and run_block:
@@ -626,7 +644,7 @@ def analyze_file(rst_file):
 
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/run.log", u"w") as logfile:
+                        with open("run.log", u"w") as logfile:
                             logfile.write(out)
 
                     elif block.language == "c":
@@ -648,7 +666,7 @@ def analyze_file(rst_file):
                                 has_error = True
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/run.log", u"w") as logfile:
+                        with open("run.log", u"w") as logfile:
                             logfile.write(out)
 
             if False:
@@ -666,7 +684,7 @@ def analyze_file(rst_file):
                                 has_error = True
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/compile.log", u"w+") as logfile:
+                        with open("compile.log", u"w+") as logfile:
                             logfile.write(out)
 
                     elif block.language == "c":
@@ -680,13 +698,12 @@ def analyze_file(rst_file):
                                 has_error = True
                             out = str(e.output.decode("utf-8"))
 
-                        with open(project_block_dir + "/compile.log", u"w+") as logfile:
+                        with open("compile.log", u"w+") as logfile:
                             logfile.write(out)
 
             if prove_block:
 
                 if block.language == "ada":
-                    project_block_dir = make_project_block_dir()
 
                     main_file = get_main_filename(block)
                     spark_mode = True
@@ -724,7 +741,7 @@ def analyze_file(rst_file):
                         out = str(e.output.decode("utf-8"))
 
                     out = remove_string(out, "Summary logged in")
-                    with open(project_block_dir + "/prove.log", u"w") as logfile:
+                    with open("prove.log", u"w") as logfile:
                         logfile.write(out)
                 else:
                     print_error(loc, "Wrong language selected for prove button")

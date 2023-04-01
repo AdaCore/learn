@@ -19,12 +19,14 @@ class CodeBlockInfo():
     def __init__(self,
                  project_name : str,
                  filename : str,
-                 line_number: int):
+                 line_number: int,
+                 text_hash_short: str):
         """Widget constructor
         """
         self.__project_name: str = project_name
         self.__filename: str = filename
         self.__line_number: int = line_number
+        self.__text_hash_short: str = text_hash_short
         self.__src_test_data_dir = ""
         self.__data_available = False
 
@@ -39,7 +41,7 @@ class CodeBlockInfo():
         return (self.__src_test_data_dir + "/" +
                 self.base_project_dir + "/" +
                 self.__get_project_dir() + "/" +
-                str(self.__line_number))
+                self.__text_hash_short)
 
     def get_info(self) -> Dict[str, str]:
         """
