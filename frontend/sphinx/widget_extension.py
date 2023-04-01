@@ -154,6 +154,7 @@ class WidgetCodeDirective(Directive):
                 # Do not show empty boxes
                 continue
 
+            output_info = block_info[info_type]
             preamble_node = nodes.container(
                 '', literal_block=False,
                 classes=[])
@@ -169,7 +170,7 @@ class WidgetCodeDirective(Directive):
                 classes=['literal-block-wrapper'])
 
             literal = nodes.literal_block('',
-                                          block_info[info_type],
+                                          output_info,
                                           format=node_format)
             literal['language'] = 'none'
             literal['source'] = info_type
