@@ -3,6 +3,76 @@ Types and Representation
 
 .. include:: ../../global.txt
 
+.. _Adv_Ada_Enumeration_Representation_Clauses:
+
+Enumeration Representation Clauses
+----------------------------------
+
+We may change the
+:ref:`internal code of an enumeration <Adv_Ada_Enumeration_Position_Internal_Code>`
+using a representation clause, which has the following format:
+
+.. code-block:: ada
+
+    for Primary_Color is (Red   =>    1,
+                          Green =>    5,
+                          Blue  => 1000);
+
+The value of each code in a representation clause must be distinct. However, as
+you can see above, we don't need to use sequential values |mdash| the values
+must, however, increase for each enumeration.
+
+We can rewrite the previous example using a representation clause:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Values
+
+    package Days is
+
+       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+       for Day use (Mon => 2#00000001#, Tue => 2#00000010#,
+                    Wed => 2#00000100#, Thu => 2#00001000#,
+                    Fri => 2#00010000#, Sat => 2#00100000#,
+                    Sun => 2#01000000#);
+
+    end Days;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Days;        use Days;
+
+    procedure Show_Days is
+    begin
+       for D in Day loop
+          Put_Line (Day'Image (D) & " position      = "
+                    & Integer'Image (Day'Pos (D)));
+          Put_Line (Day'Image (D) & " internal code = "
+                    & Integer'Image (Day'Enum_Rep (D)));
+       end loop;
+    end Show_Days;
+
+Now, the value of the internal code is the one that we've specified in the
+representation clause instead of being equivalent to the value of the
+enumeration position.
+
+In the example above, we're using binary values for each enumeration |mdash|
+basically viewing the integer value as a bit-field and assigning one bit for
+each enumeration. As long as we maintain an increasing order, we can use
+totally arbitrary values as well. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Enumeration_Values
+
+    package Days is
+
+       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+
+       for Day use (Mon =>  5, Tue =>  9,
+                    Wed => 42, Thu => 49,
+                    Fri => 50, Sat => 66,
+                    Sun => 99);
+
+    end Days;
+
+
 Data Representation
 -------------------
 
