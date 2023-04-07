@@ -1171,208 +1171,211 @@ This also means that, in the assignment to :ada:`V`, we're actually writing
 This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
 1.3009 x 10\ :sup:`7` when we run this application.
 
-Model-oriented attributes
-~~~~~~~~~~~~~~~~~~~~~~~~~
+..
+    TO BE IMPROVED:
 
-In this section, we discuss model-oriented attributes. Depending on the
-programming languages you're accustomed to, the notion of a "model" of
-arithmetic might sound unfamiliar. This is how the Ada Reference Manual
-defines it:
+    Model-oriented attributes
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-| Associated with each floating point type is an infinite set of model numbers.
-| The model numbers of a type are used to define the accuracy requirements that
-| have to be satisfied by certain predefined operations of the type; through
-| certain attributes of the model numbers, they are also used to explain the
-| meaning of a user-declared floating point type declaration.
+    In this section, we discuss model-oriented attributes. Depending on the
+    programming languages you're accustomed to, the notion of a "model" of
+    arithmetic might sound unfamiliar. This is how the Ada Reference Manual
+    defines it:
 
-.. admonition:: In the Ada Reference Manual
+    | Associated with each floating point type is an infinite set of model numbers.
+    | The model numbers of a type are used to define the accuracy requirements that
+    | have to be satisfied by certain predefined operations of the type; through
+    | certain attributes of the model numbers, they are also used to explain the
+    | meaning of a user-declared floating point type declaration.
 
-    - :arm:`G.2.1 Model of Floating Point Arithmetic <G-2-1>`
+    .. admonition:: In the Ada Reference Manual
 
-Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        - :arm:`G.2.1 Model of Floating Point Arithmetic <G-2-1>`
 
-The :ada:`'Model_Mantissa` attribute is similar to the :ada:`Machine_Mantissa`
-attribute, but it returns the number of bits for the mantissa based on the
-underlying numeric model for floating-point operations.
+    Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. admonition:: Attention
+    The :ada:`'Model_Mantissa` attribute is similar to the :ada:`Machine_Mantissa`
+    attribute, but it returns the number of bits for the mantissa based on the
+    underlying numeric model for floating-point operations.
 
-    We can only say that :ada:`'Model_Mantissa` returns the "number of bits" of
-    the mantissa if :ada:`Machine_Radix` is equal to two. As this is typically
-    the case for most machines, this simplification is acceptable. However,
-    if :ada:`Machine_Radix` is *not* equal to two, we're talking about "number
-    of digits" in the :ada:`Machine_Radix`.
+    .. admonition:: Attention
 
-The :ada:`'Model_Emin` attribute is similar to the :ada:`Machine_Emin`
-attribute, but it returns the minimum machine exponent based on the underlying
-numeric model for floating-point operations.
+        We can only say that :ada:`'Model_Mantissa` returns the "number of bits" of
+        the mantissa if :ada:`Machine_Radix` is equal to two. As this is typically
+        the case for most machines, this simplification is acceptable. However,
+        if :ada:`Machine_Radix` is *not* equal to two, we're talking about "number
+        of digits" in the :ada:`Machine_Radix`.
 
-Let's see an example:
+    The :ada:`'Model_Emin` attribute is similar to the :ada:`Machine_Emin`
+    attribute, but it returns the minimum machine exponent based on the underlying
+    numeric model for floating-point operations.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Mantissa
+    Let's see an example:
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Mantissa
 
-    procedure Show_Model_Mantissa_Emin is
-    begin
-       Put_Line ("Float'Model_Mantissa:           " &
-                 Float'Model_Mantissa'Image);
-       Put_Line ("Long_Float'Model_Mantissa:      " &
-                 Long_Float'Model_Mantissa'Image);
-       Put_Line ("Long_Long_Float'Model_Mantissa: " &
-                 Long_Long_Float'Model_Mantissa'Image);
-       Put_Line ("Float'Model_Emin:               " &
-                 Float'Model_Emin'Image);
-       Put_Line ("Long_Float'Model_Emin:          " &
-                 Long_Float'Model_Emin'Image);
-       Put_Line ("Long_Long_Float'Model_Emin:     " &
-                 Long_Long_Float'Model_Emin'Image);
-    end Show_Model_Mantissa_Emin;
+        with Ada.Text_IO; use Ada.Text_IO;
 
-
-Attributes: :ada:`'Model_Epsilon` and :ada:`Model_Small`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-:ada:`'Model_Epsilon` is an attribute that returns the
-:wikipedia:`epsilon <Machine_epsilon>` of the underlying
-numeric model. For example, for the :ada:`Float` type, the :ada:`Model_Epsilon`
-corresponds to 2\ :sup:`-23` on a typical desktop PC. (Here, 23 comes from the
-mantissa, 24 bits, minus the sign bit.)
-
-:ada:`'Model_Small` is an attribute that returns the smallest value
-representable with the underlying numeric model. It corresponds to
-:ada:`Machine_Radix ** (-Model_Emin - 1)`. For example, for the :ada:`Float`
-type, this roughly corresponds to
-:ada:`Float (Float'Machine_Radix) ** (Float'Model_Emin - 1)`, or
-2\ :sup:`(-125 - 1)`. Note that the result of this calculation is of
-:ada:`Float` type, while the result of :ada:`Float'Model_Small` is a universal
-real.
-
-Let's see some examples:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Epsilon_Small
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Show_Model_Epsilon_Small is
-    begin
-       Put_Line ("Float'Model_Epsilon:           " &
-                 Float'Model_Epsilon'Image);
-       Put_Line ("Long_Float'Model_Epsilon:      " &
-                 Long_Float'Model_Epsilon'Image);
-       Put_Line ("Long_Long_Float'Model_Epsilon: " &
-                 Long_Long_Float'Model_Epsilon'Image);
-       Put_Line ("Float'Model_Small:           " &
-                 Float'Model_Small'Image);
-       Put_Line ("Long_Float'Model_Small:      " &
-                 Long_Float'Model_Small'Image);
-       Put_Line ("Long_Long_Float'Model_Small: " &
-                 Long_Long_Float'Model_Small'Image);
-    end Show_Model_Epsilon_Small;
-
-Attribute: :ada:`'Model`
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-The :ada:`'Model` attribute is similar to the :ada:`'Machine` attribute that
-:ref:`we discussed earlier on <Adv_Ada_Machine_Attribute>`. The difference is
-that, instead of returning a version of :ada:`X` that is representable on the
-target machine (as the :ada:`'Machine (X)` attribute does), :ada:`'Model (X)`
-returns a version of :ada:`X` that is representable on the model that is being
-used. This is performed by rounding or truncating :ada:`X` to either one of the
-adjacent model numbers for the specific floating-point type of :ada:`X`.
-(As expected, if the real value of :ada:`X` is representable in the model, no
-modification is performed.)
-
-For example, let's say we want to calculate the difference between the real
-value in 1.0 x 10\ :sup:`15` and the actual model value, we can use the
-:ada:`'Model` attribute:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Attribute
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Show_Model_Attribute is
-       package F_IO is new Ada.Text_IO.Float_IO (Float);
-
-       V : Float;
-    begin
-       F_IO.Default_Fore := 3;
-       F_IO.Default_Aft  := 1;
-       F_IO.Default_Exp  := 0;
-
-       Put_Line ("Original value: 1_000_000_000_000_000.0");
-
-       V := 1.0E+15;
-       Put ("Model value:    ");
-       F_IO.Put (Item => V);
-       New_Line;
-
-       V := 1.0E+15 - Float'Model (1.0E+15);
-       Put ("Difference:     ");
-       F_IO.Put (Item => V);
-       New_Line;
-
-    end Show_Model_Attribute;
-
-When running this example on a typical PC, we see that the difference is
-roughly 1.3009 x 10\ :sup:`7`. (Actually, the value we see is
-1.3008896 x 10\ :sup:`7`.)
-
-Depending on the model that is being used, the subtraction
-:ada:`1.0E+15 - Float'Model (1.0E+15)` might gives us the same value as
-:ada:`1.0E+15 - Float'Machine (1.0E+15)` or not. For example, the result is the
-same if the 32-bit IEEE floating-point model from the ISO/IEC 60559:2020
-standard is being used.
+        procedure Show_Model_Mantissa_Emin is
+        begin
+           Put_Line ("Float'Model_Mantissa:           " &
+                     Float'Model_Mantissa'Image);
+           Put_Line ("Long_Float'Model_Mantissa:      " &
+                     Long_Float'Model_Mantissa'Image);
+           Put_Line ("Long_Long_Float'Model_Mantissa: " &
+                     Long_Long_Float'Model_Mantissa'Image);
+           Put_Line ("Float'Model_Emin:               " &
+                     Float'Model_Emin'Image);
+           Put_Line ("Long_Float'Model_Emin:          " &
+                     Long_Float'Model_Emin'Image);
+           Put_Line ("Long_Long_Float'Model_Emin:     " &
+                     Long_Long_Float'Model_Emin'Image);
+        end Show_Model_Mantissa_Emin;
 
 
-Attributes: :ada:`'Safe_First` and :ada:`Safe_Last`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    Attributes: :ada:`'Model_Epsilon` and :ada:`Model_Small`
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`Safe_First` and :ada:`Safe_Last` attributes return the safe range of
-a type based on the underlying numeric model. As indicated by the Ada Reference
-Manual, this is the range "for which the accuracy corresponding to the base
-decimal precision is preserved by all predefined operations."
+    :ada:`'Model_Epsilon` is an attribute that returns the
+    :wikipedia:`epsilon <Machine_epsilon>` of the underlying
+    numeric model. For example, for the :ada:`Float` type, the :ada:`Model_Epsilon`
+    corresponds to 2\ :sup:`-23` on a typical desktop PC. (Here, 23 comes from the
+    mantissa, 24 bits, minus the sign bit.)
 
-Let's see a code example with these attributes and compare them to the
-:ada:`'First` and :ada:`'Last` attributes:
+    :ada:`'Model_Small` is an attribute that returns the smallest value
+    representable with the underlying numeric model. It corresponds to
+    :ada:`Machine_Radix ** (-Model_Emin - 1)`. For example, for the :ada:`Float`
+    type, this roughly corresponds to
+    :ada:`Float (Float'Machine_Radix) ** (Float'Model_Emin - 1)`, or
+    2\ :sup:`(-125 - 1)`. Note that the result of this calculation is of
+    :ada:`Float` type, while the result of :ada:`Float'Model_Small` is a universal
+    real.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Safe_First_Last
+    Let's see some examples:
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Epsilon_Small
 
-    procedure Show_Safe_First_Last is
-    begin
-       Put_Line ("Float'First:                " &
-                 Float'First'Image);
-       Put_Line ("Float'Last:                 " &
-                 Float'Last'Image);
-       Put_Line ("Float'Safe_First:           " &
-                 Float'Safe_First'Image);
-       Put_Line ("Float'Safe_Last:            " &
-                 Float'Safe_Last'Image);
-       Put_Line ("Long_Float'First:           " &
-                 Long_Float'First'Image);
-       Put_Line ("Long_Float'Last:            " &
-                 Long_Float'Last'Image);
-       Put_Line ("Long_Float'Safe_First:      " &
-                 Long_Float'Safe_First'Image);
-       Put_Line ("Long_Float'Safe_Last:       " &
-                 Long_Float'Safe_Last'Image);
-       Put_Line ("Long_Long_Float'First:      " &
-                 Long_Long_Float'First'Image);
-       Put_Line ("Long_Long_Float'Last:       " &
-                 Long_Long_Float'Last'Image);
-       Put_Line ("Long_Long_Float'Safe_First: " &
-                 Long_Long_Float'Safe_First'Image);
-       Put_Line ("Long_Long_Float'Safe_Last:  " &
-                 Long_Long_Float'Safe_Last'Image);
-    end Show_Safe_First_Last;
+        with Ada.Text_IO; use Ada.Text_IO;
 
-When comparing :ada:`Float'First` to :ada:`Float'Safe_First`, we see that the
-values are similar. However, :ada:`Float'Safe_First` has the precision of a
-universal real, while :ada:`Float'First` is limited to the precision of the
-:ada:`Float` type.
+        procedure Show_Model_Epsilon_Small is
+        begin
+           Put_Line ("Float'Model_Epsilon:           " &
+                     Float'Model_Epsilon'Image);
+           Put_Line ("Long_Float'Model_Epsilon:      " &
+                     Long_Float'Model_Epsilon'Image);
+           Put_Line ("Long_Long_Float'Model_Epsilon: " &
+                     Long_Long_Float'Model_Epsilon'Image);
+           Put_Line ("Float'Model_Small:           " &
+                     Float'Model_Small'Image);
+           Put_Line ("Long_Float'Model_Small:      " &
+                     Long_Float'Model_Small'Image);
+           Put_Line ("Long_Long_Float'Model_Small: " &
+                     Long_Long_Float'Model_Small'Image);
+        end Show_Model_Epsilon_Small;
+
+    Attribute: :ada:`'Model`
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+    The :ada:`'Model` attribute is similar to the :ada:`'Machine` attribute that
+    :ref:`we discussed earlier on <Adv_Ada_Machine_Attribute>`. The difference is
+    that, instead of returning a version of :ada:`X` that is representable on the
+    target machine (as the :ada:`'Machine (X)` attribute does), :ada:`'Model (X)`
+    returns a version of :ada:`X` that is representable on the model that is being
+    used. This is performed by rounding or truncating :ada:`X` to either one of the
+    adjacent model numbers for the specific floating-point type of :ada:`X`.
+    (As expected, if the real value of :ada:`X` is representable in the model, no
+    modification is performed.)
+
+    For example, let's say we want to calculate the difference between the real
+    value in 1.0 x 10\ :sup:`15` and the actual model value, we can use the
+    :ada:`'Model` attribute:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Model_Attribute
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Model_Attribute is
+           package F_IO is new Ada.Text_IO.Float_IO (Float);
+
+           V : Float;
+        begin
+           F_IO.Default_Fore := 3;
+           F_IO.Default_Aft  := 1;
+           F_IO.Default_Exp  := 0;
+
+           Put_Line ("Original value: 1_000_000_000_000_000.0");
+
+           V := 1.0E+15;
+           Put ("Model value:    ");
+           F_IO.Put (Item => V);
+           New_Line;
+
+           V := 1.0E+15 - Float'Model (1.0E+15);
+           Put ("Difference:     ");
+           F_IO.Put (Item => V);
+           New_Line;
+
+        end Show_Model_Attribute;
+
+    When running this example on a typical PC, we see that the difference is
+    roughly 1.3009 x 10\ :sup:`7`. (Actually, the value we see is
+    1.3008896 x 10\ :sup:`7`.)
+
+    Depending on the model that is being used, the subtraction
+    :ada:`1.0E+15 - Float'Model (1.0E+15)` might gives us the same value as
+    :ada:`1.0E+15 - Float'Machine (1.0E+15)` or not. For example, the result is the
+    same if the 32-bit IEEE floating-point model from the ISO/IEC 60559:2020
+    standard is being used.
+
+
+    Attributes: :ada:`'Safe_First` and :ada:`Safe_Last`
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    The :ada:`Safe_First` and :ada:`Safe_Last` attributes return the safe range of
+    a type based on the underlying numeric model. As indicated by the Ada Reference
+    Manual, this is the range "for which the accuracy corresponding to the base
+    decimal precision is preserved by all predefined operations."
+
+    Let's see a code example with these attributes and compare them to the
+    :ada:`'First` and :ada:`'Last` attributes:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Safe_First_Last
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Safe_First_Last is
+        begin
+           Put_Line ("Float'First:                " &
+                     Float'First'Image);
+           Put_Line ("Float'Last:                 " &
+                     Float'Last'Image);
+           Put_Line ("Float'Safe_First:           " &
+                     Float'Safe_First'Image);
+           Put_Line ("Float'Safe_Last:            " &
+                     Float'Safe_Last'Image);
+           Put_Line ("Long_Float'First:           " &
+                     Long_Float'First'Image);
+           Put_Line ("Long_Float'Last:            " &
+                     Long_Float'Last'Image);
+           Put_Line ("Long_Float'Safe_First:      " &
+                     Long_Float'Safe_First'Image);
+           Put_Line ("Long_Float'Safe_Last:       " &
+                     Long_Float'Safe_Last'Image);
+           Put_Line ("Long_Long_Float'First:      " &
+                     Long_Long_Float'First'Image);
+           Put_Line ("Long_Long_Float'Last:       " &
+                     Long_Long_Float'Last'Image);
+           Put_Line ("Long_Long_Float'Safe_First: " &
+                     Long_Long_Float'Safe_First'Image);
+           Put_Line ("Long_Long_Float'Safe_Last:  " &
+                     Long_Long_Float'Safe_Last'Image);
+        end Show_Safe_First_Last;
+
+    When comparing :ada:`Float'First` to :ada:`Float'Safe_First`, we see that the
+    values are similar. However, :ada:`Float'Safe_First` has the precision of a
+    universal real, while :ada:`Float'First` is limited to the precision of the
+    :ada:`Float` type.
 
 
 Fixed-Point Types
