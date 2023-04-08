@@ -1735,19 +1735,913 @@ want to declare objects of this type.
 Type conversion
 ---------------
 
+An important operation when dealing with objects of different types is type
+conversion, which we already discussed in the
+:ref:`Introduction to Ada course <Intro_Ada_Type_Conversion>`. In fact, we can
+convert an object :ada:`Obj_X` of an *operand* type :ada:`X` to a similar,
+closely related *target* type :ada:`Y` by simply indicating the target type:
+:ada:`Y (Obj_X)`. In this section, we discuss type conversions for different
+kinds of types.
+
+Ada distinguishes between two kinds of conversion: value conversion and view
+conversion. The main difference is the way how the operand (argument) of the
+conversion is evaluated:
+
+- in a value conversion, the operand is evaluated as an expression;
+
+.. todo::
+
+    Add link to section about expressions once it's available!
+
+- in a view conversion, the operand is evaluated as a name.
+
+In other words, we cannot use expressions such as :ada:`2 * A` in a view
+conversion, but only :ada:`A`. In a value conversion, we could use both forms.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm:`4.6 Type Conversions <4-6>`
 
-.. todo::
 
-    Complete section!
+Value conversion
+~~~~~~~~~~~~~~~~
 
-    Bried discussion on:
+Value conversions are possible for various types. In this section, we see some
+examples, starting with types derived from scalar types up to array
+conversions.
 
-    - type conversion
-    - view conversion
-    - value conversion
+Root and derived types
+^^^^^^^^^^^^^^^^^^^^^^
+
+Let's start with the conversion between a scalar type and its derived types.
+For example, we can convert back-and-forth between the :ada:`Integer` type and
+the derived :ada:`Int` type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Root_Derived_Type_Conversion
+
+    package Custom_Integers is
+
+       type Int is new Integer
+         with Dynamic_Predicate => Int /= 0;
+
+       function Double (I : Integer)
+                        return Integer is
+         (I * 2);
+
+    end Custom_Integers;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+    with Custom_Integers; use Custom_Integers;
+
+    procedure Show_Conversion is
+       Int_Var     : Int     := 1;
+       Integer_Var : Integer := 2;
+    begin
+       --  Int to Integer conversion
+       Integer_Var := Integer (Int_Var);
+
+       Put_Line ("Integer_Var : "
+                 & Integer_Var'Image);
+
+       --  Int to Integer conversion
+       --  as an actual parameter
+       Integer_Var := Double (Integer (Int_Var));
+
+       Put_Line ("Integer_Var : "
+                 & Integer_Var'Image);
+
+       --  Integer to Int conversion
+       --  using an expression
+       Int_Var     := Int (Integer_Var * 2);
+
+       Put_Line ("Int_Var :     "
+                 & Int_Var'Image);
+    end Show_Conversion;
+
+In the :ada:`Show_Conversion` procedure from this example, we first convert
+from :ada:`Int` to :ada:`Integer`. Then, we do the same conversion while
+providing the resulting value as an actual parameter for the :ada:`Double`
+function. Finally, we convert the :ada:`Integer_Var * 2` expression from
+:ada:`Integer` to :ada:`Int`.
+
+Note that the converted value must conform to any constraints that the target
+type might have. In the example above, :ada:`Int` has a predicate that dictates
+that its value cannot be zero. This (dynamic) predicate is checked at runtime,
+so an exception is raised if it fails:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Root_Derived_Type_Conversion
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+    with Custom_Integers; use Custom_Integers;
+
+    procedure Show_Conversion is
+       Int_Var     : Int;
+       Integer_Var : Integer;
+    begin
+       Integer_Var := 0;
+       Int_Var     := Int (Integer_Var);
+
+       Put_Line ("Int_Var : "
+                 & Int_Var'Image);
+    end Show_Conversion;
+
+In this case, the conversion from :ada:`Integer` to :ada:`Int` fails because,
+while zero is a valid integer value, it doesn't obey :ada:`Int`\'s predicate.
+
+
+Numeric type conversion
+^^^^^^^^^^^^^^^^^^^^^^^
+
+A typical conversion is the one between integer and floating-point values. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Numeric_Type_Conversion
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Conversion is
+       F : Float   := 1.0;
+       I : Integer := 2;
+    begin
+       I := Integer (F);
+
+       Put_Line ("I : "
+                 & I'Image);
+
+       I := 4;
+       F := Float (I);
+
+       Put_Line ("F :   "
+                 & F'Image);
+    end Show_Conversion;
+
+Also, we can convert between fixed-point types and floating-point or integer
+types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Numeric_Type_Conversion
+
+    package Fixed_Point_Defs is
+       S     : constant := 32;
+       Exp   : constant := 15;
+       D     : constant := 2.0 ** (-S + Exp + 1);
+
+       type TQ15_31 is delta D
+         range -1.0 * 2.0 ** Exp ..
+                1.0 * 2.0 ** Exp - D;
+
+       pragma Assert (TQ15_31'Size = S);
+    end Fixed_Point_Defs;
+
+    with Fixed_Point_Defs; use Fixed_Point_Defs;
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    procedure Show_Conversion is
+       F  : Float;
+       FP : TQ15_31;
+       I  : Integer;
+    begin
+       FP := TQ15_31 (10.25);
+       I  := Integer (FP);
+
+       Put_Line ("FP : "
+                 & FP'Image);
+       Put_Line ("I : "
+                 & I'Image);
+
+       I  := 128;
+       FP := TQ15_31 (I);
+       F  := Float (FP);
+
+       Put_Line ("FP : "
+                 & FP'Image);
+       Put_Line ("F :   "
+                 & F'Image);
+    end Show_Conversion;
+
+As we can see in the examples above, converting between different numeric types
+works in all directions. (Of course, rounding is applied when converting from
+floating-point to integer types, but this is expected.)
+
+
+Enumeration conversion
+^^^^^^^^^^^^^^^^^^^^^^
+
+We can also convert between an enumeration type and a type derived from it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Type_Conversion
+
+    package Custom_Enumerations is
+
+       type Priority is (Low, Mid, High);
+
+       type Important_Priority is new
+         Priority range Mid .. High;
+
+    end Custom_Enumerations;
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+    with Custom_Enumerations; use Custom_Enumerations;
+
+    procedure Show_Conversion is
+       P  : Priority           := Low;
+       IP : Important_Priority := High;
+    begin
+       P := Priority (IP);
+
+       Put_Line ("P:  "
+                 & P'Image);
+
+       P  := Mid;
+       IP := Important_Priority (P);
+
+       Put_Line ("IP: "
+                 & IP'Image);
+    end Show_Conversion;
+
+In this example, we have the :ada:`Priority` type and the derived type
+:ada:`Important_Priority`. As expected, the conversion works fine when the
+converted value is in the range of the target type. If not, an exception is
+raised:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Type_Conversion
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+    with Custom_Enumerations; use Custom_Enumerations;
+
+    procedure Show_Conversion is
+       P  : Priority;
+       IP : Important_Priority;
+    begin
+       P  := Low;
+       IP := Important_Priority (P);
+
+       Put_Line ("IP: "
+                 & IP'Image);
+    end Show_Conversion;
+
+In this example, an exception is raised because :ada:`Low` is not in the :ada:`Important_Priority` type's range.
+
+
+Array conversion
+^^^^^^^^^^^^^^^^
+
+Similarly, we can convert between array types. For example, if we have the
+array type :ada:`Integer_Array` and its derived type
+:ada:`Derived_Integer_Array`, we can convert between those array types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Array_Type_Conversion
+
+    package Custom_Arrays is
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Derived_Integer_Array is new Integer_Array;
+
+    end Custom_Arrays;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Custom_Arrays; use Custom_Arrays;
+
+    procedure Show_Conversion is
+       subtype Common_Range is Positive range 1 .. 3;
+
+       AI : Integer_Array (Common_Range);
+       AI_D : Derived_Integer_Array (Common_Range);
+    begin
+       AI_D := [1, 2, 3];
+       AI := Integer_Array (AI_D);
+
+       Put_Line ("AI: "
+                 & AI'Image);
+
+       AI   := [4, 5, 6];
+       AI_D := Derived_Integer_Array (AI);
+
+       Put_Line ("AI_D: "
+                 & AI_D'Image);
+    end Show_Conversion;
+
+Note that both arrays must have the same number of components in order for the
+conversion to be successful. (Sliding is fine, though.) In this example, both
+arrays have the same range: :ada:`Common_Range`.
+
+We can also convert between array types that aren't derived one from the
+other. As long as the components are of the same type, the conversion between
+those types is possible. This can be very handy when we have types that were
+declared in different packages, but have the same component type.
+
+Converting between different array types can be very handy, especially when
+we're dealing with array types that were not declared in the same package. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Array_Type_Conversion
+
+    package Custom_Arrays_1 is
+
+       type Integer_Array_1 is array (Positive range <>) of Integer;
+
+       type Float_Array_1 is array (Positive range <>) of Float;
+
+    end Custom_Arrays_1;
+
+    package Custom_Arrays_2 is
+
+       type Integer_Array_2 is array (Positive range <>) of Integer;
+
+       type Float_Array_2 is array (Positive range <>) of Float;
+
+    end Custom_Arrays_2;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+    with Custom_Arrays_1; use Custom_Arrays_1;
+    with Custom_Arrays_2; use Custom_Arrays_2;
+
+    procedure Show_Conversion is
+       subtype Common_Range is Positive range 1 .. 3;
+
+       AI_1 : Integer_Array_1 (Common_Range);
+       AI_2 : Integer_Array_2 (Common_Range);
+       AF_1 : Float_Array_1 (Common_Range);
+       AF_2 : Float_Array_2 (Common_Range);
+    begin
+       AI_2 := [1, 2, 3];
+       AI_1 := Integer_Array_1 (AI_2);
+
+       Put_Line ("AI_1: "
+                 & AI_1'Image);
+
+       AI_1 := [4, 5, 6];
+       AI_2 := Integer_Array_2 (AI_1);
+
+       Put_Line ("AI_2: "
+                 & AI_2'Image);
+
+       --  ERROR: Cannot convert arrays whose components
+       --         have different types:
+       --
+       --  AF_1 := Float_Array_1 (AI_1);
+       --
+       --  Instead, use array aggregate where each
+       --  component is converted from integer to float:
+       --
+       AF_1 := [for I in AF_1'Range => Float (AI_1 (I))];
+
+       Put_Line ("AF_1: "
+                 & AF_1'Image);
+
+       AF_2 := Float_Array_2 (AF_1);
+
+       Put_Line ("AF_2: "
+                 & AF_2'Image);
+    end Show_Conversion;
+
+As we can see in this example, the fact that :ada:`Integer_Array_1` and
+:ada:`Integer_Array_2` have the same component type (:ada:`Integer`) allows us
+to convert between them. The same applies to the :ada:`Float_Array_1` and
+:ada:`Float_Array_2` types.
+
+A conversion is not possible when the component types don't match. Even though
+we can convert between integer and floating-point types, we cannot convert an
+array of integers to an array of floating-point directly. Therefore, we cannot
+write a statement such as :ada:`AF_1 := Float_Array_1 (AI_1);`.
+
+However, when the components don't match, we can of course implement the array
+conversion by converting the individual components. For the example above, we
+used an iterated component association in an array aggregate:
+:ada:`[for I in AF_1'Range => Float (AI_1 (I))];`. (We discuss this topic later
+:ref:`in another chapter <Adv_Ada_Array_Aggregates>`.)
+
+We may also encounter array types originating from the instantiation of generic
+packages. In this case as well, we can use array conversions. Consider the
+following generic package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Generic_Array_Type_Conversion
+
+    generic
+       type T is private;
+    package Custom_Arrays is
+       type T_Array is array (Positive range <>) of T;
+    end Custom_Arrays;
+
+We could instantiate this generic package and reuse parts of the previous code
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Generic_Array_Type_Conversion
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+    with Custom_Arrays;
+
+    procedure Show_Conversion is
+       package CA_Int_1 is
+         new Custom_Arrays (T => Integer);
+       package CA_Int_2 is
+         new Custom_Arrays (T => Integer);
+
+       subtype Common_Range is Positive range 1 .. 3;
+
+       AI_1 : CA_Int_1.T_Array (Common_Range);
+       AI_2 : CA_Int_2.T_Array (Common_Range);
+    begin
+       AI_2 := [1, 2, 3];
+       AI_1 := CA_Int_1.T_Array (AI_2);
+
+       Put_Line ("AI_1: "
+                 & AI_1'Image);
+
+       AI_1 := [4, 5, 6];
+       AI_2 := CA_Int_2.T_Array (AI_1);
+
+       Put_Line ("AI_2: "
+                 & AI_2'Image);
+    end Show_Conversion;
+
+As we can see in this example, each of the instantiated :ada:`CA_Int_1` and
+:ada:`CA_Int_2` packages has a :ada:`T_Array` type. Even though these
+:ada:`T_Array` types have the same name, they're actually completely unrelated
+types. However, we can still convert between them in the same way as we did in
+the previous code examples.
+
+
+View conversion
+~~~~~~~~~~~~~~~
+
+As mentioned before, view conversions just allow names to be converted. Thus,
+we cannot use expressions in this case.
+
+There are basically two kinds of view conversions: the ones using tagged types
+and the ones using untagged types. We discuss these kinds of conversion in this
+section.
+
+View conversion of tagged types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A conversion between tagged types is a view conversion. Let's consider a
+typical code example that declares one, two and three-dimensional points:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Tagged_Type_Conversion
+
+    package Points is
+
+       type Point_1D is tagged record
+          X : Float;
+       end record;
+
+       procedure Display (P : Point_1D);
+
+       type Point_2D is new Point_1D with record
+          Y : Float;
+       end record;
+
+       procedure Display (P : Point_2D);
+
+       type Point_3D is new Point_2D with record
+          Z : Float;
+       end record;
+
+       procedure Display (P : Point_3D);
+
+    end Points;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Points is
+
+       procedure Display (P : Point_1D) is
+       begin
+          Put_Line ("(X => " & P.X'Image & ")");
+       end Display;
+
+       procedure Display (P : Point_2D) is
+       begin
+          Put_Line ("(X => " & P.X'Image
+                    & ", Y => " & P.Y'Image & ")");
+       end Display;
+
+       procedure Display (P : Point_3D) is
+       begin
+          Put_Line ("(X => " & P.X'Image
+                    & ", Y => " & P.Y'Image
+                    & ", Z => " & P.Z'Image & ")");
+       end Display;
+
+    end Points;
+
+We can use the types from the :ada:`Points` package and convert between each
+other:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Tagged_Type_Conversion
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Points;      use Points;
+
+    procedure Show_Conversion is
+       P_1D : Point_1D;
+       P_3D : Point_3D;
+    begin
+       P_3D := (X => 0.1, Y => 0.5, Z => 0.3);
+       P_1D := Point_1D (P_3D);
+
+       Put ("P_3D : ");
+       Display (P_3D);
+
+       Put ("P_1D : ");
+       Display (P_1D);
+    end Show_Conversion;
+
+In this example, as expected, we're able to convert from the :ada:`Point_3D`
+type (which has three components) to the :ada:`Point_1D` type, which has only
+one component.
+
+
+View conversion of untagged types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For untagged types, a view conversion is the one that happens when we have an
+object of an untagged type as an actual parameter for a formal :ada:`in out`
+or :ada:`out` parameter.
+
+Let's see a code example. Consider the following simple procedure:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Untagged_Type_View_Conversion
+
+    procedure Double (X : in out Float);
+
+    procedure Double (X : in out Float) is
+    begin
+       X := X * 2.0;
+    end Double;
+
+The :ada:`Double` procedure has an :ada:`in out` parameter of :ada:`Float`
+type. We can call this procedure using an integer variable :ada:`I` as the
+actual parameter. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Untagged_Type_View_Conversion
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Double;
+
+    procedure Show_Conversion is
+       I : Integer;
+    begin
+       I := 2;
+       Put_Line ("I : "
+                 & I'Image);
+
+       --  Calling Double with
+       --  Integer parameter:
+       Double (Float (I));
+       Put_Line ("I : "
+                 & I'Image);
+    end Show_Conversion;
+
+In this case, the :ada:`Float (I)` conversion in the call to :ada:`Double`
+creates a temporary floating-point variable. This is the same as if we had
+written the following code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Untagged_Type_View_Conversion
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Double;
+
+    procedure Show_Conversion is
+       I : Integer;
+    begin
+       I := 2;
+       Put_Line ("I : "
+                 & I'Image);
+
+       declare
+          F : Float := Float (I);
+       begin
+          Double (F);
+          I := Integer (F);
+       end;
+       Put_Line ("I : "
+                 & I'Image);
+    end Show_Conversion;
+
+In this sense, the view conversion that happens in :ada:`Double (Float (I))`
+can be considered syntactic sugar, as it allows us to elegantly write two
+conversions in a single statement.
+
+
+Implicit conversions
+~~~~~~~~~~~~~~~~~~~~
+
+Implicit conversions are only possible when we have a type :ada:`T` and a
+subtype :ada:`S` related to the :ada:`T` type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Implicit_Subtype_Conversion
+
+    package Custom_Integers is
+
+       type Int is new Integer
+         with Dynamic_Predicate => Int /= 0;
+
+       subtype Sub_Int_1 is Integer
+         with Dynamic_Predicate => Sub_Int_1 /= 0;
+
+       subtype Sub_Int_2 is Sub_Int_1
+         with Dynamic_Predicate => Sub_Int_2 /= 1;
+
+    end Custom_Integers;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+    with Custom_Integers; use Custom_Integers;
+
+    procedure Show_Conversion is
+       Int_Var       : Int;
+       Sub_Int_1_Var : Sub_Int_1;
+       Sub_Int_2_Var : Sub_Int_2;
+       Integer_Var   : Integer;
+    begin
+       Integer_Var := 5;
+       Int_Var     := Int (Integer_Var);
+
+       Put_Line ("Int_Var :       "
+                 & Int_Var'Image);
+
+       --  Implicit conversions:
+       --  no explicit conversion required!
+       Sub_Int_1_Var := Integer_Var;
+       Sub_Int_2_Var := Integer_Var;
+
+       Put_Line ("Sub_Int_1_Var : "
+                 & Sub_Int_1_Var'Image);
+       Put_Line ("Sub_Int_2_Var : "
+                 & Sub_Int_2_Var'Image);
+    end Show_Conversion;
+
+In this example, we declare the :ada:`Int` type and the :ada:`Sub_Int_1` and
+:ada:`Sub_Int_2` subtypes:
+
+- the :ada:`Int` type is    derived from the :ada:`Integer` type,
+
+- :ada:`Sub_Int_1` is a subtype of the :ada:`Integer` type, and
+
+- :ada:`Sub_Int_2` is a subtype of the :ada:`Sub_Int_1` subtype.
+
+We need an explicit conversion when converting between the :ada:`Integer` and
+:ada:`Int` types. However, as the conversion is implicit for subtypes, we can
+simply write :ada:`Sub_Int_1_Var := Integer_Var;`. (Of course, writing the
+explicit conversion :ada:`Sub_Int_1 (Integer_Var)` in the assignment is
+possible as well.) Also, the same applies to the :ada:`Sub_Int_2` subtype: we
+can write an implicit conversion in the :ada:`Sub_Int_2_Var := Integer_Var;`
+statement.
+
+
+Conversion of other types
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For other kinds of types, such as records, a direct conversion as we've seen so
+far isn't possible. In this case, we have to write a conversion function
+ourselves. A common convention in Ada is to name this function
+:ada:`To_Typename`. For example, if we want to convert from any type to
+:ada:`Integer` or :ada:`Float`, we implement the :ada:`To_Integer` and
+:ada:`To_Float` functions, respectively. (Obviously, because Ada supports
+subprogram overloading, we can have multiple :ada:`To_Typename` functions for
+different operand types.)
+
+Let's see a code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Types.Other_Type_Conversion
+
+    package Custom_Rec is
+
+       type Rec is record
+          X : Integer;
+       end record;
+
+       function To_Integer (R : Rec)
+                            return Integer is
+         (R.X);
+
+    end Custom_Rec;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Custom_Rec;  use Custom_Rec;
+
+    procedure Show_Conversion is
+       R : Rec;
+       I : Integer;
+    begin
+       R := (X => 2);
+       I := To_Integer (R);
+
+       Put_Line ("I : " & I'Image);
+    end Show_Conversion;
+
+In this example, we have the :ada:`To_Integer` function that converts from the
+:ada:`Rec` type to the :ada:`Integer` type.
+
+.. admonition:: In other languages
+
+    In C++, you can define conversion operators to cast between objects of
+    different classes. Also, you can overload the :cpp:`=` operator.
+    Consider this example:
+
+    .. code-block:: cpp
+
+        #include <iostream>
+
+        class T1 {
+        public:
+            T1 (float x) :
+              x(x) {}
+
+            // If class T3 is declared before class T1,
+            // we can overload the "=" operator.
+            //
+            // void operator=(T3 v) {
+            //     x = static_cast<float>(v);
+            // }
+
+            void display();
+        private:
+           float x;
+        };
+
+        class T3 {
+        public:
+            T3 (float x, float y, float z) :
+              x(x), y(y), z(z) {}
+
+            // implicit conversion
+            operator float() const {
+                return (x + y + z) / 3.0;
+            }
+
+            // implicit conversion
+            //
+            // operator T1() const {
+            //     return T1((x + y + z) / 3.0);
+            // }
+
+            // explicit conversion (C++11)
+            explicit operator T1() const {
+                return T1(float(*this));
+            }
+
+            void display();
+
+        private:
+            float x, y, z;
+        };
+
+        void T1::display()
+        {
+            std::cout << "(x => " << x
+                      << ")" << std::endl;
+        }
+
+        void T3::display()
+        {
+            std::cout << "(x => " << x
+                      << "y => "  << y
+                      << "z => "  << z
+                      << ")" << std::endl;
+        }
+
+        int main ()
+        {
+            const T3 t_3 (0.5, 0.4, 0.6);
+            T1 t_1 (0.0);
+            float f;
+
+            f = t_3;                     // Implicit conversion
+
+            std::cout << "f : " << f
+                      << std::endl;
+
+            f = static_cast<float>(t_3); // Explicit conversion
+            // f = (float)t_3;
+
+            std::cout << "f : " << f
+                      << std::endl;
+
+            t_1 = static_cast<T1>(t_3); // Explicit conversion
+            // t_1 = (T1)t_3;
+
+            std::cout << "t_1 : ";
+            t_1.display();
+            std::cout << std::endl;
+        }
+
+    Here, we're using :cpp:`operator float()` and :cpp:`operator T1()` to
+    cast from an object of class :cpp:`T3` to a floating-point value and an
+    object of class :cpp:`T1`, respectively. (If we switch the order and
+    declare the :cpp:`T3` class before the :cpp:`T1` class, we could overload
+    the :cpp:`=` operator, as you can see in the commented-out lines.)
+
+    In Ada, this kind of conversions isn't available. Instead, we have to
+    implement conversion functions such as the :ada:`To_Integer` function from
+    the previous code example. This is the corresponding implementation:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Types.Explicit_Rec_Conversion
+
+        package Custom_Defs is
+
+           type T1 is private;
+
+           function Init (X : Float)
+                          return T1;
+
+           procedure Display (Obj : T1);
+
+           type T3 is private;
+
+           function Init (X, Y, Z : Float)
+                          return T3;
+
+           function To_Float (Obj : T3)
+                              return Float;
+
+           function To_T1 (Obj : T3)
+                           return T1;
+
+           procedure Display (Obj : T3);
+
+        private
+           type T1 is record
+              X : Float;
+           end record;
+
+           function Init (X : Float)
+                          return T1 is
+             (X => X);
+
+           type T3 is record
+              X, Y, Z : Float;
+           end record;
+
+           function Init (X, Y, Z : Float)
+                          return T3 is
+             (X => X, Y => Y, Z => Z);
+
+        end Custom_Defs;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Custom_Defs is
+
+           procedure Display (Obj : T1) is
+           begin
+              Put_Line ("(X => "
+                        & Obj.X'Image & ")");
+           end Display;
+
+           function To_Float (Obj : T3)
+                              return Float is
+             ((Obj.X + Obj.Y + Obj.Z) / 3.0);
+
+           function To_T1 (Obj : T3)
+                           return T1 is
+             (Init (To_Float (Obj)));
+
+           procedure Display (Obj : T3) is
+           begin
+              Put_Line ("(X => "    & Obj.X'Image
+                        & ", Y => " & Obj.Y'Image
+                        & ", Z => " & Obj.Z'Image
+                        & ")");
+           end Display;
+
+        end Custom_Defs;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with Custom_Defs; use Custom_Defs;
+
+        procedure Show_Conversion is
+           T_3 : constant T3 := Init (0.5, 0.4, 0.6);
+           T_1 :          T1 := Init (0.0);
+           F   : Float;
+        begin
+           --  Explicit conversion from
+           --  T3 to Float type
+           F := To_Float (T_3);
+
+           Put_Line ("F : " & F'Image);
+
+           --  Explicit conversion from
+           --  T3 to T1 type
+           T_1 := To_T1 (T_3);
+
+           Put ("T_1 : ");
+           Display (T_1);
+        end Show_Conversion;
+
+    In this example, we *translate* the casting operators from the C++ version
+    by implementing the :ada:`To_Float` and :ada:`To_T1` functions.
+    (In addition to that, we replace the C++ constructors by :ada:`Init`
+    functions.)
 
 
 Qualified Expressions
