@@ -449,6 +449,8 @@ assigned to a variable from the other type. For example:
        Put_Line (Miles'Image (Dist_Imperial));
     end Illegal_Example;
 
+.. _Intro_Ada_Type_Conversion:
+
 A consequence of these rules is that, in the general case, a "mixed mode"
 expression like :ada:`2 * 3.0` will trigger a compilation error. In a language
 like C or Python, such expressions are made valid by implicit conversions. In
