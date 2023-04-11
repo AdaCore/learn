@@ -61,7 +61,7 @@ from code_block_info import CodeBlockInfo
 
 # specifies the server address to set on the widgets
 WIDGETS_SERVER_URL = os.environ.get(
-    "CODE_SERVER_URL", "wss://api-sandbox.learn.r53.adacore.com/"
+    "CODE_SERVER_URL", "wss://sandbox.backend.learn.adacore.com/"
 )
 
 
