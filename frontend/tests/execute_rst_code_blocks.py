@@ -21,8 +21,8 @@ from widget.chop import manual_chop, real_gnatchop
 from code_block import CodeBlock, get_blocks
 
 
-FUNCTION_URLS = {'prod': 'wss://api.learn.r53.adacore.com',
-                 'sandbox': 'wss://api-sandbox.learn.r53.adacore.com'}
+FUNCTION_URLS = {'prod': 'wss://backend.learn.adacore.com',
+                 'sandbox': 'wss://sandbox.backend.learn.adacore.com'}
 
 EXPECT_FAILURE_CLASSES = {
     'ada': ['ada-expect-compile-error', 'ada-run-expect-failure', 'ada-expect-prove-error'],
