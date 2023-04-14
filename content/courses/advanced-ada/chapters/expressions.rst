@@ -818,9 +818,7 @@ types as well. For example:
 
        function Average (Acc : Integer_Accumulator)
                          return Float is
-       begin
-          return Float (Acc.Value) / Float (Acc.Count);
-       end;
+         (Float (Acc.Value) / Float (Acc.Count));
 
        Acc : Integer_Accumulator;
 
