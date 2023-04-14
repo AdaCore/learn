@@ -542,8 +542,9 @@ def analyze_file(rst_file):
 
                     try:
                         if block.language == "ada":
-                            out = run("gcc", "-c", "-gnats", "-gnatyg0-s",
-                                    source_file.basename)
+                            out = run(*["gcc", "-c", "-gnats", "-gnatyg0-s"] +
+                                      block.compiler_switches +
+                                      [source_file.basename])
                         elif block.language == "c":
                             out = run("gcc", "-c", source_file.basename)
 
