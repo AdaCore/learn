@@ -551,10 +551,329 @@ won't trigger compilation errors. (Feel free to try this out!)
 Reduction Expressions
 ---------------------
 
-.. admonition:: Relevant topics
+.. note::
+
+   This feature was introduced in Ada 2022.
+
+A reduction expression reduces a list of values into a single value. For
+example, we can reduce the list :ada:`[2, 3, 4]` to a single value:
+
+- by adding the values of the list: :ada:`2 + 3 + 4 = 9`, or
+
+- by multiplying the values of the list: :ada:`2 * 3 * 4 = 24`.
+
+We write a reduction expression by using the :ada:`Reduce` attribute and
+providing the reducer and its initial value:
+
+- the reducer is the operator (e.g.: :ada:`+` or :ada:`*`) that we use to
+  *combine* the values of the list;
+
+- the initial value is the value that we use before all other values of the
+  list.
+
+For example, if we use :ada:`+` as the operator and :ada:`0` an the initial
+value, we get the reduction expression: :ada:`0 + 2 + 3 + 4 = 9`. This can be
+implemented using an array:
+
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
+
+    !show_reduction_expression.adb
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Reduction_Expression is
+       A : array (1 .. 3) of Integer;
+       I : Integer;
+    begin
+       A := [2, 3, 4];
+       I := A'Reduce ("+", 0);
+
+       Put_Line ("A = "
+                 & A'Image);
+       Put_Line ("I = "
+                 & I'Image);
+    end Show_Reduction_Expression;
+
+Here, we have the array :ada:`A` with a list of values. The
+:ada:`A'Reduce ("+", 0)` expression reduces the list of values of :ada:`A` into
+a single value |mdash| in this case, an integer value that is stored in
+:ada:`I`. This statement is equivalent to:
+
+.. code-block:: ada
+
+       I := 0;
+       for E of A loop
+          I := I + E;
+       end loop;
+
+Naturally, we can reduce the array using the :ada:`*` operator:
+
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
+
+    !show_reduction_expression.adb
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Reduction_Expression is
+       A : array (1 .. 3) of Integer;
+       I : Integer;
+    begin
+       A := [2, 3, 4];
+       I := A'Reduce ("*", 1);
+
+       Put_Line ("A = "
+                 & A'Image);
+       Put_Line ("I = "
+                 & I'Image);
+    end Show_Reduction_Expression;
+
+In this example, we call :ada:`A'Reduce ("*", 1)` to reduce the list. (Note
+that we use an initial value of one because it is the
+:wikipedia:`identity element <Identity_element>` of a multiplication, so the
+complete operation is: :ada:`1 * 2 * 3 * 4 = 24`.)
+
+.. admonition:: In the Ada Reference Manual
 
     - :arm22:`Reduction Expressions <4-5-10>`
 
-.. todo::
 
-    Complete section!
+Value sequences
+~~~~~~~~~~~~~~~
+
+In addition to arrays, we can apply reduction expression to value sequences,
+which consist of an iterated element association |mdash| for example,
+:ada:`[for I in 1 .. 3 => I + 1]`. We can simply *append* the reduction
+expression to a value sequence:
+
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Reduction_Expression_Value_Sequences switches=Compiler(-gnatX)
+
+    !show_reduction_expression.adb
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Reduction_Expression is
+       I : Integer;
+    begin
+       I := [for I in 1 .. 3 => I + 1]'Reduce ("+", 0);
+       Put_Line ("I = "
+                 & I'Image);
+
+       I := [for I in 1 .. 3 => I + 1]'Reduce ("*", 1);
+       Put_Line ("I = "
+                 & I'Image);
+    end Show_Reduction_Expression;
+
+In this example, we create the value sequence :ada:`[for I in 1 .. 3 => I + 1]`
+and reduce it using the :ada:`+` and :ada:`*` operators. (Note that the
+operations in this example have the same results as in the previous examples
+using arrays.)
+
+
+Custom reducers
+~~~~~~~~~~~~~~~
+
+In the previous examples, we've used standard operators such as :ada:`+` and
+:ada:`*` as the reducer. We can, however, write our own reducers and pass
+them to the :ada:`Reduce` attribute. For example:
+
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Custom_Reducer_Procedure switches=Compiler(-gnatX)
+
+    !show_reduction_expression.adb
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Reduction_Expression is
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       A : Integer_Array (1 .. 3);
+       I : Long_Integer;
+
+       procedure Accumulate
+         (Accumulator : in out Long_Integer;
+          Value       : Integer) is
+       begin
+          Accumulator := Accumulator
+                         + Long_Integer (Value);
+       end Accumulate;
+
+    begin
+       A := [2, 3, 4];
+       I := A'Reduce (Accumulate, 0);
+
+       Put_Line ("A = "
+                 & A'Image);
+       Put_Line ("I = "
+                 & I'Image);
+    end Show_Reduction_Expression;
+
+In this example, we implement the :ada:`Accumulate` procedure as our reducer,
+which is called to accumulate the individual elements (integer values) of the
+list. We pass this procedure to the :ada:`Reduce` attribute in the
+:ada:`I := A'Reduce (Accumulate, 0)` statement, which is equivalent to:
+
+.. code-block:: ada
+
+       I := 0;
+       for E of A loop
+          Accumulate (I, E);
+       end loop;
+
+A custom reducer has the following parameters:
+
+1. The accumulator parameter, which stores the interim result |mdash| and the
+   final result as well, once all elements of the list have been processed.
+
+2. The value parameter, which is a single element from the list.
+
+Note that the accumulator type doesn't need to match the type of the individual
+components. In this example, we're using :ada:`Integer` as the component type,
+while the accumulator type is :ada:`Long_Integer`. (For this kind of reducers,
+using :ada:`Long_Integer` instead of :ada:`Integer` for the accumulator type
+makes lots of sense due to the risk of triggering overflows while the reducer
+is accumulating values |mdash| e.g. when accumulating a long list with larger
+numbers.)
+
+In the example above, we've implemented the reducer as a procedure. However, we
+can also implement it as a function. In this case, the accumulated value is
+returned by the function:
+
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Custom_Reducer_Function switches=Compiler(-gnatX)
+
+    !show_reduction_expression.adb
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Reduction_Expression is
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       A : Integer_Array (1 .. 3);
+       I : Long_Integer;
+
+       function Accumulate (Accumulator : Long_Integer;
+                            Value       : Integer)
+                            return Long_Integer is
+       begin
+          return Accumulator + Long_Integer (Value);
+       end Accumulate;
+
+    begin
+       A := [2, 3, 4];
+       I := A'Reduce (Accumulate, 0);
+
+       Put_Line ("A = "
+                 & A'Image);
+       Put_Line ("I = "
+                 & I'Image);
+    end Show_Reduction_Expression;
+
+In this example, we converted the :ada:`Accumulate` procedure into a function
+(while the core implementation is essentially the same).
+
+Note that the reduction expression remains the same, independently of whether
+we're using a procedure or a function as the reducer. Therefore, the statement
+with the reduction expression in this example is the same as in the previous
+example: :ada:`I := A'Reduce (Accumulate, 0);`. Now that we're using a
+function, this statement is equivalent to:
+
+.. code-block:: ada
+
+       I := 0;
+       for E of A loop
+          I := Accumulate (I, E);
+       end loop;
+
+
+Other accumulator types
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The accumulator type isn't restricted to scalars: in fact, we could use record
+types as well. For example:
+
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Reducer_Integer_Accumulator switches=Compiler(-gnatX)
+
+
+    !show_reduction_expression.adb
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Reduction_Expression is
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       A : Integer_Array (1 .. 3);
+
+       type Integer_Accumulator is record
+          Value : Long_Integer;
+          Count : Integer;
+       end record;
+
+       function Accumulate
+         (Accumulator : Integer_Accumulator;
+          Value       : Integer)
+          return Integer_Accumulator is
+       begin
+          return (Value => Accumulator.Value
+                           + Long_Integer (Value),
+                  Count => Accumulator.Count + 1);
+       end Accumulate;
+
+       function Zero return Integer_Accumulator is
+         (Value => 0, Count => 0);
+
+       function Average (Acc : Integer_Accumulator)
+                         return Float is
+       begin
+          return Float (Acc.Value) / Float (Acc.Count);
+       end;
+
+       Acc : Integer_Accumulator;
+
+    begin
+       A := [2, 3, 4];
+
+       Acc := A'Reduce (Accumulate, Zero);
+       Put_Line ("Acc = "
+                 & Acc'Image);
+       Put_Line ("Avg = "
+                 & Average (Acc)'Image);
+    end Show_Reduction_Expression;
+
+In this example, we're using the :ada:`Integer_Accumulator` record type in our
+reducer |mdash| the :ada:`Accumulate` function. In this case, we're not only
+accumulating the values, but also counting the number of elements in the
+list. (Of course, we could have used :ada:`A'Length` for that as well.)
+
+Also, we're not limited to numeric types: we can also create a reducer using
+strings as the accumulator type. In fact, we can display the initial value and
+the elements of the list by using unbounded strings:
+
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Reducer_String_Accumulator switches=Compiler(-gnatX)
+
+    !show_reduction_expression.adb
+    with Ada.Text_IO;           use Ada.Text_IO;
+    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
+    procedure Show_Reduction_Expression is
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       A : Integer_Array (1 .. 3);
+
+       function Unbounded_String_List
+         (Accumulator : Unbounded_String;
+          Value       : Integer)
+              return Unbounded_String is
+       begin
+          return Accumulator
+                 & ", " & Value'Image;
+       end Unbounded_String_List;
+
+    begin
+       A := [2, 3, 4];
+
+       Put_Line ("A = "
+                 & A'Image);
+       Put_Line ("L = "
+                 & To_String (A'Reduce
+                   (Unbounded_String_List,
+                      To_Unbounded_String ("0"))));
+    end Show_Reduction_Expression;
+
+In this case, the "accumulator" is concatenating the initial value and
+individual values of the list into a string.
