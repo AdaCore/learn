@@ -16,6 +16,8 @@ the ``:class:`` option for code blocks. The interest is that this will be
 usable in the generated HTML too.
 Here are the available classes for annotation:
 - ``ada-nocheck``: Specifies that the code block should not be checked at all
+- ``nosyntax-check``: Specifies that the syntax of the code block should not
+  be checked.
 - ``ada-syntax-only``: Specifies that only the syntax of the code block should
   be checked, not the semantics.
 - ``ada-expect-compile-error``: Specifies that a compilation error is expected.
@@ -535,21 +537,22 @@ def analyze_file(rst_file):
                 print(header("Checking code block {}".format(loc)))
 
             # Syntax check
-            for source_file in source_files:
+            if 'nosyntax-check' not in block.classes:
+                for source_file in source_files:
 
-                try:
-                    if block.language == "ada":
-                        out = run("gcc", "-c", "-gnats", "-gnatyg0-s",
-                                  source_file.basename)
-                    elif block.language == "c":
-                        out = run("gcc", "-c", source_file.basename)
+                    try:
+                        if block.language == "ada":
+                            out = run("gcc", "-c", "-gnats", "-gnatyg0-s",
+                                    source_file.basename)
+                        elif block.language == "c":
+                            out = run("gcc", "-c", source_file.basename)
 
-                    if out:
+                        if out:
+                            print_error(loc, "Failed to syntax check example")
+                            has_error = True
+                    except S.CalledProcessError:
                         print_error(loc, "Failed to syntax check example")
                         has_error = True
-                except S.CalledProcessError:
-                    print_error(loc, "Failed to syntax check example")
-                    has_error = True
 
             if 'ada-syntax-only' in block.classes or not block.run:
                 continue
