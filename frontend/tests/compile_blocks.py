@@ -263,6 +263,7 @@ parser.add_argument('--keep_files', '-k', action='store_true',
 parser.add_argument('--code-block', '-b', type=str, default=0)
 parser.add_argument('--all-diagnostics', '-A', action='store_true')
 parser.add_argument('--code-block-at', type=int, default=0)
+parser.add_argument('--max-line-length', type=int, default=0)
 
 args = parser.parse_args()
 
@@ -542,7 +543,10 @@ def analyze_file(rst_file):
 
                     try:
                         if block.language == "ada":
-                            out = run(*["gcc", "-c", "-gnats", "-gnatyg0-s"] +
+                            commands = ["gcc", "-c", "-gnats", "-gnatyg0-s"]
+                            if args.max_line_length > 0:
+                                commands.append("-gnatyM" + str(args.max_line_length))
+                            out = run(*commands +
                                       block.compiler_switches +
                                       [source_file.basename])
                         elif block.language == "c":
