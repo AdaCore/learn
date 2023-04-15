@@ -7,6 +7,7 @@ BUILDDIR           = dist
 SRC_TEST_DIR       = $(BUILDDIR)/test_output
 TEST_LAMBDA       ?= 0
 TEST_LOCAL_DRIVER  = PYTHONPATH="$PYTHONPATH:sphinx" python3 tests/compile_blocks.py --keep_files -B $(SRC_TEST_DIR)
+TEST_OPTIONS      ?=
 TEST_LAMBDA_DRIVER = PYTHONPATH="$PYTHONPATH:sphinx" python3 tests/execute_rst_code_blocks.py --halt-on-failure
 
 ifeq ($(strip $(TEST_LAMBDA)),1)
@@ -47,57 +48,57 @@ test_engine: webpack-production
 
 test_ada_intro:
 	@echo "===== INTRO TO ADA ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/intro-to-ada/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/intro-to-ada/chapters/*.rst
 	@echo ""
 
 test_spark_intro:
 	@echo "===== INTRO TO SPARK ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/intro-to-spark/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/intro-to-spark/chapters/*.rst
 	@echo ""
 
 test_intro_to_embedded_sys_prog:
 	@echo "===== INTRO TO EMBEDDED SYS PROG ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/intro-to-embedded-sys-prog/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/intro-to-embedded-sys-prog/chapters/*.rst
 	@echo ""
 
 test_advanced_ada:
 	@echo "===== ADVANCED ADA ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/advanced-ada/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/advanced-ada/chapters/*.rst
 	@echo ""
 
 test_advanced_spark:
 	@echo "===== ADVANCED SPARK ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/advanced-spark/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/advanced-spark/chapters/*.rst
 	@echo ""
 
 test_whats_new_in_ada_2022:
 	@echo "===== WHAT'S NEW IN ADA 2022 ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/whats-new-in-ada-2022/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/whats-new-in-ada-2022/chapters/*.rst
 	@echo ""
 
 test_spark_for_the_misra_c_developer:
 	@echo "===== SPARK FOR MISRA C DEV ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
 	@echo ""
 
 test_ada_for_the_cpp_java_developer:
 	@echo "===== ADA FOR THE CPP JAVA DEV ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
 	@echo ""
 
 test_ada_for_the_embedded_c_developer:
 	@echo "===== ADA FOR THE EMBEDDED C DEV ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/Ada_For_The_Embedded_C_Developer/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/Ada_For_The_Embedded_C_Developer/chapters/*.rst
 	@echo ""
 
 test_gnat_toolchain_intro:
 	@echo "===== GNAT TOOLCHAIN INTRO ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
 	@echo ""
 
 test_training_fundamentals:
 	@echo "===== FUNDAMENTALS OF ADA ====="
-	@$(TEST_DRIVER) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
 	@echo ""
 
 test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
