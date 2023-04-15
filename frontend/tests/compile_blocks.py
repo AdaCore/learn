@@ -255,7 +255,7 @@ parser.add_argument('rst_files', type=str, nargs="+",
 parser.add_argument('--build-dir', '-B', type=str, default="build",
                     help='Dir in which to build code')
 
-parser.add_argument('--verbose', '-v', type=bool, default=False,
+parser.add_argument('--verbose', '-v', action='store_true',
                     help='Show more information')
 
 parser.add_argument('--keep_files', '-k', action='store_true',
