@@ -213,7 +213,8 @@ This example shows how :ada:`Last_Increment` is used indirectly:
        R : Integer;
 
        procedure Display_Update_Values is
-          Incr : constant Integer := Get_Increment_Value;
+          Incr : constant Integer :=
+                   Get_Increment_Value;
        begin
           Put_Line (Integer'Image (I)
                     & " incremented by "
@@ -355,8 +356,10 @@ same way as before: we can reuse the previous test application and adapt the
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Child_Packages
 
-    with Ada.Text_IO;           use Ada.Text_IO;
-    with Week.Child.Grandchild; use Week.Child.Grandchild;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Week.Child.Grandchild;
+    use  Week.Child.Grandchild;
 
     procedure Main is
     begin

@@ -463,9 +463,10 @@ Ada, such conversions must be made explicit:
        Dist_Imperial : Miles;
        Dist_Metric : constant Meters := 1000.0;
     begin
-       Dist_Imperial := Miles (Dist_Metric) * 621.371e-6;
+       Dist_Imperial := Miles (Dist_Metric)
        --               ^ Type conversion,
        --                 from Meters to Miles
+                          * 621.371e-6;
        --  Now the code is correct
 
        Put_Line (Miles'Image (Dist_Imperial));

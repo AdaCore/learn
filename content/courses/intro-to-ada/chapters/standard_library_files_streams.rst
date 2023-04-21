@@ -148,7 +148,8 @@ the same file for reading:
        when Name_Error =>
           Put_Line ("File does not exist");
        when others =>
-          Put_Line ("Error while processing input file");
+          Put_Line
+            ("Error while processing input file");
     end Show_Text_File_Input_Except;
 
 In this example, we create the file by calling :ada:`Create` and then
@@ -333,7 +334,8 @@ the current index. Let's see an example:
        Write (F,  2.4);
        Write (F,  6.7);
 
-       --  Set index to previous position and overwrite value
+       --  Set index to previous position
+       --  and overwrite value
        Set_Index (F, Index (F) - 1);
        Write (F,  7.7);
 
@@ -345,7 +347,8 @@ the current index. Let's see an example:
 
           while not End_Of_File (F) loop
              Read (F, Value);
-             Ada.Text_IO.Put_Line (Float'Image (Value));
+             Ada.Text_IO.Put_Line
+               (Float'Image (Value));
           end loop;
           Close (F);
        end;
@@ -385,7 +388,9 @@ previous section that makes use of stream I/O instead of direct I/O:
     :class: ada-run
 
     with Ada.Text_IO;
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+
+    with Ada.Streams.Stream_IO;
+    use  Ada.Streams.Stream_IO;
 
     procedure Show_Float_Stream is
        F         : File_Type;
@@ -437,7 +442,9 @@ different lengths and floating-point values:
     :class: ada-run
 
     with Ada.Text_IO;
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+
+    with Ada.Streams.Stream_IO;
+    use  Ada.Streams.Stream_IO;
 
     procedure Show_String_Stream is
        F         : File_Type;

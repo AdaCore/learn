@@ -266,7 +266,8 @@ discrete range.
     begin
        for I in 1 .. 5 loop
           --  Put_Line is a procedure call
-          Put_Line ("Hello, World!" & Integer'Image (I));
+          Put_Line ("Hello, World!"
+                      & Integer'Image (I));
           --        ^ Procedure parameter
        end loop;
     end Greet_5a;
@@ -473,23 +474,32 @@ with an :ada:`if` statement:
 
           case N is
              when 0 | 360 =>
-                Put_Line (" is due north");
+                Put_Line
+                  (" is due north");
              when 1 .. 89 =>
-                Put_Line (" is in the northeast quadrant");
+                Put_Line
+                  (" is in the northeast quadrant");
              when 90 =>
-                Put_Line (" is due east");
+                Put_Line
+                  (" is due east");
              when 91 .. 179 =>
-                Put_Line (" is in the southeast quadrant");
+                Put_Line
+                  (" is in the southeast quadrant");
              when 180 =>
-                Put_Line (" is due south");
+                Put_Line
+                  (" is due south");
              when 181 .. 269 =>
-                Put_Line (" is in the southwest quadrant");
+                Put_Line
+                  (" is in the southwest quadrant");
              when 270 =>
-                Put_Line (" is due west");
+                Put_Line
+                  (" is due west");
              when 271 .. 359 =>
-                Put_Line (" is in the northwest quadrant");
+                Put_Line
+                  (" is in the northwest quadrant");
              when others =>
-                Put_Line (" Au revoir");
+                Put_Line
+                  (" Au revoir");
                 exit;
           end case;
        end loop;
@@ -680,7 +690,9 @@ Here's another example:
     procedure Main is
     begin
        for I in 1 .. 10 loop
-          Put_Line (if I mod 2 = 0 then "Even" else "Odd");
+          Put_Line (if I mod 2 = 0
+                      then "Even"
+                      else "Odd");
        end loop;
     end Main;
 
@@ -700,9 +712,10 @@ They work just as you would expect.
     procedure Main is
     begin
        for I in 1 .. 10 loop
-          Put_Line (case I is
-                    when 1 | 3 | 5 | 7 | 9 => "Odd",
-                    when 2 | 4 | 6 | 8 | 10 => "Even");
+          Put_Line
+            (case I is
+             when 1 | 3 | 5 | 7 | 9 => "Odd",
+             when 2 | 4 | 6 | 8 | 10 => "Even");
        end loop;
     end Main;
 
