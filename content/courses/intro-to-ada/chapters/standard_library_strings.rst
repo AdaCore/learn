@@ -195,7 +195,8 @@ of both function and procedure versions of :ada:`Insert`, :ada:`Overwrite`, and
           S_Del : String :=
             Trim (Delete (Source,
                           Before,
-                          Before + Pattern'Length - 1),
+                          Before +
+                            Pattern'Length - 1),
                   Ada.Strings.Right);
        begin
           Insert (S_Ins_In,

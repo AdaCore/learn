@@ -273,7 +273,9 @@ In the Ada application, we just reference the foreign variable:
        V := my_func (1);
        V := my_func (2);
        V := my_func (3);
-       Put_Line ("Result is " & int'Image (V));
+
+       Put_Line ("Result is "
+                 & int'Image (V));
 
        Put_Line ("Function was called "
                  & int'Image (func_cnt)
@@ -351,7 +353,8 @@ In the C application, we just need to declare the variable and use it:
 
       printf("Result is %d\n", v);
 
-      printf("Function was called %d times\n", func_cnt);
+      printf("Function was called %d times\n",
+             func_cnt);
 
       return 0;
     }
@@ -417,7 +420,9 @@ Now we simply refer to this :file:`test_h` package in our Ada application:
        V := my_func (1);
        V := my_func (2);
        V := my_func (3);
-       Put_Line ("Result is " & int'Image (V));
+
+       Put_Line ("Result is "
+                 & int'Image (V));
 
        Put_Line ("Function was called "
                  & int'Image (func_cnt)
@@ -468,9 +473,11 @@ Let's start with this C header file:
 
     void test_reset(struct test *t);
 
-    void test_set_name(struct test *t, char *name);
+    void test_set_name(struct test *t,
+                       char        *name);
 
-    void test_set_address(struct test *t, char *address);
+    void test_set_address(struct test *t,
+                          char        *address);
 
     void test_display(const struct test *t);
 
@@ -491,11 +498,14 @@ And the corresponding C implementation:
     };
 
     static size_t
-    strlcpy(char *dst, const char *src, size_t dstsize)
+    strlcpy(char       *dst,
+            const char *src,
+            size_t      dstsize)
     {
       size_t len = strlen(src);
       if (dstsize) {
-        size_t bl = (len < dstsize-1 ? len : dstsize-1);
+        size_t bl = (len < dstsize-1 ?
+                       len : dstsize-1);
         ((char*)memcpy(dst, src, bl))[bl] = 0;
       }
       return len;
@@ -519,14 +529,20 @@ And the corresponding C implementation:
       t->address[0] = '\0';
     }
 
-    void test_set_name(struct test *t, char *name)
+    void test_set_name(struct test *t,
+                       char        *name)
     {
-      strlcpy(t->name, name, sizeof(t->name));
+      strlcpy(t->name,
+              name,
+              sizeof(t->name));
     }
 
-    void test_set_address(struct test *t, char *address)
+    void test_set_address(struct test *t,
+                          char        *address)
     {
-      strlcpy(t->address, address, sizeof(t->address));
+      strlcpy(t->address,
+              address,
+              sizeof(t->address));
     }
 
     void test_display(const struct test *t)
@@ -585,10 +601,15 @@ Ada:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
-    with Interfaces.C;         use Interfaces.C;
-    with Interfaces.C.Strings; use Interfaces.C.Strings;
-    with Ada.Text_IO;          use Ada.Text_IO;
-    with test_h;               use test_h;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Interfaces.C.Strings;
+    use  Interfaces.C.Strings;
+
+    with test_h; use test_h;
 
     with System;
 
@@ -628,8 +649,9 @@ This is the resulting specification:
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
     :class: nosyntax-check
 
-    with Interfaces.C; use Interfaces.C;
     with System;
+
+    with Interfaces.C; use Interfaces.C;
     with Interfaces.C.Strings;
 
     package adapted_test_h is
@@ -662,9 +684,13 @@ And this is the corresponding Ada body:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
-    with Interfaces.C;         use Interfaces.C;
-    with Interfaces.C.Strings; use Interfaces.C.Strings;
-    with adapted_test_h;       use  adapted_test_h;
+    with Interfaces.C;
+    use  Interfaces.C;
+
+    with Interfaces.C.Strings;
+    use  Interfaces.C.Strings;
+
+    with adapted_test_h; use  adapted_test_h;
 
     with System;
 

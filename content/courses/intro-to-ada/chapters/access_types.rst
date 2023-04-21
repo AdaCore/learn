@@ -53,8 +53,9 @@ Here is how you declare a simple pointer type, or access type, in Ada:
         --  Declare an access type
         type Date_Acc is access Date;
         --                      ^ "Designated type"
-        --                      ^ Date_Acc values point
-        --                        to Date objects
+        --                      ^ Date_Acc values
+        --                        point to Date
+        --                        objects
 
         D : Date_Acc := null;
         --              ^ Literal for

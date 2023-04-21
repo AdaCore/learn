@@ -109,13 +109,14 @@ We illustrate postconditions using the following example:
 
        function Square (A : Int_8) return Int_8 is
          (A * A)
-         with Post => (if abs A in 0 | 1
-                       then Square'Result = abs A
-                       else Square'Result > A);
+           with Post => (if abs A in 0 | 1
+                         then Square'Result = abs A
+                         else Square'Result > A);
 
        procedure Square (A : in out Int_8_Array)
          with Post => (for all I in A'Range =>
-                         A (I) = A'Old (I) * A'Old (I))
+                         A (I) = A'Old (I) *
+                                 A'Old (I))
        is
        begin
           for V of A loop
@@ -164,22 +165,25 @@ subprogram. For example:
 
        function Square (A : Int_8) return Int_8 is
          (A * A)
-         with
-              Pre  => (Integer'Size >= Int_8'Size * 2
-                       and Integer (A) * Integer (A) <=
-                           Integer (Int_8'Last)),
-              Post => (if abs A in 0 | 1
-                       then Square'Result = abs A
-                       else Square'Result > A);
+           with
+             Pre  => (Integer'Size >= Int_8'Size * 2
+                      and Integer (A) *
+                            Integer (A) <=
+                          Integer (Int_8'Last)),
+             Post => (if abs A in 0 | 1
+                      then Square'Result = abs A
+                      else Square'Result > A);
 
        V : Int_8;
     begin
        V := Square (11);
-       Put_Line ("Square of 11 is " & Int_8'Image (V));
+       Put_Line ("Square of 11 is "
+                 & Int_8'Image (V));
 
        --  Precondition will fail...
        V := Square (12);
-       Put_Line ("Square of 12 is " & Int_8'Image (V));
+       Put_Line ("Square of 12 is "
+                 & Int_8'Image (V));
     end Show_Simple_Contract;
 
 In this example, we want to ensure that the input value of calls to the
@@ -327,7 +331,8 @@ static predicate:
 .. code-block:: ada
 
    subtype Check_Days is Work_Week
-     with Static_Predicate => Check_Days in Mon | Wed | Fri;
+     with Static_Predicate =>
+            Check_Days in Mon | Wed | Fri;
 
 Let's look at a complete example:
 

@@ -125,16 +125,16 @@ beginning or end of a vector, respectively. For example:
 
        V : Vector;
     begin
-       Put_Line
-         ("Appending some elements to the vector...");
+       Put_Line ("Appending some elements "
+                 & "to the vector...");
        V.Append (20);
        V.Append (10);
        V.Append (0);
        V.Append (13);
        Put_Line ("Finished appending.");
 
-       Put_Line
-         ("Prepending some elements to the vector...");
+       Put_Line ("Prepending some elements"
+                 & "to the vector...");
        V.Prepend (30);
        V.Prepend (40);
        V.Prepend (100);

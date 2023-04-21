@@ -82,10 +82,16 @@ to index into the array.
 
     procedure Array_Bounds_Example is
        type My_Int is range 0 .. 1000;
+
        type Index is range 11 .. 15;
-       --                  ^ Low bound can be any value
-       type My_Int_Array is array (Index) of My_Int;
-       Tab : constant My_Int_Array := (2, 3, 5, 7, 11);
+       --                  ^ Low bound can
+       --                    be any value
+
+       type My_Int_Array is
+         array (Index) of My_Int;
+
+       Tab : constant My_Int_Array :=
+               (2, 3, 5, 7, 11);
     begin
        for I in Index loop
           Put (My_Int'Image (Tab (I)));
@@ -185,7 +191,9 @@ compile-time error.
        type My_Index   is range 1 .. 5;
        type Your_Index is range 1 .. 5;
 
-       type My_Int_Array is array (My_Index) of My_Int;
+       type My_Int_Array is
+         array (My_Index) of My_Int;
+
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
     begin
        for I in Your_Index loop
@@ -206,8 +214,11 @@ instead of accessing random memory as in unsafe languages.
 
     procedure Greet is
        type My_Int is range 0 .. 1000;
-       type Index is range 1 .. 5;
-       type My_Int_Array is array (Index) of My_Int;
+       type Index  is range 1 .. 5;
+
+       type My_Int_Array is
+         array (Index) of My_Int;
+
        Tab : My_Int_Array := (2, 3, 5, 7, 11);
     begin
        for I in Index range 2 .. 6 loop
@@ -233,9 +244,13 @@ that, too.
 
     procedure Simple_Array_Bounds is
        type My_Int is range 0 .. 1000;
-       type My_Int_Array is array (1 .. 5) of My_Int;
-       --                          ^ Subtype of Integer
-       Tab : constant My_Int_Array := (2, 3, 5, 7, 11);
+
+       type My_Int_Array is
+         array (1 .. 5) of My_Int;
+       --       ^ Subtype of Integer
+
+       Tab : constant My_Int_Array :=
+               (2, 3, 5, 7, 11);
     begin
        for I in 1 .. 5 loop
        --       ^ Subtype of Integer
@@ -271,8 +286,12 @@ refer to the range.  Ada solves that via several attributes of array objects:
 
     procedure Range_Example is
        type My_Int is range 0 .. 1000;
-       type My_Int_Array is array (1 .. 5) of My_Int;
-       Tab : constant My_Int_Array := (2, 3, 5, 7, 11);
+
+       type My_Int_Array is
+         array (1 .. 5) of My_Int;
+
+       Tab : constant My_Int_Array :=
+               (2, 3, 5, 7, 11);
     begin
        for I in Tab'Range loop
        --          ^ Gets the range of Tab
@@ -290,8 +309,12 @@ If you want more fine grained control, you can use the separate attributes
 
     procedure Array_Attributes_Example is
        type My_Int is range 0 .. 1000;
-       type My_Int_Array is array (1 .. 5) of My_Int;
-       Tab : My_Int_Array := (2, 3, 5, 7, 11);
+
+       type My_Int_Array is
+         array (1 .. 5) of My_Int;
+
+       Tab : My_Int_Array :=
+               (2, 3, 5, 7, 11);
     begin
        for I in Tab'First .. Tab'Last - 1 loop
        --          ^ Iterate on every index
@@ -476,12 +499,15 @@ initialization expression.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
-       type Integer_Array is array (Natural range <>) of Integer;
+       type Integer_Array is
+         array (Natural range <>) of Integer;
 
-       My_Array : constant Integer_Array := (1, 2, 3, 4);
-       --                  ^ Bounds are automatically
-       --                    computed from
-       --                    initialization value
+       My_Array : constant Integer_Array :=
+                    (1, 2, 3, 4);
+       --         ^^^^^^^^^^^^^^^^^^^^^
+       --          Bounds are automatically
+       --          computed from
+       --          initialization value
     begin
         null;
     end Main;
@@ -732,10 +758,11 @@ for these objects. Let's look at an example:
     with Measurements;
 
     procedure Main is
-       subtype Degrees is Measurements.Degree_Celsius;
+       subtype Degrees is
+         Measurements.Degree_Celsius;
 
        T : Degrees
-         renames Measurements.Current_Temperature;
+             renames Measurements.Current_Temperature;
     begin
         T := 5.0;
 
@@ -774,7 +801,11 @@ renaming them. Let's look at the following example:
 
     package Colors is
 
-       type Color is (Black, Red, Green, Blue, White);
+       type Color is (Black,
+                      Red,
+                      Green,
+                      Blue,
+                      White);
 
        type Color_Array is
          array (Positive range <>) of Color;
@@ -785,10 +816,12 @@ renaming them. Let's look at the following example:
 
     package body Colors is
 
-       procedure Reverse_It (X : in out Color_Array) is
+       procedure Reverse_It (X : in out Color_Array)
+       is
        begin
           for I in X'First ..
-                   (X'Last + X'First) / 2 loop
+                   (X'Last + X'First) / 2
+          loop
              declare
                 Tmp     : Color;
                 X_Left  : Color
@@ -816,7 +849,8 @@ renaming them. Let's look at the following example:
 
     begin
        for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
+          Put_Line ("My_Color: "
+                    & Color'Image (C));
        end loop;
 
        New_Line;
@@ -825,7 +859,8 @@ renaming them. Let's look at the following example:
        Reverse_It (My_Colors);
 
        for C of My_Colors loop
-          Put_Line ("My_Color: " & Color'Image (C));
+          Put_Line ("My_Color: "
+                    & Color'Image (C));
        end loop;
 
     end Test_Reverse_Colors;
@@ -848,6 +883,7 @@ Compare this to the alternative version without renaming:
 
     begin
        Tmp                      := X (I);
-       X (I)                    := X (X'Last + X'First - I);
+       X (I)                    := X (X'Last +
+                                   X'First - I);
        X (X'Last + X'First - I) := Tmp;
     end;

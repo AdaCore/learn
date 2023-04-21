@@ -125,7 +125,7 @@ Ada's :ada:`if` statement is pretty unsurprising in form and function:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;         use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
     procedure Check_Positive is
@@ -168,7 +168,7 @@ with an :ada:`else` part:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive_2
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;         use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
     procedure Check_Positive is
@@ -198,7 +198,7 @@ sections:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;         use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
     procedure Check_Direction is
@@ -461,7 +461,7 @@ with an :ada:`if` statement:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Direction_2
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;         use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
     procedure Check_Direction is
@@ -647,7 +647,7 @@ statement has been replaced by an :ada:`if` expression:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Imperative_Language.Check_Positive
 
-    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Text_IO;         use Ada.Text_IO;
     with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
     procedure Check_Positive is
@@ -659,8 +659,9 @@ statement has been replaced by an :ada:`if` expression:
 
        declare
           S : constant String :=
-            (if N > 0 then " is a positive number"
-             else " is not a positive number");
+            (if N > 0
+               then " is a positive number"
+               else " is not a positive number");
        begin
           Put_Line (S);
        end;
@@ -714,7 +715,7 @@ They work just as you would expect.
        for I in 1 .. 10 loop
           Put_Line
             (case I is
-             when 1 | 3 | 5 | 7 | 9 => "Odd",
+             when 1 | 3 | 5 | 7 | 9  => "Odd",
              when 2 | 4 | 6 | 8 | 10 => "Even");
        end loop;
     end Main;

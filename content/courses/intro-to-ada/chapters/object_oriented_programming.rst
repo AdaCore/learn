@@ -208,7 +208,8 @@ Let's see our first tagged type declarations:
            --  You can add fields in derived types.
        end record;
 
-       overriding procedure Foo (Self : in out Derived);
+       overriding
+       procedure Foo (Self : in out Derived);
        --  The "overriding" qualifier is optional,
        --  but if it is present, it must be valid.
     end P;
