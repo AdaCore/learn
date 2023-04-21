@@ -272,7 +272,8 @@ used by the generic procedure :ada:`Check`.
     generic
        Description : String;
        type T is private;
-       with function Comparison (X, Y : T) return Boolean;
+       with function Comparison (X, Y : T)
+                                 return Boolean;
     procedure Check (X, Y : T);
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -282,13 +283,15 @@ used by the generic procedure :ada:`Check`.
     begin
        Result := Comparison (X, Y);
        if Result then
-          Put_Line ("Comparison ("
-                    & Description
-                    & ") between arguments is OK!");
+          Put_Line
+            ("Comparison ("
+             & Description
+             & ") between arguments is OK!");
        else
-          Put_Line ("Comparison ("
-                    & Description
-                    & ") between arguments is not OK!");
+          Put_Line
+            ("Comparison ("
+             & Description
+             & ") between arguments is not OK!");
        end if;
     end Check;
 

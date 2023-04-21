@@ -182,9 +182,11 @@ Let's look at a complete example:
           Year  : Integer range 1 .. 3000 := 2032;
        end record;
 
-       procedure Increase_Month (Some_Day : in out Date);
+       procedure Increase_Month
+        (Some_Day : in out Date);
 
-       procedure Display_Month (Some_Day : Date);
+       procedure Display_Month
+         (Some_Day : Date);
 
     end Dates;
 
@@ -192,7 +194,9 @@ Let's look at a complete example:
 
     package body Dates is
 
-       procedure Increase_Month (Some_Day : in out Date) is
+       procedure Increase_Month
+         (Some_Day : in out Date)
+       is
           --  Renaming components from
           --  the Date record
           M : Months  renames Some_Day.Month;
@@ -200,7 +204,8 @@ Let's look at a complete example:
 
           --  Renaming function (for Months
           --  enumeration)
-          function Next (M : Months) return Months
+          function Next (M : Months)
+                         return Months
             renames Months'Succ;
        begin
           if M = December then
@@ -211,7 +216,9 @@ Let's look at a complete example:
           end if;
        end Increase_Month;
 
-       procedure Display_Month (Some_Day : Date) is
+       procedure Display_Month
+         (Some_Day : Date)
+       is
           --  Renaming components from
           --  the Date record
           M : Months  renames Some_Day.Month;

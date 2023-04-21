@@ -26,9 +26,11 @@ look at a simple example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Time
 
-    with Ada.Calendar;            use Ada.Calendar;
-    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
-    with Ada.Text_IO;             use Ada.Text_IO;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Calendar; use Ada.Calendar;
+
+    with Ada.Calendar.Formatting;
+    use  Ada.Calendar.Formatting;
 
     procedure Display_Current_Time is
        Now : Time := Clock;
@@ -44,8 +46,8 @@ function. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Year
 
-    with Ada.Calendar;            use Ada.Calendar;
-    with Ada.Text_IO;             use Ada.Text_IO;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Calendar; use Ada.Calendar;
 
     procedure Display_Current_Year is
        Now         : Time := Clock;
@@ -80,10 +82,14 @@ using a :ada:`delay until` statement. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
 
-    with Ada.Calendar;            use Ada.Calendar;
-    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
-    with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones;
-    with Ada.Text_IO;             use Ada.Text_IO;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Calendar; use Ada.Calendar;
+
+    with Ada.Calendar.Formatting;
+    use  Ada.Calendar.Formatting;
+
+    with Ada.Calendar.Time_Zones;
+    use  Ada.Calendar.Time_Zones;
 
     procedure Display_Delay_Next_Specific_Time is
        TZ   : Time_Offset := UTC_Time_Offset;
@@ -132,10 +138,14 @@ We could achieve a similar result by initializing :ada:`Next` with a
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next_Specific_Time
 
-    with Ada.Calendar;            use Ada.Calendar;
-    with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
-    with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones;
-    with Ada.Text_IO;             use Ada.Text_IO;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Calendar; use Ada.Calendar;
+
+    with Ada.Calendar.Formatting;
+    use  Ada.Calendar.Formatting;
+
+    with Ada.Calendar.Time_Zones;
+    use  Ada.Calendar.Time_Zones;
 
     procedure Display_Delay_Next_Specific_Time is
        TZ   : Time_Offset := UTC_Time_Offset;
@@ -164,8 +174,8 @@ seconds, using the current time:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Delay_Next
 
-    with Ada.Calendar;            use Ada.Calendar;
-    with Ada.Text_IO;             use Ada.Text_IO;
+    with Ada.Calendar; use Ada.Calendar;
+    with Ada.Text_IO;  use Ada.Text_IO;
 
     procedure Display_Delay_Next is
        D    : Duration := 5.0;
@@ -173,11 +183,12 @@ seconds, using the current time:
        Now  : Time     := Clock;
        Next : Time     := Now + D;
        --                       ^ use duration to
-       --                         specify next point
-       --                         in time
+       --                         specify next
+       --                         point in time
     begin
        Put_Line ("Let's wait "
-                 & Duration'Image (D) & " seconds...");
+                 & Duration'Image (D)
+                 & " seconds...");
        delay until Next;
        Put_Line ("Enough waiting!");
     end Display_Delay_Next;
@@ -255,7 +266,8 @@ discussing tasking. Let's look at an example of benchmarking:
        Elapsed_Time := Stop_Time - Start_Time;
 
        Put_Line ("Elapsed time: "
-                 & Duration'Image (To_Duration (Elapsed_Time))
+                 & Duration'Image
+                     (To_Duration (Elapsed_Time))
                  & " seconds");
     end Display_Benchmarking;
 
@@ -294,7 +306,8 @@ to measure CPU time:
        Elapsed_Time := Stop_Time - Start_Time;
 
        Put_Line ("CPU time: "
-                 & Duration'Image (To_Duration (Elapsed_Time))
+                 & Duration'Image
+                     (To_Duration (Elapsed_Time))
                  & " seconds");
     end Display_Benchmarking_CPU_Time;
 
@@ -328,12 +341,12 @@ loop. For example:
        begin
           for I in 0 .. 1_000_000 loop
              X := Tan (Arctan
-                       (Tan (Arctan
+                    (Tan (Arctan
+                      (Tan (Arctan
+                        (Tan (Arctan
                           (Tan (Arctan
-                             (Tan (Arctan
-                                (Tan (Arctan
-                                   (Tan (Arctan
-                                      (0.577))))))))))));
+                            (Tan (Arctan
+                              (0.577))))))))))));
           end loop;
        end Computational_Intensive_App;
 

@@ -158,7 +158,8 @@ the qualified expression syntax:
        type Date_Acc is access Date;
        type String_Acc is access String;
 
-       D   : Date_Acc   := new Date'(30, November, 2011);
+       D   : Date_Acc   :=
+               new Date'(30, November, 2011);
        Msg : String_Acc := new String'("Hello");
     end Access_Types;
 
@@ -181,13 +182,15 @@ dereferenced for you:
     package Access_Types is
        type Date_Acc is access Date;
 
-       D     : Date_Acc := new Date'(30, November, 2011);
+       D     : Date_Acc :=
+                 new Date'(30, November, 2011);
 
        Today : Date := D.all;
        --              ^ Access value dereference
        J     : Integer := D.Day;
-       --                 ^ Implicit dereference for
-       --                   record and array components
+       --                 ^ Implicit dereference
+       --                   for record and array
+       --                   components
        --                   Equivalent to D.all.day
     end Access_Types;
 

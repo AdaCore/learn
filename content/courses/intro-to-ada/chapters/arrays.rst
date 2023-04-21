@@ -787,7 +787,8 @@ renaming them. Let's look at the following example:
 
        procedure Reverse_It (X : in out Color_Array) is
        begin
-          for I in X'First .. (X'Last + X'First) / 2 loop
+          for I in X'First ..
+                   (X'Last + X'First) / 2 loop
              declare
                 Tmp     : Color;
                 X_Left  : Color

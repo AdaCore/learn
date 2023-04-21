@@ -215,9 +215,12 @@ Let's use the following example to illustrate dynamic predicates:
 .. code:: ada run_button project=Courses.Intro_To_Ada.Contracts.Show_Dynamic_Predicate_Courses
     :class: ada-run-expect-failure
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Calendar;          use Ada.Calendar;
+    with Ada.Calendar; use Ada.Calendar;
+
     with Ada.Containers.Vectors;
+
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     procedure Show_Dynamic_Predicate_Courses is
 
@@ -259,19 +262,25 @@ Let's use the following example to illustrate dynamic predicates:
     begin
        Add (CC,
             Course'(
-              Name       => To_Unbounded_String
-                             ("Intro to Photography"),
-              Start_Date => Time_Of (2018, 5, 1),
-              End_Date   => Time_Of (2018, 5, 10)));
+              Name       =>
+                To_Unbounded_String
+                  ("Intro to Photography"),
+              Start_Date =>
+                Time_Of (2018, 5, 1),
+              End_Date   =>
+                Time_Of (2018, 5, 10)));
 
        --  This should trigger an error in the
        --  dynamic predicate check
        Add (CC,
             Course'(
-              Name       => To_Unbounded_String
-                             ("Intro to Video Recording"),
-              Start_Date => Time_Of (2019, 5, 1),
-              End_Date   => Time_Of (2018, 5, 10)));
+              Name       =>
+                To_Unbounded_String
+                  ("Intro to Video Recording"),
+              Start_Date =>
+                Time_Of (2019, 5, 1),
+              End_Date   =>
+                Time_Of (2018, 5, 10)));
 
     end Show_Dynamic_Predicate_Courses;
 
@@ -443,10 +452,13 @@ type invariants. It would look like this:
 .. code:: ada run_button project=Courses.Intro_To_Ada.Contracts.Show_Type_Invariant
     :class: ada-run-expect-failure
 
-    with Ada.Text_IO;           use Ada.Text_IO;
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Calendar;          use Ada.Calendar;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Calendar; use Ada.Calendar;
+
     with Ada.Containers.Vectors;
+
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     procedure Show_Type_Invariant is
 
@@ -461,9 +473,11 @@ type invariants. It would look like this:
 
           function Init
             (Name                 : String;
-             Start_Date, End_Date : Time) return Course;
+             Start_Date, End_Date : Time)
+             return Course;
 
-          function Check (C : Course) return Boolean;
+          function Check (C : Course)
+                          return Boolean;
 
        private
           type Course is record
@@ -472,7 +486,8 @@ type invariants. It would look like this:
              End_Date   : Time;
           end record;
 
-          function Check (C : Course) return Boolean is
+          function Check (C : Course)
+                          return Boolean is
             (C.Start_Date <= C.End_Date);
 
           package Course_Vectors is new
@@ -494,10 +509,12 @@ type invariants. It would look like this:
 
           function Init
             (Name                 : String;
-             Start_Date, End_Date : Time) return Course is
+             Start_Date, End_Date : Time)
+             return Course is
           begin
              return
-               Course'(Name       => To_Unbounded_String (Name),
+               Course'(Name       =>
+                         To_Unbounded_String (Name),
                        Start_Date => Start_Date,
                        End_Date   => End_Date);
           end Init;
@@ -508,16 +525,22 @@ type invariants. It would look like this:
        CC : Course_Container;
     begin
        Add (CC,
-            Init (Name       => "Intro to Photography",
-                  Start_Date => Time_Of (2018, 5, 1),
-                  End_Date   => Time_Of (2018, 5, 10)));
+            Init (Name       =>
+                    "Intro to Photography",
+                  Start_Date =>
+                    Time_Of (2018, 5, 1),
+                  End_Date   =>
+                    Time_Of (2018, 5, 10)));
 
        --  This should trigger an error in the
        --  type-invariant check
        Add (CC,
-            Init (Name       => "Intro to Video Recording",
-                  Start_Date => Time_Of (2019, 5, 1),
-                  End_Date   => Time_Of (2018, 5, 10)));
+            Init (Name       =>
+                    "Intro to Video Recording",
+                  Start_Date =>
+                    Time_Of (2019, 5, 1),
+                  End_Date   =>
+                    Time_Of (2018, 5, 10)));
     end Show_Type_Invariant;
 
 The major difference is that the :ada:`Course` type was a visible (public)

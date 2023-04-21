@@ -125,14 +125,16 @@ beginning or end of a vector, respectively. For example:
 
        V : Vector;
     begin
-       Put_Line ("Appending some elements to the vector...");
+       Put_Line
+         ("Appending some elements to the vector...");
        V.Append (20);
        V.Append (10);
        V.Append (0);
        V.Append (13);
        Put_Line ("Finished appending.");
 
-       Put_Line ("Prepending some elements to the vector...");
+       Put_Line
+         ("Prepending some elements to the vector...");
        V.Prepend (30);
        V.Prepend (40);
        V.Prepend (100);
@@ -580,7 +582,8 @@ example:
        Show_Elements (V);
 
        New_Line;
-       Put_Line ("Adding element with value 9 (before 10)...");
+       Put_Line ("Adding element with value 9");
+       Put_Line ("  (before 10)...");
 
        --
        --  Using V.Insert to insert the element
@@ -693,8 +696,9 @@ get an invalid index or cursor. For example:
           I : Extended_Index;
        begin
           New_Line;
-          Put_Line ("Removing all elements with value of "
-                    & Integer'Image (E) & "...");
+          Put_Line
+            ("Removing all elements with value of "
+             & Integer'Image (E) & "...");
           loop
              I := V.Find_Index (E);
              exit when I = No_Index;
@@ -710,8 +714,9 @@ get an invalid index or cursor. For example:
           C : Cursor;
        begin
           New_Line;
-          Put_Line ("Removing all elements with value of "
-                    & Integer'Image (E) & "...");
+          Put_Line
+            ("Removing all elements with value of "
+             & Integer'Image (E) & "...");
           loop
              C := V.Find (E);
              exit when C = No_Element;
@@ -901,7 +906,8 @@ Let's see an example:
 
        S.Insert (0, C, Ins);
        if not Ins then
-          Put_Line ("Inserting 0 into set was not successful");
+          Put_Line
+            ("Error while inserting 0 into set");
        end if;
 
        --  We can also call S.Include instead
