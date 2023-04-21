@@ -41,7 +41,8 @@ additional constraints when supplying the subtype of the field.
        Month : Months := January;
        --  This component has a default value
        Year  : Integer range 1 .. 3000 := 2012;
-       --                                 ^ Default value
+       --                                 ^^^^
+       --                              Default value
     end record;
 
 .. _Intro_Ada_Record_Default_Values:

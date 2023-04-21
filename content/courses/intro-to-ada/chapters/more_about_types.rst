@@ -100,8 +100,10 @@ resolve overloading based on the return type of a function.
     package Pkg is
        type SSID is new Integer;
 
-       function Convert (Self : SSID) return Integer;
-       function Convert (Self : SSID) return String;
+       function Convert (Self : SSID)
+                         return Integer;
+       function Convert (Self : SSID)
+                         return String;
     end Pkg;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -133,9 +135,12 @@ This is where a qualified expression becomes useful.
     package Pkg is
        type SSID is new Integer;
 
-       function Convert (Self : SSID) return Integer;
-       function Convert (Self : SSID) return String;
-       function Convert (Self : Integer) return String;
+       function Convert (Self : SSID)
+                         return Integer;
+       function Convert (Self : SSID)
+                         return String;
+       function Convert (Self : Integer)
+                         return String;
     end Pkg;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -148,8 +153,8 @@ This is where a qualified expression becomes useful.
 
        S2 : String := Convert (SSID'(123_145_299));
        --                     ^ We specify that the
-       --                       type of the expression
-       --                       is SSID.
+       --                       type of the
+       --                       expression is SSID.
 
        --  We could also have declared a temporary
 

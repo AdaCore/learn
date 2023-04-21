@@ -437,7 +437,7 @@ assigned to a variable from the other type. For example:
     procedure Illegal_Example is
        --  Declare two different floating point types
        type Meters is new Float;
-       type Miles is new Float;
+       type Miles  is new Float;
 
        Dist_Imperial : Miles;
 
@@ -463,11 +463,11 @@ Ada, such conversions must be made explicit:
        Dist_Imperial : Miles;
        Dist_Metric : constant Meters := 1000.0;
     begin
-       Dist_Imperial := Miles (Dist_Metric)
-       --               ^ Type conversion,
-       --                 from Meters to Miles
-                          * 621.371e-6;
-       --  Now the code is correct
+       Dist_Imperial :=
+         Miles (Dist_Metric) * 621.371e-6;
+       --  ^^^^^^^^^^^^^^^^^
+       --    Type conversion, from Meters to Miles
+       --    Now the code is correct
 
        Put_Line (Miles'Image (Dist_Imperial));
     end Conv;
@@ -482,7 +482,7 @@ introduce conversion functions along with the types.
 
     procedure Conv is
        type Meters is new Float;
-       type Miles is new Float;
+       type Miles  is new Float;
 
        --  Function declaration, like procedure
        --  but returns a value.
@@ -741,7 +741,8 @@ rewrite an example using type aliases:
        Dist_Metric : constant Meters := 100.0;
     begin
        --  No conversion to Miles type required:
-       Dist_Imperial := (Dist_Metric * 1609.0) / 1000.0;
+       Dist_Imperial := (Dist_Metric * 1609.0)
+                          / 1000.0;
 
        --  Not correct, but undetected:
        Dist_Imperial := Dist_Metric;

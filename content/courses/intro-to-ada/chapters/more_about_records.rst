@@ -28,12 +28,12 @@ known at compile time. This is illustrated in the example below:
     with Runtime_Length; use Runtime_Length;
 
     package Var_Size_Record is
-        Max_Len : constant Natural
-          := Compute_Max_Len;
-        --   ^ Not known at compile time
+        Max_Len : constant Natural :=
+                    Compute_Max_Len;
+        --          ^ Not known at compile time
 
-        type Items_Array is array (Positive range <>)
-          of Integer;
+        type Items_Array is
+          array (Positive range <>) of Integer;
 
         type Growable_Stack is record
            Items : Items_Array (1 .. Max_Len);
@@ -63,8 +63,8 @@ field that is called a discriminant:
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Records.Var_Size_Record_2
 
     package Var_Size_Record_2 is
-        type Items_Array is array (Positive range <>)
-          of Integer;
+        type Items_Array is
+          array (Positive range <>) of Integer;
 
         type Growable_Stack (Max_Len : Natural) is
         record
@@ -141,8 +141,9 @@ values via the dot notation.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Records.Var_Size_Record_2
 
+    with Ada.Text_IO;       use Ada.Text_IO;
+
     with Var_Size_Record_2; use Var_Size_Record_2;
-    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        procedure Print_Stack (G : Growable_Stack) is

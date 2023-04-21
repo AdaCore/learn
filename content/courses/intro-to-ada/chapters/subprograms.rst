@@ -216,8 +216,11 @@ to explicitly store it in a local variable.
 .. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Quadruple
     :class: ada-expect-compile-error
 
-    function Quadruple (I : Integer) return Integer is
-        function Double (I : Integer) return Integer is
+    function Quadruple (I : Integer)
+                        return Integer is
+
+        function Double (I : Integer)
+                         return Integer is
         begin
            return I * 2;
         end Double;

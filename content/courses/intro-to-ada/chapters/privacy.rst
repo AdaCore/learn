@@ -79,9 +79,11 @@ implementation details of a type. Here is how it can be done in Ada:
                       Val :    out Integer);
     private
 
-       subtype Stack_Index is Natural range 1 .. 10;
-       type Content_Type is array (Stack_Index)
-         of Natural;
+       subtype Stack_Index is
+         Natural range 1 .. 10;
+
+       type Content_Type is
+         array (Stack_Index) of Natural;
 
        type Stack is record
           Top     : Stack_Index;
@@ -179,7 +181,9 @@ assignment and comparison operations are not automatically provided.
        procedure Pop (S   : in out Stack;
                       Val :    out Integer);
     private
-       subtype Stack_Index is Natural range 1 .. 10;
+       subtype Stack_Index is
+         Natural range 1 .. 10;
+
        type Content_Type is
          array (Stack_Index) of Natural;
 
@@ -340,7 +344,7 @@ example:
     private
 
        type Priv_Rec is record
-         Number : Integer := 42;
+          Number : Integer := 42;
        end record;
 
     end My_Types;

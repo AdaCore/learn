@@ -195,12 +195,15 @@ We may also use any other range. For example:
        Put_Line ("T_Inv_Trig requires "
                  & Integer'Image (T_Inv_Trig'Size)
                  & " bits");
-       Put_Line ("The delta    value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Delta));
-       Put_Line ("The minimum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'First));
-       Put_Line ("The maximum  value of T_Inv_Trig is "
-                 & T_Inv_Trig'Image (T_Inv_Trig'Last));
+       Put_Line ("Delta    value of T_Inv_Trig: "
+                 & T_Inv_Trig'Image
+                     (T_Inv_Trig'Delta));
+       Put_Line ("Minimum  value of T_Inv_Trig: "
+                 & T_Inv_Trig'Image
+                     (T_Inv_Trig'First));
+       Put_Line ("Maximum  value of T_Inv_Trig: "
+                 & T_Inv_Trig'Image
+                     (T_Inv_Trig'Last));
     end Custom_Fixed_Point_Range;
 
 In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
