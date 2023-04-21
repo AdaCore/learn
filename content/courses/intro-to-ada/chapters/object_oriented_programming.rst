@@ -80,7 +80,7 @@ derivation is built into the language.
 
     package Newtypes is
        type Point is record
-           X, Y : Integer;
+          X, Y : Integer;
        end record;
 
        type New_Point is new Point;
@@ -109,35 +109,35 @@ defined in the same scope as the type.
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Primitives is
-      package Week is
-        type Days is (Monday, Tuesday, Wednesday,
-                      Thursday, Friday,
-                      Saturday, Sunday);
+       package Week is
+          type Days is (Monday, Tuesday, Wednesday,
+                        Thursday, Friday,
+                        Saturday, Sunday);
 
-         --  Print_Day is a primitive
-         --  of the type Days
-        procedure Print_Day (D : Days);
-      end Week;
+          --  Print_Day is a primitive
+          --  of the type Days
+         procedure Print_Day (D : Days);
+       end Week;
 
-      package body Week is
-        procedure Print_Day (D : Days) is
-        begin
-           Put_Line (Days'Image (D));
-        end Print_Day;
-      end Week;
+       package body Week is
+          procedure Print_Day (D : Days) is
+          begin
+             Put_Line (Days'Image (D));
+          end Print_Day;
+       end Week;
 
-      use Week;
-      type Weekend_Days is new
-        Days range Saturday .. Sunday;
+       use Week;
+       type Weekend_Days is new
+         Days range Saturday .. Sunday;
 
-      --  A procedure Print_Day is automatically
-      --  inherited here. It is as if the procedure
-      --
-      --  procedure Print_Day (D : Weekend_Days);
-      --
-      --  has been declared with the same body
+       --  A procedure Print_Day is automatically
+       --  inherited here. It is as if the procedure
+       --
+       --  procedure Print_Day (D : Weekend_Days);
+       --
+       --  has been declared with the same body
 
-      Sat : Weekend_Days := Saturday;
+       Sat : Weekend_Days := Saturday;
     begin
        Print_Day (Sat);
     end Primitives;
@@ -204,8 +204,8 @@ Let's see our first tagged type declarations:
        --  Here's how you derive a tagged type:
 
        type Derived is new My_Class with record
-           A : Integer;
-           --  You can add fields in derived types.
+          A : Integer;
+          --  You can add fields in derived types.
        end record;
 
        overriding
@@ -453,7 +453,7 @@ This is an example of a tagged private type:
        type T is tagged private;
     private
        type T is tagged record
-           E : Integer;
+          E : Integer;
        end record;
     end P;
 
@@ -463,7 +463,7 @@ This is an example of a tagged limited type:
 
     package P is
        type T is tagged limited record
-           E : Integer;
+          E : Integer;
        end record;
     end P;
 
@@ -478,7 +478,7 @@ tagged limited private type:
        procedure Init (A : in out T);
     private
        type T is tagged limited record
-           E : Integer;
+          E : Integer;
        end record;
     end P;
 
@@ -494,20 +494,20 @@ tagged limited private type:
     with P; use P;
 
     procedure Main is
-      T1, T2 : T;
+       T1, T2 : T;
     begin
-      T1.Init;
-      T2.Init;
+       T1.Init;
+       T2.Init;
 
-      --  The following line doesn't work
-      --  because type T is private:
-      --
-      --  T1.E := 0;
+       --  The following line doesn't work
+       --  because type T is private:
+       --
+       --  T1.E := 0;
 
-      --  The following line doesn't work
-      --  because type T is limited:
-      --
-      --  T2 := T1;
+       --  The following line doesn't work
+       --  because type T is limited:
+       --
+       --  T2 := T1;
     end Main;
 
 Note that the code in the :ada:`Main` procedure above presents two assignments
@@ -573,10 +573,10 @@ dispatch. For example:
     with P; use P;
 
     procedure Dispatching_Example is
-      T2         :          T_New;
-      T_Dispatch : constant T'Class := T2;
+       T2         :          T_New;
+       T_Dispatch : constant T'Class := T2;
     begin
-      T_Dispatch.Show;
+       T_Dispatch.Show;
     end Dispatching_Example;
 
 A more useful application is to declare an array of objects that can dispatch.
@@ -599,13 +599,13 @@ However, it's not possible to declare an array of type :ada:`T'Class` directly:
     with P; use P;
 
     procedure Classwide_Compilation_Error is
-      T_Arr  : array (1 .. 2) of T'Class;
-      --                         ^
-      --               Compilation Error!
+       T_Arr  : array (1 .. 2) of T'Class;
+       --                         ^
+       --               Compilation Error!
     begin
-      for I in T_Arr'Range loop
-         T_Arr (I).Show;
-      end loop;
+       for I in T_Arr'Range loop
+          T_Arr (I).Show;
+       end loop;
     end Classwide_Compilation_Error;
 
 In fact, it's impossible for the compiler to know which type would actually be
@@ -628,7 +628,7 @@ type. This is the adapted code:
 
     package P is
        type T is tagged record
-           E : Integer;
+          E : Integer;
        end record;
 
        type T_Class is access T'Class;
@@ -671,20 +671,20 @@ type. This is the adapted code:
     with P;           use P;
 
     procedure Main is
-      T_Arr  : array (1 .. 2) of T_Class;
+       T_Arr  : array (1 .. 2) of T_Class;
     begin
-      T_Arr (1) := new T;
-      T_Arr (2) := new T_New;
+       T_Arr (1) := new T;
+       T_Arr (2) := new T_New;
 
-      for I in T_Arr'Range loop
-         Put_Line ("Element # "
-                   & Integer'Image (I));
+       for I in T_Arr'Range loop
+          Put_Line ("Element # "
+                    & Integer'Image (I));
 
-         T_Arr (I).Init;
-         T_Arr (I).Show;
+          T_Arr (I).Init;
+          T_Arr (I).Show;
 
-         Put_Line ("-----------");
-      end loop;
+          Put_Line ("-----------");
+       end loop;
     end Main;
 
 In this example, the first element (:ada:`T_Arr (1)`) is of type :ada:`T`,
