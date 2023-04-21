@@ -769,7 +769,8 @@ The following example presents code that manipulates three vectors (:ada:`V1`,
            (Index_Type   => Natural,
             Element_Type => Integer);
 
-       package Integer_Vectors_Sorting is new Integer_Vectors.Generic_Sorting;
+       package Integer_Vectors_Sorting is
+         new Integer_Vectors.Generic_Sorting;
 
        use Integer_Vectors;
        use Integer_Vectors_Sorting;
@@ -808,7 +809,8 @@ The following example presents code that manipulates three vectors (:ada:`V1`,
        Show_Elements (V3);
 
        New_Line;
-       Put_Line ("Concatenating V1, V2 and V3 into V:");
+       Put_Line
+         ("Concatenating V1, V2 and V3 into V:");
 
        V := V1 & V2 & V3;
 

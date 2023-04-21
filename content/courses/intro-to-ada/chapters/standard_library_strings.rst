@@ -450,7 +450,8 @@ Let's look at an example:
        S2 := To_Unbounded_String ("Hello World");
        Display_String_Info (S2);
 
-       S1 := To_Unbounded_String ("Something longer to say here...");
+       S1 := To_Unbounded_String
+               ("Something longer to say here...");
        Display_String_Info (S1);
     end Show_Unbounded_String;
 

@@ -90,7 +90,9 @@ generator :ada:`G`, which you pass to :ada:`Random`. For example:
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Random_Num
 
     with Ada.Text_IO;  use Ada.Text_IO;
-    with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
+
+    with Ada.Numerics.Float_Random;
+    use  Ada.Numerics.Float_Random;
 
     procedure Show_Float_Random_Num is
        G : Generator;
@@ -99,9 +101,11 @@ generator :ada:`G`, which you pass to :ada:`Random`. For example:
        Reset (G);
 
        Put_Line ("Some random numbers between "
-                 & Float'Image (Uniformly_Distributed'First)
+                 & Float'Image
+                     (Uniformly_Distributed'First)
                  & " and "
-                 & Float'Image (Uniformly_Distributed'Last)
+                 & Float'Image
+                     (Uniformly_Distributed'Last)
                  & ":");
        for I in 1 .. 15 loop
           X := Random (G);

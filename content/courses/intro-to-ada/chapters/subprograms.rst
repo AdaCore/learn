@@ -500,6 +500,7 @@ when you're using code from external sources that cannot be changed in your
 system. Let's look at an example:
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+   :class: nosyntax-check
 
     procedure A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed
       (A_Message : String);
@@ -519,6 +520,7 @@ parameters of the original subprogram |mdash| we may rename them, too, in the
 declaration. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Proc_Renaming
+   :class: nosyntax-check
 
     with A_Procedure_With_Very_Long_Name_That_Cannot_Be_Changed;
 

@@ -523,8 +523,10 @@ This is a simple test application for the packages above:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Visibility
 
-    with Ada.Text_IO;                use Ada.Text_IO;
-    with Book.Additional_Operations; use Book.Additional_Operations;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Book.Additional_Operations;
+    use  Book.Additional_Operations;
 
     procedure Main is
     begin

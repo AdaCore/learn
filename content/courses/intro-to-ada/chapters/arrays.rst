@@ -411,7 +411,8 @@ Here is how the string type is defined in Ada:
 
 .. code-block:: ada
 
-    type String is array (Positive range <>) of Character;
+    type String is
+      array (Positive range <>) of Character;
 
 The only built-in feature Ada adds to make strings more ergonomic is custom
 literals, as we can see in the example below.

@@ -386,6 +386,7 @@ To create Ada bindings, we'll call the compiler like this:
 The result is an Ada spec file called :file:`test_h.ads`:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds
+    :class: nosyntax-check
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -543,6 +544,7 @@ Next, we'll create our bindings:
 This creates the following specification in :file:`test_h.ads`:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
+    :class: nosyntax-check
 
     pragma Ada_2005;
     pragma Style_Checks (Off);
@@ -624,6 +626,7 @@ adapt them to our needs. For example, we can:
 This is the resulting specification:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
+    :class: nosyntax-check
 
     with Interfaces.C; use Interfaces.C;
     with System;
