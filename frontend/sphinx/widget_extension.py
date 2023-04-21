@@ -14,6 +14,7 @@ Options can be specified with the :class: operation. These options are used to
 tell the automatic test infrastructure how to process the widget. The following
 options are available to tell the tests to:
     * ada-nocheck              - Ignore syntax errors
+    * nosyntax-check           - No syntax check
     * ada-syntax-only          - Check syntax only, not run
     * ada-expect-compile-error - Expect a compile error
     * ada-run                  - Run the example

@@ -270,6 +270,9 @@ class Widget:
             for opt in opts['class']:
                 if opt in ['ada-nocheck', 'c-nocheck']:
                     self.__no_button = True
+                elif opt == 'nosyntax-check':
+                    # this is for testing, nothing to do here
+                    continue
                 elif opt == 'ada-syntax-only':
                     self.__no_button = True
                 elif opt in ['ada-expect-compile-error',
