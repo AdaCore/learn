@@ -400,7 +400,8 @@ simple delay. This is the complete package:
     private
        Start_Time   : Time := Clock;
 
-       function Get_Start_Time return Time is (Start_Time);
+       function Get_Start_Time return Time is
+         (Start_Time);
 
     end Delay_Aux_Pkg;
 
@@ -415,7 +416,8 @@ simple delay. This is the complete package:
           Now_Time     := Clock;
           Elapsed_Time := Now_Time - Start_Time;
           Put_Line ("Elapsed time "
-                    & Duration'Image (To_Duration (Elapsed_Time))
+                    & Duration'Image
+                        (To_Duration (Elapsed_Time))
                     & " seconds");
        end Show_Elapsed_Time;
 

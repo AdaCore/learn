@@ -223,14 +223,17 @@ floating-point value:
        procedure Put_Line (N : Num_Info) is
        begin
           if N.Valid then
-             Ada.Text_IO.Put_Line ("(ok,     "
-                                   & Float'Image (N.Value) & ")");
+             Ada.Text_IO.Put_Line
+               ("(ok,     "
+                & Float'Image (N.Value) & ")");
           else
-             Ada.Text_IO.Put_Line ("(not ok,  -----------)");
+             Ada.Text_IO.Put_Line
+               ("(not ok,  -----------)");
           end if;
        end Put_Line;
 
-       package Num_Info_IO is new Ada.Sequential_IO (Num_Info);
+       package Num_Info_IO is new
+         Ada.Sequential_IO (Num_Info);
        use Num_Info_IO;
 
        F         : Num_Info_IO.File_Type;

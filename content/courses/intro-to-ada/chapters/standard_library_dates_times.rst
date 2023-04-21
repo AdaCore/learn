@@ -319,8 +319,9 @@ loop. For example:
     procedure Display_Benchmarking_Math is
 
        procedure Computational_Intensive_App is
-          package Funcs is new Ada.Numerics.Generic_Elementary_Functions
-            (Float_Type => Long_Long_Float);
+          package Funcs is new
+            Ada.Numerics.Generic_Elementary_Functions
+              (Float_Type => Long_Long_Float);
           use Funcs;
 
           X : Long_Long_Float;
@@ -349,7 +350,8 @@ loop. For example:
           Elapsed_Time := Stop_Time - Start_Time;
 
           Put_Line ("Elapsed time: "
-                    & Duration'Image (To_Duration (Elapsed_Time))
+                    & Duration'Image
+                        (To_Duration (Elapsed_Time))
                     & " seconds");
        end Benchm_Elapsed_Time;
 
@@ -366,7 +368,8 @@ loop. For example:
           Elapsed_Time := Stop_Time - Start_Time;
 
           Put_Line ("CPU time: "
-                    & Duration'Image (To_Duration (Elapsed_Time))
+                    & Duration'Image
+                        (To_Duration (Elapsed_Time))
                     & " seconds");
        end Benchm_CPU_Time;
     begin
