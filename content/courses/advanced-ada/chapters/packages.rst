@@ -329,7 +329,8 @@ in its specification:
     with Data_Processing.Calculations;
     use  Data_Processing.Calculations;
 
-    private package Data_Processing.Advanced_Calculations is
+    private
+    package Data_Processing.Advanced_Calculations is
 
        procedure Advanced_Calculate (D : in out Data)
          renames Calculate;
@@ -403,9 +404,11 @@ package:
     with Data_Processing.Calculations;
     use  Data_Processing.Calculations;
 
-    package body Data_Processing.Advanced_Calculations is
+    package body Data_Processing.Advanced_Calculations
+    is
 
-       procedure Advanced_Calculate (D : in out Data) is
+       procedure Advanced_Calculate (D : in out Data)
+       is
        begin
          Calculate (D);
        end Advanced_Calculate;
@@ -1366,7 +1369,8 @@ and an addition operator.
 
        function Init return Point;
 
-       function "+" (P : Point; I : Integer) return Point;
+       function "+" (P : Point;
+                     I : Integer) return Point;
 
     private
 
@@ -1376,7 +1380,8 @@ and an addition operator.
 
        function Init return Point is (0, 0);
 
-       function "+" (P : Point; I : Integer) return Point is
+       function "+" (P : Point;
+                     I : Integer) return Point is
          (P.X + I, P.Y + I);
 
     end Points;
@@ -1493,14 +1498,16 @@ procedure that shows the value of a :ada:`Complex` object:
     generic
        with package Complex_Types is new
          Ada.Numerics.Generic_Complex_Types (<>);
-    procedure Show_Any_Complex (Msg : String;
-                                Val : Complex_Types.Complex);
+    procedure Show_Any_Complex
+      (Msg : String;
+       Val : Complex_Types.Complex);
 
     with Ada.Text_IO;
     with Ada.Text_IO.Complex_IO;
 
-    procedure Show_Any_Complex (Msg : String;
-                                Val : Complex_Types.Complex)
+    procedure Show_Any_Complex
+      (Msg : String;
+       Val : Complex_Types.Complex)
     is
        package Complex_Float_Types_IO is new
          Ada.Text_IO.Complex_IO (Complex_Types);
@@ -1519,14 +1526,16 @@ Then, we implement a test procedure where we declare the
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
 
-    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics; use Ada.Numerics;
+
     with Ada.Numerics.Generic_Complex_Types;
 
     with Show_Any_Complex;
 
     procedure Show_Use is
        package Complex_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Float);
        use Complex_Float_Types;
 
        procedure Show_Complex_Float is new
@@ -1558,18 +1567,21 @@ Now, let's add the declaration of the :ada:`Complex_Long_Float_Types` package
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
     :class: ada-expect-compile-error
 
-    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics; use Ada.Numerics;
+
     with Ada.Numerics.Generic_Complex_Types;
 
     with Show_Any_Complex;
 
     procedure Show_Use is
        package Complex_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Float);
        use Complex_Float_Types;
 
        package Complex_Long_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Long_Float);
        use Complex_Long_Float_Types;
 
        procedure Show_Complex_Float is new
@@ -1601,18 +1613,21 @@ prefix in the variable declaration:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
 
-    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics; use Ada.Numerics;
+
     with Ada.Numerics.Generic_Complex_Types;
 
     with Show_Any_Complex;
 
     procedure Show_Use is
        package Complex_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Float);
        use Complex_Float_Types;
 
        package Complex_Long_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Long_Float);
        use Complex_Long_Float_Types;
 
        procedure Show_Complex_Float is new
@@ -1634,18 +1649,21 @@ Another possibility is to write a use clause in the form :ada:`use all type`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
 
-    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics; use Ada.Numerics;
+
     with Ada.Numerics.Generic_Complex_Types;
 
     with Show_Any_Complex;
 
     procedure Show_Use is
        package Complex_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Float);
        use all type Complex_Float_Types.Complex;
 
        package Complex_Long_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Long_Float);
        use all type Complex_Long_Float_Types.Complex;
 
        procedure Show_Complex_Float is new
@@ -1667,18 +1685,21 @@ For the sake of completeness, let's declare and use variables of both
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Packages.Use_Type_Clause_Complex_Types
 
-    with Ada.Numerics;                       use Ada.Numerics;
+    with Ada.Numerics; use Ada.Numerics;
+
     with Ada.Numerics.Generic_Complex_Types;
 
     with Show_Any_Complex;
 
     procedure Show_Use is
        package Complex_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Float);
        use all type Complex_Float_Types.Complex;
 
        package Complex_Long_Float_Types is new
-         Ada.Numerics.Generic_Complex_Types (Real => Long_Float);
+         Ada.Numerics.Generic_Complex_Types
+           (Real => Long_Float);
        use all type Complex_Long_Float_Types.Complex;
 
        procedure Show_Complex_Float is new

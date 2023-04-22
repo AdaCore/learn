@@ -42,11 +42,14 @@ Here's another example, this time with an array:
 
     procedure Show_Dereferencing is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
-       type Integer_Array_Access is access Integer_Array;
+       type Integer_Array_Access is
+         access Integer_Array;
 
-       Arr : constant Integer_Array_Access := new Integer_Array (1 .. 6);
+       Arr : constant Integer_Array_Access :=
+                        new Integer_Array (1 .. 6);
     begin
        Arr.all := (1, 2, 3, 5, 8, 13);
 
@@ -100,21 +103,25 @@ can take the previous code example and replace :ada:`Arr.all (I)` by
 
     procedure Show_Dereferencing is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
-       type Integer_Array_Access is access Integer_Array;
+       type Integer_Array_Access is
+         access Integer_Array;
 
-       Arr : constant Integer_Array_Access := new Integer_Array (1 .. 6);
+       Arr : constant Integer_Array_Access :=
+                        new Integer_Array (1 .. 6);
     begin
        Arr.all := (1, 2, 3, 5, 8, 13);
 
        Arr (1 .. 6) := (1, 2, 3, 5, 8, 13);
 
        for I in Arr'Range loop
-          Put_Line ("Arr (: "
-                    & Integer'Image (I) & "): "
-                    & Integer'Image (Arr (I)));
-          --                            ^ .all is implicit.
+          Put_Line
+            ("Arr (: "
+             & Integer'Image (I) & "): "
+             & Integer'Image (Arr (I)));
+          --                     ^ .all is implicit.
        end loop;
     end Show_Dereferencing;
 
@@ -146,12 +153,15 @@ For example:
 
     procedure Show_Array_Assignments is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
-       type Integer_Array_Access is access Integer_Array;
+       type Integer_Array_Access is
+         access Integer_Array;
 
-       procedure Show_Array (Name : String;
-                             Arr  : Integer_Array_Access) is
+       procedure Show_Array
+         (Name : String;
+          Arr  : Integer_Array_Access) is
        begin
           Put (Name);
           for E of Arr.all loop
@@ -160,8 +170,10 @@ For example:
           New_Line;
        end Show_Array;
 
-       Arr_1 : constant Integer_Array_Access := new Integer_Array (1 .. 6);
-       Arr_2 :          Integer_Array_Access := new Integer_Array (1 .. 6);
+       Arr_1 : constant Integer_Array_Access :=
+                          new Integer_Array (1 .. 6);
+       Arr_2 :          Integer_Array_Access :=
+                          new Integer_Array (1 .. 6);
     begin
        Arr_1.all := (1,   2,  3,  5,   8,  13);
        Arr_2.all := (21, 34, 55, 89, 144, 233);
@@ -239,26 +251,35 @@ Finally, let's see an example of implicit dereference when using attributes:
 
     procedure Show_Dereferencing is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
-       type Integer_Array_Access is access Integer_Array;
+       type Integer_Array_Access is
+         access Integer_Array;
 
-       Arr : constant Integer_Array_Access := new Integer_Array (1 .. 6);
+       Arr : constant Integer_Array_Access :=
+                        new Integer_Array (1 .. 6);
     begin
-       Put_Line ("Arr'First: "
-                 & Integer'Image (Arr'First));
-       Put_Line ("Arr'Last: "
-                 & Integer'Image (Arr'Last));
+       Put_Line
+         ("Arr'First: "
+          & Integer'Image (Arr'First));
+       Put_Line
+         ("Arr'Last: "
+          & Integer'Image (Arr'Last));
 
-       Put_Line ("Arr'Component_Size: "
-                 & Integer'Image (Arr'Component_Size));
-       Put_Line ("Arr.all'Component_Size: "
-                 & Integer'Image (Arr.all'Component_Size));
+       Put_Line
+         ("Arr'Component_Size: "
+          & Integer'Image (Arr'Component_Size));
+       Put_Line
+         ("Arr.all'Component_Size: "
+          & Integer'Image (Arr.all'Component_Size));
 
-       Put_Line ("Arr'Size: "
-                 & Integer'Image (Arr'Size));
-       Put_Line ("Arr.all'Size: "
-                 & Integer'Image (Arr.all'Size));
+       Put_Line
+         ("Arr'Size: "
+          & Integer'Image (Arr'Size));
+       Put_Line
+         ("Arr.all'Size: "
+          & Integer'Image (Arr.all'Size));
     end Show_Dereferencing;
 
 Here, we can write :ada:`Arr'First` and :ada:`Arr'Last` instead of
@@ -376,15 +397,20 @@ where each quality level has an associated array:
 
     private
 
-       Calc_Table : constant array (Quality_Level, 1 .. 5) of Float :=
-         (Simplified => (0.15, 0.00, 0.00, 0.00, 0.00),
-          Better     => (0.02, 0.16, 0.27, 0.00, 0.00),
-          Best       => (0.01, 0.08, 0.12, 0.20, 0.34));
+       Calc_Table : constant array
+         (Quality_Level, 1 .. 5) of Float :=
+           (Simplified =>
+                (0.15, 0.00, 0.00, 0.00, 0.00),
+            Better     =>
+                (0.02, 0.16, 0.27, 0.00, 0.00),
+            Best       =>
+                (0.01, 0.08, 0.12, 0.20, 0.34));
 
-       Last : constant array (Quality_Level) of Positive :=
-         (Simplified => 1,
-          Better     => 3,
-          Best       => 5);
+       Last : constant array
+         (Quality_Level) of Positive :=
+           (Simplified => 1,
+            Better     => 3,
+            Best       => 5);
 
     end Data_Processing;
 
@@ -401,7 +427,8 @@ number of coefficients and the actual coefficients:
        type Quality_Level is
          (Simplified, Better, Best);
 
-       type Data is array (Positive range <>) of Float;
+       type Data is
+         array (Positive range <>) of Float;
 
     private
 
@@ -410,10 +437,14 @@ number of coefficients and the actual coefficients:
           Coef : Data (1 .. 5);
        end record;
 
-       Calc_Table : constant array (Quality_Level) of Table_Coefficient :=
-         (Simplified => (1, (0.15, 0.00, 0.00, 0.00, 0.00)),
-          Better     => (3, (0.02, 0.16, 0.27, 0.00, 0.00)),
-          Best       => (5, (0.01, 0.08, 0.12, 0.20, 0.34)));
+       Calc_Table : constant array
+         (Quality_Level) of Table_Coefficient :=
+           (Simplified =>
+                (1, (0.15, 0.00, 0.00, 0.00, 0.00)),
+            Better     =>
+                (3, (0.02, 0.16, 0.27, 0.00, 0.00)),
+            Best       =>
+                (5, (0.01, 0.08, 0.12, 0.20, 0.34)));
 
     end Data_Processing;
 
@@ -476,17 +507,26 @@ For example, we can declare a constant array :ada:`Table` as a ragged array:
 
     package Data_Processing is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
     private
 
-       type Integer_Array_Access is access constant Integer_Array;
+       type Integer_Array_Access is
+         access constant Integer_Array;
 
-       Table : constant array (1 .. 3) of Integer_Array_Access :=
+       Table : constant array (1 .. 3) of
+                 Integer_Array_Access :=
          (1 => new Integer_Array'(1 => 15),
-          2 => new Integer_Array'(1 => 12, 2 => 15, 3 => 20),
-          3 => new Integer_Array'(1 => 12, 2 => 15, 3 => 20,
-                                  4 => 20, 5 => 25, 6 => 30));
+          2 => new Integer_Array'(1 => 12,
+                                  2 => 15,
+                                  3 => 20),
+          3 => new Integer_Array'(1 => 12,
+                                  2 => 15,
+                                  3 => 20,
+                                  4 => 20,
+                                  5 => 25,
+                                  6 => 30));
 
     end Data_Processing;
 
@@ -503,16 +543,22 @@ for the :ada:`Calc_Table`:
        type Quality_Level is
          (Simplified, Better, Best);
 
-       type Data is array (Positive range <>) of Float;
+       type Data is
+         array (Positive range <>) of Float;
 
     private
 
        type Coefficients is access constant Data;
 
-       Calc_Table : constant array (Quality_Level) of Coefficients :=
-         (Simplified => new Data'(1 => 0.15),
-          Better     => new Data'(0.02, 0.16, 0.27),
-          Best       => new Data'(0.01, 0.08, 0.12, 0.20, 0.34));
+       Calc_Table : constant array (Quality_Level) of
+                      Coefficients :=
+         (Simplified =>
+              new Data'(1 => 0.15),
+          Better     =>
+              new Data'(0.02, 0.16, 0.27),
+          Best       =>
+              new Data'(0.01, 0.08, 0.12,
+                        0.20, 0.34));
 
     end Data_Processing;
 
@@ -765,17 +811,26 @@ previous code snippet:
        I_Var : aliased          Integer :=  0;
        Fact  : aliased constant Integer := 42;
 
-       Dyn_Ptr     : constant Integer_Access       := new Integer'(30);
-       I_Var_Ptr   : constant Integer_Access_All   := I_Var'Access;
-       I_Var_C_Ptr : constant Integer_Access_Const := I_Var'Access;
-       Fact_Ptr    : constant Integer_Access_Const := Fact'Access;
+       Dyn_Ptr     : constant Integer_Access
+                       := new Integer'(30);
+       I_Var_Ptr   : constant Integer_Access_All
+                       := I_Var'Access;
+       I_Var_C_Ptr : constant Integer_Access_Const
+                       := I_Var'Access;
+       Fact_Ptr    : constant Integer_Access_Const
+                       := Fact'Access;
 
        procedure Show is
        begin
-          Put_Line ("Dyn_Ptr:     " & Integer'Image (Dyn_Ptr.all));
-          Put_Line ("I_Var_Ptr:   " & Integer'Image (I_Var_Ptr.all));
-          Put_Line ("I_Var_C_Ptr: " & Integer'Image (I_Var_C_Ptr.all));
-          Put_Line ("Fact_Ptr:    " & Integer'Image (Fact_Ptr.all));
+          Put_Line ("Dyn_Ptr:     "
+                    & Integer'Image (Dyn_Ptr.all));
+          Put_Line ("I_Var_Ptr:   "
+                    & Integer'Image (I_Var_Ptr.all));
+          Put_Line ("I_Var_C_Ptr: "
+                    & Integer'Image
+                        (I_Var_C_Ptr.all));
+          Put_Line ("Fact_Ptr:    "
+                    & Integer'Image (Fact_Ptr.all));
        end Show;
 
     end Integer_Access_Types;
@@ -840,18 +895,24 @@ previous program using aliased constant objects:
 
     package Data_Processing is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
     private
 
-       type Integer_Array_Access is access constant Integer_Array;
+       type Integer_Array_Access is
+         access constant Integer_Array;
 
-       Tab_1 : aliased constant Integer_Array := (1 => 15);
-       Tab_2 : aliased constant Integer_Array := (12, 15, 20);
-       Tab_3 : aliased constant Integer_Array := (12, 15, 20,
-                                                  20, 25, 30);
+       Tab_1 : aliased constant Integer_Array
+                 := (1 => 15);
+       Tab_2 : aliased constant Integer_Array
+                 := (12, 15, 20);
+       Tab_3 : aliased constant Integer_Array
+                 := (12, 15, 20,
+                     20, 25, 30);
 
-       Table : constant array (1 .. 3) of Integer_Array_Access :=
+       Table : constant array (1 .. 3) of
+                 Integer_Array_Access :=
          (1 => Tab_1'Access,
           2 => Tab_2'Access,
           3 => Tab_3'Access);
@@ -876,8 +937,10 @@ to refer to an access object:
 
     procedure Show_Aliased_Access_Obj is
 
-       type Integer_Access        is access all Integer;
-       type Integer_Access_Access is access all Integer_Access;
+       type Integer_Access        is
+         access all Integer;
+       type Integer_Access_Access is
+         access all Integer_Access;
 
        I_Var : aliased Integer;
        A     : aliased Integer_Access;
@@ -915,8 +978,8 @@ to those components:
           I_Var_2 : aliased Integer;
        end record;
 
-       type Integer_Array is array (Positive range <>) of
-         aliased Integer;
+       type Integer_Array is
+         array (Positive range <>) of aliased Integer;
 
        R   : Rec := (22, 24);
        Arr : Integer_Array (1 .. 3) := (others => 42);
@@ -924,7 +987,8 @@ to those components:
     begin
        --  A := R.I_Var_1'Access;
        --                 ^ ERROR: cannot access
-       --                          non-aliased component
+       --                          non-aliased
+       --                          component
 
        A := R.I_Var_2'Access;
        Put_Line ("A: " & Integer'Image (A.all));
@@ -988,18 +1052,22 @@ Let's see an example:
           --               ^ equivalent to
           --                 "aliased in Integer"
 
-          type Integer_Constant_Access is access constant Integer;
+          type Integer_Constant_Access is
+            access constant Integer;
 
-          A : constant Integer_Constant_Access := I'Access;
+          A : constant Integer_Constant_Access
+                := I'Access;
        begin
-          Put_Line ("Value : I " & Integer'Image (A.all));
+          Put_Line ("Value : I "
+                    & Integer'Image (A.all));
        end Show;
 
        procedure Set_One (I : aliased out Integer) is
 
           type Integer_Access is access all Integer;
 
-          procedure Local_Set_One (A : Integer_Access) is
+          procedure Local_Set_One (A : Integer_Access)
+          is
           begin
              A.all := 1;
           end Local_Set_One;
@@ -1406,16 +1474,19 @@ Let's see a simple example:
        --
        --  Reference type:
        --
-       type Id_Ref (Ref : access Id_Number) is null record
+       type Id_Ref (Ref : access Id_Number) is
        --           ^ reference discriminant
-         with Implicit_Dereference => Ref;
-         --                           ^^^
-         --             name of the reference discriminant
+         null record
+           with Implicit_Dereference => Ref;
+         --                             ^^^
+         --               name of the reference
+         --               discriminant
 
        --
        --  Access value:
        --
-       I : constant access Id_Number := new Id_Number'(Id => 42);
+       I : constant access Id_Number :=
+             new Id_Number'(Id => 42);
 
        --
        --  Reference object:
@@ -1469,10 +1540,12 @@ wouldn't compile:
        type Id_Number_Access is access Id_Number;
 
        --  Reference type:
-       type Id_Ref (Ref : Id_Number_Access) is null record
-       --                 ^ ERROR: it must be an
-       --                          access discriminant!
-         with Implicit_Dereference => Ref;
+       type Id_Ref (Ref : Id_Number_Access) is
+       --                 ^ ERROR: it must be
+       --                          an access
+       --                          discriminant!
+         null record
+           with Implicit_Dereference => Ref;
 
 However, we could use other forms |mdash| such as :ada:`not null access`
 |mdash| in the reference discriminant:
@@ -1480,8 +1553,9 @@ However, we could use other forms |mdash| such as :ada:`not null access`
 .. code-block:: ada
 
        --  Reference type:
-       type Id_Ref (Ref : not null access Id_Number) is null record
-         with Implicit_Dereference => Ref;
+       type Id_Ref (Ref : not null access Id_Number) is
+         null record
+           with Implicit_Dereference => Ref;
 
 .. admonition:: In the Ada Reference Manual
 
@@ -1498,11 +1572,13 @@ primitive.
 .. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.User_Defined_References
 
     package Info is
-       type Id_Number (Id : Positive) is tagged private;
+       type Id_Number (Id : Positive) is
+         tagged private;
 
        procedure Show (R : Id_Number);
     private
-       type Id_Number (Id : Positive) is tagged null record;
+       type Id_Number (Id : Positive) is
+         tagged null record;
     end Info;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1526,11 +1602,13 @@ application:
     procedure Show_User_Defined_Reference is
 
        --  Reference type:
-       type Id_Ref (Ref : access Id_Number) is null record
-         with Implicit_Dereference => Ref;
+       type Id_Ref (Ref : access Id_Number) is
+         null record
+           with Implicit_Dereference => Ref;
 
        --  Access value:
-       I : constant access Id_Number := new Id_Number (42);
+       I : constant access Id_Number :=
+             new Id_Number (42);
 
        --  Reference object:
        R : Id_Ref (I);
@@ -1570,7 +1648,8 @@ iterating over a container. As an example, let's implement the
           Date    : Time;
        end record;
 
-       type National_Date_Access is access National_Date;
+       type National_Date_Access is
+         access National_Date;
 
        procedure Show (Nat_Date : National_Date);
 
@@ -1582,8 +1661,11 @@ iterating over a container. As an example, let's implement the
 
        procedure Show (Nat_Date : National_Date) is
        begin
-          Put_Line ("Country: " & Nat_Date.Country);
-          Put_Line ("Year:    " & Integer'Image (Nat_Date.Date.Year));
+          Put_Line ("Country: "
+                    & Nat_Date.Country);
+          Put_Line ("Year:    "
+                    & Integer'Image
+                        (Nat_Date.Date.Year));
        end Show;
 
     end National_Date_Info;
@@ -1602,17 +1684,19 @@ national days:
     package National_Date_Containers is
 
        --  Reference type:
-       type National_Date_Reference (Ref : access National_Date) is
-         tagged limited null record
-           with Implicit_Dereference => Ref;
+       type National_Date_Reference
+         (Ref : access National_Date) is
+           tagged limited null record
+             with Implicit_Dereference => Ref;
 
        --  Container (as an array):
-       type National_Dates is array (Positive range <>) of
-         National_Date_Access;
+       type National_Dates is
+         array (Positive range <>) of
+           National_Date_Access;
 
-       --  The Find function scans the container to find a
-       --  specific country, which is returned as a reference
-       --  object.
+       --  The Find function scans the container to
+       --  find a specific country, which is returned
+       --  as a reference object.
        function Find (Nat_Dates : National_Dates;
                       Country   : Country_Code)
                       return National_Date_Reference;
@@ -1623,21 +1707,27 @@ national days:
 
        function Find (Nat_Dates : National_Dates;
                       Country   : Country_Code)
-                      return National_Date_Reference is
+                      return National_Date_Reference
+       is
        begin
           for I in Nat_Dates'Range loop
              if Nat_Dates (I).Country = Country then
-                return National_Date_Reference'(Ref => Nat_Dates (I));
-                --     ^ Returning reference object with a reference
-                --       to the national day we found.
+                return National_Date_Reference'(
+                         Ref => Nat_Dates (I));
+                --     ^^^^^^^^^^^^^^^^^^^^^^^^^
+                --   Returning reference object with a
+                --   reference to the national day we
+                --   found.
              end if;
           end loop;
 
-          return National_Date_Reference'(Ref => null);
-          --     ^ Returning reference object with a null
-          --       reference in case the country wasn't
-          --       found. This will trigger an exception
-          --       if we try to dereference it.
+          return
+            National_Date_Reference'(Ref => null);
+          --  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          --   Returning reference object with a null
+          --   reference in case the country wasn't
+          --   found. This will trigger an exception
+          --   if we try to dereference it.
        end Find;
 
     end National_Date_Containers;
@@ -1662,17 +1752,25 @@ a specific country:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.National_Dates
 
-    with National_Date_Info;       use National_Date_Info;
-    with National_Date_Containers; use National_Date_Containers;
+    with National_Date_Info;
+    use  National_Date_Info;
+
+    with National_Date_Containers;
+    use  National_Date_Containers;
 
     procedure Show_National_Dates is
 
        Nat_Dates : constant National_Dates (1 .. 5) :=
-         (new National_Date'("USA", Time'(1776,  7,  4)),
-          new National_Date'("FRA", Time'(1789,  7, 14)),
-          new National_Date'("DEU", Time'(1990, 10,  3)),
-          new National_Date'("SPA", Time'(1492, 10, 12)),
-          new National_Date'("BRA", Time'(1822,  9,  7)));
+         (new National_Date'("USA",
+                             Time'(1776,  7,  4)),
+          new National_Date'("FRA",
+                             Time'(1789,  7, 14)),
+          new National_Date'("DEU",
+                             Time'(1990, 10,  3)),
+          new National_Date'("SPA",
+                             Time'(1492, 10, 12)),
+          new National_Date'("BRA",
+                             Time'(1822,  9,  7)));
 
     begin
        Find (Nat_Dates, "FRA").Show;
@@ -1699,15 +1797,17 @@ type) and display its information by calling the :ada:`Show` procedure.
            type T_Access is access T;
            type T_Cmp is private;
            with function Matches (E    : T_Access;
-                                  Elem : T_Cmp) return Boolean;
+                                  Elem : T_Cmp)
+                                  return Boolean;
         package Generic_Containers is
 
            type Ref_Type (Ref : access T) is
              tagged limited null record
                with Implicit_Dereference => Ref;
 
-           type Container is array (Positive range <>) of
-             T_Access;
+           type Container is
+             array (Positive range <>) of
+               T_Access;
 
            function Find (Cont : Container;
                           Elem : T_Cmp)
@@ -1749,27 +1849,35 @@ type) and display its information by calling the :ada:`Show` procedure.
 
         procedure Show_National_Dates is
 
-           function Matches_Country (E    : National_Date_Access;
-                                     Elem : Country_Code)
-                                     return Boolean is
-             (E.Country = Elem);
+           function Matches_Country
+             (E    : National_Date_Access;
+              Elem : Country_Code)
+              return Boolean is
+                (E.Country = Elem);
 
            package National_Date_Containers is new
-             Generic_Containers (T        => National_Date,
-                                 T_Access => National_Date_Access,
-                                 T_Cmp    => Country_Code,
-                                 Matches  => Matches_Country);
+             Generic_Containers
+               (T        => National_Date,
+                T_Access => National_Date_Access,
+                T_Cmp    => Country_Code,
+                Matches  => Matches_Country);
 
            use National_Date_Containers;
 
            subtype National_Dates is Container;
 
-           Nat_Dates : constant National_Dates (1 .. 5) :=
-             (new National_Date'("USA", Time'(1776,  7,  4)),
-              new National_Date'("FRA", Time'(1789,  7, 14)),
-              new National_Date'("DEU", Time'(1990, 10,  3)),
-              new National_Date'("SPA", Time'(1492, 10, 12)),
-              new National_Date'("BRA", Time'(1822,  9,  7)));
+           Nat_Dates : constant
+                         National_Dates (1 .. 5) :=
+             (new National_Date'("USA",
+                                 Time'(1776,  7,  4)),
+              new National_Date'("FRA",
+                                 Time'(1789,  7, 14)),
+              new National_Date'("DEU",
+                                 Time'(1990, 10,  3)),
+              new National_Date'("SPA",
+                                 Time'(1492, 10, 12)),
+              new National_Date'("BRA",
+                                 Time'(1822,  9,  7)));
 
         begin
            Find (Nat_Dates, "FRA").Show;
@@ -1795,37 +1903,58 @@ type) and display its information by calling the :ada:`Show` procedure.
                               return Boolean is <>;
         package Ada.Containers.Vectors
           with Preelaborate, Remote_Types,
-               Nonblocking, Global => in out synchronized is
+               Nonblocking,
+               Global => in out synchronized is
 
            -- OMITTED
 
-           type Reference_Type (Element : not null access Element_Type) is private
-              with Implicit_Dereference => Element,
-                   Nonblocking, Global => in out synchronized,
-                   Default_Initial_Condition => (raise Program_Error);
+           type Reference_Type
+             (Element : not null access Element_Type) is
+               private
+                 with Implicit_Dereference => Element,
+                      Nonblocking,
+                      Global => in out synchronized,
+                      Default_Initial_Condition =>
+                        (raise Program_Error);
 
            -- OMITTED
 
-           function Reference (Container : aliased in out Vector;
-                               Index     : in Index_Type)
-                               return Reference_Type
-              with Pre    => Index in
-                                First_Index (Container) .. Last_Index (Container)
-                                or else raise Constraint_Error,
-                   Post   => Tampering_With_Cursors_Prohibited (Container),
-                   Nonblocking, Global => null, Use_Formal => null;
+           function Reference
+             (Container : aliased in out Vector;
+              Index     : in Index_Type)
+              return Reference_Type
+                with Pre  => Index in
+                               First_Index (Container) ..
+                               Last_Index (Container)
+                             or else raise
+                                     Constraint_Error,
+                   Post =>
+                     Tampering_With_Cursors_Prohibited
+                       (Container),
+                   Nonblocking,
+                   Global => null,
+                   Use_Formal => null;
 
            -- OMITTED
 
-           function Reference (Container : aliased in out Vector;
-                               Position  : in Cursor)
-                               return Reference_Type
-              with Pre  => (Position /= No_Element
-                               or else raise Constraint_Error) and then
-                            (Has_Element (Container, Position)
-                               or else raise Program_Error),
-                   Post   => Tampering_With_Cursors_Prohibited (Container),
-                   Nonblocking, Global => null, Use_Formal => null;
+           function Reference
+             (Container : aliased in out Vector;
+              Position  : in Cursor)
+              return Reference_Type
+                with Pre  => (Position /= No_Element
+                              or else raise
+                                      Constraint_Error)
+                              and then
+                                (Has_Element
+                                  (Container, Position)
+                                 or else raise
+                                         Program_Error),
+                   Post   =>
+                     Tampering_With_Cursors_Prohibited
+                       (Container),
+                   Nonblocking,
+                   Global => null,
+                   Use_Formal => null;
 
            -- OMITTED
 
@@ -1892,8 +2021,10 @@ For example:
        Inner_Block : declare
           I_Var_2 : Integer := 42;
        begin
-          Put_Line ("I_Var_1: " & Integer'Image (I_Var_1));
-          Put_Line ("I_Var_2: " & Integer'Image (I_Var_2));
+          Put_Line ("I_Var_1: "
+                    & Integer'Image (I_Var_1));
+          Put_Line ("I_Var_2: "
+                    & Integer'Image (I_Var_2));
 
           --  I_Var_2 will get out of scope
           --  when the block finishes.
@@ -1901,9 +2032,11 @@ For example:
 
        --  I_Var_2 is now out of scope...
 
-       Put_Line ("I_Var_1: " & Integer'Image (I_Var_1));
-       Put_Line ("I_Var_2: " & Integer'Image (I_Var_2));
-       --                                     ^^^^^^^
+       Put_Line ("I_Var_1: "
+                 & Integer'Image (I_Var_1));
+       Put_Line ("I_Var_2: "
+                 & Integer'Image (I_Var_2));
+       --                         ^^^^^^^
        --  ERROR: lifetime of I_Var_2 has ended!
     end Show_Lifetime;
 
@@ -2008,7 +2141,8 @@ Let's now look at the complete code example:
 
     package Library_Level is
 
-       type L0_Integer_Access is access all Integer;
+       type L0_Integer_Access is
+         access all Integer;
 
        L0_IA  : L0_Integer_Access;
 
@@ -2019,7 +2153,8 @@ Let's now look at the complete code example:
     with Library_Level; use Library_Level;
 
     procedure Show_Library_Level is
-       type L1_Integer_Access is access all Integer;
+       type L1_Integer_Access is
+         access all Integer;
 
        L0_IA_2 : L0_Integer_Access;
        L1_IA   : L1_Integer_Access;
@@ -2027,7 +2162,8 @@ Let's now look at the complete code example:
        L1_Var : aliased Integer;
 
        procedure Test is
-          type L2_Integer_Access is access all Integer;
+          type L2_Integer_Access is
+            access all Integer;
 
           L2_IA  : L2_Integer_Access;
 
@@ -2172,8 +2308,11 @@ same level are fine:
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Same_Level_Conversion
 
     procedure Show_Same_Level_Conversion is
-       type L1_Integer_Access is access all Integer;
-       type L1_B_Integer_Access is access all Integer;
+       type L1_Integer_Access is
+         access all Integer;
+
+       type L1_B_Integer_Access is
+         access all Integer;
 
        L1_IA   : L1_Integer_Access;
        L1_B_IA : L1_B_Integer_Access;
@@ -2224,14 +2363,16 @@ Let's see an example of how dangling references could occur:
 
     procedure Show_Dangling_Reference is
 
-       type Integer_Access is access all Integer;
+       type Integer_Access is
+         access all Integer;
 
        I_Var_1 : aliased Integer := 22;
 
        A1    : Integer_Access;
     begin
        A1 := I_Var_1'Access;
-       Put_Line ("A1.all: " & Integer'Image (A1.all));
+       Put_Line ("A1.all: "
+                 & Integer'Image (A1.all));
 
        Put_Line ("Inner_Block will start now!");
 
@@ -2247,24 +2388,29 @@ Let's see an example of how dangling references could occur:
           A2      : Integer_Access;
        begin
           A2 := I_Var_1'Access;
-          Put_Line ("A2.all: " & Integer'Image (A2.all));
+          Put_Line ("A2.all: "
+                    & Integer'Image (A2.all));
 
           A1 := I_Var_2'Access;
-          --   PROBLEM: A1 and Integer_Access type have longer
-          --            lifetime than I_Var_2
+          --   PROBLEM: A1 and Integer_Access type
+          --            have longer lifetime than
+          --            I_Var_2
 
-          Put_Line ("A1.all: " & Integer'Image (A1.all));
+          Put_Line ("A1.all: "
+                    & Integer'Image (A1.all));
 
           A2 := I_Var_2'Access;
-          --   PROBLEM: A2 has the same lifetime as I_Var_2,
-          --            but Integer_Access type has a longer
-          --            lifetime.
+          --   PROBLEM: A2 has the same lifetime as
+          --            I_Var_2, but Integer_Access
+          --            type has a longer lifetime.
 
-          Put_Line ("A2.all: " & Integer'Image (A2.all));
+          Put_Line ("A2.all: "
+                    & Integer'Image (A2.all));
        end Inner_Block;
 
        Put_Line ("Inner_Block has ended!");
-       Put_Line ("A1.all: " & Integer'Image (A1.all));
+       Put_Line ("A1.all: "
+                 & Integer'Image (A1.all));
 
     end Show_Dangling_Reference;
 
@@ -2306,10 +2452,11 @@ change to the code:
           A2 := I_Var_2'Access;
 
           A1 := A2;
-          --    PROBLEM: A1 will still be referring to
-          --             I_Var_2 after the Inner_Block,
-          --             i.e. when the lifetime of
-          --             I_Var_2 has ended!
+          --    PROBLEM: A1 will still be referring
+          --             to I_Var_2 after the
+          --             Inner_Block, i.e. when the
+          --             lifetime of I_Var_2 has
+          --             ended!
 
 Here, we're introducing the :ada:`A1 := A2` assignment. The problem with this
 is that :ada:`I_Var_2`\ 's lifetime ends when the :ada:`Inner_Block` finishes,
@@ -2337,7 +2484,8 @@ is never introduced into the program.
     .. code-block:: ada
 
            Inner_Block : declare
-              type Integer_Local_Access is access all Integer;
+              type Integer_Local_Access is
+                access all Integer;
 
               I_Var_2 : aliased Integer := 42;
 
@@ -2480,7 +2628,8 @@ anonymous access types to it:
 
     package Library_Level is
 
-       type L0_Integer_Access is access all Integer;
+       type L0_Integer_Access is
+         access all Integer;
 
        L0_Var : aliased Integer;
 
@@ -2492,7 +2641,8 @@ anonymous access types to it:
     with Library_Level; use Library_Level;
 
     procedure Show_Library_Level is
-       type L1_Integer_Access is access all Integer;
+       type L1_Integer_Access is
+         access all Integer;
 
        L1_IA  : L1_Integer_Access;
        L1_AO  : access Integer;
@@ -2510,27 +2660,34 @@ anonymous access types to it:
        L0_AO := L0_IA;
        --       ^^^^^
        --       LEGAL: assignment from
-       --              L0 access object (named type) to
-       --              L0 access object (anonymous type)
+       --              L0 access object (named type)
+       --              to
+       --              L0 access object
+       --                (anonymous type)
 
        L0_AO := L1_IA;
        --       ^^^^^
        --       ILLEGAL: assignment from
        --                L1 access object (named type)
        --                to
-       --                L0 access object (anonymous type)
+       --                L0 access object
+       --                  (anonymous type)
 
        L1_AO := L0_IA;
        --       ^^^^^
        --       LEGAL: assignment from
-       --              L0 access object (named type) to
-       --              L1 access object (anonymous type)
+       --              L0 access object (named type)
+       --              to
+       --              L1 access object
+       --                (anonymous type)
 
        L1_AO := L1_IA;
        --       ^^^^^
        --       LEGAL: assignment from
-       --              L1 access object (named type) to
-       --              L1 access object (anonymous type)
+       --              L1 access object (named type)
+       --              to
+       --              L1 access object
+       --                (anonymous type)
 
        ---------------------------------------
        --  From anonymous type to named type
@@ -2542,13 +2699,16 @@ anonymous access types to it:
        L0_IA := L0_Integer_Access (L0_AO);
        --       ^^^^^^^^^^^^^^^^^
        --       LEGAL: conversion / assignment from
-       --              L0 access object (anonymous type) to
+       --              L0 access object
+       --                (anonymous type)
+       --              to
        --              L0 access object (named type)
 
        L0_IA := L0_Integer_Access (L1_AO);
        --       ^^^^^^^^^^^^^^^^^
        --       ILLEGAL: conversion / assignment from
-       --                L1 access object (anonymous type)
+       --                L1 access object
+       --                  (anonymous type)
        --                to
        --                L0 access object (named type)
        --                (accessibility check fails)
@@ -2556,13 +2716,17 @@ anonymous access types to it:
        L1_IA := L1_Integer_Access (L0_AO);
        --       ^^^^^^^^^^^^^^^^^
        --       LEGAL: conversion / assignment from
-       --              L0 access object (anonymous type) to
+       --              L0 access object
+       --                (anonymous type)
+       --              to
        --              L1 access object (named type)
 
        L1_IA := L1_Integer_Access (L1_AO);
        --       ^^^^^^^^^^^^^^^^^
        --       LEGAL: conversion / assignment from
-       --              L1 access object (anonymous type) to
+       --              L1 access object
+       --                (anonymous type)
+       --              to
        --              L1 access object (named type)
     end Show_Library_Level;
 
@@ -2612,8 +2776,8 @@ Let's see a simplified version of a code example from that section:
     begin
        A := I_Var'Access;
        --   PROBLEM: A has the same lifetime as I_Var,
-       --            but Integer_Access type has a longer
-       --            lifetime.
+       --            but Integer_Access type has a
+       --            longer lifetime.
 
        Put_Line ("A.all: " & Integer'Image (A.all));
     end Show_Access_Issue;
@@ -2765,8 +2929,9 @@ deallocation:
        type Integer_Access is access Integer;
 
        procedure Free is
-         new Ada.Unchecked_Deallocation (Object => Integer,
-                                         Name   => Integer_Access);
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Integer_Access);
 
        procedure Show_Is_Null (I : Integer_Access);
 
@@ -2992,18 +3157,22 @@ program becomes erroneous, as we discuss in this section. Let's see an example:
        I_1 := new Integer'(42);
        I_2 := I_1;
 
-       Put_Line ("I_1.all = " & Integer'Image (I_1.all));
-       Put_Line ("I_2.all = " & Integer'Image (I_2.all));
+       Put_Line ("I_1.all = "
+                 & Integer'Image (I_1.all));
+       Put_Line ("I_2.all = "
+                 & Integer'Image (I_2.all));
 
        Put_Line ("Freeing I_1");
        Free (I_1);
 
        if I_1 /= null then
-          Put_Line ("I_1.all = " & Integer'Image (I_1.all));
+          Put_Line ("I_1.all = "
+                    & Integer'Image (I_1.all));
        end if;
 
        if I_2 /= null then
-          Put_Line ("I_2.all = " & Integer'Image (I_2.all));
+          Put_Line ("I_2.all = "
+                    & Integer'Image (I_2.all));
        end if;
     end Show_Unchecked_Deallocation;
 
@@ -3077,23 +3246,29 @@ Let's see an example of these restrictions:
          with Storage_Size => 0;
 
        procedure Free is
-         new Ada.Unchecked_Deallocation (Object => Integer,
-                                         Name   => Integer_Access_Zero);
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Integer_Access_Zero);
 
-       type Constant_Integer_Access is access constant Integer;
+       type Constant_Integer_Access is
+         access constant Integer;
 
-       --  ERROR: Cannot use access-to-constant type for Name
+       --  ERROR: Cannot use access-to-constant type
+       --         for Name
        procedure Free is
-         new Ada.Unchecked_Deallocation (Object => Integer,
-                                         Name   => Constant_Integer_Access);
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Constant_Integer_Access);
 
        I : Integer_Access_Zero;
 
     begin
-       --  ERROR: Cannot allocate objects from empty storage pool
+       --  ERROR: Cannot allocate objects from
+       --         empty storage pool
        I := new Integer;
 
-       --  ERROR: Cannot deallocate objects from empty storage pool
+       --  ERROR: Cannot deallocate objects from
+       --         empty storage pool
        Free (I);
     end Show_Unchecked_Deallocation_Errors;
 
@@ -3165,7 +3340,8 @@ comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
        Not_Found : constant Ref_Element := null;
 
-       function Lookup (T : Table) return not null Ref_Element;
+       function Lookup (T : Table)
+                        return not null Ref_Element;
        --  Possible since Ada 2005.
     end Show_Not_Null_Return;
 
@@ -3181,11 +3357,13 @@ This is a complete package for the code snippets above:
        type Table is limited private;
 
        Not_Found : constant Ref_Element := null;
-       function Lookup (T : Table) return Ref_Element;
+       function Lookup (T : Table)
+                        return Ref_Element;
        --  Returns Not_Found if not found.
 
        Not_Found_2 : exception;
-       function Lookup_2 (T : Table) return not null Ref_Element;
+       function Lookup_2 (T : Table)
+                          return not null Ref_Element;
        --  Raises Not_Found_2 if not found.
 
        procedure P (X : not null Ref_Element);
@@ -3204,20 +3382,24 @@ This is a complete package for the code snippets above:
 
        An_Element : aliased Element;
 
-       function Lookup (T : Table) return Ref_Element is
+       function Lookup (T : Table)
+                        return Ref_Element is
           pragma Unreferenced (T);
        begin
           --  ...
           return Not_Found;
        end Lookup;
 
-       function Lookup_2 (T : Table) return not null Ref_Element is
+       function Lookup_2 (T : Table)
+                          return not null Ref_Element
+       is
        begin
           --  ...
           raise Not_Found_2;
 
           return An_Element'Access;
-          --  suppress error: 'missing "return" statement in function body'
+          --  suppress error: 'missing "return"
+          --  statement in function body'
        end Lookup_2;
 
        procedure P (X : not null Ref_Element) is
@@ -3313,13 +3495,17 @@ array bounds checks:
        type My_Index is range 1 .. 10;
        type My_Array is array (My_Index) of Integer;
 
-       procedure Process_Array (X : in out My_Array; Index : My_Index);
+       procedure Process_Array
+         (X     : in out My_Array;
+          Index :        My_Index);
 
     end Show_Process_Array;
 
     package body Show_Process_Array is
 
-       procedure Process_Array (X : in out My_Array; Index : My_Index) is
+       procedure Process_Array
+         (X     : in out My_Array;
+          Index :        My_Index) is
        begin
           X (Index) := X (Index) + 1;
        end Process_Array;
@@ -3400,7 +3586,8 @@ parameters, for example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Access_Types.Access_To_Subprogram_Types
 
-    with Access_To_Subprogram_Types; use Access_To_Subprogram_Types;
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
 
     package Access_To_Subprogram_Params is
 
@@ -3430,13 +3617,16 @@ In addition, we can declare those subprogram parameters using anonymous types:
 
     package Access_To_Subprogram_Params is
 
-       procedure Proc (P : access procedure (I : in out Integer));
+       procedure Proc
+         (P : access procedure (I : in out Integer));
 
     end Access_To_Subprogram_Params;
 
     package body Access_To_Subprogram_Params is
 
-       procedure Proc (P : access procedure (I : in out Integer)) is
+       procedure Proc
+         (P : access procedure (I : in out Integer))
+       is
           I : Integer := 0;
        begin
           --  P (I);
@@ -3468,8 +3658,9 @@ Finally, we can get access to a subprogram using the :ada:`Access` attribute:
     procedure Show_Access_To_Subprograms is
     begin
        Proc (Add_Ten'Access);
-       --            ^ Getting access to Add_Ten procedure
-       --              and passing it to Proc
+       --            ^ Getting access to Add_Ten
+       --              procedure and passing it
+       --              to Proc
     end Show_Access_To_Subprograms;
 
 Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
@@ -3496,19 +3687,23 @@ isn't specified:
 
     package Data_Processing is
 
-       type Data_Container is array (Positive range <>) of Float;
+       type Data_Container is
+         array (Positive range <>) of Float;
 
-       type Log_Procedure is access procedure (D : Data_Container);
+       type Log_Procedure is
+         access procedure (D : Data_Container);
 
-       procedure Process (D        : in out Data_Container;
-                          Log_Proc :        Log_Procedure := null);
+       procedure Process
+         (D        : in out Data_Container;
+          Log_Proc :        Log_Procedure := null);
 
     end Data_Processing;
 
     package body Data_Processing is
 
-       procedure Process (D        : in out Data_Container;
-                          Log_Proc :        Log_Procedure := null) is
+       procedure Process
+         (D        : in out Data_Container;
+          Log_Proc :        Log_Procedure := null) is
        begin
           --  missing processing part...
 
@@ -3531,7 +3726,8 @@ the :ada:`Log_Procedure` type:
     with Ada.Text_IO;     use Ada.Text_IO;
     with Data_Processing; use Data_Processing;
 
-    procedure Log_Element_Per_Line (D : Data_Container) is
+    procedure Log_Element_Per_Line
+      (D : Data_Container) is
     begin
        Put_Line ("Elements: ");
        for V of D loop
@@ -3594,19 +3790,23 @@ adapt the previous example and introduce the :ada:`Init_Function` type:
 
     package Data_Processing is
 
-       type Data_Container is array (Positive range <>) of Float;
+       type Data_Container is
+         array (Positive range <>) of Float;
 
-       type Init_Function is not null access function return Float;
+       type Init_Function is
+         not null access function return Float;
 
-       procedure Process (D         : in out Data_Container;
-                          Init_Func :        Init_Function);
+       procedure Process
+         (D         : in out Data_Container;
+          Init_Func :        Init_Function);
 
     end Data_Processing;
 
     package body Data_Processing is
 
-       procedure Process (D         : in out Data_Container;
-                          Init_Func :        Init_Function) is
+       procedure Process
+         (D         : in out Data_Container;
+          Init_Func :        Init_Function) is
        begin
           for I in D'Range loop
              D (I) := Init_Func.all;
@@ -3652,7 +3852,8 @@ functions we've just implemented:
     with Ada.Text_IO;     use Ada.Text_IO;
     with Data_Processing; use Data_Processing;
 
-    procedure Log_Element_Per_Line (D : Data_Container) is
+    procedure Log_Element_Per_Line
+      (D : Data_Container) is
     begin
        Put_Line ("Elements: ");
        for V of D loop
@@ -3714,7 +3915,8 @@ argument cannot be :ada:`null` due to the null exclusion.
 
            procedure Iterate
              (T      : Table;
-              Action : access procedure (X : not null Ref_Element)
+              Action : access procedure
+                         (X : not null Ref_Element)
               := null);
            --  If Action is null, do nothing.
 
@@ -3734,11 +3936,13 @@ argument cannot be :ada:`null` due to the null exclusion.
            type Table is limited null record;
            --  Not implemented yet
 
-           procedure Do_Nothing (X : not null Ref_Element) is null;
+           procedure Do_Nothing
+             (X : not null Ref_Element) is null;
 
            procedure Iterate
              (T      : Table;
-              Action : not null access procedure (X : not null Ref_Element)
+              Action : not null access procedure
+                         (X : not null Ref_Element)
               := Do_Nothing'Access);
 
         end Show_Null_Procedure;
@@ -3759,15 +3963,18 @@ argument cannot be :ada:`null` due to the null exclusion.
 
            procedure Iterate
              (T : Table;
-              Action : access procedure (X : not null Ref_Element)
-                                          := null);
+              Action : access procedure
+                         (X : not null Ref_Element)
+                           := null);
            --  If Action is null, do nothing.
 
-           procedure Do_Nothing (X : not null Ref_Element) is null;
+           procedure Do_Nothing
+             (X : not null Ref_Element) is null;
            procedure Iterate_2
              (T : Table;
-              Action : not null access procedure (X : not null Ref_Element)
-                                              := Do_Nothing'Access);
+              Action : not null access procedure
+                         (X : not null Ref_Element)
+                           := Do_Nothing'Access);
 
         private
            type Element is limited
@@ -3783,22 +3990,28 @@ argument cannot be :ada:`null` due to the null exclusion.
 
            procedure Iterate
              (T : Table;
-              Action : access procedure (X : not null Ref_Element)
-                                              := null) is
+              Action : access procedure
+                         (X : not null Ref_Element)
+                           := null)
+           is
            begin
               if Action /= null then
                  Action (An_Element'Access);
-                 --  In a real program, this would do something more sensible.
+                 --  In a real program, this would do
+                 --  something more sensible.
               end if;
            end Iterate;
 
            procedure Iterate_2
              (T : Table;
-              Action : not null access procedure (X : not null Ref_Element)
-                                              := Do_Nothing'Access) is
+              Action : not null access procedure
+                         (X : not null Ref_Element)
+                           := Do_Nothing'Access)
+           is
            begin
               Action (An_Element'Access);
-              --  In a real program, this would do something more sensible.
+              --  In a real program, this would do
+              --  something more sensible.
            end Iterate_2;
 
         end Example;
@@ -3877,9 +4090,12 @@ register protected procedures and execute them. This is implemented in
        subtype Valid_Work_Handler is
          not null Work_Handler;
 
-       type Work_Handlers is array (Positive range <>) of Work_Handler;
+       type Work_Handlers is
+         array (Positive range <>) of Work_Handler;
 
-       protected type Work_Handler_Registry (Last : Positive) is
+       protected type Work_Handler_Registry
+         (Last : Positive)
+       is
 
           procedure Register (T : Valid_Work_Handler);
 
@@ -3904,7 +4120,8 @@ register protected procedures and execute them. This is implemented in
 
        protected body Work_Handler_Registry is
 
-          procedure Register (T : Valid_Work_Handler) is
+          procedure Register (T : Valid_Work_Handler)
+          is
           begin
              if Curr < Last then
                 Curr := Curr + 1;
@@ -3982,10 +4199,12 @@ which is a simple protected type that we use to store an integer value:
 
        end Integer_Storage;
 
-       type Integer_Storage_Access is access Integer_Storage;
+       type Integer_Storage_Access is
+         access Integer_Storage;
 
        type Integer_Storage_Array is
-         array (Positive range <>) of Integer_Storage_Access;
+         array (Positive range <>) of
+           Integer_Storage_Access;
 
     end Integer_Storage_System;
 
@@ -4000,7 +4219,8 @@ which is a simple protected type that we use to store an integer value:
              I := V;
           end Set;
 
-          procedure Show (T : Work_Registry.Work_Id) is
+          procedure Show (T : Work_Registry.Work_Id)
+          is
              pragma Unreferenced (T);
           begin
              Put_Line ("Value: " & Integer'Image (I));
@@ -4027,8 +4247,11 @@ and an array of "protected integer objects" (:ada:`Int_Stor`):
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Protected_Access_Init_Function
 
-    with Work_Registry;          use Work_Registry;
-    with Integer_Storage_System; use Integer_Storage_System;
+    with Work_Registry;
+    use  Work_Registry;
+
+    with Integer_Storage_System;
+    use  Integer_Storage_System;
 
     procedure Show_Access_To_Protected_Subprograms is
 
@@ -4038,9 +4261,9 @@ and an array of "protected integer objects" (:ada:`Int_Stor`):
     begin
        --  Allocate and initialize integer storage
        --
-       --  (For the initialization, we're just assigning
-       --   the index here, but we could really have used
-       --   any integer value.)
+       --  (For the initialization, we're just
+       --  assigning the index here, but we could
+       --  really have used any integer value.)
 
        for I in Int_Stor'Range loop
           Int_Stor (I) := new Integer_Storage;
@@ -4087,11 +4310,14 @@ we register the :ada:`Show` procedure of each protected object from
     .. code:: ada run_button project=Courses.Advanced_Ada.Access_Types.Protected_Access_Init_Function
         :class: ada-expect-compile-error
 
-        with Work_Registry;          use Work_Registry;
-        with Integer_Storage_System; use Integer_Storage_System;
+        with Work_Registry;
+        use  Work_Registry;
 
-        procedure Show_Access_To_Protected_Subprograms is
+        with Integer_Storage_System;
+        use  Integer_Storage_System;
 
+        procedure Show_Access_To_Protected_Subprograms
+        is
            WHR      : Work_Handler_Registry (5);
 
            Int_Stor : array (1 .. 3) of Integer_Storage;
@@ -4099,9 +4325,9 @@ we register the :ada:`Show` procedure of each protected object from
         begin
            --  Allocate and initialize integer storage
            --
-           --  (For the initialization, we're just assigning
-           --   the index here, but we could really have used
-           --   any integer value.)
+           --  (For the initialization, we're just
+           --  assigning the index here, but we could
+           --  really have used any integer value.)
 
            for I in Int_Stor'Range loop
               --  Int_Stor (I) := new Integer_Storage;

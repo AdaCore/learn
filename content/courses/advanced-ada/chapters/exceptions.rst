@@ -231,17 +231,20 @@ the call to :ada:`Assert` is not ignored.
     - :arm:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
 
 
-:ada:`Default_Initial_Condition` policy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..
+    TO BE DONE:
 
-.. admonition:: In the Ada Reference Manual
+    :ada:`Default_Initial_Condition` policy
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    - :arm22:`7.3.3 Default Initial Conditions <11-4-2>`
-    - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+    .. admonition:: In the Ada Reference Manual
 
-.. todo::
+        - :arm22:`7.3.3 Default Initial Conditions <11-4-2>`
+        - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
 
-    Complete section!
+    .. todo::
+
+        Complete section!
 
 
 Checks and exceptions
@@ -285,18 +288,21 @@ performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
 
 
-:ada:`Program_Error_Check` and :ada:`Tasking_Check`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..
+    TO BE DONE:
 
-.. admonition:: In the Ada Reference Manual
+    :ada:`Program_Error_Check` and :ada:`Tasking_Check`
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    - :arm22:`11.5 Suppressing Checks <11-5>`
+    .. admonition:: In the Ada Reference Manual
 
-.. todo::
+        - :arm22:`11.5 Suppressing Checks <11-5>`
 
-   - Add to previous section:
-      - :ada:`Program_Error_Check`
-      - :ada:`Tasking_Check`
+    .. todo::
+
+    - Add to previous section:
+        - :ada:`Program_Error_Check`
+        - :ada:`Tasking_Check`
 
 
 .. _Adv_Ada_Access_Check:
@@ -333,8 +339,11 @@ about this topic in the section about
 
     procedure Show_Access_Check is
 
-       type Integer_Access is access all Integer;
-       type Safe_Integer_Access is not null access all Integer;
+       type Integer_Access is
+         access all Integer;
+
+       type Safe_Integer_Access is
+         not null access all Integer;
 
        AI  : Integer_Access;
        SAI : Safe_Integer_Access := new Integer;
@@ -421,13 +430,16 @@ when using the :ada:`/`, :ada:`rem` and :ada:`mod` operators. For example:
     :class: ada-run-expect-failure
 
     package Ops is
-       function Div_Op (A, B : Integer) return Integer is
+       function Div_Op (A, B : Integer)
+                        return Integer is
          (A / B);
 
-       function Rem_Op (A, B : Integer) return Integer is
+       function Rem_Op (A, B : Integer)
+                        return Integer is
          (A rem B);
 
-       function Mod_Op (A, B : Integer) return Integer is
+       function Mod_Op (A, B : Integer)
+                        return Integer is
          (A mod B);
     end Ops;
 
@@ -459,11 +471,13 @@ bounds. For example:
 
     procedure Show_Index_Check is
 
-       type Integer_Array is array (Positive range <>)
-         of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
        function Value_Of (A : Integer_Array;
-                     I : Integer) return Integer is
+                          I : Integer)
+                          return Integer
+       is
           type Half_Integer_Array is new
             Integer_Array (A'First ..
                            A'First + A'Length / 2);
@@ -473,7 +487,8 @@ bounds. For example:
           return A_2 (I);
        end Value_Of;
 
-       Arr_1 : Integer_Array (1 .. 10)  := (others => 1);
+       Arr_1 : Integer_Array (1 .. 10) :=
+                 (others => 1);
 
     begin
        Arr_1 (10) := Value_Of (Arr_1, 10);
@@ -495,8 +510,8 @@ this is the case, a length check is performed. For example:
 
     procedure Show_Length_Check is
 
-       type Integer_Array is array (Positive range <>)
-         of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
        procedure Assign (To   : out Integer_Array;
                          From :     Integer_Array) is
@@ -505,7 +520,8 @@ this is the case, a length check is performed. For example:
        end Assign;
 
        Arr_1 : Integer_Array (1 .. 10);
-       Arr_2 : Integer_Array (1 .. 9) := (others => 1);
+       Arr_2 : Integer_Array (1 .. 9) :=
+                 (others => 1);
 
     begin
        Assign (Arr_1, Arr_2);
@@ -687,16 +703,19 @@ This is an example adapted from
     with Ada.Unchecked_Deallocation;
 
     package P is
-       type T1 is new Ada.Finalization.Controlled with null record;
+       type T1 is new
+         Ada.Finalization.Controlled with null record;
        procedure Finalize (X : in out T1);
 
-       type T2 is new Ada.Finalization.Controlled with null record;
+       type T2 is new
+         Ada.Finalization.Controlled with null record;
        procedure Finalize (X : in out T2);
 
        X1 : T1;
 
        type T2_Ref is access T2;
-       procedure Free is new Ada.Unchecked_Deallocation (T2, T2_Ref);
+       procedure Free is new
+         Ada.Unchecked_Deallocation (T2, T2_Ref);
     end P;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -755,7 +774,8 @@ This is an example adapted from
 
        function F return Integer;
 
-       type Pointer_To_Func is access function return Integer;
+       type Pointer_To_Func is
+         access function return Integer;
 
        X : constant Pointer_To_Func := P'Access;
 
@@ -881,8 +901,9 @@ For example:
 .. code-block:: ada
 
     exception
-        when E : others =>
-            Put_Line (Ada.Exceptions.Exception_Information (E));
+       when E : others =>
+         Put_Line
+           (Ada.Exceptions.Exception_Information (E));
 
 .. admonition:: In the GNAT toolchain
 
@@ -912,7 +933,8 @@ Let's see a complete example:
 
        procedure Nested is
        begin
-          raise Custom_Exception with "We got a problem";
+          raise Custom_Exception
+            with "We got a problem";
        end Nested;
 
     begin
@@ -920,9 +942,12 @@ Let's see a complete example:
 
     exception
        when E : others =>
-          Put_Line ("Exception info: " & Exception_Information (E));
-          Put_Line ("Exception name: " & Exception_Name (E));
-          Put_Line ("Exception msg:  " & Exception_Message (E));
+          Put_Line ("Exception info: "
+                    & Exception_Information (E));
+          Put_Line ("Exception name: "
+                    & Exception_Name (E));
+          Put_Line ("Exception msg:  "
+                    & Exception_Message (E));
     end Show_Exception_Info;
 
 
@@ -946,26 +971,30 @@ displays them after running the :ada:`Test_Exceptions` procedure:
 
        Custom_Exception : exception;
 
-       type Exception_Occurrences is
-         array (Positive range <>) of Exception_Occurrence;
+       type All_Exception_Occur is
+         array (Positive range <>) of
+           Exception_Occurrence;
 
        procedure Test_Exceptions
-         (Occurrences    : in out Exception_Occurrences;
-          Last_Occurence :    out Integer);
+         (All_Occur  : in out All_Exception_Occur;
+          Last_Occur :    out Integer);
 
     end Exception_Tests;
 
     package body Exception_Tests is
 
-       procedure Save_To_List (E              :        Exception_Occurrence;
-                               Occurrences    : in out Exception_Occurrences;
-                               Last_Occurence : in out Integer) is
-          L : Integer renames Last_Occurence;
-          O : Exception_Occurrences renames Occurrences;
+       procedure Save_To_List
+         (E          :        Exception_Occurrence;
+          All_Occur  : in out All_Exception_Occur;
+          Last_Occur : in out Integer)
+       is
+          L : Integer renames Last_Occur;
+          O : All_Exception_Occur renames All_Occur;
        begin
           L := L + 1;
           if L > O'Last then
-             raise Constraint_Error with  "Cannot save occurrence";
+             raise Constraint_Error
+               with "Cannot save occurrence";
           end if;
 
           Save_Occurrence (Target => O (L),
@@ -973,28 +1002,34 @@ displays them after running the :ada:`Test_Exceptions` procedure:
        end Save_To_List;
 
        procedure Test_Exceptions
-         (Occurrences    : in out Exception_Occurrences;
-          Last_Occurence :    out Integer)
+         (All_Occur  : in out All_Exception_Occur;
+          Last_Occur :    out Integer)
        is
 
           procedure Nested_1 is
           begin
-             raise Custom_Exception with "We got a problem";
+             raise Custom_Exception
+               with "We got a problem";
           exception
              when E : others =>
-                Save_To_List (E, Occurrences, Last_Occurence);
+                Save_To_List (E,
+                              All_Occur,
+                              Last_Occur);
           end Nested_1;
 
           procedure Nested_2 is
           begin
-             raise Constraint_Error with "Constraint is not correct";
+             raise Constraint_Error
+               with "Constraint is not correct";
           exception
              when E : others =>
-                Save_To_List (E, Occurrences, Last_Occurence);
+                Save_To_List (E,
+                              All_Occur,
+                              Last_Occur);
           end Nested_2;
 
        begin
-          Last_Occurence := 0;
+          Last_Occur := 0;
 
           Nested_1;
           Nested_2;
@@ -1009,7 +1044,7 @@ displays them after running the :ada:`Test_Exceptions` procedure:
 
     procedure Show_Exception_Info is
        L : Integer;
-       O : Exception_Occurrences (1 .. 10);
+       O : All_Exception_Occur (1 .. 10);
     begin
        Test_Exceptions (O, L);
 
@@ -1020,7 +1055,7 @@ displays them after running the :ada:`Test_Exceptions` procedure:
 
 In the :ada:`Save_To_List` procedure of the :ada:`Exception_Tests` package, we
 call the :ada:`Save_Occurrence` procedure to store the exception occurence to
-the :ada:`Occurrences` array. In the :ada:`Show_Exception_Info`, we display all
+the :ada:`All_Occur` array. In the :ada:`Show_Exception_Info`, we display all
 the exception occurrences that we collected.
 
 :ada:`Read` and :ada:`Write` attributes
@@ -1033,8 +1068,12 @@ we can simply use the :ada:`'Read` and :ada:`'Write` attributes.
     :class: ada-run
 
     with Ada.Text_IO;
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
-    with Ada.Exceptions;        use Ada.Exceptions;
+
+    with Ada.Streams.Stream_IO;
+    use  Ada.Streams.Stream_IO;
+
+    with Ada.Exceptions;
+    use  Ada.Exceptions;
 
     procedure Exception_Occurrence_Stream is
 
@@ -1044,7 +1083,8 @@ we can simply use the :ada:`'Read` and :ada:`'Write` attributes.
 
        procedure Nested_1 is
        begin
-          raise Custom_Exception with "We got a problem";
+          raise Custom_Exception
+            with "We got a problem";
        exception
           when E : others =>
              Exception_Occurrence'Write (S, E);
@@ -1052,14 +1092,16 @@ we can simply use the :ada:`'Read` and :ada:`'Write` attributes.
 
        procedure Nested_2 is
        begin
-          raise Constraint_Error with "Constraint is not correct";
+          raise Constraint_Error
+            with "Constraint is not correct";
        exception
           when E : others =>
              Exception_Occurrence'Write (S, E);
        end Nested_2;
 
        F         : File_Type;
-       File_Name : constant String := "exceptions_file.bin";
+       File_Name : constant String :=
+                     "exceptions_file.bin";
     begin
        Create (F, Out_File, File_Name);
        S := Stream (F);
@@ -1077,7 +1119,9 @@ we can simply use the :ada:`'Read` and :ada:`'Write` attributes.
 
           while not End_Of_File (F) loop
              Exception_Occurrence'Read (S, E);
-             Ada.Text_IO.Put_Line (Exception_Information (E));
+
+             Ada.Text_IO.Put_Line
+               (Exception_Information (E));
           end loop;
           Close (F);
        end Read_Exceptions;
@@ -1104,17 +1148,19 @@ the application:
 
     procedure Main is
 
-        procedure Nested is
-        begin
-            raise Constraint_Error with "some message";
-        end Nested;
+       procedure Nested is
+       begin
+          raise Constraint_Error
+                  with "some message";
+       end Nested;
 
     begin
-        Nested;
+       Nested;
 
     exception
-        when E : others =>
-            Put_Line (Ada.Exceptions.Exception_Information (E));
+       when E : others =>
+          Put_Line
+           (Ada.Exceptions.Exception_Information (E));
     end Main;
 
 The output we get when running the application is not very informative. To get
@@ -1213,19 +1259,20 @@ Let's amend our test program to:
 
     procedure Main is
 
-        procedure Nested (Index : Integer) is
-           type T_Array is array (1 .. 2) of Integer;
-           T : constant T_Array := (10, 20);
-        begin
-           Put_Line (T (Index)'Img);
-        end Nested;
+       procedure Nested (Index : Integer) is
+          type T_Array is array (1 .. 2) of Integer;
+          T : constant T_Array := (10, 20);
+       begin
+          Put_Line (T (Index)'Img);
+       end Nested;
 
     begin
-        Nested (3);
+       Nested (3);
 
     exception
-        when E : others =>
-            Put_Line (Ada.Exceptions.Exception_Information (E));
+       when E : others =>
+          Put_Line
+           (Ada.Exceptions.Exception_Information (E));
     end Main;
 
 When running the application, we see that the exception information (traceback)
@@ -1282,7 +1329,8 @@ visible in package :ada:`B`. For example:
 
     package Test_Constraints is
 
-       Ext_E : exception renames Internal_Exceptions.Int_E;
+       Ext_E : exception renames
+                 Internal_Exceptions.Int_E;
 
     end Test_Constraints;
 
@@ -1296,7 +1344,8 @@ visible in package :ada:`B`. For example:
        raise Ext_E;
     exception
        when E : others =>
-          Put_Line (Ada.Exceptions.Exception_Information (E));
+          Put_Line
+           (Ada.Exceptions.Exception_Information (E));
     end Show_Exception_Renaming_View;
 
 Here, we're renaming the :ada:`Int_E` exception in the :ada:`Test_Constraints`
@@ -1328,7 +1377,8 @@ terminates due to an exception. Let's take an example:
     with Ada.Text_IO;  use Ada.Text_IO;
     procedure Show_Out_Uninitialized is
 
-       procedure Local (A : in out Integer; Error : Boolean) is
+       procedure Local (A     : in out Integer;
+                        Error : Boolean) is
        begin
           A := 1;
 
@@ -1343,7 +1393,8 @@ terminates due to an exception. Let's take an example:
        Local (B, Error => True);
     exception
        when Program_Error =>
-          Put_Line ("Value for B is" & Integer'Image (B));  --  "0"
+          Put_Line ("Value for B is"
+                    & Integer'Image (B));  --  "0"
     end Show_Out_Uninitialized;
 
 This program outputs a value of 0 for :ada:`B`, whereas the code indicates that
@@ -1382,7 +1433,8 @@ normal return).
            Local (B);
         exception
            when others =>
-              Put_Line ("Value for B is" & Integer'Image (B));
+              Put_Line ("Value for B is"
+                        & Integer'Image (B));
         end Show_Out_Uninitialized_Warnings;
 
     We now get a compilation warning that the pass-by-copy formal may have no
@@ -1418,7 +1470,9 @@ exception:
        V.Field := 0;
        Local (V);
     exception
-       when others => Put_Line ("Value of Field is" & V.Field'Img); -- "1"
+       when others =>
+          Put_Line ("Value of Field is"
+                    & V.Field'Img); -- "1"
     end Show_Out_Initialized_Rec;
 
 .. admonition:: In the GNAT toolchain
@@ -1437,14 +1491,18 @@ exception:
 
         package Exported_Procedures is
 
-          procedure Local (A : in out Integer; Error : Boolean);
-          pragma Export_Procedure (Local, Mechanism => (A => Reference));
+          procedure Local (A     : in out Integer;
+                           Error : Boolean);
+          pragma Export_Procedure
+            (Local,
+            Mechanism => (A => Reference));
 
         end Exported_Procedures;
 
         package body Exported_Procedures is
 
-           procedure Local (A : in out Integer; Error : Boolean) is
+           procedure Local (A     : in out Integer;
+                            Error : Boolean) is
            begin A := 1;
               if Error then
                  raise Program_Error;
@@ -1453,8 +1511,10 @@ exception:
 
         end Exported_Procedures;
 
-        with Ada.Text_IO;         use Ada.Text_IO;
-        with Exported_Procedures; use Exported_Procedures;
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Exported_Procedures;
+        use  Exported_Procedures;
 
         procedure Show_Out_Reference is
            B : Integer := 0;
@@ -1462,7 +1522,8 @@ exception:
            Local (B, Error => True);
         exception
            when Program_Error =>
-              Put_Line ("Value for B is" & Integer'Image (B)); -- "1"
+              Put_Line ("Value for B is"
+                        & Integer'Image (B)); -- "1"
         end Show_Out_Reference;
 
 In the case of direct assignments to global variables, the behavior in the
@@ -1531,7 +1592,9 @@ subprogram:
 
    procedure Main is
       procedure Sort_Array (A : in out Some_Array) is
-         pragma Suppress (Index_Check);  -- eliminate check overhead
+         pragma Suppress (Index_Check);
+         --     ^^^^^^^^^^^^^^^^^^^^^
+         --   eliminate check overhead
       begin
         ...
       end Sort_Array;
@@ -1643,15 +1706,18 @@ Let's see an example:
 
     procedure Show_Index_Check is
 
-       type Integer_Array is array (Positive range <>)
-         of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
        pragma Suppress (Index_Check);
        --  from now on, the compiler may
        --  eliminate index checks...
 
-       function Unchecked_Value_Of (A : Integer_Array;
-                     I : Integer) return Integer is
+       function Unchecked_Value_Of
+         (A : Integer_Array;
+          I : Integer)
+          return Integer
+       is
           type Half_Integer_Array is new
             Integer_Array (A'First ..
                            A'First + A'Length / 2);
@@ -1665,8 +1731,11 @@ Let's see an example:
        --  from now on, index checks are
        --  typically performed...
 
-       function Value_Of (A : Integer_Array;
-                     I : Integer) return Integer is
+       function Value_Of
+         (A : Integer_Array;
+          I : Integer)
+          return Integer
+       is
           type Half_Integer_Array is new
             Integer_Array (A'First ..
                            A'First + A'Length / 2);
@@ -1676,7 +1745,8 @@ Let's see an example:
           return A_2 (I);
        end Value_Of;
 
-       Arr_1 : Integer_Array (1 .. 10)  := (others => 1);
+       Arr_1 : Integer_Array (1 .. 10) :=
+                 (others => 1);
 
     begin
        Arr_1 (10) := Unchecked_Value_Of (Arr_1, 10);
