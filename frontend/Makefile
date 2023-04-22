@@ -81,7 +81,7 @@ test_advanced_ada:
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
 else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
+	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 50)
 endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/advanced-ada/chapters/*.rst
 	@echo ""
