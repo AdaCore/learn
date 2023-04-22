@@ -109,13 +109,14 @@ We illustrate postconditions using the following example:
 
        function Square (A : Int_8) return Int_8 is
          (A * A)
-         with Post => (if abs A in 0 | 1
-                       then Square'Result = abs A
-                       else Square'Result > A);
+           with Post => (if abs A in 0 | 1
+                         then Square'Result = abs A
+                         else Square'Result > A);
 
        procedure Square (A : in out Int_8_Array)
          with Post => (for all I in A'Range =>
-                         A (I) = A'Old (I) * A'Old (I))
+                         A (I) = A'Old (I) *
+                                 A'Old (I))
        is
        begin
           for V of A loop
@@ -164,22 +165,25 @@ subprogram. For example:
 
        function Square (A : Int_8) return Int_8 is
          (A * A)
-         with
-              Pre  => (Integer'Size >= Int_8'Size * 2
-                       and Integer (A) * Integer (A) <=
-                           Integer (Int_8'Last)),
-              Post => (if abs A in 0 | 1
-                       then Square'Result = abs A
-                       else Square'Result > A);
+           with
+             Pre  => (Integer'Size >= Int_8'Size * 2
+                      and Integer (A) *
+                            Integer (A) <=
+                          Integer (Int_8'Last)),
+             Post => (if abs A in 0 | 1
+                      then Square'Result = abs A
+                      else Square'Result > A);
 
        V : Int_8;
     begin
        V := Square (11);
-       Put_Line ("Square of 11 is " & Int_8'Image (V));
+       Put_Line ("Square of 11 is "
+                 & Int_8'Image (V));
 
        --  Precondition will fail...
        V := Square (12);
-       Put_Line ("Square of 12 is " & Int_8'Image (V));
+       Put_Line ("Square of 12 is "
+                 & Int_8'Image (V));
     end Show_Simple_Contract;
 
 In this example, we want to ensure that the input value of calls to the
@@ -215,9 +219,12 @@ Let's use the following example to illustrate dynamic predicates:
 .. code:: ada run_button project=Courses.Intro_To_Ada.Contracts.Show_Dynamic_Predicate_Courses
     :class: ada-run-expect-failure
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Calendar;          use Ada.Calendar;
+    with Ada.Calendar; use Ada.Calendar;
+
     with Ada.Containers.Vectors;
+
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     procedure Show_Dynamic_Predicate_Courses is
 
@@ -259,19 +266,25 @@ Let's use the following example to illustrate dynamic predicates:
     begin
        Add (CC,
             Course'(
-              Name       => To_Unbounded_String
-                             ("Intro to Photography"),
-              Start_Date => Time_Of (2018, 5, 1),
-              End_Date   => Time_Of (2018, 5, 10)));
+              Name       =>
+                To_Unbounded_String
+                  ("Intro to Photography"),
+              Start_Date =>
+                Time_Of (2018, 5, 1),
+              End_Date   =>
+                Time_Of (2018, 5, 10)));
 
        --  This should trigger an error in the
        --  dynamic predicate check
        Add (CC,
             Course'(
-              Name       => To_Unbounded_String
-                             ("Intro to Video Recording"),
-              Start_Date => Time_Of (2019, 5, 1),
-              End_Date   => Time_Of (2018, 5, 10)));
+              Name       =>
+                To_Unbounded_String
+                  ("Intro to Video Recording"),
+              Start_Date =>
+                Time_Of (2019, 5, 1),
+              End_Date   =>
+                Time_Of (2018, 5, 10)));
 
     end Show_Dynamic_Predicate_Courses;
 
@@ -318,7 +331,8 @@ static predicate:
 .. code-block:: ada
 
    subtype Check_Days is Work_Week
-     with Static_Predicate => Check_Days in Mon | Wed | Fri;
+     with Static_Predicate =>
+            Check_Days in Mon | Wed | Fri;
 
 Let's look at a complete example:
 
@@ -443,10 +457,13 @@ type invariants. It would look like this:
 .. code:: ada run_button project=Courses.Intro_To_Ada.Contracts.Show_Type_Invariant
     :class: ada-run-expect-failure
 
-    with Ada.Text_IO;           use Ada.Text_IO;
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Calendar;          use Ada.Calendar;
+    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Calendar; use Ada.Calendar;
+
     with Ada.Containers.Vectors;
+
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     procedure Show_Type_Invariant is
 
@@ -461,9 +478,11 @@ type invariants. It would look like this:
 
           function Init
             (Name                 : String;
-             Start_Date, End_Date : Time) return Course;
+             Start_Date, End_Date : Time)
+             return Course;
 
-          function Check (C : Course) return Boolean;
+          function Check (C : Course)
+                          return Boolean;
 
        private
           type Course is record
@@ -472,7 +491,8 @@ type invariants. It would look like this:
              End_Date   : Time;
           end record;
 
-          function Check (C : Course) return Boolean is
+          function Check (C : Course)
+                          return Boolean is
             (C.Start_Date <= C.End_Date);
 
           package Course_Vectors is new
@@ -494,10 +514,12 @@ type invariants. It would look like this:
 
           function Init
             (Name                 : String;
-             Start_Date, End_Date : Time) return Course is
+             Start_Date, End_Date : Time)
+             return Course is
           begin
              return
-               Course'(Name       => To_Unbounded_String (Name),
+               Course'(Name       =>
+                         To_Unbounded_String (Name),
                        Start_Date => Start_Date,
                        End_Date   => End_Date);
           end Init;
@@ -508,16 +530,22 @@ type invariants. It would look like this:
        CC : Course_Container;
     begin
        Add (CC,
-            Init (Name       => "Intro to Photography",
-                  Start_Date => Time_Of (2018, 5, 1),
-                  End_Date   => Time_Of (2018, 5, 10)));
+            Init (Name       =>
+                    "Intro to Photography",
+                  Start_Date =>
+                    Time_Of (2018, 5, 1),
+                  End_Date   =>
+                    Time_Of (2018, 5, 10)));
 
        --  This should trigger an error in the
        --  type-invariant check
        Add (CC,
-            Init (Name       => "Intro to Video Recording",
-                  Start_Date => Time_Of (2019, 5, 1),
-                  End_Date   => Time_Of (2018, 5, 10)));
+            Init (Name       =>
+                    "Intro to Video Recording",
+                  Start_Date =>
+                    Time_Of (2019, 5, 1),
+                  End_Date   =>
+                    Time_Of (2018, 5, 10)));
     end Show_Type_Invariant;
 
 The major difference is that the :ada:`Course` type was a visible (public)

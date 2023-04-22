@@ -400,7 +400,8 @@ simple delay. This is the complete package:
     private
        Start_Time   : Time := Clock;
 
-       function Get_Start_Time return Time is (Start_Time);
+       function Get_Start_Time return Time is
+         (Start_Time);
 
     end Delay_Aux_Pkg;
 
@@ -415,7 +416,8 @@ simple delay. This is the complete package:
           Now_Time     := Clock;
           Elapsed_Time := Now_Time - Start_Time;
           Put_Line ("Elapsed time "
-                    & Duration'Image (To_Duration (Elapsed_Time))
+                    & Duration'Image
+                        (To_Duration (Elapsed_Time))
                     & " seconds");
        end Show_Elapsed_Time;
 
@@ -651,17 +653,26 @@ operation. It also contains two concurrent subprograms (main task and task
 
        task body T is
        begin
-          Put_Line ("Task T will delay for 4 seconds...");
+          Put_Line
+            ("Task T will delay for 4 seconds...");
           delay 4.0;
-          Put_Line ("Task T will set Obj...");
+
+          Put_Line
+            ("Task T will set Obj...");
           Obj.Set (5);
-          Put_Line ("Task T has just set Obj...");
+
+          Put_Line
+            ("Task T has just set Obj...");
        end T;
     begin
-       Put_Line ("Main application will get Obj...");
+       Put_Line
+         ("Main application will get Obj...");
        Obj.Get (N);
-       Put_Line ("Main application has just retrieved Obj...");
-       Put_Line ("Number is: " & Integer'Image (N));
+
+       Put_Line
+         ("Main application has retrieved Obj...");
+       Put_Line
+         ("Number is: " & Integer'Image (N));
 
     end Show_Protected_Objects_Entries;
 

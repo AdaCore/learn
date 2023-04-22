@@ -272,7 +272,8 @@ used by the generic procedure :ada:`Check`.
     generic
        Description : String;
        type T is private;
-       with function Comparison (X, Y : T) return Boolean;
+       with function Comparison (X, Y : T)
+                                 return Boolean;
     procedure Check (X, Y : T);
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -282,13 +283,15 @@ used by the generic procedure :ada:`Check`.
     begin
        Result := Comparison (X, Y);
        if Result then
-          Put_Line ("Comparison ("
-                    & Description
-                    & ") between arguments is OK!");
+          Put_Line
+            ("Comparison ("
+             & Description
+             & ") between arguments is OK!");
        else
-          Put_Line ("Comparison ("
-                    & Description
-                    & ") between arguments is not OK!");
+          Put_Line
+            ("Comparison ("
+             & Description
+             & ") between arguments is not OK!");
        end if;
     end Check;
 
@@ -676,7 +679,8 @@ type:
 
     package body Colors is
 
-       procedure Reverse_It (X : in out Color_Array) is
+       procedure Reverse_It (X : in out Color_Array)
+       is
        begin
           for I in X'First ..
                    (X'Last + X'First) / 2 loop
@@ -875,7 +879,8 @@ Here is a version of the test application making use of the generic
        type Array_T is
          array (Index range <>) of T;
        S : String;
-       with function Image (E : T) return String is <>;
+       with function Image (E : T)
+                            return String is <>;
        with procedure Test (X : in out Array_T);
     procedure Perform_Test (X : in out Array_T);
 

@@ -195,7 +195,8 @@ of both function and procedure versions of :ada:`Insert`, :ada:`Overwrite`, and
           S_Del : String :=
             Trim (Delete (Source,
                           Before,
-                          Before + Pattern'Length - 1),
+                          Before +
+                            Pattern'Length - 1),
                   Ada.Strings.Right);
        begin
           Insert (S_Ins_In,
@@ -319,12 +320,15 @@ them at run-time is much easier. For example:
 
     procedure Show_Bounded_String is
        package B_Str is new
-         Ada.Strings.Bounded.Generic_Bounded_Length (Max => 15);
+         Ada.Strings.Bounded.Generic_Bounded_Length
+           (Max => 15);
        use B_Str;
 
        S1, S2 : Bounded_String;
 
-       procedure Display_String_Info (S : Bounded_String) is
+       procedure Display_String_Info
+         (S : Bounded_String)
+       is
        begin
           Put_Line ("String: " & To_String (S));
           Put_Line ("String Length: "
@@ -339,6 +343,7 @@ them at run-time is much easier. For example:
           Put_Line ("Max.   Length: "
                     & Integer'Image (Max_Length));
        end Display_String_Info;
+
     begin
        S1 := To_Bounded_String ("Hello");
        Display_String_Info (S1);
@@ -378,7 +383,8 @@ bounded strings using the :ada:`&` operator.  Like so:
 
     procedure Show_Bounded_String_Op is
        package B_Str is new
-         Ada.Strings.Bounded.Generic_Bounded_Length (Max => 30);
+         Ada.Strings.Bounded.Generic_Bounded_Length
+           (Max => 30);
        use B_Str;
 
        S1, S2 : Bounded_String;
@@ -389,7 +395,8 @@ bounded strings using the :ada:`&` operator.  Like so:
        --  A := Null_Bounded_String & "Hello";
 
        Append (S1, " World");
-       --  Alternatively: Append (A, " World", Right);
+       --  Alternatively:
+       --    Append (A, " World", Right);
 
        Put_Line ("String: " & To_String (S1));
 
@@ -426,14 +433,18 @@ Let's look at an example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String
 
-    with Ada.Strings;           use Ada.Strings;
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Text_IO;           use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Strings; use Ada.Strings;
+
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     procedure Show_Unbounded_String is
        S1, S2 : Unbounded_String;
 
-       procedure Display_String_Info (S : Unbounded_String) is
+       procedure Display_String_Info
+         (S : Unbounded_String)
+       is
        begin
           Put_Line ("String: " & To_String (S));
           Put_Line ("String Length: "
@@ -450,7 +461,8 @@ Let's look at an example:
        S2 := To_Unbounded_String ("Hello World");
        Display_String_Info (S2);
 
-       S1 := To_Unbounded_String ("Something longer to say here...");
+       S1 := To_Unbounded_String
+               ("Something longer to say here...");
        Display_String_Info (S1);
     end Show_Unbounded_String;
 
@@ -464,11 +476,14 @@ the :ada:`&` operator for unbounded strings. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Unbounded_String_Op
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-    with Ada.Text_IO;           use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     procedure Show_Unbounded_String_Op is
-       S1, S2 : Unbounded_String := Null_Unbounded_String;
+       S1, S2 : Unbounded_String :=
+                  Null_Unbounded_String;
     begin
        S1 := S1 & "Hello";
        S2 := S2 & "Hello!";

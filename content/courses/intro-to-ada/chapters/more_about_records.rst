@@ -28,12 +28,12 @@ known at compile time. This is illustrated in the example below:
     with Runtime_Length; use Runtime_Length;
 
     package Var_Size_Record is
-        Max_Len : constant Natural
-          := Compute_Max_Len;
-        --   ^ Not known at compile time
+        Max_Len : constant Natural :=
+                    Compute_Max_Len;
+        --          ^ Not known at compile time
 
-        type Items_Array is array (Positive range <>)
-          of Integer;
+        type Items_Array is
+          array (Positive range <>) of Integer;
 
         type Growable_Stack is record
            Items : Items_Array (1 .. Max_Len);
@@ -63,13 +63,14 @@ field that is called a discriminant:
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Records.Var_Size_Record_2
 
     package Var_Size_Record_2 is
-        type Items_Array is array (Positive range <>)
-          of Integer;
+        type Items_Array is
+          array (Positive range <>) of Integer;
 
         type Growable_Stack (Max_Len : Natural) is
         record
         --                   ^ Discriminant. Cannot be
-        --                     modified once initialized.
+        --                     modified once
+        --                     initialized.
            Items : Items_Array (1 .. Max_Len);
            Len   : Natural := 0;
         end record;
@@ -140,8 +141,9 @@ values via the dot notation.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Records.Var_Size_Record_2
 
+    with Ada.Text_IO;       use Ada.Text_IO;
+
     with Var_Size_Record_2; use Var_Size_Record_2;
-    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        procedure Print_Stack (G : Growable_Stack) is
@@ -233,16 +235,19 @@ Here is how you could write an evaluator for expressions:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.More_About_Records.Variant_Record
 
+    with Ada.Text_IO;    use Ada.Text_IO;
+
     with Variant_Record; use Variant_Record;
-    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Main is
        function Eval_Expr (E : Expr) return Integer is
          (case E.Kind is
-          when Bin_Op_Plus  => Eval_Expr (E.Left.all)
-                               + Eval_Expr (E.Right.all),
-          when Bin_Op_Minus => Eval_Expr (E.Left.all)
-                               - Eval_Expr (E.Right.all),
+          when Bin_Op_Plus  =>
+                 Eval_Expr (E.Left.all)
+                 + Eval_Expr (E.Right.all),
+          when Bin_Op_Minus =>
+                 Eval_Expr (E.Left.all)
+                 - Eval_Expr (E.Right.all),
           when Num => E.Val);
 
        E : Expr := (Bin_Op_Plus,

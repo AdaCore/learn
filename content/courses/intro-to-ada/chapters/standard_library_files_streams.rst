@@ -148,7 +148,8 @@ the same file for reading:
        when Name_Error =>
           Put_Line ("File does not exist");
        when others =>
-          Put_Line ("Error while processing input file");
+          Put_Line
+            ("Error while processing input file");
     end Show_Text_File_Input_Except;
 
 In this example, we create the file by calling :ada:`Create` and then
@@ -184,7 +185,8 @@ package for floating-point types:
        use Float_IO;
 
        F         : Float_IO.File_Type;
-       File_Name : constant String := "float_file.bin";
+       File_Name : constant String :=
+                     "float_file.bin";
     begin
        Create (F, Out_File, File_Name);
        Write (F,  1.5);
@@ -198,7 +200,8 @@ package for floating-point types:
           Open (F, In_File, File_Name);
           while not End_Of_File (F) loop
              Read (F, Value);
-             Ada.Text_IO.Put_Line (Float'Image (Value));
+             Ada.Text_IO.Put_Line
+               (Float'Image (Value));
           end loop;
           Close (F);
        end;
@@ -223,18 +226,22 @@ floating-point value:
        procedure Put_Line (N : Num_Info) is
        begin
           if N.Valid then
-             Ada.Text_IO.Put_Line ("(ok,     "
-                                   & Float'Image (N.Value) & ")");
+             Ada.Text_IO.Put_Line
+               ("(ok,     "
+                & Float'Image (N.Value) & ")");
           else
-             Ada.Text_IO.Put_Line ("(not ok,  -----------)");
+             Ada.Text_IO.Put_Line
+               ("(not ok,  -----------)");
           end if;
        end Put_Line;
 
-       package Num_Info_IO is new Ada.Sequential_IO (Num_Info);
+       package Num_Info_IO is new
+         Ada.Sequential_IO (Num_Info);
        use Num_Info_IO;
 
        F         : Num_Info_IO.File_Type;
-       File_Name : constant String := "float_file.bin";
+       File_Name : constant String :=
+                     "float_file.bin";
     begin
        Create (F, Out_File, File_Name);
        Write (F,  (True,  1.5));
@@ -282,7 +289,8 @@ package. This is the new source code:
        use Float_IO;
 
        F         : Float_IO.File_Type;
-       File_Name : constant String := "float_file.bin";
+       File_Name : constant String :=
+                     "float_file.bin";
     begin
        Create (F, Out_File, File_Name);
        Write (F,  1.5);
@@ -296,7 +304,8 @@ package. This is the new source code:
           Open (F, In_File, File_Name);
           while not End_Of_File (F) loop
              Read (F, Value);
-             Ada.Text_IO.Put_Line (Float'Image (Value));
+             Ada.Text_IO.Put_Line
+               (Float'Image (Value));
           end loop;
           Close (F);
        end;
@@ -322,7 +331,8 @@ the current index. Let's see an example:
        use Float_IO;
 
        F         : Float_IO.File_Type;
-       File_Name : constant String := "float_file.bin";
+       File_Name : constant String :=
+                     "float_file.bin";
     begin
        --  Open file for input / output
        Create (F, Inout_File, File_Name);
@@ -330,7 +340,8 @@ the current index. Let's see an example:
        Write (F,  2.4);
        Write (F,  6.7);
 
-       --  Set index to previous position and overwrite value
+       --  Set index to previous position
+       --  and overwrite value
        Set_Index (F, Index (F) - 1);
        Write (F,  7.7);
 
@@ -342,7 +353,8 @@ the current index. Let's see an example:
 
           while not End_Of_File (F) loop
              Read (F, Value);
-             Ada.Text_IO.Put_Line (Float'Image (Value));
+             Ada.Text_IO.Put_Line
+               (Float'Image (Value));
           end loop;
           Close (F);
        end;
@@ -382,12 +394,15 @@ previous section that makes use of stream I/O instead of direct I/O:
     :class: ada-run
 
     with Ada.Text_IO;
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+
+    with Ada.Streams.Stream_IO;
+    use  Ada.Streams.Stream_IO;
 
     procedure Show_Float_Stream is
        F         : File_Type;
        S         : Stream_Access;
-       File_Name : constant String := "float_file.bin";
+       File_Name : constant String :=
+                     "float_file.bin";
     begin
        Create (F, Out_File, File_Name);
        S := Stream (F);
@@ -406,7 +421,8 @@ previous section that makes use of stream I/O instead of direct I/O:
 
           while not End_Of_File (F) loop
              Float'Read (S, Value);
-             Ada.Text_IO.Put_Line (Float'Image (Value));
+             Ada.Text_IO.Put_Line
+               (Float'Image (Value));
           end loop;
           Close (F);
        end;
@@ -434,12 +450,15 @@ different lengths and floating-point values:
     :class: ada-run
 
     with Ada.Text_IO;
-    with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+
+    with Ada.Streams.Stream_IO;
+    use  Ada.Streams.Stream_IO;
 
     procedure Show_String_Stream is
        F         : File_Type;
        S         : Stream_Access;
-       File_Name : constant String := "float_file.bin";
+       File_Name : constant String :=
+                     "float_file.bin";
 
        procedure Output (S  : Stream_Access;
                          FV : Float;
