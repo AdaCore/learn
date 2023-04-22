@@ -2736,17 +2736,20 @@ these array declarations are equivalent:
     end Shared_Var_Types;
 
 
-:ada:`Full_Access_Only`
-~~~~~~~~~~~~~~~~~~~~~~~
+..
+    TO BE DONE:
 
-.. admonition:: Relevant topics
+   :ada:`Full_Access_Only`
+   ~~~~~~~~~~~~~~~~~~~~~~~
 
-   - **Briefly** discuss :ada:`Full_Access_Only`
-   - :arm22:`The Package System.Atomic_Operations <C-6-1>`
+   .. admonition:: Relevant topics
 
-.. todo::
+      - **Briefly** discuss :ada:`Full_Access_Only`
+      - :arm22:`The Package System.Atomic_Operations <C-6-1>`
 
-    Add to previous section!
+   .. todo::
+
+      Add to previous section!
 
 
 Discarding names
