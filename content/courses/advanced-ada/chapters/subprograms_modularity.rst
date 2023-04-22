@@ -78,9 +78,13 @@ example:
 
     end Data_Processing;
 
-    private procedure Data_Processing.Calculate (D : in out Data);
+    private
+    procedure Data_Processing.Calculate
+      (D : in out Data);
 
-    procedure Data_Processing.Calculate (D : in out Data) is
+    procedure Data_Processing.Calculate
+      (D : in out Data)
+    is
     begin
        --  Dummy implementation...
        D.F := 0.0;
@@ -142,7 +146,8 @@ Let's see an example:
 
     private procedure Test_Private_Data_Processing;
 
-    with Private_Data_Processing; use Private_Data_Processing;
+    with Private_Data_Processing;
+    use  Private_Data_Processing;
 
     procedure Test_Private_Data_Processing is
        D : Data;

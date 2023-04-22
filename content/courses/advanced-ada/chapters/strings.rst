@@ -25,9 +25,15 @@ more apparent when looking at the type definitions:
 
 .. code-block:: ada
 
-    type String is array(Positive range <>) of Character;
-    type Wide_String is array(Positive range <>) of Wide_Character;
-    type Wide_Wide_String is array(Positive range <>) of Wide_Wide_Character;
+    type String is
+      array (Positive range <>) of Character;
+
+    type Wide_String is
+      array (Positive range <>) of Wide_Character;
+
+    type Wide_Wide_String is
+      array (Positive range <>) of
+        Wide_Wide_Character;
 
 The following table shows the typical bit-width of each character of the
 string types:
@@ -51,11 +57,14 @@ We can see that when running this example:
     procedure Show_Wide_Char_Types is
     begin
        Put_Line ("Character'Size:           "
-                 & Integer'Image (Character'Size));
+                 & Integer'Image
+                     (Character'Size));
        Put_Line ("Wide_Character'Size:      "
-                 & Integer'Image (Wide_Character'Size));
+                 & Integer'Image
+                     (Wide_Character'Size));
        Put_Line ("Wide_Wide_Character'Size: "
-                 & Integer'Image (Wide_Wide_Character'Size));
+                 & Integer'Image
+                     (Wide_Wide_Character'Size));
     end Show_Wide_Char_Types;
 
 Let's look at another example, this time using wide strings:
@@ -76,21 +85,33 @@ Let's look at another example, this time using wide strings:
        WWS : constant Wide_Wide_String := "hello";
     begin
        TI.Put_Line ("String:           " & S);
-       TI.Put_Line ("Length:           " & Integer'Image (S'Length));
-       TI.Put_Line ("Size:             " & Integer'Image (S'Size));
-       TI.Put_Line ("Component_Size:   " & Integer'Image (S'Component_Size));
+       TI.Put_Line ("Length:           "
+                    & Integer'Image (S'Length));
+       TI.Put_Line ("Size:             "
+                    & Integer'Image (S'Size));
+       TI.Put_Line ("Component_Size:   "
+                    & Integer'Image
+                        (S'Component_Size));
        TI.Put_Line ("------------------------");
 
        WTI.Put_Line ("Wide string:      " & WS);
-       TI.Put_Line ("Length:           " & Integer'Image (WS'Length));
-       TI.Put_Line ("Size:             " & Integer'Image (WS'Size));
-       TI.Put_Line ("Component_Size:   " & Integer'Image (WS'Component_Size));
+       TI.Put_Line ("Length:           "
+                    & Integer'Image (WS'Length));
+       TI.Put_Line ("Size:             "
+                    & Integer'Image (WS'Size));
+       TI.Put_Line ("Component_Size:   "
+                    & Integer'Image
+                        (WS'Component_Size));
        TI.Put_Line ("------------------------");
 
        WWTI.Put_Line ("Wide-wide string: " & WWS);
-       TI.Put_Line ("Length:           " & Integer'Image (WWS'Length));
-       TI.Put_Line ("Size:             " & Integer'Image (WWS'Size));
-       TI.Put_Line ("Component_Size:   " & Integer'Image (WWS'Component_Size));
+       TI.Put_Line ("Length:           "
+                    & Integer'Image (WWS'Length));
+       TI.Put_Line ("Size:             "
+                    & Integer'Image (WWS'Size));
+       TI.Put_Line ("Component_Size:   "
+                    & Integer'Image
+                        (WWS'Component_Size));
        TI.Put_Line ("------------------------");
     end Show_Wide_String_Types;
 
@@ -198,23 +219,33 @@ Introduction to Ada course, which we adapted for wide-wide strings:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_String_Handling
 
-    with Ada.Strings;                 use Ada.Strings;
-    with Ada.Strings.Wide_Wide_Fixed; use Ada.Strings.Wide_Wide_Fixed;
-    with Ada.Strings.Wide_Wide_Maps;  use Ada.Strings.Wide_Wide_Maps;
-    with Ada.Wide_Wide_Text_IO;       use Ada.Wide_Wide_Text_IO;
+    with Ada.Strings; use Ada.Strings;
+
+    with Ada.Strings.Wide_Wide_Fixed;
+    use  Ada.Strings.Wide_Wide_Fixed;
+
+    with Ada.Strings.Wide_Wide_Maps;
+    use  Ada.Strings.Wide_Wide_Maps;
+
+    with Ada.Wide_Wide_Text_IO;
+    use  Ada.Wide_Wide_Text_IO;
 
     procedure Show_Find_Words is
 
-       S   : constant Wide_Wide_String := "Hello" & 3 * " World";
+       S   : constant Wide_Wide_String :=
+               "Hello" & 3 * " World";
        F   : Positive;
        L   : Natural;
        I   : Natural := 1;
 
-       Whitespace : constant Wide_Wide_Character_Set :=
-         To_Set (' ');
+       Whitespace : constant
+         Wide_Wide_Character_Set :=
+           To_Set (' ');
     begin
        Put_Line ("String: " & S);
-       Put_Line ("String length: " & Integer'Wide_Wide_Image (S'Length));
+       Put_Line ("String length: "
+                 & Integer'Wide_Wide_Image
+                     (S'Length));
 
        while I in S'Range loop
           Find_Token
@@ -296,7 +327,8 @@ Let's look at a simple example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Unbounded_Wide_Wide_String
 
-    with Ada.Strings.Wide_Wide_Unbounded; use Ada.Strings.Wide_Wide_Unbounded;
+    with Ada.Strings.Wide_Wide_Unbounded;
+    use  Ada.Strings.Wide_Wide_Unbounded;
 
     with Ada.Wide_Wide_Text_IO.Wide_Wide_Unbounded_IO;
     use  Ada.Wide_Wide_Text_IO.Wide_Wide_Unbounded_IO;
@@ -367,8 +399,10 @@ Let's look at an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WW_UTF_String
 
-    with Ada.Text_IO;              use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
 
     with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
     use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
@@ -378,39 +412,52 @@ Let's look at an example:
 
     procedure Show_WW_UTF_String is
 
-       function To_UWWS (Source : Wide_Wide_String)
-                         return Unbounded_Wide_Wide_String
-                         renames To_Unbounded_Wide_Wide_String;
+       function To_UWWS
+         (Source : Wide_Wide_String)
+          return Unbounded_Wide_Wide_String
+            renames To_Unbounded_Wide_Wide_String;
 
-       function To_WWS (Source : Unbounded_Wide_Wide_String)
-                         return Wide_Wide_String
-                         renames To_Wide_Wide_String;
+       function To_WWS
+         (Source : Unbounded_Wide_Wide_String)
+          return Wide_Wide_String
+            renames To_Wide_Wide_String;
 
-       Hello_World_Arabic     : constant
-         UTF_8_String     := "مرحبا يا عالم";
+       Hello_World_Arabic : constant
+         UTF_8_String := "مرحبا يا عالم";
        WWS_Hello_World_Arabic : constant
-         Wide_Wide_String := Decode (Hello_World_Arabic);
+         Wide_Wide_String :=
+           Decode (Hello_World_Arabic);
 
        UWWS : Unbounded_Wide_Wide_String;
     begin
-       UWWS := "Hello World: " & To_UWWS (WWS_Hello_World_Arabic);
+       UWWS := "Hello World: "
+               & To_UWWS (WWS_Hello_World_Arabic);
 
        Show_WW_String : declare
-          WWS : constant Wide_Wide_String := To_WWS (UWWS);
+          WWS : constant Wide_Wide_String :=
+                  To_WWS (UWWS);
        begin
-          Put_Line ("Wide_Wide_String Length: " & WWS'Length'Image);
-          Put_Line ("Wide_Wide_String Size:   " & WWS'Size'Image);
+          Put_Line ("Wide_Wide_String Length: "
+                    & WWS'Length'Image);
+          Put_Line ("Wide_Wide_String Size:   "
+                    & WWS'Size'Image);
        end Show_WW_String;
 
-       Put_Line ("---------------------------------------");
-       Put_Line ("Converting Wide_Wide_String to UTF-8...");
+       Put_Line
+         ("---------------------------------------");
+       Put_Line
+         ("Converting Wide_Wide_String to UTF-8...");
 
        Show_UTF_8_String : declare
-          S_UTF_8 : constant UTF_8_String := Encode (To_WWS (UWWS));
+          S_UTF_8 : constant UTF_8_String :=
+                      Encode (To_WWS (UWWS));
        begin
-          Put_Line ("UTF-8 String:        " & S_UTF_8);
-          Put_Line ("UTF-8 String Length: " & S_UTF_8'Length'Image);
-          Put_Line ("UTF-8 String Size:   " & S_UTF_8'Size'Image);
+          Put_Line ("UTF-8 String:        "
+                    & S_UTF_8);
+          Put_Line ("UTF-8 String Length: "
+                    & S_UTF_8'Length'Image);
+          Put_Line ("UTF-8 String Size:   "
+                    & S_UTF_8'Size'Image);
        end Show_UTF_8_String;
 
     end Show_WW_UTF_String;
@@ -467,8 +514,10 @@ example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8
 
-    with Ada.Text_IO;              use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
 
     with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
     use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
@@ -522,12 +571,15 @@ Let's look at this source-code example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8_Strings
 
-    with Ada.Text_IO;              use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
 
     procedure Show_UTF_8_Strings is
 
-        Symbols_UTF_8 : constant UTF_8_String := "♥♫";
+        Symbols_UTF_8 : constant
+          UTF_8_String := "♥♫";
 
     begin
         Put_Line ("UTF_8_String: "
@@ -570,7 +622,8 @@ of :ada:`Wide_Wide_String` type:
        package TIO   renames Ada.Text_IO;
        package WWTIO renames Ada.Wide_Wide_Text_IO;
 
-       Symbols_WWS : constant Wide_Wide_String := "♥♫";
+       Symbols_WWS : constant
+         Wide_Wide_String := "♥♫";
 
     begin
        WWTIO.Put_Line ("Wide_Wide_String: "
@@ -607,7 +660,8 @@ here.)
            package TIO   renames Ada.Text_IO;
            package WWTIO renames Ada.Wide_Wide_Text_IO;
 
-           Symbols_WWS : constant Wide_Wide_String := "♥♫";
+           Symbols_WWS : constant
+             Wide_Wide_String := "♥♫";
 
         begin
            WWTIO.Put_Line ("Wide_Wide_String: "
@@ -641,7 +695,8 @@ here.)
            package TIO   renames Ada.Text_IO;
            package WWTIO renames Ada.Wide_Wide_Text_IO;
 
-           Symbols_WWS : constant Wide_Wide_String := "♥♫";
+           Symbols_WWS : constant
+             Wide_Wide_String := "♥♫";
 
         begin
            WWTIO.Put_Line ("Wide_Wide_String: "
@@ -685,14 +740,18 @@ the corresponding UTF-8 code:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8
 
-    with Ada.Text_IO;              use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
 
     procedure Show_UTF_8 is
 
-       Symbol_UTF_8 : constant UTF_8_String
-         := Character'Val (16#e2#) & Character'Val (16#98#) &
-            Character'Val (16#85#);
+       Symbol_UTF_8 : constant
+         UTF_8_String :=
+           Character'Val (16#e2#)
+           & Character'Val (16#98#)
+           & Character'Val (16#85#);
 
     begin
        Put_Line ("UTF-8 String: "
@@ -712,7 +771,9 @@ schemes exist and are supported as well. In fact, the
 
 .. code-block:: ada
 
-    type Encoding_Scheme is (UTF_8, UTF_16BE, UTF_16LE);
+    type Encoding_Scheme is (UTF_8,
+                             UTF_16BE,
+                             UTF_16LE);
 
 For example, instead of using UTF-8 encoding, we can use UTF-16 encoding
 |mdash| either in the big-endian or in the little-endian version.
@@ -734,40 +795,48 @@ Let's see a code example that makes use of both :ada:`UTF_String` and
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_16_Types
 
-    with Ada.Text_IO;                       use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding;          use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
 
     with Ada.Strings.UTF_Encoding.Conversions;
     use  Ada.Strings.UTF_Encoding.Conversions;
 
     procedure Show_UTF16_Types is
-       Symbols_UTF_8  : constant UTF_8_String := "♥♫";
+       Symbols_UTF_8  : constant
+         UTF_8_String := "♥♫";
 
-       Symbols_UTF_16 : constant UTF_16_Wide_String
-         := Convert (Symbols_UTF_8);
-       --   ^ Calling Convert for UTF_8_String
-       --     to UTF_16_Wide_String conversion.
+       Symbols_UTF_16 : constant
+         UTF_16_Wide_String :=
+           Convert (Symbols_UTF_8);
+       --  ^ Calling Convert for UTF_8_String
+       --    to UTF_16_Wide_String conversion.
 
-       Symbols_UTF_16BE : constant UTF_String
-         := Convert (Item          => Symbols_UTF_8,
-                     Input_Scheme  => UTF_8,
-                     Output_Scheme => UTF_16BE);
-       --   ^ Calling Convert for UTF_8_String
-       --     to UTF_String conversion in UTF-16BE
-       --     encoding.
+       Symbols_UTF_16BE : constant
+         UTF_String :=
+           Convert (Item          => Symbols_UTF_8,
+                    Input_Scheme  => UTF_8,
+                    Output_Scheme => UTF_16BE);
+       --  ^ Calling Convert for UTF_8_String
+       --    to UTF_String conversion in UTF-16BE
+       --    encoding.
     begin
        Put_Line ("UTF_8_String:          "
                  & Symbols_UTF_8);
 
        Put_Line ("UTF_16_Wide_String:    "
                  & Convert (Symbols_UTF_16));
-       --          ^ Calling Convert for UTF_16_Wide_String
-       --            to UTF_8_String conversion.
+       --          ^ Calling Convert for
+       --            the UTF_16_Wide_String to
+       --            UTF_8_String conversion.
 
-       Put_Line ("UTF_String / UTF_16BE: "
-                 & Convert (Item          => Symbols_UTF_16BE,
-                            Input_Scheme  => UTF_16BE,
-                            Output_Scheme => UTF_8));
+       Put_Line
+         ("UTF_String / UTF_16BE: "
+          & Convert
+              (Item          => Symbols_UTF_16BE,
+               Input_Scheme  => UTF_16BE,
+               Output_Scheme => UTF_8));
     end Show_UTF16_Types;
 
 In this example, we're declaring a UTF-8 encoded string and storing it in the
@@ -793,8 +862,10 @@ example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WW_UTF_16_String
 
-    with Ada.Text_IO;                       use Ada.Text_IO;
-    with Ada.Strings.UTF_Encoding;          use Ada.Strings.UTF_Encoding;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
 
     with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
     use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
@@ -803,27 +874,31 @@ example:
     use  Ada.Strings.UTF_Encoding.Conversions;
 
     procedure Show_WW_UTF16_String is
-       Symbols_UTF_16 : constant UTF_16_Wide_String
-         := Wide_Character'Val (16#2665#) &
-            Wide_Character'Val (16#266B#);
-       --   ^ Calling Wide_Character'Val
-       --     to specify the UTF-16 BE code
-       --     for "♥" and "♫".
+       Symbols_UTF_16 : constant
+         UTF_16_Wide_String :=
+           Wide_Character'Val (16#2665#) &
+           Wide_Character'Val (16#266B#);
+       --  ^ Calling Wide_Character'Val
+       --    to specify the UTF-16 BE code
+       --    for "♥" and "♫".
 
-       Symbols_WWS : constant Wide_Wide_String
-         := Decode (Symbols_UTF_16);
-       --   ^ Calling Decode for UTF_16_Wide_String
-       --     to Wide_Wide_String conversion.
+       Symbols_WWS : constant
+         Wide_Wide_String :=
+           Decode (Symbols_UTF_16);
+       --  ^ Calling Decode for UTF_16_Wide_String
+       --    to Wide_Wide_String conversion.
     begin
        Put_Line ("UTF_16_Wide_String: "
                  & Convert (Symbols_UTF_16));
-       --          ^ Calling Convert for UTF_16_Wide_String
-       --            to UTF_8_String conversion.
+       --          ^ Calling Convert for the
+       --            UTF_16_Wide_String to
+       --            UTF_8_String conversion.
 
        Put_Line ("Wide_Wide_String:   "
                  & Encode (Symbols_WWS));
-       --          ^ Calling Encode for Wide_Wide_String
-       --            to UTF_8_String conversion.
+       --          ^ Calling Encode for the
+       --            Wide_Wide_String to
+       --            UTF_8_String conversion.
     end Show_WW_UTF16_String;
 
 In this example, we're calling the :ada:`Wide_Character'Val` function to
@@ -931,7 +1006,8 @@ Let's see a simple example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_Image
 
-    with Ada.Wide_Wide_Text_IO; use Ada.Wide_Wide_Text_IO;
+    with Ada.Wide_Wide_Text_IO;
+    use  Ada.Wide_Wide_Text_IO;
 
     procedure Show_Wide_Wide_Image is
        F : Float;
@@ -983,10 +1059,11 @@ this attribute when dealing with non-scalar types. For example:
 
     pragma Ada_2022;
 
-    with Ada.Text_IO;                use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Unchecked_Deallocation;
 
-    with Simple_Records;             use Simple_Records;
+    with Simple_Records;
+    use  Simple_Records;
 
     procedure Show_Non_Scalar_Image is
 
@@ -1039,7 +1116,8 @@ Let's see another example, this time with arrays:
 
     procedure Show_Array_Image is
 
-       type Float_Array is array (Positive range <>) of Float;
+       type Float_Array is
+         array (Positive range <>) of Float;
 
        FA_3C   : Float_Array (1 .. 3);
        FA_Null : Float_Array (1 .. 0);
@@ -1286,7 +1364,8 @@ write useful information to the buffer:
          I : Integer;
        end record
          with Dynamic_Predicate =>
-                Integer (Float_Integer.F) = Float_Integer.I,
+                Integer (Float_Integer.F) =
+                  Float_Integer.I,
               Put_Image         => Put_Float_Integer;
        --     ^ Custom version of Put_Image
 
@@ -1443,7 +1522,8 @@ instead. For example:
           Arg    :        T_Derived_2) is
           pragma Unreferenced (Arg);
        begin
-          Buffer.Wide_Wide_Put ("Put_Image_T_Derived_2");
+          Buffer.Wide_Wide_Put
+            ("Put_Image_T_Derived_2");
        end Put_Image_T_Derived_2;
 
     end Untagged_Put_Image;
@@ -1540,7 +1620,8 @@ untagged types, as we can see in the following example:
           Arg    :        T_Child_3) is
           pragma Unreferenced (Arg);
        begin
-          Buffer.Wide_Wide_Put ("Put_Image_T_Child_3");
+          Buffer.Wide_Wide_Put
+            ("Put_Image_T_Child_3");
        end Put_Image_T_Child_3;
 
     end Tagged_Put_Image;

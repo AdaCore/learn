@@ -61,14 +61,16 @@ For example:
 
     with System;
 
-    procedure Check_Param_Passing (Formal : System.Address;
-                                   Actual : System.Address);
+    procedure Check_Param_Passing
+      (Formal : System.Address;
+       Actual : System.Address);
 
-    with Ada.Text_IO;          use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
     with System.Address_Image;
 
-    procedure Check_Param_Passing (Formal : System.Address;
-                                   Actual : System.Address) is
+    procedure Check_Param_Passing
+      (Formal : System.Address;
+       Actual : System.Address) is
     begin
        Put_Line ("Formal parameter at "
                  & System.Address_Image (Formal));
@@ -77,9 +79,11 @@ For example:
        if System.Address_Image (Formal) =
           System.Address_Image (Actual)
        then
-          Put_Line ("Parameter is passed by reference.");
+          Put_Line
+            ("Parameter is passed by reference.");
        else
-          Put_Line ("Parameter is passed by copy.");
+          Put_Line
+            ("Parameter is passed by copy.");
        end if;
     end Check_Param_Passing;
 
@@ -87,8 +91,9 @@ For example:
 
     package Machine_X is
 
-       procedure Update_Value (V  : in out Integer;
-                               AV :        System.Address);
+       procedure Update_Value
+         (V  : in out Integer;
+          AV :        System.Address);
 
     end Machine_X;
 
@@ -96,8 +101,9 @@ For example:
 
     package body Machine_X is
 
-       procedure Update_Value (V  : in out Integer;
-                               AV :        System.Address) is
+       procedure Update_Value
+         (V  : in out Integer;
+          AV :        System.Address) is
        begin
           V := V + 1;
           Check_Param_Passing (Formal => V'Address,
@@ -194,7 +200,8 @@ Let's see an example:
 
     package Machine_X is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
        type Rec is record
           A : Integer;
@@ -209,14 +216,17 @@ Let's see an example:
           A : Integer;
        end record;
 
-       procedure Update_Value (R  : in out Rec;
-                               AR :        System.Address);
+       procedure Update_Value
+         (R  : in out Rec;
+          AR :        System.Address);
 
-       procedure Update_Value (RA  : in out Rec_Array;
-                               ARA :        System.Address);
+       procedure Update_Value
+         (RA  : in out Rec_Array;
+          ARA :        System.Address);
 
-       procedure Update_Value (R  : in out Tagged_Rec;
-                               AR :        System.Address);
+       procedure Update_Value
+         (R  : in out Tagged_Rec;
+          AR :        System.Address);
 
     end Machine_X;
 
@@ -224,24 +234,30 @@ Let's see an example:
 
     package body Machine_X is
 
-       procedure Update_Value (R  : in out Rec;
-                               AR :        System.Address) is
+       procedure Update_Value
+         (R  : in out Rec;
+          AR :        System.Address)
+       is
        begin
           R.A := R.A + 1;
           Check_Param_Passing (Formal => R'Address,
                                Actual => AR);
        end Update_Value;
 
-       procedure Update_Value (RA  : in out Rec_Array;
-                               ARA :        System.Address) is
+       procedure Update_Value
+         (RA  : in out Rec_Array;
+          ARA :        System.Address)
+       is
        begin
           RA.A := RA.A + 1;
           Check_Param_Passing (Formal => RA'Address,
                                Actual => ARA);
        end Update_Value;
 
-       procedure Update_Value (R  : in out Tagged_Rec;
-                               AR :        System.Address) is
+       procedure Update_Value
+         (R  : in out Tagged_Rec;
+          AR :        System.Address)
+       is
        begin
           R.A := R.A + 1;
           Check_Param_Passing (Formal => R'Address,
@@ -322,8 +338,9 @@ error. Consider the following code example:
 
        Global_R : Rec := (A => 0);
 
-       procedure Update_Value (R  : in out Rec;
-                               AR :        System.Address);
+       procedure Update_Value
+         (R  : in out Rec;
+          AR :        System.Address);
 
     end Machine_X;
 
@@ -333,9 +350,10 @@ error. Consider the following code example:
 
     package body Machine_X is
 
-       procedure Update_Value (R  : in out Rec;
-                               AR :        System.Address) is
-
+       procedure Update_Value
+         (R  : in out Rec;
+          AR :        System.Address)
+       is
           procedure Show_Vars is
           begin
              Put_Line ("Global_R.A: "
@@ -405,8 +423,9 @@ and change it to *aliased*:
 
     package Machine_X is
 
-       procedure Update_Value (V  : aliased in out Integer;
-                               AV :                System.Address);
+       procedure Update_Value
+         (V  : aliased in out Integer;
+          AV :                System.Address);
 
     end Machine_X;
 
@@ -414,8 +433,10 @@ and change it to *aliased*:
 
     package body Machine_X is
 
-       procedure Update_Value (V  : aliased in out Integer;
-                               AV :                System.Address) is
+       procedure Update_Value
+         (V  : aliased in out Integer;
+          AV :                System.Address)
+       is
        begin
           V := V + 1;
           Check_Param_Passing (Formal => V'Address,
@@ -685,7 +706,8 @@ For array types, the concatenation operator (:ada:`&`) is a primitive operator:
 
     package Integer_Arrays is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
     end Integer_Arrays;
 
@@ -694,7 +716,7 @@ For array types, the concatenation operator (:ada:`&`) is a primitive operator:
 
     procedure Show_Array_Concatenation is
        A, B : Integer_Array (1 .. 5);
-       R : Integer_Array (1 .. 10);
+       R    : Integer_Array (1 .. 10);
     begin
        A := (1 & 2 & 3 & 4 & 5);
        B := (6 & 7 & 8 & 9 & 10);
@@ -718,7 +740,8 @@ In contrast to this, the addition operator is not available for arrays:
 
     package Integer_Arrays is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
     end Integer_Arrays;
 
@@ -770,17 +793,22 @@ Let's define a custom addition operator that adds individual components of the
 
     package Integer_Arrays is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
-       function "+" (Left, Right : Integer_Array) return Integer_Array
-         with Post => (for all I in "+"'Result'Range =>
-                         "+"'Result (I) = Left (I) + Right (I));
+       function "+" (Left, Right : Integer_Array)
+                     return Integer_Array
+         with Post =>
+           (for all I in "+"'Result'Range =>
+              "+"'Result (I) = Left (I) + Right (I));
 
     end Integer_Arrays;
 
     package body Integer_Arrays is
 
-       function "+" (Left, Right : Integer_Array) return Integer_Array is
+       function "+" (Left, Right : Integer_Array)
+                     return Integer_Array
+       is
           R : Integer_Array (Left'Range);
        begin
           for I in Left'Range loop
@@ -839,8 +867,10 @@ address of a person:
        type Person is private;
 
        function "+" (Name    : String;
-                     Address : String) return Person;
-       function "+" (Left, Right : Person) return Person;
+                     Address : String)
+                     return Person;
+       function "+" (Left, Right : Person)
+                     return Person;
 
        procedure Display (P : Person);
 
@@ -862,15 +892,21 @@ address of a person:
     package body Addresses is
 
        function "+" (Name    : String;
-                     Address : String) return Person is
+                     Address : String)
+                     return Person
+       is
        begin
-          return (Name    => Head (Name,
-                                   Name_String'Length),
-                  Address => Head (Address,
-                                   Address_String'Length));
+          return (Name    =>
+                    Head (Name,
+                          Name_String'Length),
+                  Address =>
+                    Head (Address,
+                          Address_String'Length));
        end "+";
 
-       function "+" (Left, Right : Person) return Person is
+       function "+" (Left, Right : Person)
+                     return Person
+       is
        begin
           return (Name    => Left.Name,
                   Address => Right.Address);
@@ -921,8 +957,10 @@ we can confirm by comparing the operation in both orders:
     with Addresses;   use Addresses;
 
     procedure Show_Address_Addition is
-       John : constant Person := "John" + "4 Main Street";
-       Jane : constant Person := "Jane" + "7 High Street";
+       John : constant Person :=
+                "John" + "4 Main Street";
+       Jane : constant Person :=
+                "Jane" + "7 High Street";
     begin
        if Jane + John = John + Jane then
           Put_Line ("It's commutative!");
@@ -961,7 +999,8 @@ expression function:
 
     package Expr_Func is
 
-       function Is_Zero (I : Integer) return Boolean is
+       function Is_Zero (I : Integer)
+                         return Boolean is
          (I = 0);
 
     end Expr_Func;
@@ -974,13 +1013,15 @@ function using a block:
 
     package Expr_Func is
 
-       function Is_Zero (I : Integer) return Boolean;
+       function Is_Zero (I : Integer)
+                         return Boolean;
 
     end Expr_Func;
 
     package body Expr_Func is
 
-       function Is_Zero (I : Integer) return Boolean is
+       function Is_Zero (I : Integer)
+                         return Boolean is
        begin
           return I = 0;
        end Is_Zero;
@@ -1006,7 +1047,8 @@ example, the following code is wrong and won't compile:
     !expr_func.ads
     package Expr_Func is
 
-       function Is_Zero (I : Integer) return Boolean is
+       function Is_Zero (I : Integer)
+                         return Boolean is
        begin
           return I = 0;
        end Is_Zero;
@@ -1022,13 +1064,15 @@ package:
 
     package Expr_Func is
 
-       function Is_Zero (I : Integer) return Boolean;
+       function Is_Zero (I : Integer)
+                         return Boolean;
 
     end Expr_Func;
 
     package body Expr_Func is
 
-       function Is_Zero (I : Integer) return Boolean is
+       function Is_Zero (I : Integer)
+                         return Boolean is
          (I = 0);
 
     end Expr_Func;
@@ -1045,7 +1089,8 @@ package specification:
 
        type Data is private;
 
-       function Is_Valid (D : Data) return Boolean;
+       function Is_Valid (D : Data)
+                          return Boolean;
 
     private
 
@@ -1053,8 +1098,9 @@ package specification:
           Valid : Boolean;
        end record;
 
-       function Is_Valid (D : Data) return Boolean is
-          (D.Valid);
+       function Is_Valid (D : Data)
+                          return Boolean is
+         (D.Valid);
 
     end My_Data;
 
@@ -1067,7 +1113,8 @@ instead:
 
        type Data is private;
 
-       function Is_Valid (D : Data) return Boolean;
+       function Is_Valid (D : Data)
+                          return Boolean;
 
     private
 
@@ -1079,8 +1126,9 @@ instead:
 
     package body My_Data is
 
-       function Is_Valid (D : Data) return Boolean is
-          (D.Valid);
+       function Is_Valid (D : Data)
+                          return Boolean is
+         (D.Valid);
 
     end My_Data;
 
@@ -1143,18 +1191,25 @@ Ada is unusual in that it supports top-down overload resolution as well:
           type Sequence is null record;
           type Set is null record;
 
-          function Empty return Sequence is ((others => <>));
-          function Empty return Set  is ((others => <>));
+          function Empty return Sequence is
+            ((others => <>));
 
-          procedure Print_Sequence (S : Sequence) is null;
-          procedure Print_Set (S : Set) is null;
+          function Empty return Set is
+            ((others => <>));
+
+          procedure Print_Sequence (S : Sequence) is
+            null;
+
+          procedure Print_Set (S : Set) is
+            null;
        end Types;
 
        use Types;
 
        X : Sequence;
     begin
-       --  Compiler selects function Empty return Sequence
+       --  Compiler selects function
+       --  Empty return Sequence
        Print_Sequence (Empty);
     end Show_Top_Down_Overloading;
 
@@ -1175,11 +1230,17 @@ If we overload things too heavily, we can cause ambiguities:
           type Sequence is null record;
           type Set is null record;
 
-          function Empty return Sequence is ((others => <>));
-          function Empty return Set  is ((others => <>));
+          function Empty return Sequence is
+            ((others => <>));
 
-          procedure Print (S : Sequence) is null;
-          procedure Print (S : Set) is null;
+          function Empty return Set is
+            ((others => <>));
+
+          procedure Print (S : Sequence) is
+            null;
+
+          procedure Print (S : Set) is
+            null;
        end Types;
 
        use Types;
@@ -1287,7 +1348,9 @@ determine its type.
        procedure Grind (X : Complex) is null;
        procedure Grind (X : String) is null;
     begin
-       Grind (X => (Re => 1.0, Im => 1.0));  --  Illegal!
+       Grind (X => (Re => 1.0, Im => 1.0));
+       --  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       --  Illegal!
     end Show_Record_Resolution_Error;
 
 There are two :ada:`Grind` procedures visible, so the type of the
@@ -1329,9 +1392,12 @@ we can find these declarations:
 
 .. code-block:: ada
 
-    function "+" (Left, Right : Complex) return Complex;
-    function "+" (Left : Complex;   Right : Real'Base) return Complex;
-    function "+" (Left : Real'Base; Right : Complex)   return Complex;
+    function "+" (Left, Right : Complex)
+                  return Complex;
+    function "+" (Left : Complex;   Right : Real'Base)
+                  return Complex;
+    function "+" (Left : Real'Base; Right : Complex)
+                  return Complex;
 
 This example shows that the :ada:`+` operator |mdash| as well as other
 operators |mdash| are being overloaded in the :ada:`Generic_Complex_Types`
@@ -1405,14 +1471,18 @@ the result is out of range:
        D : constant := 2.0 ** (-31);
        type TQ31 is delta D range -1.0 .. 1.0 - D;
 
-       function "+" (Left, Right : TQ31) return TQ31;
+       function "+" (Left, Right : TQ31)
+                     return TQ31;
 
     end Fixed_Point;
 
     package body Fixed_Point is
 
-       function "+" (Left, Right : TQ31) return TQ31 is
-          type TQ31_2 is delta TQ31'Delta
+       function "+" (Left, Right : TQ31)
+                     return TQ31
+       is
+          type TQ31_2 is
+            delta TQ31'Delta
             range TQ31'First * 2.0 .. TQ31'Last * 2.0;
 
           L   : constant TQ31_2 := TQ31_2 (Left);
@@ -1497,7 +1567,9 @@ server can be implemented as an endless loop. For example:
 
        procedure Run_Server is
        begin
-          pragma Warnings (Off, "implied return after this statement");
+          pragma Warnings
+            (Off,
+             "implied return after this statement");
           while True loop
              --  Processing happens here...
              null;
@@ -1648,16 +1720,20 @@ Let's look at this example:
 
     package Float_Arrays is
 
-       type Float_Array is array (Positive range <>) of Float;
+       type Float_Array is
+         array (Positive range <>) of Float;
 
-       function Average (Data : Float_Array) return Float
+       function Average (Data : Float_Array)
+                         return Float
          with Inline;
 
     end Float_Arrays;
 
     package body Float_Arrays is
 
-       function Average (Data : Float_Array) return Float is
+       function Average (Data : Float_Array)
+                         return Float
+       is
           Total : Float := 0.0;
        begin
           for Value of Data loop
@@ -1673,11 +1749,13 @@ Let's look at this example:
     with Float_Arrays; use Float_Arrays;
 
     procedure Compute_Average is
-       Values        : constant Float_Array := (10.0, 11.0, 12.0, 13.0);
+       Values        : constant Float_Array :=
+                         (10.0, 11.0, 12.0, 13.0);
        Average_Value : Float;
     begin
        Average_Value := Average (Values);
-       Put_Line ("Average = " & Float'Image (Average_Value));
+       Put_Line ("Average = "
+                 & Float'Image (Average_Value));
     end Compute_Average;
 
 When compiling this example, the compiler will most probably inline

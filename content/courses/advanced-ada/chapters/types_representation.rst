@@ -28,11 +28,16 @@ We can rewrite the previous example using a representation clause:
 
     package Days is
 
-       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+       type Day is (Mon, Tue, Wed,
+                    Thu, Fri,
+                    Sat, Sun);
 
-       for Day use (Mon => 2#00000001#, Tue => 2#00000010#,
-                    Wed => 2#00000100#, Thu => 2#00001000#,
-                    Fri => 2#00010000#, Sat => 2#00100000#,
+       for Day use (Mon => 2#00000001#,
+                    Tue => 2#00000010#,
+                    Wed => 2#00000100#,
+                    Thu => 2#00001000#,
+                    Fri => 2#00010000#,
+                    Sat => 2#00100000#,
                     Sun => 2#01000000#);
 
     end Days;
@@ -43,10 +48,13 @@ We can rewrite the previous example using a representation clause:
     procedure Show_Days is
     begin
        for D in Day loop
-          Put_Line (Day'Image (D) & " position      = "
+          Put_Line (Day'Image (D)
+                    & " position      = "
                     & Integer'Image (Day'Pos (D)));
-          Put_Line (Day'Image (D) & " internal code = "
-                    & Integer'Image (Day'Enum_Rep (D)));
+          Put_Line (Day'Image (D)
+                    & " internal code = "
+                    & Integer'Image
+                        (Day'Enum_Rep (D)));
        end loop;
     end Show_Days;
 
@@ -63,11 +71,16 @@ totally arbitrary values as well. For example:
 
     package Days is
 
-       type Day is (Mon, Tue, Wed, Thu, Fri, Sat, Sun);
+       type Day is (Mon, Tue, Wed,
+                    Thu, Fri,
+                    Sat, Sun);
 
-       for Day use (Mon =>  5, Tue =>  9,
-                    Wed => 42, Thu => 49,
-                    Fri => 50, Sat => 66,
+       for Day use (Mon =>  5,
+                    Tue =>  9,
+                    Wed => 42,
+                    Thu => 49,
+                    Fri => 50,
+                    Sat => 66,
                     Sun => 99);
 
     end Days;
@@ -145,14 +158,20 @@ Let's start with a code example using the :ada:`Size` attribute:
        V1 : UInt_7;
        V2 : UInt_7_S32;
     begin
-       Put_Line ("UInt_7'Size:            " & UInt_7'Size'Image);
-       Put_Line ("UInt_7'Object_Size:     " & UInt_7'Object_Size'Image);
-       Put_Line ("V1'Size:                " & V1'Size'Image);
+       Put_Line ("UInt_7'Size:            "
+                 & UInt_7'Size'Image);
+       Put_Line ("UInt_7'Object_Size:     "
+                 & UInt_7'Object_Size'Image);
+       Put_Line ("V1'Size:                "
+                 & V1'Size'Image);
        New_Line;
 
-       Put_Line ("UInt_7_S32'Size:        " & UInt_7_S32'Size'Image);
-       Put_Line ("UInt_7_S32'Object_Size: " & UInt_7_S32'Object_Size'Image);
-       Put_Line ("V2'Size:                " & V2'Size'Image);
+       Put_Line ("UInt_7_S32'Size:        "
+                 & UInt_7_S32'Size'Image);
+       Put_Line ("UInt_7_S32'Object_Size: "
+                 & UInt_7_S32'Object_Size'Image);
+       Put_Line ("V2'Size:                "
+                 & V2'Size'Image);
     end Show_Sizes;
 
 Depending on your target architecture, you may see this output:
@@ -219,10 +238,12 @@ Let's continue our discussion on sizes with an example that makes use of the
 
        type UInt_7 is range 0 .. 127;
 
-       type UInt_7_Array is array (Positive range <>) of UInt_7;
+       type UInt_7_Array is
+         array (Positive range <>) of UInt_7;
 
-       type UInt_7_Array_Comp_32 is array (Positive range <>) of UInt_7
-         with Component_Size => 32;
+       type UInt_7_Array_Comp_32 is
+         array (Positive range <>) of UInt_7
+           with Component_Size => 32;
 
     end Custom_Types;
 
@@ -234,28 +255,39 @@ Let's continue our discussion on sizes with an example that makes use of the
        Arr_1 : UInt_7_Array (1 .. 20);
        Arr_2 : UInt_7_Array_Comp_32 (1 .. 20);
     begin
-       Put_Line ("UInt_7_Array'Size:                   "
-                 & UInt_7_Array'Size'Image);
-       Put_Line ("UInt_7_Array'Object_Size:            "
-                 & UInt_7_Array'Object_Size'Image);
-       Put_Line ("UInt_7_Array'Component_Size:         "
-                 & UInt_7_Array'Component_Size'Image);
-       Put_Line ("Arr_1'Component_Size:                "
-                 & Arr_1'Component_Size'Image);
-       Put_Line ("Arr_1'Size:                          "
-                 & Arr_1'Size'Image);
+       Put_Line
+         ("UInt_7_Array'Size:                   "
+          & UInt_7_Array'Size'Image);
+       Put_Line
+         ("UInt_7_Array'Object_Size:            "
+          & UInt_7_Array'Object_Size'Image);
+       Put_Line
+         ("UInt_7_Array'Component_Size:         "
+          & UInt_7_Array'Component_Size'Image);
+       Put_Line
+         ("Arr_1'Component_Size:                "
+          & Arr_1'Component_Size'Image);
+       Put_Line
+         ("Arr_1'Size:                          "
+          & Arr_1'Size'Image);
        New_Line;
 
-       Put_Line ("UInt_7_Array_Comp_32'Object_Size:    "
-                 & UInt_7_Array_Comp_32'Size'Image);
-       Put_Line ("UInt_7_Array_Comp_32'Object_Size:    "
-                 & UInt_7_Array_Comp_32'Object_Size'Image);
-       Put_Line ("UInt_7_Array_Comp_32'Component_Size: "
-                 & UInt_7_Array_Comp_32'Component_Size'Image);
-       Put_Line ("Arr_2'Component_Size:                "
-                 & Arr_2'Component_Size'Image);
-       Put_Line ("Arr_2'Size:                          "
-                 & Arr_2'Size'Image);
+       Put_Line
+         ("UInt_7_Array_Comp_32'Object_Size:    "
+          & UInt_7_Array_Comp_32'Size'Image);
+       Put_Line
+         ("UInt_7_Array_Comp_32'Object_Size:    "
+          & UInt_7_Array_Comp_32'Object_Size'Image);
+       Put_Line
+         ("UInt_7_Array_Comp_32'Component_Size: "
+          &
+          UInt_7_Array_Comp_32'Component_Size'Image);
+       Put_Line
+         ("Arr_2'Component_Size:                "
+          & Arr_2'Component_Size'Image);
+       Put_Line
+         ("Arr_2'Size:                          "
+          & Arr_2'Size'Image);
        New_Line;
     end Show_Sizes;
 
@@ -287,8 +319,9 @@ to query whether the size of each component can be 32 bits:
 
 .. code-block:: ada
 
-    type UInt_7_Array_Comp_32 is array (Positive range <>) of UInt_7
-      with Component_Size => 32;
+    type UInt_7_Array_Comp_32 is
+      array (Positive range <>) of UInt_7
+        with Component_Size => 32;
 
 If the code compiles, we see this value when we use the :ada:`Component_Size`
 attribute. In this case, even though :ada:`UInt_7'Object_Size` is 8 bits, the
@@ -335,16 +368,26 @@ sizes:
     procedure Show_Sizes is
        AV1, AV2 : UInt_7_Access;
     begin
-       Put_Line ("UInt_7_Access'Storage_Size:          "
-                 & UInt_7_Access'Storage_Size'Image);
-       Put_Line ("UInt_7_Access'Storage_Size (bits):   "
-                 & Integer'Image (UInt_7_Access'Storage_Size
-                   * System.Storage_Unit));
+       Put_Line
+         ("UInt_7_Access'Storage_Size:          "
+          & UInt_7_Access'Storage_Size'Image);
+       Put_Line
+         ("UInt_7_Access'Storage_Size (bits):   "
+          & Integer'Image (UInt_7_Access'Storage_Size
+                           * System.Storage_Unit));
 
-       Put_Line ("UInt_7'Size:               " & UInt_7'Size'Image);
-       Put_Line ("UInt_7_Access'Size:        " & UInt_7_Access'Size'Image);
-       Put_Line ("UInt_7_Access'Object_Size: " & UInt_7_Access'Object_Size'Image);
-       Put_Line ("AV1'Size:                  " & AV1'Size'Image);
+       Put_Line
+         ("UInt_7'Size:               "
+          & UInt_7'Size'Image);
+       Put_Line
+         ("UInt_7_Access'Size:        "
+          & UInt_7_Access'Size'Image);
+       Put_Line
+         ("UInt_7_Access'Object_Size: "
+          & UInt_7_Access'Object_Size'Image);
+       Put_Line
+         ("AV1'Size:                  "
+          & AV1'Size'Image);
        New_Line;
 
        Put_Line ("Allocating AV1...");
@@ -353,7 +396,9 @@ sizes:
        AV2 := new UInt_7;
        New_Line;
 
-       Put_Line ("AV1.all'Size:              " & AV1.all'Size'Image);
+       Put_Line
+         ("AV1.all'Size:              "
+          & AV1.all'Size'Image);
        New_Line;
     end Show_Sizes;
 
@@ -419,17 +464,25 @@ this data type:
     procedure Show_Sizes is
        RAV1, RAV2 : UInt_7_Reserved_Access;
     begin
-       Put_Line ("UInt_7_Reserved_Access'Storage_Size:        "
-                 & UInt_7_Reserved_Access'Storage_Size'Image);
-       Put_Line ("UInt_7_Reserved_Access'Storage_Size (bits): "
-                 & Integer'Image (UInt_7_Reserved_Access'Storage_Size
-                   * System.Storage_Unit));
+       Put_Line
+       ("UInt_7_Reserved_Access'Storage_Size:        "
+        & UInt_7_Reserved_Access'Storage_Size'Image);
 
-       Put_Line ("UInt_7_Reserved_Access'Size:        "
-                 & UInt_7_Reserved_Access'Size'Image);
-       Put_Line ("UInt_7_Reserved_Access'Object_Size: "
-                 & UInt_7_Reserved_Access'Object_Size'Image);
-       Put_Line ("RAV1'Size:                          " & RAV1'Size'Image);
+       Put_Line
+       ("UInt_7_Reserved_Access'Storage_Size (bits): "
+        & Integer'Image
+            (UInt_7_Reserved_Access'Storage_Size
+             * System.Storage_Unit));
+
+       Put_Line
+         ("UInt_7_Reserved_Access'Size:        "
+          & UInt_7_Reserved_Access'Size'Image);
+       Put_Line
+         ("UInt_7_Reserved_Access'Object_Size: "
+          & UInt_7_Reserved_Access'Object_Size'Image);
+       Put_Line
+         ("RAV1'Size:                          "
+          & RAV1'Size'Image);
        New_Line;
 
        Put_Line ("Allocating RAV1...");
@@ -505,19 +558,38 @@ alignment. This can be done by using the :ada:`Alignment` attribute and the
        V         : constant UInt_7         := 0;
        Aligned_V : constant Aligned_UInt_7 := 0;
     begin
-       Put_Line ("UInt_7'Alignment:           " & UInt_7'Alignment'Image);
-       Put_Line ("UInt_7'Size:                " & UInt_7'Size'Image);
-       Put_Line ("UInt_7'Object_Size:         " & UInt_7'Object_Size'Image);
-       Put_Line ("V'Alignment:                " & V'Alignment'Image);
-       Put_Line ("V'Size:                     " & V'Size'Image);
+       Put_Line
+         ("UInt_7'Alignment:           "
+          & UInt_7'Alignment'Image);
+       Put_Line
+         ("UInt_7'Size:                "
+          & UInt_7'Size'Image);
+       Put_Line
+         ("UInt_7'Object_Size:         "
+          & UInt_7'Object_Size'Image);
+       Put_Line
+         ("V'Alignment:                "
+          & V'Alignment'Image);
+       Put_Line
+         ("V'Size:                     "
+          & V'Size'Image);
        New_Line;
 
-       Put_Line ("Aligned_UInt_7'Alignment:   " & Aligned_UInt_7'Alignment'Image);
-       Put_Line ("Aligned_UInt_7'Size:        " & Aligned_UInt_7'Size'Image);
-       Put_Line ("Aligned_UInt_7'Object_Size: "
-                 & Aligned_UInt_7'Object_Size'Image);
-       Put_Line ("Aligned_V'Alignment:        " & Aligned_V'Alignment'Image);
-       Put_Line ("Aligned_V'Size:             " & Aligned_V'Size'Image);
+       Put_Line
+         ("Aligned_UInt_7'Alignment:   "
+          & Aligned_UInt_7'Alignment'Image);
+       Put_Line
+         ("Aligned_UInt_7'Size:        "
+          & Aligned_UInt_7'Size'Image);
+       Put_Line
+         ("Aligned_UInt_7'Object_Size: "
+          & Aligned_UInt_7'Object_Size'Image);
+       Put_Line
+         ("Aligned_V'Alignment:        "
+          & Aligned_V'Alignment'Image);
+       Put_Line
+         ("Aligned_V'Size:             "
+          & Aligned_V'Size'Image);
        New_Line;
     end Show_Alignment;
 
@@ -583,12 +655,18 @@ Note that you can also retrieve the alignment associated with a class using
        end record;
 
     begin
-       Put_Line ("1D_Point'Alignment:       " & Point_1D'Alignment'Image);
-       Put_Line ("1D_Point'Class'Alignment: " & Point_1D'Class'Alignment'Image);
-       Put_Line ("2D_Point'Alignment:       " & Point_2D'Alignment'Image);
-       Put_Line ("2D_Point'Class'Alignment: " & Point_2D'Class'Alignment'Image);
-       Put_Line ("3D_Point'Alignment:       " & Point_3D'Alignment'Image);
-       Put_Line ("3D_Point'Class'Alignment: " & Point_3D'Class'Alignment'Image);
+       Put_Line ("1D_Point'Alignment:       "
+                 & Point_1D'Alignment'Image);
+       Put_Line ("1D_Point'Class'Alignment: "
+                 & Point_1D'Class'Alignment'Image);
+       Put_Line ("2D_Point'Alignment:       "
+                 & Point_2D'Alignment'Image);
+       Put_Line ("2D_Point'Class'Alignment: "
+                 & Point_2D'Class'Alignment'Image);
+       Put_Line ("3D_Point'Alignment:       "
+                 & Point_3D'Alignment'Image);
+       Put_Line ("3D_Point'Class'Alignment: "
+                 & Point_3D'Class'Alignment'Image);
     end Show_Class_Alignment;
 
 Overlapping Storage
@@ -623,7 +701,8 @@ Let's look at this example:
 
     package Int_Array_Processing is
 
-       type Int_Array is array (Positive range <>) of Integer;
+       type Int_Array is
+         array (Positive range <>) of Integer;
 
        procedure Show_Storage (X : Int_Array;
                                Y : Int_Array);
@@ -641,14 +720,19 @@ Let's look at this example:
                                Y : Int_Array) is
        begin
           if X'Has_Same_Storage (Y) then
-             Put_Line ("Info: X and Y have the same storage.");
+             Put_Line
+             ("Info: X and Y have the same storage.");
           else
-             Put_Line ("Info: X and Y don't the have same storage.");
+             Put_Line
+               ("Info: X and Y don't have"
+                & "the same storage.");
           end if;
           if X'Overlaps_Storage (Y) then
-             Put_Line ("Info: X and Y overlap.");
+             Put_Line
+               ("Info: X and Y overlap.");
           else
-             Put_Line ("Info: X and Y don't overlap.");
+             Put_Line
+               ("Info: X and Y don't overlap.");
           end if;
        end Show_Storage;
 
@@ -662,9 +746,12 @@ Let's look at this example:
              Put_Line ("In-place processing...");
           else
              if not X'Overlaps_Storage (Y) then
-                Put_Line ("Out-of-place processing...");
+                Put_Line
+                  ("Out-of-place processing...");
              else
-                Put_Line ("Cannot process overlapping arrays...");
+                Put_Line
+                  ("Cannot process "
+                   & "overlapping arrays...");
              end if;
           end if;
           New_Line;
@@ -672,23 +759,27 @@ Let's look at this example:
 
     end Int_Array_Processing;
 
-    with Int_Array_Processing; use Int_Array_Processing;
+    with Int_Array_Processing;
+    use  Int_Array_Processing;
 
     procedure Main is
        A : Int_Array (1 .. 20) := (others => 3);
        B : Int_Array (1 .. 20) := (others => 4);
     begin
        Process (A, A);
-       --  In-place processing: sharing the exact same storage
+       --  In-place processing:
+       --  sharing the exact same storage
 
        Process (A (1 .. 10), A (10 .. 20));
        --  Overlapping one component: A (10)
 
        Process (A (1 .. 10), A (11 .. 20));
-       --  Out-of-place processing: same array, but not sharing any storage
+       --  Out-of-place processing:
+       --  same array, but not sharing any storage
 
        Process (A, B);
-       --  Out-of-place processing: two different arrays
+       --  Out-of-place processing:
+       --  two different arrays
     end Main;
 
 In this code example, we implement two procedures:
@@ -748,7 +839,8 @@ declared as an array of :ada:`Boolean` components. For example:
 
     package Flag_Definitions is
 
-       type Flags is array (Positive range <>) of Boolean;
+       type Flags is
+         array (Positive range <>) of Boolean;
 
     end Flag_Definitions;
 
@@ -758,10 +850,14 @@ declared as an array of :ada:`Boolean` components. For example:
     procedure Show_Flags is
        Flags_1 : Flags (1 .. 8);
     begin
-       Put_Line ("Boolean'Size:           " & Boolean'Size'Image);
-       Put_Line ("Boolean'Object_Size:    " & Boolean'Object_Size'Image);
-       Put_Line ("Flags_1'Size:           " & Flags_1'Size'Image);
-       Put_Line ("Flags_1'Component_Size: " & Flags_1'Component_Size'Image);
+       Put_Line ("Boolean'Size:           "
+                 & Boolean'Size'Image);
+       Put_Line ("Boolean'Object_Size:    "
+                 & Boolean'Object_Size'Image);
+       Put_Line ("Flags_1'Size:           "
+                 & Flags_1'Size'Image);
+       Put_Line ("Flags_1'Component_Size: "
+                 & Flags_1'Component_Size'Image);
     end Show_Flags;
 
 Depending on your target architecture, you may see this output:
@@ -790,10 +886,12 @@ aspect. For example, we could extend the previous example and declare a
 
     package Flag_Definitions is
 
-       type Flags is array (Positive range <>) of Boolean;
+       type Flags is
+         array (Positive range <>) of Boolean;
 
-       type Packed_Flags is array (Positive range <>) of Boolean
-         with Pack;
+       type Packed_Flags is
+         array (Positive range <>) of Boolean
+           with Pack;
 
     end Flag_Definitions;
 
@@ -804,12 +902,18 @@ aspect. For example, we could extend the previous example and declare a
        Flags_1 : Flags (1 .. 8);
        Flags_2 : Packed_Flags (1 .. 8);
     begin
-       Put_Line ("Boolean'Size:           " & Boolean'Size'Image);
-       Put_Line ("Boolean'Object_Size:    " & Boolean'Object_Size'Image);
-       Put_Line ("Flags_1'Size:           " & Flags_1'Size'Image);
-       Put_Line ("Flags_1'Component_Size: " & Flags_1'Component_Size'Image);
-       Put_Line ("Flags_2'Size:           " & Flags_2'Size'Image);
-       Put_Line ("Flags_2'Component_Size: " & Flags_2'Component_Size'Image);
+       Put_Line ("Boolean'Size:           "
+                 & Boolean'Size'Image);
+       Put_Line ("Boolean'Object_Size:    "
+                 & Boolean'Object_Size'Image);
+       Put_Line ("Flags_1'Size:           "
+                 & Flags_1'Size'Image);
+       Put_Line ("Flags_1'Component_Size: "
+                 & Flags_1'Component_Size'Image);
+       Put_Line ("Flags_2'Size:           "
+                 & Flags_2'Size'Image);
+       Put_Line ("Flags_2'Component_Size: "
+                 & Flags_2'Component_Size'Image);
     end Show_Packed_Flags;
 
 Depending on your target architecture, you may see this output:
@@ -845,13 +949,16 @@ Let's modify the previous example and introduce this type conversion:
 
     package Flag_Definitions is
 
-       type Flags is array (Positive range <>) of Boolean;
+       type Flags is
+         array (Positive range <>) of Boolean;
 
-       type Packed_Flags is array (Positive range <>) of Boolean
-         with Pack;
+       type Packed_Flags is
+         array (Positive range <>) of Boolean
+           with Pack;
 
-       Default_Flags : constant Flags := (True, True, False, True,
-                                          False, False, True, True);
+       Default_Flags : constant Flags :=
+         (True, True, False, True,
+          False, False, True, True);
 
     end Flag_Definitions;
 
@@ -1014,7 +1121,8 @@ This is a generalized view of the syntax:
 .. code-block:: ada
 
     for Record_Type use record
-       Component_Name at Start_Position range First_Bit .. Last_Bit;
+       Component_Name at Start_Position
+                      range First_Bit .. Last_Bit;
     end record;
 
 These are the elements we see above:
@@ -1083,21 +1191,30 @@ We can revisit the previous example and verify how the compiler represents the
     procedure Show_Storage is
        R1 : R;
     begin
-       Put_Line ("R'Size:              " & R'Size'Image);
-       Put_Line ("R'Object_Size:       " & R'Object_Size'Image);
+       Put_Line ("R'Size:              "
+                 & R'Size'Image);
+       Put_Line ("R'Object_Size:       "
+                 & R'Object_Size'Image);
        New_Line;
 
-       Put_Line ("System.Storage_Unit: " & System.Storage_Unit'Image);
+       Put_Line ("System.Storage_Unit: "
+                 & System.Storage_Unit'Image);
        New_Line;
 
-       Put_Line ("R1.A'Position  : " & R1.A'Position'Image);
-       Put_Line ("R1.A'First_Bit : " & R1.A'First_Bit'Image);
-       Put_Line ("R1.A'Last_Bit  : " & R1.A'Last_Bit'Image);
+       Put_Line ("R1.A'Position  : "
+                 & R1.A'Position'Image);
+       Put_Line ("R1.A'First_Bit : "
+                 & R1.A'First_Bit'Image);
+       Put_Line ("R1.A'Last_Bit  : "
+                 & R1.A'Last_Bit'Image);
        New_Line;
 
-       Put_Line ("R1.B'Position  : " & R1.B'Position'Image);
-       Put_Line ("R1.B'First_Bit : " & R1.B'First_Bit'Image);
-       Put_Line ("R1.B'Last_Bit  : " & R1.B'Last_Bit'Image);
+       Put_Line ("R1.B'Position  : "
+                 & R1.B'Position'Image);
+       Put_Line ("R1.B'First_Bit : "
+                 & R1.B'First_Bit'Image);
+       Put_Line ("R1.B'Last_Bit  : "
+                 & R1.B'Last_Bit'Image);
     end Show_Storage;
 
 .. only:: builder_html
@@ -1171,8 +1288,10 @@ This is the code that implements that:
 
     procedure Show_Empty_Byte is
     begin
-       Put_Line ("R'Size:        " & R'Size'Image);
-       Put_Line ("R'Object_Size: " & R'Object_Size'Image);
+       Put_Line ("R'Size:        "
+                 & R'Size'Image);
+       Put_Line ("R'Object_Size: "
+                 & R'Object_Size'Image);
     end Show_Empty_Byte;
 
 When running the application above, we see that, due to the extra byte in the
@@ -1208,8 +1327,10 @@ specific size to the compiler. In this case, we could use the
 
     procedure Show_Empty_Byte is
     begin
-       Put_Line ("R'Size:        " & R'Size'Image);
-       Put_Line ("R'Object_Size: " & R'Object_Size'Image);
+       Put_Line ("R'Size:        "
+                 & R'Size'Image);
+       Put_Line ("R'Object_Size: "
+                 & R'Object_Size'Image);
     end Show_Empty_Byte;
 
 If the code compiles, :ada:`R'Size` and :ada:`R'Object_Size` should now have
@@ -1262,11 +1383,15 @@ specification of the child package :ada:`P.Rep`:
 
     procedure Show_Empty_Byte is
     begin
-       Put_Line ("R'Size:        " & R'Size'Image);
-       Put_Line ("R'Object_Size: " & R'Object_Size'Image);
+       Put_Line ("R'Size:        "
+                 & R'Size'Image);
+       Put_Line ("R'Object_Size: "
+                 & R'Object_Size'Image);
 
-       Put_Line ("R_New'Size:        " & R_New'Size'Image);
-       Put_Line ("R_New'Object_Size: " & R_New'Object_Size'Image);
+       Put_Line ("R_New'Size:        "
+                 & R_New'Size'Image);
+       Put_Line ("R_New'Object_Size: "
+                 & R_New'Object_Size'Image);
     end Show_Empty_Byte;
 
 When running this example, we see that the :ada:`R` type retains the memory
@@ -1300,7 +1425,8 @@ as simple as this:
 
     package P is
 
-      type Status is (Ready, Waiting, Processing, Done);
+      type Status is (Ready, Waiting,
+                      Processing, Done);
       type UInt_3 is range 0 .. 2 ** 3 - 1;
 
        type Simple_Reg is record
@@ -1324,8 +1450,10 @@ as simple as this:
 
     procedure Show_Simple_Reg is
     begin
-       Put_Line ("Simple_Reg'Size:        " & Simple_Reg'Size'Image);
-       Put_Line ("Simple_Reg'Object_Size: " & Simple_Reg'Object_Size'Image);
+       Put_Line ("Simple_Reg'Size:        "
+                 & Simple_Reg'Size'Image);
+       Put_Line ("Simple_Reg'Object_Size: "
+                 & Simple_Reg'Object_Size'Image);
     end Show_Simple_Reg;
 
 As we can see in the declaration of the :ada:`Simple_Reg` type, each component
@@ -1340,7 +1468,10 @@ on the register is as simple as accessing the record component. For example:
     with P;           use P;
 
     procedure Show_Simple_Reg is
-       Default : constant Simple_Reg := (S => Ready, Error => False, V1 => 0);
+       Default : constant Simple_Reg :=
+                   (S     => Ready,
+                    Error => False,
+                    V1    => 0);
 
        R : Simple_Reg := Default;
     begin
@@ -1422,7 +1553,9 @@ needed. A final example is:
     package Enumeration_Representation is
 
        type Status is (Off, On, Unknown);
-       for Status use (Off => 2#001#, On => 2#010#, Unknown => 2#100#);
+       for Status use (Off     => 2#001#,
+                       On      => 2#010#,
+                       Unknown => 2#100#);
 
     end Enumeration_Representation;
 
@@ -1465,7 +1598,8 @@ to convert to the efficient form, :ada:`Arr`, we simply use a type conversion.
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Types.Array_Rep
 
-    with Array_Representation; use Array_Representation;
+    with Array_Representation;
+    use  Array_Representation;
 
     procedure Using_Array_For_IO is
        Input_Data  : External_Arr;
@@ -1475,9 +1609,10 @@ to convert to the efficient form, :ada:`Arr`, we simply use a type conversion.
        --  (read data into Input_Data)
 
        --  Now convert to internal form
-        Work_Data := Arr (Input_Data);
+       Work_Data := Arr (Input_Data);
 
-       --  (computations using efficient Work_Data form)
+       --  (computations using efficient
+       --   Work_Data form)
 
        --  Convert back to external form
        Output_Data := External_Arr (Work_Data);
@@ -1499,8 +1634,12 @@ convert from one form to the other, as in:
        type Status_In is (Off, On, Unknown);
        type Status_Out is new Status_In;
 
-       for Status_In use (Off => 2#001#, On => 2#010#, Unknown => 2#100#);
-       for Status_Out use (Off => 103, On => 1045, Unknown => 7700);
+       for Status_In use (Off     => 2#001#,
+                          On      => 2#010#,
+                          Unknown => 2#100#);
+       for Status_Out use (Off     => 103,
+                           On      => 1045,
+                           Unknown => 7700);
 
     end Enumeration_Representation;
 
@@ -1609,7 +1748,8 @@ example:
 
        type My_Int_1 is range 1 .. 10;
 
-       function Odd (Arg : My_Int_1) return Boolean;
+       function Odd (Arg : My_Int_1)
+                     return Boolean;
 
        type My_Int_2 is new My_Int_1;
 
@@ -1617,7 +1757,9 @@ example:
 
     package body My_Ints is
 
-       function Odd (Arg : My_Int_1) return Boolean is (True);
+       function Odd (Arg : My_Int_1)
+                    return Boolean is
+         (True);
        --  Dummy implementation!
 
     end My_Ints;
@@ -1641,7 +1783,8 @@ implicit type conversions. Suppose after the above declarations, we write:
     begin
 
        if Odd (Var) then
-          --   ^ Calling Odd function for My_Int_2 type.
+          --   ^ Calling Odd function
+          --     for My_Int_2 type.
           null;
        end if;
 
@@ -1658,7 +1801,8 @@ The compiler translates this as:
     begin
 
        if Odd (My_Int_1 (Var)) then
-          --   ^ Converting My_Int_2 to My_Int_1 type before
+          --   ^ Converting My_Int_2 to
+          --     My_Int_1 type before
           --     calling Odd function.
           null;
        end if;
@@ -1725,8 +1869,10 @@ The mock-up data includes valid and invalid states.
 
     with Ada.Sequential_IO;
 
-    procedure Create_Test_File (File_Name : String) is
-       package Integer_Sequential_IO is new Ada.Sequential_IO (Integer);
+    procedure Create_Test_File (File_Name : String)
+    is
+       package Integer_Sequential_IO is new
+         Ada.Sequential_IO (Integer);
        use Integer_Sequential_IO;
 
        F : File_Type;
@@ -1748,11 +1894,15 @@ The mock-up data includes valid and invalid states.
        type State is (Off, On, Waiting)
          with Size => Integer'Size;
 
-       for State use (Off => 1, On => 2, Waiting => 4);
+       for State use (Off     => 1,
+                      On      => 2,
+                      Waiting => 4);
 
-       package State_Sequential_IO is new Ada.Sequential_IO (State);
+       package State_Sequential_IO is new
+         Ada.Sequential_IO (State);
 
-       procedure Read_Display_States (File_Name : String);
+       procedure Read_Display_States
+         (File_Name : String);
 
     end States;
 
@@ -1760,7 +1910,9 @@ The mock-up data includes valid and invalid states.
 
     package body States is
 
-       procedure Read_Display_States (File_Name : String) is
+       procedure Read_Display_States
+         (File_Name : String)
+       is
           use State_Sequential_IO;
 
           F : State_Sequential_IO.File_Type;
@@ -1768,7 +1920,8 @@ The mock-up data includes valid and invalid states.
 
           procedure Display_State (S : State) is
           begin
-             --  Before displaying the value, check whether it's valid or not.
+             --  Before displaying the value,
+             --  check whether it's valid or not.
              if S'Valid then
                 Put_Line (S'Image);
              else
@@ -1874,16 +2027,20 @@ an example of a variant record:
        type State is (Off, On, Waiting)
          with Size => Integer'Size;
 
-       for State use (Off => 1, On => 2, Waiting => 4);
+       for State use (Off     => 1,
+                      On      => 2,
+                      Waiting => 4);
 
-       type State_Or_Integer (Use_Enum : Boolean) is record
+       type State_Or_Integer (Use_Enum : Boolean) is
+       record
           case Use_Enum is
              when False => I : Integer;
              when True  => S : State;
           end case;
        end record;
 
-       procedure Display_State_Value (V : State_Or_Integer);
+       procedure Display_State_Value
+         (V : State_Or_Integer);
 
     end States;
 
@@ -1891,7 +2048,9 @@ an example of a variant record:
 
     package body States is
 
-       procedure Display_State_Value (V : State_Or_Integer) is
+       procedure Display_State_Value
+         (V : State_Or_Integer)
+       is
        begin
           Put_Line ("State: " & V.S'Image);
           Put_Line ("Value: " & V.I'Image);
@@ -1933,7 +2092,8 @@ exception at runtime. In this example, we cannot assign to :ada:`V.I`:
        V : State_Or_Integer (Use_Enum => True);
     begin
        V.I := 4;
-       --  Error: V.I cannot be accessed because Use_Enum is set to True.
+       --  Error: V.I cannot be accessed because
+       --         Use_Enum is set to True.
     end Show_Variant_Rec_Error;
 
 We may circumvent this limitation by using the :ada:`Unchecked_Union` aspect.
@@ -1948,19 +2108,25 @@ this aspect in its declaration. We do this in the declaration of the
        type State is (Off, On, Waiting)
          with Size => Integer'Size;
 
-       for State use (Off => 1, On => 2, Waiting => 4);
+       for State use (Off     => 1,
+                      On      => 2,
+                      Waiting => 4);
 
-       type State_Or_Integer (Use_Enum : Boolean) is record
+       type State_Or_Integer (Use_Enum : Boolean) is
+       record
           case Use_Enum is
              when False => I : Integer;
              when True  => S : State;
           end case;
        end record;
 
-       type Unchecked_State_Or_Integer (Use_Enum : Boolean) is
-         new State_Or_Integer (Use_Enum) with Unchecked_Union;
+       type Unchecked_State_Or_Integer
+         (Use_Enum : Boolean) is new
+           State_Or_Integer (Use_Enum)
+             with Unchecked_Union;
 
-       procedure Display_State_Value (V : Unchecked_State_Or_Integer);
+       procedure Display_State_Value
+         (V : Unchecked_State_Or_Integer);
 
     end States;
 
@@ -1968,7 +2134,9 @@ this aspect in its declaration. We do this in the declaration of the
 
     package body States is
 
-       procedure Display_State_Value (V : Unchecked_State_Or_Integer) is
+       procedure Display_State_Value
+         (V : Unchecked_State_Or_Integer)
+       is
        begin
           Put_Line ("State: " & V.S'Image);
           Put_Line ("Value: " & V.I'Image);
@@ -1988,7 +2156,8 @@ at runtime, as both components are now accessible. For example:
        V : State_Or_Integer (Use_Enum => True);
     begin
        V.S := On;
-       Display_State_Value (Unchecked_State_Or_Integer (V));
+       Display_State_Value
+         (Unchecked_State_Or_Integer (V));
     end Show_Unchecked_Union;
 
 Note that, in the call to the :ada:`Display_State_Value` procedure, we first
@@ -2004,7 +2173,8 @@ Also, we can assign to any of the components of a record that has the
     with States; use States;
 
     procedure Show_Unchecked_Union is
-       V : Unchecked_State_Or_Integer (Use_Enum => True);
+       V : Unchecked_State_Or_Integer
+             (Use_Enum => True);
     begin
        V := (Use_Enum => True, S => On);
        Display_State_Value (V);
@@ -2023,13 +2193,16 @@ example:
     with States; use States;
 
     procedure Show_Unchecked_Union is
-       V : Unchecked_State_Or_Integer (Use_Enum => True);
+       V : Unchecked_State_Or_Integer
+             (Use_Enum => True);
     begin
        V.S := On;
        Display_State_Value (V);
 
-       V.I := 4;  --  Error: cannot directly assign to V.I, as Use_Enum is
-                  --         set to True.
+       V.I := 4;
+       --  Error: cannot directly assign to V.I,
+       --         as Use_Enum is set to True.
+
        Display_State_Value (V);
     end Show_Unchecked_Union;
 
@@ -2050,7 +2223,8 @@ of the :ada:`State` type.
     with States; use States;
 
     procedure Show_Unchecked_Union is
-       V : Unchecked_State_Or_Integer (Use_Enum => True);
+       V : Unchecked_State_Or_Integer
+             (Use_Enum => True);
     begin
        V := (Use_Enum => False, I => 3);
        Display_State_Value (V);
@@ -2067,7 +2241,9 @@ procedure:
 
     package body States is
 
-       procedure Display_State_Value (V : Unchecked_State_Or_Integer) is
+       procedure Display_State_Value
+         (V : Unchecked_State_Or_Integer)
+       is
        begin
           if V.S'Valid then
              Put_Line ("State: " & V.S'Image);
@@ -2082,7 +2258,8 @@ procedure:
     with States; use States;
 
     procedure Show_Unchecked_Union is
-       V : Unchecked_State_Or_Integer (Use_Enum => True);
+       V : Unchecked_State_Or_Integer
+             (Use_Enum => True);
     begin
        V := (Use_Enum => False, I => 3);
        Display_State_Value (V);
@@ -2155,11 +2332,12 @@ declarations. For example:
 
     package Shared_Var_Types is
 
-       type Volatile_Long_Float is new Long_Float with Volatile;
+       type Volatile_Long_Float is new
+         Long_Float with Volatile;
 
     end Shared_Var_Types;
 
-    with Ada.Text_IO;  use Ada.Text_IO;
+    with Ada.Text_IO;      use Ada.Text_IO;
     with Shared_Var_Types; use Shared_Var_Types;
 
     procedure Show_Volatile_Type is
@@ -2170,7 +2348,8 @@ declarations. For example:
           Val := Val + 2.0 * Volatile_Long_Float (I);
        end loop;
 
-       Put_Line ("Val: " & Volatile_Long_Float'Image (Val));
+       Put_Line ("Val: "
+                 & Volatile_Long_Float'Image (Val));
     end Show_Volatile_Type;
 
 Here, we're declaring a new type :ada:`Volatile_Long_Float` in the
@@ -2187,7 +2366,8 @@ declaration. For example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Volatile_Array_Components is
-       Arr : array (1 .. 2) of Long_Float with Volatile_Components;
+       Arr : array (1 .. 2) of Long_Float
+               with Volatile_Components;
     begin
        Arr := (others => 0.0);
 
@@ -2196,8 +2376,10 @@ declaration. For example:
           Arr (2) := Arr (2) + 10.0 * Long_Float (I);
        end loop;
 
-       Put_Line ("Arr (1): " & Long_Float'Image (Arr (1)));
-       Put_Line ("Arr (2): " & Long_Float'Image (Arr (2)));
+       Put_Line ("Arr (1): "
+                 & Long_Float'Image (Arr (1)));
+       Put_Line ("Arr (2): "
+                 & Long_Float'Image (Arr (2)));
     end Show_Volatile_Array_Components;
 
 Note that it's possible to use the :ada:`Volatile` aspect for the array
@@ -2208,7 +2390,8 @@ declaration as well:
     package Shared_Var_Types is
 
     private
-       Arr : array (1 .. 2) of Long_Float with Volatile;
+       Arr : array (1 .. 2) of Long_Float
+               with Volatile;
 
     end Shared_Var_Types;
 
@@ -2253,7 +2436,8 @@ Similarly, we can use this aspect when declaring types:
 
     package Shared_Var_Types is
 
-       type Independent_Boolean is new Boolean with Independent;
+       type Independent_Boolean is new Boolean
+         with Independent;
 
        type Flags is record
           F1 : Independent_Boolean;
@@ -2276,8 +2460,8 @@ it in the declaration of the :ada:`Flag` record type. Let's now derive the
        for Rep_Flags use record
           F1 at 0 range 0 .. 0;
           F2 at 0 range 1 .. 1;
-          --            ^  ERROR: start position of F2
-          --                      is wrong!
+          --            ^  ERROR: start position of
+          --                      F2 is wrong!
           --    ^          ERROR: F1 and F2 share the
           --                      same storage unit!
        end record;
@@ -2350,7 +2534,8 @@ For arrays, we can use the :ada:`Independent_Components` aspect:
 
     package Shared_Var_Types is
 
-       Flags : array (1 .. 8) of Boolean with Independent_Components;
+       Flags : array (1 .. 8) of Boolean
+                 with Independent_Components;
 
     end Shared_Var_Types;
 
@@ -2365,8 +2550,9 @@ For example, this aspect prevents that array components are packed when the
 
     package Shared_Var_Types is
 
-       type Flags is array (Positive range <>) of Boolean
-         with Independent_Components, Pack;
+       type Flags is
+         array (Positive range <>) of Boolean
+           with Independent_Components, Pack;
 
        F : Flags (1 .. 8) with Size => 8;
 
@@ -2385,12 +2571,13 @@ a larger size for :ada:`F`:
 
     package Shared_Var_Types is
 
-       type Flags is array (Positive range <>) of Boolean
-         with Independent_Components, Pack;
+       type Flags is
+         array (Positive range <>) of Boolean
+           with Independent_Components, Pack;
 
     end Shared_Var_Types;
 
-    with Ada.Text_IO;      use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
     with System;
 
     with Shared_Var_Types; use Shared_Var_Types;
@@ -2403,7 +2590,9 @@ a larger size for :ada:`F`:
        Put_Line ("Flags (1)'Size:  "
                  & F (1)'Size'Image & " bits");
        Put_Line ("# storage units: "
-                 & Integer'Image (F'Size / System.Storage_Unit));
+                 & Integer'Image
+                     (F'Size /
+                      System.Storage_Unit));
     end Show_Flags_Size;
 
 As you can see in the output of the application, even though we specify the
@@ -2459,8 +2648,10 @@ use the aspect to declare a shared hardware register:
     package Shared_Var_Types is
 
     private
-       R   : Integer
-         with Atomic, Address => System'To_Address (16#FFFF00A0#);
+       R : Integer
+             with Atomic,
+                  Address =>
+                    System'To_Address (16#FFFF00A0#);
 
     end Shared_Var_Types;
 
@@ -2477,10 +2668,13 @@ what we've seen before for volatile objects. For example:
 
     package Shared_Var_Types is
 
-       type Atomic_Integer is new Integer with Atomic;
+       type Atomic_Integer is new Integer
+         with Atomic;
 
     private
-       R : Atomic_Integer with Address => System'To_Address (16#FFFF00A0#);
+       R : Atomic_Integer
+             with Address =>
+                    System'To_Address (16#FFFF00A0#);
 
     end Shared_Var_Types;
 
@@ -2495,7 +2689,8 @@ We can also declare atomic array components:
     package Shared_Var_Types is
 
     private
-       Arr : array (1 .. 2) of Integer with Atomic_Components;
+       Arr : array (1 .. 2) of Integer
+               with Atomic_Components;
 
     end Shared_Var_Types;
 
@@ -2510,7 +2705,8 @@ words, these type declarations are equivalent:
 
     package Shared_Var_Types is
 
-       type Atomic_Integer_1 is new Integer with Atomic;
+       type Atomic_Integer_1 is new Integer
+         with Atomic;
 
        type Atomic_Integer_2 is new Integer
          with Atomic,
@@ -2528,13 +2724,14 @@ these array declarations are equivalent:
 
     package Shared_Var_Types is
 
-       Arr_1 : array (1 .. 2) of Integer with Atomic_Components;
+       Arr_1 : array (1 .. 2) of Integer
+                 with Atomic_Components;
 
        Arr_2 : array (1 .. 2) of Integer
-         with Atomic_Components,
-              Volatile,
-              Volatile_Components,
-              Independent_Components;
+                 with Atomic_Components,
+                      Volatile,
+                      Volatile_Components,
+                      Independent_Components;
 
     end Shared_Var_Types;
 
@@ -2561,7 +2758,7 @@ user message for an enumeration type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Image
 
-    with Ada.Text_IO;      use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Enumeration_Image is
 
@@ -2580,7 +2777,7 @@ This is similar to having this code:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Types.Enumeration_Image
 
-    with Ada.Text_IO;      use Ada.Text_IO;
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Enumeration_Image is
 

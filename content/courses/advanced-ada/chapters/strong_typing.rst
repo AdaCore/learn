@@ -42,7 +42,8 @@ get to the raw data inside a trusted value, like the following:
 
        type Trusted_Value is new Integer;
 
-       function Value (V : Trusted_Value) return Integer;
+       function Value (V : Trusted_Value)
+                       return Integer;
        pragma Inline (Value);
 
     end Taint;
@@ -53,7 +54,8 @@ Notice that the implementation of :ada:`Value` is just a type conversion:
 
     package body Taint is
 
-       function Value (V : Trusted_Value) return Integer is
+       function Value (V : Trusted_Value)
+                       return Integer is
        begin
           return Integer (V);
        end Value;
@@ -132,12 +134,14 @@ efficiency all operations could be inlined):
 
        type Trusted_Value is private;
 
-       function Value (V : Trusted_Value) return Integer;
+       function Value (V : Trusted_Value)
+                       return Integer;
 
        function Trusted_1 return Trusted_Value;
        function Trusted_100 return Trusted_Value;
 
-       function "+" (V, W : Trusted_Value) return Trusted_Value;
+       function "+" (V, W : Trusted_Value)
+                     return Trusted_Value;
 
     private
 
@@ -151,7 +155,8 @@ The new implementation is as expected:
 
     package body Taint is
 
-       function Value (V : Trusted_Value) return Integer is
+       function Value (V : Trusted_Value)
+                       return Integer is
        begin
           return Integer (V);
        end Value;
@@ -166,9 +171,11 @@ The new implementation is as expected:
           return 100;
        end Trusted_100;
 
-       function "+" (V, W : Trusted_Value) return Trusted_Value is
+       function "+" (V, W : Trusted_Value)
+                     return Trusted_Value is
        begin
-          return Trusted_Value (Integer (V) + Integer (W));
+          return Trusted_Value (Integer (V) +
+                                Integer (W));
        end "+";
 
     end Taint;
@@ -192,7 +199,10 @@ Of course, the client now needs to be adapted to this new interface:
     procedure Good is
        X : Trusted_Value := Trusted_100;
     begin
-       X := X + Trusted_1; --  Perform any computations on X
+       X := X + Trusted_1;
+       --  ^^^^^^^^^^^^^^^
+       --  Perform any computations on X
+
        Sensitive (X);
     end Good;
 
@@ -221,9 +231,11 @@ data inside a validated string, as follows:
 
        type SQL_Input is new String;
 
-       function Validate (Input : String) return SQL_Input;
+       function Validate (Input : String)
+                          return SQL_Input;
 
-       function Valid_String (Input : SQL_Input) return String;
+       function Valid_String (Input : SQL_Input)
+                              return String;
 
     end Inputs;
 
@@ -238,19 +250,26 @@ does not contain a dangerous character before returning it as an
 
     package body Inputs is
 
-       Dangerous_Characters : constant Character_Set := To_Set ("""*^';&><</");
+       Dangerous_Characters : constant
+         Character_Set := To_Set ("""*^';&><</");
 
-       function Validate (Input : String) return SQL_Input is
+       function Validate (Input : String)
+                          return SQL_Input is
        begin
-          if Index (Input, Dangerous_Characters) /= 0 then
+          if Index (Input,
+                    Dangerous_Characters) /= 0
+          then
              raise Constraint_Error
-               with "Invalid input " & Input & " for an SQL query ";
+               with "Invalid input "
+                    & Input
+                    & " for an SQL query ";
           else
              return SQL_Input (Input);
           end if;
        end Validate;
 
-       function Valid_String (Input : SQL_Input) return String is
+       function Valid_String (Input : SQL_Input)
+                              return String is
        begin
           return String (Input);
        end Valid_String;
@@ -267,17 +286,21 @@ validation status.
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.SQL_Input
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     package Inputs is
 
        type SQL_Input (<>) is private;
 
-       function Validate (Input : String) return SQL_Input;
+       function Validate (Input : String)
+                          return SQL_Input;
 
-       function Valid_String (Input : SQL_Input) return String;
+       function Valid_String (Input : SQL_Input)
+                              return String;
 
-       function Is_Valid (Input : SQL_Input) return Boolean;
+       function Is_Valid (Input : SQL_Input)
+                          return Boolean;
 
     private
 
@@ -313,12 +336,17 @@ validity of an :ada:`SQL_Input` value.
 
     package body Inputs is
 
-       Dangerous_Characters : constant Character_Set := To_Set ("""*^';&><</");
+       Dangerous_Characters : constant
+         Character_Set := To_Set ("""*^';&><</");
 
-       function Validate (Input : String) return SQL_Input is
-          Local_Input : constant Unbounded_String := To_Unbounded_String (Input);
+       function Validate (Input : String)
+                          return SQL_Input is
+          Local_Input : constant Unbounded_String :=
+                          To_Unbounded_String (Input);
        begin
-          if Index (Input, Dangerous_Characters) /= 0 then
+          if Index (Input,
+                    Dangerous_Characters) /= 0
+          then
              return (Validated   => False,
                      Raw_Input   => Local_Input);
           else
@@ -327,12 +355,14 @@ validity of an :ada:`SQL_Input` value.
           end if;
        end Validate;
 
-       function Valid_String (Input : SQL_Input) return String is
+       function Valid_String (Input : SQL_Input)
+                              return String is
        begin
           return To_String (Input.Valid_Input);
        end Valid_String;
 
-       function Is_Valid (Input : SQL_Input) return Boolean is
+       function Is_Valid (Input : SQL_Input)
+                          return Boolean is
        begin
           return Input.Validated;
        end Is_Valid;
@@ -379,11 +409,16 @@ retrieves a value from it an displays this value.
     procedure Show_Tab_Access is
 
        Tab : array (1 .. 5, 1 .. 10) of Float
-         := ((0.50, 0.73, 0.22, 0.66, 0.64, 0.20, 0.73, 0.22, 0.66, 0.64),
-             (0.60, 0.23, 0.56, 0.27, 0.72, 0.36, 0.27, 0.18, 0.18, 0.08),
-             (0.20, 0.56, 0.74, 0.43, 0.72, 0.19, 0.46, 0.45, 0.25, 0.49),
-             (0.75, 0.88, 0.29, 0.08, 0.17, 0.96, 0.23, 0.83, 0.89, 0.97),
-             (0.18, 0.97, 0.82, 0.86, 0.96, 0.24, 0.84, 0.83, 0.14, 0.26));
+         := ((0.50, 0.73, 0.22, 0.66, 0.64,
+              0.20, 0.73, 0.22, 0.66, 0.64),
+             (0.60, 0.23, 0.56, 0.27, 0.72,
+              0.36, 0.27, 0.18, 0.18, 0.08),
+             (0.20, 0.56, 0.74, 0.43, 0.72,
+              0.19, 0.46, 0.45, 0.25, 0.49),
+             (0.75, 0.88, 0.29, 0.08, 0.17,
+              0.96, 0.23, 0.83, 0.89, 0.97),
+             (0.18, 0.97, 0.82, 0.86, 0.96,
+              0.24, 0.84, 0.83, 0.14, 0.26));
 
        X, Y : Positive;
        V    : Float;
@@ -440,11 +475,16 @@ implementation:
        type Y_Range is range 1 .. 10;
 
        Tab : array (X_Range, Y_Range) of Float
-         := ((0.50, 0.73, 0.22, 0.66, 0.64, 0.20, 0.73, 0.22, 0.66, 0.64),
-             (0.60, 0.23, 0.56, 0.27, 0.72, 0.36, 0.27, 0.18, 0.18, 0.08),
-             (0.20, 0.56, 0.74, 0.43, 0.72, 0.19, 0.46, 0.45, 0.25, 0.49),
-             (0.75, 0.88, 0.29, 0.08, 0.17, 0.96, 0.23, 0.83, 0.89, 0.97),
-             (0.18, 0.97, 0.82, 0.86, 0.96, 0.24, 0.84, 0.83, 0.14, 0.26));
+         := ((0.50, 0.73, 0.22, 0.66, 0.64,
+              0.20, 0.73, 0.22, 0.66, 0.64),
+             (0.60, 0.23, 0.56, 0.27, 0.72,
+              0.36, 0.27, 0.18, 0.18, 0.08),
+             (0.20, 0.56, 0.74, 0.43, 0.72,
+              0.19, 0.46, 0.45, 0.25, 0.49),
+             (0.75, 0.88, 0.29, 0.08, 0.17,
+              0.96, 0.23, 0.83, 0.89, 0.97),
+             (0.18, 0.97, 0.82, 0.86, 0.96,
+              0.24, 0.84, 0.83, 0.14, 0.26));
 
        X : X_Range;
        Y : Y_Range;
@@ -533,19 +573,24 @@ This is a typical specification of the main package:
           Idx : Positive;
        end record;
 
-       type Selector is array (1 .. 2) of Positive;
+       type Selector is
+         array (1 .. 2) of Positive;
 
-       type Mapping is array (Positive range <>) of Positive;
+       type Mapping is
+         array (Positive range <>) of Positive;
 
-       type Chunks is array (Positive range <>) of Chunk;
+       type Chunks is
+         array (Positive range <>) of Chunk;
 
-       function Get_Mapping (C : Chunks) return Mapping;
+       function Get_Mapping (C : Chunks)
+                             return Mapping;
 
     end Indirect_Ordering;
 
     package body Indirect_Ordering is
 
-       function Get_Mapping (C : Chunks) return Mapping is
+       function Get_Mapping (C : Chunks)
+                             return Mapping is
        begin
           return Map : Mapping (C'Range) do
              for J in C'Range loop
@@ -562,16 +607,20 @@ And this is a typical specification of the :ada:`Test` child package:
 
     package Indirect_Ordering.Test is
 
-       function Get_Ordered_Chunks (C : Chunks) return Chunks;
+       function Get_Ordered_Chunks (C : Chunks)
+                                    return Chunks;
 
        function Get_Selected_Chunks (C : Chunks;
-                                     S : Selector) return Chunks;
+                                     S : Selector)
+                                     return Chunks;
 
     end Indirect_Ordering.Test;
 
     package body Indirect_Ordering.Test is
 
-       function Get_Ordered_Chunks (C : Chunks) return Chunks is
+       function Get_Ordered_Chunks (C : Chunks)
+                                    return Chunks
+       is
           Map : constant Mapping := Get_Mapping (C);
        begin
           return OC : Chunks (C'Range) do
@@ -582,7 +631,9 @@ And this is a typical specification of the :ada:`Test` child package:
        end Get_Ordered_Chunks;
 
        function Get_Selected_Chunks (C : Chunks;
-                                     S : Selector) return Chunks is
+                                     S : Selector)
+                                     return Chunks
+       is
           Map : constant Mapping := Get_Mapping (C);
        begin
           return SC : Chunks (S'Range) do
@@ -619,10 +670,18 @@ external source.
        function Init_Chunks return Chunks is
           C : Chunks (1 .. 4);
        begin
-          C (1) := (V1  => 0.70, V2  => 0.72, Idx => 3);
-          C (2) := (V1  => 0.20, V2  => 0.15, Idx => 1);
-          C (3) := (V1  => 0.40, V2  => 0.74, Idx => 2);
-          C (4) := (V1  => 0.80, V2  => 0.26, Idx => 4);
+          C (1) := (V1  => 0.70,
+                    V2  => 0.72,
+                    Idx => 3);
+          C (2) := (V1  => 0.20,
+                    V2  => 0.15,
+                    Idx => 1);
+          C (3) := (V1  => 0.40,
+                    V2  => 0.74,
+                    Idx => 2);
+          C (4) := (V1  => 0.80,
+                    V2  => 0.26,
+                    Idx => 4);
 
           return C;
        end Init_Chunks;
@@ -637,8 +696,10 @@ external source.
           declare
              C1 : Chunk := C (M (S (I)));
           begin
-             Put_Line ("Selector #" & Positive'Image (I)
-                       & ": V1 = " & Float'Image (C1.V1));
+             Put_Line ("Selector #"
+                       & Positive'Image (I)
+                       & ": V1 = "
+                       & Float'Image (C1.V1));
           end;
        end loop;
        New_Line;
@@ -662,13 +723,17 @@ If we'd use the ordered array of chunks, we could use the index from
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
 
-    with Indirect_Ordering;      use Indirect_Ordering;
-    with Indirect_Ordering.Test; use Indirect_Ordering.Test;
+    with Indirect_Ordering;
+    use  Indirect_Ordering;
 
-    with Ada.Text_IO; use  Ada.Text_IO;
+    with Indirect_Ordering.Test;
+    use  Indirect_Ordering.Test;
+
+    with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Display_Ordered_Chunk (C : Chunks;
-                                     S : Selector) is
+                                     S : Selector)
+    is
        OC : Chunks := Get_Ordered_Chunks (C);
     begin
        --  Loop over selector using ordered chunks
@@ -676,8 +741,10 @@ If we'd use the ordered array of chunks, we could use the index from
           declare
              C1 : Chunk := OC (S (I));
           begin
-             Put_Line ("Selector #" & Positive'Image (I)
-                       & ": V1 = " & Float'Image (C1.V1));
+             Put_Line ("Selector #"
+                       & Positive'Image (I)
+                       & ": V1 = "
+                       & Float'Image (C1.V1));
           end;
        end loop;
        New_Line;
@@ -730,13 +797,19 @@ of the application. This is the updated specification of the main package:
        end record;
 
        type Selector_Index is range 1 .. 2;
-       type Selector is array (Selector_Index) of Ord_Chunk_Index;
 
-       type Mapping is array (Ord_Chunk_Index range <>) of Chunk_Index;
+       type Selector is
+         array (Selector_Index) of Ord_Chunk_Index;
 
-       type Chunks is array (Chunk_Index range <>) of Chunk;
+       type Mapping is
+         array (Ord_Chunk_Index range <>) of
+           Chunk_Index;
 
-       function Get_Mapping (C : Chunks) return Mapping;
+       type Chunks is
+         array (Chunk_Index range <>) of Chunk;
+
+       function Get_Mapping (C : Chunks)
+                            return Mapping;
 
     end Indirect_Ordering;
 
@@ -754,18 +827,26 @@ This is the updated specification of the :ada:`Test` child package:
 
     package Indirect_Ordering.Test is
 
-       pragma Assertion_Policy (Dynamic_Predicate => Check);
+       pragma Assertion_Policy
+         (Dynamic_Predicate => Check);
 
-       type Ord_Chunks is array (Ord_Chunk_Index range <>) of Chunk
-         with Dynamic_Predicate =>
-           (for all I in Ord_Chunks'Range => Ord_Chunks (I).Idx = I);
+       type Ord_Chunks is
+         array (Ord_Chunk_Index range <>) of Chunk
+           with Dynamic_Predicate =>
+             (for all I in Ord_Chunks'Range =>
+                Ord_Chunks (I).Idx = I);
 
-       type Sel_Chunks is array (Selector_Index) of Chunk;
+       type Sel_Chunks is
+         array (Selector_Index) of Chunk;
 
-       function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks;
+       function Get_Ordered_Chunks
+         (C : Chunks)
+          return Ord_Chunks;
 
-       function Get_Selected_Chunks (C : Chunks;
-                                     S : Selector) return Sel_Chunks;
+       function Get_Selected_Chunks
+         (C : Chunks;
+          S : Selector)
+          return Sel_Chunks;
 
     end Indirect_Ordering.Test;
 
@@ -793,8 +874,11 @@ retrieves the range of an array of :ada:`Chunk` type |mdash| which are of
           Last  : Ord_Chunk_Index;
        end record;
 
-       function Get_Ord_Chunk_Range (C : Chunks) return Ord_Chunk_Range is
-         ((Ord_Chunk_Index (C'First), Ord_Chunk_Index (C'Last)));
+       function Get_Ord_Chunk_Range
+         (C : Chunks)
+          return Ord_Chunk_Range is
+            ((Ord_Chunk_Index (C'First),
+              Ord_Chunk_Index (C'Last)));
 
     end Indirect_Ordering.Cnvt;
 
@@ -807,12 +891,15 @@ This is the corresponding update to the body of the main package:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
 
-    with Indirect_Ordering.Cnvt; use Indirect_Ordering.Cnvt;
+    with Indirect_Ordering.Cnvt;
+    use  Indirect_Ordering.Cnvt;
 
     package body Indirect_Ordering is
 
-       function Get_Mapping (C : Chunks) return Mapping is
-          R : constant Ord_Chunk_Range := Get_Ord_Chunk_Range (C);
+       function Get_Mapping (C : Chunks)
+                             return Mapping is
+          R : constant Ord_Chunk_Range :=
+                Get_Ord_Chunk_Range (C);
        begin
           return Map : Mapping (R.First .. R.Last) do
              for J in C'Range loop
@@ -828,23 +915,32 @@ package:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
 
-    with Indirect_Ordering.Cnvt; use Indirect_Ordering.Cnvt;
+    with Indirect_Ordering.Cnvt;
+    use  Indirect_Ordering.Cnvt;
 
     package body Indirect_Ordering.Test is
 
-       function Get_Ordered_Chunks (C : Chunks) return Ord_Chunks is
+       function Get_Ordered_Chunks
+         (C : Chunks)
+          return Ord_Chunks
+       is
           Map : constant Mapping := Get_Mapping (C);
-          R   : constant Ord_Chunk_Range := Get_Ord_Chunk_Range (C);
+          R   : constant Ord_Chunk_Range :=
+                  Get_Ord_Chunk_Range (C);
        begin
-          return OC : Ord_Chunks (R.First .. R.Last) do
+          return OC : Ord_Chunks (R.First .. R.Last)
+          do
              for I in OC'Range loop
                 OC (I) := C (Map (I));
              end loop;
           end return;
        end Get_Ordered_Chunks;
 
-       function Get_Selected_Chunks (C : Chunks;
-                                     S : Selector) return Sel_Chunks is
+       function Get_Selected_Chunks
+         (C : Chunks;
+          S : Selector)
+          return Sel_Chunks
+       is
           Map : constant Mapping := Get_Mapping (C);
        begin
           return SC : Sel_Chunks do
@@ -869,10 +965,18 @@ This is the updated test application:
        function Init_Chunks return Chunks is
           C : Chunks (1 .. 4);
        begin
-          C (1) := (V1  => 0.70, V2  => 0.72, Idx => 3);
-          C (2) := (V1  => 0.20, V2  => 0.15, Idx => 1);
-          C (3) := (V1  => 0.40, V2  => 0.74, Idx => 2);
-          C (4) := (V1  => 0.80, V2  => 0.26, Idx => 4);
+          C (1) := (V1  => 0.70,
+                    V2  => 0.72,
+                    Idx => 3);
+          C (2) := (V1  => 0.20,
+                    V2  => 0.15,
+                    Idx => 1);
+          C (3) := (V1  => 0.40,
+                    V2  => 0.74,
+                    Idx => 2);
+          C (4) := (V1  => 0.80,
+                    V2  => 0.26,
+                    Idx => 4);
 
           return C;
        end Init_Chunks;
@@ -887,8 +991,10 @@ This is the updated test application:
           declare
              C1 : Chunk := C (M (S (I)));
           begin
-             Put_Line ("Selector #" & Selector_Index'Image (I)
-                       & ": V1 = " & Float'Image (C1.V1));
+             Put_Line ("Selector #"
+                       & Selector_Index'Image (I)
+                       & ": V1 = "
+                       & Float'Image (C1.V1));
           end;
        end loop;
        New_Line;

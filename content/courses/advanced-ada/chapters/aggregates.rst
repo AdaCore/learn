@@ -23,10 +23,10 @@ A container aggregate is a list of elements |mdash| such as :ada:`[1, 2, 3]`
 
     procedure Show_Container_Aggregate is
 
-       package Float_Vectors is new
+       package Float_Vec is new
          Ada.Containers.Vectors (Positive, Float);
 
-       V : constant Float_Vectors.Vector :=
+       V : constant Float_Vec.Vector :=
              [1.0, 2.0, 3.0];
 
        pragma Unreferenced (V);
@@ -58,19 +58,19 @@ Let's look at a complete example:
 
     procedure Show_Container_Aggregate is
 
-       package Float_Vectors is new
+       package Float_Vec is new
          Ada.Containers.Vectors (Positive, Float);
 
        --  Null container aggregate
-       Null_V  : constant Float_Vectors.Vector :=
+       Null_V  : constant Float_Vec.Vector :=
                    [];
 
        --  Positional container aggregate
-       Pos_V   : constant Float_Vectors.Vector :=
+       Pos_V   : constant Float_Vec.Vector :=
                    [1.0, 2.0, 3.0];
 
        --  Named container aggregate
-       Named_V : constant Float_Vectors.Vector :=
+       Named_V : constant Float_Vec.Vector :=
                    [1 => 1.0,
                     2 => 2.0,
                     3 => 3.0];
@@ -106,7 +106,7 @@ For example:
 
     procedure Show_Named_Container_Aggregate is
 
-       package Float_Vectors is new
+       package Float_Vec is new
          Ada.Containers.Vectors (Positive, Float);
 
        package Float_Hashed_Maps is new
@@ -118,19 +118,21 @@ For example:
 
        --  Named container aggregate
        --  using an index
-       Indexed_Named_V : constant Float_Vectors.Vector :=
-                   [1 => 1.0,
-                    2 => 2.0,
-                    3 => 3.0];
+       Indexed_Named_V : constant Float_Vec.Vector :=
+                           [1 => 1.0,
+                            2 => 2.0,
+                            3 => 3.0];
 
        --  Named container aggregate
        --  using a key
-       Keyed_Named_V : constant Float_Hashed_Maps.Map :=
-                         ["Key_1" => 1.0,
-                          "Key_2" => 2.0,
-                          "Key_3" => 3.0];
+       Keyed_Named_V : constant
+         Float_Hashed_Maps.Map :=
+           ["Key_1" => 1.0,
+            "Key_2" => 2.0,
+            "Key_3" => 3.0];
 
-       pragma Unreferenced (Indexed_Named_V, Keyed_Named_V);
+       pragma Unreferenced (Indexed_Named_V,
+                            Keyed_Named_V);
     begin
        null;
     end Show_Named_Container_Aggregate;
@@ -668,13 +670,16 @@ subprograms for it. For example, we could specify an addition operation for it:
 
        type Null_Record is null record;
 
-       function "+" (A, B : Null_Record) return Null_Record;
+       function "+" (A, B : Null_Record)
+                     return Null_Record;
 
     end Null_Recs;
 
     package body Null_Recs is
 
-       function "+" (A, B : Null_Record) return Null_Record is
+       function "+" (A, B : Null_Record)
+                     return Null_Record
+       is
           pragma Unreferenced (A, B);
        begin
           return (null record);
@@ -713,22 +718,29 @@ Consider this example:
 
        type Device is private;
 
-       function Create (Active : Boolean) return Device;
+       function Create
+         (Active : Boolean)
+          return Device;
 
-       procedure Reset (D : out Device) is null;
+       procedure Reset
+         (D : out Device) is null;
 
-       procedure Process (D : in out Device) is null;
+       procedure Process
+         (D : in out Device) is null;
 
-       procedure Activate (D : in out Device) is null;
+       procedure Activate
+         (D : in out Device) is null;
 
-       procedure Deactivate (D : in out Device) is null;
+       procedure Deactivate
+         (D : in out Device) is null;
 
     private
 
        type Device is null record;
 
-       function Create (Active : Boolean) return Device
-         is (null record);
+       function Create (Active : Boolean)
+                        return Device is
+         (null record);
 
     end Devices;
 
@@ -789,7 +801,8 @@ the :ada:`Devices` package. This is the adapted code:
 
        type Device is null record;
 
-       function Create (Active : Boolean) return Device;
+       function Create (Active : Boolean)
+                        return Device;
 
        procedure Reset (D : out Device);
 
@@ -805,32 +818,38 @@ the :ada:`Devices` package. This is the adapted code:
 
     package body Devices is
 
-       function Create (Active : Boolean) return Device is
+       function Create (Active : Boolean)
+                        return Device
+       is
           pragma Unreferenced (Active);
        begin
           Put_Line ("Creating device...");
           return (null record);
        end Create;
 
-       procedure Reset (D : out Device) is
+       procedure Reset (D : out Device)
+       is
           pragma Unreferenced (D);
        begin
           Put_Line ("Processing on device...");
        end Reset;
 
-       procedure Process (D : in out Device) is
+       procedure Process (D : in out Device)
+       is
           pragma Unreferenced (D);
        begin
           Put_Line ("Deactivating device...");
        end Process;
 
-       procedure Activate (D : in out Device) is
+       procedure Activate (D : in out Device)
+       is
           pragma Unreferenced (D);
        begin
           Put_Line ("Activating device...");
        end Activate;
 
-       procedure Deactivate (D : in out Device) is
+       procedure Deactivate (D : in out Device)
+       is
           pragma Unreferenced (D);
        begin
           Put_Line ("Resetting device...");
@@ -880,8 +899,9 @@ derive from null records. Let's see a simple example:
 
        type Device_Config is null record;
 
-       function Create (Config : Device_Config) return Device
-         is (null record);
+       function Create (Config : Device_Config)
+                        return Device is
+         (null record);
 
        type Derived_Device is new Device;
 
@@ -927,7 +947,8 @@ activation state in the record:
 
        type Device is private;
 
-       function Create (Active : Boolean) return Device;
+       function Create (Active : Boolean)
+                        return Device;
 
        procedure Reset (D : out Device);
 
@@ -949,32 +970,38 @@ activation state in the record:
 
     package body Devices is
 
-       function Create (Active : Boolean) return Device is
+       function Create (Active : Boolean)
+                        return Device
+       is
           pragma Unreferenced (Active);
        begin
           Put_Line ("Creating device...");
           return (Active => Active);
        end Create;
 
-       procedure Reset (D : out Device) is
+       procedure Reset (D : out Device)
+       is
           pragma Unreferenced (D);
        begin
           Put_Line ("Processing on device...");
        end Reset;
 
-       procedure Process (D : in out Device) is
+       procedure Process (D : in out Device)
+       is
           pragma Unreferenced (D);
        begin
           Put_Line ("Deactivating device...");
        end Process;
 
-       procedure Activate (D : in out Device) is
+       procedure Activate (D : in out Device)
+       is
        begin
           Put_Line ("Activating device...");
           D.Active := True;
        end Activate;
 
-       procedure Deactivate (D : in out Device) is
+       procedure Deactivate (D : in out Device)
+       is
        begin
           Put_Line ("Resetting device...");
           D.Active := False;
@@ -1014,9 +1041,11 @@ A null record may be tagged, as we can see in this example:
 
     package Null_Recs is
 
-       type Tagged_Null_Record is tagged null record;
+       type Tagged_Null_Record is
+         tagged null record;
 
-       type Abstract_Tagged_Null_Record is abstract tagged null record;
+       type Abstract_Tagged_Null_Record is
+         abstract tagged null record;
 
     end Null_Recs;
 
@@ -1033,7 +1062,8 @@ them. For example:
 
        type Device is private;
 
-       function Create (Active : Boolean) return Device;
+       function Create (Active : Boolean)
+                        return Device;
 
        type Derived_Device is private;
 
@@ -1041,15 +1071,17 @@ them. For example:
 
        type Device is tagged null record;
 
-       function Create (Active : Boolean) return Device
-         is (null record);
+       function Create (Active : Boolean)
+                        return Device is
+         (null record);
 
        type Derived_Device is new Device with record
           Active : Boolean;
        end record;
 
-       function Create (Active : Boolean) return Derived_Device
-         is (Active => Active);
+       function Create (Active : Boolean)
+                        return Derived_Device is
+         (Active => Active);
 
     end Devices;
 
@@ -1077,13 +1109,14 @@ aggregates. For example, suppose we have a record type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     package Persons is
        type Years is new Natural;
 
        type Person is record
-          Name : Ada.Strings.Unbounded.Unbounded_String;
+          Name : Unbounded_String;
           Age  : Years;
        end record;
     end Persons;
@@ -1092,13 +1125,16 @@ We can create an object of the type using an aggregate:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
+
     with Persons; use Persons;
 
     procedure Show_Aggregate_Init is
 
        X : constant Person :=
-             (Name => To_Unbounded_String ("John Doe"),
+             (Name =>
+                To_Unbounded_String ("John Doe"),
               Age  => 25);
     begin
        null;
@@ -1110,7 +1146,8 @@ adding a component:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     package Persons is
        type Years is new Natural;
@@ -1133,13 +1170,16 @@ statements, but occasionally useful for
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
+
     with Persons; use Persons;
 
     procedure Show_Aggregate_Init_Others is
 
        X : constant Person :=
-             (Name   => To_Unbounded_String ("John Doe"),
+             (Name   =>
+                To_Unbounded_String ("John Doe"),
               others => 25);
     begin
        null;
@@ -1444,7 +1484,8 @@ the :ada:`Show_Points` procedure of the next code example.
 
     package Points.Extensions is
 
-       type Point_3D_Ext is new Point_3D with null record;
+       type Point_3D_Ext is new
+         Point_3D with null record;
 
     end Points.Extensions;
 
@@ -1633,7 +1674,8 @@ function and assign the same value to both components.
 
            P_3D : Point_3D;
 
-           procedure Reset (P_2D : in out Point_2D'Class) is
+           procedure Reset
+             (P_2D : in out Point_2D'Class) is
            begin
               Point_2D (P_2D) := (others => 0.0);
            end Reset;
@@ -1787,7 +1829,8 @@ slices to assign the same number to multiple components:
        P1 := [0.5, 0.7, 0.3];
        Display (P1);
 
-       P3 := [P1 with delta P3'First + 1 .. P3'Last => 0.0];
+       P3 := [P1 with delta
+                P3'First + 1 .. P3'Last => 0.0];
        Display (P3);
     end Show_Points;
 
@@ -1842,8 +1885,8 @@ We can also assign multiple components or slices:
        Display (P1);
 
        P2 := [P1 with delta
-              P2'First + 1 .. P2'Last - 2 => 0.0,
-              P2'Last - 1 .. P2'Last => 0.2];
+                P2'First + 1 .. P2'Last - 2 => 0.0,
+                P2'Last - 1  .. P2'Last => 0.2];
        Display (P2);
     end Show_Multiple_Delta_Slices;
 

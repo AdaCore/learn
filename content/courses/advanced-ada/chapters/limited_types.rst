@@ -51,7 +51,8 @@ access types, for example:
 
     package body Nonlimited_Types is
 
-       function Init (I : Integer) return Simple_Rec is
+       function Init (I : Integer) return Simple_Rec
+       is
        begin
           return E : Simple_Rec do
              E.V := new Integer'(I);
@@ -195,7 +196,8 @@ Assignments are forbidden when using objects of limited types. For example:
 
     package body Limited_Types is
 
-       function Init (I : Integer) return Simple_Rec is
+       function Init (I : Integer) return Simple_Rec
+       is
        begin
           return E : Simple_Rec do
              E.V := new Integer'(I);
@@ -247,7 +249,8 @@ to do that. For example, we can implement a :ada:`Copy` procedure for the
 
     package body Limited_Types is
 
-       function Init (I : Integer) return Simple_Rec is
+       function Init (I : Integer) return Simple_Rec
+       is
        begin
           return E : Simple_Rec do
              E.V := new Integer'(I);
@@ -255,7 +258,8 @@ to do that. For example, we can implement a :ada:`Copy` procedure for the
        end Init;
 
        procedure Copy (From :        Simple_Rec;
-                       To   : in out Simple_Rec) is
+                       To   : in out Simple_Rec)
+       is
        begin
           --  Copying record components
           To.V.all := From.V.all;
@@ -308,7 +312,8 @@ Limited types don't have a predefined equality operator. For example:
 
     package body Limited_Types is
 
-       function Init (I : Integer) return Simple_Rec is
+       function Init (I : Integer) return Simple_Rec
+       is
        begin
           return E : Simple_Rec do
              E.V := new Integer'(I);
@@ -360,7 +365,8 @@ the :ada:`=` operator ourselves. For example, we can do that for the
 
     package body Limited_Types is
 
-       function Init (I : Integer) return Simple_Rec is
+       function Init (I : Integer) return Simple_Rec
+       is
        begin
           return E : Simple_Rec do
              E.V := new Integer'(I);
@@ -534,10 +540,12 @@ the way we can use objects of this type in the package body. For example:
        type Rec_Limited_Full is limited private;
        type Rec_Nonlimited_Full is limited private;
 
-       procedure Copy (From :        Rec_Limited_Full;
-                       To   : in out Rec_Limited_Full);
-       procedure Copy (From :        Rec_Nonlimited_Full;
-                       To   : in out Rec_Nonlimited_Full);
+       procedure Copy
+         (From :        Rec_Limited_Full;
+          To   : in out Rec_Limited_Full);
+       procedure Copy
+         (From :        Rec_Nonlimited_Full;
+          To   : in out Rec_Nonlimited_Full);
 
     private
 
@@ -553,8 +561,10 @@ the way we can use objects of this type in the package body. For example:
 
     package body Simple_Recs is
 
-       procedure Copy (From :        Rec_Limited_Full;
-                       To   : in out Rec_Limited_Full) is
+       procedure Copy
+         (From :        Rec_Limited_Full;
+          To   : in out Rec_Limited_Full)
+       is
        begin
           To := From;
           --  ERROR: assignment is forbidden because
@@ -562,8 +572,10 @@ the way we can use objects of this type in the package body. For example:
           --         its full view.
        end Copy;
 
-       procedure Copy (From :        Rec_Nonlimited_Full;
-                       To   : in out Rec_Nonlimited_Full) is
+       procedure Copy
+         (From :        Rec_Nonlimited_Full;
+          To   : in out Rec_Nonlimited_Full)
+       is
        begin
           To := From;
           --  OK: assignment is allowed because
@@ -873,11 +885,13 @@ declaration of :ada:`Rec_Derived`:
 
     package Simple_Recs.Ext is
 
-       type Rec_Derived is limited new Tagged_Rec with private;
+       type Rec_Derived is limited new
+         Tagged_Rec with private;
 
     private
 
-       type Rec_Derived is limited new Tagged_Rec with null record;
+       type Rec_Derived is limited new
+         Tagged_Rec with null record;
 
     end Simple_Recs.Ext;
 
@@ -1034,12 +1048,14 @@ In this section, we focus on using aggregates to initialize limited types.
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited_Ada95
 
-        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Ada.Strings.Unbounded;
+        use  Ada.Strings.Unbounded;
 
         package Persons is
 
            type Limited_Person;
-           type Limited_Person_Access is access all Limited_Person;
+           type Limited_Person_Access is
+             access all Limited_Person;
 
            type Limited_Person is limited record
               Name      : Unbounded_String;
@@ -1048,7 +1064,9 @@ In this section, we focus on using aggregates to initialize limited types.
 
         end Persons;
 
-        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Ada.Strings.Unbounded;
+        use  Ada.Strings.Unbounded;
+
         with Persons; use Persons;
 
         procedure Show_Non_Aggregate_Init is
@@ -1081,17 +1099,20 @@ Suppose we have the following limited type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     package Persons is
 
        type Limited_Person;
-       type Limited_Person_Access is access all Limited_Person;
+       type Limited_Person_Access is
+         access all Limited_Person;
 
        type Limited_Person is limited record
-          Self      : Limited_Person_Access := Limited_Person'Unchecked_Access;
-          Name      : Unbounded_String;
-          Age       : Natural;
+          Self : Limited_Person_Access :=
+                   Limited_Person'Unchecked_Access;
+          Name : Unbounded_String;
+          Age  : Natural;
           Shoe_Size : Positive;
        end record;
 
@@ -1109,13 +1130,16 @@ We can initialize objects of limited type with an aggregate. Here, we can say:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
+
     with Persons; use Persons;
 
     procedure Show_Aggregate_Box_Init is
        X : aliased Limited_Person :=
              (Self      => <>,
-              Name      => To_Unbounded_String ("John Doe"),
+              Name      =>
+                To_Unbounded_String ("John Doe"),
               Age       => 25,
               Shoe_Size => 10);
     begin
@@ -1140,14 +1164,16 @@ you can't copy them.
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
 
-        with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+        with Ada.Strings.Unbounded;
+        use  Ada.Strings.Unbounded;
         with Persons; use Persons;
 
         procedure Show_Aggregate_Init is
 
            X : aliased Limited_Person :=
                  (Self      => null, -- Wrong!
-                  Name      => To_Unbounded_String ("John Doe"),
+                  Name      =>
+                    To_Unbounded_String ("John Doe"),
                   Age       => 25,
                   Shoe_Size => 10);
         begin
@@ -1173,7 +1199,8 @@ you can't copy them.
     .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.String_Box_Init
 
         procedure Show_String_Box_Init is
-            Uninitialized_String_Const : constant String := (1 .. 10 => <>);
+            Uninitialized_Const_Str : constant String :=
+                                        (1 .. 10 => <>);
         begin
            null;
         end Show_String_Box_Init;
@@ -1184,9 +1211,12 @@ you can't copy them.
     .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Dangerous_String
 
         procedure Show_Dangerous_String is
-            Uninitialized_String_Var : String (1 .. 10);  --  no initialization
+            Uninitialized_String_Var : String (1 .. 10);
+            --  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            --  no initialization
 
-            Uninitialized_String_Const : constant String := Uninitialized_String_Var;
+            Uninitialized_Const_Str : constant String :=
+                Uninitialized_String_Var;
         begin
            null;
         end Show_Dangerous_String;
@@ -1218,7 +1248,8 @@ Let's see an example:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     package P is
        task type Some_Task_Type;
@@ -1228,7 +1259,9 @@ Let's see an example:
        end Some_Protected_Type;
 
        type T (<>) is limited private;
-       function Make_T (Name : String) return T; -- constructor function
+       function Make_T (Name : String) return T;
+       --       ^^^^^^
+       --  constructor function
     private
        type T is limited
           record
@@ -1250,7 +1283,9 @@ Let's see an example:
 
        function Make_T (Name : String) return T is
        begin
-          return (Name => To_Unbounded_String (Name), others => <>);
+          return (Name   =>
+                    To_Unbounded_String (Name),
+                  others => <>);
        end Make_T;
 
     end P;
@@ -1262,7 +1297,8 @@ Given the above, clients can say:
     with P; use P;
 
     procedure Show_Constructor_Function is
-       My_T : T := Make_T (Name => "Bartholomew Cubbins");
+       My_T : T := Make_T
+                     (Name => "Bartholomew Cubbins");
     begin
        null;
     end Show_Constructor_Function;
@@ -1282,7 +1318,8 @@ in :ada:`My_T`), rather than being created and then copied into
            return Make_T (Name => "Rumplestiltskin");
        end Make_Rumplestiltskin;
 
-       Rumplestiltskin_Is_My_Name : constant T := Make_Rumplestiltskin;
+       Rumplestiltskin_Is_My_Name : constant T :=
+         Make_Rumplestiltskin;
     begin
        null;
     end Show_Rumplestiltskin_Constructor;
@@ -1331,12 +1368,18 @@ Some languages have a specific feature called *constructor*. In Ada, a
 
         package Aux is
            generic
-              with package OS is new Ada.Containers.Ordered_Sets (<>);
-           function Gen_Singleton_Set (Element : OS.Element_Type) return OS.Set;
+              with package OS is new
+                Ada.Containers.Ordered_Sets (<>);
+           function Gen_Singleton_Set
+             (Element : OS.Element_Type)
+              return OS.Set;
         end Aux;
 
         package body Aux is
-           function Gen_Singleton_Set  (Element : OS.Element_Type) return OS.Set is
+           function Gen_Singleton_Set
+             (Element : OS.Element_Type)
+              return OS.Set
+           is
            begin
               return S : OS.Set := OS.Empty_Set do
                  S.Insert (Element);
@@ -1353,14 +1396,18 @@ Some languages have a specific feature called *constructor*. In Ada, a
 
         procedure Show_Set_Decl is
 
-           package Integer_Sets is new Ada.Containers.Ordered_Sets
-             (Element_Type => Integer);
+           package Integer_Sets is new
+             Ada.Containers.Ordered_Sets
+               (Element_Type => Integer);
            use Integer_Sets;
 
-           function Singleton_Set is new Aux.Gen_Singleton_Set (OS => Integer_Sets);
+           function Singleton_Set is new
+             Aux.Gen_Singleton_Set
+               (OS => Integer_Sets);
 
            This_Set : Set := Empty_Set;
-           That_Set : Set := Singleton_Set (Element => 42);
+           That_Set : Set := Singleton_Set
+                               (Element => 42);
         begin
            null;
         end Show_Set_Decl;
@@ -1374,8 +1421,9 @@ Some languages have a specific feature called *constructor*. In Ada, a
 
         procedure Show_Set_Decl is
 
-           package Integer_Sets is new Ada.Containers.Ordered_Sets
-             (Element_Type => Integer);
+           package Integer_Sets is new
+             Ada.Containers.Ordered_Sets
+               (Element_Type => Integer);
            use Integer_Sets;
 
            This_Set : Set;
@@ -1411,7 +1459,8 @@ syntactic sugar. But for limited types, this syntax is almost essential:
 
        task type Task_Type (Discriminant : Integer);
 
-       function Make_Task (Val : Integer) return Task_Type;
+       function Make_Task (Val : Integer)
+                           return Task_Type;
 
     end Task_Construct_Error;
 
@@ -1422,8 +1471,11 @@ syntactic sugar. But for limited types, this syntax is almost essential:
           null;
        end Task_Type;
 
-       function Make_Task (Val : Integer) return Task_Type is
-          Result : Task_Type (Discriminant => Val * 3);
+       function Make_Task (Val : Integer)
+                           return Task_Type
+       is
+          Result : Task_Type
+                     (Discriminant => Val * 3);
        begin
           --  some statements...
           return Result; -- Illegal!
@@ -1442,7 +1494,8 @@ constructor functions for task types:
 
        task type Task_Type (Discriminant : Integer);
 
-       function Make_Task (Val : Integer) return Task_Type;
+       function Make_Task (Val : Integer)
+                           return Task_Type;
 
     end Task_Construct;
 
@@ -1453,9 +1506,12 @@ constructor functions for task types:
           null;
        end Task_Type;
 
-       function Make_Task (Val : Integer) return Task_Type is
+       function Make_Task (Val : Integer)
+                           return Task_Type is
        begin
-          return Result : Task_Type (Discriminant => Val * 3) do
+          return Result : Task_Type
+                            (Discriminant => Val * 3)
+          do
              --  some statements...
              null;
           end return;
@@ -1522,13 +1578,15 @@ type :ada:`Simple_Rec`:
 
     package body Limited_Types is
 
-       function Init (I : Integer) return Simple_Rec is
+       function Init (I : Integer) return Simple_Rec
+       is
        begin
           return E : Simple_Rec do
              E.V := new Integer'(I);
 
              Put_Line ("E'Address (Init):  "
-                       & System.Address_Image (E'Address));
+                       & System.Address_Image
+                           (E'Address));
           end return;
        end Init;
 
@@ -1546,7 +1604,8 @@ type :ada:`Simple_Rec`:
           A : Simple_Rec := Init (0);
        begin
           Put_Line ("A'Address (local): "
-                    & System.Address_Image (A'Address));
+                    & System.Address_Image
+                        (A'Address));
        end;
        Put_Line ("----");
 
@@ -1554,7 +1613,8 @@ type :ada:`Simple_Rec`:
           B : Simple_Rec := Init (0);
        begin
           Put_Line ("B'Address (local): "
-                    & System.Address_Image (B'Address));
+                    & System.Address_Image
+                        (B'Address));
        end;
     end Show_Limited_Init;
 
@@ -1581,7 +1641,8 @@ procedure are the same object.
 
            type Simple_Rec is private;
 
-           function Init (I : Integer) return Simple_Rec;
+           function Init (I : Integer)
+                          return Simple_Rec;
 
         private
 
@@ -1597,13 +1658,15 @@ procedure are the same object.
 
         package body Non_Limited_Types is
 
-           function Init (I : Integer) return Simple_Rec is
+           function Init (I : Integer)
+                          return Simple_Rec is
            begin
               return E : Simple_Rec do
                  E.V := new Integer'(I);
 
                  Put_Line ("E'Address (Init):  "
-                           & System.Address_Image (E'Address));
+                           & System.Address_Image
+                               (E'Address));
               end return;
            end Init;
 
@@ -1613,7 +1676,8 @@ procedure are the same object.
         with System;
         with System.Address_Image;
 
-        with Non_Limited_Types;         use Non_Limited_Types;
+        with Non_Limited_Types;
+        use  Non_Limited_Types;
 
         procedure Show_Non_Limited_Init_By_Copy is
            A, B : Simple_Rec;
@@ -1622,7 +1686,8 @@ procedure are the same object.
               A : Simple_Rec := Init (0);
            begin
               Put_Line ("A'Address (local): "
-                        & System.Address_Image (A'Address));
+                        & System.Address_Image
+                            (A'Address));
            end;
            Put_Line ("----");
 
@@ -1630,7 +1695,8 @@ procedure are the same object.
               B : Simple_Rec := Init (0);
            begin
               Put_Line ("B'Address (local): "
-                        & System.Address_Image (B'Address));
+                        & System.Address_Image
+                            (B'Address));
            end;
         end Show_Non_Limited_Init_By_Copy;
 
@@ -1653,7 +1719,8 @@ similar to this:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
 
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     package P is
        task type Some_Task_Type;
@@ -1663,7 +1730,9 @@ similar to this:
        end Some_Protected_Type;
 
        type T is limited private;
-       function Make_T (Name : String) return T; -- constructor function
+       function Make_T (Name : String) return T;
+       --       ^^^^^^
+       --  constructor function
     private
        type T is limited
           record
@@ -1685,7 +1754,9 @@ similar to this:
 
        function Make_T (Name : String) return T is
        begin
-          return (Name => To_Unbounded_String (Name), others => <>);
+          return (Name   =>
+                    To_Unbounded_String (Name),
+                  others => <>);
        end Make_T;
 
     end P;
@@ -1712,7 +1783,8 @@ be called. We've already seen things like:
     with P.Aux; use P.Aux;
 
     procedure Show_Rumplestiltskin_Constructor is
-       Rumplestiltskin_Is_My_Name : constant T := Make_Rumplestiltskin;
+       Rumplestiltskin_Is_My_Name : constant T :=
+         Make_Rumplestiltskin;
     begin
        null;
     end Show_Rumplestiltskin_Constructor;
@@ -1783,8 +1855,9 @@ use an aggregate:
           That : T;
        end record;
 
-       Outer_Obj : Outer_Type := (This => Make_Rumplestiltskin,
-                                  That => Make_T (Name => ""));
+       Outer_Obj : Outer_Type :=
+                    (This => Make_Rumplestiltskin,
+                     That => Make_T (Name => ""));
 
     begin
        null;
@@ -1805,7 +1878,8 @@ assignment statement:
     procedure Show_Illegal_Constructor is
        Rumplestiltskin_Is_My_Name : T;
     begin
-       Rumplestiltskin_Is_My_Name := Make_T (Name => "");  --  Illegal!
+       Rumplestiltskin_Is_My_Name :=
+         Make_T (Name => "");  --  Illegal!
     end Show_Illegal_Constructor;
 
 which is illegal because assignment statements involve copying. Likewise,
@@ -1818,8 +1892,10 @@ we can't copy a limited object into some other object:
     with P.Aux; use P.Aux;
 
     procedure Show_Illegal_Constructor is
-       Rumplestiltskin_Is_My_Name : constant T := Make_T (Name => "");
-       Other : T := Rumplestiltskin_Is_My_Name; -- Illegal!
+       Rumplestiltskin_Is_My_Name : constant T :=
+         Make_T (Name => "");
+       Other : T :=
+         Rumplestiltskin_Is_My_Name; -- Illegal!
     begin
        null;
     end Show_Illegal_Constructor;
@@ -1859,7 +1935,9 @@ If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
     package body Type_Defaults is
 
        Object_100 : constant T :=
-                      (Color => <>, Is_Gnarly => <>, Count => 100);
+                      (Color     => <>,
+                       Is_Gnarly => <>,
+                       Count     => 100);
 
        procedure Do_Something is null;
 
@@ -1874,7 +1952,9 @@ If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
         package body Type_Defaults is
 
            Object_100 : constant T :=
-                          (Color => Red, Is_Gnarly => False, Count => 100);
+                          (Color     => Red,
+                           Is_Gnarly => False,
+                           Count     => 100);
 
            procedure Do_Something is null;
 
@@ -1895,7 +1975,8 @@ week, to their defaults", we can do this:
 
     package body Type_Defaults is
 
-       Object_100 : constant T := (Count => 100, others => <>);
+       Object_100 : constant T := (Count  => 100,
+                                   others => <>);
 
        procedure Do_Something is null;
 

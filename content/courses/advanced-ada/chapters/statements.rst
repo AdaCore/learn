@@ -94,15 +94,17 @@ where we want to skip further processing depending on a condition:
 .. code:: ada run_button project=Courses.Advanced_Ada.Statements.Label_Continue_1
 
     procedure Show_Continue is
-       function Is_Further_Processing_Needed (Dummy : Integer)
-         return Boolean is
+       function Is_Further_Processing_Needed
+         (Dummy : Integer)
+          return Boolean
+       is
        begin
           --  Dummy implementation
           return False;
        end Is_Further_Processing_Needed;
 
        A : constant array (1 .. 10) of Integer :=
-         (others => 0);
+            (others => 0);
     begin
        for E of A loop
 
@@ -125,8 +127,10 @@ a :ada:`Continue` label at the end of the loop and a :ada:`goto` statement:
 .. code:: ada run_button project=Courses.Advanced_Ada.Statements.Label_Continue_2
 
     procedure Show_Continue is
-       function Is_Further_Processing_Needed (Dummy : Integer)
-         return Boolean is
+       function Is_Further_Processing_Needed
+         (Dummy : Integer)
+          return Boolean
+       is
        begin
           --  Dummy implementation
           return False;
@@ -194,7 +198,8 @@ a :ada:`for` loop:
     procedure Show_Statement_Identifier is
        pragma Warnings (Off, "is not referenced");
 
-       Arr   : constant array (1 .. 5) of Integer := (1, 4, 6, 42, 49);
+       Arr   : constant array (1 .. 5) of Integer :=
+                 (1, 4, 6, 42, 49);
        Found : Boolean := False;
     begin
        <<Find_42>> for E of Arr loop
@@ -221,7 +226,8 @@ a :ada:`for` loop:
         with Ada.Text_IO; use Ada.Text_IO;
 
         procedure Show_Statement_Identifier is
-           Arr   : constant array (1 .. 5) of Integer := (1, 4, 6, 42, 49);
+           Arr   : constant array (1 .. 5) of Integer :=
+                     (1, 4, 6, 42, 49);
            Found : Boolean := False;
         begin
            Find_42 : for E of Arr loop
@@ -292,7 +298,8 @@ Let's see a complete example:
           loop
              exit Show_Elements when C = No_Element;
 
-             Put_Line ("Element: " & Integer'Image (V (C)));
+             Put_Line ("Element: "
+                       & Integer'Image (V (C)));
              C := Next (C);
           end loop Show_Elements;
 
@@ -414,15 +421,18 @@ the following code example:
 
        type Scale is range 0 .. 10;
 
-       function To_Satisfaction_Scale (S : Scale)
-                                       return Satisfaction_Scale;
+       function To_Satisfaction_Scale
+         (S : Scale)
+          return Satisfaction_Scale;
 
     end Scales;
 
     package body Scales is
 
-       function To_Satisfaction_Scale (S : Scale)
-                                       return Satisfaction_Scale is
+       function To_Satisfaction_Scale
+         (S : Scale)
+          return Satisfaction_Scale
+       is
           Satisfaction : Satisfaction_Scale;
        begin
           case (S) is
@@ -575,9 +585,12 @@ object, and then return that object:
 
     procedure Show_Return is
 
-       type Array_Of_Natural is array (Positive range <>) of Natural;
+       type Array_Of_Natural is
+         array (Positive range <>) of Natural;
 
-       function Sum (A : Array_Of_Natural) return Natural is
+       function Sum (A : Array_Of_Natural)
+                     return Natural
+       is
           Result : Natural := 0;
        begin
           for Index in A'Range loop
@@ -598,9 +611,12 @@ statement. It looks like this:
 
     procedure Show_Extended_Return is
 
-       type Array_Of_Natural is array (Positive range <>) of Natural;
+       type Array_Of_Natural is
+         array (Positive range <>) of Natural;
 
-       function Sum (A : Array_Of_Natural) return Natural is
+       function Sum (A : Array_Of_Natural)
+                     return Natural
+       is
        begin
           return Result : Natural := 0 do
              for Index in A'Range loop
@@ -642,9 +658,11 @@ it comes in handy whenever you want a local name for the function result:
 
     procedure Show_String_Construct is
 
-       function Make_String (S          : String;
-                             Prefix     : String;
-                             Use_Prefix : Boolean) return String is
+       function Make_String
+         (S          : String;
+          Prefix     : String;
+          Use_Prefix : Boolean) return String
+       is
           Length : Natural := S'Length;
        begin
           if Use_Prefix then
@@ -655,8 +673,11 @@ it comes in handy whenever you want a local name for the function result:
 
              --  fill in the characters
              if Use_Prefix then
-                Result (1 .. Prefix'Length) := Prefix;
-                Result (Prefix'Length + 1 .. Length) := S;
+                Result
+                  (1 .. Prefix'Length) := Prefix;
+
+                Result
+                  (Prefix'Length + 1 .. Length) := S;
              else
                 Result := S;
              end if;
@@ -667,8 +688,10 @@ it comes in handy whenever you want a local name for the function result:
        S1 : String := "Ada";
        S2 : String := "Make_With_";
     begin
-       Put_Line ("No prefix:   " & Make_String (S1, S2, False));
-       Put_Line ("With prefix: " & Make_String (S1, S2, True));
+       Put_Line ("No prefix:   "
+                 & Make_String (S1, S2, False));
+       Put_Line ("With prefix: "
+                 & Make_String (S1, S2, True));
     end Show_String_Construct;
 
 In this example, we first calculate the length of the string and store it in

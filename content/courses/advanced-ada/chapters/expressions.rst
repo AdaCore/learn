@@ -42,7 +42,11 @@ a conditional expression:
        type State is (Off, On, Waiting, Invalid);
 
        function Toggled (S : State) return State is
-         (if S = Off then On elsif S = On then Off else S);
+         (if S = Off
+           then On
+           elsif S = On
+             then Off
+             else S);
 
     end Expr_Func;
 
@@ -170,15 +174,19 @@ This is the complete code:
 
     package Int_Arrays is
 
-       type Integer_Arr is array (Positive range <>) of Integer;
+       type Integer_Arr is
+         array (Positive range <>) of Integer;
 
-       function Is_Zero (A : Integer_Arr) return Boolean is
+       function Is_Zero (A : Integer_Arr)
+                         return Boolean is
           (for all I in A'Range => A (I) = 0);
 
-       function Has_Zero (A : Integer_Arr) return Boolean is
+       function Has_Zero (A : Integer_Arr)
+                          return Boolean is
           (for some I in A'Range => A (I) = 0);
 
-       procedure Display_Array (A : Integer_Arr; Name : String);
+       procedure Display_Array (A    : Integer_Arr;
+                                Name : String);
 
     end Int_Arrays;
 
@@ -206,14 +214,18 @@ This is the complete code:
        A : Integer_Arr := (0, 0, 1);
     begin
        Display_Array (A, "A");
-       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
-       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+       Put_Line ("Is_Zero: "
+                 & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: "
+                 & Boolean'Image (Has_Zero (A)));
 
        A := (0, 0, 0);
 
        Display_Array (A, "A");
-       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
-       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+       Put_Line ("Is_Zero: "
+                 & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: "
+                 & Boolean'Image (Has_Zero (A)));
     end Test_Int_Arrays;
 
 As you might have expected, we can rewrite a quantified expression as a loop
@@ -225,13 +237,17 @@ conditions instead of quantified expressions:
 
     package Int_Arrays is
 
-       type Integer_Arr is array (Positive range <>) of Integer;
+       type Integer_Arr is
+         array (Positive range <>) of Integer;
 
-       function Is_Zero (A : Integer_Arr) return Boolean;
+       function Is_Zero (A : Integer_Arr)
+                         return Boolean;
 
-       function Has_Zero (A : Integer_Arr) return Boolean;
+       function Has_Zero (A : Integer_Arr)
+                          return Boolean;
 
-       procedure Display_Array (A : Integer_Arr; Name : String);
+       procedure Display_Array (A    : Integer_Arr;
+                                Name : String);
 
     end Int_Arrays;
 
@@ -239,7 +255,8 @@ conditions instead of quantified expressions:
 
     package body Int_Arrays is
 
-       function Is_Zero (A : Integer_Arr) return Boolean is
+       function Is_Zero (A : Integer_Arr)
+                         return Boolean is
        begin
           for I in A'Range loop
              if A (I) /= 0 then
@@ -250,7 +267,8 @@ conditions instead of quantified expressions:
           return True;
        end Is_Zero;
 
-       function Has_Zero (A : Integer_Arr) return Boolean is
+       function Has_Zero (A : Integer_Arr)
+                          return Boolean is
        begin
           for I in A'Range loop
             if A (I) = 0 then
@@ -281,14 +299,18 @@ conditions instead of quantified expressions:
        A : Integer_Arr := (0, 0, 1);
     begin
        Display_Array (A, "A");
-       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
-       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+       Put_Line ("Is_Zero: "
+                 & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: "
+                 & Boolean'Image (Has_Zero (A)));
 
        A := (0, 0, 0);
 
        Display_Array (A, "A");
-       Put_Line ("Is_Zero: "  & Boolean'Image (Is_Zero (A)));
-       Put_Line ("Has_Zero: " & Boolean'Image (Has_Zero (A)));
+       Put_Line ("Is_Zero: "
+                 & Boolean'Image (Is_Zero (A)));
+       Put_Line ("Has_Zero: "
+                 & Boolean'Image (Has_Zero (A)));
     end Test_Int_Arrays;
 
 So far, we've seen quantified expressions using indices |mdash| e.g.
@@ -301,12 +323,15 @@ write :ada:`for all E of A => ...`. Let's adapt the implementation of
 
     package Int_Arrays is
 
-       type Integer_Arr is array (Positive range <>) of Integer;
+       type Integer_Arr is
+         array (Positive range <>) of Integer;
 
-       function Is_Zero (A : Integer_Arr) return Boolean is
+       function Is_Zero (A : Integer_Arr)
+                         return Boolean is
           (for all E of A => E = 0);
 
-       function Has_Zero (A : Integer_Arr) return Boolean is
+       function Has_Zero (A : Integer_Arr)
+                          return Boolean is
           (for some E of A => E = 0);
 
     end Int_Arrays;

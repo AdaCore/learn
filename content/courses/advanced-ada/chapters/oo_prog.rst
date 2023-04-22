@@ -66,22 +66,29 @@ Let's revisit a previous example from the section on null records:
 
        type Device is private;
 
-       function Create (Active : Boolean) return Device;
+       function Create
+         (Active : Boolean)
+          return Device;
 
-       procedure Reset (D : out Device) is null;
+       procedure Reset
+         (D : out Device) is null;
 
-       procedure Process (D : in out Device) is null;
+       procedure Process
+         (D : in out Device) is null;
 
-       procedure Activate (D : in out Device) is null;
+       procedure Activate
+         (D : in out Device) is null;
 
-       procedure Deactivate (D : in out Device) is null;
+       procedure Deactivate
+         (D : in out Device) is null;
 
     private
 
        type Device is null record;
 
-       function Create (Active : Boolean) return Device
-         is (null record);
+       function Create
+         (Active : Boolean)
+          return Device is (null record);
 
     end Devices;
 
@@ -93,16 +100,21 @@ We can easily rewrite this specification using interfaces:
 
        type Device is interface;
 
-       function Create (Active : Boolean) return Device
-         is abstract;
+       function Create
+         (Active : Boolean)
+          return Device is abstract;
 
-       procedure Reset (D : out Device) is null;
+       procedure Reset
+         (D : out Device) is null;
 
-       procedure Process (D : in out Device) is null;
+       procedure Process
+         (D : in out Device) is null;
 
-       procedure Activate (D : in out Device) is null;
+       procedure Activate
+         (D : in out Device) is null;
 
-       procedure Deactivate (D : in out Device) is null;
+       procedure Deactivate
+         (D : in out Device) is null;
 
     end Devices;
 
@@ -144,25 +156,33 @@ specification as a derived type. For example:
 
        type Abstract_Device is interface;
 
-       function Create (Active : Boolean) return Abstract_Device
-         is abstract;
+       function Create
+         (Active : Boolean)
+          return Abstract_Device is abstract;
 
-       procedure Reset (D : out Abstract_Device) is null;
+       procedure Reset
+         (D : out Abstract_Device) is null;
 
-       procedure Process (D : in out Abstract_Device) is null;
+       procedure Process
+         (D : in out Abstract_Device) is null;
 
-       procedure Activate (D : in out Abstract_Device) is null;
+       procedure Activate
+         (D : in out Abstract_Device) is null;
 
-       procedure Deactivate (D : in out Abstract_Device) is null;
+       procedure Deactivate
+         (D : in out Abstract_Device) is null;
 
-       type Device is new Abstract_Device with private;
+       type Device is new
+         Abstract_Device with private;
 
     private
 
-       type Device is new Abstract_Device with null record;
+       type Device is new
+         Abstract_Device with null record;
 
-       function Create (Active : Boolean) return Device
-         is (null record);
+       function Create
+         (Active : Boolean)
+          return Device is (null record);
 
     end Devices;
 
@@ -202,7 +222,8 @@ Let's assume we have the following interface:
 
        type Animal is interface;
 
-       procedure Eat (Beast : in out Animal) is abstract;
+       procedure Eat (Beast : in out Animal)
+         is abstract;
 
     end Animals;
 
@@ -264,8 +285,9 @@ done separately, in a new interface, such as:
        type A_Thing is null record;
        --  no implementation yet
 
-       procedure Eat (Beast : in out Animal_Extension_1;
-                      Thing : in out A_Thing) is abstract;
+       procedure Eat
+         (Beast : in out Animal_Extension_1;
+          Thing : in out A_Thing) is abstract;
 
     end Animals.Extensions;
 
@@ -278,12 +300,16 @@ need to be declared, such as:
 
     package Animals.Cats is
 
-       type Cat is new Animal and Animal_Extension_1 with null record;
+       type Cat is new
+         Animal and Animal_Extension_1
+           with null record;
 
-       procedure Eat (Beast : in out Cat);
+       procedure Eat
+         (Beast : in out Cat);
 
-       procedure Eat (Beast : in out Cat;
-                      Thing : in out A_Thing);
+       procedure Eat
+         (Beast : in out Cat;
+          Thing : in out A_Thing);
 
     end Animals.Cats;
 
@@ -328,7 +354,8 @@ no longer a need to extend from two interfaces:
 
 .. code-block:: ada
 
-    type Cat is new Animal_Extension_1 with null record;
+    type Cat is new
+      Animal_Extension_1 with null record;
 
 The rest of the code will remain completely untouched thanks to this
 change. Calls to the new subprogram will require some additional amount of
@@ -381,10 +408,12 @@ This is adapted code:
        type A_Thing is null record;
        --  no implementation yet
 
-       procedure Eat (Beast : in out Animal) is abstract;
+       procedure Eat
+         (Beast : in out Animal) is abstract;
 
-       procedure Eat (Beast : in out Animal;
-                      Thing : in out A_Thing) is abstract;
+       procedure Eat
+         (Beast : in out Animal;
+          Thing : in out A_Thing) is abstract;
 
     end Animals;
 
@@ -465,12 +494,15 @@ the traditional geometric classes that are often found in text books:
        procedure Initialize (Self : in out Polygon);
 
        type Square is new Polygon with private;
-       overriding procedure Initialize (Self : in out Square);
+
+       overriding
+       procedure Initialize (Self : in out Square);
 
     private
 
        type Polygon is tagged null record;
-       type Square is new Polygon with null record;
+       type Square is new
+         Polygon with null record;
 
     end Geometric_Forms;
 
@@ -489,9 +521,13 @@ which :ada:`Initialize` to call. The code thus looks like:
           null;
        end Initialize;
 
-       overriding procedure Initialize (Self : in out Square) is
+       overriding
+       procedure Initialize (Self : in out Square) is
        begin
-          Initialize (Polygon (Self));  --  calling inherited procedure
+          Initialize (Polygon (Self));
+          --  ^^^^^^^^^^^^^^^^^^^^^^^^
+          --  calling inherited procedure
+
           --  ... square-specific setups
        end Initialize;
 
@@ -520,17 +556,27 @@ needs to be changed (and not just in the spec), as in:
        type Polygon is tagged private;
        procedure Initialize (Self : in out Polygon);
 
-       type Rectangle is new Polygon with private;                 --  NEW
-       overriding procedure Initialize (Self : in out Rectangle);  --  NEW
+       type Rectangle is new
+         Polygon with private;       --  NEW
 
-       type Square is new Rectangle with private;                  --  MODIFIED
-       overriding procedure Initialize (Self : in out Square);
+       overriding
+       procedure Initialize
+         (Self : in out Rectangle);  --  NEW
+
+       type Square is new
+         Rectangle with private;     --  MODIFIED
+
+       overriding
+       procedure Initialize
+         (Self : in out Square);
 
     private
 
        type Polygon is tagged null record;
-       type Rectangle is new Polygon with null record;
-       type Square is new Rectangle with null record;
+       type Rectangle is new
+         Polygon with null record;
+       type Square is new
+         Rectangle with null record;
 
     end Geometric_Forms;
 
@@ -541,15 +587,21 @@ needs to be changed (and not just in the spec), as in:
           null;
        end Initialize;
 
-       overriding procedure Initialize (Self : in out Rectangle) is
+       overriding
+       procedure Initialize
+         (Self : in out Rectangle)
+       is
        begin
-          Initialize (Polygon (Self));  --  calling inherited procedure
+          Initialize (Polygon (Self));
+          --  ^^^^^^^^^^^^^^^^^^^^^^^^
+          --  calling inherited procedure
+
           --  ... rectangle-specific setups
        end Initialize;
 
        procedure Initialize (Self : in out Square) is
        begin
-          Initialize (Rectangle (Self));  --   MODIFIED
+          Initialize (Rectangle (Self));  --  MODIFIED
           --  ... square-specific setups
        end Initialize;
 
@@ -597,10 +649,13 @@ Here is a full example:
 
     package Geo_Forms.Rectangles is
 
-       subtype Parent is Geo_Forms.Polygons.Polygon;
-       type Rectangle is new Parent with private;
+       subtype Parent is
+         Geo_Forms.Polygons.Polygon;
+       type Rectangle is new
+         Parent with private;
 
-       overriding procedure Initialize (Self : in out Rectangle);
+       overriding
+       procedure Initialize (Self : in out Rectangle);
 
     private
 
@@ -612,10 +667,13 @@ Here is a full example:
 
     package Geo_Forms.Squares is
 
-       subtype Parent is Geo_Forms.Rectangles.Rectangle;
+       subtype Parent is
+         Geo_Forms.Rectangles.Rectangle;
+
        type Square is new Parent with private;
 
-       overriding procedure Initialize (Self : in out Square);
+       overriding
+       procedure Initialize (Self : in out Square);
 
     private
 
@@ -639,7 +697,9 @@ Here is a full example:
 
     package body Geo_Forms.Rectangles is
 
-       overriding procedure Initialize (Self : in out Rectangle) is
+       overriding
+       procedure Initialize (Self : in out Rectangle)
+       is
        begin
           Initialize (Parent (Self));
 
@@ -649,8 +709,10 @@ Here is a full example:
 
     end Geo_Forms.Rectangles;
 
-    with Ada.Text_IO;          use Ada.Text_IO;
-    with Geo_Forms.Rectangles; use Geo_Forms.Rectangles;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Geo_Forms.Rectangles;
+    use  Geo_Forms.Rectangles;
 
     package body Geo_Forms.Squares is
 

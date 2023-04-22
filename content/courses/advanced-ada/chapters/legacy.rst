@@ -61,7 +61,8 @@ We can now use elements from :ada:`Week.Nested` in a test application:
     procedure Main is
        use Week.Nested;
     begin
-       Put_Line ("First day of the week is " & Get_First_Of_Week);
+       Put_Line ("First day of the week is "
+                 & Get_First_Of_Week);
     end Main;
 
 Note that we cannot access the :ada:`Week.Nested` package directly using
@@ -81,7 +82,8 @@ nested packages to illustrate this:
 
     package Book is
 
-       Title : constant String := "Visible for my children";
+       Title : constant String :=
+                 "Visible for my children";
 
        function Get_Title return String;
 
@@ -105,7 +107,8 @@ Now, because :ada:`Author` is declared before the body of the nested package
 
     package body Book is
 
-       Author : constant String := "Author not visible for my children";
+       Author : constant String :=
+                 "Author not visible for my children";
 
        function Get_Title return String is
        begin
@@ -119,12 +122,14 @@ Now, because :ada:`Author` is declared before the body of the nested package
 
        package body Additional_Operations is
 
-          function Get_Extended_Title return String is
+          function Get_Extended_Title return String
+          is
           begin
              return "Book Title: " & Title;
           end Get_Extended_Title;
 
-          function Get_Extended_Author return String is
+          function Get_Extended_Author return String
+          is
           begin
              return "Book Author: " & Author;
           end Get_Extended_Author;
