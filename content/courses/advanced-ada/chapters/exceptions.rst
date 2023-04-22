@@ -231,17 +231,20 @@ the call to :ada:`Assert` is not ignored.
     - :arm:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
 
 
-:ada:`Default_Initial_Condition` policy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..
+    TO BE DONE:
 
-.. admonition:: In the Ada Reference Manual
+    :ada:`Default_Initial_Condition` policy
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    - :arm22:`7.3.3 Default Initial Conditions <11-4-2>`
-    - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+    .. admonition:: In the Ada Reference Manual
 
-.. todo::
+        - :arm22:`7.3.3 Default Initial Conditions <11-4-2>`
+        - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
 
-    Complete section!
+    .. todo::
+
+        Complete section!
 
 
 Checks and exceptions
@@ -285,18 +288,21 @@ performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
 
 
-:ada:`Program_Error_Check` and :ada:`Tasking_Check`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..
+    TO BE DONE:
 
-.. admonition:: In the Ada Reference Manual
+    :ada:`Program_Error_Check` and :ada:`Tasking_Check`
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    - :arm22:`11.5 Suppressing Checks <11-5>`
+    .. admonition:: In the Ada Reference Manual
 
-.. todo::
+        - :arm22:`11.5 Suppressing Checks <11-5>`
 
-   - Add to previous section:
-      - :ada:`Program_Error_Check`
-      - :ada:`Tasking_Check`
+    .. todo::
+
+    - Add to previous section:
+        - :ada:`Program_Error_Check`
+        - :ada:`Tasking_Check`
 
 
 .. _Adv_Ada_Access_Check:
