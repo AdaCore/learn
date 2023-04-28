@@ -717,7 +717,7 @@ list. We pass this procedure to the :ada:`Reduce` attribute in the
           Accumulate (I, E);
        end loop;
 
-A custom reducer has the following parameters:
+A custom reducer must have the following parameters:
 
 1. The accumulator parameter, which stores the interim result |mdash| and the
    final result as well, once all elements of the list have been processed.
