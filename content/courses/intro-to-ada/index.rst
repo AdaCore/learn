@@ -45,6 +45,32 @@ Introduction to Ada
     This document was written by Raphaël Amiard and Gustavo A. Hoffmann, with
     review from Richard Kenner.
 
+    .. info::
+
+        The code examples in this course use a 50-column limit, which
+        greatly improves the readability of the code on devices with a small
+        screen size. This constraint, however, leads to an unusual coding
+        style. For instance, instead of calling :ada:`Put_Line` in a single
+        line, we have this:
+
+        .. code-block:: ada
+
+            Put_Line
+              (" is in the northeast quadrant");
+
+        or this:
+
+        .. code-block:: ada
+
+             Put_Line ("  (X => "
+                       & Integer'Image (P.X)
+                       & ")");
+
+        Note that typical Ada code uses a limit of at least 79 columns.
+        Therefore, please don't take the coding style from this course as a
+        reference!
+
+
 .. only:: builder_html
 
     .. container:: ebook-download
