@@ -110,8 +110,8 @@ Advanced Journey With Ada: A Flight In Progress
     .. only:: not no_hidden_books
 
         This document was written by Gustavo A. Hoffmann and Robert A. Duff,
-        with contributions from Franco Gasperoni, Gary Dismukes and
-        Robert Dewar.
+        with contributions from Franco Gasperoni, Gary Dismukes,
+        Patrick Rogers, and Robert Dewar.
 
     .. only:: no_hidden_books
 
