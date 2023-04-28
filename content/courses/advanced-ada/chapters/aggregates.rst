@@ -1356,7 +1356,8 @@ Consider this package:
 
     package Integer_Arrays is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
        procedure Display (A : Integer_Array);
 
@@ -1870,8 +1871,8 @@ Consider this package, for example:
 
        procedure Display (P : Point_3D);
 
-       type Point_3D_Array is array (Positive range <>)
-         of Point_3D;
+       type Point_3D_Array is
+         array (Positive range <>) of Point_3D;
 
        procedure Display (PA : Point_3D_Array);
 
@@ -1957,7 +1958,8 @@ aspect in its specification:
        type Value is new Integer
          with Default_Value => 99;
 
-       type Integer_Array is array (Positive range <>) of Value;
+       type Integer_Array is
+         array (Positive range <>) of Value;
 
        procedure Display (A : Integer_Array);
 
@@ -1991,8 +1993,9 @@ When writing an aggregate for the :ada:`Point_3D` type, any component that has
 
            type Value is new Integer;
 
-           type Integer_Array is array (Positive range <>) of Value
-             with Default_Component_Value => 9999;
+           type Integer_Array is
+             array (Positive range <>) of Value
+               with Default_Component_Value => 9999;
 
            procedure Display (A : Integer_Array);
 
@@ -2027,8 +2030,9 @@ When writing an aggregate for the :ada:`Point_3D` type, any component that has
            type Value is new Integer
              with Default_Value => 99;
 
-           type Integer_Array is array (Positive range <>) of Value
-             with Default_Component_Value => 9999;
+           type Integer_Array is
+             array (Positive range <>) of Value
+               with Default_Component_Value => 9999;
 
            procedure Display (A : Integer_Array);
 
