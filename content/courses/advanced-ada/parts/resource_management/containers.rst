@@ -790,7 +790,8 @@ example:
     with Custom_Container_Aggregates;
     use  Custom_Container_Aggregates;
 
-    procedure Show_Unnamed_Indexed_Container_Aggregate is
+    procedure Show_Unnamed_Indexed_Container_Aggregate
+    is
        A : T;
     begin
        Put_Line ("A := []");
@@ -799,7 +800,8 @@ example:
        Put_Line ("A := [""Hello"", ""World""]");
        A := ["Hello", "World"];
 
-       Put_Line ("A := [1 => ""Hello"", 2 => ""World""]");
+       Put_Line
+         ("A := [1 => ""Hello"", 2 => ""World""]");
        A := [1 => "Hello", 2 => "World"];
     end Show_Unnamed_Indexed_Container_Aggregate;
 
