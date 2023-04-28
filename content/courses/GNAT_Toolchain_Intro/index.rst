@@ -40,7 +40,7 @@ Introduction to GNAT Toolchain
     This document was written by Gustavo A. Hoffmann, with contributions and
     review from Richard Kenner and Robert Duff.
 
-    .. info::
+    .. note::
 
         The code examples in this course use a 80-column limit, which is a
         typical limit for Ada code. Note that, on devices with a small screen

@@ -45,7 +45,7 @@ Introduction to Ada
     This document was written by Raphaël Amiard and Gustavo A. Hoffmann, with
     review from Richard Kenner.
 
-    .. info::
+    .. note::
 
         The code examples in this course use a 50-column limit, which
         greatly improves the readability of the code on devices with a small
@@ -72,7 +72,7 @@ Introduction to Ada
 
     .. only:: builder_latex or builder_epub
 
-        .. info::
+        .. note::
 
             Each code example from this book has an associated "code block
             metadata", which contains the name of the "project" and a MD5 hash

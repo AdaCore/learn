@@ -39,7 +39,7 @@ Introduction To SPARK
 
     This document was prepared by Claire Dross and Yannick Moy.
 
-    .. info::
+    .. note::
 
         The code examples in this course use a 80-column limit, which is a
         typical limit for Ada code. Note that, on devices with a small screen
@@ -47,7 +47,7 @@ Introduction To SPARK
 
     .. only:: builder_latex or builder_epub
 
-        .. info::
+        .. note::
 
             Each code example from this book has an associated "code block
             metadata", which contains the name of the "project" and a MD5 hash
