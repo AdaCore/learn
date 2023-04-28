@@ -59,8 +59,9 @@ What's New in Ada 2022
             metadata. For example, if you're searching for a code example with
             this metadata:
 
-            Project: Courses.Intro_To_Ada.Imperative_Language.Greet
-            MD5: cba89a34b87c9dfa71533d982d05e6ab
+            - Project: Courses.Intro_To_Ada.Imperative_Language.Greet
+
+            - MD5: cba89a34b87c9dfa71533d982d05e6ab
 
             you will find it in this directory:
 
