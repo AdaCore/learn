@@ -38,6 +38,12 @@ Introduction to Embedded Systems Programming
     This document was written by Patrick Rogers, with review by
     Stephen Baird, Tucker Taft, Filip Gajowniczek, and Gustavo A. Hoffmann.
 
+    .. info::
+
+        The code examples in this course use a 80-column limit, which is a
+        typical limit for Ada code. Note that, on devices with a small screen
+        size, some code examples might be difficult to read.
+
 
 .. only:: builder_html
 
