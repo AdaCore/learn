@@ -41,7 +41,7 @@ What's New in Ada 2022
 
     .. note::
 
-        The code examples in this course use a 80-column limit, which is a
+        The code examples in this course use an 80-column limit, which is a
         typical limit for Ada code. Note that, on devices with a small screen
         size, some code examples might be difficult to read.
 
