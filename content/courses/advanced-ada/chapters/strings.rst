@@ -1701,7 +1701,7 @@ this type and additional procedures associated with this type.
 Overview
 ~~~~~~~~
 
-We use the :ada:`Root_Buffer_Type'Class` type to implement an universal text
+We use the :ada:`Root_Buffer_Type'Class` type to implement a universal text
 buffer that is used to store and retrieve information about data types. Because
 this text buffer isn't associated with specific data types, it is universal
 |mdash| in the sense that we can really use it for any data type, regardless of
