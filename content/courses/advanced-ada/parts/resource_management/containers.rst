@@ -278,7 +278,8 @@ indicates the number of components |mdash| for the :ada:`Empty` function:
           return T is
        begin
           Put_Line ("Calling Empty_Func ("
-                    & "Total => " & Total'Image & ")");
+                    & "Total => "
+                    & Total'Image & ")");
 
           return (Total => Total,
                   Cnt   => 0);
@@ -370,7 +371,8 @@ element, we can only use the :ada:`Empty` element in the same declaration.
           return T is
        begin
           Put_Line ("Calling Empty_Func ("
-                    & "Total => " & Total'Image & ")");
+                    & "Total => "
+                    & Total'Image & ")");
 
           return (Total => Total,
                   Cnt   => 0);
@@ -382,8 +384,10 @@ element, we can only use the :ada:`Empty` element in the same declaration.
           Value :        String) is
        begin
           Put_Line ("Calling Add_Named_Proc (Anon, "
-                    & "Key => """   & Key   & """, "
-                    & "Value => """ & Value & """)");
+                    & "Key => """
+                    & Key   & """, "
+                    & "Value => """
+                    & Value & """)");
        end Add_Named_Proc;
 
     end Custom_Container_Aggregates;
@@ -474,7 +478,8 @@ Let's look at an example:
           return T is
        begin
           Put_Line ("Calling Empty_Func ("
-                    & "Total => " & Total'Image & ")");
+                    & "Total => "
+                    & Total'Image & ")");
 
           return (Total => Total,
                   Cnt   => 0);
@@ -485,7 +490,8 @@ Let's look at an example:
           Item :        String) is
        begin
           Put_Line ("Calling Add_Unnamed_Proc (Anon, "
-                    & "Item => """ & Item & """)");
+                    & "Item => """
+                    & Item & """)");
        end Add_Unnamed_Proc;
 
     end Custom_Container_Aggregates;
@@ -574,8 +580,9 @@ Let's look at an example:
          (Total : Integer := T_Len_Typical)
           return T is
        begin
-          Put_Line ("Calling Empty_Func ("
-                    & "Total => " & Total'Image & ")");
+          Put_Line
+            ("Calling Empty_Func ("
+             & "Total => " & Total'Image & ")");
 
           return (Total => Total,
                   Cnt   => 0);
@@ -585,9 +592,10 @@ Let's look at an example:
          (First, Last : Positive)
           return T is
        begin
-          Put_Line ("Calling New_Indexed_Func ("
-                    & "First => " & First'Image & ", "
-                    & "Last  => " & Last'Image & ")");
+          Put_Line
+            ("Calling New_Indexed_Func ("
+             & "First => " & First'Image & ", "
+             & "Last  => " & Last'Image & ")");
 
           return (Total => Last - First + 1,
                   Cnt   => 0);
@@ -600,9 +608,10 @@ Let's look at an example:
        is
           pragma Unreferenced (Cont);
        begin
-          Put_Line ("Calling Assign_Indexed_Proc (Anon, "
-                    & "Index => "   & Index'Image & ", "
-                    & "Item  => """ & Item & """)");
+          Put_Line
+            ("Calling Assign_Indexed_Proc (Anon, "
+             & "Index => "   & Index'Image & ", "
+             & "Item  => """ & Item & """)");
 
        end Assign_Indexed_Proc;
 
@@ -730,7 +739,8 @@ example:
           return T is
        begin
           Put_Line ("Calling Empty_Func ("
-                    & "Total => " & Total'Image & ")");
+                    & "Total => "
+                    & Total'Image & ")");
 
           return (Total => Total,
                   Cnt   => 0);
@@ -748,9 +758,10 @@ example:
          (First, Last : Positive)
           return T is
        begin
-          Put_Line ("Calling New_Indexed_Func ("
-                    & "First => " & First'Image & ", "
-                    & "Last  => " & Last'Image & ")");
+          Put_Line
+            ("Calling New_Indexed_Func ("
+             & "First => " & First'Image & ", "
+             & "Last  => " & Last'Image & ")");
 
           return (Total => Last - First + 1,
                   Cnt   => 0);
@@ -763,9 +774,10 @@ example:
        is
           pragma Unreferenced (Cont);
        begin
-          Put_Line ("Calling Assign_Indexed_Proc (Anon, "
-                    & "Index => "   & Index'Image & ", "
-                    & "Item  => """ & Item & """)");
+          Put_Line
+            ("Calling Assign_Indexed_Proc (Anon, "
+             & "Index => "   & Index'Image & ", "
+             & "Item  => """ & Item & """)");
 
        end Assign_Indexed_Proc;
 
