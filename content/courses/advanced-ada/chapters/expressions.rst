@@ -53,7 +53,8 @@ the corresponding grammatical elements (we're going to discuss them later):
        --   ^^^^^^^^^^^^^^^^^ relation
        --
        --                     ^^^^^^^^^^^^^^ relation
-       --   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expression
+       --   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       --                                  expression
 
        Dummy :=
            M1 in Active_Mode;
@@ -167,13 +168,17 @@ a membership choice list, and :ada:`Off` and :ada:`A` are membership choices.
     .. code-block:: none
 
         expression ::=
-             relation {and relation} | relation {and then relation}
-           | relation {or relation}  | relation {or else relation}
+             relation {and relation}
+           | relation {and then relation}
+           | relation {or relation}
+           | relation {or else relation}
            | relation {xor relation}
 
         relation ::=
-             simple_expression [relational_operator simple_expression]
-           | simple_expression [not] in membership_choice_list
+             simple_expression
+               [relational_operator simple_expression]
+           | simple_expression [not] in
+               membership_choice_list
            | raise_expression
 
     Again, for more details, please refer to the
