@@ -651,11 +651,13 @@ expression to a value sequence:
     procedure Show_Reduction_Expression is
        I : Integer;
     begin
-       I := [for I in 1 .. 3 => I + 1]'Reduce ("+", 0);
+       I := [for I in 1 .. 3 =>
+               I + 1]'Reduce ("+", 0);
        Put_Line ("I = "
                  & I'Image);
 
-       I := [for I in 1 .. 3 => I + 1]'Reduce ("*", 1);
+       I := [for I in 1 .. 3 =>
+               I + 1]'Reduce ("*", 1);
        Put_Line ("I = "
                  & I'Image);
     end Show_Reduction_Expression;
@@ -746,9 +748,10 @@ returned by the function:
        A : Integer_Array (1 .. 3);
        I : Long_Integer;
 
-       function Accumulate (Accumulator : Long_Integer;
-                            Value       : Integer)
-                            return Long_Integer is
+       function Accumulate
+         (Accumulator : Long_Integer;
+          Value       : Integer)
+          return Long_Integer is
        begin
           return Accumulator + Long_Integer (Value);
        end Accumulate;
@@ -844,8 +847,10 @@ the elements of the list by using unbounded strings:
 .. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Reducer_String_Accumulator switches=Compiler(-gnatX)
 
     !show_reduction_expression.adb
-    with Ada.Text_IO;           use Ada.Text_IO;
-    with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.Unbounded;
+    use  Ada.Strings.Unbounded;
 
     procedure Show_Reduction_Expression is
        type Integer_Array is
