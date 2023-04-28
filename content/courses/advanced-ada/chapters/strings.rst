@@ -1817,5 +1817,5 @@ mentioned above:
 In the body of the :ada:`Put_Float_Integer` procedure, we're using the
 :ada:`New_Line`, :ada:`Increase_Indent` and :ada:`Decrease_Indent` procedures
 to improve the format of the string returned by the :ada:`Float_Integer'Image`
-attribute. Using these procedures, you can write any kind of format for your
-custom type.
+attribute. Using these procedures, you can create any kind of output format
+for your custom type.
