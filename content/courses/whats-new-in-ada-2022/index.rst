@@ -39,7 +39,7 @@ What's New in Ada 2022
 
     This document was written by Maxim Reznik and reviewed by Richard Kenner.
 
-    .. info::
+    .. note::
 
         The code examples in this course use a 80-column limit, which is a
         typical limit for Ada code. Note that, on devices with a small screen
@@ -47,7 +47,7 @@ What's New in Ada 2022
 
     .. only:: builder_latex or builder_epub
 
-        .. info::
+        .. note::
 
             Each code example from this book has an associated "code block
             metadata", which contains the name of the "project" and a MD5 hash

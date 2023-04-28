@@ -47,7 +47,7 @@ Ada for the Embedded C Developer
     and Patrick Rogers and reviewed by Patrick Rogers, Filip Gajowniczek, and
     Tucker Taft.
 
-    .. info::
+    .. note::
 
         The code examples in this course use a 80-column limit, which is a
         typical limit for Ada code. Note that, on devices with a small screen
@@ -55,7 +55,7 @@ Ada for the Embedded C Developer
 
     .. only:: builder_latex or builder_epub
 
-        .. info::
+        .. note::
 
             Each code example from this book has an associated "code block
             metadata", which contains the name of the "project" and a MD5 hash
