@@ -1995,9 +1995,11 @@ array type :ada:`Integer_Array` and its derived type
 
     package Custom_Arrays is
 
-       type Integer_Array is array (Positive range <>) of Integer;
+       type Integer_Array is
+         array (Positive range <>) of Integer;
 
-       type Derived_Integer_Array is new Integer_Array;
+       type Derived_Integer_Array is new
+         Integer_Array;
 
     end Custom_Arrays;
 
@@ -2042,17 +2044,21 @@ example:
 
     package Custom_Arrays_1 is
 
-       type Integer_Array_1 is array (Positive range <>) of Integer;
+       type Integer_Array_1 is
+         array (Positive range <>) of Integer;
 
-       type Float_Array_1 is array (Positive range <>) of Float;
+       type Float_Array_1 is
+         array (Positive range <>) of Float;
 
     end Custom_Arrays_1;
 
     package Custom_Arrays_2 is
 
-       type Integer_Array_2 is array (Positive range <>) of Integer;
+       type Integer_Array_2 is
+         array (Positive range <>) of Integer;
 
-       type Float_Array_2 is array (Positive range <>) of Float;
+       type Float_Array_2 is
+         array (Positive range <>) of Float;
 
     end Custom_Arrays_2;
 
@@ -2082,15 +2088,17 @@ example:
        Put_Line ("AI_2: "
                  & AI_2'Image);
 
-       --  ERROR: Cannot convert arrays whose components
-       --         have different types:
+       --  ERROR: Cannot convert arrays whose
+       --         components have different types:
        --
        --  AF_1 := Float_Array_1 (AI_1);
        --
        --  Instead, use array aggregate where each
-       --  component is converted from integer to float:
+       --  component is converted from integer to
+       --  float:
        --
-       AF_1 := [for I in AF_1'Range => Float (AI_1 (I))];
+       AF_1 := [for I in AF_1'Range =>
+                  Float (AI_1 (I))];
 
        Put_Line ("AF_1: "
                  & AF_1'Image);
@@ -2126,7 +2134,8 @@ following generic package:
     generic
        type T is private;
     package Custom_Arrays is
-       type T_Array is array (Positive range <>) of T;
+       type T_Array is
+         array (Positive range <>) of T;
     end Custom_Arrays;
 
 We could instantiate this generic package and reuse parts of the previous code
@@ -2457,8 +2466,8 @@ In this example, we have the :ada:`To_Integer` function that converts from the
             T1 (float x) :
               x(x) {}
 
-            // If class T3 is declared before class T1,
-            // we can overload the "=" operator.
+            // If class T3 is declared before class
+            // T1, we can overload the "=" operator.
             //
             // void operator=(T3 v) {
             //     x = static_cast<float>(v);
@@ -2516,18 +2525,23 @@ In this example, we have the :ada:`To_Integer` function that converts from the
             T1 t_1 (0.0);
             float f;
 
-            f = t_3;                     // Implicit conversion
+            // Implicit conversion
+            f = t_3;
 
             std::cout << "f : " << f
                       << std::endl;
 
-            f = static_cast<float>(t_3); // Explicit conversion
+            // Explicit conversion
+            f = static_cast<float>(t_3);
+
             // f = (float)t_3;
 
             std::cout << "f : " << f
                       << std::endl;
 
-            t_1 = static_cast<T1>(t_3); // Explicit conversion
+            // Explicit conversion
+            t_1 = static_cast<T1>(t_3);
+
             // t_1 = (T1)t_3;
 
             std::cout << "t_1 : ";
