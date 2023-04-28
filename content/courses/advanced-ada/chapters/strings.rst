@@ -1758,7 +1758,8 @@ mentioned above:
          I : Integer;
        end record
          with Dynamic_Predicate =>
-                Integer (Float_Integer.F) = Float_Integer.I,
+                Integer (Float_Integer.F) =
+                  Float_Integer.I,
               Put_Image         => Put_Float_Integer;
        --     ^ Custom version of Put_Image
 
