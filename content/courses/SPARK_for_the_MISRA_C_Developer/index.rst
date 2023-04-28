@@ -50,7 +50,7 @@ SPARK Ada for the MISRA C Developer
         .. note::
 
             Each code example from this book has an associated "code block
-            metadata", which contains the name of the "project" and a MD5 hash
+            metadata", which contains the name of the "project" and an MD5 hash
             value. This information is used to identify a single code example.
 
             You can find all code examples in a zip file, which you can
