@@ -45,6 +45,36 @@ What's New in Ada 2022
         typical limit for Ada code. Note that, on devices with a small screen
         size, some code examples might be difficult to read.
 
+    .. only:: builder_latex or builder_epub
+
+        .. info::
+
+            Each code example from this book has an associated "code block
+            metadata", which contains the name of the "project" and a MD5 hash
+            value. This information is used to identify a single code example.
+
+            You can find all code examples in a zip file, which you can
+            `download from the learn website <https://learn.adacore.com/zip/learning-ada_code.zip>`_.
+            The directory structure in the zip file is based on the code block
+            metadata. For example, if you're searching for a code example with
+            this metadata:
+
+            Project: Courses.Intro_To_Ada.Imperative_Language.Greet
+            MD5: cba89a34b87c9dfa71533d982d05e6ab
+
+            you will find it in this directory:
+
+            :file:`projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/`
+
+            In order to use this code example, just follow these steps:
+
+            1. Unpack the zip file;
+            2. Go to target directory;
+            3. Start GNAT Studio on this directory;
+            4. Build (or compile) the project;
+            5. Run the application (if a main procedure is available in the
+               project).
+
 
 .. only:: builder_html
 
