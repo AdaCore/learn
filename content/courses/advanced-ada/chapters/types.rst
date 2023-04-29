@@ -2032,9 +2032,17 @@ conversion to be successful. (Sliding is fine, though.) In this example, both
 arrays have the same range: :ada:`Common_Range`.
 
 We can also convert between array types that aren't derived one from the
-other. As long as the components are of the same type, the conversion between
-those types is possible. This can be very handy when we have types that were
-declared in different packages, but have the same component type.
+other. As long as the components and the index subtypes are of the same type,
+the conversion between those types is possible. To be more precise, these are
+the requirements for the array conversion to be accepted:
+
+- The component types must be the same type.
+
+- The index types (or subtypes) must be the same or, at least, convertible.
+
+- The dimensionality of the arrays must be the same.
+
+- The bounds must be compatible (but not necessarily equal).
 
 Converting between different array types can be very handy, especially when
 we're dealing with array types that were not declared in the same package. For
