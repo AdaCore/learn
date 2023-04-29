@@ -27,7 +27,7 @@ $frontend = <<-SHELL
 
   # Install FSF GNAT
   # (Required tool: gnatchop)
-  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.1.0-2/gnat-x86_64-linux-12.1.0-2.tar.gz && \
+  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-x86_64-linux-12.2.0-1.tar.gz && \
   tar xzf gnat.tar.gz && \
   mv gnat-* /usr/local/gnat && \
   rm *.tar.gz
@@ -96,7 +96,7 @@ $epub = <<-SHELL
       libc6-dev
 
   # Install FSF GNAT
-  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.1.0-2/gnat-x86_64-linux-12.1.0-2.tar.gz && \
+  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-x86_64-linux-12.2.0-1.tar.gz && \
   wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-12.1.0-1/gnatprove-x86_64-linux-12.1.0-1.tar.gz && \
   wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-22.0.0-1/gprbuild-x86_64-linux-22.0.0-1.tar.gz && \
   tar xzf gnat.tar.gz && \
@@ -133,8 +133,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
   config.vm.define "web" do |web|
-    web.vm.box = "bento/ubuntu-22.04"
-    web.vm.box_version = "202212.11.0"
+    web.vm.box = "bento/ubuntu-23.04"
+    web.vm.box_version = "202304.25.0"
     web.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
@@ -144,8 +144,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "epub" do |epub|
-    epub.vm.box = "bento/ubuntu-22.04"
-    epub.vm.box_version = "202212.11.0"
+    epub.vm.box = "bento/ubuntu-23.04"
+    epub.vm.box_version = "202304.25.0"
 
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'

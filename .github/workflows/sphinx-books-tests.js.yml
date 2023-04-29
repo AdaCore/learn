@@ -46,7 +46,7 @@ jobs:
         poppler-utils
     - name: Install GNAT FSF
       run: |
-        sudo wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.1.0-2/gnat-x86_64-linux-12.1.0-2.tar.gz && \
+        sudo wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-x86_64-linux-12.2.0-1.tar.gz && \
         sudo tar xzf gnat.tar.gz && \
         sudo mv gnat-* /usr/local/gnat
         sudo echo "/usr/local/gnat/bin" >> $GITHUB_PATH
