@@ -2193,6 +2193,41 @@ View conversion
 As mentioned before, view conversions just allow names to be converted. Thus,
 we cannot use expressions in this case.
 
+Note that a view conversion never changes the value during the conversion. We
+could say that a view conversion is simply making us *view* an object from a
+different angle. The object itself is still the same for both the original and
+the target types.
+
+For example, consider this package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Types.Tagged_Types_View
+
+    package Some_Tagged_Types is
+
+       type T is tagged record
+          A : Integer;
+       end record;
+
+       type T_Derived is new T with record
+          B : Float;
+       end record;
+
+       Obj : T_Derived;
+
+    end Some_Tagged_Types;
+
+Here, :ada:`Obj` is an object of type :ada:`T_Derived`. When we *view* this
+object, we notice that it has two components: :ada:`A` and :ada:`B`. However,
+we could *view* this object as being of type :ada:`T`. From that perspective,
+this object only has one component: :ada:`A`. (Note that changing the
+perspective doesn't change the object itself.) Therefore, a view conversion
+from :ada:`T_Derived` to :ada:`T` just makes us *view* the object :ada:`Obj`
+from a different angle.
+
+In this sense, a view conversion changes the view of a given object to the
+target type's view, both in terms of components that exist and operations that
+are available. It doesn't really change anything at all in the value itself.
+
 There are basically two kinds of view conversions: the ones using tagged types
 and the ones using untagged types. We discuss these kinds of conversion in this
 section.
