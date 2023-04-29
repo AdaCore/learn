@@ -1834,7 +1834,16 @@ use strings in the aggregates:
 
        Display (SL);
 
-       --  Named component association
+       --  Named component associations
+       SL := [[1 => 'A',
+               2 => 'B',
+               3 => 'C'],
+              [1 => 'D',
+               2 => 'E',
+               3 => 'F']];
+
+       Display (SL);
+
        SL := [[1 => 'X',
                2 => 'Y',
                3 => 'Z'],
