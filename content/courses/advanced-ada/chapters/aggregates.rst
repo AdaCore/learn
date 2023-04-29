@@ -1278,8 +1278,8 @@ of :ada:`Point_3D` type:
 
 In this example, we assign a positional array aggregate (:ada:`[1, 2, 3]`) to
 :ada:`P`. Then, we assign a named array aggregate
-(:ada:`[1 => 3, 2 => 4, 3 => 5]`) to :ada:`P`. In this case, the *name* is the
-index of  the component we're assigning to.
+(:ada:`[1 => 3, 2 => 4, 3 => 5]`) to :ada:`P`. In this case, the *names* are
+the indices of the components we're assigning to.
 
 We can also assign array aggregates to slices:
 
@@ -1497,8 +1497,8 @@ using ranges instead of the :ada:`|` and :ada:`others` syntax.
 Missing components
 ~~~~~~~~~~~~~~~~~~
 
-All components must have an associated value. If we don't specify a value for a
-certain component, an exception is raised:
+All aggregate components must have an associated value. If we don't specify a
+value for a certain component, an exception is raised:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Array_Aggregates
     :class: ada-run-expect-failure
@@ -1568,8 +1568,8 @@ Iterated component association
 
    This feature was introduced in Ada 2022.
 
-We can use iterated component association to specify an aggregate. This is the
-general syntax:
+We can use an iterated component association to specify an aggregate. This is
+the general syntax:
 
 .. code-block:: ada
 
@@ -1660,8 +1660,8 @@ Multidimensional array aggregates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 So far, we've discussed one-dimensional array aggregates. We can also use the
-same concepts when dealing with multidimensional arrays. Consider, for example,
-this package:
+same constructs when dealing with multidimensional arrays. Consider, for
+example, this package:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Matrix_Aggregates
 
