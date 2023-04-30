@@ -7,16 +7,18 @@ Expressions: Definition
 -----------------------
 
 According to the Ada Reference Manual, an expression "is a formula that defines
-the computation or retrieval of a value." Also, when an expression is evaluated,
-the computed or retrieved value always has an associated type.
+the computation or retrieval of a value." Also, when an expression is
+evaluated, the computed or retrieved value always has an associated type known
+at compile-time.
 
 Even though the definition above is very simple, Ada expressions are actually
 very flexible |mdash| and they can also be very complex. In fact, if you read
 the :arm:`corresponding section <4-4>` of the Ada Reference Manual, you'll
 quickly discover that they include elements such as relations, membership
-choices, terms and primaries. In this section, we present examples of just some
-of these elements. For a complete overview, please refer to the Reference
-Manual.
+choices, terms and primaries. Some of these are classic elements of expressions
+in programming languages, although some of their forms are unique to Ada. In
+this section, we present examples of just some of these elements. For a
+complete overview, please refer to the Reference Manual.
 
 .. admonition:: In the Ada Reference Manual
 
