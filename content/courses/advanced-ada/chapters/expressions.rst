@@ -165,7 +165,7 @@ a membership choice list, and :ada:`Off` and :ada:`A` are membership choices.
 .. admonition:: For further reading...
 
     Relations can actually be much more complicated than the one we just
-    seen. In fact, this is the definition from the Ada Reference Manual:
+    saw. In fact, this is the definition from the Ada Reference Manual:
 
     .. code-block:: none
 
