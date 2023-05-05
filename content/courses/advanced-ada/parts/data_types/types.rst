@@ -1747,11 +1747,8 @@ Ada distinguishes between two kinds of conversion: value conversion and view
 conversion. The main difference is the way how the operand (argument) of the
 conversion is evaluated:
 
-- in a value conversion, the operand is evaluated as an expression;
-
-.. todo::
-
-    Add link to section about expressions once it's available!
+- in a value conversion, the operand is evaluated as an
+  :ref:`expression <Adv_Ada_Expressions>`;
 
 - in a view conversion, the operand is evaluated as a name.
 
