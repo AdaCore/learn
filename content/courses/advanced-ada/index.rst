@@ -104,7 +104,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     This course will teach you advanced topics of the Ada programming language.
     The
-    :doc:`Introduction to Ada <learn:courses/intro-to-ada/index>`
+    :ref:`Introduction to Ada <Intro_Ada_Course_Index>`
     course is a prerequisite for this course.
 
     .. only:: not no_hidden_books

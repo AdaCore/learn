@@ -6,6 +6,8 @@
 :prev_state: False
 :next_state: False
 
+.. _Intro_Ada_Course_Index:
+
 Introduction to Ada
 ===================
 

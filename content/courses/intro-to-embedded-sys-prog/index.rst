@@ -1,6 +1,8 @@
 :prev_state: False
 :next_state: False
 
+.. _Intro_Embedded_Sys_Prog_Index:
+
 Introduction to Embedded Systems Programming
 ============================================
 
