@@ -20,7 +20,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. container:: content-copyright
 
-        Copyright © 2019 |ndash| 2022, AdaCore
+        Copyright © 2019 |ndash| 2023, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -126,7 +126,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. admonition:: CHANGELOG
 
-        *Release 2023-04*
+        *Release 2023-05*
 
         - First draft release including following chapters:
 
