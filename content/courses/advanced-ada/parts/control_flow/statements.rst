@@ -24,7 +24,7 @@ Here are some examples from each category:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
+    - :arm22:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
 
 Labels
 ------
@@ -56,7 +56,7 @@ statement.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
+    - :arm22:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
 
 Labels and :ada:`goto` statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -331,7 +331,7 @@ condition :ada:`Cond` is met, even if we're actually within the inner loop.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.7 Exit Statements <5-7>`
+    - :arm22:`5.7 Exit Statements <5-7>`
 
 
 If, case and loop statements
@@ -387,9 +387,9 @@ statement.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.3 If Statements <5-3>`
-    - :arm:`5.4 Case Statements <5-4>`
-    - :arm:`5.5 Loop Statements <5-5>`
+    - :arm22:`5.3 If Statements <5-3>`
+    - :arm22:`5.4 Case Statements <5-4>`
+    - :arm22:`5.5 Loop Statements <5-5>`
 
 Case statements and expressions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -561,7 +561,7 @@ Block statement identifiers are useful:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.6 Block Statements <5-6>`
+    - :arm22:`5.6 Block Statements <5-6>`
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2025:
@@ -636,7 +636,7 @@ as the function result.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.5 Return Statements <6-5>`
+    - :arm22:`6.5 Return Statements <6-5>`
 
 
 Other usages of extended return statements

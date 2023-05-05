@@ -105,9 +105,9 @@ To read a thorough overview on this topic, please refer to the
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.2 Packed Types <13-2>`
-    - :arm:`13.3 Operational and Representation Attributes <13-3>`
-    - :arm:`13.5.3 Bit Ordering <13-5-3>`
+    - :arm22:`13.2 Packed Types <13-2>`
+    - :arm22:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm22:`13.5.3 Bit Ordering <13-5-3>`
 
 Sizes
 ~~~~~
@@ -1152,7 +1152,7 @@ bits span over four storage units (positions #0 .. #3).
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.5.1 Record Representation Clauses <13-5-1>`
+    - :arm22:`13.5.1 Record Representation Clauses <13-5-1>`
 
 Storage Place Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1243,7 +1243,7 @@ seen above.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.5.2 Storage Place Attributes <13-5-2>`
+    - :arm22:`13.5.2 Storage Place Attributes <13-5-2>`
 
 Using Representation Clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2007,7 +2007,7 @@ when we know that information stored in memory might be corrupted.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.9.2 The Valid Attribute <13-9-2>`
+    - :arm22:`13.9.2 The Valid Attribute <13-9-2>`
 
 Unchecked Union
 ---------------
@@ -2274,7 +2274,7 @@ solving very specific problems when doing low-level programming.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`B.3.3 Unchecked Union Types <B-3-3>`
+    - :arm22:`B.3.3 Unchecked Union Types <B-3-3>`
 
 Shared variable control
 -----------------------
@@ -2284,7 +2284,7 @@ start by discussing volatile objects.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`C.6 Shared Variable Control <C-6>`
+    - :arm22:`C.6 Shared Variable Control <C-6>`
 
 Volatile
 ~~~~~~~~

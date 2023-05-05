@@ -11,7 +11,7 @@ Preelaboration
 .. admonition:: Relevant topics
 
     - Pure packages
-    - :arm:`Preelaboration Requirements <C-4>`
+    - :arm22:`Preelaboration Requirements <C-4>`
 
 .. todo::
 
@@ -23,8 +23,8 @@ Elaboration control
 
 .. admonition:: Relevant topics
 
-    - :arm:`Elaboration control <10-2-1>`
-    - :arm:`Elaboration Control Pragmas <J-15-14>`
+    - :arm22:`Elaboration control <10-2-1>`
+    - :arm22:`Elaboration Control Pragmas <J-15-14>`
     - GNAT's static model
 
 .. todo::

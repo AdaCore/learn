@@ -9,7 +9,7 @@ Elaboration check
 .. admonition:: Relevant topics
 
     - Elaboration check mentioned in
-      :arm:`Generic Bodies <12-2>`
+      :arm22:`Generic Bodies <12-2>`
 
 .. todo::
 

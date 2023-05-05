@@ -25,8 +25,8 @@ specification or body.
 
 .. admonition:: In the Ada Reference Manual
 
-   - :arm:`6.2 Formal Parameter Modes <6-2>`
-   - :arm:`6.4.1 Parameter Associations <6-4-1>`
+   - :arm22:`6.2 Formal Parameter Modes <6-2>`
+   - :arm22:`6.4.1 Parameter Associations <6-4-1>`
 
 
 Formal Parameter Modes
@@ -468,7 +468,7 @@ about how this association is made and some of the potential errors.
 
 .. admonition:: In the Ada Reference Manual
 
-   - :arm:`6.4.1 Parameter Associations <6-4-1>`
+   - :arm22:`6.4.1 Parameter Associations <6-4-1>`
 
 
 Parameter order and association
@@ -689,7 +689,7 @@ Many primitive operators exist for scalar types. We classify them as follows:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.5 Operators and Expression Evaluation <4-5>`
+    - :arm22:`4.5 Operators and Expression Evaluation <4-5>`
 
 User-defined operators
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -974,7 +974,7 @@ In this example, we're using the primitive :ada:`=` operator for the
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.1 Subprogram Declarations <6-1>`
+    - :arm22:`6.1 Subprogram Declarations <6-1>`
 
 Expression functions
 --------------------
@@ -1134,7 +1134,7 @@ instead:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.8 Expression functions <6-8>`
+    - :arm22:`6.8 Expression functions <6-8>`
 
 
 .. _Adv_Ada_Overloading:
@@ -1405,8 +1405,8 @@ package.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.6 Overloading of Operators <6-6>`
-    - :arm:`G.1.1 Complex Types <G-1-1>`
+    - :arm22:`6.6 Overloading of Operators <6-6>`
+    - :arm22:`G.1.1 Complex Types <G-1-1>`
 
 Operator Overriding
 -------------------
@@ -1683,7 +1683,7 @@ Here, :ada:`Program_Error` is raised when :ada:`Log_And_Raise` returns to the
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.5.1 Nonreturning Subprograms <6-5-1>`
+    - :arm22:`6.5.1 Nonreturning Subprograms <6-5-1>`
 
 
 Inline subprograms
@@ -1798,7 +1798,7 @@ instances of that generic subprogram.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.3.2 Inline Expansion of Subprograms <6-3-2>`
+    - :arm22:`6.3.2 Inline Expansion of Subprograms <6-3-2>`
 
 
 .. _Adv_Ada_Null_Procedures:
@@ -1952,4 +1952,4 @@ that makes use of null procedures.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.7 Null Procedures <6-7>`
+    - :arm22:`6.7 Null Procedures <6-7>`

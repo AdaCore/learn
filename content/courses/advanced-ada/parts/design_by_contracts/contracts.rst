@@ -16,7 +16,7 @@ Default initial conditions
 
 .. admonition:: Relevant topics
 
-    - :arm:`Default Initial Conditions <7-3-3>`
+    - :arm22:`Default Initial Conditions <7-3-3>`
 
 .. todo::
 
@@ -29,7 +29,7 @@ Entry index attribute
 .. admonition:: Relevant topics
 
     - :ada:`E'Index` mentioned in
-      :arm:`Preconditions and Postconditions <6-1-1>`
+      :arm22:`Preconditions and Postconditions <6-1-1>`
 
 .. todo::
 
@@ -54,7 +54,7 @@ Predicate failure
 .. admonition:: Relevant topics
 
     - :ada:`Predicate_Failure` mentioned in
-      :arm:`Subtype Predicates <3-2-4>`
+      :arm22:`Subtype Predicates <3-2-4>`
 
 .. todo::
 
