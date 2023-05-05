@@ -83,7 +83,7 @@ ifeq ($(strip $(TEST_LAMBDA)),1)
 else
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 50)
 endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/advanced-ada/chapters/*.rst
+	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/*.rst)
 	@echo ""
 
 test_advanced_spark:
