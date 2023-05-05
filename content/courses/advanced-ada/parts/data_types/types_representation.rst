@@ -1831,8 +1831,8 @@ way to trigger these complex conversions between different representations. On
 the other hand, Ada guarantees that you never get these potentially expensive
 conversions happening unless you explicitly ask for them.
 
-Valid
------
+Valid Attribute
+---------------
 
 When receiving data from external sources, we're subjected to problems such as
 transmission errors. If not handled properly, erroneous data can lead to major
