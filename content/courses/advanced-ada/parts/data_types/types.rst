@@ -55,7 +55,7 @@ course.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.5 Scalar types <3-5>`
+    - :arm22:`3.5 Scalar types <3-5>`
 
 Ranges
 ~~~~~~
@@ -540,7 +540,7 @@ enumeration renaming, enumeration overloading and representation clauses.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.5.1 Enumeration Types <3-5-1>`
+    - :arm22:`3.5.1 Enumeration Types <3-5-1>`
 
 Enumerations as functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1177,7 +1177,7 @@ We'll see later how definite and indefinite types apply to
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.3 Objects and Named Numbers <3-3>`
+    - :arm22:`3.3 Objects and Named Numbers <3-3>`
 
 Constrained Attribute
 ~~~~~~~~~~~~~~~~~~~~~
@@ -1338,7 +1338,7 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.7.2 Operations of Discriminated Types <3-7-2>`
+    - :arm22:`3.7.2 Operations of Discriminated Types <3-7-2>`
 
 
 .. _Adv_Ada_Incomplete_Types:
@@ -1431,7 +1431,7 @@ we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.10.1 Incomplete Type Declarations <3-10-1>`
+    - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
 
 
 .. _Adv_Ada_Mutually_Dependent_Types:
@@ -1523,7 +1523,7 @@ Later on, we'll see that these code examples can be written using
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.10.1 Incomplete Type Declarations <3-10-1>`
+    - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
 
 
 .. _Adv_Ada_Type_View:
@@ -1729,7 +1729,7 @@ want to declare objects of this type.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`7.3 Private Types and Private Extensions <7-3>`
+    - :arm22:`7.3 Private Types and Private Extensions <7-3>`
 
 
 Type conversion
@@ -1760,7 +1760,7 @@ conversion, but only :ada:`A`. In a value conversion, we could use both forms.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.6 Type Conversions <4-6>`
+    - :arm22:`4.6 Type Conversions <4-6>`
 
 
 Value conversion
@@ -2733,7 +2733,7 @@ Here, :ada:`Int'(0)` indicates that the value zero is of :ada:`Int` type.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.7 Qualified Expressions <4-7>`
+    - :arm22:`4.7 Qualified Expressions <4-7>`
 
 
 Verifying subtypes
@@ -2885,8 +2885,8 @@ default values, since we haven't assigned any value to them.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.5 Scalar Types <3-5>`
-    - :arm:`3.6 Array Types <3-6>`
+    - :arm22:`3.5 Scalar Types <3-5>`
+    - :arm22:`3.6 Array Types <3-6>`
 
 
 Deferred Constants
@@ -3015,7 +3015,7 @@ declaration of the :ada:`Light` constant.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`7.4 Deferred Constants <7-4>`
+    - :arm22:`7.4 Deferred Constants <7-4>`
 
 
 .. _Adv_Ada_User_Defined_Literals:
@@ -3396,5 +3396,5 @@ when using a preprocessor or a domain-specific language.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.2.1 User-Defined Literals <4-2-1>`
+    - :arm22:`4.2.1 User-Defined Literals <4-2-1>`
 

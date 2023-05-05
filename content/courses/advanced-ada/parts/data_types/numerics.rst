@@ -24,7 +24,7 @@ and :ada:`Mod`. We also discuss operations on modular types.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.5.4 Integer Types <3-5-4>`
+    - :arm22:`3.5.4 Integer Types <3-5-4>`
 
 
 :ada:`Modulus` Attribute
@@ -638,8 +638,8 @@ In this section, we discuss various attributes related to floating-point types.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.5.8 Operations of Floating Point Types <3-5-8>`
-    - :arm:`A.5.3 Attributes of Floating Point Types <A-5-3>`
+    - :arm22:`3.5.8 Operations of Floating Point Types <3-5-8>`
+    - :arm22:`A.5.3 Attributes of Floating Point Types <A-5-3>`
 
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1290,7 +1290,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
 
     .. admonition:: In the Ada Reference Manual
 
-        - :arm:`G.2.1 Model of Floating Point Arithmetic <G-2-1>`
+        - :arm22:`G.2.1 Model of Floating Point Arithmetic <G-2-1>`
 
     Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1500,8 +1500,8 @@ fixed-point types.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.5.10 Operations of Fixed Point Types <3-5-10>`
-    - :arm:`A.5.4 Attributes of Fixed Point Types <A-5-4>`
+    - :arm22:`3.5.10 Operations of Fixed Point Types <3-5-10>`
+    - :arm22:`A.5.4 Attributes of Fixed Point Types <A-5-4>`
 
 Attributes of fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

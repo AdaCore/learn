@@ -8,8 +8,8 @@ Pragmas
 
 .. admonition:: Relevant topics
 
-    - :arm:`Pragma Restrictions and Pragma Profile <13-12>`
-    - :arm:`Dependence Restriction Identifiers <J-13>`
+    - :arm22:`Pragma Restrictions and Pragma Profile <13-12>`
+    - :arm22:`Dependence Restriction Identifiers <J-13>`
 
 .. todo::
 
@@ -21,7 +21,7 @@ Language-Defined Restrictions and Profiles
 
 .. admonition:: Relevant topics
 
-    - :arm:`Language-Defined Restrictions and Profiles <13-12-1>`
+    - :arm22:`Language-Defined Restrictions and Profiles <13-12-1>`
 
 .. todo::
 

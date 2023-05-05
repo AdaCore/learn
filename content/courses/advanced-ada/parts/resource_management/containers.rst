@@ -22,8 +22,8 @@ User-Defined Iterator Types
 
 .. admonition:: Relevant topics
 
-    - :arm:`User-Defined Iterator Types <5-5-1>`
-    - :arm:`Generalized Loop Iteration <5-5-2>`
+    - :arm22:`User-Defined Iterator Types <5-5-1>`
+    - :arm22:`Generalized Loop Iteration <5-5-2>`
     - :arm22:`Procedural Iterators <5-5-3>`
 
 .. todo::

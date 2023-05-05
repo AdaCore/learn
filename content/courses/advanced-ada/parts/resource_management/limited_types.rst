@@ -167,7 +167,7 @@ information is copied to multiple objects of the same type.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`7.5 Limited Types <7-5>`
+    - :arm22:`7.5 Limited Types <7-5>`
 
 
 Assignments
@@ -471,7 +471,7 @@ and full views can have non-matching declarations.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`7.5 Limited Types <7-5>`
+    - :arm22:`7.5 Limited Types <7-5>`
 
 
 Partial and full view of limited types
@@ -697,8 +697,8 @@ tagged types. We discuss this topic in another chapter.)
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`7.3 Private Types and Private Extensions <7-3>`
-    - :arm:`7.5 Limited Types <7-5>`
+    - :arm22:`7.3 Private Types and Private Extensions <7-3>`
+    - :arm22:`7.5 Limited Types <7-5>`
 
 
 Deriving from limited private types
@@ -1026,7 +1026,7 @@ Here, the compiler indicates that the assignment is forbidden because the
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.8 Record Types <3-8>`
+    - :arm22:`3.8 Record Types <3-8>`
 
 
 Limited types and aggregates
@@ -2147,7 +2147,7 @@ by copy is made by the compiler.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.2 Formal Parameter Modes <6-2>`
-    - :arm:`6.4.1 Parameter Associations <6-4-1>`
-    - :arm:`7.5 Limited Types <7-5>`
+    - :arm22:`6.2 Formal Parameter Modes <6-2>`
+    - :arm22:`6.4.1 Parameter Associations <6-4-1>`
+    - :arm22:`7.5 Limited Types <7-5>`
 

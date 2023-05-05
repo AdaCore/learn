@@ -159,7 +159,7 @@ This is the test application in this case:
 
 .. admonition:: Relevant topics
 
-    - :arm:`Subunits of Compilation Units <10-1-3>`
+    - :arm22:`Subunits of Compilation Units <10-1-3>`
 
 .. todo::
 

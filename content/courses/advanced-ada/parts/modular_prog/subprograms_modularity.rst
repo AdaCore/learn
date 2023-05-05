@@ -41,8 +41,8 @@ this procedure cannot be referenced in the :ada:`Show_Test` procedure.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
-    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
+    - :arm22:`10.1.1 Compilation Units - Library Units <10-1-1>`
+    - :arm22:`10.1.2 Context Clauses - With Clauses <10-1-2>`
 
 
 Private subprograms of a package

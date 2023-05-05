@@ -8,7 +8,7 @@ Linked lists
 
 .. admonition:: Relevant topics
 
-    - :arm:`Containers.Doubly_Linked_Lists <A-18-3>`
+    - :arm22:`Containers.Doubly_Linked_Lists <A-18-3>`
 
 .. todo::
 
@@ -19,7 +19,7 @@ Trees
 
 .. admonition:: Relevant topics
 
-    - :arm:`Containers.Multiway_Trees <A-18-25>`
+    - :arm22:`Containers.Multiway_Trees <A-18-25>`
 
 .. todo::
 
@@ -30,11 +30,11 @@ Queue containers
 
 .. admonition:: Relevant topics
 
-    - :arm:`Containers.Synchronized_Queue_Interfaces <A-18-27>`
-    - :arm:`Containers.Unbounded_Synchronized_Queues <A-18-28>`
-    - :arm:`Containers.Bounded_Synchronized_Queues <A-18-29>`
-    - :arm:`Containers.Unbounded_Priority_Queues <A-18-30>`
-    - :arm:`Containers.Bounded_Priority_Queues <A-18-31>`
+    - :arm22:`Containers.Synchronized_Queue_Interfaces <A-18-27>`
+    - :arm22:`Containers.Unbounded_Synchronized_Queues <A-18-28>`
+    - :arm22:`Containers.Bounded_Synchronized_Queues <A-18-29>`
+    - :arm22:`Containers.Unbounded_Priority_Queues <A-18-30>`
+    - :arm22:`Containers.Bounded_Priority_Queues <A-18-31>`
 
 .. todo::
 
@@ -58,7 +58,7 @@ Holder container
 
 .. admonition:: Relevant topics
 
-    - :arm:`Containers.Indefinite_Holders <A-18-18>`
+    - :arm22:`Containers.Indefinite_Holders <A-18-18>`
 
 .. todo::
 

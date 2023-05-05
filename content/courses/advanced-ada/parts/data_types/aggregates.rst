@@ -153,7 +153,7 @@ defining custom container aggregates for any record type.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.3.5 Container Aggregates <4-3-5>`
+    - :arm22:`4.3.5 Container Aggregates <4-3-5>`
 
 
 .. _Adv_Ada_Record_Aggregates:
@@ -267,7 +267,7 @@ Here, we assign 5 to both :ada:`X` and :ada:`Y`.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.3.1 Record Aggregates <4-3-1>`
+    - :arm22:`4.3.1 Record Aggregates <4-3-1>`
 
 
 :ada:`<>`
@@ -698,7 +698,7 @@ subprograms for it. For example, we could specify an addition operation for it:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.3.1 Record Aggregates <4-3-1>`
+    - :arm22:`4.3.1 Record Aggregates <4-3-1>`
 
 Simple Prototyping
 ~~~~~~~~~~~~~~~~~~
@@ -1207,7 +1207,7 @@ this section just presents some details about this topic.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.3.3 Array Aggregates <4-3-3>`
+    - :arm22:`4.3.3 Array Aggregates <4-3-3>`
 
 Positional and named array aggregates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2076,7 +2076,7 @@ ancestor type's components.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.3.2 Extension Aggregates <4-3-2>`
+    - :arm22:`4.3.2 Extension Aggregates <4-3-2>`
 
 Assignments to objects of derived types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

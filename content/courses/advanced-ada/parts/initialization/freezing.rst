@@ -8,7 +8,7 @@ Freezing rules
 
 .. admonition:: Relevant topics
 
-    - :arm:`Freezing rules <13-14>`
+    - :arm22:`Freezing rules <13-14>`
 
 .. todo::
 

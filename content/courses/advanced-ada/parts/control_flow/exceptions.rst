@@ -79,7 +79,7 @@ roughly corresponds to this:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+    - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
 
 
 Assertion policies
@@ -228,7 +228,7 @@ the call to :ada:`Assert` is not ignored.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
+    - :arm22:`11.4.2 Pragmas Assert and Assertion_Policy <11-4-2>`
 
 
 ..
@@ -842,7 +842,7 @@ checks fails and raises a :ada:`Storage_Error` exception.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`11.5 Suppressing Checks <11-5>`
+    - :arm22:`11.5 Suppressing Checks <11-5>`
 
 
 ``Ada.Exceptions`` package
@@ -886,7 +886,7 @@ that raises the exception, as in the following code:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`11.4.1 The Package Exceptions <11-4-1>`
+    - :arm22:`11.4.1 The Package Exceptions <11-4-1>`
 
 
 Retrieving exception information
@@ -1357,7 +1357,7 @@ package.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`8.5.2 Exception Renaming Declarations <8-5-2>`
+    - :arm22:`8.5.2 Exception Renaming Declarations <8-5-2>`
 
 
 Out and Uninitialized
@@ -1530,7 +1530,7 @@ In the case of direct assignments to global variables, the behavior in the
 presence of exceptions is somewhat different. For predefined exceptions, most
 notably :ada:`Constraint_Error`, the optimization permissions allow some
 flexibility in whether a global variable is or is not updated when an exception
-occurs (see :arm:`Ada RM 11.6 <11-6>`). For
+occurs (see :arm22:`Ada RM 11.6 <11-6>`). For
 instance, the following code makes an incorrect assumption:
 
 .. code-block:: none
@@ -1545,7 +1545,7 @@ program are incorrect code which should be fixed.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`11.6 Exceptions and Optimization <11-6>`
+    - :arm22:`11.6 Exceptions and Optimization <11-6>`
 
 
 Suppressing checks
@@ -1768,4 +1768,4 @@ the call to this function, which raises a :ada:`Constraint_Error` exception.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`11.5 Suppressing Checks <11-5>`
+    - :arm22:`11.5 Suppressing Checks <11-5>`

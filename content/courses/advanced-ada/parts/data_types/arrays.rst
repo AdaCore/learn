@@ -56,7 +56,7 @@ its whole lifetime.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.6 Array Types <3-6>`
+    - :arm22:`3.6 Array Types <3-6>`
 
 
 Unconstrained Arrays vs. Vectors
@@ -119,8 +119,8 @@ once for each object.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.6 Array Types <3-6>`
-    - :arm:`A.18.2 The Generic Package Containers.Vectors <A-18-2>`
+    - :arm22:`3.6 Array Types <3-6>`
+    - :arm22:`A.18.2 The Generic Package Containers.Vectors <A-18-2>`
 
 
 Multidimensional Arrays
@@ -326,7 +326,7 @@ to highlight the following aspects:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.6 Array Types <3-6>`
+    - :arm22:`3.6 Array Types <3-6>`
 
 
 Unconstrained Multidimensional Arrays

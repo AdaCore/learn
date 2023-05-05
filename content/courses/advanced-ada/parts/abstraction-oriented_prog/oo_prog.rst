@@ -18,7 +18,7 @@ Overriding indicators
 
     - **Briefly** discuss :ada:`overriding` and :ada:`not overriding` mentioned
       in
-      :arm:`Overriding Indicators <8-3-1>`
+      :arm22:`Overriding Indicators <8-3-1>`
     - Mention that :ada:`not overriding` is not recommended.
 
 .. todo::
@@ -790,7 +790,7 @@ User-defined indexing
 
 .. admonition:: Relevant topics
 
-   - :arm:`User-Defined Indexing <4-1-6>`
+   - :arm22:`User-Defined Indexing <4-1-6>`
 
 .. todo::
 

@@ -1318,7 +1318,7 @@ Formal incomplete type
 .. admonition:: Relevant topics
 
     - Formal incomplete type mentioned in
-      :arm:`Formal Types <12-5>`
+      :arm22:`Formal Types <12-5>`
 
 .. todo::
 
@@ -1331,7 +1331,7 @@ Default subtype mark
 .. admonition:: Relevant topics
 
     - Default subtype mark (:ada:`or use`) mentioned in
-      :arm:`Formal Types <12-5>`
+      :arm22:`Formal Types <12-5>`
 
 .. todo::
 
@@ -1343,7 +1343,7 @@ Formal private and derived types
 
 .. admonition:: Relevant topics
 
-    - :arm:`Formal Private and Derived Types <12-5-1>`
+    - :arm22:`Formal Private and Derived Types <12-5-1>`
 
 .. todo::
 
@@ -2832,7 +2832,7 @@ Generic Renaming
 
 .. admonition:: Relevant topics
 
-    - :arm:`Generic Renaming Declarations <8-5-5>`
+    - :arm22:`Generic Renaming Declarations <8-5-5>`
 
 .. todo::
 

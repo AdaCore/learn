@@ -126,7 +126,7 @@ best choice, as it covers all possible use-cases.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`3.6.3 String Types <3-6-3>`
+    - :arm22:`3.6.3 String Types <3-6-3>`
 
 Text I/O
 ~~~~~~~~
@@ -192,11 +192,11 @@ and :ada:`Float_IO`:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`A.10 Text Input-Output <A-10>`
-    - :arm:`A.10.1 The Package Text_IO <A-10-1>`
-    - :arm:`A.10.8 Input-Output for Integer Types <A-10-8>`
-    - :arm:`A.10.9 Input-Output for Real Types <A-10-9>`
-    - :arm:`A.11 Wide Text Input-Output and Wide Wide Text Input-Output <A-11>`
+    - :arm22:`A.10 Text Input-Output <A-10>`
+    - :arm22:`A.10.1 The Package Text_IO <A-10-1>`
+    - :arm22:`A.10.8 Input-Output for Integer Types <A-10-8>`
+    - :arm22:`A.10.9 Input-Output for Real Types <A-10-9>`
+    - :arm22:`A.11 Wide Text Input-Output and Wide Wide Text Input-Output <A-11>`
 
 
 Wide and Wide-Wide String Handling
@@ -275,9 +275,9 @@ attribute :ref:`later on <Adv_Ada_Wider_Versions_Image_Attribute>`.)
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`A.4.6 String-Handling Sets and Mappings <A-4-6>`
-    - :arm:`A.4.7 Wide_String Handling <A-4-7>`
-    - :arm:`A.4.8 Wide_Wide_String Handling <A-4-8>`
+    - :arm22:`A.4.6 String-Handling Sets and Mappings <A-4-6>`
+    - :arm22:`A.4.7 Wide_String Handling <A-4-7>`
+    - :arm22:`A.4.8 Wide_Wide_String Handling <A-4-8>`
 
 
 Bounded and Unbounded Wide and Wide-Wide Strings
@@ -349,9 +349,9 @@ All the operations we're using here are similar to the ones for
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`A.4.7 Wide_String Handling <A-4-7>`
-    - :arm:`A.4.8 Wide_Wide_String Handling <A-4-8>`
-    - :arm:`A.11 Wide Text Input-Output and Wide Wide Text Input-Output <A-11>`
+    - :arm22:`A.4.7 Wide_String Handling <A-4-7>`
+    - :arm22:`A.4.8 Wide_Wide_String Handling <A-4-8>`
+    - :arm22:`A.11 Wide Text Input-Output and Wide Wide Text Input-Output <A-11>`
 
 
 String Encoding
@@ -366,7 +366,7 @@ and other requirements.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`A.4.11 String Encoding <A-4-11>`
+    - :arm22:`A.4.11 String Encoding <A-4-11>`
 
 UTF-8 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
