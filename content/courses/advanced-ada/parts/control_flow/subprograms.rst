@@ -995,7 +995,7 @@ however, we can simplify the implementation by just writing
 :ada:`is (I = 0);`. This is the complete code of :ada:`Is_Zero` using an
 expression function:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Simple_Expression_Function_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_1
 
     package Expr_Func is
 
@@ -1009,7 +1009,7 @@ An expression function has the same effect as the usual version using a block.
 In fact, the code above is similar to this implementation of the :ada:`Is_Zero`
 function using a block:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Simple_Expression_Function_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_2
 
     package Expr_Func is
 
@@ -1041,7 +1041,7 @@ the function. Note that this is only possible for expression functions; you
 cannot have a function implemented with a block in a package specification. For
 example, the following code is wrong and won't compile:
 
-.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Simple_Expression_Function_3
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_3
     :class: ada-nocheck
 
     !expr_func.ads
@@ -1060,7 +1060,7 @@ an expression function. For example, we can rewrite the first version of the
 :ada:`Expr_Func` package and move the expression function to the body of the
 package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Simple_Expression_Function_4
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_4
 
     package Expr_Func is
 
@@ -1083,7 +1083,7 @@ package specification. For example, the following code declares the
 while its implementation is an expression function in the private part of the
 package specification:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Private_Expression_Function_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Private_Expression_Function_1
 
     package My_Data is
 
@@ -1107,7 +1107,7 @@ package specification:
 Naturally, we could write the function implementation in the package body
 instead:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Private_Expression_Function_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Private_Expression_Function_2
 
     package My_Data is
 
