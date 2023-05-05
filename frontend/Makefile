@@ -165,7 +165,8 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
 	@echo ""
 
-test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
+test_content: test_ada_intro test_advanced_ada \
+	test_spark_intro test_intro_to_embedded_sys_prog \
 	test_whats_new_in_ada_2022 \
 	test_spark_for_the_misra_c_developer \
 	test_ada_for_the_cpp_java_developer \
@@ -177,7 +178,7 @@ test_content: test_ada_intro test_spark_intro test_intro_to_embedded_sys_prog \
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
 
-test_hidden_content: test_advanced_ada test_advanced_spark \
+test_hidden_content: test_advanced_spark \
 	test_training_fundamentals
 	@echo ""
 
