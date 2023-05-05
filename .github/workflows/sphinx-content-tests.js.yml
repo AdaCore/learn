@@ -61,7 +61,7 @@ jobs:
     - name: Run SPHINX engine tests
       run: make SPHINXOPTS="-W" test_engine
     - name: Build HTML content
-      run: make cleanall webpack-production sphinx-production
+      run: make HIDDEN_BOOKS="" cleanall webpack-production sphinx-production
     - name: Archive HTML content in artifact
       uses: actions/upload-artifact@v2
       with:
