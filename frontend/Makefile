@@ -85,7 +85,7 @@ else
 endif
 ifeq ($(HIDDEN_BOOKS),)
 # Test all code examples
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/*.rst)
+	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/**/*.rst)
 else
 # Test only the code examples from visible parts and chapters
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT)                                                     \
