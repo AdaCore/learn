@@ -1745,7 +1745,7 @@ counter.
 Let's revisit an example from the previous section and use the procedures
 mentioned above:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Universal_Text_Buffer.Put_Image_Custom_Numerics_Extended
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Universal_Text_Buffer.Put_Image_Custom_Numerics
 
     pragma Ada_2022;
 
