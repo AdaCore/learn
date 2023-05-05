@@ -30,3 +30,20 @@ Elaboration control
 .. todo::
 
     Complete section!
+
+
+.. _Adv_Ada_Pure:
+
+Pure program and library units
+------------------------------
+
+.. admonition:: Relevant topics
+
+    - :arm22:`C.4 Preelaboration Requirements <C-4>`
+    - :arm22:`10.2.1 Elaboration Control <10-2-1>`
+    - Add link to :ref:`Adv_Ada_Preelaboration` section
+
+.. todo::
+
+    Complete section!
+
