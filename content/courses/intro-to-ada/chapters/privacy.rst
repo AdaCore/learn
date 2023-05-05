@@ -1,3 +1,5 @@
+.. _Intro_Ada_Course_Privacy:
+
 Privacy
 =======
 

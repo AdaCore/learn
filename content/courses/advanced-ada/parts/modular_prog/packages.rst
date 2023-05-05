@@ -184,7 +184,7 @@ proceed with the discussion, let's recapitulate some important ideas that we've
 seen earlier.
 
 In the
-:doc:`Introduction to Ada course <learn:courses/intro-to-ada/chapters/privacy>`,
+:ref:`Introduction to Ada course <Intro_Ada_Course_Privacy>`,
 we've seen that encapsulation plays an important role in modular programming.
 By using the private part of a package specification, we can disclose some
 information, but, at the same time, prevent that this information gets
