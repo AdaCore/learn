@@ -153,9 +153,9 @@ Advanced Journey With Ada: A Flight In Progress
     :maxdepth: 4
     :caption: Contents:
 
-    chapters/data_types
-    chapters/control_flow
-    chapters/modular_prog
+    parts/data_types/index
+    parts/control_flow/index
+    parts/modular_prog/index
 
 .. only:: no_hidden_books
 
@@ -163,10 +163,10 @@ Advanced Journey With Ada: A Flight In Progress
         :maxdepth: 4
         :caption: Contents:
 
-        chapters/resource_management
-        chapters/abstraction_oriented_prog
-        chapters/design_by_contracts
-        chapters/initialization
-        chapters/multithreading
-        chapters/interfacing_external
-        chapters/appendices
+        parts/resource_management/index
+        parts/abstraction-oriented_prog/index
+        parts/design_by_contracts/index
+        parts/initialization/index
+        parts/multithreading/index
+        parts/interfacing_external/index
+        parts/appendices/index
