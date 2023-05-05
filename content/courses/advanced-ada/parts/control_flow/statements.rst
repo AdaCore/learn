@@ -33,7 +33,7 @@ We can use labels to identify statements in the code. They have the following
 format: :ada:`<<Some_Label>>`. We write them right before the statement we want
 to apply it to. Let's see an example of labels with simple statements:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Simple_Labels
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Labels.Simple_Labels
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -66,7 +66,7 @@ pretty much uncommon, we could potentially use labels to indicate important
 statements in the code.) Let's see an example where we use a :ada:`goto label;`
 statement to *jump* to a specific label:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Label_Goto
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Labels.Label_Goto
 
     procedure Show_Cleanup is
        pragma Warnings (Off, "always false");
@@ -91,7 +91,7 @@ Use-case: :ada:`Continue`
 Another use-case is that of a :ada:`Continue` label in a loop. Consider a loop
 where we want to skip further processing depending on a condition:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Label_Continue_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Labels.Label_Continue_1
 
     procedure Show_Continue is
        function Is_Further_Processing_Needed
@@ -124,7 +124,7 @@ check whether further processing is needed or not. If it's needed, we continue
 processing in the :ada:`if` statement. We could simplify this code by just using
 a :ada:`Continue` label at the end of the loop and a :ada:`goto` statement:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Label_Continue_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Labels.Label_Continue_2
 
     procedure Show_Continue is
        function Is_Further_Processing_Needed
@@ -191,7 +191,7 @@ Labels and compound statements
 We can use labels with compound statements as well. For example, we can label
 a :ada:`for` loop:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Loop_Label
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Labels.Loop_Label
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -221,7 +221,7 @@ a :ada:`for` loop:
     We could rewrite the previous code example using a loop statement
     identifier:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Loop_Statement_Identifier
+    .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Labels.Loop_Statement_Identifier
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -274,7 +274,7 @@ having a name for a loop allows us to indicate which loop we're exiting from:
 
 Let's see a complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Exit_Named_Loop
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Exit_Loop_Statement.Exit_Named_Loop
 
     with Ada.Text_IO;            use Ada.Text_IO;
     with Ada.Containers.Vectors;
@@ -308,7 +308,7 @@ Let's see a complete example:
 Naming a loop is particularly useful when we have nested loops and we want to
 exit directly from the inner loop:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Inner_Loop_Exit
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Exit_Loop_Statement.Inner_Loop_Exit
 
     procedure Show_Inner_Loop_Exit is
        pragma Warnings (Off);
@@ -343,7 +343,7 @@ In the Introduction to Ada course, we talked about
 and :ref:`case statements <Intro_Ada_Case_Statement>`. This is a very simple
 code example with these statements:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.If_Case_Loop_Statements
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.If_Case_Loop_Statements.Example
 
     procedure Show_If_Case_Loop_Statements is
        pragma Warnings (Off);
@@ -408,7 +408,7 @@ the following code example:
 
     Add link to Adv_Ada_Parenthesized_Expressions when it's available
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Case_Statement_Expression
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.If_Case_Loop_Statements.Case_Statement_Expression
     :class: ada-expect-compile-error
 
     package Scales is
@@ -483,7 +483,7 @@ its :ref:`base type <Adv_Ada_Base_Attribute>` :ada:`Scale'Base'Range`.
     In C, the switch-case statement requires parentheses for the choice
     expression:
 
-    .. code:: c manual_chop run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Case_Statement_C
+    .. code:: c manual_chop run_button project=Courses.Advanced_Ada.Control_Flow.Statements.If_Case_Loop_Statements.Case_Statement_C
 
         !main.c
 
@@ -516,7 +516,7 @@ We've introduced block statements back in the
 :ref:`Introduction to Ada course <Intro_Ada_Block_Statement>`.
 They have this simple form:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Simple_Block_Statement
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Block_Statements.Simple_Block_Statement
 
     procedure Show_Block_Statement is
        pragma Warnings (Off);
@@ -535,7 +535,7 @@ We can use an identifier when writing a block statement. (This is similar to
 loop statement identifiers that we discussed in the previous section.) In this
 example, we implement a block called :ada:`Simple_Block`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Block_Statement_Identifier
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Block_Statements.Block_Statement_Identifier
 
     procedure Show_Block_Statement is
        pragma Warnings (Off);
@@ -581,7 +581,7 @@ Extended return statement
 A common idiom in Ada is to build up a function result in a local
 object, and then return that object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Simple_Return
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Extended_Return_Statements.Simple_Return
 
     procedure Show_Return is
 
@@ -607,7 +607,7 @@ Since Ada 2005, a notation called the extended return statement is available:
 this allows you to declare the result object and return it as part of one
 statement. It looks like this:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Extended_Return
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Extended_Return_Statements.Extended_Return
 
     procedure Show_Extended_Return is
 
@@ -652,7 +652,7 @@ specifically to support
 :ref:`limited constructor functions <Adv_Ada_Extended_Return_Statements_Limited>`,
 it comes in handy whenever you want a local name for the function result:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Limited_Types.Extended_Return_Other_Usages
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.Extended_Return_Statements.Extended_Return_Other_Usages
 
     with Ada.Text_IO; use Ada.Text_IO;
 

@@ -23,7 +23,7 @@ definite form.
 Let's create a generic package using the definite form of the formal nonlimited
 private type and map an actual data type to it:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Definite_Formal_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Mapping_Definite_Indefinite_Subtypes.Definite_Formal_Type
 
     generic
        type T is private;
@@ -46,7 +46,7 @@ private type and map an actual data type to it:
 We can map any nonlimited, definite type to the type :ada:`T` above. However,
 we cannot map indefinite types to it:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Definite_Formal_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Mapping_Definite_Indefinite_Subtypes.Definite_Formal_Type
     :class: ada-expect-compile-error
 
     with Definite_Formal_Type_Example;
@@ -76,7 +76,7 @@ When we try to compile this example, we get a compilation error at the
 declaration of the :ada:`Map_Indefinite_Type` package. We could solve this
 problem by changing type :ada:`T` to a formal indefinite type, for example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Indefinite_Formal_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Mapping_Definite_Indefinite_Subtypes.Indefinite_Formal_Type
 
     generic
        type T (<>) is private;
@@ -111,7 +111,7 @@ Now, we don't get a compilation error because type :ada:`T` allows us to map an
 indefinite type. Note that we could still map a definite type to type :ada:`T`.
 For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Indefinite_Formal_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Mapping_Definite_Indefinite_Subtypes.Indefinite_Formal_Type
 
     with Indefinite_Formal_Type_Example;
 
@@ -153,7 +153,7 @@ Note that, instead of just using a formal indefinite nonlimited private type,
 we could be more specific about the discriminants that we use for type
 :ada:`T`. Consider the following example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Type_Discriminants
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Mapping_Definite_Indefinite_Subtypes.Formal_Type_Discriminants
 
     generic
        type T (B : Boolean) is private;
@@ -197,7 +197,7 @@ Here, we replaced :ada:`(<>)` by :ada:`(B : Boolean)` in the declaration of
 type :ada:`T`. This means that, now, we can only map indefinite types with that
 specific list of discriminants. For example, we cannot map the following types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Type_Discriminants
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Mapping_Definite_Indefinite_Subtypes.Formal_Type_Discriminants
     :class: ada-expect-compile-error
 
     with Formal_Type_Discriminants_Example;
@@ -238,7 +238,7 @@ Formal incomplete types
 
 A formal incomplete type has the following syntax:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Simple_Formal_Incomplete_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Incomplete_Types.Simple_Formal_Incomplete_Type
 
     generic
       type Formal_Incomplete;
@@ -249,7 +249,7 @@ A formal incomplete type has the following syntax:
 We can use them to map incomplete types when instantiating generic packages or
 subprograms. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Simple_Formal_Incomplete_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Incomplete_Types.Simple_Formal_Incomplete_Type
 
     with Using_Formal_Incomplete;
 
@@ -281,7 +281,7 @@ A formal incomplete type can also be tagged:
 
 Let's see an example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Incomplete_Tagged_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Incomplete_Types.Formal_Incomplete_Tagged_Types
 
     generic
       type Incomplete_Tagged is tagged;
@@ -330,7 +330,7 @@ reversing algorithm that we discussed in the
 :ref:`chapter about generics <Intro_Ada_Generic_Reverse_Colors_Example>`
 from the introductory course.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Reverse_Color
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Reverse_Color
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -399,7 +399,7 @@ procedures for the same array.
 In order to achieve this, we start by first specifying a generic package
 that contains the generic array type definition:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Simple_Generic_Array_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Simple_Generic_Array_Pkg
 
     generic
        type T is private;
@@ -431,7 +431,7 @@ This will allow us to reuse definitions from the generic package.
 This is the updated version of the our test application for the reversing
 algorithm:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Simple_Generic_Array_Pkg
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Simple_Generic_Array_Pkg
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -511,7 +511,7 @@ use of :ada:`others => <>` to indicate that the generic declaration takes
 the definitions from the package argument provided in the generic
 instantiation:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Simple_Generic_Array_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Simple_Generic_Array_Pkg
 
     with Simple_Generic_Array_Pkg;
 
@@ -532,7 +532,7 @@ the :ada:`Color_Pkg` package:
 A complete parametrization, in constrast, contains the definition of all
 types in the generic declaration. For example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Simple_Generic_Array_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Simple_Generic_Array_Pkg
 
     with Simple_Generic_Array_Pkg;
 
@@ -551,7 +551,7 @@ types in the generic declaration. For example:
 Another approach is to take all definitions from the formal package
 parameter:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Simple_Generic_Array_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Simple_Generic_Array_Pkg
 
     with Simple_Generic_Array_Pkg;
 
@@ -577,7 +577,7 @@ separate package, but left the generic procedure (:ada:`Reverse_Array`) in
 the test application. We could also move the generic procedure into the
 generic package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Array_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Generic_Array_Pkg
 
     generic
        type T is private;
@@ -610,7 +610,7 @@ array type (:ada:`Array_T`) and the procedure (:ada:`Reverse_Array`):
 
 This is the generic package body:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Array_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Generic_Array_Pkg
 
     package body Generic_Array_Pkg is
        procedure Reverse_Array (X : in out Array_T) is
@@ -661,7 +661,7 @@ later section.
 This is a version of the test application that makes use of the generic
 :ada:`Perform_Test` procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Array_Pkg
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Generic_Array_Pkg
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -778,7 +778,7 @@ First, let us define the new :ada:`Generic_Array_Bundle` package, which
 references the :ada:`Generic_Array_Pkg` package and the two formal elements
 (:ada:`S` and :ada:`Image`) mentioned previously:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Array_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Generic_Array_Pkg
 
     with Generic_Array_Pkg;
 
@@ -793,7 +793,7 @@ references the :ada:`Generic_Array_Pkg` package and the two formal elements
 
 Then, we update the definition of :ada:`Perform_Test`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Array_Pkg
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Generic_Array_Pkg
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -877,7 +877,7 @@ is an example of a signature package.
 
 In this simple example, we define the signature package :ada:`Sig_Pkg`:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Sig_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Sig_Pkg
 
     generic
        type T is private;
@@ -891,7 +891,7 @@ becomes useful when used as a formal package in other generic declarations.
 For example, let's use this signature package for the generic procedure
 :ada:`Show` of a package :ada:`P`:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Sig_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Sig_Pkg
 
     with Sig_Pkg;
 
@@ -912,7 +912,7 @@ For example, let's use this signature package for the generic procedure
 
 Finally, we can use this package in an application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Sig_Pkg
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Sig_Pkg
 
     with Sig_Pkg;
     with P;
@@ -930,7 +930,7 @@ Finally, we can use this package in an application:
 
 We can also use formal incomplete types for signature packages. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Signature_Package_Formal_Incomplete_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Signature_Package_Formal_Incomplete_Type
 
     generic
       type Incomplete;
@@ -944,7 +944,7 @@ We can also use formal incomplete types for signature packages. For example:
 
 This allows us to map other formal incomplete types, for example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Signature_Package_Formal_Incomplete_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Signature_Package_Formal_Incomplete_Type
 
     with Formal_Incomplete_Type_Example;
 
@@ -991,7 +991,7 @@ While the generic implementation offers both variants, developers can
 select the version that is more appropriate for their system during
 instantiation.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Object
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Objects.Formal_Object
 
     with Ada.Text_IO;
     use  Ada.Text_IO;
@@ -1047,7 +1047,7 @@ The :ada:`Data_Elements` package describes the data fields of the data
 container. It also includes an :ada:`Image` function that returns a string
 based on the specified field.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.In_Out_Formal_Object
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Objects.In_Out_Formal_Object
 
     with Ada.Calendar; use Ada.Calendar;
 
@@ -1073,7 +1073,7 @@ based on the specified field.
 
 This is the corresponding package body:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.In_Out_Formal_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Objects.In_Out_Formal_Object
 
     with Ada.Calendar.Formatting;
     use  Ada.Calendar.Formatting;
@@ -1120,7 +1120,7 @@ vector. It includes the generic procedure :ada:`Display` that exhibits the
 information from the data container based on the fields specified by the
 developer at the procedure instantiation.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.In_Out_Formal_Object
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Objects.In_Out_Formal_Object
 
     with Ada.Containers;
     with Ada.Containers.Vectors;
@@ -1178,7 +1178,7 @@ used in all calls to an instance of the :ada:`Display` procedure.
 
 This is the corresponding body of the :ada:`Data` package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.In_Out_Formal_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Objects.In_Out_Formal_Object
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1212,7 +1212,7 @@ This is the corresponding body of the :ada:`Data` package:
 Finally, we implement the :ada:`Test_Data_Container` procedure, which
 makes use of the data container:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.In_Out_Formal_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Objects.In_Out_Formal_Object
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1364,7 +1364,7 @@ back and forth between the types :ada:`T` and :ada:`Integer`. In addition,
 we might want to convert from and to other types (e.g., :ada:`Float`). To
 implement this, we can define the following generic interface:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Gen_Interface
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Gen_Interface
 
     package Gen_Interface is
 
@@ -1390,7 +1390,7 @@ We then proceed to declare packages for converting between :ada:`Integer`
 and :ada:`Float` types and the interface type. Also, we declare an actual
 tagged type that combines these conversion subprograms into a single type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Gen_Interface
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Gen_Interface
 
     with Gen_Interface;
 
@@ -1451,7 +1451,7 @@ the complex data.
 This is just an example on how we could implement these :ada:`Set` and
 :ada:`Get` subprograms:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Gen_Interface
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Gen_Interface
 
     package body My_Type_Pkg is
 
@@ -1486,7 +1486,7 @@ This is just an example on how we could implement these :ada:`Set` and
 As expected, declaring and using variable of :ada:`My_Type` is
 straightforward:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Gen_Interface
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Gen_Interface
 
     with My_Type_Pkg; use My_Type_Pkg;
 
@@ -1508,7 +1508,7 @@ elements that access types :ada:`T` or :ada:`T2`. Also, we may process
 these arrays with an operation :ada:`Op` using the API of the :ada:`TI`
 interface.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Array
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Array
 
     package TI_Pkg is
 
@@ -1563,7 +1563,7 @@ interface.
 This is a test application that declares an array :ada:`A` of the
 interface type :ada:`TI` and calls :ada:`Op` for :ada:`A`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Array
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Array
 
     with TI_Pkg; use TI_Pkg;
     with T_Pkg;  use T_Pkg;
@@ -1616,7 +1616,7 @@ calculates the average of an array containing elements of a
 *convertible type* (i.e. any type derived from the :ada:`Float_Cnvt_Type`
 interface).
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Interface_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Float_Interface_Pkg
 
     package Float_Interface_Pkg is
 
@@ -1644,7 +1644,7 @@ interface).
 This is the corresponding package body containing the implementation of
 the generic :ada:`Average` function:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Interface_Pkg
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Float_Interface_Pkg
 
     package body Float_Interface_Pkg.Ops is
 
@@ -1667,7 +1667,7 @@ In the :ada:`App_Data` package, we declare two types derived from
 :ada:`Float_Cnvt_Type`: :ada:`T` and :ada:`T2`. We also declare the
 corresponding :ada:`To_Float` functions.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Interface_Pkg
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Float_Interface_Pkg
 
     with Float_Interface_Pkg; use Float_Interface_Pkg;
 
@@ -1703,7 +1703,7 @@ corresponding :ada:`To_Float` functions.
 
 This is the corresponding package body:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Interface_Pkg
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Float_Interface_Pkg
 
     package body App_Data is
 
@@ -1729,7 +1729,7 @@ Finally, this is a test application that declares an array of
 *convertible* types and calls the :ada:`Average` function to calculate
 the average of all elements.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Interface_Pkg
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Float_Interface_Pkg
 
     with App_Data;                use App_Data;
     with Float_Interface_Pkg.Ops;
@@ -1791,7 +1791,7 @@ we've just seen above, we also have these approaches:
 
 Let's briefly recapitulate these approaches:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Approaches
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Approaches
 
     package Interface_Approaches is
 
@@ -1854,7 +1854,7 @@ Formal subprograms, combined with a formal type, can be used to define
 an implicit interface. Let's look at the implementation of a generic hash
 table:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Using_Formal_Function
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Using_Formal_Function
 
     with Ada.Containers; use Ada.Containers;
 
@@ -1884,7 +1884,7 @@ requiring the use of tagged types in the package instantiation.
 
 This is an example of a package instantiating the generic hash table:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Using_Formal_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Using_Formal_Function
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Strings.Hash;
@@ -1958,7 +1958,7 @@ represent an interface.
 Let's look at the implementation of a generic hash table using a signature
 package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Using_Signature_Package
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Using_Signature_Package
 
     with Ada.Containers; use Ada.Containers;
 
@@ -1988,7 +1988,7 @@ packages instead of one.
 This is an example of a package instantiating a signature package and the
 generic hash table:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Using_Signature_Package
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Using_Signature_Package
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Strings.Hash;
@@ -2066,7 +2066,7 @@ use the previous approaches to implement interfaces.
 Let's look at the implementation of a generic hash table using a formal
 interface:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Using_Tagged_Types
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Using_Tagged_Types
 
     with Ada.Containers; use Ada.Containers;
 
@@ -2087,7 +2087,7 @@ interface:
 This is an example of a package instantiating the generic hash table
 using a tagged type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Using_Tagged_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Using_Tagged_Types
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Strings.Hash;
@@ -2123,7 +2123,7 @@ have to declare a derived type and override the :ada:`Hash` function. This
 is how we may create the :ada:`My_Type_Alt_Hash_Tables` package using the
 alternative hashing function, as we did in the previous approaches:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Interface_Using_Tagged_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Interface_Using_Tagged_Types
 
     with Ada.Containers;   use  Ada.Containers;
     with Ada.Strings.Hash;
@@ -2163,7 +2163,7 @@ we can reuse the previous source-code example with minimal adaptations.
 When adapting the :ada:`Gen_Interface` package, we just need to make use
 of the :ada:`synchronized` keyword:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Synchronized_Interfaces
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Formal_Synchronized_Interfaces
 
     package Gen_Sync_Interface is
 
@@ -2191,7 +2191,7 @@ as a protected type and adapt the subprogram and component declarations.
 Note that we could have used a task type instead. This is the adapted
 package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Synchronized_Interfaces
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Formal_Synchronized_Interfaces
 
     with Gen_Sync_Interface;
 
@@ -2230,7 +2230,7 @@ package:
 In the package body, we just need to adapt the access to components in the
 subprograms:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Synchronized_Interfaces
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Formal_Synchronized_Interfaces
 
     package body My_Sync_Type_Pkg is
 
@@ -2262,7 +2262,7 @@ subprograms:
 
 Finally, the main application doesn't require adaptations:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Synchronized_Interfaces
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Formal_Synchronized_Interfaces
 
     with My_Sync_Type_Pkg; use My_Sync_Type_Pkg;
 
@@ -2306,7 +2306,7 @@ calculations might lead to results outside this range, we use the
 
 This is the package specification:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Float
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Float
 
     generic
        type F is digits <>;
@@ -2316,7 +2316,7 @@ This is the package specification:
 
 This is the package body:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Float
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Float
 
     package body Gen_Float_Ops is
 
@@ -2333,7 +2333,7 @@ This is the package body:
 
 Finally, we create a test application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Float
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Float
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Gen_Float_Ops;
@@ -2385,7 +2385,7 @@ the actual addition.
 
 This is the package specification:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Types
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Float_Types
 
     package Float_Types is
 
@@ -2396,7 +2396,7 @@ This is the package specification:
 
 This is the corresponding package body:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Float_Types
 
     package body Float_Types is
 
@@ -2423,7 +2423,7 @@ This is the corresponding package body:
 Next, we create a package containing a procedure that accumulates
 floating-point values. This is the package specification:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Types
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Float_Types
 
     generic
        type F is digits <>;
@@ -2440,7 +2440,7 @@ in the specification, the corresponding addition operator for type
 
 This is the package body:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Float_Types
 
     package body Gen_Float_Acc is
 
@@ -2454,7 +2454,7 @@ This is the package body:
 This is a test application that makes use of the :ada:`Float_Types` and
 :ada:`Gen_Float_Acc` packages.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Float_Types
 
     with Ada.Text_IO;    use Ada.Text_IO;
 
@@ -2535,7 +2535,7 @@ that the operator associated with the actual type is used.
 Alternatively, we could make use of the :ada:`Float_Types` package
 directly in the generic package. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Float_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Float_Types
 
     with Float_Types; use Float_Types;
 
@@ -2559,7 +2559,7 @@ In the previous section, we looked into an example of saturation for
 generic floating-point types. Let's adapt this example for fixed-point
 types. This is the package specification:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     generic
        type F is delta <>;
@@ -2578,7 +2578,7 @@ computes the addition using the local :ada:`Ovhd_Fixed` type with wider
 range, calls the :ada:`Saturate` procedure and converts the data type back
 into the original range.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     with Ada.Text_IO;    use Ada.Text_IO;
 
@@ -2643,7 +2643,7 @@ and the original type.
 
 We then use the :ada:`Gen_Fixed_Ops` package in a test application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Gen_Fixed_Ops;
@@ -2711,7 +2711,7 @@ First, we define a package that implements a new fixed-point type called
 implementation that saturates the value after the actual addition. This is
 the package specification:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     package Fixed_Types is
 
@@ -2733,7 +2733,7 @@ we discussed earlier in the previous section. By instantiating the
 :ada:`Gen_Fixed_Ops` package, we can use the :ada:`Sat_Add` function in
 the implementation of the saturating addition operator.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     with Gen_Fixed_Ops;
 
@@ -2755,7 +2755,7 @@ the implementation of the saturating addition operator.
 Next, we create a package containing a procedure that accumulates
 fixed-point values. This is the package specification:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     generic
        type F is delta <>;
@@ -2769,7 +2769,7 @@ In this specification, we declare a formal function for the addition
 operator using :ada:`with function`. This operator is used by the
 :ada:`Acc` procedure in the package body, which we show next.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     package body Gen_Fixed_Acc is
 
@@ -2783,7 +2783,7 @@ operator using :ada:`with function`. This operator is used by the
 This is a test application that makes use of the :ada:`Fixed_Types` and
 :ada:`Gen_Fixed_Acc` packages.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Generic_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Numeric_Types.Generic_Fixed
 
     with Ada.Text_IO; use Ada.Text_IO;
 

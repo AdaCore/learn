@@ -60,7 +60,7 @@ However, as we've just learned, the consequences are that:
 
 Let's revisit a previous example from the section on null records:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Device
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Device
 
     package Devices is
 
@@ -94,7 +94,7 @@ Let's revisit a previous example from the section on null records:
 
 We can easily rewrite this specification using interfaces:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Device_Interface
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Device_Interface
 
     package Devices is
 
@@ -132,7 +132,7 @@ in an application, as we cannot declare objects of an abstract type. The
 following application |mdash| which works fine when :ada:`Device` is a null
 record |mdash| doesn't compile when :ada:`Device` is an interface:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Device_Interface
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Device_Interface
     :class: ada-expect-compile-error
 
     with Devices; use Devices;
@@ -150,7 +150,7 @@ record |mdash| doesn't compile when :ada:`Device` is an interface:
 A possible compromise is, of course, to reintroduce null records in our
 specification as a derived type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Device_Interface
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Device_Interface
 
     package Devices is
 
@@ -216,7 +216,7 @@ Using new interfaces
 
 Let's assume we have the following interface:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Extending_Interfaces
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Extending_Interfaces
 
     package Animals is
 
@@ -230,7 +230,7 @@ Let's assume we have the following interface:
 All types implementing the :ada:`Animal` interface have to override the
 :ada:`Eat` operation:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Extending_Interfaces
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Extending_Interfaces
 
     package Animals.Cats is
 
@@ -276,7 +276,7 @@ they're just happy eating some random amount of anonymous food. Extending
 this interface is just not the way to go --- so the extension has to be
 done separately, in a new interface, such as:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Extending_Interfaces
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Extending_Interfaces
 
     package Animals.Extensions is
 
@@ -294,7 +294,7 @@ done separately, in a new interface, such as:
 So now, :ada:`Animals` that need to rely on this new way of eating will
 need to be declared, such as:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Extending_Interfaces
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Extending_Interfaces
 
     with Animals.Extensions; use Animals.Extensions;
 
@@ -330,7 +330,7 @@ need to be declared, such as:
 
     end Animals.Cats;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Extending_Interfaces
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Extending_Interfaces
 
     with Animals.Cats;       use Animals.Cats;
     with Animals.Extensions; use Animals.Extensions;
@@ -364,7 +364,7 @@ work though, as we'll first have to check that the type of an
 :ada:`Animal_Extension_1`, and perform a conversion to that interface's
 class, before calling the new version of :ada:`Eat`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Extending_Interfaces
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Extending_Interfaces
 
     with Animals;            use Animals;
     with Animals.Cats;       use Animals.Cats;
@@ -399,7 +399,7 @@ declare the interface's :ada:`Eat` primitive as follows:
 
 This is adapted code:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Null_Procedures
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Null_Procedures
 
     package Animals is
 
@@ -452,7 +452,7 @@ declaration does not break source compatibility with the contract of the
 lot easier to make calls to this subprogram --- no more need to check
 membership or write a type conversion, and we can just write:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Null_Procedures
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Null_Procedures
 
     with Animals;            use Animals;
     with Animals.Cats;       use Animals.Cats;
@@ -486,7 +486,7 @@ for languages that allow multiple inheritance of implementation).
 In Ada, things are slightly more complicated. Let's take an example, using
 the traditional geometric classes that are often found in text books:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Call_Inherited_Subprograms
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms
 
     package Geometric_Forms is
 
@@ -512,7 +512,7 @@ square specific setups. To do this, we need to use type conversions to
 change the view of :ada:`Self`, so that the compiler statically knows
 which :ada:`Initialize` to call. The code thus looks like:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Call_Inherited_Subprograms
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms
 
     package body Geometric_Forms is
 
@@ -533,7 +533,7 @@ which :ada:`Initialize` to call. The code thus looks like:
 
     end Geometric_Forms;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Call_Inherited_Subprograms
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms
 
     with Geometric_Forms; use Geometric_Forms;
 
@@ -549,7 +549,7 @@ we suddenly realize that a :ada:`Square` is after all a special case of a
 :ada:`Rectangle`, and thus decide to add the new rectangle class, the code
 needs to be changed (and not just in the spec), as in:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Call_Inherited_Subprograms
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms
 
     package Geometric_Forms is
 
@@ -607,7 +607,7 @@ needs to be changed (and not just in the spec), as in:
 
     end Geometric_Forms;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Call_Inherited_Subprograms
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms
 
     with Geometric_Forms; use Geometric_Forms;
 
@@ -628,7 +628,7 @@ The trick is to always define a :ada:`Parent` subtype every time one
 extends a type, and use that subtype when calling the inherited procedure.
 Here is a full example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Call_Inherited_Subprograms_2
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms_2
 
     package Geo_Forms with Pure is
 

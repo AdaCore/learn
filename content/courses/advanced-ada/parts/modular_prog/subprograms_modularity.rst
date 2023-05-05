@@ -13,7 +13,7 @@ private packages. Because packages and subprograms can both be library units,
 we can declare private subprograms as well. We do this by using the
 :ada:`private` keyword. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Test_Procedure
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Subprograms.Private_Test_Procedure
 
     private procedure Test;
 
@@ -26,7 +26,7 @@ Such a subprogram as the one above isn't really useful. For example, we cannot
 write a with clause that refers to the :ada:`Test` procedure, as it's not
 visible anywhere:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Test_Procedure
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Subprograms.Private_Test_Procedure
     :class: ada-expect-compile-error
 
     with Test;
@@ -51,7 +51,7 @@ Private subprograms of a package
 A more useful example is to declare private subprograms of a package. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Package_Procedure
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Subprograms.Private_Package_Procedure
 
     package Data_Processing is
 
@@ -119,7 +119,7 @@ those can be main programs.)
 
 Let's see an example:
 
-.. code:: ada run_button main=test_private_data_processing.adb project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Subprogram_Private_Package
+.. code:: ada run_button main=test_private_data_processing.adb project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Subprograms.Private_Subprogram_Private_Package
 
     private package Private_Data_Processing is
 
@@ -176,7 +176,7 @@ parent package :ada:`P` in the test procedure.
 Let's rewrite the :ada:`Test_Private_Data_Processing` procedure from the
 previous example as the child procedure :ada:`Private_Data_Processing.Test`:
 
-.. code:: ada run_button main=private_data_processing-test.adb project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Package_Child_Subprogram
+.. code:: ada run_button main=private_data_processing-test.adb project=Courses.Advanced_Ada.Modular_Prog.Subprograms_Modularity.Private_Subprograms.Private_Package_Child_Subprogram
 
     private package Private_Data_Processing is
 
