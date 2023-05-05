@@ -33,7 +33,7 @@ expressions. (There are more details to this, but we'll keep it simple for the
 moment.) Let's see a code example with a few expressions, which we dissect into
 the corresponding grammatical elements (we're going to discuss them later):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Expression_Elements
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Expression_Elements
 
     procedure Show_Expression_Elements is
        type Mode is (Off, A, B, C, D);
@@ -199,7 +199,7 @@ The expressions we've seen so far had the :ada:`Boolean` type. Although much
 of the grammar described in the Manual exists exclusively for Boolean
 operations, we can also write numeric expressions such as the following one:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Numeric_Expressions
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Numeric_Expressions
 
     procedure Show_Numeric_Expressions is
        C1    : constant Integer := 5;
@@ -270,7 +270,7 @@ An interesting aspect of primaries is that, by using parentheses, we can
 embed an expression inside another expression. As an example, let's discuss the
 following expression and its elements:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Parenthesized_Expressions
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Parenthesized_Expressions
 
     procedure Show_Parenthesized_Expressions is
        C1 : constant Integer := 4;
@@ -328,7 +328,7 @@ Note that the usage of parentheses might lead to situations where we have
 expressions in potentially unsuspected places. For example, consider the
 following code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Name_In_Expression
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Name_In_Expression
 
     procedure Show_Name_In_Expression is
        type Mode is (Off, A, B, C, D);
@@ -361,7 +361,7 @@ statements, as we'll see in another chapter.
 
 Let's look at another example, this time with a subprogram call:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Name_In_Expression
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Name_In_Expression
     :class: ada-expect-compile-error
 
     procedure Increment_By_One (I : in out Integer);
@@ -403,7 +403,7 @@ The :ada:`Max` function in the following code example is an expression function
 implemented with a conditional expression |mdash| an if-expression, to be more
 precise:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Simple_Conditional_If_Expressions
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Simple_Conditional_If_Expressions
 
     package Expr_Func is
 
@@ -422,7 +422,7 @@ to :ada:`Off`). For other values, the state remains unchanged |mdash| i.e. the
 returned value is the same as the input value. This is the implementation using
 a conditional expression:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_If_Expressions_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_If_Expressions_1
 
     package Expr_Func is
 
@@ -442,7 +442,7 @@ therefore be more complicated).
 
 The code above corresponds to this more verbose version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_If_Expressions_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_If_Expressions_2
 
     package Expr_Func is
 
@@ -475,7 +475,7 @@ an if-block to an if-expression is quite straightforward.
 We could also replace the if-expression used in the :ada:`Toggled` function
 above with a case-expression. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_Case_Expressions_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_Case_Expressions_1
 
     package Expr_Func is
 
@@ -493,7 +493,7 @@ Note that we use commas in case-expressions to separate the alternatives (the
 :ada:`when` expressions). The code above corresponds to this more verbose
 version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Conditional_Case_Expressions_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_Case_Expressions_2
 
     package Expr_Func is
 
@@ -557,7 +557,7 @@ two functions:
 
 This is the complete code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Quantified_Expression_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Quantified_Expression_1
 
     package Int_Arrays is
 
@@ -620,7 +620,7 @@ in the :ada:`for I in A'Range loop if ... return ...` form. In the code below,
 we're implementing :ada:`Is_Zero` and :ada:`Has_Zero` using loops and
 conditions instead of quantified expressions:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Numerics.Quantified_Expression_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Quantified_Expression_2
 
     package Int_Arrays is
 
@@ -706,7 +706,7 @@ expressions by simply using the :ada:`E of A` form. In this case, we can just
 write :ada:`for all E of A => ...`. Let's adapt the implementation of
 :ada:`Is_Zero` and :ada:`Has_Zero` using this form:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Numerics.Quantified_Expression_3
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Quantified_Expression_3
 
     package Int_Arrays is
 
@@ -745,7 +745,7 @@ In those cases, we can use a declare expression.
 A declare expression allows for declaring or renaming objects within an
 expression:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Expressions.Simple_Declare_Expression
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Simple_Declare_Expression
 
     pragma Ada_2022;
 
@@ -767,7 +767,7 @@ expression.
 Of course, the code above isn't really useful, so let's look at a more complete
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Expressions.Integer_Arrays
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Integer_Arrays
 
     pragma Ada_2022;
 
@@ -855,7 +855,7 @@ declarative part of a subprogram or declare block. In fact, we cannot:
 
 Let's see some examples of erroneous declarations:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Expressions.Integer_Arrays_Error
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Integer_Arrays_Error
     :class: ada-expect-compile-error
 
     pragma Ada_2022;
@@ -964,7 +964,7 @@ For example, if we use :ada:`+` as the operator and :ada:`0` an the initial
 value, we get the reduction expression: :ada:`0 + 2 + 3 + 4 = 9`. This can be
 implemented using an array:
 
-.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
 
     !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
@@ -996,7 +996,7 @@ a single value |mdash| in this case, an integer value that is stored in
 
 Naturally, we can reduce the array using the :ada:`*` operator:
 
-.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
 
     !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1032,7 +1032,7 @@ which consist of an iterated element association |mdash| for example,
 :ada:`[for I in 1 .. 3 => I + 1]`. We can simply *append* the reduction
 expression to a value sequence:
 
-.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Reduction_Expression_Value_Sequences switches=Compiler(-gnatX)
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expression_Value_Sequences switches=Compiler(-gnatX)
 
     !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1064,7 +1064,7 @@ In the previous examples, we've used standard operators such as :ada:`+` and
 :ada:`*` as the reducer. We can, however, write our own reducers and pass
 them to the :ada:`Reduce` attribute. For example:
 
-.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Custom_Reducer_Procedure switches=Compiler(-gnatX)
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Custom_Reducer_Procedure switches=Compiler(-gnatX)
 
     !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1125,7 +1125,7 @@ In the example above, we've implemented the reducer as a procedure. However, we
 can also implement it as a function. In this case, the accumulated value is
 returned by the function:
 
-.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Custom_Reducer_Function switches=Compiler(-gnatX)
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Custom_Reducer_Function switches=Compiler(-gnatX)
 
     !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1178,7 +1178,7 @@ Other accumulator types
 The accumulator type isn't restricted to scalars: in fact, we could use record
 types as well. For example:
 
-.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Reducer_Integer_Accumulator switches=Compiler(-gnatX)
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reducer_Integer_Accumulator switches=Compiler(-gnatX)
 
 
     !show_reduction_expression.adb
@@ -1233,7 +1233,7 @@ Also, we're not limited to numeric types: we can also create a reducer using
 strings as the accumulator type. In fact, we can display the initial value and
 the elements of the list by using unbounded strings:
 
-.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Expressions.Reducer_String_Accumulator switches=Compiler(-gnatX)
+.. code:: ada run_button manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reducer_String_Accumulator switches=Compiler(-gnatX)
 
     !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;

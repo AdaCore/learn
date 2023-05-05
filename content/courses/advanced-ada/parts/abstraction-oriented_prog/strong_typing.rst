@@ -36,7 +36,7 @@ Let's say tainted data is of an integer type. The basic idea is to derive
 the trusted type from the tainted one, and to provide a function Value to
 get to the raw data inside a trusted value, like the following:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Taint
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint
 
     package Taint is
 
@@ -50,7 +50,7 @@ get to the raw data inside a trusted value, like the following:
 
 Notice that the implementation of :ada:`Value` is just a type conversion:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Taint
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint
 
     package body Taint is
 
@@ -64,7 +64,7 @@ Notice that the implementation of :ada:`Value` is just a type conversion:
 
 Then, make sure the sensitive program uses trusted data:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Taint
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint
 
     with Taint; use Taint;
 
@@ -75,7 +75,7 @@ Then, make sure the sensitive program uses trusted data:
 
 Let's try to pass in data from the user to the sensitive program:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Taint
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint
     :class: ada-expect-compile-error
 
     with Taint;
@@ -99,7 +99,7 @@ Now, this does not prevent us from doing useful computations on trusted
 data as easily as on tainted data, including initialization with literals,
 case statements, array indexing, etc.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Taint
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint
 
     with Taint; use Taint;
     with Sensitive;
@@ -128,7 +128,7 @@ function for each literal which we used previously, as well as the
 operations that we'd like to allow on trusted values (note that for
 efficiency all operations could be inlined):
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Taint_2
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint_2
 
     package Taint is
 
@@ -151,7 +151,7 @@ efficiency all operations could be inlined):
 
 The new implementation is as expected:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Taint_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint_2
 
     package body Taint is
 
@@ -182,7 +182,7 @@ The new implementation is as expected:
 
 Of course, the client now needs to be adapted to this new interface:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Taint_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Taint_2
 
     with Taint; use Taint;
     procedure Sensitive (X : Trusted_Value);
@@ -225,7 +225,7 @@ The basic idea is to define a new type :ada:`SQL_Input` derived from type
 validated and fails if not. Function :ada:`Valid_String` returns the raw
 data inside a validated string, as follows:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.SQL_Input
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.SQL_Input
 
     package Inputs is
 
@@ -243,7 +243,7 @@ The implementation of :ada:`Validate` simply checks that the input string
 does not contain a dangerous character before returning it as an
 :ada:`SQL_Input`, while :ada:`Valid_String` is a simple type conversion:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.SQL_Input
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.SQL_Input
 
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
     with Ada.Strings.Maps;  use Ada.Strings.Maps;
@@ -284,7 +284,7 @@ the implementation of package :ada:`Inputs`, we use this opportunity to
 make :ada:`SQL_Input` a discriminated record parameterized by the
 validation status.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.SQL_Input
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.SQL_Input
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -329,7 +329,7 @@ values based on the result of the check against dangerous characters.
 Also, an :ada:`Is_Valid` function has been added to allow clients to query
 validity of an :ada:`SQL_Input` value.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.SQL_Input
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.SQL_Input
 
     with Ada.Strings.Fixed; use Ada.Strings.Fixed;
     with Ada.Strings.Maps;  use Ada.Strings.Maps;
@@ -402,7 +402,7 @@ Typical implementation
 Let's look at an application that declares a two-dimensional lookup table,
 retrieves a value from it an displays this value.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Table_Access_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Table_Access_1
 
     with Ada.Text_IO; use  Ada.Text_IO;
 
@@ -465,7 +465,7 @@ the :ada:`Tab (Y, X)` example we mentioned previously. These problems can
 be avoided by defining range types for each dimension. This is the updated
 implementation:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Table_Access_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Table_Access_2
 
     with Ada.Text_IO; use  Ada.Text_IO;
 
@@ -563,7 +563,7 @@ Typical implementation
 
 This is a typical specification of the main package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering
 
     package Indirect_Ordering is
 
@@ -603,7 +603,7 @@ This is a typical specification of the main package:
 
 And this is a typical specification of the :ada:`Test` child package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering
 
     package Indirect_Ordering.Test is
 
@@ -659,7 +659,7 @@ initialize the array containing the unordered chunks and the selector
 directly in the application instead of receiving input data from an
 external source.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering
 
     with Indirect_Ordering; use Indirect_Ordering;
 
@@ -721,7 +721,7 @@ and the *unordered index*. This is achieved by the mapping stored in
 If we'd use the ordered array of chunks, we could use the index from
 :ada:`S` directly, as illustrated in the following procedure:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering
 
     with Indirect_Ordering;
     use  Indirect_Ordering;
@@ -783,7 +783,7 @@ In the previous implementation, we basically used the :ada:`Positive` type
 for all indices. We can, however, declare individual types for each index
 of the application. This is the updated specification of the main package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering_2
 
     package Indirect_Ordering is
 
@@ -823,7 +823,7 @@ features for the package.
 
 This is the updated specification of the :ada:`Test` child package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering_2
 
     package Indirect_Ordering.Test is
 
@@ -865,7 +865,7 @@ retrieves the range of an array of :ada:`Chunk` type |mdash| which are of
 :ada:`Chunk_Index` type |mdash| and converts the range using the
 :ada:`Ord_Chunk_Index` type.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering_2
 
     private package Indirect_Ordering.Cnvt is
 
@@ -889,7 +889,7 @@ function.
 
 This is the corresponding update to the body of the main package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
+.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering_2
 
     with Indirect_Ordering.Cnvt;
     use  Indirect_Ordering.Cnvt;
@@ -913,7 +913,7 @@ This is the corresponding update to the body of the main package:
 This is the corresponding update to the body of the :ada:`Test` child
 package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering_2
 
     with Indirect_Ordering.Cnvt;
     use  Indirect_Ordering.Cnvt;
@@ -954,7 +954,7 @@ package:
 
 This is the updated test application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strong_Typing.Indirect_Ordering_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Indirect_Ordering_2
 
     with Indirect_Ordering; use Indirect_Ordering;
 
