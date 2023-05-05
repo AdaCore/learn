@@ -128,7 +128,7 @@ Advanced Journey With Ada: A Flight In Progress
 
         *Release 2023-05*
 
-        - First draft release including following chapters:
+        - First draft release including following parts:
 
             - Data Types
             - Control Flow
