@@ -3,6 +3,9 @@ Expressions
 
 .. include:: ../../../global.txt
 
+
+.. _Adv_Ada_Expressions:
+
 Expressions: Definition
 -----------------------
 
@@ -353,11 +356,8 @@ expression, a term, a factor and a primary.
 However, if we replace :ada:`case M1 is` by :ada:`case (M1) is`, :ada:`(M1)`
 is identified as a parenthesized expression, not as a name! This parenthesized
 expression is first parsed and evaluated, which might have implications in case
-statements, as we'll see in another chapter.
-
-.. todo::
-
-    Add link to subsection on case statements and expressions.
+statements, as we'll see
+:ref:`in another chapter <Adv_Ada_Case_Statements_And_Expressions>`.
 
 Let's look at another example, this time with a subprogram call:
 
