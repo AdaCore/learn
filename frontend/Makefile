@@ -83,7 +83,16 @@ ifeq ($(strip $(TEST_LAMBDA)),1)
 else
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 50)
 endif
+ifeq ($(HIDDEN_BOOKS),)
+# Test all code examples
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/*.rst)
+else
+# Test only the code examples from visible parts and chapters
+	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT)                                                     \
+		$(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/data_types/*.rst)          \
+		$(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/control_flow/*.rst)        \
+		$(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/modular_prog/*.rst)
+endif
 	@echo ""
 
 test_advanced_spark:
