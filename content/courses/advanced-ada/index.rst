@@ -151,7 +151,7 @@ Advanced Journey With Ada: A Flight In Progress
 
 .. toctree::
     :maxdepth: 4
-    :caption: Contents:
+    :caption: Contents
 
     parts/data_types/index
     parts/control_flow/index
@@ -161,7 +161,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. toctree::
         :maxdepth: 4
-        :caption: Contents:
+        :caption: Contents
 
         parts/resource_management/index
         parts/abstraction-oriented_prog/index
