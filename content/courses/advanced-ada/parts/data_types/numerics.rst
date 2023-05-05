@@ -1951,7 +1951,7 @@ package:
 | Big Reals    | :ada:`Ada.Numerics.Big_Numbers.Big_Real`     |
 +--------------+----------------------------------------------+
 
-.. admonition:: Relevant topics
+.. admonition:: In the Ada Reference Manual
 
     - :arm22:`Big Numbers <A-5-5>`
     - :arm22:`Big Integers <A-5-6>`
