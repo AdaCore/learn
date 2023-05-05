@@ -18,7 +18,7 @@ procedural form, as we'll see later.)
 
 A simple assert has this form:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assert_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Pragma_Assert_1
 
     procedure Show_Pragma_Assert is
        I : constant Integer := 10;
@@ -31,7 +31,7 @@ A simple assert has this form:
 In this example, we're asserting that the value of :ada:`I` is always 10. We
 could also display a message if the assertion is false:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assert_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Pragma_Assert_2
     :class: ada-run-expect-failure
 
     procedure Show_Pragma_Assert is
@@ -45,7 +45,7 @@ could also display a message if the assertion is false:
 Similarly, we can use the procedural form of :ada:`Assert`. For example, the
 code above can implemented as follows:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Procedure_Assert
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Procedure_Assert
     :class: ada-run-expect-failure
 
     with Ada.Assertions; use Ada.Assertions;
@@ -62,7 +62,7 @@ the :ada:`Assertion_Error` exception from the :ada:`Ada.Assertions` package
 being raised in the case that the check fails. For example, the code above
 roughly corresponds to this:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Assertion_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Assertion_Error
     :class: ada-run-expect-failure
 
     with Ada.Assertions; use Ada.Assertions;
@@ -93,7 +93,7 @@ For example, we can deactivate assertion checks by specifying
 :ada:`Assert => Ignore`. Similarly, we can activate assertion checks by
 specifying :ada:`Assert => Check`. Let's see a code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Assertion_Policy_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Pragma_Assertion_Policy_1
 
     procedure Show_Pragma_Assertion_Policy is
        I : constant Integer := 11;
@@ -168,7 +168,7 @@ The following table presents all policies that we can set:
 You can specify multiple policies in a single call to :ada:`Assertion_Policy`.
 For example, you can activate all policies by writing:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Multiple_Assertion_Policies
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Multiple_Assertion_Policies
 
     procedure Show_Multiple_Assertion_Policies is
        pragma Assertion_Policy
@@ -203,7 +203,7 @@ For example, you can activate all policies by writing:
 Note that the :ada:`Assert` procedure raises an exception independently of the
 assertion policy (:ada:`Assertion_Policy (Assert => Ignore)`). For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Assert_Procedure_Policy
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Assert_Procedure_Policy
     :class: ada-run-expect-failure
 
     with Ada.Text_IO;    use Ada.Text_IO;
@@ -315,7 +315,7 @@ dereference this object, as it doesn't indicate a valid position in memory.
 Therefore, the access check verifies that an access object is not null when
 dereferencing it. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Access_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Access_Check
     :class: ada-run-expect-failure
 
     procedure Show_Access_Check is
@@ -334,7 +334,7 @@ that excludes null (:ada:`not null access`). (You can find more information
 about this topic in the section about
 :ref:`not null access <Adv_Ada_Not_Null_Access>`.) For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Access_Check_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Access_Check_2
     :class: ada-run-expect-failure
 
     procedure Show_Access_Check is
@@ -369,7 +369,7 @@ important to ensure that the discriminants of the objects match |mdash| i.e. to
 ensure that the structure of the objects matches. The discriminant check
 verifies whether this is the case. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Discriminant_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Discriminant_Check
     :class: ada-run-expect-failure
 
     procedure Show_Discriminant_Check is
@@ -395,7 +395,7 @@ assign an object whose :ada:`Valid` discriminant is :ada:`True`.
 Also, when accessing a component, the discriminant check ensures that this
 component exists for the current discriminant value:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Discriminant_Check_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Discriminant_Check_2
     :class: ada-run-expect-failure
 
     procedure Show_Discriminant_Check is
@@ -426,7 +426,7 @@ Division Check
 The division check verifies that we're not trying to divide a value by zero
 when using the :ada:`/`, :ada:`rem` and :ada:`mod` operators. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Division_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Division_Check
     :class: ada-run-expect-failure
 
     package Ops is
@@ -466,7 +466,7 @@ We use indices to access components of an array. An index check verifies that
 the index we're using to access a specific component is within the array's
 bounds. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Index_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Index_Check
     :class: ada-run-expect-failure
 
     procedure Show_Index_Check is
@@ -505,7 +505,7 @@ Length Check
 In array assignments, both arrays must have the same length. To ensure that
 this is the case, a length check is performed. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Length_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Length_Check
     :class: ada-run-expect-failure
 
     procedure Show_Length_Check is
@@ -539,7 +539,7 @@ lead to wrong information being computed and stored. Therefore, an overflow
 check verifies that the value of a scalar object is within the base range of
 its type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Overflow_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Overflow_Check
     :class: ada-run-expect-failure
 
     procedure Show_Overflow_Check is
@@ -561,7 +561,7 @@ Range Check
 The range check verifies that a scalar value is within a specific range |mdash|
 for instance, the range of a subtype. Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Range_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Range_Check
     :class: ada-run-expect-failure
 
     procedure Show_Range_Check is
@@ -585,7 +585,7 @@ Tag Check
 The tag check ensures that the tag of a tagged object matches the expected tag
 in a dispatching operation. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Tag_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Tag_Check
     :class: ada-run-expect-failure
 
     package P is
@@ -638,7 +638,7 @@ Let's look at an example that mixes access types and anonymous access types.
 Here, we use an anonymous access type in the declaration of :ada:`A1` and a
 named access type in the declaration of :ada:`A2`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Accessibility_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Accessibility_Check
     :class: ada-run-expect-failure
 
     package P is
@@ -667,7 +667,7 @@ conversion.
 
 We can see the accessibility check failing in this example as well:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Accessibility_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Accessibility_Check
     :class: ada-run-expect-failure
 
     with P; use P;
@@ -696,7 +696,7 @@ master has not been completed or the finalization has not been started.
 This is an example adapted from
 `AI-00280 <http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ais/ai-00280.txt?rev=1.12&raw=N>`_:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Allocation_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Allocation_Check
     :class: ada-run-expect-failure
 
     with Ada.Finalization;
@@ -758,7 +758,7 @@ or task activations |mdash| have been elaborated before being called.
 This is an example adapted from
 `AI-00064 <http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ais/ai-00064.txt?rev=1.12&raw=N>`_:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Elaboration_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Elaboration_Check
     :class: ada-run-expect-failure
 
     function P return Integer;
@@ -805,7 +805,7 @@ The storage check ensures that the storage pool has enough space when
 allocating memory. Let's revisit an example that we
 :ref:`discussed earlier <Adv_Ada_Types_Storage_Size_Error>`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Storage_Check
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Storage_Check
     :class: ada-run-expect-failure
 
     package Custom_Types is
@@ -922,7 +922,7 @@ You can also retrieve this information individually. Here, you can use:
 
 Let's see a complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Info switches=Compiler(-g);
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exception_Info switches=Compiler(-g);
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Ada.Exceptions; use Ada.Exceptions;
@@ -963,7 +963,7 @@ You can save an exception occurrence using the :ada:`Save_Occurrence` procedure.
 For example, the following application collects exceptions into a list and
 displays them after running the :ada:`Test_Exceptions` procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Save_Occurrence switches=Compiler(-g);
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Save_Occurrence switches=Compiler(-g);
 
     with Ada.Exceptions; use Ada.Exceptions;
 
@@ -1064,7 +1064,7 @@ the exception occurrences that we collected.
 Similarly, we can use files to read and write exception occurences. To do that,
 we can simply use the :ada:`'Read` and :ada:`'Write` attributes.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Exceptions.Exception_Occurrence_Stream
+.. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exception_Occurrence_Stream
     :class: ada-run
 
     with Ada.Text_IO;
@@ -1141,7 +1141,7 @@ Debugging exceptions in the GNAT toolchain
 Here is a typical exception handler that catches all unexpected exceptions in
 the application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Information switches=Compiler(-g);
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exception_Information switches=Compiler(-g);
 
     with Ada.Exceptions;
     with Ada.Text_IO;   use Ada.Text_IO;
@@ -1252,7 +1252,7 @@ information in exception messages.
 
 Let's amend our test program to:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Information switches=Compiler(-g,-gnateE);
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exception_Information switches=Compiler(-g,-gnateE);
 
     with Ada.Exceptions;
     with Ada.Text_IO;      use Ada.Text_IO;
@@ -1304,7 +1304,7 @@ We can rename exceptions by using the an exception renaming declaration in this
 form :ada:`Renamed_Exception : exception renames Existing_Exception;`. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Renaming
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exception_Renaming
     :class: ada-run-expect-failure
 
     procedure Show_Exception_Renaming is
@@ -1317,7 +1317,7 @@ Exception renaming creates a new view of the original exception. If we rename an
 exception from package :ada:`A` in package :ada:`B`, that exception will become
 visible in package :ada:`B`. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Exception_Renaming_View switches=Compiler(-g,-gnateE);
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exception_Renaming_View switches=Compiler(-g,-gnateE);
 
     package Internal_Exceptions is
 
@@ -1372,7 +1372,7 @@ Perhaps surprisingly, the Ada standard indicates cases where objects passed to
 :ada:`out` and :ada:`in out` parameters might not be updated when a procedure
 terminates due to an exception. Let's take an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Out_Uninitialized_1
 
     with Ada.Text_IO;  use Ada.Text_IO;
     procedure Show_Out_Uninitialized is
@@ -1415,7 +1415,7 @@ normal return).
     :ada:`in out` parameter after an exception is suspect and should be avoided.
     GNAT has useful warnings here, so that if we simplify the above code to:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_2
+    .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Out_Uninitialized_2
 
         with Ada.Text_IO;  use Ada.Text_IO;
 
@@ -1448,7 +1448,7 @@ be passed by reference, such as tagged types for instance. So the following
 code will work as expected, updating the actual parameter despite the
 exception:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_3
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Out_Uninitialized_3
 
     with Ada.Text_IO;  use Ada.Text_IO;
 
@@ -1487,7 +1487,7 @@ exception:
     shows an example that ensures that :ada:`B` is set to 1 after the call to
     :ada:`Local`:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Out_Uninitialized_4
+    .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Out_Uninitialized_4
 
         package Exported_Procedures is
 
@@ -1701,7 +1701,7 @@ permission.
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Exceptions.Pragma_Unsuppress
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Pragma_Unsuppress
     :class: ada-run-expect-failure
 
     procedure Show_Index_Check is

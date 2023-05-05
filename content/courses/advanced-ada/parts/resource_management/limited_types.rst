@@ -23,7 +23,7 @@ programs, even though they are perfectly OK in many cases. Programs can become
 erroneous when we use those operations on record types that have components of
 access types, for example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Wrong_Assignment_Equality
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Wrong_Assignment_Equality
 
     package Nonlimited_Types is
 
@@ -175,7 +175,7 @@ Assignments
 
 Assignments are forbidden when using objects of limited types. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Assignment
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Assignment
     :class: ada-expect-compile-error
 
     package Limited_Types is
@@ -226,7 +226,7 @@ need to copy two objects of limited type, we have to provide a custom procedure
 to do that. For example, we can implement a :ada:`Copy` procedure for the
 :ada:`Simple_Rec` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Assignment
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Assignment
 
     package Limited_Types is
 
@@ -291,7 +291,7 @@ Equality
 
 Limited types don't have a predefined equality operator. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Equality
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Equality
     :class: ada-expect-compile-error
 
     package Limited_Types is
@@ -342,7 +342,7 @@ If we want to be able to compare objects of this type, we have to implement
 the :ada:`=` operator ourselves. For example, we can do that for the
 :ada:`Simple_Rec` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Equality
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Equality
 
     package Limited_Types is
 
@@ -447,7 +447,7 @@ As we've seen in code examples from the previous section, we can apply
 we can declare a type as :ada:`limited private` instead of just :ada:`limited`.
 For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Private
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private
 
     package Simple_Recs is
 
@@ -481,7 +481,7 @@ In the previous example, both partial and full views of the :ada:`Rec` type
 were limited. We may actually declare a type as :ada:`limited private` (in the
 public part of a package), while its full view is nonlimited. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Partial_Full_View
 
     package Simple_Recs is
 
@@ -503,7 +503,7 @@ view is nonlimited.
 Note that the opposite |mdash| declaring a type as :ada:`private` and its full
 full view as :ada:`limited private` |mdash| is not possible. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Partial_Full_View
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -532,7 +532,7 @@ Limited and nonlimited in full view
 Declaring the full view of a type as limited or nonlimited has implications in
 the way we can use objects of this type in the package body. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Limited_Partial_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Partial_Full_View
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -601,7 +601,7 @@ For tagged private types, the partial and full views must match: if a tagged
 type is limited in the partial view, it must be limited in the full view. For
 example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Tagged_Limited_Private_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Tagged_Limited_Private_Types
 
     package Simple_Recs is
 
@@ -642,7 +642,7 @@ Deriving from limited types
 In this section, we discuss the implications of deriving from limited types.
 As usual, let's start with a simple example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Limited_Type
 
     package Simple_Recs is
 
@@ -665,7 +665,7 @@ used the :ada:`limited` keyword here:
 Therefore, we cannot use the assignment operator for objects of
 :ada:`Rec_Derived` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Limited_Type
     :class: ada-expect-compile-error
 
     with Simple_Recs; use Simple_Recs;
@@ -678,7 +678,7 @@ Therefore, we cannot use the assignment operator for objects of
 
 Note that we cannot derive a limited type from a nonlimited ancestor:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Type_Nonlimited_Ancestor
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Limited_Type_Nonlimited_Ancestor
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -708,7 +708,7 @@ Of course, we can also derive from limited private types. However, there are
 more rules in this case than the ones we've seen so far. Let's start with an
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Limited_Private_Type
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -748,7 +748,7 @@ Any type derived from a limited type is always limited, even if the full view
 of its ancestor is nonlimited. For example, let's modify the full view of
 :ada:`Rec` and make it nonlimited:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Limited_Private_Type
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -774,7 +774,7 @@ limited *outside* this package, but nonlimited in the :ada:`Simple_Recs.Ext`
 package. We can verify this by copying the code from the :ada:`Test_Limitedness`
 procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Limited_Private_Type
 
     package Simple_Recs.Ext
       with Elaborate_Body is
@@ -838,7 +838,7 @@ Deriving from tagged limited private types
 The rules for deriving from tagged limited private types are slightly different
 than ones we've seen in the previous section. Let's look at an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Tagged_Limited_Private_Type
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -880,7 +880,7 @@ type, even though the :ada:`limited` keyword doesn't appear in its
 declaration. We could, of course, include the :ada:`limited` keyword in the
 declaration of :ada:`Rec_Derived`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Tagged_Limited_Private_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Tagged_Limited_Private_Type
     :class: ada-expect-compile-error
 
     package Simple_Recs.Ext is
@@ -907,7 +907,7 @@ types. In contrast to the rule we've seen in the previous section, a type that
 is derived from a limited type isn't automatically limited. In other words, it
 doesn't inherit the *limitedness* from the interface. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Derived_Interface_Limited_Private
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Interface_Limited_Private
 
     package Simple_Recs is
 
@@ -942,7 +942,7 @@ interface. As we can see, the :ada:`Test_Limitedness` compiles fine because
 Of course, if we want :ada:`Rec_Derived` to be limited, we can make this
 explicit in the type declaration:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Derived_Interface_Limited_Private
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Derived_Interface_Limited_Private
     :class: ada-expect-compile-error
 
     package Simple_Recs.Ext is
@@ -975,7 +975,7 @@ Record components of limited type
 In this section, we discuss the implications of using components of limited
 type. Let's start by declaring a record component of limited type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Record_Components_Limited_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Record_Components_Limited_Type
 
     package Simple_Recs is
 
@@ -998,7 +998,7 @@ example and remove the :ada:`limited` keyword, the type itself remains
 implicitly limited. We can see that when trying to assign to objects of
 :ada:`Rec` type in the :ada:`Show_Implicitly_Limited` procedure:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Record_Components_Limited_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Record_Components_Limited_Type
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -1046,7 +1046,7 @@ In this section, we focus on using aggregates to initialize limited types.
     we would be faced with a difficult choice: Make the type limited, and
     initialize it like this:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited_Ada95
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Full_Coverage_Rules_Limited_Ada95
 
         with Ada.Strings.Unbounded;
         use  Ada.Strings.Unbounded;
@@ -1097,7 +1097,7 @@ We can also use them for limited types.
 
 Suppose we have the following limited type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Full_Coverage_Rules_Limited
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1128,7 +1128,7 @@ expensive, and add unnecessary complexity if not needed.
 
 We can initialize objects of limited type with an aggregate. Here, we can say:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Full_Coverage_Rules_Limited
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1162,7 +1162,7 @@ you can't copy them.
 
     Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Full_Coverage_Rules_Limited
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Full_Coverage_Rules_Limited
 
         with Ada.Strings.Unbounded;
         use  Ada.Strings.Unbounded;
@@ -1196,7 +1196,7 @@ you can't copy them.
 
     For example, if we have an aggregate of type :ada:`String`, like this:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.String_Box_Init
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.String_Box_Init
 
         procedure Show_String_Box_Init is
             Uninitialized_Const_Str : constant String :=
@@ -1208,7 +1208,7 @@ you can't copy them.
     we end up with a 10-character string all of whose characters are invalid
     values. Note that this is no more nor less dangerous than this:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Dangerous_String
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Dangerous_String
 
         procedure Show_Dangerous_String is
             Uninitialized_String_Var : String (1 .. 10);
@@ -1246,7 +1246,7 @@ to create and initialize objects.
 
 Let's see an example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1292,7 +1292,7 @@ Let's see an example:
 
 Given the above, clients can say:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions
 
     with P; use P;
 
@@ -1307,7 +1307,7 @@ As for aggregates, the result of :ada:`Make_T` is built in place (that is,
 in :ada:`My_T`), rather than being created and then copied into
 :ada:`My_T`. Adding another level of function call, we can do:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions
 
     with P; use P;
 
@@ -1362,7 +1362,7 @@ Some languages have a specific feature called *constructor*. In Ada, a
 
     Consider the following package:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions_2
 
         with Ada.Containers.Ordered_Sets;
 
@@ -1389,7 +1389,7 @@ Some languages have a specific feature called *constructor*. In Ada, a
 
     Since Ada 2005, we can say:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions_2
 
         with Ada.Containers.Ordered_Sets;
         with Aux;
@@ -1415,7 +1415,7 @@ Some languages have a specific feature called *constructor*. In Ada, a
     whether or not :ada:`Set` is limited. :ada:`This_Set : Set := Empty_Set;`
     seems clearer than:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Constructor_Functions_2
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions_2
 
         with Ada.Containers.Ordered_Sets;
 
@@ -1452,7 +1452,7 @@ Previously, we discussed
 For most types, extended return statements are no big deal |mdash| it's just
 syntactic sugar. But for limited types, this syntax is almost essential:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Limited
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Limited
     :class: ada-syntax-only
 
     package Task_Construct_Error is
@@ -1488,7 +1488,7 @@ The return statement here is illegal, because :ada:`Result` is local to
 sense (which is why task types are limited). Since Ada 2005, we can write
 constructor functions for task types:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Limited
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Limited
 
     package Task_Construct is
 
@@ -1521,7 +1521,7 @@ constructor functions for task types:
 
 If we call it like this:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Extended_Return_Limited
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Limited
 
     with Task_Construct; use Task_Construct;
 
@@ -1554,7 +1554,7 @@ For example, we can see this when looking at the address of the object
 *returned* by the :ada:`Init` function, which we call to initialize the limited
 type :ada:`Simple_Rec`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Initialization_Return_Do
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Initialization_Return_Do
 
     package Limited_Types is
 
@@ -1633,7 +1633,7 @@ procedure are the same object.
    For example, let's modify the previous code and make :ada:`Simple_Rec`
    non-limited:
 
-       .. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Initialization_Return_Copy
+       .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Initialization_Return_Copy
 
         package Non_Limited_Types is
 
@@ -1717,7 +1717,7 @@ Building objects from constructors
 We've earlier seen examples of constructor functions for limited types
 similar to this:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objs_From_Constructors
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1777,7 +1777,7 @@ similar to this:
 It is useful to consider the various contexts in which these functions may
 be called. We've already seen things like:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1794,7 +1794,7 @@ This object will be finalized whenever the surrounding scope is left.
 
 We can also do:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1811,7 +1811,7 @@ return from :ada:`Do_Something`.
 
 We can allocate initialized objects on the heap:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1843,7 +1843,7 @@ which will be finalized when the scope of :ada:`T_Ref` is left (long after
 We can create another limited type with a component of type :ada:`T`, and
 use an aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1869,7 +1869,7 @@ As usual, the function results are built in place, directly in
 The one case where we *cannot* call such constructor functions is in an
 assignment statement:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objs_From_Constructors
     :class: ada-expect-compile-error
 
     with P;     use P;
@@ -1885,7 +1885,7 @@ assignment statement:
 which is illegal because assignment statements involve copying. Likewise,
 we can't copy a limited object into some other object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Building_Objs_From_Constructors
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objs_From_Constructors
     :class: ada-expect-compile-error
 
     with P;     use P;
@@ -1910,7 +1910,7 @@ Default initialization
 
 Consider the following type declaration:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Init
 
     package Type_Defaults is
        type Color_Enum is (Red, Blue, Green);
@@ -1930,7 +1930,7 @@ Consider the following type declaration:
 If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
 :ada:`Color` and :ada:`Is_Gnarly` to their defaults", we can do this:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Init
 
     package body Type_Defaults is
 
@@ -1947,7 +1947,7 @@ If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
 
     Prior to Ada 2005, the following style was common:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Init
 
         package body Type_Defaults is
 
@@ -1971,7 +1971,7 @@ On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
 but initialize all other components, including the ones we might add next
 week, to their defaults", we can do this:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Init
 
     package body Type_Defaults is
 
@@ -1986,7 +1986,7 @@ Note that if we add a component :ada:`Glorp : Integer;` to type :ada:`T`,
 then the :ada:`others` case leaves :ada:`Glorp` undefined just as this
 code would do:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Limited_Types.Default_Init
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Init
 
     package body Type_Defaults is
 
@@ -2018,7 +2018,7 @@ it's not |mdash| using the :ada:`limited` keyword in a part of the declaration
 doesn't necessary ensure this, as we'll see later. Let's start with an example
 of an explicitly limited type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Explicitly_Limited_Types
 
     with System;
 
@@ -2042,7 +2042,7 @@ We can run the :ada:`Test` application below and compare the address of the
 :ada:`Proc` to determine whether both :ada:`R` \s refer to the same object or
 not:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Explicitly_Limited_Types
 
     package body Simple_Recs is
 
@@ -2092,7 +2092,7 @@ later.)
 The :ada:`Rec` type is also explicitly limited when it's declared limited in
 the private type's completion (in the package's private part):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Explicitly_Limited_Types
     :class: ada-syntax-only
 
     with System;
@@ -2119,7 +2119,7 @@ If we make the full view of the :ada:`Rec` non-limited (by removing the
 :ada:`limited` keyword in the private part), then the :ada:`Rec` type
 isn't explicitly limited anymore:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Limited_Types.Explicitly_Limited_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Explicitly_Limited_Types
     :class: ada-syntax-only
 
     with System;

@@ -12,7 +12,7 @@ we've seen that we can declare array types whose bounds are not fixed: in that
 case, the bounds are provided when creating objects of those types. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Arrays.Unconstrained_Array_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Array_Example
 
     package Measurement_Defs is
 
@@ -66,7 +66,7 @@ If you need, however, the flexibility of increasing the length of an array, you
 could use vectors instead. This is how we could rewrite the previous example
 using vectors:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Arrays.Unconstrained_Array_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Array_Example
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -138,7 +138,7 @@ dimension with a comma. The following example presents the one-dimensional
 array :ada:`A1`, the two-dimensional array :ada:`A2` and the three-dimensional
 array :ada:`A3`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Arrays.Multidimensional_Arrays
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Arrays.Multidimensional_Arrays
 
     package Multidimensional_Arrays_Decl is
 
@@ -172,7 +172,7 @@ same equivalence applies to other array-related attributes such as
 Let's use the :ada:`Length` attribute for the arrays we declared in the
 :ada:`Multidimensional_Arrays_Decl` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Arrays.Multidimensional_Arrays
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Multidimensional_Arrays
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -215,7 +215,7 @@ three procedures for this array:
 
 This is the complete code for this application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Arrays.Multidimensional_Measurements
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Multidimensional_Measurements
 
     package Measurement_Defs is
 
@@ -336,7 +336,7 @@ Previously, we've discussed unconstrained arrays for the unidimensional case.
 It's possible to declare unconstrained multidimensional arrays as well. For
 example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Arrays.Unconstrained_Multidimensional_Arrays
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Multidimensional_Arrays
 
     package Multidimensional_Arrays_Decl is
 
@@ -355,7 +355,7 @@ type :ada:`F2` and the three-dimensional type :ada:`F3`.
 As is the case with unidimensional arrays, we must specify the bounds when
 declaring objects of unconstrained multidimensional array types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Arrays.Unconstrained_Multidimensional_Arrays
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Multidimensional_Arrays
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -390,7 +390,7 @@ We can create an array of an array by first specifying a one-dimensional array
 type :ada:`T1`, and then specifying another one-dimensional array type
 :ada:`T2` where each component of :ada:`T2` is of :ada:`T1` type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Arrays.Array_Of_Arrays
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Of_Arrays
 
     package Array_Of_Arrays_Decl is
 
@@ -411,7 +411,7 @@ allow for unconstrained ranges in multiple dimensions.
 We can rewrite the previous application for measurements using arrays of
 arrays. This is the adapted code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Arrays.Multidimensional_Measurements
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Multidimensional_Measurements
 
     package Measurement_Defs is
 

@@ -50,7 +50,7 @@ string types:
 
 We can see that when running this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Char_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Wide_Char_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -69,7 +69,7 @@ We can see that when running this example:
 
 Let's look at another example, this time using wide strings:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_String_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Wide_String_Types
 
     with Ada.Text_IO;
     with Ada.Wide_Text_IO;
@@ -217,7 +217,7 @@ Let's look at
 :ref:`this example <Intro_Ada_String_Operations_Show_Find_Words>` from the
 Introduction to Ada course, which we adapted for wide-wide strings:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_String_Handling
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Wide_Wide_String_Handling
 
     with Ada.Strings; use Ada.Strings;
 
@@ -325,7 +325,7 @@ For wider string types, we have:
 
 Let's look at a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Unbounded_Wide_Wide_String
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Unbounded_Wide_Wide_String
 
     with Ada.Strings.Wide_Wide_Unbounded;
     use  Ada.Strings.Wide_Wide_Unbounded;
@@ -397,7 +397,7 @@ following table:
 
 Let's look at an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.WW_UTF_String
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.WW_UTF_String
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -512,7 +512,7 @@ This difference in sizes might not always be the case. In fact, the sizes
 match when encoding a symbol in UTF-8 that requires four 8-bit codes. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.UTF_8
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -569,7 +569,7 @@ how this file is parsed by the compiler.
 
 Let's look at this source-code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8_Strings
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.UTF_8_Strings
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -612,7 +612,7 @@ with 32-bit characters |mdash| such as :ada:`Wide_Wide_String`. For example,
 let's say we want to use the :ada:`"♥♫"` string again to initialize a constant
 of :ada:`Wide_Wide_String` type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Strings.WWS_Strings_W8
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.WWS_Strings_W8
 
     with Ada.Text_IO;
     with Ada.Wide_Wide_Text_IO;
@@ -650,7 +650,7 @@ here.)
     offers the ``-gnatW8`` switch. Let's run the previous example using this
     switch:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WWS_Strings_W8 switches=Compiler(-gnatW8);
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.WWS_Strings_W8 switches=Compiler(-gnatW8);
 
         with Ada.Text_IO;
         with Ada.Wide_Wide_Text_IO;
@@ -685,7 +685,7 @@ here.)
     If we don't use the ``-gnatW8`` switch, however, we get wrong results.
     Let's look at the same example again without the switch:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Strings.WWS_Strings_No_W8
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.WWS_Strings_No_W8
 
         with Ada.Text_IO;
         with Ada.Wide_Wide_Text_IO;
@@ -738,7 +738,7 @@ you want to use.
 We can reuse parts of the previous example and replace the UTF-8 character with
 the corresponding UTF-8 code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_8
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.UTF_8
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -793,7 +793,7 @@ schemes when converting between UTF-8 and UTF-16 encoding schemes.
 Let's see a code example that makes use of both :ada:`UTF_String` and
 :ada:`UTF_16_Wide_String` types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.UTF_16_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.UTF_16_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -860,7 +860,7 @@ convert between UTF-8 and the :ada:`Wide_Wide_String` type. The same kind of
 conversion functions exist for UTF-16 strings as well. Let's look at this code
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.WW_UTF_16_String
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.WW_UTF_16_String
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -920,7 +920,7 @@ seen that the :ada:`'Image` attribute returns a string that contains a textual
 representation of an object. For example, we write :ada:`Integer'Image (V)` to
 get a string for the integer variable :ada:`V`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Simple_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Simple_Image
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -934,7 +934,7 @@ get a string for the integer variable :ada:`V`:
 Naturally, we can use the :ada:`Image` attribute with other scalar types. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Simple_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Simple_Image
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -964,7 +964,7 @@ variable :ada:`V`. Also, we use :ada:`Status'Image (V)` to retrieve a string rep
 
 We can also apply the :ada:`'Image` attribute to an object directly:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Simple_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Simple_Image
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1004,7 +1004,7 @@ each string type:
 
 Let's see a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Wide_Wide_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Wide_Wide_Image
 
     with Ada.Wide_Wide_Text_IO;
     use  Ada.Wide_Wide_Text_IO;
@@ -1033,7 +1033,7 @@ In the previous code examples, we were using the :ada:`Image` attribute with
 scalar types, but it isn't restricted to those types. In fact, we can also use
 this attribute when dealing with non-scalar types. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Non_Scalar_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Non_Scalar_Image
 
     package Simple_Records is
 
@@ -1108,7 +1108,7 @@ and :ada:`R_A` is null after the call to :ada:`Free`.
 
 Let's see another example, this time with arrays:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Array_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Array_Image
 
     pragma Ada_2022;
 
@@ -1140,7 +1140,7 @@ In this example, we display the values of the three components of the
 In addition to untagged types, we can also use the :ada:`'Image` attribute with
 tagged types. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Tagged_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Tagged_Image
 
     package Simple_Records is
 
@@ -1201,7 +1201,7 @@ object of :ada:`Rec'Class` type. Also, we display the contents of the
 
 We can also apply the :ada:`'Image` attribute to protected objects and tasks:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Protected_Task_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Protected_Task_Image
 
     package Simple_Tasking is
 
@@ -1293,7 +1293,7 @@ that via the :ada:`Put_Image` aspect. This is what we have to do:
 
 We can see these steps performed in the code example below:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Strings.Simple_Put_Image
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Strings.Simple_Put_Image
 
     pragma Ada_2022;
 
@@ -1351,7 +1351,7 @@ Complete Example of :ada:`Put_Image`
 Let's see a complete example in which we use the :ada:`Put_Image` aspect and
 write useful information to the buffer:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Put_Image_Custom_Numerics
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image_Custom_Numerics
 
     pragma Ada_2022;
 
@@ -1479,7 +1479,7 @@ their parent type |mdash| either a custom procedure indicated in the
 has the :ada:`Put_Image` aspect, the procedure indicated in the aspect is used
 instead. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Untagged_Put_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Untagged_Put_Image
 
     pragma Ada_2022;
 
@@ -1569,7 +1569,7 @@ Types that are derived from a tagged type may also inherit the :ada:`Put_Image`
 aspect. However, there are a couple of small differences in comparison to
 untagged types, as we can see in the following example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Tagged_Put_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Tagged_Put_Image
 
     pragma Ada_2022;
 
@@ -1745,7 +1745,7 @@ counter.
 Let's revisit an example from the previous section and use the procedures
 mentioned above:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Strings.Put_Image_Custom_Numerics_Extended
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image_Custom_Numerics_Extended
 
     pragma Ada_2022;
 
