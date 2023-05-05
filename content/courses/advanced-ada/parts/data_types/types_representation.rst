@@ -95,13 +95,8 @@ strict requirements that are often found there. Therefore, unless you have
 very specific requirements for your application, in most cases, you won't need
 them. However, you should at least have a rudimentary understanding of them.
 To read a thorough overview on this topic, please refer to the
-*Introduction to Embedded Systems Programming* course.
-
-.. todo::
-
-    Add link once available:
-
-    ``Introduction to Embedded Systems Programming </courses/intro-to-embedded-sys-prog/low_level_programming>``
+:doc:`Introduction to Embedded Systems Programming <learn:courses/intro-to-embedded-sys-prog/chapters/low_level_programming>`
+course.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -1039,7 +1034,8 @@ In this section, we discuss how to use record representation clauses to specify
 how a record is represented in memory. Our goal is to provide a brief
 introduction into the topic. If you're interested in more details, you can find
 a thorough discussion about record representation clauses in the
-*Introduction to Embedded Systems Programming* course.
+:doc:`Introduction to Embedded Systems Programming <learn:courses/intro-to-embedded-sys-prog/chapters/low_level_programming>`
+course.
 
 Let's start with the simple approach of declaring a record type without
 providing further information. In this case, we're basically asking the
