@@ -57,7 +57,7 @@ that parameter modes don't correspond directly to how parameters are
 actually passed. In fact, an :ada:`in out` parameter could be passed by copy.
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.By_Copy_By_Ref_Params
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
 
     with System;
 
@@ -194,7 +194,7 @@ more details :ref:`in another chapter <Adv_Ada_Limited_Types_As_Parameters>`.
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.By_Copy_By_Ref_Params
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
 
     with System;
 
@@ -326,7 +326,7 @@ variable directly, and the other one using it indirectly via the in-out
 parameter. This situation could lead to undefined behavior or to a program
 error. Consider the following code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.By_Copy_By_Ref_Params
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
 
     with System;
 
@@ -417,7 +417,7 @@ keyword to circumvent the rules mentioned so far.
 Let's rewrite a previous code example that has a parameter of elementary type
 and change it to *aliased*:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.By_Copy_By_Ref_Params
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
 
     with System;
 
@@ -478,7 +478,7 @@ As we already know, when calling subprograms, we can use positional or named
 parameter association |mdash| or a mixture of both. Also, parameters can have
 default values. Let's see some examples:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Param_Association_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.Param_Association_1
 
     package Operations is
 
@@ -546,7 +546,7 @@ For example, when we have both default values in parameters and subprogram
 overloading, the compiler might be unable to decide which subprogram we're
 calling:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Param_Association_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.Param_Association_1
     :class: ada-expect-compile-error
 
     package Operations is
@@ -618,7 +618,7 @@ When we have more than one :ada:`out` or :ada:`in out` parameters in a
 subprogram, we might run into the situation where the actual parameter overlaps
 with another parameter. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Illegal_Calls
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.Illegal_Calls
     :class: ada-expect-compile-error
 
     package Machine_X is
@@ -702,7 +702,7 @@ for any type (be it scalar, record types, and array types).
 
 For array types, the concatenation operator (:ada:`&`) is a primitive operator:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Integer_Arrays_Concat
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Operators.Integer_Arrays_Concat
 
     package Integer_Arrays is
 
@@ -735,7 +735,7 @@ that we assign to :ada:`A` and :ada:`B`.
 
 In contrast to this, the addition operator is not available for arrays:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Integer_Arrays_Addition
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Operators.Integer_Arrays_Addition
     :class: ada-expect-compile-error
 
     package Integer_Arrays is
@@ -789,7 +789,7 @@ symbols; we cannot use new symbols for custom operators.
 Let's define a custom addition operator that adds individual components of the
 :ada:`Integer_Array` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Integer_Arrays_Addition
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Operators.Integer_Arrays_Addition
 
     package Integer_Arrays is
 
@@ -860,7 +860,7 @@ We can also define custom operators for record types. For example, we
 could declare two :ada:`+` operators for a record containing the name and
 address of a person:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Rec_Operator
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Operators.Rec_Operator
 
     package Addresses is
 
@@ -951,7 +951,7 @@ In other words, changing the order of the elements in the operation doesn't
 change the result. However, in our definition above, this is *not* the case, as
 we can confirm by comparing the operation in both orders:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Rec_Operator
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Operators.Rec_Operator
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Addresses;   use Addresses;
@@ -995,7 +995,7 @@ however, we can simplify the implementation by just writing
 :ada:`is (I = 0);`. This is the complete code of :ada:`Is_Zero` using an
 expression function:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Expression_Functions.Simple_Expression_Function_1
 
     package Expr_Func is
 
@@ -1009,7 +1009,7 @@ An expression function has the same effect as the usual version using a block.
 In fact, the code above is similar to this implementation of the :ada:`Is_Zero`
 function using a block:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Expression_Functions.Simple_Expression_Function_2
 
     package Expr_Func is
 
@@ -1041,7 +1041,7 @@ the function. Note that this is only possible for expression functions; you
 cannot have a function implemented with a block in a package specification. For
 example, the following code is wrong and won't compile:
 
-.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_3
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Expression_Functions.Simple_Expression_Function_3
     :class: ada-nocheck
 
     !expr_func.ads
@@ -1060,7 +1060,7 @@ an expression function. For example, we can rewrite the first version of the
 :ada:`Expr_Func` package and move the expression function to the body of the
 package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Expression_Function_4
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Expression_Functions.Simple_Expression_Function_4
 
     package Expr_Func is
 
@@ -1083,7 +1083,7 @@ package specification. For example, the following code declares the
 while its implementation is an expression function in the private part of the
 package specification:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Private_Expression_Function_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Expression_Functions.Private_Expression_Function_1
 
     package My_Data is
 
@@ -1107,7 +1107,7 @@ package specification:
 Naturally, we could write the function implementation in the package body
 instead:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Private_Expression_Function_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Expression_Functions.Private_Expression_Function_2
 
     package My_Data is
 
@@ -1158,7 +1158,7 @@ In most languages that support overloading, overload resolution is done
 constructs. As usual, computer folks draw their trees upside-down, with
 the root at the top. For example, if we have two procedures :ada:`Print`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading.Overloading
 
     procedure Show_Overloading is
 
@@ -1183,7 +1183,7 @@ the type of :ada:`X` determines which :ada:`Print` is meant in the call.
 
 Ada is unusual in that it supports top-down overload resolution as well:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading.Overloading
 
     procedure Show_Top_Down_Overloading is
 
@@ -1221,7 +1221,7 @@ top-down information.
 
 If we overload things too heavily, we can cause ambiguities:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading.Overloading
     :class: ada-expect-compile-error
 
     procedure Show_Overloading_Error is
@@ -1276,7 +1276,7 @@ at it, for example appending ``L`` (letter el) means "the type of this
 literal is long int". That sort of kludge won't work in Ada, because we
 have an open-ended set of integer types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Literal_Resolution
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading.Literal_Resolution
 
     procedure Show_Literal_Resolution is
 
@@ -1301,7 +1301,7 @@ literal notation as being overloaded on all integer types.
 Developers sometimes wonder why the compiler can't resolve something that
 seems obvious. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Literal_Resolution_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading.Literal_Resolution_Error
     :class: ada-expect-compile-error
 
     procedure Show_Literal_Resolution_Error is
@@ -1336,7 +1336,7 @@ the context in which the aggregate appears). Bottom-up information is not
 used; that is, the compiler does not look inside the aggregate in order to
 determine its type.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Record_Resolution_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Overloading.Record_Resolution_Error
     :class: ada-expect-compile-error
 
     procedure Show_Record_Resolution_Error is
@@ -1425,7 +1425,7 @@ typically employed in signal processing algorithms, for example.
 
 In this example, we declare and use the 32-bit fixed-point type :ada:`TQ31`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Fixed_Point_Exception
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Operator_Overriding.Fixed_Point_Exception
     :class: ada-run-expect-failure
 
     package Fixed_Point is
@@ -1464,7 +1464,7 @@ Here, we're using the standard :ada:`+` operator, which raises a
 overflow. Let's now override the addition operator and enforce saturation when
 the result is out of range:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Fixed_Point_Operator_Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Operator_Overriding.Fixed_Point_Operator_Overloading
 
     package Fixed_Point is
 
@@ -1553,7 +1553,7 @@ A typical example is that of a server that is designed to run forever until the
 process is killed or the machine where the server runs is switched off. This
 server can be implemented as an endless loop. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Server_Proc
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Nonreturning_Procedures.Server_Proc
     :class: ada-norun
 
     package Servers is
@@ -1593,7 +1593,7 @@ unconditionally. In that case, exception handling is triggered, so that the
 procedure never returns to the caller. An example is that of a logging
 procedure that writes a message before raising an exception internally:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Log_Exception
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Nonreturning_Procedures.Log_Exception
     :class: ada-norun
 
     package Loggers is
@@ -1643,7 +1643,7 @@ called, right after the call to the :ada:`Log_And_Raise` procedure).
 If a nonreturning procedure returns nevertheless, this is considered a program
 error, so that the :ada:`Program_Error` exception is raised. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Erroneous_Log_Exception
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Nonreturning_Procedures.Erroneous_Log_Exception
     :class: ada-run-expect-failure
 
     package Loggers is
@@ -1716,7 +1716,7 @@ We do that by using the :ada:`Inline` aspect.
 
 Let's look at this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Inlining_Float_Arrays
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Inline_Subprograms.Inlining_Float_Arrays
 
     package Float_Arrays is
 
@@ -1810,7 +1810,7 @@ Null procedures are procedures that don't have any effect, as their body is
 empty. We declare a null procedure by simply writing :ada:`is null` in its
 declaration. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Proc_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Procedures.Null_Proc_1
 
     package Null_Procs is
 
@@ -1820,7 +1820,7 @@ declaration. For example:
 
 As expected, calling a null procedure doesn't have any effect. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Proc_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Procedures.Null_Proc_1
 
     with Null_Procs; use Null_Procs;
 
@@ -1833,7 +1833,7 @@ Null procedures are equivalent to implementing a procedure with a body that
 only contains :ada:`null`. Therefore, the :ada:`Do_Nothing` procedure above is
 equivalent to this:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Proc_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Procedures.Null_Proc_1
 
     package Null_Procs is
 
@@ -1858,7 +1858,7 @@ types |mdash| similar to what actual interfaces do for tagged types. For
 example, we may start by declaring a type and null procedures that operate on
 that type. For example, let's model a very simple API:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Storage_Model
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Procedures.Simple_Storage_Model
 
     package Simple_Storage is
 
@@ -1874,7 +1874,7 @@ Here, the API of the :ada:`Storage_Model` type consists of the :ada:`Set` and
 :ada:`Display` procedures. Naturally, we can use objects of the
 :ada:`Storage_Model` type in an application, but this won't have any effect:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Storage_Model
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Procedures.Simple_Storage_Model
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Simple_Storage; use Simple_Storage;
@@ -1891,7 +1891,7 @@ By itself, the :ada:`Storage_Model` type is not very useful. However, we can
 derive other types from it and override the null procedures. Let's say we want
 to implement the :ada:`Integer_Storage` type to store an integer value:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Simple_Storage_Model
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Null_Procedures.Simple_Storage_Model
 
     package Simple_Storage is
 

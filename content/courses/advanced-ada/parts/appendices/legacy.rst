@@ -10,7 +10,7 @@ Nested packages, as the name suggests, are declared within a parent
 package. This contrasts with child packages, which are declared independently.
 For example, this would be a nested package for the :ada:`Week` package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages
+.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Simple_Example
 
     package Week is
 
@@ -35,7 +35,7 @@ In contrast to child packages, we don't write
 :ada:`Nested`. Instead, the package body of :ada:`Nested` is *nested* in
 the package body of the parent package :ada:`Week`:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages
+.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Simple_Example
 
     package body Week is
 
@@ -52,7 +52,7 @@ the package body of the parent package :ada:`Week`:
 
 We can now use elements from :ada:`Week.Nested` in a test application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages
+.. code:: ada run_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Simple_Example
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -78,7 +78,7 @@ packages is part of the body of their parent, nested packages have the same
 visibility as their parent package. Let's rewrite the previous example using
 nested packages to illustrate this:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Visibility
+.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Visibility
 
     package Book is
 
@@ -103,7 +103,7 @@ Now, because :ada:`Author` is declared before the body of the nested package
 :ada:`Additional_Operations`, we can use it in the implementation of the
 :ada:`Get_Extended_Author` function:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Visibility
+.. code:: ada no_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Visibility
 
     package body Book is
 
@@ -140,7 +140,7 @@ Now, because :ada:`Author` is declared before the body of the nested package
 
 This is the test application in this case:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Appendices.Packages.Visibility
+.. code:: ada run_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Visibility
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;

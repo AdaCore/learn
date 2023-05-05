@@ -39,7 +39,7 @@ A use-case that we haven't mentioned in that course is that we can apply
 package renaming to group individual packages into a common hierarchy. For
 example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming.Package_Renaming_1
 
     package Driver_M1 is
 
@@ -73,7 +73,7 @@ child packages of the :ada:`Drivers` package, which is a
     :ada:`Driver_M1` (renamed as :ada:`Drivers.M1`) cannot refer to information
     from the :ada:`Drivers` package. For example:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming_1_Refer_To_Parent
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming.Package_Renaming_1_Refer_To_Parent
         :class: ada-expect-compile-error
 
         package Driver_M1 is
@@ -114,7 +114,7 @@ cannot just declare a :ada:`Drivers.M1.Ext` package like this:
 because the parent unit cannot be a renaming. The solution is to actually
 extend the original (non-renamed) package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming.Package_Renaming_1
 
     package Driver_M1.Ext is
 
@@ -150,7 +150,7 @@ package hierarchy. For example, we could adapt the previous source-code by:
 
 This is the adapted code:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Package_Renaming.Package_Renaming_2
 
     package Drivers
       with Pure is
@@ -223,7 +223,7 @@ Declaration and usage
 We declare private packages by using the :ada:`private` keyword. For example,
 let's say we have a package named :ada:`Data_Processing`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package_Decl
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package_Decl
 
     package Data_Processing is
 
@@ -234,7 +234,7 @@ let's say we have a package named :ada:`Data_Processing`:
 We simply write :ada:`private package` to declare a private child package named
 :ada:`Calculations`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package_Decl
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package_Decl
 
     private package Data_Processing.Calculations is
 
@@ -244,7 +244,7 @@ We simply write :ada:`private package` to declare a private child package named
 
 Let's see a complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package
 
     package Data_Processing is
 
@@ -306,7 +306,7 @@ We can introduce another private package :ada:`Advanced_Calculations` as a
 child of :ada:`Data_Processing` and refer to the :ada:`Calculations` package
 in its specification:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package_2
 
     package Data_Processing is
 
@@ -376,7 +376,7 @@ child package is OK, but we cannot do the same in the specification of a
 *non-private* package. For example, let's change the specification of the
 :ada:`Advanced_Calculations` and make it *non-private*:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package_2
     :class: ada-expect-compile-error
 
     with Data_Processing.Calculations;
@@ -393,7 +393,7 @@ Now, the compilation doesn't work anymore. However, we could still refer to
 :ada:`Calculations` packages in the body of the :ada:`Advanced_Calculations`
 package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package_2
 
     package Data_Processing.Advanced_Calculations is
 
@@ -427,7 +427,7 @@ While we can use a with-clause of a private child package in the body of the
 For example, we cannot refer to it in the :ada:`Test_Data_Processing`
 procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package
     :class: ada-expect-compile-error
 
     with Data_Processing; use Data_Processing;
@@ -450,7 +450,7 @@ if we implement a child package of the :ada:`Calculations` package |mdash|
 let's name it :ada:`Calculations.Child` |mdash|, we cannot refer to it in the
 :ada:`Test_Data_Processing` procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package
     :class: ada-expect-compile-error
 
     package Data_Processing.Calculations.Child is
@@ -494,7 +494,7 @@ Note that subprograms can also be declared private. We'll see this
     :ref:`in a previous section <Adv_Ada_Package_Renaming>`. We can rename a
     package as a private package, too. For example:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package_Renaming
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package_Renaming
 
         package Driver_M1 is
 
@@ -512,7 +512,7 @@ Note that subprograms can also be declared private. We'll see this
     Obviously, :ada:`Drivers.M1` has the same restrictions as any private
     package:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Package_Renaming
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_Packages.Private_Package_Renaming
         :class: ada-expect-compile-error
 
         with Driver_M1;
@@ -544,7 +544,7 @@ A private with clause allows us to refer to a package in the private part of
 another package. For example, if we want to refer to package :ada:`P` in the
 private part of :ada:`Data`, we can write :ada:`private with P`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Simple_Private_With_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_With_Clauses.Simple_Private_With_Clause
 
     package P is
 
@@ -579,7 +579,7 @@ the private part of :ada:`Data`, we can derive a new type :ada:`T2` based on
 :ada:`T` from :ada:`P`. However, we cannot do the same in the visible part of
 :ada:`Data`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Simple_Private_With_Clause
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_With_Clauses.Simple_Private_With_Clause
     :class: ada-expect-compile-error
 
     private with P;
@@ -597,7 +597,7 @@ Also, the information from :ada:`P` is available in the package body. For
 example, let's declare a :ada:`Process` procedure in the :ada:`P` package and
 use it in the body of the :ada:`Data` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Simple_Private_With_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_With_Clauses.Simple_Private_With_Clause
 
     package P is
 
@@ -652,7 +652,7 @@ a package: when we want to refer to a private child package in another child
 package. For example, here we have a package :ada:`P` and its two child
 packages: :ada:`Private_Child` and :ada:`Public_Child`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_With_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_With_Clauses.Private_With_Clause
 
     package P is
 
@@ -688,7 +688,7 @@ In this example, we're referring to the :ada:`P.Private_Child` package in the
 :ada:`P.Public_Child` package. As expected, this works fine. However, using a
 *normal* with clause doesn't work in this case:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_With_Clause
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Private_With_Clauses.Private_With_Clause
     :class: ada-expect-compile-error
 
     with P.Private_Child;
@@ -721,7 +721,7 @@ Sometimes, we might face the situation where two packages depend on
 information from each other. Let's consider a package :ada:`A` that depends
 on a package :ada:`B`, and vice-versa:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Circular_Dependency
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility.Circular_Dependency
     :class: ada-expect-compile-error
 
     with B; use B;
@@ -782,7 +782,7 @@ Keeping this information in mind, we can now correct the previous code by using
 limited with clauses for package :ada:`A` and declaring the component of the
 :ada:`T1` record using an anonymous access type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility.Limited_Visibility
 
     limited with B;
 
@@ -809,7 +809,7 @@ As expected, we can now compile the code without issues.
 Note that we can also use limited with clauses for both packages. If we do
 that, we must declare all components using anonymous access types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility.Limited_Visibility_2
 
     limited with B;
 
@@ -848,7 +848,7 @@ For a package :ada:`P`, we do this by simply writing
 Let's reuse the previous source-code example and convert types :ada:`T1` and
 :ada:`T2` to private types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Private_Visibility
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility.Limited_Private_Visibility
 
     limited private with B;
 
@@ -899,7 +899,7 @@ types. In fact, when we use a limited with clause, all other declarations have
 no visibility at all! For example, let's say we have a package :ada:`Info` that
 declares a constant :ada:`Zero_Const` and a function :ada:`Zero_Func`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Private_Visibility_Other_Elements
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility.Limited_Private_Visibility_Other_Elements
 
     package Info is
 
@@ -913,7 +913,7 @@ Also, let's say we want to use the information (from package :ada:`Info`) in
 package :ada:`A`. If we have limited visibility to package :ada:`Info`,
 however, this information won't be visible. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Private_Visibility_Other_Elements
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Limited_Visibility.Limited_Private_Visibility_Other_Elements
     :class: ada-expect-compile-error
 
     limited private with Info;
@@ -1323,7 +1323,7 @@ used |mdash| to the content of a package's visible part.
 
 For example, consider this simple procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.No_Use_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.No_Use_Clause
 
     with Ada.Text_IO;
 
@@ -1337,7 +1337,7 @@ By adding :ada:`use Ada.Text_IO` to this code, we make the visible part of the
 :ada:`Display_Message` procedure, so we can now just write :ada:`Put_Line`
 instead of :ada:`Ada.Text_IO.Put_Line`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.Use_Clause
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1361,7 +1361,7 @@ Let's now consider a simple package called :ada:`Points`, which contains the
 declaration of the :ada:`Point` type and two primitive: an :ada:`Init` function
 and an addition operator.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.Use_Type_Clause
 
     package Points is
 
@@ -1388,7 +1388,7 @@ and an addition operator.
 
 We can implement a simple procedure that makes use of this package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.Use_Type_Clause
 
     with Points; use Points;
 
@@ -1409,7 +1409,7 @@ In certain situations, however, we might want to avoid the use clause. If
 that's the case, we can rewrite the previous implementation by removing the use
 clause and specifying the :ada:`Points` package in the prefixed form:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.Use_Type_Clause
 
     with Points;
 
@@ -1432,7 +1432,7 @@ As a compromise, we can have direct visibility to the operators of a certain
 type. We do this by using a use clause in the form :ada:`use type`. This allows
 us to simplify the previous example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.Use_Type_Clause
 
     with Points;
 
@@ -1457,7 +1457,7 @@ not just its operators), we need to write a use clause in the form
 :ada:`use all type`. This allows us to simplify the previous example even
 further:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.Use_Type_Clause
 
     with Points;
 
@@ -1491,7 +1491,7 @@ Code example
 Let's start with a code example. First, we declare and implement a generic
 procedure that shows the value of a :ada:`Complex` object:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause_Complex_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Clause_Naming_Conflicts.Use_Type_Clause_Complex_Types
 
     with Ada.Numerics.Generic_Complex_Types;
 
@@ -1524,7 +1524,7 @@ Then, we implement a test procedure where we declare the
 :ada:`Complex_Float_Types` package as an instance of the
 :ada:`Generic_Complex_Types` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause_Complex_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Clause_Naming_Conflicts.Use_Type_Clause_Complex_Types
 
     with Ada.Numerics; use Ada.Numerics;
 
@@ -1564,7 +1564,7 @@ Now, let's add the declaration of the :ada:`Complex_Long_Float_Types` package
 |mdash| a second instantiation of the :ada:`Generic_Complex_Types` package
 |mdash| to the code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause_Complex_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Clause_Naming_Conflicts.Use_Type_Clause_Complex_Types
     :class: ada-expect-compile-error
 
     with Ada.Numerics; use Ada.Numerics;
@@ -1611,7 +1611,7 @@ Circumventing naming conflicts
 As we know, a simple fix for this compilation error is to add the package
 prefix in the variable declaration:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause_Complex_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Clause_Naming_Conflicts.Use_Type_Clause_Complex_Types
 
     with Ada.Numerics; use Ada.Numerics;
 
@@ -1647,7 +1647,7 @@ prefix in the variable declaration:
 
 Another possibility is to write a use clause in the form :ada:`use all type`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause_Complex_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Clause_Naming_Conflicts.Use_Type_Clause_Complex_Types
 
     with Ada.Numerics; use Ada.Numerics;
 
@@ -1683,7 +1683,7 @@ Another possibility is to write a use clause in the form :ada:`use all type`:
 For the sake of completeness, let's declare and use variables of both
 :ada:`Complex` types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause_Complex_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Clause_Naming_Conflicts.Use_Type_Clause_Complex_Types
 
     with Ada.Numerics; use Ada.Numerics;
 

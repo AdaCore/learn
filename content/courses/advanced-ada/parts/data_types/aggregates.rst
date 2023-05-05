@@ -15,7 +15,7 @@ Container Aggregates
 A container aggregate is a list of elements |mdash| such as :ada:`[1, 2, 3]`
 |mdash| that we use to initialize or assign to a container. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Simple_Container_Aggregate
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Container_Aggregates.Simple_Container_Aggregate
 
     pragma Ada_2022;
 
@@ -50,7 +50,7 @@ We can specify container aggregates in three forms:
 
 Let's look at a complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Simple_Container_Aggregate
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Container_Aggregates.Simple_Container_Aggregate
 
     pragma Ada_2022;
 
@@ -96,7 +96,7 @@ an index as the name (i.e. it's an indexed aggregate). Another option is to use
 non-indexed aggregates, where we use actual keys |mdash| as we do in maps.
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Named_Container_Aggregate
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Container_Aggregates.Named_Container_Aggregate
 
     pragma Ada_2022;
 
@@ -168,7 +168,7 @@ a brief overview on the topic.
 As we already know, record aggregates can have positional and named component
 associations. For example, consider this package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     package Points is
 
@@ -202,7 +202,7 @@ associations. For example, consider this package:
 We can use positional or named record aggregates when assigning to an object
 :ada:`P` of :ada:`Point_3D` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     with Points; use Points;
 
@@ -224,7 +224,7 @@ We can use positional or named record aggregates when assigning to an object
 
 Also, we can have a mixture of both:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     with Points; use Points;
 
@@ -249,7 +249,7 @@ remaining components.
 In addition, we can choose multiple components at once and assign the same value
 to them. For that, we use the :ada:`|` syntax:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     with Points; use Points;
 
@@ -277,7 +277,7 @@ We can use the :ada:`<>` syntax to tell the compiler to use the default value
 for specific components. However, if there's no default value for specific
 components, that component isn't initialized to a known value. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     with Points; use Points;
 
@@ -326,7 +326,7 @@ If the components of :ada:`Point_3D` had default values, those would have been
 used. For example, we may change the type declaration of :ada:`Point_3D` and use
 default values for each component:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     package Points is
 
@@ -342,7 +342,7 @@ default values for each component:
 
 Then, writing :ada:`<>` makes use of those default values we've just specified:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     with Points; use Points;
 
@@ -365,7 +365,7 @@ example, let's declare a :ada:`Point_Value` type with a default value |mdash|
 using the :ada:`Default_Value` aspect |mdash| and use it in the :ada:`Point_3D`
 record type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregate_Default_Value
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregate_Default_Value
 
     package Points is
 
@@ -404,7 +404,7 @@ record type:
 Then, writing :ada:`<>` makes use of the default value of the :ada:`Point_Value`
 type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregate_Default_Value
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregate_Default_Value
 
     with Points; use Points;
 
@@ -429,7 +429,7 @@ for all components when we write :ada:`<>`.
 Also, we can use the :ada:`others` selector to assign a value to all components
 that aren't explicitly mentioned in the aggregate. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Pos_Named_Rec_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Pos_Named_Rec_Aggregates
 
     with Points; use Points;
 
@@ -461,7 +461,7 @@ selected by :ada:`others`, say :ada:`Integer` and :ada:`Float`, then
 :ada:`(others => 256)` would trigger a compilation error. For example, consider
 this package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregates_Others
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregates_Others
 
     package Custom_Records is
 
@@ -476,7 +476,7 @@ If we had written an aggregate such as :ada:`(others => 256)` for an object of
 type :ada:`Integer_Float`, the value (256) would be OK for components :ada:`A`
 and :ada:`B`, but not for components :ada:`Y` and :ada:`Z`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregates_Others
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregates_Others
     :class: ada-expect-compile-error
 
     with Custom_Records; use Custom_Records;
@@ -493,7 +493,7 @@ and :ada:`B`, but not for components :ada:`Y` and :ada:`Z`:
 We can fix this compilation error by making sure that :ada:`others` only refers
 to components of the same type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregates_Others
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregates_Others
 
     with Custom_Records; use Custom_Records;
 
@@ -510,7 +510,7 @@ In any case, writing :ada:`(others => <>)` is always accepted by the compiler
 because it simply selects the default value of each component, so the type of
 those values is unambiguous:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregates_Others
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregates_Others
 
     with Custom_Records; use Custom_Records;
 
@@ -530,7 +530,7 @@ Record discriminants
 When a record type has discriminants, they must appear as components of an
 aggregate of that type. For example, consider this package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregate_Discriminant
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregate_Discriminant
 
     package Points is
 
@@ -600,7 +600,7 @@ otherwise, those three components don't exist in that aggregate. Also, the
 discriminant :ada:`D` must be the first one if we use positional component
 association. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Aggregate_Discriminant
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Record_Aggregates.Rec_Aggregate_Discriminant
 
     with Points; use Points;
 
@@ -640,7 +640,7 @@ cannot store any information. When declaring a null record, we simply
 write :ada:`null` instead of declaring actual components, as we usually do for
 records. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Null_Record
 
     package Null_Recs is
 
@@ -653,7 +653,7 @@ records. For example:
 Note that the syntax can be simplified to :ada:`is null record`, which is much
 more common than the previous form:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Null_Record
 
     package Null_Recs is
 
@@ -664,7 +664,7 @@ more common than the previous form:
 Although a null record doesn't have components, we can still specify
 subprograms for it. For example, we could specify an addition operation for it:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Null_Record
 
     package Null_Recs is
 
@@ -712,7 +712,7 @@ the implementation details of the API in the first stage.
 
 Consider this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Device
 
     package Devices is
 
@@ -795,7 +795,7 @@ it (as there's nothing to be implemented). We could, however, move those user
 messages from the :ada:`Show_Devices` procedure to a dummy implementation of
 the :ada:`Devices` package. This is the adapted code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Device
 
     package Devices is
 
@@ -891,7 +891,7 @@ complex prototypes with them. We could, for instance, design an application
 that makes use of many null records, or even have types that depend on or
 derive from null records. Let's see a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Derived_Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Derived_Device
 
     package Many_Devices is
 
@@ -941,7 +941,7 @@ we can start implementing some of the functionality needed for the
 :ada:`Device` type. For example, we can store information about the current
 activation state in the record:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Device
 
     package Devices is
 
@@ -1037,7 +1037,7 @@ Tagged null records
 
 A null record may be tagged, as we can see in this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Tagged_Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Tagged_Null_Record
 
     package Null_Recs is
 
@@ -1056,7 +1056,7 @@ As we see in this example, a type can be :ada:`tagged`, or even
 As expected, in addition to deriving from tagged types, we can also extend
 them. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extended_Device
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Extended_Device
 
     package Devices is
 
@@ -1107,7 +1107,7 @@ Full coverage rules for Aggregates
 One interesting feature of Ada are the *full coverage rules* for
 aggregates. For example, suppose we have a record type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules_Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1123,7 +1123,7 @@ aggregates. For example, suppose we have a record type:
 
 We can create an object of the type using an aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules_Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1144,7 +1144,7 @@ The full coverage rules say that every component of :ada:`Person` must be
 accounted for in the aggregate. If we later modify type :ada:`Person` by
 adding a component:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules_Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1168,7 +1168,7 @@ Of course, we can defeat the full coverage rules by using :ada:`others`
 statements, but occasionally useful for
 :ref:`record aggregates <Adv_Ada_Record_Aggregates>`):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules_Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1220,7 +1220,7 @@ Positional and named array aggregates
 Similar to :ref:`record aggregates <Adv_Ada_Record_Aggregates>`, array
 aggregates can be positional or named. Consider this package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     package Points is
 
@@ -1254,7 +1254,7 @@ aggregates can be positional or named. Consider this package:
 We can write positional or named aggregates when assigning to an object :ada:`P`
 of :ada:`Point_3D` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1283,7 +1283,7 @@ the indices of the components we're assigning to.
 
 We can also assign array aggregates to slices:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1314,7 +1314,7 @@ assigning the component from index 1 of the aggregate to the component of index
    In the first versions of Ada, we could only write array aggregates using
    parentheses.
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
         pragma Ada_2012;
 
@@ -1352,7 +1352,7 @@ kind of array aggregate doesn't have any components.
 
 Consider this package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates_2
 
     package Integer_Arrays is
 
@@ -1394,7 +1394,7 @@ Consider this package:
 We can initialize an object :ada:`N` of :ada:`Integer_Array` type with a null
 array aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates_2
 
     pragma Ada_2022;
 
@@ -1417,7 +1417,7 @@ We've seen the following syntactic elements when we were discussing
 :ref:`record aggregates <Adv_Ada_Record_Aggregates>`: :ada:`|`, :ada:`<>` and
 :ada:`others`. We can apply them to array aggregates as well:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1460,7 +1460,7 @@ value (if it is available). We discuss this topic in more details
 
 We can also use the range syntax (:ada:`..`) with array aggregates:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1500,7 +1500,7 @@ Missing components
 All aggregate components must have an associated value. If we don't specify a
 value for a certain component, an exception is raised:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
     :class: ada-run-expect-failure
 
     pragma Ada_2022;
@@ -1520,7 +1520,7 @@ value for a certain component, an exception is raised:
 We can use :ada:`others` to specify a value to all components that
 haven't been explicitly mentioned in the aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1539,7 +1539,7 @@ haven't been explicitly mentioned in the aggregate:
 However, :ada:`others` can only be used when the range is known |mdash|
 compilation fails otherwise:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates_2
     :class: ada-expect-compile-error
 
     pragma Ada_2022;
@@ -1578,7 +1578,7 @@ the general syntax:
 
 Let's see a complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1625,7 +1625,7 @@ So far, we've used a discrete choice list (in the :ada:`for I in Range` form) in
 the iterated component association. We could use an iterator (in the
 :ada:`for E of` form) instead. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1663,7 +1663,7 @@ So far, we've discussed one-dimensional array aggregates. We can also use the
 same constructs when dealing with multidimensional arrays. Consider, for
 example, this package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Matrix_Aggregates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Matrix_Aggregates
 
     package Matrices is
 
@@ -1725,7 +1725,7 @@ example, this package:
 We can assign multidimensional aggregates to a matrix :ada:`M` using
 positional or named component association:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Matrix_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Matrix_Aggregates
 
     pragma Ada_2022;
 
@@ -1766,7 +1766,7 @@ Strings in subaggregates
 In the case of matrices using characters, we can use strings in the
 corresponding array aggregates. Consider this package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.String_Aggregates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.String_Aggregates
 
     package String_Lists is
 
@@ -1819,7 +1819,7 @@ corresponding array aggregates. Consider this package:
 Then, when assigning to an object :ada:`SL` of :ada:`String_List` type, we can
 use strings in the aggregates:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.String_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.String_Aggregates
 
     pragma Ada_2022;
 
@@ -1868,7 +1868,7 @@ defined, however, the component will remain uninitialized, so that the behavior
 is undefined. Let's look at more complex example to illustrate this situation.
 Consider this package, for example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Array_Aggregates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Rec_Array_Aggregates
 
     package Points is
 
@@ -1927,7 +1927,7 @@ Consider this package, for example:
 
 Then, let's use :ada:`<>` for the array components:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Rec_Array_Aggregates
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Rec_Array_Aggregates
 
     pragma Ada_2022;
 
@@ -1960,7 +1960,7 @@ When a default value is specified, it is used whenever :ada:`<>` is
 specified. For example, we could use a type that has the :ada:`Default_Value`
 aspect in its specification:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates_2
 
     package Integer_Arrays is
 
@@ -1996,7 +1996,7 @@ When writing an aggregate for the :ada:`Point_3D` type, any component that has
     Similarly, we could specify the :ada:`Default_Component_Value` aspect in the
     declaration of the array type:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates_2
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates_2
 
         package Integer_Arrays is
 
@@ -2032,7 +2032,7 @@ When writing an aggregate for the :ada:`Point_3D` type, any component that has
     value specified in the :ada:`Default_Component_Value` aspect has higher
     priority:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates_2
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates_2
 
         package Integer_Arrays is
 
@@ -2117,7 +2117,7 @@ Example: :ada:`Points`
 To present a more concrete example, let's start with a package that defines
 one, two and three-dimensional point types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregate_Points
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregates.Extension_Aggregate_Points
 
     package Points is
 
@@ -2168,7 +2168,7 @@ one, two and three-dimensional point types:
 Let's now focus on the :ada:`Show_Points` procedure below, where we initialize
 a two-dimensional point using a one-dimensional point.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregate_Points
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregates.Extension_Aggregate_Points
 
     with Points; use Points;
 
@@ -2213,7 +2213,7 @@ allows us to assign to an object with information from another object
 Let's rewrite the previous :ada:`Show_Points` procedure using extension
 aggregates:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregate_Points
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregates.Extension_Aggregate_Points
 
     with Points; use Points;
 
@@ -2265,7 +2265,7 @@ well. For example, let's extend our previous code example by declaring an
 object of :ada:`Point_3D` type (called :ada:`P_3D`) and use extension
 aggregates in assignments to this object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregate_Points
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregates.Extension_Aggregate_Points
 
     with Points; use Points;
 
@@ -2302,7 +2302,7 @@ Other versions of extension aggregates are possible as well. For example, we
 can combine keywords and write :ada:`with others` to focus on all remaining
 components of an extension aggregate.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregate_Points
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregates.Extension_Aggregate_Points
 
     with Points; use Points;
 
@@ -2348,7 +2348,7 @@ We can also use extension aggregates with null records. Let's focus on the
 :ada:`P_3D_Ext` object of :ada:`Point_3D_Ext` type. This object is declared in
 the :ada:`Show_Points` procedure of the next code example.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregate_Points
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregates.Extension_Aggregate_Points
 
     package Points.Extensions is
 
@@ -2385,7 +2385,7 @@ using objects of ascending types in extension aggregates. We could, however, do
 the opposite and initialize objects of ascending types using objects of
 descendent type in extension aggregates. Consider this code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregate_Points
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Extension_Aggregates.Extension_Aggregate_Points
 
     with Points; use Points;
 
@@ -2432,7 +2432,7 @@ Delta Aggregates for Tagged Records
 
 Let's reuse the :ada:`Points` package from a previous example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates_Tagged
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates.Delta_Aggregates_Tagged
 
     package Points is
 
@@ -2488,7 +2488,7 @@ components.
 
 We can use class-wide types with delta aggregates. Consider this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates_Tagged
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates.Delta_Aggregates_Tagged
 
     pragma Ada_2022;
 
@@ -2524,7 +2524,7 @@ function and assign the same value to both components.
     We could have implemented :ada:`Reset` as a procedure |mdash| in this case,
     without using delta aggregates:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates_Tagged
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates.Delta_Aggregates_Tagged
 
         with Points; use Points;
 
@@ -2556,7 +2556,7 @@ The examples above use tagged types. We can also use delta aggregates with
 non-tagged types. Let's rewrite the :ada:`Points` package and convert
 :ada:`Point_3D` to a non-tagged record type.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates_Non_Tagged
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates.Delta_Aggregates_Non_Tagged
 
     package Points is
 
@@ -2610,7 +2610,7 @@ Delta Aggregates for Arrays
 We can use delta aggregates for arrays. Let's change the declaration of
 :ada:`Point_3D` and use an array to represent a 3-dimensional point:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates_Array
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates.Delta_Aggregates_Array
 
     package Points is
 
@@ -2675,7 +2675,7 @@ In the assignment to :ada:`P3`, we can either specify each component of the
 delta individually or use a slice: both forms are equivalent. Also, we can use
 slices to assign the same number to multiple components:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates_Array
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates.Delta_Aggregates_Array
 
     pragma Ada_2022;
 
@@ -2700,7 +2700,7 @@ Multiple components
 
 We can also assign multiple components or slices:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates_Array
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Delta_Aggregates.Delta_Aggregates_Array
 
     package Float_Arrays is
 

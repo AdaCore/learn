@@ -64,7 +64,7 @@ We've seen that the :ada:`First` and :ada:`Last` attributes can be used with
 discrete types. Those attributes are also available for real types. Here's an
 example using the :ada:`Float` type and a subtype of it:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Ranges_Real_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Ranges_Real_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -90,7 +90,7 @@ and successor of a specific value. For discrete types, this is simply the next
 discrete value. For example, :ada:`Pred (2)` is 1 and :ada:`Succ (2)` is 3.
 Let's look at a complete source-code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Show_Succ_Pred_Discrete
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Show_Succ_Pred_Discrete
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -135,7 +135,7 @@ this case, however, the value we get depends on the actual type we're using:
 Let's look at this example with a decimal type (:ada:`Decimal`) and a
 floating-point type (:ada:`My_Float`):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Show_Succ_Pred_Real
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Show_Succ_Pred_Real
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -200,7 +200,7 @@ Scalar To String Conversion
 We've seen that we can use the :ada:`Image` and :ada:`Value` attributes to
 perform conversions between values of a given subtype and a string:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Image_Value_Attr
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Image_Value_Attr
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -247,7 +247,7 @@ attribute when converting a value of :ada:`Integer` type to a string of
 This attribute is useful when we're using bounded strings in our code to store
 the string returned by the :ada:`Image` attribute. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Width_Attr
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Width_Attr
 
     with Ada.Text_IO;         use Ada.Text_IO;
     with Ada.Strings;         use Ada.Strings;
@@ -300,7 +300,7 @@ The :ada:`Base` attribute gives us the unconstrained underlying hardware
 representation selected for a given numeric type. As an example, let's say we
 declared a subtype of the :ada:`Integer` type named :ada:`One_To_Ten`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Base_Attr
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Base_Attr
 
     package My_Integers is
 
@@ -365,7 +365,7 @@ itself.)
     compilation is rejected. For example, in current architectures, the code
     below most likely won't compile:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Very_Big_Range
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Very_Big_Range
         :class: ada-expect-compile-error
 
         package Int_Def is
@@ -383,7 +383,7 @@ itself.)
 The following example shows how the :ada:`Base` attribute affects the bounds of
 a variable:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Base_Attr
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Base_Attr
 
     with Ada.Text_IO; use Ada.Text_IO;
     with My_Integers; use My_Integers;
@@ -435,7 +435,7 @@ exception being raised.
 In the following example, we adjust the result of additions and subtractions
 to avoid constraint errors:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Base_Attr_Sat
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Base_Attr_Sat
 
     package My_Integers is
 
@@ -550,7 +550,7 @@ with the concept of enumerations being constants with integer values. In Ada,
 however, enumerations are not integers. In fact, they're actually parameterless
 functions! Let's consider this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_As_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_As_Function
 
     package Days is
 
@@ -589,7 +589,7 @@ The idea that enumerations are parameterless functions can be used when we want
 to rename enumerations. For example, we could rename the enumerations of the
 :ada:`Day` type like this:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Renaming
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Renaming
 
     package Enumeration_Example is
 
@@ -610,7 +610,7 @@ to rename enumerations. For example, we could rename the enumerations of the
 Now, we can use both :ada:`Monday` or :ada:`Mon` to refer to Monday of the
 :ada:`Day` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Renaming
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Renaming
 
     with Ada.Text_IO;         use Ada.Text_IO;
     with Enumeration_Example; use Enumeration_Example;
@@ -638,7 +638,7 @@ is just another name to refer to the actual enumeration (:ada:`Mon`).
     application |mdash| and make the original enumeration invisible |mdash|,
     you can use a separate package. For example:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Renaming
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Renaming
 
         package Enumeration_Example is
 
@@ -692,7 +692,7 @@ Enumerations can be overloaded. In simple terms, this means that the same name
 can be used to declare an enumeration of different types. A typical example is
 the declaration of colors:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Overloading
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Overloading
 
     package Colors is
 
@@ -721,7 +721,7 @@ Note that we have :ada:`Red` as an enumeration of type :ada:`Color` and of type
 Ada is a strongly-typed language, in most cases, the enumeration that we're
 referring to is clear from the context. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Overloading
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Overloading
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Colors;      use Colors;
@@ -755,7 +755,7 @@ Enumeration subtypes
 Note that enumeration overloading is not the same as enumeration subtypes. For
 example, we could define the following subtype:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Overloading
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Overloading
 
     package Colors.Shades is
 
@@ -773,7 +773,7 @@ Enumeration ambiguities
 A situation where enumeration overloading might lead to ambiguities is when we
 use them in ranges. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Ambiguities
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Ambiguities
     :class: ada-expect-compile-error
 
     package Colors is
@@ -817,7 +817,7 @@ to :ada:`Put_Line` |mdash| gives us a hint about the developer's intention to
 refer to the :ada:`Color` type. In this case, we can use qualification |mdash|
 for example, :ada:`Color'(Red)` |mdash| to resolve the ambiguity:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Ambiguities
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Ambiguities
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Colors;      use Colors;
@@ -832,7 +832,7 @@ for example, :ada:`Color'(Red)` |mdash| to resolve the ambiguity:
 Note that, in the case of ranges, we can also rewrite the loop by using a range
 declaration:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Ambiguities
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Ambiguities
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Colors;      use Colors;
@@ -848,7 +848,7 @@ Alternatively, :ada:`Color range Red .. Blue` could be used in a subtype
 declaration, so we could rewrite the example above using a subtype (such as
 :ada:`Red_To_Blue`) in the loop:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Ambiguities
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Ambiguities
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Colors;      use Colors;
@@ -883,7 +883,7 @@ Also, by default, the value of the first position is zero, the value of the
 second position is one, and so on. We can see this by listing each enumeration
 of the :ada:`Day` type and displaying the value of the corresponding position:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Values
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumerations.Enumeration_Values
 
     package Days is
 
@@ -940,7 +940,7 @@ Indefinite types include:
 
 Let's see some examples of indefinite types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Indefinite_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
 
     package Unconstrained_Types is
 
@@ -962,7 +962,7 @@ Let's see some examples of indefinite types:
 
 As we've just mentioned, we cannot declare variable of indefinite types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Indefinite_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
     :class: ada-expect-compile-error
 
     with Unconstrained_Types; use Unconstrained_Types;
@@ -986,7 +986,7 @@ other words, we need to change the declaration so the type becomes definite. We
 can do this by either declaring a definite type or providing constraints in the
 variable declaration. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Indefinite_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
 
     with Unconstrained_Types; use Unconstrained_Types;
 
@@ -1027,7 +1027,7 @@ Although we cannot use indefinite types directly in variable declarations,
 they're very useful to generalize algorithms. For example, we can use them as
 parameters of a subprogram:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Indefinite_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
 
     with Unconstrained_Types; use Unconstrained_Types;
 
@@ -1071,7 +1071,7 @@ parameter :ada:`A` of :ada:`Show_Integer_Array` is unconstrained, both calls to
 Note that we could call the :ada:`Show_Integer_Array` procedure above with
 another unconstrained parameter. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Indefinite_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
 
     with Unconstrained_Types; use Unconstrained_Types;
 
@@ -1130,7 +1130,7 @@ definite type.
 Note that we can declare variables based on parameters of indefinite type. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Indefinite_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
 
     with Unconstrained_Types; use Unconstrained_Types;
 
@@ -1188,7 +1188,7 @@ the :ada:`Simple_Record` type from previous examples. In this version of the
 :ada:`Unconstrained_Types` package, we're adding a :ada:`Reset` procedure for
 the discriminated record type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Constrained_Attribute
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Constrained_Attribute
 
     package Unconstrained_Types is
 
@@ -1258,7 +1258,7 @@ specify any constraints, so that it takes the default value
 (:ada:`Extended => False`).  In the declaration of :ada:`R2`, however, we
 explicitly set :ada:`Extended` to :ada:`False`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Constrained_Attribute
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Constrained_Attribute
 
     with Ada.Text_IO;         use Ada.Text_IO;
 
@@ -1357,7 +1357,7 @@ Because this type declaration is incomplete, we need to provide the missing
 information at some later point. Consider the incomplete type :ada:`R` in the
 following example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Incomplete_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Incomplete_Types.Incomplete_Types
 
     package Incomplete_Type_Example is
 
@@ -1379,7 +1379,7 @@ It's also possible to declare an incomplete type in the private part of a
 package specification and its complete form in the package body. Let's rewrite
 the example above accordingly:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Incomplete_Types_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Incomplete_Types.Incomplete_Types_2
 
     package Incomplete_Type_Example is
 
@@ -1403,7 +1403,7 @@ A typical application of incomplete types is to create linked lists using
 access types based on those incomplete types. This kind of type is called
 a recursive type. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Linked_List_Example
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Incomplete_Types.Linked_List_Example
 
     package Linked_List_Example is
 
@@ -1442,7 +1442,7 @@ Mutually dependent types
 In this section, we discuss how to use incomplete types to declare mutually
 dependent types. Let's start with this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
     :class: ada-expect-compile-error
 
     package Mutually_Dependent is
@@ -1477,7 +1477,7 @@ For example, we could declare an incomplete type :ada:`T2` and then declare
 the component :ada:`B` of the :ada:`T1` record as an access to :ada:`T2`.
 This is the corrected version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
 
     package Mutually_Dependent is
 
@@ -1498,7 +1498,7 @@ We could strive for consistency and declare two incomplete types and two
 accesses, but this isn't strictly necessary in this case. Here's the adapted
 code:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
 
     package Mutually_Dependent is
 
@@ -1536,7 +1536,7 @@ view is a type declaration that contains all the information needed by the
 compiler. For example, the following declaration of type :ada:`R` represents
 the full view of this type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Full_View
 
     package Full_View is
 
@@ -1553,7 +1553,7 @@ partial view and making only that view compile-time visible to clients. Doing
 so requires us to introduce the private part of the package (unless already
 present). For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Partial_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Partial_Full_View
 
     package Partial_Full_Views is
 
@@ -1585,7 +1585,7 @@ information stored in this type |mdash| for example, read the value of the
 :ada:`I` component of :ada:`R` |mdash|, they can use the :ada:`R` type to
 declare objects. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Partial_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Partial_Full_View
 
     with Partial_Full_Views; use Partial_Full_Views;
 
@@ -1608,7 +1608,7 @@ In many cases, the restrictions applied to the partial and full views must
 match. For example, if we declare a limited type in the full view of a private
 type, its partial view must also be limited:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Limited_Private
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Limited_Private
 
     package Limited_Private_Example is
 
@@ -1629,7 +1629,7 @@ requirements that aren't mentioned in the partial view. For example, a type may
 be declared as non-tagged in the partial view, but, at the same time, be tagged
 in the full view:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Tagged_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Tagged_Full_View
 
     package Tagged_Full_View_Example is
 
@@ -1660,7 +1660,7 @@ want to declare objects of this type.
     |mdash| scalars, for example |mdash|, so we could declare a "private
     integer" type:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Private_Integer
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
 
         package Private_Integers is
 
@@ -1677,7 +1677,7 @@ want to declare objects of this type.
     This code compiles as expected, but isn't very useful. We can improve it by
     adding operators to it, for example:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Private_Integer
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
 
         package Private_Integers is
 
@@ -1717,7 +1717,7 @@ want to declare objects of this type.
 
     Now, we can use the :ada:`+` operator as a common integer variable:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Private_Integer
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
 
         with Private_Integers; use Private_Integers;
 
@@ -1777,7 +1777,7 @@ Let's start with the conversion between a scalar type and its derived types.
 For example, we can convert back-and-forth between the :ada:`Integer` type and
 the derived :ada:`Int` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Root_Derived_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Root_Derived_Type_Conversion
 
     package Custom_Integers is
 
@@ -1829,7 +1829,7 @@ type might have. In the example above, :ada:`Int` has a predicate that dictates
 that its value cannot be zero. This (dynamic) predicate is checked at runtime,
 so an exception is raised if it fails:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Root_Derived_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Root_Derived_Type_Conversion
     :class: ada-run-expect-failure
 
     with Ada.Text_IO;     use Ada.Text_IO;
@@ -1856,7 +1856,7 @@ Numeric type conversion
 A typical conversion is the one between integer and floating-point values. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Numeric_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Numeric_Type_Conversion
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1879,7 +1879,7 @@ example:
 Also, we can convert between fixed-point types and floating-point or integer
 types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Numeric_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Numeric_Type_Conversion
 
     package Fixed_Point_Defs is
        S     : constant := 32;
@@ -1929,7 +1929,7 @@ Enumeration conversion
 
 We can also convert between an enumeration type and a type derived from it:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Enumeration_Type_Conversion
 
     package Custom_Enumerations is
 
@@ -1964,7 +1964,7 @@ In this example, we have the :ada:`Priority` type and the derived type
 converted value is in the range of the target type. If not, an exception is
 raised:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Enumeration_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Enumeration_Type_Conversion
     :class: ada-run-expect-failure
 
     with Ada.Text_IO;         use Ada.Text_IO;
@@ -1991,7 +1991,7 @@ Similarly, we can convert between array types. For example, if we have the
 array type :ada:`Integer_Array` and its derived type
 :ada:`Derived_Integer_Array`, we can convert between those array types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Array_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion
 
     package Custom_Arrays is
 
@@ -2048,7 +2048,7 @@ Converting between different array types can be very handy, especially when
 we're dealing with array types that were not declared in the same package. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Array_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion
 
     package Custom_Arrays_1 is
 
@@ -2137,7 +2137,7 @@ We may also encounter array types originating from the instantiation of generic
 packages. In this case as well, we can use array conversions. Consider the
 following generic package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Generic_Array_Type_Conversion
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion
 
     generic
        type T is private;
@@ -2149,7 +2149,7 @@ following generic package:
 We could instantiate this generic package and reuse parts of the previous code
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Generic_Array_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion
 
     pragma Ada_2022;
 
@@ -2200,7 +2200,7 @@ the target types.
 
 For example, consider this package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Tagged_Types_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Tagged_Types_View
 
     package Some_Tagged_Types is
 
@@ -2238,7 +2238,7 @@ View conversion of tagged types
 A conversion between tagged types is a view conversion. Let's consider a
 typical code example that declares one, two and three-dimensional points:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Tagged_Type_Conversion
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Tagged_Type_Conversion
 
     package Points is
 
@@ -2289,7 +2289,7 @@ typical code example that declares one, two and three-dimensional points:
 We can use the types from the :ada:`Points` package and convert between each
 other:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Tagged_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Tagged_Type_Conversion
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Points;      use Points;
@@ -2322,7 +2322,7 @@ or :ada:`out` parameter.
 
 Let's see a code example. Consider the following simple procedure:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Untagged_Type_View_Conversion
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Untagged_Type_View_Conversion
 
     procedure Double (X : in out Float);
 
@@ -2335,7 +2335,7 @@ The :ada:`Double` procedure has an :ada:`in out` parameter of :ada:`Float`
 type. We can call this procedure using an integer variable :ada:`I` as the
 actual parameter. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Untagged_Type_View_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Untagged_Type_View_Conversion
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Double;
@@ -2358,7 +2358,7 @@ In this case, the :ada:`Float (I)` conversion in the call to :ada:`Double`
 creates a temporary floating-point variable. This is the same as if we had
 written the following code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Untagged_Type_View_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Untagged_Type_View_Conversion
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Double;
@@ -2391,7 +2391,7 @@ Implicit conversions
 Implicit conversions are only possible when we have a type :ada:`T` and a
 subtype :ada:`S` related to the :ada:`T` type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Implicit_Subtype_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Implicit_Subtype_Conversion
 
     package Custom_Integers is
 
@@ -2464,7 +2464,7 @@ different operand types.)
 
 Let's see a code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Other_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Other_Type_Conversions
 
     package Custom_Rec is
 
@@ -2602,7 +2602,7 @@ In this example, we have the :ada:`To_Integer` function that converts from the
     implement conversion functions such as the :ada:`To_Integer` function from
     the previous code example. This is the corresponding implementation:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Explicit_Rec_Conversion
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Explicit_Rec_Conversion
 
         package Custom_Defs is
 
@@ -2710,7 +2710,7 @@ mentioned there, a qualified expression specifies the exact type or subtype
 that the target expression will be resolved to, and it can be either any
 expression in parentheses, or an aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Qualified_Expressions
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Qualified_Expressions.Example
 
     package Simple_Integers is
 
@@ -2745,7 +2745,7 @@ Verifying subtypes
 
 We can use qualified expressions to verify a subtype's predicate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Qualified_Expressions
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Qualified_Expressions.Example
     :class: ada-run-expect-failure
 
     with Simple_Integers; use Simple_Integers;
@@ -2767,7 +2767,7 @@ In the
 :ref:`Introduction to Ada course <Intro_Ada_Record_Default_Values>`,
 we've seen that record components can have default values. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Defaults_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Default_Initial_Values.Defaults_1
 
     package Defaults is
 
@@ -2784,7 +2784,7 @@ type declarations, such as scalar types and arrays.
 To assign a default value for a scalar type declaration |mdash| such as an
 enumeration and a new integer |mdash|, we use the :ada:`Default_Value` aspect:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Defaults_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Default_Initial_Values.Defaults_2
 
     package Defaults is
 
@@ -2798,7 +2798,7 @@ enumeration and a new integer |mdash|, we use the :ada:`Default_Value` aspect:
 
 Note that we cannot specify a default value for a subtype:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Defaults_3
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Default_Initial_Values.Defaults_3
     :class: ada-expect-compile-error
 
     package Defaults is
@@ -2811,7 +2811,7 @@ Note that we cannot specify a default value for a subtype:
 
 For array types, we use the :ada:`Default_Component_Value` aspect:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Defaults_4
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Default_Initial_Values.Defaults_4
 
     package Defaults is
 
@@ -2823,7 +2823,7 @@ For array types, we use the :ada:`Default_Component_Value` aspect:
 
 This is a package containing the declarations we've just seen:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Defaults
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Default_Initial_Values.Defaults
 
     package Defaults is
 
@@ -2853,7 +2853,7 @@ This is a package containing the declarations we've just seen:
 In the example below, we declare variables of the types from the
 :ada:`Defaults` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Defaults
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Default_Initial_Values.Defaults
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Defaults; use Defaults;
@@ -2902,7 +2902,7 @@ if a constant declaration is deferred, it is actually declared twice:
 The simplest form of deferred constant is the one that has a full constant
 declaration in the private part of the package specification. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constant_Private
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constants.Deferred_Constant_Private
 
     package Deferred_Constants is
 
@@ -2923,7 +2923,7 @@ external implementation |mdash| using the :ada:`Import` keyword. We can use
 this to import a constant declaration from an implementation in C. For example,
 we can declare the :c:`light` constant in a C file:
 
-.. code:: c no_button manual_chop project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constant_C
+.. code:: c no_button manual_chop project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constants.Deferred_Constant_C
     :class: ada-syntax-only
 
     !constants.c
@@ -2931,7 +2931,7 @@ we can declare the :c:`light` constant in a C file:
 
 Then, we can import this constant in the :ada:`Deferred_Constants` package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constant_C
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constants.Deferred_Constant_C
     :class: ada-syntax-only
 
     package Deferred_Constants is
@@ -2957,7 +2957,7 @@ However, we may use a subtype in the full declaration |mdash| as long as it's
 compatible with the type that was used in the deferred declaration. For
 example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constant_Subtype
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constants.Deferred_Constant_Subtype
 
     package Deferred_Constants is
 
@@ -2989,7 +2989,7 @@ package, so that's where the value of the deferred constant must be computed.
 For example, the full constant declaration may be computed by a call to an
 expression function:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constant_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Deferred_Constants.Deferred_Constant_Function
 
     package Deferred_Constants is
 
@@ -3027,7 +3027,7 @@ Any type definition has a kind of literal associated with it. For example,
 integer types are associated with integer literals. Therefore, we can
 initialize an object of integer type with an integer literal:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Simple_Integer_Literal
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Simple_Integer_Literal
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3046,7 +3046,7 @@ literals, as we'll see later.
 When we declare an enumeration type, we limit the set of literals that we can
 use to initialize objects of that type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Simple_Enumeration
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Simple_Enumeration
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3093,7 +3093,7 @@ For our previous :ada:`Activation_States` type, we could declare a function
 enumeration literals that we've specified for the :ada:`Activation_States`
 type:
 
-.. code:: ada manual_chop no_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals
+.. code:: ada manual_chop no_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.User_Defined_Literals
 
     !activation_states.ads
     package Activation_States is
@@ -3122,7 +3122,7 @@ only used to convert integer literals (but not string literals) to the
 the implementation of the :ada:`Integer_To_Activation_State` function and
 convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
 
-.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.User_Defined_Literals
 
     !activation_states.adb
     package body Activation_States is
@@ -3142,7 +3142,7 @@ convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
 
 Let's look at a complete example that makes use of all three kinds of literals:
 
-.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.Activation_States
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
 
     !activation_states.ads
     package Activation_States is
@@ -3266,7 +3266,7 @@ With the definition of the :ada:`Activation_State` type that we've seen in the
 complete example, we can initialize an object of this type with an enumeration
 literal or a string, as both forms are defined in the type specification:
 
-.. code:: ada manual_chop run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Data_Types.Types.Activation_States
+.. code:: ada manual_chop run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
 
     !using_string_literal.adb
     with Ada.Text_IO;       use Ada.Text_IO;
@@ -3284,7 +3284,7 @@ Note we need to be very careful when designing conversion functions. For
 example, the use of string literals may limit the kind of checks that we can
 do. Consider the following misspelling of the :ada:`Off` literal:
 
-.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.Activation_States
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
     :class: ada-expect-compile-error
 
     !misspelling_example.adb
@@ -3302,7 +3302,7 @@ do. Consider the following misspelling of the :ada:`Off` literal:
 As expected, the compiler detects this error. However, this error is accepted
 when using the corresponding string literal:
 
-.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.Activation_States
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
 
     !misspelling_example.adb
     with Ada.Text_IO;       use Ada.Text_IO;
@@ -3339,7 +3339,7 @@ allowed for the :ada:`To_Activation_State` type.
 User-defined literals can also be used for more complex types, such as records.
 For example:
 
-.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.Record_Literals
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Record_Literals
 
     !silly_records.ads
     package Silly_Records is

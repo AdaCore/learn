@@ -10,7 +10,7 @@ In the Introduction to Ada course, we've seen that Ada has two kinds of integer
 type: :ref:`signed <Intro_Ada_Integers>` and
 :ref:`modular <Intro_Ada_Unsigned_Types>` types. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_1
 
     package Num_Types is
 
@@ -35,7 +35,7 @@ universal integer value. Let's get the modulus of the 32-bit :ada:`Modular`
 type that we've declared in the :ada:`Num_Types` package of the previous
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_1
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -73,7 +73,7 @@ be something like :ada:`-2**31 .. 2**31 - 1`. (Note: we discussed the
 Operations on modular integers use modular (wraparound) arithmetic. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_1
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -98,7 +98,7 @@ wrap around)? The answer in Ada is the former |mdash| that is, if you try to
 convert, say, :ada:`Integer'(-1)` to :ada:`Modular`, you will get
 :ada:`Constraint_Error`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_1
     :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -115,7 +115,7 @@ convert, say, :ada:`Integer'(-1)` to :ada:`Modular`, you will get
 
 To solve this problem, we can use the :ada:`Mod` attribute:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_1
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -144,7 +144,7 @@ given modular type, using wraparound semantics.
     The :ada:`Mod` attribute was added to Ada 2005 to solve this problem.
     Also, we can now safely use this attribute in generics. For example:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Mod_Attribute
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Mod_Attribute
 
         generic
            type Formal_Modular is mod <>;
@@ -184,7 +184,7 @@ performed.
 
 Let's see a simple implementation of the CRC-CCITT (0x1D0F) algorithm:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Mod_Crc_CCITT_Ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Mod_Crc_CCITT_Ada
 
     package Crc_Defs is
 
@@ -289,7 +289,7 @@ there. There are two kinds of numeric literals in Ada: integer literals and
 real literals. They are distinguished by the absence or presence of a radix
 point. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Integer_Literals
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Real_Integer_Literals
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -308,7 +308,7 @@ Another classification takes the use of a base indicator into account.
 element before the first ``#`` sign.) So here we distinguish between decimal
 literals and based literals. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Based_Literals
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Decimal_Based_Literals
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -390,7 +390,7 @@ readable and less error prone to type than
 :ada:`3.14159265358979323846264338327950288419716939937510`. Here's the
 complete code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Pi_Literals
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Pi_Literals
    :class: nosyntax-check
 
     with Ada.Text_IO;
@@ -413,7 +413,7 @@ complete code:
 Also, when using based literals, Ada allows any base from 2 to 16. Thus, we can
 write the decimal number 136 in any one of the following notations:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Based_Literals
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Based_Literals
 
     with Ada.Text_IO;
 
@@ -466,7 +466,7 @@ and have the ability to turn on/off the lights as follows:
 
 Here's the complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Literal_Lights
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Literal_Lights
 
     with Ada.Text_IO;
 
@@ -504,7 +504,7 @@ to do the above, which is even more elegant.
 The notion of base in Ada allows for exponents, which is particularly pleasant.
 For instance, we can write:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Literal_Binary
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Literal_Binary
 
     package Literal_Binaries is
        Kilobyte  : constant := 2#1#e+10;
@@ -571,7 +571,7 @@ where :ada:`Zero_Approx` is really :ada:`1.0e-29` |mdash| and that will show up
 in your numerical computations. The above is quite handy when we want to write
 fractions without any loss of precision. Here's the complete code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Literals
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Literals
 
     with Ada.Text_IO;
 
@@ -598,7 +598,7 @@ fractions without any loss of precision. Here's the complete code:
 
 Along these same lines, we can write:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Literal_Binary
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Literal_Binary
 
     with Ada.Text_IO;
 
@@ -650,7 +650,7 @@ Attribute: :ada:`'Machine_Radix`
 :ada:`'Machine_Radix` is an attribute that returns the radix of the hardware
 representation of a type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Machine_Radix
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Radix
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -679,7 +679,7 @@ and :ada:`Machine_Emax` attributes return the minimum and maximum value,
 respectively, of the machine exponent the floating-point type. Note that, in
 all cases, the returned value is a universal integer. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Machine_Emin_Emax
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Emin_Emax
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -738,7 +738,7 @@ Attribute: :ada:`'Digits`
 :ada:`'Digits` is an attribute that returns the requested decimal precision of
 a floating-point subtype. Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Digits
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Digits
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -759,7 +759,7 @@ Note that we said that :ada:`Digits` is the *requested* level of precision,
 which is specified as part of declaring a floating point type. We can retrieve
 the actual decimal precision with :ada:`'Base'Digits`. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Digits
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Base_Digits
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -796,7 +796,7 @@ indicating whether a feature is available or not in the target architecture:
   :ada:`Constraint_Error` is (or is not) guaranteed to be raised when an
   operation with that type produces an overflow or divide-by-zero.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Machine_Rounds_Overflows
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Rounds_Overflows
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -856,7 +856,7 @@ mantissa part of a floating-point value. :ada:`'Compose` is used to return a
 floating-point value based on a fraction (the mantissa part) and the machine
 exponent. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Exponent_Fraction
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Exponent_Fraction
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -907,7 +907,7 @@ Attribute: :ada:`'Scaling`
 :ada:`'Scaling` is an attribute that scales a floating-point value based on the
 machine radix and a machine exponent passed to the function. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Scaling
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Scaling
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -931,7 +931,7 @@ Attributes: :ada:`'Floor`, :ada:`Ceiling`
 :ada:`'Floor` and :ada:`'Ceiling` are attributes that returned the rounded-down
 or rounded-up value, respectively, of a floating-point value. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floor_Ceiling
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floor_Ceiling
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -956,7 +956,7 @@ integer value.
 
 Let's see some examples:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Rounding
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Rounding
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1052,7 +1052,7 @@ second parameter is the :ada:`Towards` value.
 
 Let's see a code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Truncation_Remainder
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Truncation_Remainder
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1126,7 +1126,7 @@ corresponds to the sign bit.)
 
 Let's see some examples:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Sign_Leading
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Sign_Leading
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1168,7 +1168,7 @@ Not every real number is directly representable as a floating-point value on a
 specific machine. For example, let's take a value such as 1.0 x 10\ :sup:`15`
 (or 1,000,000,000,000,000):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Float_Value
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Float_Value
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1217,7 +1217,7 @@ the difference between the original real value in our example
 (1.0 x 10\ :sup:`15`) and the actual value that is assigned to :ada:`V`. We can
 do this by using the :ada:`'Machine` attribute in the calculation:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Machine_Attribute
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Attribute
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1313,7 +1313,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
 
     Let's see an example:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Model_Mantissa
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Model_Mantissa
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1360,7 +1360,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
 
     Let's see some examples:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Model_Epsilon_Small
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Model_Epsilon_Small
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1403,7 +1403,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     value in 1.0 x 10\ :sup:`15` and the actual model value, we can use the
     :ada:`'Model` attribute:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Model_Attribute
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Model_Attribute
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1454,7 +1454,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     Let's see a code example with these attributes and compare them to the
     :ada:`'First` and :ada:`'Last` attributes:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Safe_First_Last
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Safe_First_Last
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1512,7 +1512,7 @@ Attribute: :ada:`'Machine_Radix`
 :ada:`'Machine_Radix` is an attribute that returns the radix of the hardware
 representation of a type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Machine_Radix
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Machine_Radix
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1548,7 +1548,7 @@ indicating whether a feature is available or not in the target architecture:
   :ada:`Constraint_Error` is guaranteed to be raised when a fixed-point
   operation with that type produces an overflow or divide-by-zero.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Machine_Rounds_Overflows
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Machine_Rounds_Overflows
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1595,7 +1595,7 @@ conform to the :ada:`T'Small <= T'Delta` rule.
     They can be arbitrarily large. For instance, they could be 1.0, or 1000.0.
     Consider the following example:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Large_Small_Attribute
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Large_Small_Attribute
 
         package Fixed_Point_Defs is
            S     : constant := 32;
@@ -1652,7 +1652,7 @@ it's automatically selected by the compiler, and it's always equal to the
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Small_Delta
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
 
     package Fixed_Small_Delta is
        D3 : constant := 10.0 ** (-3);
@@ -1724,7 +1724,7 @@ In the case of the :ada:`TQ15` type, we're specifying the *small* by using the
 type is 32 bits, while the precision we get when operating with this type is
 16 bits. Let's see a specific example for this type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Small_Delta
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
 
     with Ada.Text_IO;       use Ada.Text_IO;
 
@@ -1769,7 +1769,7 @@ precise:
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Fore_Aft
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Fore_Aft
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1823,7 +1823,7 @@ use for the :ada:`digits` in the definition of a decimal fixed-point type.
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Digits
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Decimal_Digits
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1865,7 +1865,7 @@ of :ada:`T'Scale` is three.
 
 Let's look at this complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Scale
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Decimal_Scale
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1908,7 +1908,7 @@ value, while the returned value is of :ada:`S'Base` type.
 
 Let's look at this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Round
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Decimal_Round
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1962,7 +1962,7 @@ Overview
 
 Let's start with a simple declaration of big numbers:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Simple_Big_Numbers
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Numbers
 
     pragma Ada_2022;
 
@@ -2001,7 +2001,7 @@ normal numeric types. In fact, the common unary operators
 :ada:`*`, :ada:`/`, :ada:`**`, :ada:`Min` and :ada:`Max`) are available to us.
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Simple_Big_Numbers_Operators
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Numbers_Operators
 
     pragma Ada_2022;
 
@@ -2034,7 +2034,7 @@ A typical example is the :wikipedia:`factorial <Factorial>`: a sequence of the
 factorial of consecutive small numbers can quickly lead to big numbers. Let's
 take this implementation as an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Factorial_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Factorial_Integer
     :class: ada-run-expect-failure
 
     function Factorial (N : Integer)
@@ -2071,7 +2071,7 @@ before getting an exception is `20!`, which basically shows the limitation of
 standard integers for this kind of algorithm. If we use big integers instead,
 we can easily display all numbers up to `50!` (and more!):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Factorial_Big_Numbers
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Factorial_Big_Numbers
 
     pragma Ada_2022;
 
@@ -2196,7 +2196,7 @@ Big integer to integer
 We use the :ada:`To_Big_Integer` and :ada:`To_Integer` functions to convert
 back and forth between :ada:`Big_Integer` and :ada:`Integer` types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Simple_Big_Integer_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Integer_Conversion
 
     pragma Ada_2022;
 
@@ -2220,7 +2220,7 @@ In addition, we can use the generic :ada:`Signed_Conversions` and
 :ada:`Unsigned_Conversions` packages to convert between :ada:`Big_Integer` and
 any signed or unsigned integer types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Arbitrary_Big_Integer_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Arbitrary_Big_Integer_Conversion
 
     pragma Ada_2022;
 
@@ -2275,7 +2275,7 @@ Big real to floating-point types
 When converting between big real and floating-point types, we have to
 instantiate the generic :ada:`Float_Conversions` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Real_Floating_Point_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Floating_Point_Conversion
 
     pragma Ada_2022;
 
@@ -2328,7 +2328,7 @@ Big real to fixed-point types
 When converting between big real and ordinary fixed-point types, we have to
 instantiate the generic :ada:`Fixed_Conversions` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Real_Fixed_Point_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Fixed_Point_Conversion
 
     pragma Ada_2022;
 
@@ -2373,7 +2373,7 @@ Big reals to (big) integers
 
 We can also convert between big reals and big integers (or standard integers):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Real_Big_Integer_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Big_Integer_Conversion
 
     pragma Ada_2022;
 
@@ -2411,7 +2411,7 @@ String conversions
 
 In addition to that, we can use string conversions:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Number_String_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Number_String_Conversion
 
     pragma Ada_2022;
 
@@ -2513,7 +2513,7 @@ Instead, these subtypes include contracts to check the corresponding range.
 In any case, we can use them to ensure that a big integer is in the expected
 (natural or positive) range:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Positive_Natural
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Positive_Natural
 
     pragma Ada_2022;
 
@@ -2543,7 +2543,7 @@ Other operators for big integers
 
 We can use the :ada:`mod` and :ada:`rem` operators with big integers:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Integer_Rem_Mod
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Integer_Rem_Mod
 
     pragma Ada_2022;
 
@@ -2569,7 +2569,7 @@ Moreover, there's a :ada:`Greatest_Common_Divisor` function for big
 integers which, as the name suggests, calculates the greatest common divisor of
 two big integer values:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Integer_Greatest_Common_Divisor
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Integer_Greatest_Common_Divisor
 
     pragma Ada_2022;
 
@@ -2598,7 +2598,7 @@ we can simply assign `2/3` to a big real variable. (Note that we're able to
 omit the decimal points, as we write :ada:`2/3` instead of :ada:`2.0 / 3.0`.)
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Real_Quotient_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Quotient_Conversion
 
     pragma Ada_2022;
 
@@ -2641,7 +2641,7 @@ Previously, we've talked about the :ada:`Big_Natural` and :ada:`Big_Positive`
 subtypes. In addition to those subtypes, we have the :ada:`In_Range` function
 for big numbers:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers_In_Range
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Numbers_In_Range
 
     pragma Ada_2022;
 

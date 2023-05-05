@@ -9,7 +9,7 @@ Dereferencing
 In the :ref:`Introduction to Ada course <Intro_Ada_Access_Dereferencing>`, we
 discussed the :ada:`.all` syntax to dereference access values:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Simple_Dereferencing
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Simple_Dereferencing
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -36,7 +36,7 @@ access objects of :ada:`Integer` type. We dereference :ada:`A1` by writing
 
 Here's another example, this time with an array:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Array_Dereferencing
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Array_Dereferencing
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -97,7 +97,7 @@ Let's start by looking into an example of implicit dereferencing of arrays. We
 can take the previous code example and replace :ada:`Arr.all (I)` by
 :ada:`Arr (I)`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Array_Implicit_Dereferencing
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Array_Implicit_Dereferencing
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -147,7 +147,7 @@ Implicit dereferencing isn't available for the whole array because we have to
 distinguish between assigning to access values and assigning to actual arrays.
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Array_Assignments
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Array_Assignments
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -205,7 +205,7 @@ Records
 
 Let's see an example of implicit dereferencing of a record:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Record_Implicit_Dereferencing
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Record_Implicit_Dereferencing
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -245,7 +245,7 @@ Attributes
 
 Finally, let's see an example of implicit dereference when using attributes:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Array_Implicit_Dereferencing
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Array_Implicit_Dereferencing
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -388,7 +388,7 @@ trying to implement any actual algorithm.)
 We can implement this table as a two-dimensional array (:ada:`Calc_Table`),
 where each quality level has an associated array:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Uniform_Table
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Arrays.Uniform_Table
 
     package Data_Processing is
 
@@ -420,7 +420,7 @@ indicates the actual number of coefficients of each quality level.
 Alternatively, we could use a record (:ada:`Table_Coefficient`) that stores the
 number of coefficients and the actual coefficients:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Uniform_Table
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Arrays.Uniform_Table
 
     package Data_Processing is
 
@@ -455,7 +455,7 @@ coefficients.
 This is an example of a :ada:`Process` procedure that references the
 :ada:`Calc_Table`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Uniform_Table
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Arrays.Uniform_Table
 
     package Data_Processing.Operations is
 
@@ -503,7 +503,7 @@ non-uniform multidimensional array.
 
 For example, we can declare a constant array :ada:`Table` as a ragged array:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Simple_Ragged_Array
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Arrays.Simple_Ragged_Array
 
     package Data_Processing is
 
@@ -536,7 +536,7 @@ array is allocated via :ada:`new`, those arrays may have different sizes.
 We can rewrite the example from the previous subsection using a ragged array
 for the :ada:`Calc_Table`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Table
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Arrays.Ragged_Table
 
     package Data_Processing is
 
@@ -570,7 +570,7 @@ array initialization (via the allocation of the :ada:`Data` array for the
 
 This is the adapted :ada:`Process` procedure:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Table
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Arrays.Ragged_Table
 
 
     package Data_Processing.Operations is
@@ -611,7 +611,7 @@ reference. In Ada, if we allocate an object via :ada:`new`, we have a
 potentially aliased object. We can then have multiple references to this
 object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing_Via_Access
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Aliasing_Via_Access
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -641,7 +641,7 @@ words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
     Note that aliasing is unrelated to renaming. For example, we could use
     renaming to write a program that looks similar to the one above:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Renaming
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Renaming
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -677,7 +677,7 @@ declaration: :ada:`Obj : aliased Integer;`.
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Aliased_Obj
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Access_Aliased_Obj
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -697,7 +697,7 @@ Here, we declare :ada:`I_Var` as an aliased integer variable and get a
 reference to it, which we assign to :ada:`A1`. Naturally, we could also have
 two accesses :ada:`A1` and :ada:`A2`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Aliased_Obj
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Access_Aliased_Obj
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -754,7 +754,7 @@ modifiers:
 
 Let's look at an example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Show_Access_Modifiers
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Show_Access_Modifiers
 
     package Integer_Access_Types is
 
@@ -787,7 +787,7 @@ object.
 Let's look at an example of how to use the integer access types from the
 previous code snippet:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Show_Access_Modifiers
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Show_Access_Modifiers
 
     package Integer_Access_Types is
 
@@ -864,7 +864,7 @@ By default, declared objects |mdash| i.e. without using :ada:`new`
 |mdash| are not aliased. Therefore, we cannot have get a reference to those
 objects. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Non_Aliased_Obj
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Access_Non_Aliased_Obj
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -891,7 +891,7 @@ We can use aliased objects to declare
 :ref:`ragged arrays <Adv_Ada_Ragged_Arrays>`. For example, we can rewrite a
 previous program using aliased constant objects:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Array_Aliased_Objs
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Ragged_Array_Aliased_Objs
 
     package Data_Processing is
 
@@ -931,7 +931,7 @@ It's interesting to mention that access objects can be aliased themselves.
 Consider this example where we declare the :ada:`Integer_Access_Access` type
 to refer to an access object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliased_Access
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Aliased_Access
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -965,7 +965,7 @@ Aliased components
 Components of an array or a record can be aliased. This allows us to get access
 to those components:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliased_Components
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Aliased_Components
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1036,7 +1036,7 @@ we'll discuss soon:
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliased_Rec_Component
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Aliased_Rec_Component
 
     package Data_Processing is
 
@@ -1162,7 +1162,7 @@ We discuss all these topics in more details later.
 
 Let's see a complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Simple_Anonymous_Access_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Simple_Anonymous_Access_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1224,7 +1224,7 @@ anonymous type, and the :ada:`S'Access` attribute always works.
 
 Let's see an example:
 
-.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Object_Assignment
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Anonymous_Access_Object_Assignment
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1265,7 +1265,7 @@ approach in terms of clean Ada software design.)
 In contrast, if we had used named type declarations, the code would be more
 complicated and more limited:
 
-.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Object_Assignment
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Anonymous_Access_Object_Assignment
 
     package Aux is
 
@@ -1334,7 +1334,7 @@ types.
     corresponding declaration must match. In the following example, we can see
     how this rule works:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Subtype_Error
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Anonymous_Access_Subtype_Error
         :class: ada-expect-compile-error
 
         procedure Show_Anonymous_Access_Subtype_Error is
@@ -1404,7 +1404,7 @@ In the section on
 a code example that was using named access types. We could now rewrite it using
 anonymous access types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Mutually_Dependent_Anonymous_Access_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Mutually_Dependent_Anonymous_Access_Types
 
     package Mutually_Dependent is
 
@@ -1461,7 +1461,7 @@ Also, for the reference type, we have to:
 
 Let's see a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Simple_User_Defined_References
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.Simple_User_Defined_References
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1569,7 +1569,7 @@ tagged type. For example, let's change the declaration of the
 :ada:`Id_Number` type from the previous code example and add a :ada:`Show`
 primitive.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.User_Defined_References
 
     package Info is
        type Id_Number (Id : Positive) is
@@ -1595,7 +1595,7 @@ primitive.
 Then, let's declare a reference type and a reference object in the test
 application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.User_Defined_References
 
     with Info; use Info;
 
@@ -1631,7 +1631,7 @@ A typical application of user-defined references is to create cursors when
 iterating over a container. As an example, let's implement the
 :ada:`National_Date_Info` package to store the national day of a country:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.National_Dates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
 
     package National_Date_Info is
 
@@ -1677,7 +1677,7 @@ information.
 Now, let's implement the :ada:`National_Date_Containers` with a container for
 national days:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.National_Dates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
 
     with National_Date_Info; use National_Date_Info;
 
@@ -1750,7 +1750,7 @@ Finally, let's see a test application that stores information for some
 countries into the :ada:`Nat_Dates` container and displays the information for
 a specific country:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.National_Dates
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
 
     with National_Date_Info;
     use  National_Date_Info;
@@ -1790,7 +1790,7 @@ type) and display its information by calling the :ada:`Show` procedure.
     container for other record types. In fact, this is actually very
     straightforward:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.National_Dates
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
 
         generic
            type T is private;
@@ -1842,7 +1842,7 @@ type) and display its information by calling the :ada:`Show` procedure.
     declare the :ada:`National_Date_Containers` package as an instance of the
     :ada:`Generic_Containers` package:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.National_Dates
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
 
         with Generic_Containers;
         with National_Date_Info; use National_Date_Info;
@@ -2009,7 +2009,7 @@ no longer exists.
 
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Lifetime
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Lifetime
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -2136,7 +2136,7 @@ deeper level.
 
 Let's now look at the complete code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Library_Level
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Library_Level
     :class: ada-expect-compile-error
 
     package Library_Level is
@@ -2305,7 +2305,7 @@ code example, the :ada:`L0_Integer_Access (L1_IA)` conversion is illegal
 because the resulting object is less deep. That being said, conversions on the
 same level are fine:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Same_Level_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Same_Level_Conversion
 
     procedure Show_Same_Level_Conversion is
        type L1_Integer_Access is
@@ -2356,7 +2356,7 @@ thereby preventing that a dangling reference gets used.
 
 Let's see an example of how dangling references could occur:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dangling_Reference_Rules
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Dangling_Reference_Rules
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -2520,7 +2520,7 @@ Let's adapt the
 :ref:`code example from that section <Adv_Ada_Accessibility_Rules_Code_Example>`
 to make use of anonymous access types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Library_Level
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Library_Level
     :class: ada-expect-compile-error
 
     package Library_Level is
@@ -2623,7 +2623,7 @@ Let's adapt parts of the previous
 :ref:`code example <Adv_Ada_Accessibility_Rules_Code_Example>` and add
 anonymous access types to it:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Conversions_Named_Anonymous_Access_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Named_Anonymous_Access_Type_Conversions
     :class: ada-expect-compile-error
 
     package Library_Level is
@@ -2756,7 +2756,7 @@ lifetime of access types.
 
 Let's see a simplified version of a code example from that section:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dangling_Reference_Rules
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Access.Dangling_Reference_Rules
     :class: ada-expect-compile-error
 
     package Integers is
@@ -2794,7 +2794,7 @@ references, we can the use :ada:`'Unchecked_Access` attribute. For instance, we
 can use this attribute to circumvent the compilation error in the previous code
 example, since we know that the assignment is actually safe:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dangling_Reference_Rules
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Access.Dangling_Reference_Rules
 
     package Integers is
 
@@ -2848,7 +2848,7 @@ Our starting point to manually deallocate an object is the generic
 procedure for an access type whose objects we want to be able to deallocate.
 For example, let's instantiate it for the :ada:`Integer_Access` type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Simple_Unchecked_Deallocation
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Simple_Unchecked_Deallocation
 
     with Ada.Unchecked_Deallocation;
 
@@ -2886,7 +2886,7 @@ Because each instance of :ada:`Ada.Unchecked_Deallocation` is bound to a
 specific access type, we cannot use it for another access type, even if the
 type we use for the :ada:`Object` parameter is the same:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Simple_Unchecked_Deallocation
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Simple_Unchecked_Deallocation
 
     with Ada.Unchecked_Deallocation;
 
@@ -2920,7 +2920,7 @@ very common.
 Now, let's see a complete example that includes object allocation and
 deallocation:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Unchecked_Deallocation
 
     with Ada.Unchecked_Deallocation;
 
@@ -2986,7 +2986,7 @@ access value |mdash| which was previously pointing to an existing object
 Note that it is OK to call :ada:`Free` multiple times for the same access
 object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Unchecked_Deallocation
 
     with Integer_Types; use Integer_Types;
 
@@ -3027,7 +3027,7 @@ dangling references and the issues of having them in an application.
 Let's reuse the last example and introduce :ada:`I_2`, which will point to the
 same object as :ada:`I`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Unchecked_Deallocation
     :class: ada-run-expect-failure
 
     with Integer_Types; use Integer_Types;
@@ -3083,7 +3083,7 @@ For the example we've just seen, we could avoid creating a dangling reference
 by explicitly assigning :ada:`null` to :ada:`I_2` to indicate that it doesn't
 point to any specific object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Unchecked_Deallocation
 
     with Integer_Types; use Integer_Types;
 
@@ -3144,7 +3144,7 @@ Dereferencing dangling references
 Of course, you shouldn't try to dereference a dangling reference because your
 program becomes erroneous, as we discuss in this section. Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Unchecked_Deallocation
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Integer_Types; use Integer_Types;
@@ -3235,7 +3235,7 @@ There are two unsurprising restrictions for :ada:`Ada.Unchecked_Deallocation`:
 
 Let's see an example of these restrictions:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Deallocation.Unchecked_Deallocation_Error
     :class: ada-expect-compile-error
 
     with Ada.Unchecked_Deallocation;
@@ -3297,7 +3297,7 @@ singly-linked list can be null-terminated. A :ada:`Lookup` function can
 return :ada:`null` to mean "not found", presuming the result is of an
 access type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_Return
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_And_Not_Null_Access.Null_Return
     :class: ada-syntax-only
 
     package Show_Null_Return is
@@ -3312,7 +3312,7 @@ access type:
 
 An alternative design for :ada:`Lookup` would be to raise an exception:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Not_Found_Exception
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_And_Not_Null_Access.Not_Found_Exception
     :class: ada-syntax-only
 
     package Show_Not_Found_Exception is
@@ -3332,7 +3332,7 @@ idea to document whether things can be null or not, especially for formal
 parameters and function results. Prior to Ada 2005, we would do that with
 comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Not_Null_Return
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_And_Not_Null_Access.Not_Null_Return
     :class: ada-syntax-only
 
     package Show_Not_Null_Return is
@@ -3347,7 +3347,7 @@ comments. Since Ada 2005, we can use the :ada:`not null` syntax:
 
 This is a complete package for the code snippets above:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Complete_Null_Return
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_And_Not_Null_Access.Complete_Null_Return
 
     package Example is
 
@@ -3447,7 +3447,7 @@ parameters and function results, for this reason.
 Another advantage of :ada:`not null` over comments is for efficiency.
 Consider procedures :ada:`P` and :ada:`Q` in this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Complete_Null_Return
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_And_Not_Null_Access.Complete_Null_Return
 
     package Example.Processing is
 
@@ -3488,7 +3488,7 @@ the call site is usually beneficial because
 This is analogous to the situation with other run-time checks, such as
 array bounds checks:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Process_Array
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_And_Not_Null_Access.Process_Array
 
     package Show_Process_Array is
 
@@ -3527,7 +3527,7 @@ In a typical subprogram call, we indicate the subprogram we want to call
 statically. For example, let's say we've implemented a procedure :ada:`Proc`
 that calls a procedure :ada:`P`:
 
-.. code:: ada compile_button main=proc.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Subprogram_Call
+.. code:: ada compile_button main=proc.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Subprogram_Call
 
    procedure P (I : in out Integer);
 
@@ -3566,7 +3566,7 @@ We declare an access to a subprogram as a type by writing
 :ada:`access procedure` or :ada:`access function` and the corresponding
 prototype:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprogram_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
 
     package Access_To_Subprogram_Types is
 
@@ -3584,7 +3584,7 @@ in the subprogram.
 We can use those types to declare access to subprograms |mdash| as subprogram
 parameters, for example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprogram_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
 
     with Access_To_Subprogram_Types;
     use  Access_To_Subprogram_Types;
@@ -3613,7 +3613,7 @@ the :ada:`P` procedure by simply passing :ada:`I` as a parameter. In this case,
 
 In addition, we can declare those subprogram parameters using anonymous types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprogram_Params
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
 
     package Access_To_Subprogram_Params is
 
@@ -3641,7 +3641,7 @@ later.
 
 Finally, we can get access to a subprogram using the :ada:`Access` attribute:
 
-.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprogram_Params
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
 
     procedure Add_Ten (I : in out Integer);
 
@@ -3683,7 +3683,7 @@ procedure as a parameter (:ada:`Log_Proc`). Also, this parameter may be
 :ada:`null` by default |mdash| so that no procedure is called if the parameter
 isn't specified:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Log_Procedure
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Log_Procedure
 
     package Data_Processing is
 
@@ -3721,7 +3721,7 @@ the call.)
 Now, let's implement two logging procedures that match the expected form of
 the :ada:`Log_Procedure` type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Log_Procedure
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Log_Procedure
 
     with Ada.Text_IO;     use Ada.Text_IO;
     with Data_Processing; use Data_Processing;
@@ -3751,7 +3751,7 @@ the :ada:`Log_Procedure` type:
 Finally, we implement a test application that selects each of the logging
 procedures that we've just implemented:
 
-.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Log_Procedure
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Log_Procedure
 
     with Ada.Text_IO;     use Ada.Text_IO;
     with Data_Processing; use Data_Processing;
@@ -3786,7 +3786,7 @@ we ensure that a subprogram must be specified |mdash| either as a parameter or
 when initializing an access object. Otherwise, an exception is raised. Let's
 adapt the previous example and introduce the :ada:`Init_Function` type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Init_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_Init_Function
 
     package Data_Processing is
 
@@ -3829,7 +3829,7 @@ implementation of the :ada:`Process` procedure of the code example.
 Now, let's declare two simple functions |mdash| :ada:`Init_Zero` and
 :ada:`Init_One` |mdash| that return 0.0 and 1.0, respectively:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Init_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_Init_Function
 
     function Init_Zero return Float;
     function Init_One return Float;
@@ -3847,7 +3847,7 @@ Now, let's declare two simple functions |mdash| :ada:`Init_Zero` and
 Finally, let's see a test application where we select each of the init
 functions we've just implemented:
 
-.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Init_Function
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_Init_Function
 
     with Ada.Text_IO;     use Ada.Text_IO;
     with Data_Processing; use Data_Processing;
@@ -3901,7 +3901,7 @@ argument cannot be :ada:`null` due to the null exclusion.
 
     Here's another example, first with :ada:`null`:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_Procedure
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Null_Procedure
         :class: ada-syntax-only
 
         package Show_Null_Procedure is
@@ -3924,7 +3924,7 @@ argument cannot be :ada:`null` due to the null exclusion.
 
     and without :ada:`null`:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Null_Procedure
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Null_Procedure
         :class: ada-syntax-only
 
         package Show_Null_Procedure is
@@ -3952,7 +3952,7 @@ argument cannot be :ada:`null` due to the null exclusion.
     complete package that includes both versions of the :ada:`Iterate`
     procedure:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Complete_Not_Null_Procedure
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Complete_Not_Null_Procedure
 
         package Example is
 
@@ -4037,7 +4037,7 @@ Up to this point, we've discussed access to *normal* Ada subprograms. In some
 situations, however, we might want to have access to protected subprograms.
 To do this, we can simply declare a type using :ada:`access protected`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Simple_Protected_Access
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Simple_Protected_Access
 
     package Simple_Protected_Access is
 
@@ -4078,7 +4078,7 @@ Now, let's discuss a more useful example: a simple system that allows us to
 register protected procedures and execute them. This is implemented in
 :ada:`Work_Registry` package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Protected_Access_Init_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Protected_Access_Init_Function
 
     package Work_Registry is
 
@@ -4181,7 +4181,7 @@ we store the procedures in an array (of :ada:`Work_Handlers` type).
 In the next part of the code, we declare the :ada:`Integer_Storage` type,
 which is a simple protected type that we use to store an integer value:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Protected_Access_Init_Function
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Protected_Access_Init_Function
 
     with Work_Registry;
 
@@ -4245,7 +4245,7 @@ indicates that this procedure was designed to be registered in the system of
 Finally, we have a test application in which we declare a registry (:ada:`WHR`)
 and an array of "protected integer objects" (:ada:`Int_Stor`):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Protected_Access_Init_Function
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Protected_Access_Init_Function
 
     with Work_Registry;
     use  Work_Registry;
@@ -4307,7 +4307,7 @@ we register the :ada:`Show` procedure of each protected object from
     :ada:`Int_Stor` with a local array (and then adapt the remaining code). If
     we do this, we get a compilation error in the call to :ada:`Register`:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Protected_Access_Init_Function
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Protected_Access_Init_Function
         :class: ada-expect-compile-error
 
         with Work_Registry;

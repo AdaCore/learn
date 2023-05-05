@@ -24,7 +24,7 @@ must, however, increase for each enumeration.
 
 We can rewrite the previous example using a representation clause:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enumeration_Values
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enumeration_Representation_Clauses.Enumeration_Values
 
     package Days is
 
@@ -67,7 +67,7 @@ basically viewing the integer value as a bit-field and assigning one bit for
 each enumeration. As long as we maintain an increasing order, we can use
 totally arbitrary values as well. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enumeration_Values
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enumeration_Representation_Clauses.Enumeration_Values
 
     package Days is
 
@@ -139,7 +139,7 @@ Size attribute and aspect
 
 Let's start with a code example using the :ada:`Size` attribute:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Sizes
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Sizes
 
     package Custom_Types is
 
@@ -232,7 +232,7 @@ Component size
 Let's continue our discussion on sizes with an example that makes use of the
 :ada:`Component_Size` attribute:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Sizes
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Sizes
 
     package Custom_Types is
 
@@ -350,7 +350,7 @@ Storage size
 To complete our discussion on sizes, let's look at this example of storage
 sizes:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Sizes
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Sizes
 
     package Custom_Types is
 
@@ -444,7 +444,7 @@ dereferencing it |mdash| in our example, we do this by writing
 Now, let's use the :ada:`Storage_Size` aspect to actually reserve memory for
 this data type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Sizes
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Sizes
     :class: ada-run-expect-failure
 
     package Custom_Types is
@@ -539,7 +539,7 @@ For many algorithms, it's important to ensure that we're using the appropriate
 alignment. This can be done by using the :ada:`Alignment` attribute and the
 :ada:`Alignment` aspect. Let's look at this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Alignment
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Alignment
 
     package Custom_Types is
 
@@ -635,7 +635,7 @@ bits instead of 8 bits as for the :ada:`UInt_7` type.
 Note that you can also retrieve the alignment associated with a class using
 :ada:`S'Class'Alignment`. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Class_Alignment
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Class_Alignment
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -697,7 +697,7 @@ objects related to each other:
 
 Let's look at this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Overlapping_Storage
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Overlapping_Storage
 
     package Int_Array_Processing is
 
@@ -835,7 +835,7 @@ and forth. We'll come back to this point later.
 The situation is even worse when implementing bit-fields, which can be
 declared as an array of :ada:`Boolean` components. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Non_Packed_Flags
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Non_Packed_Flags
 
     package Flag_Definitions is
 
@@ -882,7 +882,7 @@ improving memory usage. This is actually possible by using the :ada:`Pack`
 aspect. For example, we could extend the previous example and declare a
 :ada:`Packed_Flags` type that makes use of this aspect:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Packed_Flags
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Packed_Flags
 
     package Flag_Definitions is
 
@@ -945,7 +945,7 @@ conversion.
 
 Let's modify the previous example and introduce this type conversion:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Flag_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Flag_Conversion
 
     package Flag_Definitions is
 
@@ -1048,7 +1048,7 @@ our target architecture.
 
 Let's see a simple example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Rep_Clauses_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Rep_Clauses_1
 
     package P is
 
@@ -1091,7 +1091,7 @@ using representation clauses, as you can see in the code starting at the
 :ada:`for R use record` line in the code example below |mdash| we'll discuss
 the syntax and further details right after this example.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Rep_Clauses_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Rep_Clauses_2
 
     package P is
 
@@ -1172,7 +1172,7 @@ not with record types.
 We can revisit the previous example and verify how the compiler represents the
 :ada:`R` type in memory:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Storage_Place_Attributes
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Storage_Place_Attributes
 
     package P is
 
@@ -1266,7 +1266,7 @@ before component :ada:`B`:
 
 This is the code that implements that:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Rep_Clauses_Empty_Byte
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Rep_Clauses_Empty_Byte
 
     package P is
 
@@ -1304,7 +1304,7 @@ As we've mentioned in the previous section, we can use aspects to request a
 specific size to the compiler. In this case, we could use the
 :ada:`Object_Size` aspect:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Rep_Clauses_Empty_Byte
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Rep_Clauses_Empty_Byte
 
     package P is
 
@@ -1353,7 +1353,7 @@ matter. In this case, we could simply derive :ada:`R` as :ada:`R_New` and use a
 representation clause for :ada:`R_New`. This is exactly what we do in the
 specification of the child package :ada:`P.Rep`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Derived_Rep_Clauses_Empty_Byte
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Derived_Rep_Clauses_Empty_Byte
 
     package P is
 
@@ -1421,7 +1421,7 @@ contains a value. Due to the fact that we can use representation clauses to
 describe individual bits of a register as records, the implementation becomes
 as simple as this:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Rep_Clauses_Simple_Reg
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Rep_Clauses_Simple_Reg
 
     package P is
 
@@ -1461,7 +1461,7 @@ represents a field from our register, and it has a fixed location (which
 matches the register representation we see in the graph above). Any operation
 on the register is as simple as accessing the record component. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Rep_Clauses_Simple_Reg
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Record_Representation_Storage_Clauses.Rep_Clauses_Simple_Reg
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1512,7 +1512,7 @@ A powerful feature of Ada is the ability to specify the exact data layout. This
 is particularly important when you have an external device or program that
 requires a very specific format. Some examples are:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Com_Packet
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.Com_Packet
 
     package Communication is
 
@@ -1534,7 +1534,7 @@ which lays out the fields of a record, and in the case of :ada:`Val`, forces a
 biased representation in which all zero bits represents 100. Another example
 is:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Array_Rep
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.Array_Rep
 
     package Array_Representation is
 
@@ -1548,7 +1548,7 @@ is:
 which forces the components to take only 3 bits, crossing byte boundaries as
 needed. A final example is:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enum_Rep
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.Enum_Rep
 
     package Enumeration_Representation is
 
@@ -1581,7 +1581,7 @@ The idea is to use type derivation, where one type has the specified format and
 the other has the normal default format. For instance for the array case above,
 we would write:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Array_Rep
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.Array_Rep
 
     package Array_Representation is
 
@@ -1596,7 +1596,7 @@ we would write:
 Now we read and write the data using the :ada:`External_Arr` type. When we want
 to convert to the efficient form, :ada:`Arr`, we simply use a type conversion.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Array_Rep
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.Array_Rep
 
     with Array_Representation;
     use  Array_Representation;
@@ -1627,7 +1627,7 @@ Similar code can be used in the record and enumeration type cases. It is even
 possible to specify two different representations for the two types, and
 convert from one form to the other, as in:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enum_Rep
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.Enum_Rep
 
     package Enumeration_Representation is
 
@@ -1657,7 +1657,7 @@ All the representation clauses that are interesting from the point of view of
 change of representation are "type related", so for example, the following
 sequence would be illegal:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Array_Rep_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.Array_Rep_2
     :class: ada-expect-compile-error
 
     package Array_Representation is
@@ -1742,7 +1742,7 @@ representation. Let's have a look at how type derivation works when there are
 primitive subprograms defined at the point of derivation. Consider this
 example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.My_Int
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.My_Int
 
     package My_Ints is
 
@@ -1774,7 +1774,7 @@ which :ada:`My_Int_2` replaces :ada:`My_Int_1`, but that would be impractical
 and expensive. The actual mechanism avoids the need to do this by use of
 implicit type conversions. Suppose after the above declarations, we write:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.My_Int
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.My_Int
 
     with My_Ints; use My_Ints;
 
@@ -1792,7 +1792,7 @@ implicit type conversions. Suppose after the above declarations, we write:
 
 The compiler translates this as:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.My_Int
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Changing_Data_Representation.My_Int
 
     with My_Ints; use My_Ints;
 
@@ -1862,7 +1862,7 @@ In the next example, we show an application that
 
 The mock-up data includes valid and invalid states.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Valid_States
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Valid_Attribute.Valid_States
     :class: ada-run
 
     procedure Create_Test_File (File_Name : String);
@@ -2020,7 +2020,7 @@ for changing its structure. Basically, it's a record containing a :ada:`case`.
 The :ada:`State_Or_Integer` declaration in the :ada:`States` package below is
 an example of a variant record:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.State_Or_Integer
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.State_Or_Integer
 
     package States is
 
@@ -2067,7 +2067,7 @@ exception is raised as expected because :ada:`Use_Enum` is set to :ada:`True`,
 so that the :ada:`I` component is invalid |mdash| only the :ada:`S` component
 is valid in this case.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.State_Or_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.State_Or_Integer
     :class: ada-run-expect-failure
 
     with States; use States;
@@ -2083,7 +2083,7 @@ In addition to not being able to read the value of a component that isn't
 valid, assigning a value to a component that isn't valid also raises an
 exception at runtime. In this example, we cannot assign to :ada:`V.I`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.State_Or_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.State_Or_Integer
     :class: ada-run-expect-failure
 
     with States; use States;
@@ -2101,7 +2101,7 @@ For example, we can derive a new type from :ada:`State_Or_Integer` and use
 this aspect in its declaration. We do this in the declaration of the
 :ada:`Unchecked_State_Or_Integer` type below.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_State_Or_Integer
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.Unchecked_State_Or_Integer
 
     package States is
 
@@ -2148,7 +2148,7 @@ Because we now use the :ada:`Unchecked_State_Or_Integer` type for the input
 parameter of the :ada:`Display_State_Value` procedure, no exception is raised
 at runtime, as both components are now accessible. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_State_Or_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.Unchecked_State_Or_Integer
 
     with States; use States;
 
@@ -2168,7 +2168,7 @@ Also, we can assign to any of the components of a record that has the
 :ada:`Unchecked_Union` aspect. In our example, we can now assign to both the
 :ada:`S` and the :ada:`I` components of the :ada:`V` record:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_State_Or_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.Unchecked_State_Or_Integer
 
     with States; use States;
 
@@ -2187,7 +2187,7 @@ In the example above, we're use an aggregate in the assignments to :ada:`V`. By
 doing so, we avoid that :ada:`Use_Enum` is set to the *wrong* component. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_State_Or_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.Unchecked_State_Or_Integer
     :class: ada-run-expect-failure
 
     with States; use States;
@@ -2217,7 +2217,7 @@ with 3, which is a valid integer value, but results in an invalid value for
 the :ada:`S` component, as the value 3 cannot be mapped to the representation
 of the :ada:`State` type.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_State_Or_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.Unchecked_State_Or_Integer
     :class: ada-run-expect-failure
 
     with States; use States;
@@ -2235,7 +2235,7 @@ discussed in the previous section |mdash| for the :ada:`S` component before
 trying to use its value in the implementation of the :ada:`Display_State_Value`
 procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_State_Or_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Unchecked_Union.Unchecked_State_Or_Integer
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2309,7 +2309,7 @@ of the volatile object from memory for each access.
 
 Let's look at a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Volatile_Object_Ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Object_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2328,7 +2328,7 @@ In this example, :ada:`Val` has the :ada:`Volatile` aspect, which makes the
 object volatile. We can also use the :ada:`Volatile` aspect in type
 declarations. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Volatile_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Type
 
     package Shared_Var_Types is
 
@@ -2361,7 +2361,7 @@ In addition to that, we can declare components of an array to be volatile. In
 this case, we can use the :ada:`Volatile_Components` aspect in the array
 declaration. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Volatile_Array_Components
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Array_Components
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2385,7 +2385,7 @@ declaration. For example:
 Note that it's possible to use the :ada:`Volatile` aspect for the array
 declaration as well:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Volatile_Array
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Array
 
     package Shared_Var_Types is
 
@@ -2422,7 +2422,7 @@ the way objects can be represented in memory, as we'll see next.
 To indicate that an object is independent, we use the :ada:`Independent`
 aspect:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Independent_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Object
 
     package Shared_Var_Types is
 
@@ -2432,7 +2432,7 @@ aspect:
 
 Similarly, we can use this aspect when declaring types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
 
     package Shared_Var_Types is
 
@@ -2450,7 +2450,7 @@ In this example, we're declaring the :ada:`Independent_Boolean` type and using
 it in the declaration of the :ada:`Flag` record type. Let's now derive the
 :ada:`Flags` type and use a representation clause for the derived type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
     :class: ada-expect-compile-error
 
     package Shared_Var_Types.Representation is
@@ -2489,7 +2489,7 @@ the issues in the code above by:
 
 This is the corrected version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
 
     with System;
 
@@ -2509,7 +2509,7 @@ likely the representation that the compiler would have chosen for this data
 type. We could, however, have added an empty storage unit between :ada:`F1` and
 :ada:`F2` |mdash| by simply writing :ada:`F2 at 2 ...`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
 
     with System;
 
@@ -2530,7 +2530,7 @@ might select.
 
 For arrays, we can use the :ada:`Independent_Components` aspect:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Independent_Components
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Components
 
     package Shared_Var_Types is
 
@@ -2545,7 +2545,7 @@ same restrictions apply when we use the :ada:`Independent_Components` aspect.
 For example, this aspect prevents that array components are packed when the
 :ada:`Pack` aspect is used. Let's discuss the following erroneous code example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Packed_Independent_Components
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Packed_Independent_Components
     :class: ada-expect-compile-error
 
     package Shared_Var_Types is
@@ -2567,7 +2567,7 @@ limitation. If we remove the :ada:`Size` aspect, however, the code is compiled
 successfully because the compiler ignores the :ada:`Pack` aspect and allocates
 a larger size for :ada:`F`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Packed_Independent_Components
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Packed_Independent_Components
 
     package Shared_Var_Types is
 
@@ -2641,7 +2641,7 @@ memory-mapped registers are handled atomically. In Ada, we can use the
 :ada:`Atomic` aspect to indicate that an object is atomic. This is how we can
 use the aspect to declare a shared hardware register:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Atomic_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Object
 
     with System;
 
@@ -2662,7 +2662,7 @@ specify the address of the memory-mapped register.
 In addition to atomic objects, we can declare atomic types |mdash| similar to
 what we've seen before for volatile objects. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Atomic_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Types
 
     with System;
 
@@ -2684,7 +2684,7 @@ atomic type. Objects of this type |mdash| such as :ada:`R` in this example
 
 We can also declare atomic array components:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Atomic_Array_Components
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Array_Components
 
     package Shared_Var_Types is
 
@@ -2701,7 +2701,7 @@ components |mdash| the atomicity of its components is indicated by the
 Note that if an object is atomic, it is also volatile and independent. In other
 words, these type declarations are equivalent:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Atomic_Volatile_Independent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Volatile_Independent
 
     package Shared_Var_Types is
 
@@ -2720,7 +2720,7 @@ A simular rule applies to components of an array. When we use the
 :ada:`Volatile_Components` and :ada:`Independent_Components`. For example,
 these array declarations are equivalent:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Atomic_Volatile_Independent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Volatile_Independent
 
     package Shared_Var_Types is
 
@@ -2759,7 +2759,7 @@ As we know, we can use the :ada:`'Image` attribute of a type to get a string
 associated with this type. This is useful for example when we want to display a
 user message for an enumeration type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enumeration_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Discarding_Names.Enumeration_Image
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2778,7 +2778,7 @@ user message for an enumeration type:
 
 This is similar to having this code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Enumeration_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Discarding_Names.Enumeration_Image
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2827,7 +2827,7 @@ with the type. Here, we can use the :ada:`Discard_Names` aspect to request the
 compiler to reduce |mdash| as much as possible |mdash| the amount of storage
 used for storing names for this type. Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Discard_Names
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Discarding_Names.Discard_Names
 
     procedure Show_Discard_Names is
        pragma Warnings (Off, "is not referenced");
