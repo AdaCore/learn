@@ -1107,7 +1107,7 @@ Full coverage rules for Aggregates
 One interesting feature of Ada are the *full coverage rules* for
 aggregates. For example, suppose we have a record type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Limited_Types.Full_Coverage_Rules
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1123,7 +1123,7 @@ aggregates. For example, suppose we have a record type:
 
 We can create an object of the type using an aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Limited_Types.Full_Coverage_Rules
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1144,7 +1144,7 @@ The full coverage rules say that every component of :ada:`Person` must be
 accounted for in the aggregate. If we later modify type :ada:`Person` by
 adding a component:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Limited_Types.Full_Coverage_Rules
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1168,7 +1168,7 @@ Of course, we can defeat the full coverage rules by using :ada:`others`
 statements, but occasionally useful for
 :ref:`record aggregates <Adv_Ada_Record_Aggregates>`):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Limited_Types.Full_Coverage_Rules
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;

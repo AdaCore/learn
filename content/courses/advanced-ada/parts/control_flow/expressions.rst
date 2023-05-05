@@ -403,7 +403,7 @@ The :ada:`Max` function in the following code example is an expression function
 implemented with a conditional expression |mdash| an if-expression, to be more
 precise:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Simple_Conditional_If_Expressions
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Simple_Conditional_If_Expressions
 
     package Expr_Func is
 
@@ -422,7 +422,7 @@ to :ada:`Off`). For other values, the state remains unchanged |mdash| i.e. the
 returned value is the same as the input value. This is the implementation using
 a conditional expression:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_If_Expressions_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Conditional_If_Expressions_1
 
     package Expr_Func is
 
@@ -442,7 +442,7 @@ therefore be more complicated).
 
 The code above corresponds to this more verbose version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_If_Expressions_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Conditional_If_Expressions_2
 
     package Expr_Func is
 
@@ -475,7 +475,7 @@ an if-block to an if-expression is quite straightforward.
 We could also replace the if-expression used in the :ada:`Toggled` function
 above with a case-expression. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_Case_Expressions_1
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Conditional_Case_Expressions_1
 
     package Expr_Func is
 
@@ -493,7 +493,7 @@ Note that we use commas in case-expressions to separate the alternatives (the
 :ada:`when` expressions). The code above corresponds to this more verbose
 version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Conditional_Case_Expressions_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Conditional_Case_Expressions_2
 
     package Expr_Func is
 
@@ -557,7 +557,7 @@ two functions:
 
 This is the complete code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Quantified_Expression_1
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Quantified_Expression_1
 
     package Int_Arrays is
 
@@ -620,7 +620,7 @@ in the :ada:`for I in A'Range loop if ... return ...` form. In the code below,
 we're implementing :ada:`Is_Zero` and :ada:`Has_Zero` using loops and
 conditions instead of quantified expressions:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Quantified_Expression_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Quantified_Expression_2
 
     package Int_Arrays is
 
@@ -706,7 +706,7 @@ expressions by simply using the :ada:`E of A` form. In this case, we can just
 write :ada:`for all E of A => ...`. Let's adapt the implementation of
 :ada:`Is_Zero` and :ada:`Has_Zero` using this form:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Numerics.Quantified_Expression_3
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Quantified_Expression_3
 
     package Int_Arrays is
 
