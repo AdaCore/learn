@@ -3,22 +3,6 @@ Packages
 
 .. include:: ../../../global.txt
 
-.. _Adv_Ada_Pure:
-
-Pure program and library units
-------------------------------
-
-.. admonition:: Relevant topics
-
-    - :arm:`C.4 Preelaboration Requirements <C-4>`
-    - :arm:`10.2.1 Elaboration Control <10-2-1>`
-    - Add link to :ref:`Adv_Ada_Preelaboration` section
-
-.. todo::
-
-    Complete section!
-
-
 .. _Adv_Ada_Package_Renaming:
 
 Package renaming
@@ -29,7 +13,7 @@ that we can :ref:`rename packages <Intro_Ada_Package_Renaming>`.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
+    - :arm22:`10.1.1 Compilation Units - Library Units <10-1-1>`
 
 
 Grouping packages
@@ -200,7 +184,7 @@ proceed with the discussion, let's recapitulate some important ideas that we've
 seen earlier.
 
 In the
-:doc:`Introduction to Ada course </courses/intro-to-ada/chapters/privacy>`,
+:ref:`Introduction to Ada course <Intro_Ada_Course_Privacy>`,
 we've seen that encapsulation plays an important role in modular programming.
 By using the private part of a package specification, we can disclose some
 information, but, at the same time, prevent that this information gets
@@ -529,7 +513,7 @@ Note that subprograms can also be declared private. We'll see this
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`10.1.1 Compilation Units - Library Units <10-1-1>`
+    - :arm22:`10.1.1 Compilation Units - Library Units <10-1-1>`
 
 
 .. _Adv_Ada_Private_With_Clauses:
@@ -711,7 +695,7 @@ of a non-private child package.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
+    - :arm22:`10.1.2 Context Clauses - With Clauses <10-1-2>`
 
 
 Limited Visibility
@@ -835,7 +819,7 @@ Now, both packages :ada:`A` and :ada:`B` have limited visibility to each other.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`10.1.2 Context Clauses - With Clauses <10-1-2>`
+    - :arm22:`10.1.2 Context Clauses - With Clauses <10-1-2>`
 
 Limited visibility and private with clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1352,7 +1336,7 @@ introduce two specific forms of use clauses: :ada:`use type` and
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`8.4 Use Clauses <8-4>`
+    - :arm22:`8.4 Use Clauses <8-4>`
 
 Another use clause example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1483,7 +1467,7 @@ they're not directly visible anymore, even if we have a use clause.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`8.4 Use Clauses <8-4>`
+    - :arm22:`8.4 Use Clauses <8-4>`
 
 Code example
 ~~~~~~~~~~~~

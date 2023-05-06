@@ -24,7 +24,7 @@ Here are some examples from each category:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
+    - :arm22:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
 
 Labels
 ------
@@ -56,7 +56,7 @@ statement.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
+    - :arm22:`5.1 Simple and Compound Statements - Sequences of Statements <5-1>`
 
 Labels and :ada:`goto` statements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -331,7 +331,7 @@ condition :ada:`Cond` is met, even if we're actually within the inner loop.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.7 Exit Statements <5-7>`
+    - :arm22:`5.7 Exit Statements <5-7>`
 
 
 If, case and loop statements
@@ -387,9 +387,11 @@ statement.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.3 If Statements <5-3>`
-    - :arm:`5.4 Case Statements <5-4>`
-    - :arm:`5.5 Loop Statements <5-5>`
+    - :arm22:`5.3 If Statements <5-3>`
+    - :arm22:`5.4 Case Statements <5-4>`
+    - :arm22:`5.5 Loop Statements <5-5>`
+
+.. _Adv_Ada_Case_Statements_And_Expressions:
 
 Case statements and expressions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -399,14 +401,11 @@ As we know, the case statement has a choice expression
 Also, this expression can be a function call or a type conversion, for example
 |mdash| in additional to being a variable or a constant.
 
-As we discussed earlier on, if we use parentheses, the contents between those
+As we discussed :ref:`earlier on <Adv_Ada_Parenthesized_Expressions>`,
+if we use parentheses, the contents between those
 parentheses is parsed as an expression. In the context of case statements, the
 expression is first evaluated before being used as a choice expression. Consider
 the following code example:
-
-.. todo::
-
-    Add link to Adv_Ada_Parenthesized_Expressions when it's available
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.If_Case_Loop_Statements.Case_Statement_Expression
     :class: ada-expect-compile-error
@@ -561,7 +560,7 @@ Block statement identifiers are useful:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`5.6 Block Statements <5-6>`
+    - :arm22:`5.6 Block Statements <5-6>`
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2025:
@@ -636,7 +635,7 @@ as the function result.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`6.5 Return Statements <6-5>`
+    - :arm22:`6.5 Return Statements <6-5>`
 
 
 Other usages of extended return statements

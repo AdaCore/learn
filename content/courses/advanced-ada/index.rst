@@ -20,7 +20,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. container:: content-copyright
 
-        Copyright © 2019 |ndash| 2022, AdaCore
+        Copyright © 2019 |ndash| 2023, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -104,7 +104,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     This course will teach you advanced topics of the Ada programming language.
     The
-    :doc:`Introduction to Ada </courses/intro-to-ada/index>`
+    :ref:`Introduction to Ada <Intro_Ada_Course_Index>`
     course is a prerequisite for this course.
 
     .. only:: not no_hidden_books
@@ -126,9 +126,9 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. admonition:: CHANGELOG
 
-        *Release 2023-04*
+        *Release 2023-05*
 
-        - First draft release including following chapters:
+        - First draft release including following parts:
 
             - Data Types
             - Control Flow
@@ -151,7 +151,7 @@ Advanced Journey With Ada: A Flight In Progress
 
 .. toctree::
     :maxdepth: 4
-    :caption: Contents:
+    :caption: Contents
 
     parts/data_types/index
     parts/control_flow/index
@@ -161,7 +161,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. toctree::
         :maxdepth: 4
-        :caption: Contents:
+        :caption: Contents
 
         parts/resource_management/index
         parts/abstraction-oriented_prog/index

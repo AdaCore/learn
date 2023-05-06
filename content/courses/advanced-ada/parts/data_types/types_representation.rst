@@ -95,19 +95,14 @@ strict requirements that are often found there. Therefore, unless you have
 very specific requirements for your application, in most cases, you won't need
 them. However, you should at least have a rudimentary understanding of them.
 To read a thorough overview on this topic, please refer to the
-*Introduction to Embedded Systems Programming* course.
-
-.. todo::
-
-    Add link once available:
-
-    ``Introduction to Embedded Systems Programming </courses/intro-to-embedded-sys-prog/low_level_programming>``
+:ref:`Introduction to Embedded Systems Programming <Intro_Embedded_Sys_Prog_Low_Level_Programming>`
+course.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.2 Packed Types <13-2>`
-    - :arm:`13.3 Operational and Representation Attributes <13-3>`
-    - :arm:`13.5.3 Bit Ordering <13-5-3>`
+    - :arm22:`13.2 Packed Types <13-2>`
+    - :arm22:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm22:`13.5.3 Bit Ordering <13-5-3>`
 
 Sizes
 ~~~~~
@@ -1039,7 +1034,8 @@ In this section, we discuss how to use record representation clauses to specify
 how a record is represented in memory. Our goal is to provide a brief
 introduction into the topic. If you're interested in more details, you can find
 a thorough discussion about record representation clauses in the
-*Introduction to Embedded Systems Programming* course.
+:ref:`Introduction to Embedded Systems Programming <Intro_Embedded_Sys_Prog_Low_Level_Programming>`
+course.
 
 Let's start with the simple approach of declaring a record type without
 providing further information. In this case, we're basically asking the
@@ -1152,7 +1148,7 @@ bits span over four storage units (positions #0 .. #3).
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.5.1 Record Representation Clauses <13-5-1>`
+    - :arm22:`13.5.1 Record Representation Clauses <13-5-1>`
 
 Storage Place Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1243,7 +1239,7 @@ seen above.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.5.2 Storage Place Attributes <13-5-2>`
+    - :arm22:`13.5.2 Storage Place Attributes <13-5-2>`
 
 Using Representation Clauses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2007,7 +2003,7 @@ when we know that information stored in memory might be corrupted.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`13.9.2 The Valid Attribute <13-9-2>`
+    - :arm22:`13.9.2 The Valid Attribute <13-9-2>`
 
 Unchecked Union
 ---------------
@@ -2274,7 +2270,7 @@ solving very specific problems when doing low-level programming.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`B.3.3 Unchecked Union Types <B-3-3>`
+    - :arm22:`B.3.3 Unchecked Union Types <B-3-3>`
 
 Shared variable control
 -----------------------
@@ -2284,7 +2280,7 @@ start by discussing volatile objects.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`C.6 Shared Variable Control <C-6>`
+    - :arm22:`C.6 Shared Variable Control <C-6>`
 
 Volatile
 ~~~~~~~~

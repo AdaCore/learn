@@ -3,6 +3,9 @@ Expressions
 
 .. include:: ../../../global.txt
 
+
+.. _Adv_Ada_Expressions:
+
 Expressions: Definition
 -----------------------
 
@@ -13,7 +16,7 @@ at compile-time.
 
 Even though the definition above is very simple, Ada expressions are actually
 very flexible |mdash| and they can also be very complex. In fact, if you read
-the :arm:`corresponding section <4-4>` of the Ada Reference Manual, you'll
+the :arm22:`corresponding section <4-4>` of the Ada Reference Manual, you'll
 quickly discover that they include elements such as relations, membership
 choices, terms and primaries. Some of these are classic elements of expressions
 in programming languages, although some of their forms are unique to Ada. In
@@ -22,7 +25,7 @@ complete overview, please refer to the Reference Manual.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.4 Expressions <4-4>`
+    - :arm22:`4.4 Expressions <4-4>`
 
 
 Relations and simple expressions
@@ -184,12 +187,12 @@ a membership choice list, and :ada:`Off` and :ada:`A` are membership choices.
            | raise_expression
 
     Again, for more details, please refer to the
-    :arm:`section on expressions <4-4>` of the Ada Reference Manual.
+    :arm22:`section on expressions <4-4>` of the Ada Reference Manual.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.4 Expressions <4-4>`
-    - :arm:`4.5.2 Relational Operators and Membership Tests <4-5-2>`
+    - :arm22:`4.4 Expressions <4-4>`
+    - :arm22:`4.5.2 Relational Operators and Membership Tests <4-5-2>`
 
 
 Numeric expressions
@@ -246,7 +249,7 @@ each:
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.4 Expressions <4-4>`
+    - :arm22:`4.4 Expressions <4-4>`
 
 
 Other expressions
@@ -257,7 +260,7 @@ Indeed, expressions can be of any type, and the definition of primaries we've
 seen earlier on already hints in this direction |mdash| as it includes elements
 such as allocators. Because expressions are very flexible, covering all possible
 variations and combinations in this section is out of scope. Again, please refer
-to the :arm:`section on expressions <4-4>` of the Ada Reference Manual for
+to the :arm22:`section on expressions <4-4>` of the Ada Reference Manual for
 further details.
 
 
@@ -353,11 +356,8 @@ expression, a term, a factor and a primary.
 However, if we replace :ada:`case M1 is` by :ada:`case (M1) is`, :ada:`(M1)`
 is identified as a parenthesized expression, not as a name! This parenthesized
 expression is first parsed and evaluated, which might have implications in case
-statements, as we'll see in another chapter.
-
-.. todo::
-
-    Add link to subsection on case statements and expressions.
+statements, as we'll see
+:ref:`in another chapter <Adv_Ada_Case_Statements_And_Expressions>`.
 
 Let's look at another example, this time with a subprogram call:
 
@@ -524,7 +524,7 @@ semicolons.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.5.7 Conditional Expressions <4-5-7>`
+    - :arm22:`4.5.7 Conditional Expressions <4-5-7>`
 
 .. _Adv_Ada_Quantified_Expressions:
 
@@ -728,7 +728,7 @@ comparing them against zero.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm:`4.5.8 Quantified Expressions <4-5-8>`
+    - :arm22:`4.5.8 Quantified Expressions <4-5-8>`
 
 
 .. _Adv_Ada_Declare_Expressions:
