@@ -1062,7 +1062,7 @@ the exception occurrences that we collected.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Similarly, we can use files to read and write exception occurences. To do that,
-we can simply use the :ada:`'Read` and :ada:`'Write` attributes.
+we can simply use the :ada:`Read` and :ada:`Write` attributes.
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exceptions_Package.Exception_Occurrence_Stream
     :class: ada-run
