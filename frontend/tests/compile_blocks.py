@@ -525,6 +525,8 @@ def analyze_file(rst_file):
 
                     try:
                         run("gprclean", "-P", project_filename)
+
+                        run("gnatprove", "-P", project_filename, "--clean")
                     except S.CalledProcessError as e:
                         out = str(e.output.decode("utf-8"))
 
