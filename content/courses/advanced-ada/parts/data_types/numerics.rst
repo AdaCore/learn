@@ -2506,7 +2506,30 @@ Similar to integer types, big integers have the :ada:`Big_Natural` and
 :ada:`Big_Positive` subtypes to indicate natural and positive numbers. However,
 in contrast to the :ada:`Natural` and :ada:`Positive` subtypes, the
 :ada:`Big_Natural` and :ada:`Big_Positive` subtypes are defined via predicates
-rather than the simple ranges of normal (ordinary) numeric types.
+rather than the simple ranges of normal (ordinary) numeric types:
+
+.. code-block:: ada
+
+    subtype Natural  is
+      Integer range 0 .. Integer'Last;
+
+    subtype Positive is
+      Integer range 1 .. Integer'Last;
+
+    subtype Big_Natural is Big_Integer
+      with Dynamic_Predicate =>
+             (if Is_Valid (Big_Natural)
+                then Big_Natural >= 0),
+           Predicate_Failure =>
+             (raise Constraint_Error);
+
+    subtype Big_Positive is Big_Integer
+      with Dynamic_Predicate =>
+             (if Is_Valid (Big_Positive)
+                then Big_Positive > 0),
+           Predicate_Failure =>
+             (raise Constraint_Error);
+
 Therefore, we cannot simply use attributes such as :ada:`Big_Natural'First`.
 However, we can use the subtypes to ensure that a big integer is in the
 expected (natural or positive) range:
