@@ -587,6 +587,7 @@ def analyze_file(rst_file):
                         has_error = True
 
             if 'ada-syntax-only' in block.classes or not block.run:
+                cleanup_project(block.language, project_filename, main_file)
                 continue
 
             compile_error = False
