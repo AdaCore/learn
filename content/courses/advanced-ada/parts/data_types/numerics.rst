@@ -808,8 +808,8 @@ indicating whether a feature is available or not in the target architecture:
   rounding-toward-zero).
 
 - :ada:`Machine_Overflows` is an attribute that indicates whether a
-  :ada:`Constraint_Error` is (or is not) guaranteed to be raised when an
-  operation with that type produces an overflow or divide-by-zero.
+  :ada:`Constraint_Error` exception is (or is not) guaranteed to be raised
+  when an operation with that type produces an overflow or divide-by-zero.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Rounds_Overflows
 
