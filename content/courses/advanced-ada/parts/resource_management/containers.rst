@@ -5,7 +5,7 @@ Containers
 
 .. _Adv_Ada_Aggregate_Aspect:
 
-:ada:`'Aggregate` aspect
+:ada:`Aggregate` aspect
 ------------------------
 
 .. admonition:: In the Ada Reference Manual

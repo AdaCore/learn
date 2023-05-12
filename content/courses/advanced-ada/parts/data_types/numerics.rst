@@ -644,10 +644,10 @@ In this section, we discuss various attributes related to floating-point types.
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Attribute: :ada:`'Machine_Radix`
+Attribute: :ada:`Machine_Radix`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Machine_Radix` is an attribute that returns the radix of the hardware
+:ada:`Machine_Radix` is an attribute that returns the radix of the hardware
 representation of a type. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Radix
@@ -670,10 +670,10 @@ representation of a type. For example:
 Usually, this value is two, as the radix is based on a binary system.
 
 
-Attributes: :ada:`'Machine_Mantissa`, :ada:`'Machine_Emin` and :ada:`Machine_Emax`
+Attributes: :ada:`Machine_Mantissa`, :ada:`Machine_Emin` and :ada:`Machine_Emax`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Machine_Mantissa` is an attribute that returns the number of bits
+:ada:`Machine_Mantissa` is an attribute that returns the number of bits
 reserved for the mantissa of the floating-point type. The :ada:`Machine_Emin`
 and :ada:`Machine_Emax` attributes return the minimum and maximum value,
 respectively, of the machine exponent the floating-point type. Note that, in
@@ -714,11 +714,11 @@ all cases, the returned value is a universal integer. For example:
           & Long_Long_Float'Machine_Emax'Image);
     end Show_Machine_Emin_Emax;
 
-On a typical desktop PC, as indicated by :ada:`'Machine_Mantissa`, we have 24
+On a typical desktop PC, as indicated by :ada:`Machine_Mantissa`, we have 24
 bits for the floating-point mantissa of the :ada:`Float` type.
 
 To get the actual minimum and maximum value of the exponent for a specific
-type, we need to use :ada:`'Machine_Radix` that we've just discussed in the
+type, we need to use :ada:`Machine_Radix` that we've just discussed in the
 previous section. Let's calculate the minimum and maximum value of the exponent
 for the :ada:`Float` type on a typical PC:
 
@@ -732,10 +732,10 @@ for the :ada:`Float` type on a typical PC:
     - In our target platform, this is
       2\ :sup:`128`  = 3.40282366920938463463 x 10\ :sup:`38`.
 
-Attribute: :ada:`'Digits`
+Attribute: :ada:`Digits`
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Digits` is an attribute that returns the requested decimal precision of
+:ada:`Digits` is an attribute that returns the requested decimal precision of
 a floating-point subtype. Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Digits
@@ -757,7 +757,7 @@ type is six digits.
 
 Note that we said that :ada:`Digits` is the *requested* level of precision,
 which is specified as part of declaring a floating point type. We can retrieve
-the actual decimal precision with :ada:`'Base'Digits`. For example:
+the actual decimal precision with :ada:`Base'Digits`. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Base_Digits
 
@@ -776,19 +776,19 @@ On a typical desktop PC, the requested decimal precision of the :ada:`Float_D3`
 type is three digits, while the actual decimal precision is six digits.
 
 
-Attributes: :ada:`'Denorm`, :ada:`Signed_Zeros`, :ada:`'Machine_Rounds`, :ada:`Machine_Overflows`
+Attributes: :ada:`Denorm`, :ada:`Signed_Zeros`, :ada:`Machine_Rounds`, :ada:`Machine_Overflows`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss attributes that return :ada:`Boolean` values
 indicating whether a feature is available or not in the target architecture:
 
-- :ada:`'Denorm` is an attribute that indicates whether the target architecture
+- :ada:`Denorm` is an attribute that indicates whether the target architecture
   uses :wikipedia:`denormalized numbers <Subnormal_number>`.
 
-- :ada:`'Signed_Zeros` is an attribute that indicates whether the type uses a
+- :ada:`Signed_Zeros` is an attribute that indicates whether the type uses a
   sign for zero values, so it can represent both -0.0 and 0.0.
 
-- :ada:`'Machine_Rounds` is an attribute that indicates whether
+- :ada:`Machine_Rounds` is an attribute that indicates whether
   rounding-to-nearest is used, rather than some other choice (such as
   rounding-toward-zero).
 
@@ -840,19 +840,19 @@ indicating whether a feature is available or not in the target architecture:
           & Long_Long_Float'Machine_Overflows'Image);
     end Show_Boolean_Attributes;
 
-On a typical PC, :ada:`'Denorm`, :ada:`'Signed_Zeros`, :ada:`'Machine_Rounds`
-are true, while :ada:`'Machine_Overflows` is false.
+On a typical PC, :ada:`Denorm`, :ada:`Signed_Zeros`, :ada:`Machine_Rounds`
+are true, while :ada:`Machine_Overflows` is false.
 
 
 Primitive function attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Attributes: :ada:`'Fraction`, :ada:`'Exponent` and :ada:`Compose`
+Attributes: :ada:`Fraction`, :ada:`Exponent` and :ada:`Compose`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Exponent` is an attribute that returns the machine exponent of a
-floating-point value, while :ada:`'Fraction` is an attribute that returns the
-mantissa part of a floating-point value. :ada:`'Compose` is used to return a
+:ada:`Exponent` is an attribute that returns the machine exponent of a
+floating-point value, while :ada:`Fraction` is an attribute that returns the
+mantissa part of a floating-point value. :ada:`Compose` is used to return a
 floating-point value based on a fraction (the mantissa part) and the machine
 exponent. For example:
 
@@ -895,16 +895,16 @@ For example, considering that :ada:`Float'Machine_Radix` is two, we see that
 the value 1.0 is composed by a fraction of 0.5 and a machine exponent of one.
 In other words, 0.5 x 2\ :sup:`1` = 1.0. For the value 0.25, we get a fraction
 of 0.5 and a machine exponent of -1, which makes 0.5 x 2\ :sup:`-1` = 0.25.
-We can use the :ada:`'Compose` attribute to perform this calculation. For
+We can use the :ada:`Compose` attribute to perform this calculation. For
 example, :ada:`Float'Compose (0.5, -1) = 0.25`.
 
 Note that :ada:`Fraction` is always between 0.5 and 0.999999 (i.e < 1.0),
 except for denormalized numbers, where it can be < 0.5.
 
-Attribute: :ada:`'Scaling`
+Attribute: :ada:`Scaling`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Scaling` is an attribute that scales a floating-point value based on the
+:ada:`Scaling` is an attribute that scales a floating-point value based on the
 machine radix and a machine exponent passed to the function. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Scaling
@@ -925,10 +925,10 @@ This is calculated with this formula: value x Machine_Radix\
 :sup:`machine exponent`. For example, on a typical PC with a machine radix of
 two, :ada:`Float'Scaling (0.25, 3)` corresponds to 0.25 x 2\ :sup:`3` = 2.0.
 
-Attributes: :ada:`'Floor`, :ada:`Ceiling`
+Attributes: :ada:`Floor`, :ada:`Ceiling`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Floor` and :ada:`'Ceiling` are attributes that returned the rounded-down
+:ada:`Floor` and :ada:`Ceiling` are attributes that returned the rounded-down
 or rounded-up value, respectively, of a floating-point value. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floor_Ceiling
@@ -946,7 +946,7 @@ or rounded-up value, respectively, of a floating-point value. For example:
 As we can see in this example, the rounded-down value (floor) of 0.25 is 0.0,
 while the rounded-up value (ceiling) of 0.25 is 1.0.
 
-Attributes: :ada:`'Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
+Attributes: :ada:`Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss three attributes used for rounding. In all cases,
@@ -993,7 +993,7 @@ value is exactly in between two integer values. For example, 4.5 could be
 rounded up to 5.0 or rounded down to 4.0. This is the way each rounding
 attribute works in this case:
 
-- :ada:`'Rounding` rounds away from zero. Positive floating-point values are
+- :ada:`Rounding` rounds away from zero. Positive floating-point values are
   rounded up, while negative floating-point values are rounded down when the
   value is between two integer values. For example:
 
@@ -1022,16 +1022,16 @@ attribute works in this case:
     behavior won't have a significant impact on the results, we can safely use
     this attribute.
 
-Attributes: :ada:`'Truncation`, :ada:`Remainder`, :ada:`Adjacent`
+Attributes: :ada:`Truncation`, :ada:`Remainder`, :ada:`Adjacent`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`'Truncation` attribute returns the *truncated* value of a
+The :ada:`Truncation` attribute returns the *truncated* value of a
 floating-point value, i.e. the value corresponding to the integer part of a
 number rounded toward zero. This corresponds to the number before the radix
 point. For example, the truncation of 1.55 is 1.0 because the integer part of
 1.55 is 1.
 
-The :ada:`'Remainder` attribute returns the remainder part of a division. For
+The :ada:`Remainder` attribute returns the remainder part of a division. For
 example, :ada:`Float'Remainder (1.25, 0.5) = 0.25`. Let's briefly discuss the
 details of this operations. The result of the division 1.25 / 0.5 is 2.5. Here,
 1.25 is the dividend and 0.5 is the divisor. The quotient and remainder of this
@@ -1085,16 +1085,16 @@ Let's see a code example:
     end Show_Truncation_Remainder_Adjacent;
 
 
-Attributes: :ada:`'Copy_Sign` and :ada:`Leading_Part`
+Attributes: :ada:`Copy_Sign` and :ada:`Leading_Part`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Copy_Sign` is an attribute that returns a value where the sign of the
+:ada:`Copy_Sign` is an attribute that returns a value where the sign of the
 second floating-point argument is multiplied by the magnitude of the first
 floating-point argument. For example, :ada:`Float'Copy_Sign (1.0, -10.0)` is
 -1.0. Here, the sign of the second argument (-10.0) is multiplied by the
 magnitude of the first argument (1.0), so the result is -1.0.
 
-:ada:`'Leading_Part` is an attribute that returns the *approximated* version of
+:ada:`Leading_Part` is an attribute that returns the *approximated* version of
 the mantissa of a value based on the specified number of leading bits for the
 mantissa. For example, :ada:`Float'Leading_Part (3.1416, 1)` is 2.0 because
 that's the value we can represent with one leading bit. (Note that
@@ -1115,7 +1115,7 @@ corresponds to the sign bit.)
 
 .. admonition:: Attention
 
-    In this explanation about the :ada:`'Leading_Part` attribute, we're
+    In this explanation about the :ada:`Leading_Part` attribute, we're
     talking about leading bits. Strictly speaking, however, this is actually a
     simplification, and it's only correct if :ada:`Machine_Radix` is equal to
     two |mdash| which is the case for most machines. Therefore, in most cases,
@@ -1161,7 +1161,7 @@ Let's see some examples:
 
 .. _Adv_Ada_Machine_Attribute:
 
-Attribute: :ada:`'Machine`
+Attribute: :ada:`Machine`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Not every real number is directly representable as a floating-point value on a
@@ -1194,7 +1194,7 @@ If we run this example on a typical PC, we see that the expected value
 This is because 1.0 x 10\ :sup:`15` isn't
 directly representable on this machine, so it has to be modified to a value that
 is actually representable (on the machine). This modification can be made
-visible with the :ada:`'Machine (X)` attribute, which returns a version of
+visible with the :ada:`Machine (X)` attribute, which returns a version of
 :ada:`X` that is representable on the target machine. This modification is
 performed by rounding or truncating :ada:`X` to either one of the adjacent
 machine numbers for the specific floating-point type of :ada:`X`. (Of course, if
@@ -1211,11 +1211,11 @@ case, 999999986991000.0 is a representable version of the real value
 value that is assigned to :ada:`V`, as the conversion to a representable value
 happens automatically during the assignment to :ada:`V`.
 
-There are, however, instances where using the :ada:`'Machine` attribute does
+There are, however, instances where using the :ada:`Machine` attribute does
 make a difference in the result. For example, let's say we want to calculate
 the difference between the original real value in our example
 (1.0 x 10\ :sup:`15`) and the actual value that is assigned to :ada:`V`. We can
-do this by using the :ada:`'Machine` attribute in the calculation:
+do this by using the :ada:`Machine` attribute in the calculation:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Attribute
 
@@ -1292,22 +1292,22 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
 
         - :arm22:`G.2.1 Model of Floating Point Arithmetic <G-2-1>`
 
-    Attributes: :ada:`'Model_Mantissa`, :ada:`'Model_Emin`
+    Attributes: :ada:`Model_Mantissa`, :ada:`Model_Emin`
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    The :ada:`'Model_Mantissa` attribute is similar to the :ada:`Machine_Mantissa`
+    The :ada:`Model_Mantissa` attribute is similar to the :ada:`Machine_Mantissa`
     attribute, but it returns the number of bits for the mantissa based on the
     underlying numeric model for floating-point operations.
 
     .. admonition:: Attention
 
-        We can only say that :ada:`'Model_Mantissa` returns the "number of bits" of
+        We can only say that :ada:`Model_Mantissa` returns the "number of bits" of
         the mantissa if :ada:`Machine_Radix` is equal to two. As this is typically
         the case for most machines, this simplification is acceptable. However,
         if :ada:`Machine_Radix` is *not* equal to two, we're talking about "number
         of digits" in the :ada:`Machine_Radix`.
 
-    The :ada:`'Model_Emin` attribute is similar to the :ada:`Machine_Emin`
+    The :ada:`Model_Emin` attribute is similar to the :ada:`Machine_Emin`
     attribute, but it returns the minimum machine exponent based on the underlying
     numeric model for floating-point operations.
 
@@ -1340,16 +1340,16 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
         end Show_Model_Mantissa_Emin;
 
 
-    Attributes: :ada:`'Model_Epsilon` and :ada:`Model_Small`
+    Attributes: :ada:`Model_Epsilon` and :ada:`Model_Small`
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    :ada:`'Model_Epsilon` is an attribute that returns the
+    :ada:`Model_Epsilon` is an attribute that returns the
     :wikipedia:`epsilon <Machine_epsilon>` of the underlying
     numeric model. For example, for the :ada:`Float` type, the :ada:`Model_Epsilon`
     corresponds to 2\ :sup:`-23` on a typical desktop PC. (Here, 23 comes from the
     mantissa, 24 bits, minus the sign bit.)
 
-    :ada:`'Model_Small` is an attribute that returns the smallest value
+    :ada:`Model_Small` is an attribute that returns the smallest value
     representable with the underlying numeric model. It corresponds to
     :ada:`Machine_Radix ** (-Model_Emin - 1)`. For example, for the :ada:`Float`
     type, this roughly corresponds to
@@ -1386,13 +1386,13 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
               & Long_Long_Float'Model_Small'Image);
         end Show_Model_Epsilon_Small;
 
-    Attribute: :ada:`'Model`
+    Attribute: :ada:`Model`
     ^^^^^^^^^^^^^^^^^^^^^^^^
 
-    The :ada:`'Model` attribute is similar to the :ada:`'Machine` attribute that
+    The :ada:`Model` attribute is similar to the :ada:`Machine` attribute that
     :ref:`we discussed earlier on <Adv_Ada_Machine_Attribute>`. The difference is
     that, instead of returning a version of :ada:`X` that is representable on the
-    target machine (as the :ada:`'Machine (X)` attribute does), :ada:`'Model (X)`
+    target machine (as the :ada:`Machine (X)` attribute does), :ada:`Model (X)`
     returns a version of :ada:`X` that is representable on the model that is being
     used. This is performed by rounding or truncating :ada:`X` to either one of the
     adjacent model numbers for the specific floating-point type of :ada:`X`.
@@ -1401,7 +1401,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
 
     For example, let's say we want to calculate the difference between the real
     value in 1.0 x 10\ :sup:`15` and the actual model value, we can use the
-    :ada:`'Model` attribute:
+    :ada:`Model` attribute:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Model_Attribute
 
@@ -1443,7 +1443,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     standard is being used.
 
 
-    Attributes: :ada:`'Safe_First` and :ada:`Safe_Last`
+    Attributes: :ada:`Safe_First` and :ada:`Safe_Last`
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     The :ada:`Safe_First` and :ada:`Safe_Last` attributes return the safe range of
@@ -1452,7 +1452,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     decimal precision is preserved by all predefined operations."
 
     Let's see a code example with these attributes and compare them to the
-    :ada:`'First` and :ada:`'Last` attributes:
+    :ada:`First` and :ada:`Last` attributes:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Safe_First_Last
 
@@ -1506,10 +1506,10 @@ fixed-point types.
 Attributes of fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Attribute: :ada:`'Machine_Radix`
+Attribute: :ada:`Machine_Radix`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Machine_Radix` is an attribute that returns the radix of the hardware
+:ada:`Machine_Radix` is an attribute that returns the radix of the hardware
 representation of a type. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Machine_Radix
@@ -1531,20 +1531,20 @@ representation of a type. For example:
 Usually, this value is two, as the radix is based on a binary system.
 
 
-Attribute: :ada:`'Machine_Rounds` and :ada:`'Machine_Overflows`
+Attribute: :ada:`Machine_Rounds` and :ada:`Machine_Overflows`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss attributes that return :ada:`Boolean` values
 indicating whether a feature is available or not in the target architecture:
 
-- :ada:`'Machine_Rounds` is an attribute that indicates what happens when the
+- :ada:`Machine_Rounds` is an attribute that indicates what happens when the
   result of a fixed-point operation is inexact:
 
   - :ada:`T'Machine_Rounds = True`: inexact result is rounded;
 
   - :ada:`T'Machine_Rounds = False`: inexact result is truncated.
 
-- :ada:`'Machine_Overflows` is an attribute that indicates whether a
+- :ada:`Machine_Overflows` is an attribute that indicates whether a
   :ada:`Constraint_Error` is guaranteed to be raised when a fixed-point
   operation with that type produces an overflow or divide-by-zero.
 
@@ -1569,22 +1569,22 @@ indicating whether a feature is available or not in the target architecture:
     end Show_Boolean_Attributes;
 
 
-Attribute: :ada:`'Small` and :ada:`'Delta`
+Attribute: :ada:`Small` and :ada:`Delta`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`'Small` and :ada:`'Delta` attributes return numbers that indicate the
-numeric precision of a fixed-point type. In many cases, the :ada:`'Small` of a
-type :ada:`T` is equal to the :ada:`'Delta` of that type |mdash| i.e.
+The :ada:`Small` and :ada:`Delta` attributes return numbers that indicate the
+numeric precision of a fixed-point type. In many cases, the :ada:`Small` of a
+type :ada:`T` is equal to the :ada:`Delta` of that type |mdash| i.e.
 :ada:`T'Small = T'Delta`. Let's discuss each attribute and how they distinguish
 from each other.
 
-The :ada:`'Delta` attribute returns the value of the :ada:`delta` that was
+The :ada:`Delta` attribute returns the value of the :ada:`delta` that was
 used in the type definition. For example, if we declare
 :ada:`type T3_D3 is delta 10.0 ** (-3) digits D`, then the value of
 :ada:`T3_D3'Delta` is the :ada:`10.0 ** (-3)` that we used in the type
 definition.
 
-The :ada:`'Small` attribute returns the "small" of a type, i.e. the smallest
+The :ada:`Small` attribute returns the "small" of a type, i.e. the smallest
 value used in the machine representation of the type. The *small* must be at
 least equal to or smaller than the *delta* |mdash| in other words, it must
 conform to the :ada:`T'Small <= T'Delta` rule.
@@ -1644,7 +1644,7 @@ Specifying the *small*, however, is optional:
   :ada:`T'Small <= T'Delta`.
 
 - If we want, however, to specify the *small*, we can do that by using the
-  :ada:`'Small` aspect. In this case, it doesn't need to be a power of two.
+  :ada:`Small` aspect. In this case, it doesn't need to be a power of two.
 
 For decimal fixed-point types, we cannot specify the *small*. In this case,
 it's automatically selected by the compiler, and it's always equal to the
@@ -1708,7 +1708,7 @@ Let's see an example:
                  & TQ15'Size'Image);
     end Show_Fixed_Small_Delta;
 
-As we can see in the output of the code example, the :ada:`'Delta` attribute
+As we can see in the output of the code example, the :ada:`Delta` attribute
 returns the value we used for :ada:`delta` in the type definition of the
 :ada:`T3_D3`, :ada:`TD3`, :ada:`TQ31` and :ada:`TQ15` types.
 
@@ -1720,7 +1720,7 @@ fixed-point types, if we don't specify the *small*, it's automatically selected
 by the compiler as a power of two smaller than or equal to the *delta*.)
 
 In the case of the :ada:`TQ15` type, we're specifying the *small* by using the
-:ada:`'Small` aspect. In this case, the underlying size of the :ada:`TQ15`
+:ada:`Small` aspect. In this case, the underlying size of the :ada:`TQ15`
 type is 32 bits, while the precision we get when operating with this type is
 16 bits. Let's see a specific example for this type:
 
@@ -1753,18 +1753,18 @@ In contrast, after the second assignment |mdash| where we assign
 :ada:`V` has the same value as the *delta*.
 
 
-Attributes: :ada:`'Fore` and :ada:`'Aft`
+Attributes: :ada:`Fore` and :ada:`Aft`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`'Fore` and :ada:`'Aft` attributes indicate the number of characters
+The :ada:`Fore` and :ada:`Aft` attributes indicate the number of characters
 or digits needed for displaying a value in decimal representation. To be more
 precise:
 
-- The :ada:`'Fore` attribute refers to the digits before the decimal point and
+- The :ada:`Fore` attribute refers to the digits before the decimal point and
   it returns the number of digits plus one for the sign indicator (which is
   either :ada:`-` or space), and it's always at least two.
 
-- The :ada:`'Aft` attribute returns the number of decimal digits that is needed
+- The :ada:`Aft` attribute returns the number of decimal digits that is needed
   to represent the delta after the decimal point.
 
 Let's see an example:
@@ -1799,7 +1799,7 @@ Let's see an example:
     end Show_Fixed_Fore_Aft;
 
 As we can see in the output of the :ada:`Dec` and :ada:`Fix` variables at the
-bottom, the value of :ada:`'Fore` is two for both :ada:`T3_D3` and :ada:`TQ31`.
+bottom, the value of :ada:`Fore` is two for both :ada:`T3_D3` and :ada:`TQ31`.
 This value corresponds to the length of the string "-0" displayed in the output
 for these variables (the first two characters of "-0.123" and "-0.0000000005").
 
@@ -1814,10 +1814,10 @@ Attributes of decimal fixed-point types
 The attributes presented in this subsection are only available for decimal
 fixed-point types.
 
-Attribute: :ada:`'Digits`
+Attribute: :ada:`Digits`
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`'Digits` is an attribute that returns the number of significant decimal
+:ada:`Digits` is an attribute that returns the number of significant decimal
 digits of a decimal fixed-point subtype. This corresponds to the value that we
 use for the :ada:`digits` in the definition of a decimal fixed-point type.
 
@@ -1844,21 +1844,21 @@ the value is two, which was used in the declaration of the :ada:`T3_D2`
 subtype.
 
 
-Attribute: :ada:`'Scale`
+Attribute: :ada:`Scale`
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-According to the Ada Reference Manual, the :ada:`'Scale` attribute "indicates
+According to the Ada Reference Manual, the :ada:`Scale` attribute "indicates
 the position of the point relative to the rightmost significant digits of
 values" of a decimal type. For example:
 
-- If the value of :ada:`'Scale` is two, then there are two decimal digits after
+- If the value of :ada:`Scale` is two, then there are two decimal digits after
   the decimal point.
 
-- If the value of :ada:`'Scale` is negative, that implies that the
-  :ada:`'Delta` is a power of 10 greater than 1, and it would be the number of
+- If the value of :ada:`Scale` is negative, that implies that the
+  :ada:`Delta` is a power of 10 greater than 1, and it would be the number of
   zero digits that every value would end in.
 
-The :ada:`'Scale` corresponds to the N used in the :ada:`delta 10.0 ** (-N)`
+The :ada:`Scale` corresponds to the N used in the :ada:`delta 10.0 ** (-N)`
 expression of the type declaration. For example, if we write
 :ada:`delta 10.0 ** (-3)` in the declaration of a type :ada:`T`, then the value
 of :ada:`T'Scale` is three.
@@ -1888,14 +1888,14 @@ In this example, we get the following values for the scales:
 - :ada:`T3_D6'Scale = 3`,
 - :ada:`T9_D12 = 9`.
 
-As you can see, the value of :ada:`'Scale` is directly related to the *delta*
+As you can see, the value of :ada:`Scale` is directly related to the *delta*
 of the corresponding type declaration.
 
 
-Attribute: :ada:`'Round`
+Attribute: :ada:`Round`
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :ada:`'Round` attribute rounds a value of any real type to the nearest
+The :ada:`Round` attribute rounds a value of any real type to the nearest
 value that is a multiple of the *delta* of the decimal fixed-point type,
 rounding away from zero if exactly between two such multiples.
 
@@ -2487,7 +2487,7 @@ user-defined literals in the definitions of the :ada:`Big_Integer` and the
 
 Also, we call the :ada:`To_String` function to get a string for the big
 numbers. Naturally, using the :ada:`To_String` function instead of the
-:ada:`'Image` attribute |mdash| as we did in previous examples |mdash| allows
+:ada:`Image` attribute |mdash| as we did in previous examples |mdash| allows
 us to customize the format of the string that we display in the user message.
 
 
