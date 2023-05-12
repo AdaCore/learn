@@ -884,12 +884,14 @@ Attributes: :ada:`Fraction`, :ada:`Exponent` and :ada:`Compose`
 The :ada:`Exponent` and :ada:`Fraction` attributes return "parts" of a
 floating-point value:
 
-- :ada:`Exponent` returns the machine exponent, while
+- :ada:`Exponent` returns the machine exponent, and
 
 - :ada:`Fraction` returns the mantissa part.
 
 :ada:`Compose` is used to return a floating-point value based on a fraction
-(the mantissa part) and the machine exponent. For example:
+(the mantissa part) and the machine exponent.
+
+Let's see some examples:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Exponent_Fraction
 
@@ -934,7 +936,7 @@ Considering that the value of :ada:`Float'Machine_Radix` on a typical PC is
 two, we see that the value 1.0 is composed by a fraction of 0.5 and a machine
 exponent of one. In other words:
 
-   1.0 = 0.5 x 2\ :sup:`1`.
+   0.5 x 2\ :sup:`1` = 1.0
 
 For the value 0.25, we get a fraction of 0.5 and a machine exponent of -1,
 which is the result of 0.5 x 2\ :sup:`-1` = 0.25.
