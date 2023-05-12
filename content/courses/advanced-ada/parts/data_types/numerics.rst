@@ -875,11 +875,15 @@ Primitive function attributes
 Attributes: :ada:`Fraction`, :ada:`Exponent` and :ada:`Compose`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`Exponent` is an attribute that returns the machine exponent of a
-floating-point value, while :ada:`Fraction` is an attribute that returns the
-mantissa part of a floating-point value. :ada:`Compose` is used to return a
-floating-point value based on a fraction (the mantissa part) and the machine
-exponent. For example:
+The :ada:`Exponent` and :ada:`Fraction` attributes return "parts" of a
+floating-point value:
+
+- :ada:`Exponent` returns the machine exponent, while
+
+- :ada:`Fraction` returns the mantissa part.
+
+:ada:`Compose` is used to return a floating-point value based on a fraction
+(the mantissa part) and the machine exponent. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Exponent_Fraction
 
@@ -916,10 +920,18 @@ exponent. For example:
           & Float'Compose (9.67141E-01, -83)'Image);
     end Show_Exponent_Fraction_Compose;
 
-For example, considering that :ada:`Float'Machine_Radix` is two, we see that
-the value 1.0 is composed by a fraction of 0.5 and a machine exponent of one.
-In other words, 0.5 x 2\ :sup:`1` = 1.0. For the value 0.25, we get a fraction
-of 0.5 and a machine exponent of -1, which makes 0.5 x 2\ :sup:`-1` = 0.25.
+To understand this code example, we have to take this formula into account:
+
+   Value = Fraction x Machine_Radix\ :sup:`Exponent`
+
+Considering that the value of :ada:`Float'Machine_Radix` on a typical PC is
+two, we see that the value 1.0 is composed by a fraction of 0.5 and a machine
+exponent of one. In other words:
+
+   1.0 = 0.5 x 2\ :sup:`1`.
+
+For the value 0.25, we get a fraction of 0.5 and a machine exponent of -1,
+which is the result of 0.5 x 2\ :sup:`-1` = 0.25.
 We can use the :ada:`Compose` attribute to perform this calculation. For
 example, :ada:`Float'Compose (0.5, -1) = 0.25`.
 
@@ -946,9 +958,14 @@ machine radix and a machine exponent passed to the function. For example:
                  & Float'Scaling (0.25, 3)'Image);
     end Show_Scaling;
 
-This is calculated with this formula: value x Machine_Radix\
-:sup:`machine exponent`. For example, on a typical PC with a machine radix of
-two, :ada:`Float'Scaling (0.25, 3)` corresponds to 0.25 x 2\ :sup:`3` = 2.0.
+This is calculated with this formula:
+
+   scaling = value x Machine_Radix\ :sup:`machine exponent`
+
+For example, on a typical PC with a machine radix of two,
+:ada:`Float'Scaling (0.25, 3) = 2.0` corresponds to
+
+   2.0 = 0.25 x 2\ :sup:`3`
 
 Attributes: :ada:`Floor`, :ada:`Ceiling`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
