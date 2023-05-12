@@ -528,6 +528,17 @@ def analyze_file(rst_file):
                     except S.CalledProcessError as e:
                         out = str(e.output.decode("utf-8"))
 
+                if language == "c":
+                    try:
+                        cmd = ["rm", "-f"] + glob.glob('*.o') + glob.glob('*.gch')
+                        if main_file is not None:
+                            cmd.append(P.splitext(main_file)[0])
+                        out = run(*cmd)
+                    except S.CalledProcessError as e:
+                        print_error(loc, "Failed to clean-up example")
+                        print(e.output)
+                        has_error = True
+
             try:
                 latest_project_dir, source_files = update_latest()
             except Exception as e:
