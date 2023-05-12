@@ -292,7 +292,7 @@ different meanings:
 
 - :ada:`Arr.all'Size` indicates the size of the actual array :ada:`Arr`.
 
-In other words, the :ada:`'Size` attribute is *not* implicitly deferenced.
+In other words, the :ada:`Size` attribute is *not* implicitly deferenced.
 In fact, any attribute that could potentially be ambiguous is not implicitly
 dereferenced. Therefore, in those cases, we must explicitly indicate (by using
 :ada:`.all` or not) how we want to use the attribute.
@@ -780,7 +780,7 @@ access constants |mdash| or access objects that we want to treat as constants
 Access attribute
 ^^^^^^^^^^^^^^^^
 
-To get access to a variable or a constant, we make use of the :ada:`'Access`
+To get access to a variable or a constant, we make use of the :ada:`Access`
 attribute. For example, :ada:`I_Var'Access` gives us access to the :ada:`I_Var`
 object.
 
@@ -845,7 +845,7 @@ previous code snippet:
 In this example, :ada:`Dyn_Ptr` refers to a dynamically allocated object,
 :ada:`I_Var_Ptr` refers to the :ada:`I_Var` variable, and :ada:`Fact_Ptr`
 refers to the :ada:`Fact` constant. We get access to the variable and the
-constant objects by using the :ada:`'Access` attribute.
+constant objects by using the :ada:`Access` attribute.
 
 Also, we declare :ada:`I_Var_C_Ptr` as an access-to-constant, but we get
 access to the :ada:`I_Var` variable. This simply means the object
@@ -2103,7 +2103,7 @@ Things start getting more complicated when we use information from :ada:`Pkg`
 in :ada:`Proc`. Those details will become more clear in the next sections.)
 
 The levels themselves are not visible to the programmer. For example, there's
-no :ada:`'Access_Level` attribute that returns an integer value indicating the
+no :ada:`Access_Level` attribute that returns an integer value indicating the
 level. Also, you cannot write a user message that displays the level at a
 certain point. In this sense, accessibility levels are assessed relatively to
 each other: we can only say that a specific operation is at the same or at a
@@ -2743,7 +2743,7 @@ access objects doesn't impose additional hurdles.
 Unchecked Access
 ----------------
 
-In this section, we discuss the :ada:`'Unchecked_Access` attribute, which we
+In this section, we discuss the :ada:`Unchecked_Access` attribute, which we
 can use to circumvent accessibility issues for objects in specific cases. (Note
 that this attribute only exists for objects, not for subprograms.)
 
@@ -2790,7 +2790,7 @@ Therefore, we can assume that assigning the access to :ada:`I_Var` to :ada:`A`
 is safe.
 
 When we're sure that an access assignment cannot possibly generate dangling
-references, we can the use :ada:`'Unchecked_Access` attribute. For instance, we
+references, we can the use :ada:`Unchecked_Access` attribute. For instance, we
 can use this attribute to circumvent the compilation error in the previous code
 example, since we know that the assignment is actually safe:
 
@@ -2817,8 +2817,8 @@ example, since we know that the assignment is actually safe:
        Put_Line ("A.all: " & Integer'Image (A.all));
     end Show_Access_Issue;
 
-When we use the :ada:`'Unchecked_Access` attribute, most rules still apply.
-The only difference to the standard :ada:`'Access` attribute is that unchecked
+When we use the :ada:`Unchecked_Access` attribute, most rules still apply.
+The only difference to the standard :ada:`Access` attribute is that unchecked
 access applies the rules as if the object we're getting access to was being
 declared at library level. (For the code example we've just seen, the check
 would be performed as if :ada:`I_Var` was declared in the :ada:`Integers`

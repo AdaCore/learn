@@ -916,7 +916,7 @@ Overview
 ~~~~~~~~
 
 In the :ref:`Introduction to Ada <Intro_Ada_Image_Attribute>` course, we've
-seen that the :ada:`'Image` attribute returns a string that contains a textual
+seen that the :ada:`Image` attribute returns a string that contains a textual
 representation of an object. For example, we write :ada:`Integer'Image (V)` to
 get a string for the integer variable :ada:`V`:
 
@@ -962,7 +962,7 @@ variable :ada:`V`. Also, we use :ada:`Status'Image (V)` to retrieve a string rep
 :ada:`Type'Image` and :ada:`Obj'Image`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can also apply the :ada:`'Image` attribute to an object directly:
+We can also apply the :ada:`Image` attribute to an object directly:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Simple_Image
 
@@ -1096,12 +1096,12 @@ and :ada:`R_A` is null after the call to :ada:`Free`.
 
 .. admonition:: Historically
 
-    Since Ada 2022, the :ada:`'Image` attribute is available for all types.
+    Since Ada 2022, the :ada:`Image` attribute is available for all types.
     Prior to this version of the language, it was only available for scalar
-    types. (For other kind of types, programmers had to use the :ada:`'Image`
+    types. (For other kind of types, programmers had to use the :ada:`Image`
     attribute for each component of a record, for example.)
 
-    In fact, prior to Ada 2022, the :ada:`'Image` attribute was described in
+    In fact, prior to Ada 2022, the :ada:`Image` attribute was described in
     the :arm22:`3.5 Scalar Types <3-5>` section of the Ada Reference Manual, as
     it was only applied to those types. Now, it is part of the new
     :arm22:`Image Attributes <4-10>` section.
@@ -1134,10 +1134,10 @@ In this example, we display the values of the three components of the
 :ada:`FA_3C` array. Also, we display the null array :ada:`FA_Null`.
 
 
-:ada:`'Image` attribute for tagged types
+:ada:`Image` attribute for tagged types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to untagged types, we can also use the :ada:`'Image` attribute with
+In addition to untagged types, we can also use the :ada:`Image` attribute with
 tagged types. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Tagged_Image
@@ -1196,10 +1196,10 @@ object of :ada:`Rec'Class` type. Also, we display the contents of the
 :ada:`Rec` type.
 
 
-:ada:`'Image` attribute for task and protected types
+:ada:`Image` attribute for task and protected types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can also apply the :ada:`'Image` attribute to protected objects and tasks:
+We can also apply the :ada:`Image` attribute to protected objects and tasks:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Protected_Task_Image
 
@@ -1274,13 +1274,13 @@ the componentless protected object :ada:`PN` and the task :ada:`T1`.
 Overview
 ~~~~~~~~
 
-In the previous section, we discussed many details about the :ada:`'Image`
+In the previous section, we discussed many details about the :ada:`Image`
 attribute. In the code examples from that section, we've seen the default
-behavior of this attribute: the string returned by the calls to :ada:`'Image`
+behavior of this attribute: the string returned by the calls to :ada:`Image`
 was always in the format defined by the Ada standard.
 
 In some situations, however, we might want to customize the string that is
-returned by the :ada:`'Image` attribute of a type :ada:`T`. Ada allows us to do
+returned by the :ada:`Image` attribute of a type :ada:`T`. Ada allows us to do
 that via the :ada:`Put_Image` aspect. This is what we have to do:
 
 1. Specify the :ada:`Put_Image` aspect for the type :ada:`T` and indicate a
@@ -1421,7 +1421,7 @@ Relation to the :ada:`Image` attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Note that we cannot override the :ada:`Image` attribute directly |mdash|
-there's no :ada:`'Image` *aspect* that we could specify. However, as we've just
+there's no :ada:`Image` *aspect* that we could specify. However, as we've just
 seen, we can do this indirectly by using our own version of the
 :ada:`Put_Image` procedure for a type :ada:`T`.
 

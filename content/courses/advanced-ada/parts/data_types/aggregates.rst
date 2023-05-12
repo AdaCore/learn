@@ -148,7 +148,7 @@ while
 - the container aggregate for :ada:`Keyed_Named_V` has a key for each element.
 
 Later on, we'll talk about the
-:ref:`'Aggregate aspect <Adv_Ada_Aggregate_Aspect>`, which allows for
+:ref:`Aggregate aspect <Adv_Ada_Aggregate_Aspect>`, which allows for
 defining custom container aggregates for any record type.
 
 .. admonition:: In the Ada Reference Manual

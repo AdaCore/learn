@@ -723,7 +723,7 @@ In this example, we create the procedure
 procedure (:ada:`Perform_Test`). Note that:
 
     - For the formal :ada:`Image` function, we make use of the
-      :ada:`'Image` attribute of the :ada:`Color` type
+      :ada:`Image` attribute of the :ada:`Color` type
 
     - For the formal :ada:`Pkg_Test` procedure, we reference the
       :ada:`Reverse_Array` procedure from the package.

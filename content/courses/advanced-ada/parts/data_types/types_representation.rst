@@ -2751,7 +2751,7 @@ these array declarations are equivalent:
 Discarding names
 ----------------
 
-As we know, we can use the :ada:`'Image` attribute of a type to get a string
+As we know, we can use the :ada:`Image` attribute of a type to get a string
 associated with this type. This is useful for example when we want to display a
 user message for an enumeration type:
 
@@ -2815,9 +2815,9 @@ Here, the :ada:`Months_Image` function associates a string with each month of
 the :ada:`Months` enumeration. As expected, the compiler needs to store the
 strings used in the :ada:`Months_Image` function when compiling this code.
 Similarly, the compiler needs to store strings for the :ada:`Months`
-enumeration for the :ada:`'Image` attribute.
+enumeration for the :ada:`Image` attribute.
 
-Sometimes, we don't need to call the :ada:`'Image` attribute for a type. In
+Sometimes, we don't need to call the :ada:`Image` attribute for a type. In
 this case, we could save some storage by eliminating the strings associated
 with the type. Here, we can use the :ada:`Discard_Names` aspect to request the
 compiler to reduce |mdash| as much as possible |mdash| the amount of storage

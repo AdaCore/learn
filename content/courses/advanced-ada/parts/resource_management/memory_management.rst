@@ -8,9 +8,9 @@ Size Information
 
 .. admonition:: Relevant topics
 
-    - :ada:`'Size`
-    - :ada:`'Object_Size`
-    - :ada:`'Max_Size_In_Storage_Elements`
+    - :ada:`Size`
+    - :ada:`Object_Size`
+    - :ada:`Max_Size_In_Storage_Elements`
     - :ada:`System.Storage_Elements` package
     - :ada:`System.Storage_Elements.Storage_Element'Size`
         - :arm22:`The Package System.Storage_Elements <13-7-1>`
