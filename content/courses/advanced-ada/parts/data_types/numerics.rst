@@ -722,12 +722,12 @@ type, we need to use :ada:`Machine_Radix` that we've just discussed in the
 previous section. Let's calculate the minimum and maximum value of the exponent
 for the :ada:`Float` type on a typical PC:
 
-- Minimum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emin`.
+- Value of minimum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emin`.
 
     - In our target platform, this is
       2\ :sup:`-125` = 2.35098870164457501594 x 10\ :sup:`-38`.
 
-- Maximum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emax`. In this
+- Value of maximum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emax`.
 
     - In our target platform, this is
       2\ :sup:`128`  = 3.40282366920938463463 x 10\ :sup:`38`.
@@ -752,8 +752,7 @@ a floating-point subtype. Let's see an example:
                  & Long_Long_Float'Digits'Image);
     end Show_Digits;
 
-On a typical desktop PC, the requested decimal precision of the :ada:`Float`
-type is six digits.
+Here, the requested decimal precision of the :ada:`Float` type is six digits.
 
 Note that we said that :ada:`Digits` is the *requested* level of precision,
 which is specified as part of declaring a floating point type. We can retrieve
@@ -772,8 +771,8 @@ the actual decimal precision with :ada:`Base'Digits`. For example:
                  & Float_D3'Base'Digits'Image);
     end Show_Base_Digits;
 
-On a typical desktop PC, the requested decimal precision of the :ada:`Float_D3`
-type is three digits, while the actual decimal precision is six digits.
+The requested decimal precision of the :ada:`Float_D3` type is three digits,
+while the actual decimal precision is six digits (on a typical desktop PC).
 
 
 Attributes: :ada:`Denorm`, :ada:`Signed_Zeros`, :ada:`Machine_Rounds`, :ada:`Machine_Overflows`
@@ -2494,7 +2493,7 @@ us to customize the format of the string that we display in the user message.
 Other features of big integers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's look at two additional features of big integers:
+Now, let's look at two additional features of big integers:
 
 - the natural and positive subtypes, and
 
@@ -2509,9 +2508,8 @@ in contrast to the :ada:`Natural` and :ada:`Positive` subtypes, the
 :ada:`Big_Natural` and :ada:`Big_Positive` subtypes are defined via predicates
 rather than the simple ranges of normal (ordinary) numeric types.
 Therefore, we cannot simply use attributes such as :ada:`Big_Natural'First`.
-Instead, these subtypes include contracts to check the corresponding range.
-In any case, we can use them to ensure that a big integer is in the expected
-(natural or positive) range:
+However, we can use the subtypes to ensure that a big integer is in the
+expected (natural or positive) range:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Positive_Natural
 
@@ -2587,7 +2585,8 @@ two big integer values:
 
     end Show_Big_Integer_Greatest_Common_Divisor;
 
-In this example, we retrieve the greatest common divisor of 145 and 25.
+In this example, we retrieve the greatest common divisor of 145 and 25
+(i.e.: 5).
 
 
 Big real and quotients
