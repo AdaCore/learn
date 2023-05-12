@@ -1086,12 +1086,13 @@ The :ada:`Remainder` attribute returns the remainder part of a division. For
 example, :ada:`Float'Remainder (1.25, 0.5) = 0.25`. Let's briefly discuss the
 details of this operations. The result of the division 1.25 / 0.5 is 2.5. Here,
 1.25 is the dividend and 0.5 is the divisor. The quotient and remainder of this
-division are 2 and 0.25, respectively. Here, the quotient is an integer number,
-and the remainder is the floating-point part that remains. Note that the
-relation between quotient and remainder is defined in such a way that we get
-the original dividend back when we use the formula: "quotient x divisor +
-remainder = dividend". For the previous example, this means 2 x 0.5 + 0.25
-= 1.25.
+division are 2 and 0.25, respectively. (Here, the quotient is an integer number,
+and the remainder is the floating-point part that remains.)
+
+Note that the relation between quotient and remainder is defined in such a way
+that we get the original dividend back when we use the formula: "quotient x
+divisor + remainder = dividend". For the previous example, this means
+2 x 0.5 + 0.25 = 1.25.
 
 The :ada:`Adjacent` attribute is the next machine value towards another value.
 For example, on a typical PC, the adjacent value of a small value |mdash|
@@ -1147,22 +1148,33 @@ magnitude of the first argument (1.0), so the result is -1.0.
 
 :ada:`Leading_Part` is an attribute that returns the *approximated* version of
 the mantissa of a value based on the specified number of leading bits for the
-mantissa. For example, :ada:`Float'Leading_Part (3.1416, 1)` is 2.0 because
-that's the value we can represent with one leading bit. (Note that
-:ada:`Float'Fraction (2.0) = 0.5` |mdash| which can be represented with one
-leading bit in the mantissa |mdash| and :ada:`Float'Exponent (2.0) = 2`.) If we
-increase the number of leading bits of the mantissa to two |mdash| by writing
-:ada:`Float'Leading_Part (3.1416, 2)` |mdash|, we get 3.0 because that's the
-value we can represent with two leading bits. If we increase again the number
-of leading bits to five |mdash| :ada:`Float'Leading_Part (3.1416, 5)` |mdash|,
-we get 3.125. Note that, in this case :ada:`Float'Fraction (3.125) = 0.78125`
-and :ada:`Float'Exponent (3.125) = 2`. The binary mantissa is actually
-:ada:`2#110_0100_0000_0000_0000_0000#`, which can be represented with five
-leading bits as expected: :ada:`2#110_01#`. (Note that we can get the mantissa
-by calculating
-:ada:`Float'Fraction (3.125) * Float (Float'Machine_Radix) ** (Float'Machine_Mantissa - 1)`
-and converting the result to binary format. The -1 value in the formula
-corresponds to the sign bit.)
+mantissa. Let's see some examples:
+
+- :ada:`Float'Leading_Part (3.1416, 1)` is 2.0 because that's the value we can
+  represent with one leading bit.
+
+  - Note that :ada:`Float'Fraction (2.0) = 0.5` |mdash| which can be
+    represented with one leading bit in the mantissa |mdash| and
+    :ada:`Float'Exponent (2.0) = 2`.)
+
+- If we increase the number of leading bits of the mantissa to two |mdash| by
+  writing :ada:`Float'Leading_Part (3.1416, 2)` |mdash|, we get 3.0 because
+  that's the value we can represent with two leading bits.
+
+- If we increase again the number of leading bits to five |mdash|
+  :ada:`Float'Leading_Part (3.1416, 5)` |mdash|, we get 3.125.
+
+  - Note that, in this case :ada:`Float'Fraction (3.125) = 0.78125`
+    and :ada:`Float'Exponent (3.125) = 2`.
+
+  - The binary mantissa is actually :ada:`2#110_0100_0000_0000_0000_0000#`,
+    which can be represented with five leading bits as expected:
+    :ada:`2#110_01#`.
+
+     - We can get the binary mantissa by calculating
+       :ada:`Float'Fraction (3.125) * Float (Float'Machine_Radix) ** (Float'Machine_Mantissa - 1)`
+       and converting the result to binary format. The -1 value in the formula
+       corresponds to the sign bit.
 
 .. admonition:: Attention
 
@@ -1244,23 +1256,27 @@ If we run this example on a typical PC, we see that the expected value
 :ada:`1_000_000_000_000_000.0` was displayed as :ada:`999_999_986_991_000.0`.
 This is because 1.0 x 10\ :sup:`15` isn't
 directly representable on this machine, so it has to be modified to a value that
-is actually representable (on the machine). This modification can be made
-visible with the :ada:`Machine (X)` attribute, which returns a version of
-:ada:`X` that is representable on the target machine. This modification is
-performed by rounding or truncating :ada:`X` to either one of the adjacent
-machine numbers for the specific floating-point type of :ada:`X`. (Of course, if
-the real value of :ada:`X` is representable on the target machine, no
-modification is performed.)
+is actually representable (on the machine).
+
+This *automatic* modification we've just described is actually hidden, so to
+say, in the assignment. However, we can make it more visible by using the
+:ada:`Machine (X)` attribute, which returns a version of :ada:`X` that is
+representable on the target machine. The :ada:`Machine (X)` attribute rounds
+(or truncates) :ada:`X` to either one of the adjacent machine numbers for the
+specific floating-point type of :ada:`X`. (Of course, if the real value of
+:ada:`X` is directly representable on the target machine, no modification is
+performed.)
 
 In fact, we could rewrite the :ada:`V := 1.0E+15` assignment of the code example
 as :ada:`V := Float'Machine (1.0E+15)`, as we're never assigning a real value
-directly to a floating-pointing variable, but instead first converting it to a
-version of the real value that is representable on the target machine. In this
-case, 999999986991000.0 is a representable version of the real value
-1.0 x 10\ :sup:`15`. Of course, writing :ada:`V := 1.0E+15` or
+directly to a floating-pointing variable |mdash| instead, we're first
+converting it to a version of the real value that is representable on the
+target machine. In this case, 999999986991000.0 is a representable version of
+the real value 1.0 x 10\ :sup:`15`. Of course, writing :ada:`V := 1.0E+15` or
 :ada:`V := Float'Machine (1.0E+15)` doesn't make any difference to the actual
-value that is assigned to :ada:`V`, as the conversion to a representable value
-happens automatically during the assignment to :ada:`V`.
+value that is assigned to :ada:`V` (in the case of this specific target
+architecture), as the conversion to a representable value happens automatically
+during the assignment to :ada:`V`.
 
 There are, however, instances where using the :ada:`Machine` attribute does
 make a difference in the result. For example, let's say we want to calculate
