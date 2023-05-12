@@ -644,6 +644,9 @@ In this section, we discuss various attributes related to floating-point types.
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+In this section, we discuss attributes related to the representation of
+floating-point types.
+
 Attribute: :ada:`Machine_Radix`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -871,6 +874,9 @@ On a typical PC, we have the following information:
 
 Primitive function attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we discuss attributes that we can use to manipulate
+floating-point values.
 
 Attributes: :ada:`Fraction`, :ada:`Exponent` and :ada:`Compose`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
