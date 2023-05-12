@@ -776,7 +776,7 @@ while the actual decimal precision is six digits (on a typical desktop PC).
 
 
 Attributes: :ada:`Denorm`, :ada:`Signed_Zeros`, :ada:`Machine_Rounds`, :ada:`Machine_Overflows`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss attributes that return :ada:`Boolean` values
 indicating whether a feature is available or not in the target architecture:
@@ -847,7 +847,7 @@ Primitive function attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Attributes: :ada:`Fraction`, :ada:`Exponent` and :ada:`Compose`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`Exponent` is an attribute that returns the machine exponent of a
 floating-point value, while :ada:`Fraction` is an attribute that returns the
