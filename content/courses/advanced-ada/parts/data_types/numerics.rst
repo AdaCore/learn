@@ -670,20 +670,17 @@ representation of a type. For example:
 Usually, this value is two, as the radix is based on a binary system.
 
 
-Attributes: :ada:`Machine_Mantissa`, :ada:`Machine_Emin` and :ada:`Machine_Emax`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`Machine_Mantissa`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`Machine_Mantissa` is an attribute that returns the number of bits
-reserved for the mantissa of the floating-point type. The :ada:`Machine_Emin`
-and :ada:`Machine_Emax` attributes return the minimum and maximum value,
-respectively, of the machine exponent the floating-point type. Note that, in
-all cases, the returned value is a universal integer. For example:
+reserved for the mantissa of the floating-point type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Emin_Emax
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Mantissa
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Machine_Emin_Emax is
+    procedure Show_Machine_Mantissa is
     begin
        Put_Line
          ("Float'Machine_Mantissa:           "
@@ -694,6 +691,25 @@ all cases, the returned value is a universal integer. For example:
        Put_Line
          ("Long_Long_Float'Machine_Mantissa: "
           & Long_Long_Float'Machine_Mantissa'Image);
+    end Show_Machine_Mantissa;
+
+On a typical desktop PC, as indicated by :ada:`Machine_Mantissa`, we have 24
+bits for the floating-point mantissa of the :ada:`Float` type.
+
+:ada:`Machine_Emin` and :ada:`Machine_Emax`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`Machine_Emin` and :ada:`Machine_Emax` attributes return the minimum
+and maximum value, respectively, of the machine exponent the floating-point
+type. Note that, in all cases, the returned value is a universal integer. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Emin_Emax
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Machine_Emin_Emax is
+    begin
        Put_Line
          ("Float'Machine_Emin:               "
           & Float'Machine_Emin'Image);
@@ -714,13 +730,13 @@ all cases, the returned value is a universal integer. For example:
           & Long_Long_Float'Machine_Emax'Image);
     end Show_Machine_Emin_Emax;
 
-On a typical desktop PC, as indicated by :ada:`Machine_Mantissa`, we have 24
-bits for the floating-point mantissa of the :ada:`Float` type.
+On a typical desktop PC, the value of :ada:`Float'Machine_Emin` and
+:ada:`Float'Machine_Emax` is -125 and 128, respectively.
 
 To get the actual minimum and maximum value of the exponent for a specific
-type, we need to use :ada:`Machine_Radix` that we've just discussed in the
-previous section. Let's calculate the minimum and maximum value of the exponent
-for the :ada:`Float` type on a typical PC:
+type, we need to use the :ada:`Machine_Radix` attribute that we've seen
+previously. Let's calculate the minimum and maximum value of the exponent for
+the :ada:`Float` type on a typical PC:
 
 - Value of minimum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emin`.
 
