@@ -1005,7 +1005,7 @@ In all cases, the rounding attributes return the nearest integer value (as a
 floating-point value). For example, the rounded value for 4.8 is 5.0 because 5
 is the closest integer value.
 
-Let's see some examples:
+Let's see a code example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Rounding
 
