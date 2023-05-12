@@ -991,10 +991,11 @@ while the rounded-up value (ceiling) of 0.25 is 1.0.
 Round-to-nearest attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this section, we discuss three attributes used for rounding. In all cases,
-the rounding attributes return the nearest integer value (as a floating-point
-value). For example, the rounded value for 4.8 is 5.0 because 5 is the closest
-integer value.
+In this section, we discuss three attributes used for rounding:
+:ada:`Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
+In all cases, the rounding attributes return the nearest integer value (as a
+floating-point value). For example, the rounded value for 4.8 is 5.0 because 5
+is the closest integer value.
 
 Let's see some examples:
 
