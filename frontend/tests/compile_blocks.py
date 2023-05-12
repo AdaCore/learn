@@ -517,6 +517,30 @@ def analyze_file(rst_file):
 
                 return project_block_dir
 
+            def cleanup_project(language, project_filename, main_file):
+                #
+                # Clean-up source-code examples after compilation
+                #
+                if project_filename is not None:
+
+                    try:
+                        run("gprclean", "-P", project_filename)
+
+                        run("gnatprove", "-P", project_filename, "--clean")
+                    except S.CalledProcessError as e:
+                        out = str(e.output.decode("utf-8"))
+
+                if language == "c":
+                    try:
+                        cmd = ["rm", "-f"] + glob.glob('*.o') + glob.glob('*.gch')
+                        if main_file is not None:
+                            cmd.append(P.splitext(main_file)[0])
+                        out = run(*cmd)
+                    except S.CalledProcessError as e:
+                        print_error(loc, "Failed to clean-up example")
+                        print(e.output)
+                        has_error = True
+
             try:
                 latest_project_dir, source_files = update_latest()
             except Exception as e:
@@ -526,6 +550,9 @@ def analyze_file(rst_file):
 
             project_block_dir = prepare_project_block_dir(latest_project_dir)
             os.chdir(project_block_dir)
+
+            project_filename = None
+            main_file = None
 
             no_check = any(sphinx_class in ["ada-nocheck", "c-nocheck"]
                            for sphinx_class in block.classes)
@@ -560,6 +587,7 @@ def analyze_file(rst_file):
                         has_error = True
 
             if 'ada-syntax-only' in block.classes or not block.run:
+                cleanup_project(block.language, project_filename, main_file)
                 continue
 
             compile_error = False
@@ -584,13 +612,8 @@ def analyze_file(rst_file):
                     main_file = source_files[-1].basename
                 return main_file
 
-            project_filename = None
-
             if compile_block:
 
-                main_file = get_main_filename(block)
-
-                main_file = None
                 if run_block:
                     main_file = get_main_filename(block)
                 spark_mode = False
@@ -790,13 +813,7 @@ def analyze_file(rst_file):
             elif args.verbose:
                 print(C.col("SUCCESS", C.Colors.GREEN))
 
-            # Clean-up source-code examples after compilation
-            if project_filename is not None:
-
-                try:
-                    run("gprclean", "-P", project_filename)
-                except S.CalledProcessError as e:
-                    out = str(e.output.decode("utf-8"))
+            cleanup_project(block.language, project_filename, main_file)
 
             output_block_info(block)
 
