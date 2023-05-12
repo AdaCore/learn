@@ -958,14 +958,14 @@ machine radix and a machine exponent passed to the function. For example:
                  & Float'Scaling (0.25, 3)'Image);
     end Show_Scaling;
 
-This is calculated with this formula:
+The scaling is calculated with this formula:
 
    scaling = value x Machine_Radix\ :sup:`machine exponent`
 
 For example, on a typical PC with a machine radix of two,
 :ada:`Float'Scaling (0.25, 3) = 2.0` corresponds to
 
-   2.0 = 0.25 x 2\ :sup:`3`
+   0.25 x 2\ :sup:`3` = 2.0
 
 Round-up and round-down attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
