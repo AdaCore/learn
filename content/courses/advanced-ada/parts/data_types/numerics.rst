@@ -967,8 +967,8 @@ For example, on a typical PC with a machine radix of two,
 
    2.0 = 0.25 x 2\ :sup:`3`
 
-Attributes: :ada:`Floor`, :ada:`Ceiling`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Round-up and round-down attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`Floor` and :ada:`Ceiling` are attributes that returned the rounded-down
 or rounded-up value, respectively, of a floating-point value. For example:
@@ -988,8 +988,8 @@ or rounded-up value, respectively, of a floating-point value. For example:
 As we can see in this example, the rounded-down value (floor) of 0.25 is 0.0,
 while the rounded-up value (ceiling) of 0.25 is 1.0.
 
-Attributes: :ada:`Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Round-to-nearest attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss three attributes used for rounding. In all cases,
 the rounding attributes return the nearest integer value (as a floating-point
