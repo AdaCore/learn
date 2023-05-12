@@ -855,9 +855,19 @@ indicating whether a feature is available or not in the target architecture:
           & Long_Long_Float'Machine_Overflows'Image);
     end Show_Boolean_Attributes;
 
-On a typical PC, :ada:`Denorm`, :ada:`Signed_Zeros`, :ada:`Machine_Rounds`
-are true, while :ada:`Machine_Overflows` is false.
+On a typical PC, we have the following information:
 
+- :ada:`Denorm` is true (i.e. the architecture uses denormalized numbers);
+
+- :ada:`Signed_Zeros` is true (i.e. the standard floating-point types use a
+  sign for zero values);
+
+- :ada:`Machine_Rounds` is true (i.e. rounding-to-nearest is used for
+  floating-point types);
+
+- :ada:`Machine_Overflows` is false (i.e. there's no guarantee that a
+  :ada:`Constraint_Error` exception is raised when an operation with a
+  floating-point type produces an overflow or divide-by-zero).
 
 Primitive function attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
