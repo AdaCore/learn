@@ -8,9 +8,10 @@ Types and Representation
 Enumeration Representation Clauses
 ----------------------------------
 
-We may change the
-:ref:`internal code of an enumeration <Adv_Ada_Enumeration_Position_Internal_Code>`
-using a representation clause, which has the following format:
+We have talked about the internal code of an enumeration
+:ref:`in another section <Adv_Ada_Enumeration_Position_Internal_Code>`.
+We may change this internal code by using a representation clause, which has
+the following format:
 
 .. code-block:: ada
 
@@ -1571,7 +1572,7 @@ computations with this more efficient form.
 
 To follow this approach, you will need to convert between the efficient format
 and the specified format. Ada provides a very convenient method for doing this,
-as described in RM 13.6 "Change of Representation".
+as described in :arm22:`RM 13.6 "Change of Representation" <13-6>`.
 
 The idea is to use type derivation, where one type has the specified format and
 the other has the normal default format. For instance for the array case above,
@@ -1642,8 +1643,8 @@ convert from one form to the other, as in:
 There are two restrictions that must be kept in mind when using this feature.
 First, you have to use a derived type. You can't put representation clauses on
 subtypes, which means that the conversion must always be explicit. Second,
-there is a rule RM 13.1(10) that restricts the placement of interesting
-representation clauses:
+there is a rule :arm22:`RM 13.1 <13-1>` (10) that restricts the placement of
+interesting representation clauses:
 
     10 For an untagged derived type, no type-related representation items are
     allowed if the parent type is a by-reference type, or has any user-defined
@@ -1727,7 +1728,7 @@ get all the gobbledygook listed above, but you can be sure that this never
 happens unless you explicitly ask for it.
 
 This also explains the restriction we mentioned in previous subsection from
-RM 13.1(10):
+:arm22:`RM 13.1 <13-1>` (10):
 
     10 For an untagged derived type, no type-related representation items are
     allowed if the parent type is a by-reference type, or has any user-defined
