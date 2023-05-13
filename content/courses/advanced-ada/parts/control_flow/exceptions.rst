@@ -1054,14 +1054,14 @@ displays them after running the :ada:`Test_Exceptions` procedure:
     end Show_Exception_Info;
 
 In the :ada:`Save_To_List` procedure of the :ada:`Exception_Tests` package, we
-call the :ada:`Save_Occurrence` procedure to store the exception occurence to
+call the :ada:`Save_Occurrence` procedure to store the exception occurrence to
 the :ada:`All_Occur` array. In the :ada:`Show_Exception_Info`, we display all
 the exception occurrences that we collected.
 
 :ada:`Read` and :ada:`Write` attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Similarly, we can use files to read and write exception occurences. To do that,
+Similarly, we can use files to read and write exception occurrences. To do that,
 we can simply use the :ada:`Read` and :ada:`Write` attributes.
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exceptions_Package.Exception_Occurrence_Stream
