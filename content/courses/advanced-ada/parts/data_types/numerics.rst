@@ -644,6 +644,9 @@ In this section, we discuss various attributes related to floating-point types.
 Representation-oriented attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+In this section, we discuss attributes related to the representation of
+floating-point types.
+
 Attribute: :ada:`Machine_Radix`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -670,20 +673,17 @@ representation of a type. For example:
 Usually, this value is two, as the radix is based on a binary system.
 
 
-Attributes: :ada:`Machine_Mantissa`, :ada:`Machine_Emin` and :ada:`Machine_Emax`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Attributes: :ada:`Machine_Mantissa`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`Machine_Mantissa` is an attribute that returns the number of bits
-reserved for the mantissa of the floating-point type. The :ada:`Machine_Emin`
-and :ada:`Machine_Emax` attributes return the minimum and maximum value,
-respectively, of the machine exponent the floating-point type. Note that, in
-all cases, the returned value is a universal integer. For example:
+reserved for the mantissa of the floating-point type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Emin_Emax
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Mantissa
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Machine_Emin_Emax is
+    procedure Show_Machine_Mantissa is
     begin
        Put_Line
          ("Float'Machine_Mantissa:           "
@@ -694,6 +694,25 @@ all cases, the returned value is a universal integer. For example:
        Put_Line
          ("Long_Long_Float'Machine_Mantissa: "
           & Long_Long_Float'Machine_Mantissa'Image);
+    end Show_Machine_Mantissa;
+
+On a typical desktop PC, as indicated by :ada:`Machine_Mantissa`, we have 24
+bits for the floating-point mantissa of the :ada:`Float` type.
+
+:ada:`Machine_Emin` and :ada:`Machine_Emax`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`Machine_Emin` and :ada:`Machine_Emax` attributes return the minimum
+and maximum value, respectively, of the machine exponent the floating-point
+type. Note that, in all cases, the returned value is a universal integer. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Emin_Emax
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Machine_Emin_Emax is
+    begin
        Put_Line
          ("Float'Machine_Emin:               "
           & Float'Machine_Emin'Image);
@@ -714,20 +733,20 @@ all cases, the returned value is a universal integer. For example:
           & Long_Long_Float'Machine_Emax'Image);
     end Show_Machine_Emin_Emax;
 
-On a typical desktop PC, as indicated by :ada:`Machine_Mantissa`, we have 24
-bits for the floating-point mantissa of the :ada:`Float` type.
+On a typical desktop PC, the value of :ada:`Float'Machine_Emin` and
+:ada:`Float'Machine_Emax` is -125 and 128, respectively.
 
 To get the actual minimum and maximum value of the exponent for a specific
-type, we need to use :ada:`Machine_Radix` that we've just discussed in the
-previous section. Let's calculate the minimum and maximum value of the exponent
-for the :ada:`Float` type on a typical PC:
+type, we need to use the :ada:`Machine_Radix` attribute that we've seen
+previously. Let's calculate the minimum and maximum value of the exponent for
+the :ada:`Float` type on a typical PC:
 
-- Minimum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emin`.
+- Value of minimum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emin`.
 
     - In our target platform, this is
       2\ :sup:`-125` = 2.35098870164457501594 x 10\ :sup:`-38`.
 
-- Maximum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emax`. In this
+- Value of maximum exponent: :ada:`Float'Machine_Radix ** Float'Machine_Emax`.
 
     - In our target platform, this is
       2\ :sup:`128`  = 3.40282366920938463463 x 10\ :sup:`38`.
@@ -752,8 +771,7 @@ a floating-point subtype. Let's see an example:
                  & Long_Long_Float'Digits'Image);
     end Show_Digits;
 
-On a typical desktop PC, the requested decimal precision of the :ada:`Float`
-type is six digits.
+Here, the requested decimal precision of the :ada:`Float` type is six digits.
 
 Note that we said that :ada:`Digits` is the *requested* level of precision,
 which is specified as part of declaring a floating point type. We can retrieve
@@ -772,12 +790,12 @@ the actual decimal precision with :ada:`Base'Digits`. For example:
                  & Float_D3'Base'Digits'Image);
     end Show_Base_Digits;
 
-On a typical desktop PC, the requested decimal precision of the :ada:`Float_D3`
-type is three digits, while the actual decimal precision is six digits.
+The requested decimal precision of the :ada:`Float_D3` type is three digits,
+while the actual decimal precision is six digits (on a typical desktop PC).
 
 
 Attributes: :ada:`Denorm`, :ada:`Signed_Zeros`, :ada:`Machine_Rounds`, :ada:`Machine_Overflows`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss attributes that return :ada:`Boolean` values
 indicating whether a feature is available or not in the target architecture:
@@ -793,8 +811,8 @@ indicating whether a feature is available or not in the target architecture:
   rounding-toward-zero).
 
 - :ada:`Machine_Overflows` is an attribute that indicates whether a
-  :ada:`Constraint_Error` is (or is not) guaranteed to be raised when an
-  operation with that type produces an overflow or divide-by-zero.
+  :ada:`Constraint_Error` exception is (or is not) guaranteed to be raised
+  when an operation with that type produces an overflow or divide-by-zero.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Machine_Rounds_Overflows
 
@@ -840,21 +858,40 @@ indicating whether a feature is available or not in the target architecture:
           & Long_Long_Float'Machine_Overflows'Image);
     end Show_Boolean_Attributes;
 
-On a typical PC, :ada:`Denorm`, :ada:`Signed_Zeros`, :ada:`Machine_Rounds`
-are true, while :ada:`Machine_Overflows` is false.
+On a typical PC, we have the following information:
 
+- :ada:`Denorm` is true (i.e. the architecture uses denormalized numbers);
+
+- :ada:`Signed_Zeros` is true (i.e. the standard floating-point types use a
+  sign for zero values);
+
+- :ada:`Machine_Rounds` is true (i.e. rounding-to-nearest is used for
+  floating-point types);
+
+- :ada:`Machine_Overflows` is false (i.e. there's no guarantee that a
+  :ada:`Constraint_Error` exception is raised when an operation with a
+  floating-point type produces an overflow or divide-by-zero).
 
 Primitive function attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Attributes: :ada:`Fraction`, :ada:`Exponent` and :ada:`Compose`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In this section, we discuss attributes that we can use to manipulate
+floating-point values.
 
-:ada:`Exponent` is an attribute that returns the machine exponent of a
-floating-point value, while :ada:`Fraction` is an attribute that returns the
-mantissa part of a floating-point value. :ada:`Compose` is used to return a
-floating-point value based on a fraction (the mantissa part) and the machine
-exponent. For example:
+Attributes: :ada:`Fraction`, :ada:`Exponent` and :ada:`Compose`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`Exponent` and :ada:`Fraction` attributes return "parts" of a
+floating-point value:
+
+- :ada:`Exponent` returns the machine exponent, and
+
+- :ada:`Fraction` returns the mantissa part.
+
+:ada:`Compose` is used to return a floating-point value based on a fraction
+(the mantissa part) and the machine exponent.
+
+Let's see some examples:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Exponent_Fraction
 
@@ -891,10 +928,18 @@ exponent. For example:
           & Float'Compose (9.67141E-01, -83)'Image);
     end Show_Exponent_Fraction_Compose;
 
-For example, considering that :ada:`Float'Machine_Radix` is two, we see that
-the value 1.0 is composed by a fraction of 0.5 and a machine exponent of one.
-In other words, 0.5 x 2\ :sup:`1` = 1.0. For the value 0.25, we get a fraction
-of 0.5 and a machine exponent of -1, which makes 0.5 x 2\ :sup:`-1` = 0.25.
+To understand this code example, we have to take this formula into account:
+
+   Value = Fraction x Machine_Radix\ :sup:`Exponent`
+
+Considering that the value of :ada:`Float'Machine_Radix` on a typical PC is
+two, we see that the value 1.0 is composed by a fraction of 0.5 and a machine
+exponent of one. In other words:
+
+   0.5 x 2\ :sup:`1` = 1.0
+
+For the value 0.25, we get a fraction of 0.5 and a machine exponent of -1,
+which is the result of 0.5 x 2\ :sup:`-1` = 0.25.
 We can use the :ada:`Compose` attribute to perform this calculation. For
 example, :ada:`Float'Compose (0.5, -1) = 0.25`.
 
@@ -921,12 +966,17 @@ machine radix and a machine exponent passed to the function. For example:
                  & Float'Scaling (0.25, 3)'Image);
     end Show_Scaling;
 
-This is calculated with this formula: value x Machine_Radix\
-:sup:`machine exponent`. For example, on a typical PC with a machine radix of
-two, :ada:`Float'Scaling (0.25, 3)` corresponds to 0.25 x 2\ :sup:`3` = 2.0.
+The scaling is calculated with this formula:
 
-Attributes: :ada:`Floor`, :ada:`Ceiling`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   scaling = value x Machine_Radix\ :sup:`machine exponent`
+
+For example, on a typical PC with a machine radix of two,
+:ada:`Float'Scaling (0.25, 3) = 2.0` corresponds to
+
+   0.25 x 2\ :sup:`3` = 2.0
+
+Round-up and round-down attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :ada:`Floor` and :ada:`Ceiling` are attributes that returned the rounded-down
 or rounded-up value, respectively, of a floating-point value. For example:
@@ -946,15 +996,16 @@ or rounded-up value, respectively, of a floating-point value. For example:
 As we can see in this example, the rounded-down value (floor) of 0.25 is 0.0,
 while the rounded-up value (ceiling) of 0.25 is 1.0.
 
-Attributes: :ada:`Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Round-to-nearest attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this section, we discuss three attributes used for rounding. In all cases,
-the rounding attributes return the nearest integer value (as a floating-point
-value). For example, the rounded value for 4.8 is 5.0 because 5 is the closest
-integer value.
+In this section, we discuss three attributes used for rounding:
+:ada:`Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
+In all cases, the rounding attributes return the nearest integer value (as a
+floating-point value). For example, the rounded value for 4.8 is 5.0 because 5
+is the closest integer value.
 
-Let's see some examples:
+Let's see a code example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Rounding
 
@@ -1035,12 +1086,13 @@ The :ada:`Remainder` attribute returns the remainder part of a division. For
 example, :ada:`Float'Remainder (1.25, 0.5) = 0.25`. Let's briefly discuss the
 details of this operations. The result of the division 1.25 / 0.5 is 2.5. Here,
 1.25 is the dividend and 0.5 is the divisor. The quotient and remainder of this
-division are 2 and 0.25, respectively. Here, the quotient is an integer number,
-and the remainder is the floating-point part that remains. Note that the
-relation between quotient and remainder is defined in such a way that we get
-the original dividend back when we use the formula: "quotient x divisor +
-remainder = dividend". For the previous example, this means 2 x 0.5 + 0.25
-= 1.25.
+division are 2 and 0.25, respectively. (Here, the quotient is an integer number,
+and the remainder is the floating-point part that remains.)
+
+Note that the relation between quotient and remainder is defined in such a way
+that we get the original dividend back when we use the formula: "quotient x
+divisor + remainder = dividend". For the previous example, this means
+2 x 0.5 + 0.25 = 1.25.
 
 The :ada:`Adjacent` attribute is the next machine value towards another value.
 For example, on a typical PC, the adjacent value of a small value |mdash|
@@ -1096,22 +1148,33 @@ magnitude of the first argument (1.0), so the result is -1.0.
 
 :ada:`Leading_Part` is an attribute that returns the *approximated* version of
 the mantissa of a value based on the specified number of leading bits for the
-mantissa. For example, :ada:`Float'Leading_Part (3.1416, 1)` is 2.0 because
-that's the value we can represent with one leading bit. (Note that
-:ada:`Float'Fraction (2.0) = 0.5` |mdash| which can be represented with one
-leading bit in the mantissa |mdash| and :ada:`Float'Exponent (2.0) = 2`.) If we
-increase the number of leading bits of the mantissa to two |mdash| by writing
-:ada:`Float'Leading_Part (3.1416, 2)` |mdash|, we get 3.0 because that's the
-value we can represent with two leading bits. If we increase again the number
-of leading bits to five |mdash| :ada:`Float'Leading_Part (3.1416, 5)` |mdash|,
-we get 3.125. Note that, in this case :ada:`Float'Fraction (3.125) = 0.78125`
-and :ada:`Float'Exponent (3.125) = 2`. The binary mantissa is actually
-:ada:`2#110_0100_0000_0000_0000_0000#`, which can be represented with five
-leading bits as expected: :ada:`2#110_01#`. (Note that we can get the mantissa
-by calculating
-:ada:`Float'Fraction (3.125) * Float (Float'Machine_Radix) ** (Float'Machine_Mantissa - 1)`
-and converting the result to binary format. The -1 value in the formula
-corresponds to the sign bit.)
+mantissa. Let's see some examples:
+
+- :ada:`Float'Leading_Part (3.1416, 1)` is 2.0 because that's the value we can
+  represent with one leading bit.
+
+  - Note that :ada:`Float'Fraction (2.0) = 0.5` |mdash| which can be
+    represented with one leading bit in the mantissa |mdash| and
+    :ada:`Float'Exponent (2.0) = 2`.)
+
+- If we increase the number of leading bits of the mantissa to two |mdash| by
+  writing :ada:`Float'Leading_Part (3.1416, 2)` |mdash|, we get 3.0 because
+  that's the value we can represent with two leading bits.
+
+- If we increase again the number of leading bits to five |mdash|
+  :ada:`Float'Leading_Part (3.1416, 5)` |mdash|, we get 3.125.
+
+  - Note that, in this case :ada:`Float'Fraction (3.125) = 0.78125`
+    and :ada:`Float'Exponent (3.125) = 2`.
+
+  - The binary mantissa is actually :ada:`2#110_0100_0000_0000_0000_0000#`,
+    which can be represented with five leading bits as expected:
+    :ada:`2#110_01#`.
+
+     - We can get the binary mantissa by calculating
+       :ada:`Float'Fraction (3.125) * Float (Float'Machine_Radix) ** (Float'Machine_Mantissa - 1)`
+       and converting the result to binary format. The -1 value in the formula
+       corresponds to the sign bit.
 
 .. admonition:: Attention
 
@@ -1193,23 +1256,27 @@ If we run this example on a typical PC, we see that the expected value
 :ada:`1_000_000_000_000_000.0` was displayed as :ada:`999_999_986_991_000.0`.
 This is because 1.0 x 10\ :sup:`15` isn't
 directly representable on this machine, so it has to be modified to a value that
-is actually representable (on the machine). This modification can be made
-visible with the :ada:`Machine (X)` attribute, which returns a version of
-:ada:`X` that is representable on the target machine. This modification is
-performed by rounding or truncating :ada:`X` to either one of the adjacent
-machine numbers for the specific floating-point type of :ada:`X`. (Of course, if
-the real value of :ada:`X` is representable on the target machine, no
-modification is performed.)
+is actually representable (on the machine).
+
+This *automatic* modification we've just described is actually hidden, so to
+say, in the assignment. However, we can make it more visible by using the
+:ada:`Machine (X)` attribute, which returns a version of :ada:`X` that is
+representable on the target machine. The :ada:`Machine (X)` attribute rounds
+(or truncates) :ada:`X` to either one of the adjacent machine numbers for the
+specific floating-point type of :ada:`X`. (Of course, if the real value of
+:ada:`X` is directly representable on the target machine, no modification is
+performed.)
 
 In fact, we could rewrite the :ada:`V := 1.0E+15` assignment of the code example
 as :ada:`V := Float'Machine (1.0E+15)`, as we're never assigning a real value
-directly to a floating-pointing variable, but instead first converting it to a
-version of the real value that is representable on the target machine. In this
-case, 999999986991000.0 is a representable version of the real value
-1.0 x 10\ :sup:`15`. Of course, writing :ada:`V := 1.0E+15` or
+directly to a floating-pointing variable |mdash| instead, we're first
+converting it to a version of the real value that is representable on the
+target machine. In this case, 999999986991000.0 is a representable version of
+the real value 1.0 x 10\ :sup:`15`. Of course, writing :ada:`V := 1.0E+15` or
 :ada:`V := Float'Machine (1.0E+15)` doesn't make any difference to the actual
-value that is assigned to :ada:`V`, as the conversion to a representable value
-happens automatically during the assignment to :ada:`V`.
+value that is assigned to :ada:`V` (in the case of this specific target
+architecture), as the conversion to a representable value happens automatically
+during the assignment to :ada:`V`.
 
 There are, however, instances where using the :ada:`Machine` attribute does
 make a difference in the result. For example, let's say we want to calculate
@@ -2494,7 +2561,7 @@ us to customize the format of the string that we display in the user message.
 Other features of big integers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's look at two additional features of big integers:
+Now, let's look at two additional features of big integers:
 
 - the natural and positive subtypes, and
 
@@ -2507,11 +2574,33 @@ Similar to integer types, big integers have the :ada:`Big_Natural` and
 :ada:`Big_Positive` subtypes to indicate natural and positive numbers. However,
 in contrast to the :ada:`Natural` and :ada:`Positive` subtypes, the
 :ada:`Big_Natural` and :ada:`Big_Positive` subtypes are defined via predicates
-rather than the simple ranges of normal (ordinary) numeric types.
+rather than the simple ranges of normal (ordinary) numeric types:
+
+.. code-block:: ada
+
+    subtype Natural  is
+      Integer range 0 .. Integer'Last;
+
+    subtype Positive is
+      Integer range 1 .. Integer'Last;
+
+    subtype Big_Natural is Big_Integer
+      with Dynamic_Predicate =>
+             (if Is_Valid (Big_Natural)
+                then Big_Natural >= 0),
+           Predicate_Failure =>
+             (raise Constraint_Error);
+
+    subtype Big_Positive is Big_Integer
+      with Dynamic_Predicate =>
+             (if Is_Valid (Big_Positive)
+                then Big_Positive > 0),
+           Predicate_Failure =>
+             (raise Constraint_Error);
+
 Therefore, we cannot simply use attributes such as :ada:`Big_Natural'First`.
-Instead, these subtypes include contracts to check the corresponding range.
-In any case, we can use them to ensure that a big integer is in the expected
-(natural or positive) range:
+However, we can use the subtypes to ensure that a big integer is in the
+expected (natural or positive) range:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Positive_Natural
 
@@ -2587,7 +2676,8 @@ two big integer values:
 
     end Show_Big_Integer_Greatest_Common_Divisor;
 
-In this example, we retrieve the greatest common divisor of 145 and 25.
+In this example, we retrieve the greatest common divisor of 145 and 25
+(i.e.: 5).
 
 
 Big real and quotients
