@@ -2778,6 +2778,8 @@ we've seen that record components can have default values. For example:
 In this section, we'll extend the concept of default values to other kinds of
 type declarations, such as scalar types and arrays.
 
+.. _Adv_Ada_Default_Value:
+
 To assign a default value for a scalar type declaration |mdash| such as an
 enumeration and a new integer |mdash|, we use the :ada:`Default_Value` aspect:
 
@@ -2805,6 +2807,8 @@ Note that we cannot specify a default value for a subtype:
        --  ERROR!!
 
     end Defaults;
+
+.. _Adv_Ada_Default_Component_Value:
 
 For array types, we use the :ada:`Default_Component_Value` aspect:
 

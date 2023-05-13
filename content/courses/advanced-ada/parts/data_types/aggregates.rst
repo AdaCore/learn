@@ -1993,8 +1993,9 @@ When writing an aggregate for the :ada:`Point_3D` type, any component that has
 
 .. admonition:: For further reading...
 
-    Similarly, we could specify the :ada:`Default_Component_Value` aspect in the
-    declaration of the array type:
+    Similarly, we could specify the :ada:`Default_Component_Value` aspect
+    (which we discussed :ref:`earlier on <Adv_Ada_Default_Component_Value>`)
+    in the declaration of the array type:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Array_Aggregates_2
 
@@ -2027,7 +2028,8 @@ When writing an aggregate for the :ada:`Point_3D` type, any component that has
     In this case, when writing :ada:`<>` for a component, the value specified in
     the :ada:`Default_Component_Value` aspect is used.
 
-    Finally, we might want to use both :ada:`Default_Value` and
+    Finally, we might want to use both :ada:`Default_Value` (which we discussed
+    :ref:`previously <Adv_Ada_Default_Value>`) and
     :ada:`Default_Component_Value` aspects at the same time. In this case, the
     value specified in the :ada:`Default_Component_Value` aspect has higher
     priority:
