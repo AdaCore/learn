@@ -506,8 +506,8 @@ the traditional geometric classes that are often found in text books:
 
     end Geometric_Forms;
 
-Let's assume now that :ada:`Square`'s :ada:`Initialize` needs to call
-:ada:`Polygon`'s :ada:`Initialize`, in addition to doing a number of
+Let's assume now that :ada:`Square`\ 's :ada:`Initialize` needs to call
+:ada:`Polygon`\ 's :ada:`Initialize`, in addition to doing a number of
 square specific setups. To do this, we need to use type conversions to
 change the view of :ada:`Self`, so that the compiler statically knows
 which :ada:`Initialize` to call. The code thus looks like:
