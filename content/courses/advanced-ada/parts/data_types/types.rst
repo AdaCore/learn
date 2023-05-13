@@ -3024,6 +3024,10 @@ declaration of the :ada:`Light` constant.
 User-defined literals
 ---------------------
 
+.. note::
+
+   This feature was introduced in Ada 2022.
+
 Any type definition has a kind of literal associated with it. For example,
 integer types are associated with integer literals. Therefore, we can
 initialize an object of integer type with an integer literal:
@@ -3073,9 +3077,6 @@ conversion from literals to the type we're declaring. For this conversion from
 integer literals to the :ada:`Activation_State` type, we could specify that 0
 corresponds to :ada:`Off`, 1 corresponds to :ada:`On` and other values
 correspond to :ada:`Unknown`. We'll see the corresponding implementation later.
-
-.. note:: This feature was first introduced in Ada 2020 and might not be
-          available in older compilers.
 
 These are the three kinds of literals and their corresponding aspect:
 
