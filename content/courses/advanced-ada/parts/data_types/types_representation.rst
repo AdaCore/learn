@@ -8,9 +8,10 @@ Types and Representation
 Enumeration Representation Clauses
 ----------------------------------
 
-We may change the
-:ref:`internal code of an enumeration <Adv_Ada_Enumeration_Position_Internal_Code>`
-using a representation clause, which has the following format:
+We have talked about the internal code of an enumeration
+:ref:`in another section <Adv_Ada_Enumeration_Position_Internal_Code>`.
+We may change this internal code by using a representation clause, which has
+the following format:
 
 .. code-block:: ada
 
