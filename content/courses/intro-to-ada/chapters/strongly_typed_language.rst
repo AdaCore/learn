@@ -800,7 +800,7 @@ We could write:
 Note, however, that subtypes in Ada correspond to type aliases if, and only
 if, they don't have new constraints. Thus, if we add a new constraint to a
 subtype declaration, we don't have a type alias anymore. For example, the
-following declaration *can't* be consider a type alias of :ada:`Float`:
+following declaration *can't* be considered a type alias of :ada:`Float`:
 
 .. code-block:: ada
 
