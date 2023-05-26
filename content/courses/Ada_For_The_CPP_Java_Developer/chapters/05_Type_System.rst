@@ -332,7 +332,7 @@ Here's an example of declaring an array of 26 characters, initializing the value
 
 In C++ and Java, only the size of the array is given during declaration. In Ada, array index ranges are specified using two values of a discrete type. In this example, the array type declaration specifies the use of Integer as the index type, but does not provide any constraints (use :ada:`<>`, pronounced *box*, to specify "no constraints").  The constraints are defined in the object declaration to be 1 to 26, inclusive. Arrays have an attribute called :ada:`'Range`. In our example, :ada:`Arr'Range` can also be expressed as :ada:`Arr'First .. Arr'Last`; both expressions will resolve to :ada:`1 .. 26`. So the :ada:`'Range` attribute supplies the bounds for our :ada:`for` loop. There is no risk of stating either of the bounds incorrectly, as one might do in C++ where :cpp:`I <= 26` may be specified as the end-of-loop condition.
 
-As in C++, Ada :ada:`String`\s are arrays of :ada:`Character`\s. The C++ or Java :cpp:`String` class is the equivalent of the Ada type :ada:`Ada.Strings.Unbounded_String` which offers additional capabilities in exchange for some overhead. Ada strings, importantly, are not delimited with the special character :cpp:`'\0'` like they are in C++. It is not necessary because Ada uses the array's bounds to determine where the string starts and stops.
+As in C++, Ada :ada:`String`\s are arrays of :ada:`Character`\s. The C++ or Java :cpp:`String` class is the equivalent of the Ada type :ada:`Ada.Strings.Unbounded_String` which offers additional capabilities in exchange for some overhead. Ada strings, importantly, are not delimited with the special character :cpp:`\'\\0\'` like they are in C++. It is not necessary because Ada uses the array's bounds to determine where the string starts and stops.
 
 Ada's predefined :ada:`String` type is very straighforward to use:
 
@@ -340,7 +340,7 @@ Ada's predefined :ada:`String` type is very straighforward to use:
 
    My_String : String (1 .. 26);
 
-Unlike C++ and Java, Ada does not offer escape sequences such as :cpp:`'\n'`. Instead, explicit values from the :ada:`ASCII` package must be concatenated (via the concatenation operator, :ada:`&`). Here for example, is how to initialize a line of text ending with a new line:
+Unlike C++ and Java, Ada does not offer escape sequences such as :cpp:`\'\\n\'`. Instead, explicit values from the :ada:`ASCII` package must be concatenated (via the concatenation operator, :ada:`&`). Here for example, is how to initialize a line of text ending with a new line:
 
 .. code-block:: ada
 
