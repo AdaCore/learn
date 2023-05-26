@@ -30,7 +30,7 @@
     real-time embedded systems to large-scale enterprise applications, and
     everything in between.
 
-    SPARK is formally analyzable subset of Ada |mdash| and toolset that brings
+    SPARK is a formally analyzable subset of Ada |mdash| and a toolset that brings
     mathematics-based confidence to software verification.
 
     Try Ada Now:
