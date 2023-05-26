@@ -99,6 +99,8 @@ the second case:
        function F return Integer is (1);
     end Fun;
 
+    procedure Use_F (Z : out Integer);
+
     with Fun; use Fun;
 
     procedure Use_F (Z : out Integer) is
