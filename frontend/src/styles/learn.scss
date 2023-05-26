@@ -32,23 +32,23 @@ a {
     }
 }
 
+@mixin non_menu_vertical_current_hover_colors {
+    color: #e8e8e8;
+    &:hover {
+        color: lightgoldenrodyellow;
+    }
+}
+
 .wy-menu-vertical {
     p.caption {
         color: #fff;
     }
     li {
         a {
-            color: #e8e8e8;
-
-            &:hover {
-                color: #100000;
-            }
+            @include non_menu_vertical_current_hover_colors;
 
             &:visited {
-                color: #e8e8e8;
-                &:hover {
-                    color: #100000;
-                }
+                @include non_menu_vertical_current_hover_colors;
             }
         }
         &.current {
