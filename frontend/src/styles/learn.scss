@@ -32,29 +32,57 @@ a {
     }
 }
 
+@mixin menu_vertical_current_hover_colors {
+    &:hover {
+        background-color: #777777;
+        color: darkorange;
+    }
+}
+
+@mixin menu_vertical_current_colors {
+    @include menu_vertical_current_hover_colors;
+
+    &:visited {
+        color: #303030;
+        @include menu_vertical_current_hover_colors;
+    }
+}
+
+@mixin non_menu_vertical_current_hover_colors {
+    color: #e8e8e8;
+    &:hover {
+        color: lightgoldenrodyellow;
+    }
+}
+
 .wy-menu-vertical {
     p.caption {
         color: #fff;
     }
     li {
         a {
-            color: #e8e8e8;
-
-            &:hover {
-                color: #100000;
-            }
+            @include non_menu_vertical_current_hover_colors;
 
             &:visited {
-                color: #e8e8e8;
-                &:hover {
-                    color: #100000;
-                }
+                @include non_menu_vertical_current_hover_colors;
             }
         }
         &.current {
             a {
+                background-color: #eeeeee;
                 color: #303030;
-                padding: .4045em 2.427em;
+
+                @include menu_vertical_current_colors;
+            }
+            &.toctree-l2 {
+                li.toctree-l3>a {
+                    @include menu_vertical_current_colors;
+                }
+            }
+            &.toctree-l3 {
+                li.toctree-l4>a {
+                    @include menu_vertical_current_colors;
+                }
             }
         }
     }
