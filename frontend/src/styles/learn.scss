@@ -41,19 +41,19 @@ a {
             color: #e8e8e8;
 
             &:hover {
-                color: #bc4600;
+                color: #100000;
             }
 
             &:visited {
                 color: #e8e8e8;
                 &:hover {
-                    color: #bc4600;
+                    color: #100000;
                 }
             }
         }
         &.current {
             a {
-                color: $color-theme-bg-dark;
+                color: #303030;
                 padding: .4045em 2.427em;
             }
         }
@@ -71,13 +71,13 @@ a {
         color: #e8e8e8;
 
         &:hover {
-            color: #bc4600;
+            color: #100000;
         }
 
         &:visited {
             color: #e8e8e8;
             &:hover {
-                color: #bc4600;
+                color: #100000;
             }
         }
     }
