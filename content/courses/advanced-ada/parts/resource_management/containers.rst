@@ -26,9 +26,9 @@ process the :ada:`[1, 2, 3]` aggregate.
 The :ada:`Aggregate` aspect is used in many declarations of the
 :ada:`Ada.Containers` packages. However, this aspect isn't restricted to the
 standard containers: we may indeed use the :ada:`Aggregate` aspect to specify
-a custom container aggregate for any record data type. In this section, we
-discuss the elements of the :ada:`Aggregate` aspect and how to use this aspect
-to create your own container aggregates.
+a custom container aggregate for any type other than an array. In this section,
+we discuss the elements of the :ada:`Aggregate` aspect and how to use this
+aspect to create your own container aggregates.
 
 .. admonition:: In the Ada Reference Manual
 
