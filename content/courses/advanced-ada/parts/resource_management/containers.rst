@@ -56,6 +56,20 @@ Basically, there are three elements you can use in the :ada:`Aggregate` aspect
 to specify a procedure that is called when adding an element to the container:
 :ada:`Add_Named`, ada:`Add_Unnamed`, and :ada:`Assign_Indexed`.
 
+.. admonition:: Attention
+
+    Remember that an indexed aggregate has an index associated with each
+    component. As discussed in the
+    :ref:`section on container aggregates <Adv_Ada_Container_Aggregates>`,
+
+    - for indexed positional container aggregates, the index of each component
+      is implied by its position;
+
+    - for indexed named container aggregates, the index of each component is
+      explicitly indicated.
+
+    We discuss this topic later in more details.
+
 Some restrictions apply to the :ada:`Aggregate` aspect. For example:
 
 - we have to specify at least one of those elements (:ada:`Add_Named`,
