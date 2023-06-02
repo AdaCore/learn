@@ -18,10 +18,10 @@ used with standard containers. If you look at the type declarations of the
 standard containers (in the :ada:`Ada.Containers` packages), you'll notice that
 some of them make use of the :ada:`Aggregate` aspect. This aspect is used to
 specify which subprograms are called to process a container aggregate for a
-data type :ada:`T`. Suppose we declare an object :ada:`Obj` like this:
-:ada:`Obj : T := [1, 2, 3]`. In this case, the :ada:`Aggregate` aspect
-specifies which subprograms are going to be called to process the
-:ada:`[1, 2, 3]` aggregate.
+data type, let's say a type named :ada:`T`. Suppose we declare an object
+:ada:`Obj` like this: :ada:`Obj : T := [1, 2, 3]`. In this case, the
+:ada:`Aggregate` aspect specifies which subprograms are going to be called to
+process the :ada:`[1, 2, 3]` aggregate.
 
 The :ada:`Aggregate` aspect is used in many declarations of the
 :ada:`Ada.Containers` packages. However, this aspect isn't restricted to the
@@ -128,7 +128,8 @@ container, i.e. the simplest version of a container without any components.
 
 Let's assume we a container type :ada:`T` for which we specify an
 :ada:`Empty` function in the :ada:`Aggregate` aspect, and we declare an object
-:ada:`Obj : T`. In this case, the :ada:`Empty` function is called:
+:ada:`Obj : T`. In this case, the :ada:`Empty` function is called in one of
+two scenarios:
 
 - when we assign a null container to :ada:`Obj` |mdash| by writing
   :ada:`Obj := [];` |mdash| or
@@ -310,12 +311,9 @@ aspect).
 
 The actual argument for the integer parameter of the :ada:`Empty_Func` function
 depends on the number of elements we use in the container aggregate. In this
-specific example,
-
-- when we write :ada:`A := []`, then :ada:`Empty_Func (0)` is called, whereas
-
-- when we write :ada:`A := ["Hello", "World"]`, this results in a call to
-  :ada:`Empty_Func (2)`.
+specific example, when we write :ada:`A := []`, then :ada:`Empty_Func (0)` is
+called, whereas when we write :ada:`A := ["Hello", "World"]`, this results in
+a call to :ada:`Empty_Func (2)`.
 
 
 :ada:`Add_Named`
