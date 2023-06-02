@@ -16,18 +16,18 @@ In a previous chapter, we discussed
 :ref:`container aggregates <Adv_Ada_Container_Aggregates>`, which are commonly
 used with standard containers. If you look at the type declarations of the
 standard containers (in the :ada:`Ada.Containers` packages), you'll notice that
-some of them make use of the :ada:`''Aggregate` aspect. This aspect is used to
+some of them make use of the :ada:`Aggregate` aspect. This aspect is used to
 specify which subprograms are called to process a container aggregate for a
 data type :ada:`T`. Suppose we declare an object :ada:`Obj` like this:
-:ada:`Obj : T := [1, 2, 3]`. In this case, the :ada:`'Aggregate` aspect
+:ada:`Obj : T := [1, 2, 3]`. In this case, the :ada:`Aggregate` aspect
 specifies which subprograms are going to be called to process the
 :ada:`[1, 2, 3]` aggregate.
 
-The :ada:`'Aggregate` aspect is used in many declarations of the
+The :ada:`Aggregate` aspect is used in many declarations of the
 :ada:`Ada.Containers` packages. However, this aspect isn't restricted to the
-standard containers: we may indeed use the :ada:`'Aggregate` aspect to specify
+standard containers: we may indeed use the :ada:`Aggregate` aspect to specify
 a custom container aggregate for any record data type. In this section, we
-discuss the elements of the :ada:`'Aggregate` aspect and how to use this aspect
+discuss the elements of the :ada:`Aggregate` aspect and how to use this aspect
 to create your own container aggregates.
 
 .. admonition:: In the Ada Reference Manual
@@ -38,7 +38,7 @@ to create your own container aggregates.
 Basic syntax
 ~~~~~~~~~~~~
 
-The :ada:`'Aggregate` aspect has the following syntax:
+The :ada:`Aggregate` aspect has the following syntax:
 
 .. code-block:: ada
 
@@ -52,7 +52,7 @@ The :ada:`'Aggregate` aspect has the following syntax:
 
 Note that the order of the elements must be exactly as shown above.
 
-Basically, there are three elements you can use in the :ada:`'Aggregate` aspect
+Basically, there are three elements you can use in the :ada:`Aggregate` aspect
 to specify a procedure that is called when adding an element to the container:
 :ada:`Add_Named`, ada:`Add_Unnamed`, and :ada:`Assign_Indexed`.
 
