@@ -10,7 +10,7 @@ Containers
 
 .. note::
 
-   This feature was introduced in Ada 2022.
+    This feature was introduced in Ada 2022.
 
 In a previous chapter, we discussed
 :ref:`container aggregates <Adv_Ada_Container_Aggregates>`, which are commonly
@@ -32,7 +32,7 @@ to create your own container aggregates.
 
 .. admonition:: In the Ada Reference Manual
 
-   - :arm22:`Container Aggregates <4-3-5>`
+    - :arm22:`Container Aggregates <4-3-5>`
 
 
 Basic syntax
