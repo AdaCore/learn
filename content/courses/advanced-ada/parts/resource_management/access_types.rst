@@ -3,6 +3,68 @@ Access Types
 
 .. include:: ../../../global.txt
 
+Access types: Terminology
+-------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+    - :arm22:`3.10.2 Operations of Access Types <3-10-2>`
+
+.. todo::
+
+    Complete section!
+
+
+Access types: Allocation
+-------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+.. todo::
+
+    Complete section!
+
+
+Pool-specific access types
+--------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+.. todo::
+
+    Complete section!
+
+
+Discriminants as Access Values
+------------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+    - :arm22:`3.7.1 Discriminant Constraints <3-7-1>`
+
+.. todo::
+
+    Complete section!
+
+
+Self-reference
+--------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
+
+.. todo::
+
+    Complete section!
+
+
 Dereferencing
 -------------
 
@@ -4385,6 +4447,14 @@ the :ada:`Valid_Work_Handler` type.
 
 Anonymous Access-To-Subprograms
 -------------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+.. todo::
+
+    Complete section!
 
 
 .. _Adv_Ada_Accessibility_Rules_Access_To_Subprograms:
