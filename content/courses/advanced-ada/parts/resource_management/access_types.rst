@@ -2809,14 +2809,9 @@ In this section, we discuss the :ada:`Unchecked_Access` attribute, which we
 can use to circumvent accessibility issues for objects in specific cases. (Note
 that this attribute only exists for objects, not for subprograms.)
 
-We've seen in the previous section that the accessibility levels verify the
-lifetime of access types.
-
-.. todo::
-
-    Add link: Adv_Ada_Accessibility_Levels_Intro
-
-Let's see a simplified version of a code example from that section:
+We've seen :ref:`previously <Adv_Ada_Accessibility_Levels_Intro>` that the
+accessibility levels verify the lifetime of access types. Let's see a
+simplified version of a code example from that section:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Access.Dangling_Reference_Rules
     :class: ada-expect-compile-error
