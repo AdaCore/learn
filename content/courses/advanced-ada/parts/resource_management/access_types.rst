@@ -3,6 +3,68 @@ Access Types
 
 .. include:: ../../../global.txt
 
+Access types: Terminology
+-------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+    - :arm22:`3.10.2 Operations of Access Types <3-10-2>`
+
+.. todo::
+
+    Complete section!
+
+
+Access types: Allocation
+-------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+.. todo::
+
+    Complete section!
+
+
+Pool-specific access types
+--------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+.. todo::
+
+    Complete section!
+
+
+Discriminants as Access Values
+------------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+    - :arm22:`3.7.1 Discriminant Constraints <3-7-1>`
+
+.. todo::
+
+    Complete section!
+
+
+Self-reference
+--------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
+
+.. todo::
+
+    Complete section!
+
+
 Dereferencing
 -------------
 
@@ -2747,14 +2809,9 @@ In this section, we discuss the :ada:`Unchecked_Access` attribute, which we
 can use to circumvent accessibility issues for objects in specific cases. (Note
 that this attribute only exists for objects, not for subprograms.)
 
-We've seen in the previous section that the accessibility levels verify the
-lifetime of access types.
-
-.. todo::
-
-    Add link: Adv_Ada_Accessibility_Levels_Intro
-
-Let's see a simplified version of a code example from that section:
+We've seen :ref:`previously <Adv_Ada_Accessibility_Levels_Intro>` that the
+accessibility levels verify the lifetime of access types. Let's see a
+simplified version of a code example from that section:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Unchecked_Access.Dangling_Reference_Rules
     :class: ada-expect-compile-error
@@ -4385,6 +4442,14 @@ the :ada:`Valid_Work_Handler` type.
 
 Anonymous Access-To-Subprograms
 -------------------------------
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+.. todo::
+
+    Complete section!
 
 
 .. _Adv_Ada_Accessibility_Rules_Access_To_Subprograms:
