@@ -1664,7 +1664,7 @@ Let's see an example:
        Proc (I);
     end Show_Aliased_Param;
 
-Here, :ada:`Proc` has an :ada:`aliased in out` parameter. In :ada:`Proc` \'s
+Here, :ada:`Proc` has an :ada:`aliased in out` parameter. In :ada:`Proc`\'s
 body, we declare the :ada:`Integer_Access` type as an :ada:`access all` type.
 We use the same approach in body of the :ada:`Set_One` procedure, which has an
 :ada:`aliased out` parameter. Finally, the :ada:`Show` procedure has
