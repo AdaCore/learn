@@ -850,7 +850,7 @@ different meanings:
 
 - :ada:`Arr.all'Size` indicates the size of the actual array :ada:`Arr`.
 
-In other words, the :ada:`Size` attribute is *not* implicitly deferenced.
+In other words, the :ada:`Size` attribute is *not* implicitly dereferenced.
 In fact, any attribute that could potentially be ambiguous is not implicitly
 dereferenced. Therefore, in those cases, we must explicitly indicate (by using
 :ada:`.all` or not) how we want to use the attribute.
