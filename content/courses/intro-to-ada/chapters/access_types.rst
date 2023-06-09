@@ -3,6 +3,8 @@ Access types (pointers)
 
 .. include:: ../../global.txt
 
+.. _Intro_Ada_Access_Types_Overview:
+
 Overview
 --------
 
