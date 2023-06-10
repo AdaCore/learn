@@ -2725,10 +2725,12 @@ expression in parentheses, or an aggregate:
     procedure Show_Qualified_Expressions is
        I : Int;
     begin
+       --  Using qualified expression Int'(N)
        I := Int'(0);
     end Show_Qualified_Expressions;
 
-Here, :ada:`Int'(0)` indicates that the value zero is of :ada:`Int` type.
+Here, the qualified expression :ada:`Int'(0)` indicates that the value zero is
+of :ada:`Int` type.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -2755,8 +2757,8 @@ We can use qualified expressions to verify a subtype's predicate:
        I := Int_Not_Zero'(0);
     end Show_Qualified_Expressions;
 
-Here, the qualified expression checks the dynamic predicate of
-:ada:`Int_Not_Zero`, which fails at runtime.
+Here, the qualified expression :ada:`Int_Not_Zero'(0)` checks the dynamic
+predicate of the subtype. (This predicate check fails at runtime.)
 
 
 Default initial values
