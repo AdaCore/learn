@@ -2698,6 +2698,8 @@ In this example, we have the :ada:`To_Integer` function that converts from the
     functions.)
 
 
+.. _Adv_Ada_Qualified_Expressions:
+
 Qualified Expressions
 ---------------------
 

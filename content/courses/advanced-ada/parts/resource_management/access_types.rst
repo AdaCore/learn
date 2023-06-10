@@ -15,29 +15,409 @@ Access types: Terminology
 
     Complete section!
 
+.. _Adv_Ada_Access_Types_Allocation:
 
 Access types: Allocation
 -------------------------
 
+Ada makes the distinction between pool-specific and general access types, as
+we'll discuss in this section. Before doing so, however, let's talk about
+memory allocation.
+
+In general terms, memory can be allocated dynamically on the
+heap or statically on the stack. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Simple_Allocation
+
+    procedure Show_Simple_Allocation is
+
+       --  Declaring access type:
+       type Integer_Access is access Integer;
+
+       --  Declaring access object:
+       A1 : Integer_Access;
+
+    begin
+       --  Allocating an Integer variable on the heap
+       A1 := new Integer;
+
+       declare
+          --  Allocating an Integer variable on the
+          --  stack
+          I : Integer;
+       begin
+          null;
+       end;
+
+    end Show_Simple_Allocation;
+
+When we allocate an object on the heap via :ada:`new`, the allocation happens
+in a memory pool that is associated with the access type. In our code example,
+there's a memory pool associated with the :ada:`Integer_Access` type, and each
+:ada:`new Integer` allocates a new integer object in that pool. Therefore,
+access types of this kind are called pool-specific access types. (We discuss
+:ref:`more about these types <Adv_Ada_Pool_Specific_Access_Types>` later.)
+
+It is also possible to access objects that were allocated on the stack. To do
+that, however, we cannot use pool-specific access types because |mdash| as the
+name suggests |mdash| they're only allowed to access objects that were
+allocated in the specific pool associated with the type. Instead, we have to
+use general access types in this case:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.General_Access_Types
+
+    procedure Show_General_Access_Type is
+
+       --  Declaring general access type:
+       type Integer_Access is access all Integer;
+
+       --  Declaring access object:
+       A1 : Integer_Access;
+
+       --  Allocating an integer variable on the
+       --  stack:
+       I : aliased Integer;
+
+    begin
+       --  Getting access to an integer variable that
+       --  was allocated on the stack
+       A1 := I'Access;
+
+    end Show_General_Access_Type;
+
+In this example, we declare the general access type :ada:`Integer_Access` and
+the access object :ada:`A1`. To initialize :ada:`A1`, we write :ada:`I'Access`
+to get access to an integer variable :ada:`I` that was allocated on the stack.
+(For the moment, don't worry much about these details: we'll talk about general
+access types again when we introduce the topic of
+:ref:`aliased objects <Adv_Ada_Aliased_Objects>` later on.)
+
+.. admonition:: For further reading...
+
+    Note that it is possible to use general access types to allocate objects on
+    the heap:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.General_Access_Types_Heap
+
+        procedure Show_Simple_Allocation is
+
+           --  Declaring general access type:
+           type Integer_Access is access all Integer;
+
+           --  Declaring access object:
+           A1 : Integer_Access;
+
+        begin
+           --
+           --  Allocating an integer variable on the heap
+           --  and initializing an access object of
+           --  the general access type Integer_Access.
+           --
+           A1 := new Integer;
+
+        end Show_Simple_Allocation;
+
+    Here, we're using a general access type :ada:`Integer_Access`, but
+    allocating an integer variable on the heap.
+
+.. admonition:: Important
+
+    In many code examples, we have used the :ada:`Integer` type as the
+    designated subtype of the access types |mdash| by writing
+    :ada:`access Integer`. Although we have used this specific scalar type,
+    we aren't really limited to those types. In fact, we can use *any type* as
+    the designated subtype, including user-defined types, composite types,
+    task types and protected types.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
 
-.. todo::
 
-    Complete section!
-
+.. _Adv_Ada_Pool_Specific_Access_Types:
 
 Pool-specific access types
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. admonition:: In the Ada Reference Manual
+We've already discussed many aspects about pool-specific access types. In this
+section, we recapitulate some of those aspects, and discuss some new details
+that haven't seen yet.
 
-    - :arm22:`3.10 Access Types <3-10>`
+As we know, we cannot directly assign an object :ada:`Distance_Miles` of type
+:ada:`Miles` to an object :ada:`Distance_Meters` of type :ada:`Meters`, even if
+both share a common :ada:`Float` type ancestor. The assignment is only possible
+if we perform a type conversion from :ada:`Miles` to :ada:`Meters`, or
+vice-versa |mdash| e.g.:
+:ada:`Distance_Meters := Meters (Distance_Miles) * Miles_To_Meters_Factor`.
 
-.. todo::
+Similarly, in the case of pool-specific access types, a direct assignment
+between objects of different access types isn't possible. However, even if
+both access types have the same designated subtype (let's say, they are both
+declared using :ada:`is access Integer`), it's still not possible to perform
+a type conversion between those access types. The only situation when an access
+type conversion is allowed is when both types have a common ancestor.
 
-    Complete section!
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.General_Access_Types
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_Allocation is
+
+       --  Declaring pool-specific access type:
+       type Integer_Access_1 is access Integer;
+       type Integer_Access_2 is access Integer;
+       type Integer_Access_2B is new Integer_Access_2;
+
+       --  Declaring access object:
+       A1  : Integer_Access_1;
+       A2  : Integer_Access_2;
+       A2B : Integer_Access_2B;
+
+    begin
+       A1 := new Integer;
+       Put_Line ("A1  : " & A1'Image);
+       Put_Line ("Pool: " & A1'Storage_Pool'Image);
+
+       A2 := new Integer;
+       Put_Line ("A2:   " & A2'Image);
+       Put_Line ("Pool: " & A2'Storage_Pool'Image);
+
+       --  ERROR: Cannot directly assign access values
+       --         for objects of unrelated access
+       --         types; also, cannot convert between
+       --         these types.
+       --
+       --  A1 := A2;
+       --  A1 := Integer_Access_1 (A2);
+
+       A2B := Integer_Access_2B (A2);
+       Put_Line ("A2B:  " & A2B'Image);
+       Put_Line ("Pool: " & A2B'Storage_Pool'Image);
+
+    end Show_Simple_Allocation;
+
+In this example, we declare three access types: :ada:`Integer_Access_1`,
+:ada:`Integer_Access_2` and :ada:`Integer_Access_2B`. Also,
+the :ada:`Integer_Access_2B` type is derived from the :ada:`Integer_Access_2`
+type. Therefore, we can convert an object of :ada:`Integer_Access_2` type to
+the :ada:`Integer_Access_2B` type |mdash| we do this in the
+:ada:`A2B := Integer_Access_2B (A2)` assignment. However, we cannot directly
+assign to or convert between unrelated types such as :ada:`Integer_Access_1`
+and :ada:`Integer_Access_2`. (We would get a compilation error if we included
+the :ada:`A1 := A2` or the :ada:`A1 := Integer_Access_1 (A2)` assignment.)
+
+.. admonition:: Important
+
+    Remember that:
+
+    - As mentioned in the
+      :ref:`Introduction to Ada course <Intro_Ada_Access_Type_Allocation_Constraints>`:
+
+        - an access type can be unconstrained, but the actual object allocation
+          must be constrained;
+
+        - we can use a
+          :ref:`qualified expression <Adv_Ada_Qualified_Expressions>` to
+          allocate an object.
+
+    - We can use the :ada:`Storage_Size` attribute to limit the size of the
+      memory pool associated with an access type, as discussed previously in
+      the :ref:`section about storage size <Adv_Ada_Storage_Size_Attribute>`.
+
+    - When running out of memory while allocating via :ada:`new`, we get a
+      :ada:`Storage_Error` exception because of the
+      :ref:`storage check <Adv_Ada_Storage_Check>`.
+
+    For example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Array_Allocation
+
+        pragma Ada_2022;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Array_Allocation is
+
+           --  Unconstrained array type:
+           type Integer_Array is
+             array (Positive range <>) of Integer;
+
+           --  Access type with unconstrained
+           --  designated subtype and limited storage
+           --  size.
+           type Integer_Array_Access is
+             access Integer_Array
+               with Storage_Size => 128;
+
+           --  An access object:
+           A1 : Integer_Array_Access;
+
+           procedure Show_Info
+             (IAA : Integer_Array_Access) is
+           begin
+              Put_Line ("Allocated: " & IAA'Image);
+              Put_Line ("Length:    "
+                        & IAA.all'Length'Image);
+              Put_Line ("Values:    "
+                        & IAA.all'Image);
+           end Show_Info;
+
+        begin
+           --  Allocating an integer array with
+           --  constrained range on the heap:
+           A1 := new Integer_Array (1 .. 3);
+           A1.all := [others => 42];
+           Show_Info (A1);
+
+           --  Allocating an integer array on the
+           --  heap using a qualified expression:
+           A1 := new Integer_Array'(5, 10);
+           Show_Info (A1);
+
+           --  A third allocation fails at run time
+           --  because of the constrained storage
+           --  size:
+           A1 := new Integer_Array (1 .. 100);
+           Show_Info (A1);
+
+        exception
+            when Storage_Error =>
+               Put_Line ("Out of memory!");
+
+        end Show_Array_Allocation;
+
+
+Multiple allocation
+~~~~~~~~~~~~~~~~~~~
+
+Up to now, we have seen examples of allocating a single object on the heap.
+It's possible to allocate multiple objects *at once* as well |mdash| i.e.
+syntactic sugar is available to simplify the code that performs this
+allocation. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Integer_Access_Array
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Access_Array_Allocation is
+
+       type Integer_Access is access Integer;
+
+       type Integer_Access_Array is
+         array (Positive range <>) of Integer_Access;
+
+       --  An array of access objects:
+       Arr : Integer_Access_Array (1 .. 10);
+
+    begin
+       --
+       --  Allocating 10 access objects and
+       --  initializing the corresponding designated
+       --  object with zero:
+       --
+       Arr := (others => new Integer'(0));
+
+       --  Same as:
+       for I in Arr'Range loop
+          Arr (I) := new Integer'(0);
+       end loop;
+
+       Put_Line ("Arr: " & Arr'Image);
+
+       Put_Line ("Arr (designated values): ");
+       for E of Arr loop
+          Put (E.all'Image);
+       end loop;
+
+    end Show_Access_Array_Allocation;
+
+In this example, we have the access type :ada:`Integer_Access` and an array
+type of this access type (:ada:`Integer_Access_Array`). We also declare an
+array :ada:`Arr` of :ada:`Integer_Access_Array` type. This means that each
+component of :ada:`Arr` is an access object. We allocate all ten components of
+the :ada:`Arr` array by simply writing :ada:`Arr := (others => new Integer)`.
+This :ref:`array aggregate <Adv_Ada_Array_Aggregates>` is syntactic sugar for a
+loop over :ada:`Arr` that allocates each component. (Note that, by writing
+:ada:`Arr := (others => new Integer'(0))`, we're also initializing the
+designated objects with zero.)
+
+Let's see another code example, this time with task types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Workers
+
+    package Workers is
+
+       task type Worker is
+          entry Start (Id : Positive);
+          entry Stop;
+       end Worker;
+
+       type Worker_Access is access Worker;
+
+       type Worker_Array is
+         array (Positive range <>) of Worker_Access;
+
+    end Workers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Workers is
+
+       task body Worker is
+          Id : Positive;
+       begin
+          accept Start (Id : Positive) do
+             Worker.Id := Id;
+          end;
+          Put_Line ("Started Worker #"
+                    & Id'Image);
+
+          accept Stop;
+
+          Put_Line ("Stopped Worker #"
+                    & Id'Image);
+       end Worker;
+
+    end Workers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Workers; use Workers;
+
+    procedure Show_Workers is
+       Worker_Arr : Worker_Array (1 .. 50);
+    begin
+       --
+       --  Allocating 50 workers at once:
+       --
+       Worker_Arr := (others => new Worker);
+
+       for I in Worker_Arr'Range loop
+          Worker_Arr (I).Start (I);
+       end loop;
+
+       Put_Line ("Some processing...");
+       delay 1.0;
+
+       for W of Worker_Arr loop
+          W.Stop;
+       end loop;
+
+    end Show_Workers;
+
+In this example, we declare the task type :ada:`Worker`, the access type
+:ada:`Worker_Access` and an array of access to tasks :ada:`Worker_Array`.
+Using this approach, a task is only created when we allocate an individual
+component of an array of :ada:`Worker_Array` type. Thus, when we declare
+the :ada:`Worker_Arr` array in this example, we're only preparing a *container*
+of 50 workers, but we don't have any actual tasks yet. We bring the 50 tasks
+into existence by writing :ada:`Worker_Arr := (others => new Worker)`.
 
 
 Discriminants as Access Values

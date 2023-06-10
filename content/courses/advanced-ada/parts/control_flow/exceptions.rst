@@ -798,6 +798,8 @@ body.) Therefore,  at runtime, the elaboration check fails because the body of
 the first declaration of the :ada:`F` function is actually missing.
 
 
+.. _Adv_Ada_Storage_Check:
+
 Storage Check
 ~~~~~~~~~~~~~
 
