@@ -128,6 +128,8 @@ with the :ada:`new` keyword in Ada.
         --              ^ Allocate a new Date record
     end Access_Types;
 
+.. _Intro_Ada_Access_Type_Allocation_Constraints:
+
 If the type you want to allocate needs constraints, you can put them in the
 subtype indication, just as you would do in a variable declaration:
 

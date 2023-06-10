@@ -340,6 +340,9 @@ the object size of the :ada:`UInt_7_Array` type corresponds to the
 multiplication of 2\ :sup:`31` - 1 components (maximum length) by 8 bits
 (component size).
 
+
+.. _Adv_Ada_Storage_Size_Attribute:
+
 Storage size
 ^^^^^^^^^^^^
 
