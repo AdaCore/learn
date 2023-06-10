@@ -1113,9 +1113,13 @@ words, :ada:`A1` or :ada:`A2` allow us to access the same object in memory.
 Aliased objects
 ~~~~~~~~~~~~~~~
 
-In addition to using :ada:`new` to create aliased objects, we can indicate
-that an object is aliased by using the :ada:`aliased` keyword in the object's
-declaration: :ada:`Obj : aliased Integer;`.
+As we discussed :ref:`previously <Adv_Ada_Access_Types_Allocation>`, we use
+:ada:`new` to create aliased objects on the heap. We can also use general
+access types to access objects that were created on the stack.
+
+By default, objects created on the stack aren't aliased. Therefore, we have to
+indicate that an object is aliased by using the :ada:`aliased` keyword in the
+object's declaration: :ada:`Obj : aliased Integer;`.
 
 Let's see an example:
 
@@ -1167,7 +1171,7 @@ variable.
 
 Note that these examples make use of these two features:
 
-1. The declaration of an access-to-variable type (:ada:`Integer_Access`)
+1. The declaration of a general access type (:ada:`Integer_Access`)
    using :ada:`access all`.
 
 2. The retrieval of a reference to :ada:`I_Var` using the :ada:`Access`
@@ -1183,7 +1187,8 @@ In the next sections, we discuss these features in more details.
 General access modifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-In addition to the *standard* access type declarations, Ada provides two access
+Let's now discuss how to declare general access types. In addition to the
+*standard* (pool-specific) access type declarations, Ada provides two access
 modifiers:
 
 +--------------------+----------------------------------------+
@@ -1302,9 +1307,9 @@ write :ada:`I_Var := 22;`, but we cannot write :ada:`I_Var_C_Ptr.all := 22;`.
 Non-aliased objects
 ^^^^^^^^^^^^^^^^^^^
 
-By default, declared objects |mdash| i.e. without using :ada:`new`
-|mdash| are not aliased. Therefore, we cannot have get a reference to those
-objects. For example:
+As mentioned earlier, by default, declared objects |mdash| which are allocated
+on the stack |mdash| aren't aliased. Therefore, we cannot get a reference to
+those objects. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Access_Non_Aliased_Obj
     :class: ada-expect-compile-error
