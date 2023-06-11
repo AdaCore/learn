@@ -374,7 +374,7 @@ Let's see another code example, this time with task types:
        begin
           accept Start (Id : Positive) do
              Worker.Id := Id;
-          end;
+          end Start;
           Put_Line ("Started Worker #"
                     & Id'Image);
 
