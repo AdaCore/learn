@@ -187,7 +187,7 @@ describe('Widget', () => {
         let receivedMessages: Array<string> = [];
 
         before(async () => {
-          const editorDiv = getElemById(root.id + '.editor');
+          const editorDiv = getElemById(root.id + '.editors.editor');
           editor = ace.edit(editorDiv);
 
           server.on('connection', (socket) => {
@@ -399,7 +399,7 @@ describe('Widget', () => {
       let editor: ace.Editor;
 
       before(() => {
-        const editorDiv = getElemById(root.id + '.editor');
+        const editorDiv = getElemById(root.id + '.editors.editor');
         editor = ace.edit(editorDiv);
       });
 

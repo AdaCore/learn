@@ -272,6 +272,10 @@ div {
         font-size: 0.75em;
         color: $color-font-grey;
     }
+    &.non-tabbed-links {
+        display: flex;
+        border: 1px solid $color-widget-border;
+    }
     &.output_line {
         color: $color-font-grey;
         padding-left: 15px;
