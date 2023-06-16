@@ -16,7 +16,14 @@
             <button id="{{ w.id }}.tab.{{ t.basename }}" class="tab-links">{{ t.basename }}</button>
         {% endfor %}
     </div>
-    <div id="{{ w.id }}.editor" class="editor-container"></div>
+    <div id="{{ w.id }}.editors">
+        <div id="{{ w.id }}.editors.editor" class="editor-container"></div>
+        <div id="{{ w.id }}.editors.non-tabbed-editor" class="non-tabbed-editor-container" hidden>
+            {% for t in w.files %}
+                <div id="{{ w.id }}.editors.non-tabbed-editor.{{ t.basename }}" class="non-tabbed-links"></div>
+            {% endfor %}
+        </div>
+    </div>
     <div id="{{ w.id }}.settings-bar" class="settings-bar">
         <div class="dropdown-container settingsbar-item">
             <button class="dropdown-btn">
@@ -25,7 +32,7 @@
             </button>
             <div class="dropdown-content">
                 <label>
-                    <input id="{{ w.id }}.settings-bar.tab-setting" type="checkbox" class="checkbox tab-setting" disabled>
+                    <input id="{{ w.id }}.settings-bar.tab-setting" type="checkbox" class="checkbox tab-setting">
                     Enable tabbed editor view for this editor
                 </label>
                 <label>

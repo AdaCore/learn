@@ -26,6 +26,8 @@ type SessionMap = Map<string, SessionData>;
 /** Class representing an Editor **/
 export class Editor {
   private readonly editor: ace.Editor;
+  private readonly nontabbedEditors : Array<ace.Editor>;
+
   private sessions: SessionMap = new Map();
   private maxLength = 0;
 
@@ -36,26 +38,8 @@ export class Editor {
   */
   constructor(elem: HTMLDivElement) {
     this.editor = ace.edit(elem);
-    this.editor.$blockScrolling = Infinity;
-
-    // ... and content options
-    this.editor.setShowPrintMargin(false);
-    this.editor.gotoLine(1);
-
-    this.editor.setOptions({
-      highlightActiveLine: false,
-      fontSize: 13,
-      tabSize: 3,
-      useSoftTabs: true,
-      theme: EditorTheme.Light,
-      minLines: this.editor.session.doc.getLength(),
-      maxLines: 50,
-    });
-
-    // place the cursor at 1,1
-    this.editor.selection.moveCursorTo(0, 0);
-
-    this.editor.renderer.setScrollMargin(5, 5, 0, 0);
+    this.initACEEditor(this.editor);
+    this.nontabbedEditors = [];
   }
 
   /**
@@ -63,6 +47,49 @@ export class Editor {
    */
   public destructor(): void {
     this.editor.destroy();
+  }
+
+  /**
+  * Configures the ACE editor
+  *
+  * @param {ace.Editor} editor - The ACE editor
+  */
+  private initACEEditor(editor: ace.Editor) {
+    editor.$blockScrolling = Infinity;
+
+    // ... and content options
+    editor.setShowPrintMargin(false);
+    editor.gotoLine(1);
+
+    editor.setOptions({
+      highlightActiveLine: false,
+      fontSize: 13,
+      tabSize: 3,
+      useSoftTabs: true,
+      theme: EditorTheme.Light,
+      minLines: editor.session.doc.getLength(),
+      maxLines: 50,
+    });
+
+    // place the cursor at 1,1
+    editor.selection.moveCursorTo(0, 0);
+
+    editor.renderer.setScrollMargin(5, 5, 0, 0);
+  }
+
+  /**
+   * Refresh editor sessions
+   *
+   * @param {boolean} isTabbed - Use tabbed session
+   */
+  public refresh(isTabbed: boolean): void {
+    if (isTabbed) {
+      this.editor.resize();
+    } else {
+      for (const e of this.nontabbedEditors) {
+        e.resize();
+      }
+    }
   }
 
   /**
@@ -96,6 +123,22 @@ export class Editor {
     data.session.setUndoManager(new ace.UndoManager());
 
     this.sessions.set(basename, data);
+  }
+
+  /**
+   * Add a session to the editor
+   *
+   * @param {string} basename - The name of the file
+   * @param {HTMLDivElement} elem - The element that will contain the editor
+   */
+  public addNonTabbedEditor(basename: string, elem: HTMLDivElement): void {
+    const data = this.getSession(basename);
+
+    const newEditor = ace.edit(elem);
+    this.initACEEditor(newEditor);
+    newEditor.setSession(data.session);
+
+    this.nontabbedEditors.push(newEditor);
   }
 
   /**
@@ -142,6 +185,10 @@ export class Editor {
    */
   public setTheme(theme: EditorTheme): void {
     this.editor.setTheme(theme);
+
+    for (const e of this.nontabbedEditors) {
+      e.setTheme(theme);
+    }
   }
 
   /**
