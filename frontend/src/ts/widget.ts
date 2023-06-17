@@ -202,8 +202,11 @@ class Widget {
 
     // add code block info
     for (const r of this.codeBlockInfo) {
-      this.outputArea.addInfo('---- ' + r.basename + ' ----\n');
-      this.outputArea.addInfo(r.contents);
+      const outputCodeBlockInfo = this.getElem(
+          'code_block_info',
+          r.basename,
+          'contents') as HTMLDivElement;
+      outputCodeBlockInfo.innerText = r.contents;
     }
   }
 

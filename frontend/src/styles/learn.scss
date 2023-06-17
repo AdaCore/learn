@@ -276,6 +276,28 @@ div {
         display: flex;
         border: 1px solid $color-widget-border;
     }
+    &.code_block_info {
+        font-family: $mono-font;
+        font-size: 12px;
+        font-style: normal;
+        background: $color-widget-output-area;
+        margin-top: 8px;
+        max-height: 250px;
+        overflow-y: auto;
+        line-height: normal;
+    }
+    &.code_block_info_header {
+        margin-top: 2px;
+        font-weight: bold;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    &.code_block_info_contents {
+        color: $color-font-grey;
+        padding-left: 15px;
+        padding-right: 3px;
+        white-space: pre-wrap;
+    }
     &.output_line {
         color: $color-font-grey;
         padding-left: 15px;
