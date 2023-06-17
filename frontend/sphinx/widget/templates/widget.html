@@ -57,6 +57,12 @@
             {% endfor %}
         </div>
         <div class="col-md-9 output-group">
+            <div id="{{ w.id }}.code_block_info" class="code_block_info">
+                {% for cbi in w.code_block_info %}
+                    <div id="{{ w.id }}.code_block_info.{{ cbi.basename }}.header" class="code_block_info_header">---- {{ cbi.basename }}:</div>
+                    <div id="{{ w.id }}.code_block_info.{{ cbi.basename }}.contents" class="code_block_info_contents"></div>
+                {% endfor %}
+            </div>
             <div id="{{ w.id }}.output-area" class="output-area"></div>
             {% if w.is_lab %}
                 <div id="{{ w.id }}.lab-area" class="lab-area"></div>
