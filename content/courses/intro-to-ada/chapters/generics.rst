@@ -240,7 +240,7 @@ Here's an example:
        Put_Line ("Value is now set to "
                  & Integer'Image (I.Get));
 
-       Put_Line ("Reseting...");
+       Put_Line ("Resetting...");
        I.Reset;
        Display_Initialized;
 
