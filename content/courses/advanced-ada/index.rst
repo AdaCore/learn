@@ -41,9 +41,7 @@ Advanced Journey With Ada: A Flight In Progress
         **This is work in progress!**
 
         Information in this document is subject to change at any time without
-        prior notification.  The editors/authors exclude all liability for the
-        topicality, correctness, completeness or quality of the information
-        provided in this course.
+        prior notification.
 
     .. note::
 
