@@ -240,7 +240,7 @@ Here's an example:
        Put_Line ("Value is now set to "
                  & Integer'Image (I.Get));
 
-       Put_Line ("Reseting...");
+       Put_Line ("Resetting...");
        I.Reset;
        Display_Initialized;
 
@@ -250,7 +250,7 @@ In the example above, we created a simple container named :ada:`Element`,
 with just one single element. This container tracks whether the
 element has been initialized or not.
 
-After writing package definition, we create the instance :ada:`I` of the
+After writing the package definition, we create the instance :ada:`I` of the
 :ada:`Element`. We use the instance by calling the package subprograms
 (:ada:`Set`, :ada:`Reset`, and :ada:`Get`).
 
