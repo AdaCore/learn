@@ -2002,7 +2002,7 @@ type |mdash| whether defined by the language or the user |mdash| cannot have a
 range greater than that of :ada:`System.Min_Int .. System.Max_Int` because
 those constants reflect the actual hardware's signed integer types. In certain
 applications, that precision might not be enough, so we have to rely on
-:wikipedia:`arbitrary-precision_arithmetic <arbitrary-precision_arithmetic>`.
+:wikipedia:`arbitrary-precision arithmetic <arbitrary-precision_arithmetic>`.
 These so-called "big numbers" are limited conceptually only by available
 memory, in contrast to the underlying hardware-defined numeric types.
 
