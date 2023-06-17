@@ -63,7 +63,8 @@ class Widget {
     }
 
     // Initialize editor
-    const edDiv = this.getElem('editor') as HTMLDivElement;
+    const edDiv =
+      this.getElem('editors', 'editor') as HTMLDivElement;
     this.editor = new Editor(edDiv);
 
     // Parse files
@@ -76,6 +77,12 @@ class Widget {
       const basename = file.dataset.basename as string;
       const content = file.textContent ? file.textContent : '';
       this.editor.addSession(basename, content);
+
+      const editorPane =
+        this.getElem(
+            'editors',
+            'non-tabbed-editor', basename) as HTMLDivElement;
+      this.editor.addNonTabbedEditor(basename, editorPane);
     }
 
     // Parse shadow files
@@ -138,22 +145,26 @@ class Widget {
       this.getElem('settings-bar', 'tab-setting') as HTMLInputElement;
     tabSetting.checked = true;
     tabSetting.addEventListener('change', () => {
-      // TODO: figure out how to do this
-      // if (tabSetting.checked) {
-      //   for (const t of this.viewMap.values()) {
-      //     t.header.style.display = 'block';
-      //     if (t.content.classList.contains('active')) {
-      //       t.content.style.display = 'block';
-      //     } else {
-      //       t.content.style.display = 'none';
-      //     }
-      //   }
-      // } else {
-      //   for (const t of this.viewMap.values()) {
-      //     t.header.style.display = 'none';
-      //     t.content.style.display = 'block';
-      //   }
-      // }
+      const isTabbed: boolean = tabSetting.checked;
+
+      const editorContainer =
+        this.getElem('editors', 'editor');
+      const nontabbedEditorContainer =
+        this.getElem('editors', 'non-tabbed-editor');
+
+      //  Show / hide editor containers
+      editorContainer.hidden = ! isTabbed;
+      nontabbedEditorContainer.hidden = isTabbed;
+
+      //  Show / hide buttons (for tabbed view)
+      const tab = this.getElem('tab');
+      const headers = getElemsByTag(tab, 'button');
+      for (const h of headers) {
+        h.hidden = ! isTabbed;
+      }
+
+      // Ask editor to refresh ACE editor
+      this.editor.refresh(isTabbed);
     });
 
     const themeSetting =
