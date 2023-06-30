@@ -25,7 +25,9 @@ we'll discuss in this section. Before doing so, however, let's talk about
 memory allocation.
 
 In general terms, memory can be allocated dynamically on the
-heap or statically on the stack. For example:
+heap or statically on the stack. (Strictly speaking, both are dynamic
+allocations, in that they occur at run-time with amounts not previously
+specified.) For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Simple_Allocation
 
