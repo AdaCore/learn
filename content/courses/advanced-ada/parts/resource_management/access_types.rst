@@ -47,11 +47,11 @@ Here, we're declaring two access types: the access-to-object type
 :ref:`later on <Adv_Ada_Access_To_Subprograms>`).
 
 In the declaration of an access type, we always specify |mdash| after the
-:ada:`access` keyword |mdash| *what* we want to access. In the case of an
-access-to-object type declaration, we declare a subtype we want to access,
-which is known as the *designated subtype* of an access type. In the case of
-an access-to-subprogram type declaration, the subprogram prototype is known as
-the *designated profile*.
+:ada:`access` keyword |mdash| the kind of thing we want to designate. In the
+case of an access-to-object type declaration, we declare a subtype we want to
+access, which is known as the *designated subtype* of an access type. In the
+case of an access-to-subprogram type declaration, the subprogram prototype is
+known as the *designated profile*.
 
 In our previous code example, :ada:`Integer` is the designated subtype of the
 :ada:`Integer_Access` type, and :ada:`function return Integer` is the
