@@ -1094,7 +1094,7 @@ Anonymous Access-To-Subprograms
 
 We can declare subprogram parameters using anonymous types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
 
     package Access_To_Subprogram_Params is
 
@@ -1115,6 +1115,26 @@ We can declare subprogram parameters using anonymous types:
        end Proc;
 
     end Access_To_Subprogram_Params;
+
+    procedure Add_Ten (I : in out Integer);
+
+    procedure Add_Ten (I : in out Integer) is
+    begin
+       I := I + 10;
+    end Add_Ten;
+
+    with Access_To_Subprogram_Params;
+    use  Access_To_Subprogram_Params;
+
+    with Add_Ten;
+
+    procedure Show_Access_To_Subprograms is
+    begin
+       Proc (Add_Ten'Access);
+       --            ^ Getting access to Add_Ten
+       --              procedure and passing it
+       --              to Proc
+    end Show_Access_To_Subprograms;
 
 
 .. admonition:: In the Ada Reference Manual
