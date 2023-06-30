@@ -2858,11 +2858,13 @@ argument cannot be :ada:`null` due to the null exclusion.
            type Table is limited null record;
            --  Not implemented yet
 
+           type Iterate_Action is
+             access procedure
+               (X : not null Ref_Element);
+
            procedure Iterate
              (T      : Table;
-              Action : access procedure
-                         (X : not null Ref_Element)
-              := null);
+              Action : Iterate_Action := null);
            --  If Action is null, do nothing.
 
         end Show_Null_Procedure;
@@ -2884,11 +2886,14 @@ argument cannot be :ada:`null` due to the null exclusion.
            procedure Do_Nothing
              (X : not null Ref_Element) is null;
 
+           type Iterate_Action is
+             access procedure
+               (X : not null Ref_Element);
+
            procedure Iterate
              (T      : Table;
-              Action : not null access procedure
-                         (X : not null Ref_Element)
-              := Do_Nothing'Access);
+              Action : not null Iterate_Action
+                         := Do_Nothing'Access);
 
         end Show_Null_Procedure;
 
@@ -2906,20 +2911,21 @@ argument cannot be :ada:`null` due to the null exclusion.
 
            type Table is limited private;
 
+           type Iterate_Action is
+             access procedure
+               (X : not null Ref_Element);
+
            procedure Iterate
              (T : Table;
-              Action : access procedure
-                         (X : not null Ref_Element)
-                           := null);
+              Action : Iterate_Action := null);
            --  If Action is null, do nothing.
 
            procedure Do_Nothing
              (X : not null Ref_Element) is null;
            procedure Iterate_2
              (T : Table;
-              Action : not null access procedure
-                         (X : not null Ref_Element)
-                           := Do_Nothing'Access);
+              Action : not null Iterate_Action
+                         := Do_Nothing'Access);
 
         private
            type Element is limited
@@ -2935,9 +2941,7 @@ argument cannot be :ada:`null` due to the null exclusion.
 
            procedure Iterate
              (T : Table;
-              Action : access procedure
-                         (X : not null Ref_Element)
-                           := null)
+              Action : Iterate_Action := null)
            is
            begin
               if Action /= null then
@@ -2949,9 +2953,8 @@ argument cannot be :ada:`null` due to the null exclusion.
 
            procedure Iterate_2
              (T : Table;
-              Action : not null access procedure
-                         (X : not null Ref_Element)
-                           := Do_Nothing'Access)
+              Action : not null Iterate_Action
+                         := Do_Nothing'Access)
            is
            begin
               Action (An_Element'Access);
@@ -2969,10 +2972,10 @@ argument cannot be :ada:`null` due to the null exclusion.
            Iterate_2 (T);
         end Show_Example;
 
-    The :ada:`not null access procedure` is quite a mouthful, but it's
-    worthwhile, and anyway, as mentioned earlier, the compatibility
-    requirement requires that the :ada:`not null` be explicit, rather than the
-    other way around.
+    Writing :ada:`not null Iterate_Action` might look a bit more
+    complicated, but it's worthwhile, and anyway, as mentioned earlier, the
+    compatibility requirement requires that the :ada:`not null` be explicit,
+    rather than the other way around.
 
 
 Access to protected subprograms
