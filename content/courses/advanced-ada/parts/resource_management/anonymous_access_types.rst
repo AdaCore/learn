@@ -42,7 +42,7 @@ We discuss all these topics in more details later.
 
 Let's see a complete example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Simple_Anonymous_Access_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Types.Simple_Anonymous_Access_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -104,7 +104,7 @@ anonymous type, and the :ada:`S'Access` attribute always works.
 
 Let's see an example:
 
-.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Anonymous_Access_Object_Assignment
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Types.Anonymous_Access_Object_Assignment
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -145,7 +145,7 @@ approach in terms of clean Ada software design.)
 In contrast, if we had used named type declarations, the code would be more
 complicated and more limited:
 
-.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Anonymous_Access_Object_Assignment
+.. code:: ada run_button main=show_anonymous_access_types.adb project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Types.Anonymous_Access_Object_Assignment
 
     package Aux is
 
@@ -214,7 +214,7 @@ types.
     corresponding declaration must match. In the following example, we can see
     how this rule works:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Anonymous_Access_Subtype_Error
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Types.Anonymous_Access_Subtype_Error
         :class: ada-expect-compile-error
 
         procedure Show_Anonymous_Access_Subtype_Error is
@@ -284,7 +284,7 @@ In the section on
 a code example that was using named access types. We could now rewrite it using
 anonymous access types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Anonymous_Access_Types.Mutually_Dependent_Anonymous_Access_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Types.Mutually_Dependent_Anonymous_Access_Types
 
     package Mutually_Dependent is
 
@@ -341,7 +341,7 @@ Also, for the reference type, we have to:
 
 Let's see a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.Simple_User_Defined_References
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.Simple_User_Defined_References
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -449,7 +449,7 @@ tagged type. For example, let's change the declaration of the
 :ada:`Id_Number` type from the previous code example and add a :ada:`Show`
 primitive.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.User_Defined_References
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.User_Defined_References
 
     package Info is
        type Id_Number (Id : Positive) is
@@ -475,7 +475,7 @@ primitive.
 Then, let's declare a reference type and a reference object in the test
 application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.User_Defined_References
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.User_Defined_References
 
     with Info; use Info;
 
@@ -511,7 +511,7 @@ A typical application of user-defined references is to create cursors when
 iterating over a container. As an example, let's implement the
 :ada:`National_Date_Info` package to store the national day of a country:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.National_Dates
 
     package National_Date_Info is
 
@@ -557,7 +557,7 @@ information.
 Now, let's implement the :ada:`National_Date_Containers` with a container for
 national days:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.National_Dates
 
     with National_Date_Info; use National_Date_Info;
 
@@ -630,7 +630,7 @@ Finally, let's see a test application that stores information for some
 countries into the :ada:`Nat_Dates` container and displays the information for
 a specific country:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.National_Dates
 
     with National_Date_Info;
     use  National_Date_Info;
@@ -670,7 +670,7 @@ type) and display its information by calling the :ada:`Show` procedure.
     container for other record types. In fact, this is actually very
     straightforward:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.National_Dates
 
         generic
            type T is private;
@@ -722,7 +722,7 @@ type) and display its information by calling the :ada:`Show` procedure.
     declare the :ada:`National_Date_Containers` package as an instance of the
     :ada:`Generic_Containers` package:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.User_Defined_References.National_Dates
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.National_Dates
 
         with Generic_Containers;
         with National_Date_Info; use National_Date_Info;
@@ -869,7 +869,7 @@ Let's adapt the
 :ref:`code example from that section <Adv_Ada_Accessibility_Rules_Code_Example>`
 to make use of anonymous access types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Library_Level
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Library_Level
     :class: ada-expect-compile-error
 
     package Library_Level is
@@ -972,7 +972,7 @@ Let's adapt parts of the previous
 :ref:`code example <Adv_Ada_Accessibility_Rules_Code_Example>` and add
 anonymous access types to it:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Named_Anonymous_Access_Type_Conversions
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Named_Anonymous_Access_Type_Conversions
     :class: ada-expect-compile-error
 
     package Library_Level is
@@ -1094,7 +1094,7 @@ Anonymous Access-To-Subprograms
 
 We can declare subprogram parameters using anonymous types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
 
     package Access_To_Subprogram_Params is
 
