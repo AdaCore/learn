@@ -38,11 +38,11 @@ heap or statically on the stack. For example:
        A1 : Integer_Access;
 
     begin
-       --  Allocating an Integer variable on the heap
+       --  Allocating an Integer object on the heap
        A1 := new Integer;
 
        declare
-          --  Allocating an Integer variable on the
+          --  Allocating an Integer object on the
           --  stack
           I : Integer;
        begin
@@ -74,12 +74,12 @@ use general access types in this case:
        --  Declaring access object:
        A1 : Integer_Access;
 
-       --  Allocating an integer variable on the
+       --  Allocating an Integer object on the
        --  stack:
        I : aliased Integer;
 
     begin
-       --  Getting access to an integer variable that
+       --  Getting access to an Integer object that
        --  was allocated on the stack
        A1 := I'Access;
 
@@ -87,7 +87,7 @@ use general access types in this case:
 
 In this example, we declare the general access type :ada:`Integer_Access` and
 the access object :ada:`A1`. To initialize :ada:`A1`, we write :ada:`I'Access`
-to get access to an integer variable :ada:`I` that was allocated on the stack.
+to get access to an integer object :ada:`I` that was allocated on the stack.
 (For the moment, don't worry much about these details: we'll talk about general
 access types again when we introduce the topic of
 :ref:`aliased objects <Adv_Ada_Aliased_Objects>` later on.)
@@ -109,7 +109,7 @@ access types again when we introduce the topic of
 
         begin
            --
-           --  Allocating an integer variable on the heap
+           --  Allocating an Integer object on the heap
            --  and initializing an access object of
            --  the general access type Integer_Access.
            --
@@ -118,7 +118,7 @@ access types again when we introduce the topic of
         end Show_Simple_Allocation;
 
     Here, we're using a general access type :ada:`Integer_Access`, but
-    allocating an integer variable on the heap.
+    allocating an integer object on the heap.
 
 .. admonition:: Important
 
