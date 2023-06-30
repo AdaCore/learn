@@ -2586,7 +2586,7 @@ the :ada:`P` procedure by simply passing :ada:`I` as a parameter. In this case,
 
 Next, we can get access to a subprogram by using the :ada:`Access` attribute:
 
-.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
 
     procedure Add_Ten (I : in out Integer);
 
