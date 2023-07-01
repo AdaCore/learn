@@ -2101,12 +2101,7 @@ The suggested design is to not use :ada:`Free` in the client code, but
 instead hide its use within bigger abstractions. In that way, all the
 occurrences of the calls to :ada:`Free` are in one package, and the programmer
 of that package can then prevent dangling references. We'll discuss these
-design strategies later on.
-
-.. todo::
-
-    Add link to section on design strategies for access types when it becomes
-    available! (See PR #752 for details.)
+:ref:`design strategies <Adv_Ada_Design_Strategies_Access_Types>` later on.
 
 
 .. _Adv_Ada_Dereferencing_Dangling_References:
@@ -2488,6 +2483,33 @@ array bounds checks:
 If :ada:`X (Index)` occurs inside :ada:`Process_Array`, there is no need
 to check that :ada:`Index` is in range, because the check is pushed to the
 caller.
+
+
+.. _Adv_Ada_Design_Strategies_Access_Types:
+
+Design strategies for access types
+----------------------------------
+
+.. todo::
+
+    Complete section!
+
+    (See PR #752 for details.)
+
+    It's not practical for the programmer to make every possible dangling
+    reference become null if the calls to Free are strewn throughout the code.
+    That means the suggested design is to not use Free in client code, but
+    instead hide its use within the bigger abstraction. That way all the
+    occurrences of the calls to Free are in one package, and the programmer of
+    that package then can prevent dangling references. For example, if we have
+    a bank account that involves dynamic allocation for some part of an
+    account, the bank account is a private type (or limited), and the access
+    values are hidden in the private part. Thus when an account is closed the
+    allocated memory can be freed without the possibility of leaving dangling
+    references. That will work as long as the reference cannot be copied when
+    copying bank account objects, in which case we'd want the type to be
+    limited as well as private. Or we'd make it a controlled type so that
+    Finalize can call Free.
 
 
 Access to subprograms
