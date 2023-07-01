@@ -537,14 +537,176 @@ into existence by writing :ada:`Worker_Arr := (others => new Worker)`.
 Discriminants as Access Values
 ------------------------------
 
+We can use access types when declaring discriminants. Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Discriminant_Access_Values
+
+    package Custom_Recs is
+
+       --  Declaring an access type:
+       type Integer_Access is access Integer;
+
+       --  Declaring a discriminant with this
+       --  access type:
+       type Rec (IA : Integer_Access) is record
+
+          I : Integer := IA.all;
+          --          ^^^^^^^^^
+          --  Setting I's default to use the
+          --  designated value of IA:
+       end record;
+
+       procedure Show (R : Rec);
+
+    end Custom_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Custom_Recs is
+
+       procedure Show (R : Rec) is
+       begin
+          Put_Line ("R.IA = "
+                    & Integer'Image (R.IA.all));
+          Put_Line ("R.I  = "
+                    & Integer'Image (R.I));
+       end Show;
+
+    end Custom_Recs;
+
+    with Custom_Recs; use Custom_Recs;
+
+    procedure Show_Discriminants_As_Access_Values is
+
+       IA : constant Integer_Access :=
+              new Integer'(10);
+       R  : Rec (IA);
+
+    begin
+       Show (R);
+
+       IA.all := 20;
+       R.I    := 30;
+       Show (R);
+
+       --  As expected, we cannot change the
+       --  discriminant. The following line is
+       --  triggers a compilation error:
+       --
+       --  R.IA := new Integer;
+
+    end Show_Discriminants_As_Access_Values;
+
+In the :ada:`Custom_Recs` package from this example, we declare the access
+type :ada:`Integer_Access`. We then use this type to declare the discriminant
+(:ada:`IA`) of the :ada:`Rec` type. In the
+:ada:`Show_Discriminants_As_Access_Values` procedure, we see that (as expected)
+we cannot change the discriminant of an object of :ada:`Rec` type: an
+assignment such as :ada:`R.IA := new Integer` would trigger a compilation
+error.
+
+Note that we can use a default for the discriminant:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Discriminant_Access_Values
+
+    package Custom_Recs is
+
+       type Integer_Access is access Integer;
+
+       type Rec (IA : Integer_Access
+                        := new Integer'(0)) is
+          --               ^^^^^^^^^^^^^^^
+          --                default value
+       record
+          I : Integer := IA.all;
+       end record;
+
+       procedure Show (R : Rec);
+
+    end Custom_Recs;
+
+    with Custom_Recs; use Custom_Recs;
+
+    procedure Show_Discriminants_As_Access_Values is
+
+       R1 : Rec;
+       --   ^^^
+       --   no discriminant: use default
+
+       R2 : Rec (new Integer'(20));
+       --        ^^^^^^^^^^^^^^^^
+       --        allocating an unnamed integer object
+
+    begin
+       Show (R1);
+       Show (R2);
+    end Show_Discriminants_As_Access_Values;
+
+Here, we've changed the declaration of the :ada:`Rec` type to allocate an
+integer object if the type's discriminant isn't provided |mdash| we can see
+this in the declaration of the :ada:`R1` object in the
+:ada:`Show_Discriminants_As_Access_Values` procedure. Also, in this
+procedure, we're allocating an unnamed integer object in the declaration
+of :ada:`R2`.
+
+Notice that we were using a scalar type as the designated subtype of the
+:ada:`Integer_Access` type. We could have used an unconstrained type as well:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Persons
+
+    package Persons is
+
+       --  Declaring an access type whose
+       --  designated subtype is unconstrained:
+       type String_Access is access String;
+
+       --  Declaring a discriminant with this
+       --  access type:
+       type Person (Name : String_Access) is record
+          Age : Integer;
+       end record;
+
+       procedure Show (P : Person);
+
+    end Persons;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Persons is
+
+       procedure Show (P : Person) is
+       begin
+          Put_Line ("Name = "
+                    & P.Name.all);
+          Put_Line ("Age  = "
+                    & Integer'Image (P.Age));
+       end Show;
+
+    end Persons;
+
+    with Persons; use Persons;
+
+    procedure Show_Person is
+       P : Person (new String'("John"));
+    begin
+       P.Age := 30;
+       Show (P);
+    end Show_Person;
+
+In this example, the discriminant of the :ada:`Person` type has an
+unconstrained designated type. In the :ada:`Show_Person` procedure, we declare
+the :ada:`P` object and specify the constraints of the allocated string object
+|mdash| in this case, a four-character string initialized with the name "John".
+
+Later on, we'll discuss discriminants again when we look into
+:ref:`anonymous access discriminants <Adv_Ada_Anonymous_Access_Discriminants>`,
+which provide some advantages in terms of
+:ref:`accessibility rules <Adv_Ada_Accessibility_Levels_Intro>`.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
     - :arm22:`3.7.1 Discriminant Constraints <3-7-1>`
-
-.. todo::
-
-    Complete section!
 
 
 Self-reference
