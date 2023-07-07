@@ -649,6 +649,12 @@ this in the declaration of the :ada:`R1` object in the
 procedure, we're allocating an unnamed integer object in the declaration
 of :ada:`R2`.
 
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+    - :arm22:`3.7.1 Discriminant Constraints <3-7-1>`
+
+
 Unconstrained type as designated subtype
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -710,10 +716,7 @@ Later on, we'll discuss discriminants again when we look into
 which provide some advantages in terms of
 :ref:`accessibility rules <Adv_Ada_Accessibility_Levels_Intro>`.
 
-.. admonition:: In the Ada Reference Manual
 
-    - :arm22:`3.10 Access Types <3-10>`
-    - :arm22:`3.7.1 Discriminant Constraints <3-7-1>`
 
 
 Self-reference
