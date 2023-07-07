@@ -650,7 +650,11 @@ procedure, we're allocating an unnamed integer object in the declaration
 of :ada:`R2`.
 
 Notice that we were using a scalar type as the designated subtype of the
-:ada:`Integer_Access` type. We could have used an unconstrained type as well:
+:ada:`Integer_Access` type. We could have used an unconstrained type as well.
+In fact, this is often used for the sake of having the effect of an
+unconstrained discriminant type.
+
+Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Persons
 
