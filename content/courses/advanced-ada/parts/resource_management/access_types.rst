@@ -3,17 +3,129 @@ Access Types
 
 .. include:: ../../../global.txt
 
+We discussed access types back in the
+:ref:`Introduction to Ada course <Intro_Ada_Access_Types_Overview>`. In
+this chapter, we discuss further details about access types and techniques when
+using them. Before we dig into details, however, we're going to make sure
+we understand the terminology.
+
 Access types: Terminology
 -------------------------
+
+In this section, we discuss some of the terminology associated with access
+types. Usually, the terms used in Ada when discussing references and dynamic
+memory allocation are different than the ones you might encounter in other
+languages, so it's necessary you understand what each term means.
+
+Access type, designated subtype and profile
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The first term we encounter is (obviously) *access type*, which is a type that
+provides us access to an object or a subprogram. We declare access types by
+using the :ada:`access` keyword:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Terminology.Access_Type_Declaration
+
+    package Show_Access_Type_Declaration is
+
+       --
+       --  Declaring access types:
+       --
+
+       --  Access-to-object type
+       type Integer_Access is access Integer;
+
+       --  Access-to-subprogram type
+       type Init_Integer_Access is access
+         function return Integer;
+
+    end Show_Access_Type_Declaration;
+
+Here, we're declaring two access types: the access-to-object type
+:ada:`Integer_Access` and the access-to-subprogram type
+:ada:`Init_Integer_Access`. (We discuss access-to-subprogram types
+:ref:`later on <Adv_Ada_Access_To_Subprograms>`).
+
+In the declaration of an access type, we always specify |mdash| after the
+:ada:`access` keyword |mdash| the kind of thing we want to designate. In the
+case of an access-to-object type declaration, we declare a subtype we want to
+access, which is known as the *designated subtype* of an access type. In the
+case of an access-to-subprogram type declaration, the subprogram prototype is
+known as the *designated profile*.
+
+In our previous code example, :ada:`Integer` is the designated subtype of the
+:ada:`Integer_Access` type, and :ada:`function return Integer` is the
+designated profile of the :ada:`Init_Integer_Access` type.
+
+Access object and designated object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We use an access-to-object type by first declaring a variable (or constant) of
+an access type and then allocating an object. (This is actually just one way of
+using access types; we discuss other methods later in this chapter.) The actual
+variable or constant of an access type is called *access object*, while the
+object we allocate (via :ada:`new`) is the *designated object*.
+
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Object_Allocated_Object.Simple_Allocation
+
+    procedure Show_Simple_Allocation is
+
+       --  Access-to-object type
+       type Integer_Access is access Integer;
+
+       --  Access object
+       I1 : Integer_Access;
+
+    begin
+       I1 := new Integer;
+       --    ^^^^^^^^^^^ allocating an object,
+       --                which becomes the designated
+       --                object for I1
+
+    end Show_Simple_Allocation;
+
+In this example, :ada:`I1` is an access object and the object allocated via
+:ada:`new Integer` is its designated object.
+
+Access value and designated value
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An access object and a designated (allocated) object, both store values. The
+value of an access object is the *access value* and the value of a designated
+object is the *designated value*. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Value_Designated_Value.Values
+
+    procedure Show_Values is
+
+       --  Access-to-object type
+       type Integer_Access is access Integer;
+
+       I1, I2, I3 : Integer_Access;
+
+    begin
+       I1 := new Integer;
+       I3 := new Integer;
+
+       --  Copying the access value of I1 to I2
+       I2 := I1;
+
+       --  Copying the designated value of I1
+       I3.all := I1.all;
+
+    end Show_Values;
+
+In this example, the assignment :ada:`I2 := I1` copies the access value of
+:ada:`I1` to :ada:`I2`. The assignment :ada:`I3.all := I1.all` copies
+:ada:`I1`\'s designated value to :ada:`I3`\'s designated object.
+(As we already know, :ada:`.all` is used to dereference an access object. We
+discuss this topic again :ref:`later in this chapter <Adv_Ada_Dereferencing>`.)
 
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
-    - :arm22:`3.10.2 Operations of Access Types <3-10-2>`
-
-.. todo::
-
-    Complete section!
 
 .. _Adv_Ada_Access_Types_Allocation:
 
@@ -447,6 +559,8 @@ Self-reference
     Complete section!
 
 
+.. _Adv_Ada_Dereferencing:
+
 Dereferencing
 -------------
 
@@ -462,7 +576,7 @@ discussed the :ada:`.all` syntax to dereference access values:
        --  Declaring access type:
        type Integer_Access is access Integer;
 
-       --  Declaring access value:
+       --  Declaring access object:
        A1 : Integer_Access;
 
     begin
@@ -474,7 +588,7 @@ discussed the :ada:`.all` syntax to dereference access values:
        Put_Line ("A1: " & Integer'Image (A1.all));
     end Show_Dereferencing;
 
-In this example, we declare :ada:`A1` as an access value, which allows us to
+In this example, we declare :ada:`A1` as an access object, which allows us to
 access objects of :ada:`Integer` type. We dereference :ada:`A1` by writing
 :ada:`A1.all`.
 
@@ -588,7 +702,7 @@ each component:
    Arr (6) := 13;
 
 Implicit dereferencing isn't available for the whole array because we have to
-distinguish between assigning to access values and assigning to actual arrays.
+distinguish between assigning to access objects and assigning to actual arrays.
 For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Array_Assignments
@@ -732,11 +846,11 @@ is implicitly dereferenced. The same applies to :ada:`Arr'Component_Size`. Note
 that we can write both :ada:`Arr'Size` and :ada:`Arr.all'Size`, but they have
 different meanings:
 
-- :ada:`Arr'Size` is the size of the access value; while
+- :ada:`Arr'Size` is the size of the access object; while
 
 - :ada:`Arr.all'Size` indicates the size of the actual array :ada:`Arr`.
 
-In other words, the :ada:`Size` attribute is *not* implicitly deferenced.
+In other words, the :ada:`Size` attribute is *not* implicitly dereferenced.
 In fact, any attribute that could potentially be ambiguous is not implicitly
 dereferenced. Therefore, in those cases, we must explicitly indicate (by using
 :ada:`.all` or not) how we want to use the attribute.
@@ -1550,7 +1664,7 @@ Let's see an example:
        Proc (I);
     end Show_Aliased_Param;
 
-Here, :ada:`Proc` has an :ada:`aliased in out` parameter. In :ada:`Proc` \'s
+Here, :ada:`Proc` has an :ada:`aliased in out` parameter. In :ada:`Proc`\'s
 body, we declare the :ada:`Integer_Access` type as an :ada:`access all` type.
 We use the same approach in body of the :ada:`Set_One` procedure, which has an
 :ada:`aliased out` parameter. Finally, the :ada:`Show` procedure has
@@ -2184,7 +2298,7 @@ would be performed as if :ada:`I_Var` was declared in the :ada:`Integers`
 package instead of being declared in the procedure.)
 
 It is strongly recommended to avoid unchecked access in general. You should
-only use it when you can safely assume that the access value will be discarded
+only use it when you can safely assume that the access object will be discarded
 before the object we had access to gets out of scope. Therefore, if this
 situation isn't clear enough, it's best to avoid unchecked access. (Later in
 this chapter, we'll see some of the nasty issues that arrive from creating
@@ -2871,6 +2985,7 @@ If :ada:`X (Index)` occurs inside :ada:`Process_Array`, there is no need
 to check that :ada:`Index` is in range, because the check is pushed to the
 caller.
 
+.. _Adv_Ada_Access_To_Subprograms:
 
 .. _Adv_Ada_Design_Strategies_Access_Types:
 
@@ -2960,8 +3075,8 @@ prototype:
 
     end Access_To_Subprogram_Types;
 
-Note that, in the type declarations, we list all the parameters that we expect
-in the subprogram.
+In the designated profile of the access type declarations, we list all the
+parameters that we expect in the subprogram.
 
 We can use those types to declare access to subprograms |mdash| as subprogram
 parameters, for example:
