@@ -717,6 +717,49 @@ which provide some advantages in terms of
 :ref:`accessibility rules <Adv_Ada_Accessibility_Levels_Intro>`.
 
 
+Whole object assignments
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+As expected, we cannot change the discriminant value in whole object
+assignments. If we do that, the :ada:`Constraint_Error` exception is raised
+at runtime:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Persons
+    :class: ada-run-expect-failure
+
+    with Persons; use Persons;
+
+    procedure Show_Person is
+       S1 : String_Access := new String'("John");
+       S2 : String_Access := new String'("Mark");
+       P : Person := (Name => S1,
+                      Age  => 30);
+    begin
+       P := (Name => S1, Age => 31);
+       --            ^^ OK: we didn't change the
+       --                   discriminant.
+       Show (P);
+
+       --  We can just repeat the discriminant:
+       P := (Name => P.Name, Age => 32);
+       --            ^^^^^^ OK: we didn't change the
+       --                       discriminant.
+       Show (P);
+
+       --  Of course, we can change the string itself:
+       S1.all := "Mark";
+       Show (P);
+
+       P := (Name => S2, Age => 40);
+       --            ^^ ERROR: we changed the
+       --                      discriminant!
+       Show (P);
+    end Show_Person;
+
+The first and the second assignments to :ada:`P` are OK because we didn't
+change the discriminant. However, the last assignment raises the
+:ada:`Constraint_Error` exception at runtime because we're changing the
+discriminant.
 
 
 Self-reference
