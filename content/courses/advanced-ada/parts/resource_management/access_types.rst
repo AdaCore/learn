@@ -576,7 +576,7 @@ discussed the :ada:`.all` syntax to dereference access values:
        --  Declaring access type:
        type Integer_Access is access Integer;
 
-       --  Declaring access value:
+       --  Declaring access object:
        A1 : Integer_Access;
 
     begin
@@ -588,7 +588,7 @@ discussed the :ada:`.all` syntax to dereference access values:
        Put_Line ("A1: " & Integer'Image (A1.all));
     end Show_Dereferencing;
 
-In this example, we declare :ada:`A1` as an access value, which allows us to
+In this example, we declare :ada:`A1` as an access object, which allows us to
 access objects of :ada:`Integer` type. We dereference :ada:`A1` by writing
 :ada:`A1.all`.
 
@@ -702,7 +702,7 @@ each component:
    Arr (6) := 13;
 
 Implicit dereferencing isn't available for the whole array because we have to
-distinguish between assigning to access values and assigning to actual arrays.
+distinguish between assigning to access objects and assigning to actual arrays.
 For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Dereferencing.Array_Assignments
@@ -846,7 +846,7 @@ is implicitly dereferenced. The same applies to :ada:`Arr'Component_Size`. Note
 that we can write both :ada:`Arr'Size` and :ada:`Arr.all'Size`, but they have
 different meanings:
 
-- :ada:`Arr'Size` is the size of the access value; while
+- :ada:`Arr'Size` is the size of the access object; while
 
 - :ada:`Arr.all'Size` indicates the size of the actual array :ada:`Arr`.
 
@@ -2298,7 +2298,7 @@ would be performed as if :ada:`I_Var` was declared in the :ada:`Integers`
 package instead of being declared in the procedure.)
 
 It is strongly recommended to avoid unchecked access in general. You should
-only use it when you can safely assume that the access value will be discarded
+only use it when you can safely assume that the access object will be discarded
 before the object we had access to gets out of scope. Therefore, if this
 situation isn't clear enough, it's best to avoid unchecked access. (Later in
 this chapter, we'll see some of the nasty issues that arrive from creating
@@ -3075,8 +3075,8 @@ prototype:
 
     end Access_To_Subprogram_Types;
 
-Note that, in the type declarations, we list all the parameters that we expect
-in the subprogram.
+In the designated profile of the access type declarations, we list all the
+parameters that we expect in the subprogram.
 
 We can use those types to declare access to subprograms |mdash| as subprogram
 parameters, for example:
