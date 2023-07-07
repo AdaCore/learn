@@ -649,6 +649,9 @@ this in the declaration of the :ada:`R1` object in the
 procedure, we're allocating an unnamed integer object in the declaration
 of :ada:`R2`.
 
+Unconstrained type as designated subtype
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Notice that we were using a scalar type as the designated subtype of the
 :ada:`Integer_Access` type. We could have used an unconstrained type as well.
 In fact, this is often used for the sake of having the effect of an
