@@ -713,6 +713,98 @@ unconstrained designated type. In the :ada:`Show_Person` procedure, we declare
 the :ada:`P` object and specify the constraints of the allocated string object
 |mdash| in this case, a four-character string initialized with the name "John".
 
+.. admonition:: For further reading...
+
+    In the previous code example, we used an array |mdash| actually, a string
+    |mdash| to demonstrate the advantage of using discriminants as access
+    values, for we can use an unconstrained type as the designated subtype. In
+    fact, as we discussed
+    :ref:`earlier in another chapter <Adv_Ada_Indefinite_Subtype_Discriminant>`,
+    we cannot use indefinite subtypes as discriminants. Therefore, you wouldn't
+    be able to use a string, for example, directly as a discriminant without
+    using access types:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Persons_Error
+        :class: ada-expect-compile-error
+
+        package Persons is
+
+           --  ERROR: Declaring a discriminant with an
+           --         unconstrained type:
+           type Person (Name : String) is record
+              Age : Integer;
+           end record;
+
+        end Persons;
+
+    As expected, compilation fails for this code because the discriminant of
+    the :ada:`Person` type is indefinite.
+
+    However, the advantage of discriminants as access values isn't restricted
+    to being able to use unconstrained types such as arrays: we could really
+    use any type as the designated subtype! In fact, we can generalized this
+    to:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Generic_Access
+
+        generic
+           type T (<>);  --  any type
+           type T_Access is access T;
+        package Gen_Custom_Recs is
+           --  Declare a type whose discriminant D can
+           --  access any type:
+           type T_Rec (D : T_Access) is null record;
+        end Gen_Custom_Recs;
+
+        with Gen_Custom_Recs;
+
+        package Custom_Recs is
+
+            type Incomp;
+            --  Incomplete type declaration!
+
+           type Incomp_Access is access Incomp;
+
+           --  Instantiating package using
+           --  incomplete type Incomp:
+           package Inst is new
+             Gen_Custom_Recs
+               (T        => Incomp,
+                T_Access => Incomp_Access);
+           subtype Rec is Inst.T_Rec;
+
+           --  At this point, Rec (Inst.T_Rec) uses
+           --  an incomplete type as the designated
+           --  subtype of its discriminant type
+
+           procedure Show (R : Rec) is null;
+
+           --  Now, we complete the Incomp type:
+           type Incomp (B : Boolean := True) is private;
+
+        private
+           --  Finally, we have the full view of the
+           --  Incomp type:
+           type Incomp (B : Boolean := True) is
+             null record;
+
+        end Custom_Recs;
+
+        with Custom_Recs; use Custom_Recs;
+
+        procedure Show_Rec is
+           R : Rec (new Incomp);
+        begin
+           Show (R);
+        end Show_Rec;
+
+    In the :ada:`Gen_Custom_Recs` package, we're using :ada:`type T (<>)`
+    |mdash| which can be any type |mdash| for the designated subtype of the
+    access type :ada:`T_Access`, which is the type of :ada:`T_Rec`\'s
+    discriminant. In the :ada:`Custom_Recs` package, we use the incomplete type
+    :ada:`Incomp` to instantiate the generic package. Only after the
+    instantiation, we declare the complete type.
+
 Later on, we'll discuss discriminants again when we look into
 :ref:`anonymous access discriminants <Adv_Ada_Anonymous_Access_Discriminants>`,
 which provide some advantages in terms of
