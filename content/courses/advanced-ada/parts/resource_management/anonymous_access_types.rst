@@ -394,7 +394,8 @@ access discriminant of a non-limited type:
        --  Declaring a discriminant with an anonymous
        --  access type and a default value:
        type Rec (IA : access Integer :=
-                        new Integer'(0)) is record
+                        new Integer'(0)) is
+       record
           I : Integer := IA.all;
        end record;
 
