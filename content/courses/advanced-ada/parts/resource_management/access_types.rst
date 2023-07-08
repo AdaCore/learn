@@ -534,6 +534,8 @@ of 50 workers, but we don't have any actual tasks yet. We bring the 50 tasks
 into existence by writing :ada:`Worker_Arr := (others => new Worker)`.
 
 
+.. _Adv_Ada_Discriminants_As_Access_Values:
+
 Discriminants as Access Values
 ------------------------------
 
