@@ -270,8 +270,8 @@ Drawbacks of Anonymous Access-To-Object Types
 
 .. _Adv_Ada_Anonymous_Access_Discriminants:
 
-Anonymous Access discriminants
-------------------------------
+Access discriminants
+--------------------
 
 
 .. _Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types:
