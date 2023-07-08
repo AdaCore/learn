@@ -273,6 +273,316 @@ Drawbacks of Anonymous Access-To-Object Types
 Access discriminants
 --------------------
 
+Previously, we've discussed
+:ref:`discriminants as access values <Adv_Ada_Discriminants_As_Access_Values>`.
+In that section, we only used named access types. Now, in this section, we see
+how to use anonymous access types as discriminants. This feature is also known
+as *access discriminants* and it provides some flexibility that can be
+interesting in terms of software design, as we'll discuss later.
+
+Let's start with an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+
+    package Custom_Recs is
+
+       --  Declaring a discriminant with an anonymous
+       --  access type:
+       type Rec (IA : access Integer) is record
+          I : Integer := IA.all;
+       end record;
+
+       procedure Show (R : Rec);
+
+    end Custom_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Custom_Recs is
+
+       procedure Show (R : Rec) is
+       begin
+          Put_Line ("R.IA = "
+                    & Integer'Image (R.IA.all));
+          Put_Line ("R.I  = "
+                    & Integer'Image (R.I));
+       end Show;
+
+    end Custom_Recs;
+
+    with Custom_Recs; use Custom_Recs;
+
+    procedure Show_Access_Discriminants is
+       I  : aliased Integer := 10;
+       R  : Rec (I'Access);
+    begin
+       Show (R);
+
+       I   := 20;
+       R.I := 30;
+       Show (R);
+    end Show_Access_Discriminants;
+
+In this example, we use an anonymous access type for the discriminant in the
+declaration of the :ada:`Rec` type of the :ada:`Custom_Recs` package. In the
+:ada:`Show_Access_Discriminants` procedure, we declare :ada:`R` and provide
+access to the local :ada:`I` integer.
+
+Similarly, we can use unconstrained designated subtypes:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Persons
+
+    package Persons is
+
+       --  Declaring a discriminant with an anonymous
+       --  access type whose designated subtype is
+       --  unconstrained:
+       type Person (Name : access String) is record
+          Age : Integer;
+       end record;
+
+       procedure Show (P : Person);
+
+    end Persons;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Persons is
+
+       procedure Show (P : Person) is
+       begin
+          Put_Line ("Name = "
+                    & P.Name.all);
+          Put_Line ("Age  = "
+                    & Integer'Image (P.Age));
+       end Show;
+
+    end Persons;
+
+    with Persons; use Persons;
+
+    procedure Show_Person is
+       S : aliased String := "John";
+       P : Person (S'Access);
+    begin
+       P.Age := 30;
+       Show (P);
+    end Show_Person;
+
+In this example, for the discriminant of the :ada:`Person` type, we use an
+anonymous access type whose designated subtype is unconstrained. In the
+:ada:`Show_Person` procedure, we declare the :ada:`P` object and provide
+access to the :ada:`S` string.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.7 Discriminants <3-7>`
+    - :arm22:`3.10.2 Operations of Access Types <3-10-2>`
+
+
+Default Value of Access Discriminants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In contrast to named access types, we cannot use a default value for the
+access discriminant of a non-limited type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+    :class: ada-expect-compile-error
+
+    package Custom_Recs is
+
+       --  Declaring a discriminant with an anonymous
+       --  access type and a default value:
+       type Rec (IA : access Integer :=
+                        new Integer'(0)) is record
+          I : Integer := IA.all;
+       end record;
+
+       procedure Show (R : Rec);
+
+    end Custom_Recs;
+
+However, if we change the type declaration to be a limited type, having a
+default value for the access discriminant is OK:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+
+    package Custom_Recs is
+
+       --  Declaring a discriminant with an anonymous
+       --  access type and a default value:
+       type Rec (IA : access Integer :=
+                        new Integer'(0)) is limited
+       record
+          I : Integer := IA.all;
+       end record;
+
+       procedure Show (R : Rec);
+
+    end Custom_Recs;
+
+Note that, if we don't provide a value for the access discriminant when
+declaring an object :ada:`R`, the default value is allocated (via :ada:`new`)
+during :ada:`R`\'s creation.
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+
+    with Custom_Recs; use Custom_Recs;
+
+    procedure Show_Access_Discriminants is
+       R : Rec;
+       --  ^^^
+       --  This triggers "new Integer'(0)", so an
+       --  integer object is allocated and stored in
+       --  the R.IA discriminant.
+    begin
+       Show (R);
+
+       --  R gets out of scope here, and the object
+       --  allocated via new hasn't been deallocated.
+    end Show_Access_Discriminants;
+
+In this case, the allocated object won't be deallocated when :ada:`R` gets out
+of scope!
+
+
+Benefits of Access Discriminants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Access discriminants have the same benefits that we've already seen
+earlier while discussing
+:ref:`discriminants as access values <Adv_Ada_Discriminants_As_Access_Values>`.
+An additional benefit is its extended flexibility: access discriminants are
+compatible with any access :ada:`T'Access`, as long as :ada:`T` is of the
+designated subtype.
+
+Consider the following example using the named access type
+:ada:`Access_String`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Persons
+    :class: ada-expect-compile-error
+
+    package Persons is
+
+       type Access_String is access all String;
+
+       --  Declaring a discriminant with a named
+       --  access type:
+       type Person (Name : Access_String) is record
+          Age : Integer;
+       end record;
+
+       procedure Show (P : Person);
+
+    end Persons;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Persons is
+
+       procedure Show (P : Person) is
+       begin
+          Put_Line ("Name = "
+                    & P.Name.all);
+          Put_Line ("Age  = "
+                    & Integer'Image (P.Age));
+       end Show;
+
+    end Persons;
+
+    with Persons; use Persons;
+
+    procedure Show_Person is
+       S : aliased String := "John";
+       P : Person (S'Access);
+       --          ^^^^^^^^ ERROR: cannot use local
+       --                          object
+       --
+       --  We can, however, allocate the string via
+       --  new:
+       --
+       --  S : Access_String := new String'("John");
+       --  P : Person (S);
+    begin
+       P.Age := 30;
+       Show (P);
+    end Show_Person;
+
+This code doesn't compile because we cannot have a non-local pointer
+(:ada:`Access_String`) pointing to the local object :ada:`S`. The only way
+to make this work is by allocating the string via :ada:`new`
+(i.e.: :ada:`S : Access_String := new String`).
+
+However, if we use an access discriminant in the declaration of :ada:`Person`,
+the code compiles fine:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Persons
+
+    package Persons is
+
+       --  Declaring a discriminant with an anonymous
+       --  access type:
+       type Person (Name : access String) is record
+          Age : Integer;
+       end record;
+
+       procedure Show (P : Person);
+
+    end Persons;
+
+    with Persons; use Persons;
+
+    procedure Show_Person is
+       S : aliased String := "John";
+       P : Person (S'Access);
+       --          ^^^^^^^^ OK
+
+       --  Allocating the string via new and using it
+       --  in P's declaration is OK as well, but we
+       --  should manually deallocate it before S
+       --  gets out of scope:
+       --
+       --  S : access String := new String'("John");
+       --  P : Person (S);
+    begin
+       P.Age := 30;
+       Show (P);
+    end Show_Person;
+
+In this case, getting access to the local object :ada:`S` and using it for
+:ada:`P`\'s discriminant is perfectly fine.
+
+
+Preventing dangling pointers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that the usual rules that prevent dangling pointers still apply here.
+This ensures that we can safely use access discriminants. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Persons
+    :class: ada-expect-compile-error
+
+    with Persons; use Persons;
+
+    procedure Show_Person is
+
+       function Local_Init return Person is
+          S : aliased String := "John";
+       begin
+          return (Name => S'Access, Age => 30);
+          --      ^^^^^^^^^^^^^^^^
+          --      ERROR: dangling reference!
+       end Local_Init;
+
+       P : Person := Local_Init;
+    begin
+       Show (P);
+    end Show_Person;
+
+In this example, compilation fails in the :ada:`Local_Init` function when
+trying to return an object of :ada:`Person` type because :ada:`S'Access`
+would be a dangling reference.
+
 
 .. _Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types:
 
