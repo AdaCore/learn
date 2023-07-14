@@ -164,6 +164,20 @@ if 'HIDDEN_BOOKS' in os.environ and os.environ['HIDDEN_BOOKS'] != "":
 else:
     tags.add('no_hidden_books')
 
+if 'HIDDEN_CONTENTS' in os.environ and os.environ['HIDDEN_CONTENTS'] != "":
+    hidden_contents_file_name = os.environ['HIDDEN_CONTENTS']
+
+    f = Path(hidden_contents_file_name)
+
+    if f.is_file():
+        with open(hidden_contents_file_name, 'r') as hidden_contents_file:
+            for hidden_content in hidden_contents_file.readlines():
+                exclude_patterns += ["**{}".format(hidden_content.strip())]
+    else:
+        print("WARNING: Cannot find file: " + hidden_contents_file_name)
+else:
+    tags.add('no_hidden_contents')
+
 show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
