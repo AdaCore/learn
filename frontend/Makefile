@@ -46,7 +46,7 @@ test_engine: webpack-production
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@echo ""
 
-test_ada_intro:
+test_content_courses_intro-to-ada:
 	@echo "===== INTRO TO ADA ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -56,7 +56,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/intro-to-ada/chapters/*.rst
 	@echo ""
 
-test_spark_intro:
+test_content_courses_intro-to-spark:
 	@echo "===== INTRO TO SPARK ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -66,7 +66,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/intro-to-spark/chapters/*.rst
 	@echo ""
 
-test_intro_to_embedded_sys_prog:
+test_content_courses_intro-to-embedded-sys-prog:
 	@echo "===== INTRO TO EMBEDDED SYS PROG ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -76,7 +76,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/intro-to-embedded-sys-prog/chapters/*.rst
 	@echo ""
 
-test_advanced_ada:
+test_content_courses_advanced-ada:
 	@echo "===== ADVANCED ADA ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -95,7 +95,7 @@ else
 endif
 	@echo ""
 
-test_advanced_spark:
+test_content_courses_advanced-spark:
 	@echo "===== ADVANCED SPARK ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -105,7 +105,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/advanced-spark/chapters/*.rst
 	@echo ""
 
-test_whats_new_in_ada_2022:
+test_content_courses_whats-new-in-ada-2022:
 	@echo "===== WHAT'S NEW IN ADA 2022 ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -115,7 +115,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/whats-new-in-ada-2022/chapters/*.rst
 	@echo ""
 
-test_spark_for_the_misra_c_developer:
+test_content_courses_SPARK_for_the_MISRA_C_Developer:
 	@echo "===== SPARK FOR MISRA C DEV ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -125,7 +125,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
 	@echo ""
 
-test_ada_for_the_cpp_java_developer:
+test_content_courses_Ada_For_The_CPP_Java_Developer:
 	@echo "===== ADA FOR THE CPP JAVA DEV ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -135,7 +135,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
 	@echo ""
 
-test_ada_for_the_embedded_c_developer:
+test_content_courses_Ada_For_The_Embedded_C_Developer:
 	@echo "===== ADA FOR THE EMBEDDED C DEV ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -145,7 +145,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/Ada_For_The_Embedded_C_Developer/chapters/*.rst
 	@echo ""
 
-test_gnat_toolchain_intro:
+test_content_courses_GNAT_Toolchain_Intro:
 	@echo "===== GNAT TOOLCHAIN INTRO ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -155,7 +155,7 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
 	@echo ""
 
-test_training_fundamentals:
+test_content_training_examples:
 	@echo "===== FUNDAMENTALS OF ADA ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
@@ -165,21 +165,26 @@ endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
 	@echo ""
 
-test_content: test_ada_intro test_advanced_ada \
-	test_spark_intro test_intro_to_embedded_sys_prog \
-	test_whats_new_in_ada_2022 \
-	test_spark_for_the_misra_c_developer \
-	test_ada_for_the_cpp_java_developer \
-	test_ada_for_the_embedded_c_developer \
-	test_gnat_toolchain_intro
+test_content_courses: \
+	test_content_courses_intro-to-ada \
+	test_content_courses_intro-to-spark \
+	test_content_courses_intro-to-embedded-sys-prog \
+	test_content_courses_advanced-ada \
+	test_content_courses_whats-new-in-ada-2022 \
+	test_content_courses_SPARK_for_the_MISRA_C_Developer \
+	test_content_courses_Ada_For_The_CPP_Java_Developer \
+	test_content_courses_Ada_For_The_Embedded_C_Developer \
+	test_content_courses_GNAT_Toolchain_Intro
+
+test_content: test_content_courses
 	@cd $(SRC_TEST_DIR) \
 		&& zip -9 -r $(COMPLETE_SITE_BOOK)_code.zip . \
 			-x "*.log" -x "*/latest*"
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
 
-test_hidden_content: test_advanced_spark \
-	test_training_fundamentals
+test_hidden_content: test_content_courses_advanced-spark \
+	test_content_training_examples
 	@echo ""
 
 test_all_content: test_content test_hidden_content
