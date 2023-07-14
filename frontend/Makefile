@@ -49,11 +49,11 @@ test_engine: webpack-production
 
 file_found = $(or $(and $(wildcard $(1)),1),0)
 
-rst_hidden_file = \
+rst_hidden_files = \
 	$(foreach fr,$(shell cat $(1)),$(shell find $(CONTENT_DIR)/$(fr) -type f))
 
 filter_rst_files = \
-	$(eval RST_HIDDEN_FILES := $(call rst_hidden_file,$(1)) ) \
+	$(eval RST_HIDDEN_FILES := $(call rst_hidden_files,$(1)) ) \
 	$(foreach f,$(2),\
 		$(if $(findstring $(f),$(RST_HIDDEN_FILES)),,$(f)))
 
