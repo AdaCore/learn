@@ -175,6 +175,7 @@ test_content_courses: \
 	test_content_courses_Ada_For_The_CPP_Java_Developer \
 	test_content_courses_Ada_For_The_Embedded_C_Developer \
 	test_content_courses_GNAT_Toolchain_Intro
+	@echo ""
 
 test_content: test_content_courses
 	@cd $(SRC_TEST_DIR) \
