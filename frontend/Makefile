@@ -26,6 +26,7 @@ TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
 
 HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
+HIDDEN_CONTENTS	?= $(CONTENT_DIR)/hidden_contents.txt
 
 WEBSOCKET_URL_PROD      = wss://backend.learn.adacore.com
 export CODE_SERVER_URL := wss://sandbox.backend.learn.adacore.com
@@ -83,16 +84,24 @@ ifeq ($(strip $(TEST_LAMBDA)),1)
 else
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 50)
 endif
-ifeq ($(HIDDEN_BOOKS),)
+	$(eval CONTENT_CHAPTERS := courses/advanced-ada/parts)
+	$(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(CONTENT_CHAPTERS)/**/*.rst))
+ifeq ($(HIDDEN_CONTENTS),)
 # Test all code examples
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/**/*.rst)
+	$(eval RST_FILES := $(ALL_RST_FILES))
 else
 # Test only the code examples from visible parts and chapters
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT)                                                     \
-		$(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/data_types/*.rst)          \
-		$(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/control_flow/*.rst)        \
-		$(wildcard $(CONTENT_DIR)/courses/advanced-ada/parts/modular_prog/*.rst)
+	$(eval RST_HIDDEN_FILES_RULES := $(shell cat $(HIDDEN_CONTENTS)) )
+	$(eval RST_HIDDEN_FILES :=  $(foreach fr,$(RST_HIDDEN_FILES_RULES),$(shell find $(CONTENT_DIR)/$(fr) -type f)))
+	$(eval HIDDEN_CONTENTS_FOUND := $(or $(and $(wildcard $(HIDDEN_CONTENTS)),1),0))
+	$(eval RST_FILES := $(if $(findstring 0,$(HIDDEN_CONTENTS_FOUND)), \
+		$(ALL_RST_FILES),             \
+		$(foreach f,$(ALL_RST_FILES), \
+			$(if $(findstring $(f),$(RST_HIDDEN_FILES)),,$(f)) \
+		)) \
+	)
 endif
+	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(RST_FILES)
 	@echo ""
 
 test_content_courses_advanced-spark:
