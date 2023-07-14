@@ -75,7 +75,7 @@ define test_content
 	)
 	$(eval RST_FILES := $(call get_rst_files,$(CONTENT_CHAPTERS)))
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(RST_FILES)
-	echo ""
+	@echo ""
 endef
 
 test_content_courses_intro-to-ada:
