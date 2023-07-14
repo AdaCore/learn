@@ -258,6 +258,7 @@ sphinx-production:
 	SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
 	SRC_TEST_DIR="$(SRC_TEST_DIR)" \
 	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
+	HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)" \
 	CODE_SERVER_URL="$(WEBSOCKET_URL_PROD)" \
 	GEN_LEARN_SITE=yes \
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
@@ -267,6 +268,7 @@ sphinx-sandbox:
 	SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
 	SRC_TEST_DIR="$(SRC_TEST_DIR)" \
 	HIDDEN_BOOKS="$(HIDDEN_BOOKS)" \
+	HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)" \
 	$(SPHINXBUILD) -M html $(CONTENT_DIR) \
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
@@ -296,6 +298,7 @@ PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
@@ -310,6 +313,7 @@ $(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf:
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
@@ -343,6 +347,7 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
@@ -358,6 +363,7 @@ $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub:
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
 	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
@@ -398,6 +404,7 @@ cleantest:
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
+	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
 	  export SPHINX_LOCAL_BUILD=true; \
 	$(SPHINXBUILD) -M $@ $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
