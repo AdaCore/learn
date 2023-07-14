@@ -57,10 +57,14 @@ filter_rst_files = \
 	$(foreach f,$(2),\
 		$(if $(findstring $(f),$(RST_HIDDEN_FILES)),,$(f)))
 
-get_rst_files = \
+get_filtered_rst_files = \
 	$(if $(findstring 0,$(call file_found,$(1))),\
 		$(2),\
 		$(call filter_rst_files,$(1),$(2)))
+
+get_rst_files = \
+	$(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(1)/**/*.rst)) \
+	$(call get_filtered_rst_files,$(HIDDEN_CONTENTS),$(ALL_RST_FILES))
 
 test_content_courses_intro-to-ada:
 	@echo "===== INTRO TO ADA ====="
@@ -100,14 +104,7 @@ else
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 50)
 endif
 	$(eval CONTENT_CHAPTERS := courses/advanced-ada/parts)
-	$(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(CONTENT_CHAPTERS)/**/*.rst))
-ifeq ($(HIDDEN_CONTENTS),)
-# Test all code examples
-	$(eval RST_FILES := $(ALL_RST_FILES))
-else
-# Test only the code examples from visible parts and chapters
-	$(eval RST_FILES := $(call get_rst_files,$(HIDDEN_CONTENTS),$(ALL_RST_FILES)))
-endif
+	$(eval RST_FILES := $(call get_rst_files,$(CONTENT_CHAPTERS)))
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(RST_FILES)
 	@echo ""
 
