@@ -47,6 +47,21 @@ test_engine: webpack-production
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@echo ""
 
+file_found = $(or $(and $(wildcard $(1)),1),0)
+
+rst_hidden_file = \
+	$(foreach fr,$(shell cat $(1)),$(shell find $(CONTENT_DIR)/$(fr) -type f))
+
+filter_rst_files = \
+	$(eval RST_HIDDEN_FILES := $(call rst_hidden_file,$(1)) ) \
+	$(foreach f,$(2),\
+		$(if $(findstring $(f),$(RST_HIDDEN_FILES)),,$(f)))
+
+get_rst_files = \
+	$(if $(findstring 0,$(call file_found,$(1))),\
+		$(2),\
+		$(call filter_rst_files,$(1),$(2)))
+
 test_content_courses_intro-to-ada:
 	@echo "===== INTRO TO ADA ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
@@ -91,15 +106,7 @@ ifeq ($(HIDDEN_CONTENTS),)
 	$(eval RST_FILES := $(ALL_RST_FILES))
 else
 # Test only the code examples from visible parts and chapters
-	$(eval RST_HIDDEN_FILES_RULES := $(shell cat $(HIDDEN_CONTENTS)) )
-	$(eval RST_HIDDEN_FILES :=  $(foreach fr,$(RST_HIDDEN_FILES_RULES),$(shell find $(CONTENT_DIR)/$(fr) -type f)))
-	$(eval HIDDEN_CONTENTS_FOUND := $(or $(and $(wildcard $(HIDDEN_CONTENTS)),1),0))
-	$(eval RST_FILES := $(if $(findstring 0,$(HIDDEN_CONTENTS_FOUND)), \
-		$(ALL_RST_FILES),             \
-		$(foreach f,$(ALL_RST_FILES), \
-			$(if $(findstring $(f),$(RST_HIDDEN_FILES)),,$(f)) \
-		)) \
-	)
+	$(eval RST_FILES := $(call get_rst_files,$(HIDDEN_CONTENTS),$(ALL_RST_FILES)))
 endif
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(RST_FILES)
 	@echo ""
