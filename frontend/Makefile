@@ -87,33 +87,24 @@ endef
 
 test_content_courses_intro-to-ada:
 	@echo "===== INTRO TO ADA ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 50)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/intro-to-ada/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 50)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/intro-to-ada/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_intro-to-spark:
 	@echo "===== INTRO TO SPARK ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/intro-to-spark/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/intro-to-spark/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_intro-to-embedded-sys-prog:
 	@echo "===== INTRO TO EMBEDDED SYS PROG ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/intro-to-embedded-sys-prog/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/intro-to-embedded-sys-prog/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_advanced-ada:
 	@echo "===== ADVANCED ADA ====="
@@ -124,73 +115,52 @@ test_content_courses_advanced-ada:
 
 test_content_courses_advanced-spark:
 	@echo "===== ADVANCED SPARK ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/advanced-spark/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/advanced-spark/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_whats-new-in-ada-2022:
 	@echo "===== WHAT'S NEW IN ADA 2022 ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/whats-new-in-ada-2022/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/whats-new-in-ada-2022/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_SPARK_for_the_MISRA_C_Developer:
 	@echo "===== SPARK FOR MISRA C DEV ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/SPARK_for_the_MISRA_C_Developer/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/SPARK_for_the_MISRA_C_Developer/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_Ada_For_The_CPP_Java_Developer:
 	@echo "===== ADA FOR THE CPP JAVA DEV ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/Ada_For_The_CPP_Java_Developer/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/Ada_For_The_CPP_Java_Developer/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_Ada_For_The_Embedded_C_Developer:
 	@echo "===== ADA FOR THE EMBEDDED C DEV ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/Ada_For_The_Embedded_C_Developer/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/Ada_For_The_Embedded_C_Developer/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_GNAT_Toolchain_Intro:
 	@echo "===== GNAT TOOLCHAIN INTRO ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/courses/GNAT_Toolchain_Intro/chapters/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 0)
+	$(eval CONTENT_CHAPTERS := courses/GNAT_Toolchain_Intro/chapters)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_training_examples:
 	@echo "===== TRAINING EXAMPLES: FUNDAMENTALS OF ADA ====="
-ifeq ($(strip $(TEST_LAMBDA)),1)
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
-else
-	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns 80)
-endif
-	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(CONTENT_DIR)/training_examples/fundamentals_of_ada/*.rst
-	@echo ""
+	$(eval MAX_SRC_COLUMNS := 80)
+	$(eval DIR_LEVELS := 1)
+	$(eval CONTENT_CHAPTERS := training_examples/fundamentals_of_ada)
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses: \
 	test_content_courses_intro-to-ada \
