@@ -156,7 +156,7 @@ endif
 	@echo ""
 
 test_content_training_examples:
-	@echo "===== FUNDAMENTALS OF ADA ====="
+	@echo "===== TRAINING EXAMPLES: FUNDAMENTALS OF ADA ====="
 ifeq ($(strip $(TEST_LAMBDA)),1)
 	$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS))
 else
