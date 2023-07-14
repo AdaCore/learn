@@ -1,0 +1,7 @@
+courses/advanced-ada/parts/resource_management/*.*
+courses/advanced-ada/parts/interfacing_external/*.*
+courses/advanced-ada/parts/appendices/*.*
+courses/advanced-ada/parts/multithreading/*.*
+courses/advanced-ada/parts/initialization/*.*
+courses/advanced-ada/parts/abstraction-oriented_prog/*.*
+courses/advanced-ada/parts/design_by_contracts/*.*
