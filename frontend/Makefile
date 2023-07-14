@@ -63,17 +63,24 @@ get_filtered_rst_files = \
 		$(call filter_rst_files,$(1),$(2)))
 
 get_rst_files = \
-	$(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(1)/**/*.rst)) \
+	$(eval DIR_LEVELS := $(2)) \
+	$(if $(findstring 0,$(DIR_LEVELS)),\
+		$(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(1)/*.rst)), \
+		$(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(1)/**/*.rst)) \
+	) \
 	$(call get_filtered_rst_files,$(HIDDEN_CONTENTS),$(ALL_RST_FILES))
 
 define test_content
 	$(eval MAX_SRC_COLUMNS := $(1))
-	$(eval CONTENT_CHAPTERS := $(2))
+	$(eval DIR_LEVELS := $(2))
+	$(eval CONTENT_CHAPTERS := $(3))
 	$(if $(findstring 1,$(strip $(TEST_LAMBDA))), \
 		$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS)), \
 		$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns $(MAX_SRC_COLUMNS)) \
 	)
-	$(eval RST_FILES := $(call get_rst_files,$(CONTENT_CHAPTERS)))
+	$(eval RST_FILES := $(call get_rst_files,$(CONTENT_CHAPTERS),$(DIR_LEVELS)))
+	@echo $(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(CONTENT_CHAPTERS)/*.rst))
+	@echo $(RST_FILES)
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(RST_FILES)
 	@echo ""
 endef
@@ -111,8 +118,9 @@ endif
 test_content_courses_advanced-ada:
 	@echo "===== ADVANCED ADA ====="
 	$(eval MAX_SRC_COLUMNS := 50)
+	$(eval DIR_LEVELS := 1)
 	$(eval CONTENT_CHAPTERS := courses/advanced-ada/parts)
-	$(call test_content,$(MAX_SRC_COLUMNS),$(CONTENT_CHAPTERS))
+	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_advanced-spark:
 	@echo "===== ADVANCED SPARK ====="
