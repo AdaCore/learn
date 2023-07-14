@@ -184,7 +184,8 @@ test_content: test_content_courses
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
 
-test_hidden_content: test_content_courses_advanced-spark \
+test_hidden_content: \
+	test_content_courses_advanced-spark \
 	test_content_training_examples
 	@echo ""
 
