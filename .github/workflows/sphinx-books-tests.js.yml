@@ -72,9 +72,9 @@ jobs:
     - name: Run Webpack production
       run: make cleanall webpack-production
     - name: Run SPHINX content tests
-      run: make -k HIDDEN_BOOKS="" test_all_content
+      run: make -k HIDDEN_BOOKS="" HIDDEN_CONTENTS="" test_all_content
     - name: Build PDF books including build/runtime output
-      run: make HIDDEN_BOOKS="" pdf_books
+      run: make HIDDEN_BOOKS="" HIDDEN_CONTENTS="" pdf_books
     - name: Archive PDF books in artifact
       uses: actions/upload-artifact@v2
       with:
@@ -83,7 +83,7 @@ jobs:
           frontend/dist/pdf_books
         retention-days: 1
     - name: Build EPUB books including build/runtime output
-      run: make HIDDEN_BOOKS="" epub_books
+      run: make HIDDEN_BOOKS="" HIDDEN_CONTENTS="" epub_books
     - name: Archive EPUB books in artifact
       uses: actions/upload-artifact@v2
       with:
