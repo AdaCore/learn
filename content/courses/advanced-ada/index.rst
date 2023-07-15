@@ -155,7 +155,7 @@ Advanced Journey With Ada: A Flight In Progress
     parts/control_flow/index
     parts/modular_prog/index
 
-.. only:: no_hidden_books
+.. only:: no_hidden_contents
 
     .. toctree::
         :maxdepth: 4
