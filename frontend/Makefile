@@ -79,8 +79,6 @@ define test_content
 		$(eval TEST_OPTIONS_EXT := $(TEST_OPTIONS) --max-columns $(MAX_SRC_COLUMNS)) \
 	)
 	$(eval RST_FILES := $(call get_rst_files,$(CONTENT_CHAPTERS),$(DIR_LEVELS)))
-	@echo $(eval ALL_RST_FILES := $(wildcard $(CONTENT_DIR)/$(CONTENT_CHAPTERS)/*.rst))
-	@echo $(RST_FILES)
 	@$(TEST_DRIVER) $(TEST_OPTIONS_EXT) $(RST_FILES)
 	@echo ""
 endef
