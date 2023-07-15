@@ -256,48 +256,96 @@ BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/
 
 PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 
-%.pdf:
-	@echo Building $@
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
-	$(eval SPHINX_PDF := $(shell basename $@ .pdf))
-	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))
-	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+lowercase_word = $(shell echo $(1) | tr '[:upper:]' '[:lower:]')
+
+define build_book_preps_pdf
+	$(eval SPHINX_DIR := $(1))
 	@mkdir -p $(PDF_BOOKS_DIR)/$(SPHINX_DIR)
 	@mkdir -p $(BUILDDIR)/latex
+endef
+
+define build_book_preps_epub
+	$(eval SPHINX_DIR := $(1))
+	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
+	@rm   -rf $(BUILDDIR)/epub
+	@mkdir -p $(BUILDDIR)/epub/_static
+endef
+
+define build_book_generic
+	$(eval TARGET_NAME := $(1))
+	$(eval TARGET_TYPE := $(2))
+	$(eval TARGET_TYPE_LC := $(call lowercase_word,$(TARGET_TYPE)))
+	$(eval SPHINX_CONTENT_DIR := $(3))
+	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
+	$(if $(findstring PDF,$(TARGET_TYPE)),$(eval SPHINX_TARGET_TYPE := latexpdf))
+	$(if $(findstring PDF,$(TARGET_TYPE)),$(eval SPHINX_OUTPUT := latex/learnadacorecom.pdf))
+	$(if $(findstring EPUB,$(TARGET_TYPE)),$(eval SPHINX_TARGET_TYPE := epub))
+	$(if $(findstring EPUB,$(TARGET_TYPE)),$(eval SPHINX_OUTPUT := epub/learnadacorecom.epub))
 	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
 	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
 	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
 	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
-	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
+	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M $(SPHINX_TARGET_TYPE) $(SPHINX_CONTENT_DIR) \
 	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
+	@mv $(BUILDDIR)/$(SPHINX_OUTPUT) $@
+endef
+
+define build_book
+	$(eval TARGET_NAME := $(1))
+	$(eval TARGET_TYPE := $(2))
+	$(eval TARGET_TYPE_LC := $(call lowercase_word,$(TARGET_TYPE)))
+	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(TARGET_NAME))))
+	$(eval SPHINX_BOOK := $(shell basename $@ .$(TARGET_TYPE_LC)))
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_BOOK))
+	$(call build_book_preps_$(TARGET_TYPE_LC),$(SPHINX_DIR))
+	$(call build_book_generic,$(TARGET_NAME),$(TARGET_TYPE),$(SPHINX_CONTENT_DIR))
+endef
+
+define build_complete_book_preps_pdf
+	@mkdir -p $(PDF_BOOKS_DIR)
+	@mkdir -p $(BUILDDIR)/latex
+endef
+
+define build_complete_book_preps_epub
+	@mkdir -p $(EPUB_BOOKS_DIR)
+	@rm   -rf $(BUILDDIR)/epub
+	@mkdir -p $(BUILDDIR)/epub/_static
+endef
+
+define build_complete_book
+	$(eval TARGET_NAME := $(1))
+	$(eval TARGET_TYPE := $(2))
+	$(eval TARGET_TYPE_LC := $(call lowercase_word,$(TARGET_TYPE)))
+	@rm -rf "$(BUILDDIR)/doctrees"
+	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
+	$(call build_book_complete_preps_$(TARGET_TYPE_LC))
+	$(call build_book_generic,$(TARGET_NAME),$(TARGET_TYPE),$(SPHINX_CONTENT_DIR))
+endef
+
+%.pdf:
+	@echo Building $@ PDF
+	$(call build_book,$@,PDF)
 
 $(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf:
 	@echo Building $@ PDF
-	@rm -rf "$(BUILDDIR)/doctrees"
-	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
-	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
-	@mkdir -p $(PDF_BOOKS_DIR)
-	@mkdir -p $(BUILDDIR)/latex
-	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
-	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
-	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
-	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
-	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M latexpdf $(SPHINX_CONTENT_DIR) \
-	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@mv $(BUILDDIR)/latex/learnadacorecom.pdf $@
+	$(call build_complete_book,$@,PDF)
+
+generate_book_list = \
+	$(foreach book_dir, $(BOOKS), \
+		$(eval TARGET_TYPE := $(1)) \
+		$(eval TARGET_TYPE_LC := $(call lowercase_word,$(TARGET_TYPE))) \
+		$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
+		$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
+		$(eval SPHINX_BOOK_FULL := $(SPHINX_BOOK).$(TARGET_TYPE_LC)) \
+		$(eval HIDDEN_BOOKS_FOUND := $(or $(and $(wildcard $(HIDDEN_BOOKS)),1),0)) \
+		$(if $(findstring 1,$(HIDDEN_BOOKS_FOUND)), \
+			$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
+			$(eval HIDDEN_BOOK := 0)) \
+		$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval $(TARGET_TYPE)_BOOKS += $($(TARGET_TYPE)_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_BOOK_FULL))) \
+	)
 
 # Generate list: PDF_BOOKS
-$(foreach book_dir, $(BOOKS), \
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
-	$(eval SPHINX_PDF := $(SPHINX_BOOK).pdf) \
-	$(eval HIDDEN_BOOKS_FOUND := $(or $(and $(wildcard $(HIDDEN_BOOKS)),1),0)) \
-	$(if $(findstring 1,$(HIDDEN_BOOKS_FOUND)), \
-		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
-		$(eval HIDDEN_BOOK := 0)) \
-	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval PDF_BOOKS += $(PDF_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_PDF))) \
-	)
+$(call generate_book_list,PDF)
 
 pdf_books: $(PDF_BOOKS)
 	@echo $@ completed.
@@ -306,48 +354,14 @@ EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
 
 %.epub:
 	@echo Building $@ EPUB
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $@)))
-	$(eval SPHINX_EPUB := $(shell basename $@ .epub))
-	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))
-	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
-	@mkdir -p $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)
-	@rm   -rf $(BUILDDIR)/epub
-	@mkdir -p $(BUILDDIR)/epub/_static
-	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
-	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
-	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
-	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
-	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
-	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
+	$(call build_book,$@,EPUB)
 
 $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub:
-	@echo Building $@
-	@rm -rf "$(BUILDDIR)/doctrees"
-	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
-	$(eval SPHINX_CONF_INI := $(shell [ -f ${SPHINX_CONTENT_DIR}/conf.ini ] && echo ${SPHINX_CONTENT_DIR}/conf.ini))
-	@mkdir -p $(EPUB_BOOKS_DIR)
-	@rm   -rf $(BUILDDIR)/epub
-	@mkdir -p $(BUILDDIR)/epub/_static
-	@export SPHINX_CONF_INI="$(SPHINX_CONF_INI)"; \
-	  export SRC_TEST_DIR="$(SRC_TEST_DIR)"; \
-	  export HIDDEN_BOOKS="$(HIDDEN_BOOKS)"; \
-	  export HIDDEN_CONTENTS="$(HIDDEN_CONTENTS)"; \
-	GEN_LEARN_SITE=yes $(SPHINXBUILD) -M epub $(SPHINX_CONTENT_DIR) \
-	   "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@mv $(BUILDDIR)/epub/learnadacorecom.epub $@
+	@echo Building $@ PDF
+	$(call build_complete_book,$@,EPUB)
 
 # Generate list: EPUB_BOOKS
-$(foreach book_dir, $(BOOKS), \
-	$(eval SPHINX_DIR := $(shell basename $(shell dirname $(shell dirname ${book_dir})))) \
-	$(eval SPHINX_BOOK := $(shell basename $(shell dirname ${book_dir}))) \
-	$(eval SPHINX_EPUB := $(SPHINX_BOOK).epub) \
-	$(eval HIDDEN_BOOKS_FOUND := $(or $(and $(wildcard $(HIDDEN_BOOKS)),1),0)) \
-	$(if $(findstring 1,$(HIDDEN_BOOKS_FOUND)), \
-		$(eval HIDDEN_BOOK := $(shell grep -c $(SPHINX_DIR)/$(SPHINX_BOOK) $(HIDDEN_BOOKS))), \
-		$(eval HIDDEN_BOOK := 0)) \
-	$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval EPUB_BOOKS += $(EPUB_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_EPUB))) \
-	)
+$(call generate_book_list,EPUB)
 
 epub_books: $(EPUB_BOOKS)
 	@echo $@ completed.
