@@ -720,9 +720,9 @@ the :ada:`P` object and specify the constraints of the allocated string object
     values, for we can use an unconstrained type as the designated subtype. In
     fact, as we discussed
     :ref:`earlier in another chapter <Adv_Ada_Indefinite_Subtype_Discriminant>`,
-    we cannot use indefinite subtypes as discriminants. Therefore, you wouldn't
-    be able to use a string, for example, directly as a discriminant without
-    using access types:
+    we can only use discrete types (or access types) as discriminants.
+    Therefore, you wouldn't be able to use a string, for example, directly as a
+    discriminant without using access types:
 
     .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Persons_Error
         :class: ada-expect-compile-error
