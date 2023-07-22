@@ -585,6 +585,146 @@ trying to return an object of :ada:`Person` type because :ada:`S'Access`
 would be a dangling reference.
 
 
+.. _Adv_Ada_Self_Reference_Anonymous_Access_Types:
+
+Self-reference
+--------------
+
+Previously, we've seen that we can declare
+:ref:`self-references <Adv_Ada_Self_Reference_Access_Types>` using named access
+types. We can do the same with anonymous access types. Let's revisit the code
+example that implements linked lists:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Self_Reference.Linked_List_Example
+
+    generic
+       type T is private;
+    package Linked_Lists is
+
+       type List is limited private;
+
+       procedure Append_Front
+          (L : in out List;
+           E :        T);
+
+       procedure Append_Rear
+          (L : in out List;
+           E :        T);
+
+       procedure Show (L : List);
+
+    private
+
+       type Component is record
+          Value : T;
+          Next  : access Component;
+          --      ^^^^^^^^^^^^^^^^
+          --       Self-reference
+          --
+          --       (The "Component" type is still
+          --        incomplete at this point.)
+       end record;
+
+       type List is access all Component;
+
+    end Linked_Lists;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Linked_Lists is
+
+       procedure Append_Front
+          (L : in out List;
+           E :        T)
+       is
+          New_First : constant List := new
+            Component'(Value => E,
+                       Next  => L);
+       begin
+          L := New_First;
+       end Append_Front;
+
+       procedure Append_Rear
+          (L : in out List;
+           E :        T)
+       is
+          New_Last : constant List := new
+            Component'(Value => E,
+                       Next  => null);
+       begin
+          if L = null then
+             L := New_Last;
+          else
+             declare
+                Last : List := L;
+             begin
+                while Last.Next /= null loop
+                   Last := List (Last.Next);
+                   --      ^^^^
+                   --   type conversion:
+                   --      "access Component" to
+                   --      "List"
+                end loop;
+                Last.Next := New_Last;
+             end;
+          end if;
+       end Append_Rear;
+
+       procedure Show (L : List) is
+          Curr : List := L;
+       begin
+          if L = null then
+             Put_Line ("[ ]");
+          else
+             Put ("[");
+             loop
+                Put (Curr.Value'Image);
+                Put (" ");
+                exit when Curr.Next = null;
+                Curr := Curr.Next;
+             end loop;
+             Put_Line ("]");
+          end if;
+       end Show;
+
+    end Linked_Lists;
+
+    with Linked_Lists;
+
+    procedure Test_Linked_List is
+        package Integer_Lists is new
+          Linked_Lists (T => Integer);
+        use Integer_Lists;
+
+        L : List;
+    begin
+        Append_Front (L, 3);
+        Append_Rear (L, 4);
+        Append_Rear (L, 5);
+        Append_Front (L, 2);
+        Append_Front (L, 1);
+        Append_Rear (L, 6);
+        Append_Rear (L, 7);
+
+        Show (L);
+    end Test_Linked_List;
+
+Here, in the declaration of the :ada:`Component` type (in the private part of
+the generic :ada:`Linked_Lists` package), we declare :ada:`Next` as an
+anonymous access type that refers to the :ada:`Component` type. (Note that,
+at this point, the :ada:`Component` type is still an incomplete type.) Then, we
+declare :ada:`List` as a general access type (with :ada:`Component` as the
+designated subtype).
+
+It's worth mentioning that the :ada:`List` type and the anonymous
+:ada:`access Component` type aren't the same type, although they share the same
+designated subtype. Therefore, in the implementation of the :ada:`Append_Rear`
+procedure, we have to use type conversion to convert from the anonymous
+:ada:`access Component` type to the (named) :ada:`List` type.
+
+
 .. _Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types:
 
 Mutually dependent types using anonymous access types
