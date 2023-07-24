@@ -1,0 +1,10 @@
+fun has_out_params(s) =
+    [p for p in s.p_params() if p.f_mode is ModeInOut or p.f_mode is ModeOut]
+
+@check(message="function has output parameter(s)")
+fun function_out_parameters(node) =
+    node is (SubpBody or SubpBodyStub or ClassicSubpDecl or GenericSubpInternal)
+    when (node is (ClassicSubpDecl or GenericSubpInternal) or
+          not node.p_previous_part())
+     and node.f_subp_spec.f_subp_kind is SubpKindFunction
+     and has_out_params(node.f_subp_spec)

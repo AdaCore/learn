@@ -1,0 +1,6 @@
+@check
+fun no_pre_post_contracts(node) =
+    node is (BasicSubpDecl or
+             BaseSubpBody(p_previous_part() is null) or
+             SubpBodyStub(p_previous_part() is null))
+    and not ( node.p_has_aspect("Pre") and node.p_has_aspect("Post") )

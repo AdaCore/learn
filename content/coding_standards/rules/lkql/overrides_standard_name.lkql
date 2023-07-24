@@ -1,0 +1,32 @@
+fun is_standard(name) =
+    name.p_name_is( "boolean" ) or
+    name.p_name_is( "character" ) or
+    name.p_name_is( "constraint_error" ) or
+    name.p_name_is( "duration" ) or
+    name.p_name_is( "float" ) or
+    name.p_name_is( "integer" ) or
+    name.p_name_is( "long_float" ) or
+    name.p_name_is( "long_integer" ) or
+    name.p_name_is( "long_long_float" ) or
+    name.p_name_is( "long_long_integer" ) or
+    name.p_name_is( "long_long_long_integer" ) or
+    name.p_name_is( "natural" ) or
+    name.p_name_is( "numeric_error" ) or
+    name.p_name_is( "positive" ) or
+    name.p_name_is( "program_error" ) or
+    name.p_name_is( "short_float" ) or
+    name.p_name_is( "short_integer" ) or
+    name.p_name_is( "short_short_integer" ) or
+    name.p_name_is( "standard" ) or
+    name.p_name_is( "storage_error" ) or
+    name.p_name_is( "string" ) or
+    name.p_name_is( "tasking_error" ) or
+    name.p_name_is( "wide_character" ) or
+    name.p_name_is( "wide_string" ) or
+    name.p_name_is( "wide_wide_character" ) or
+    name.p_name_is( "wide_wide_string" )
+
+@check
+fun overrides_standard_name(node) =
+    node is DefiningName and
+    is_standard ( node.f_name )
