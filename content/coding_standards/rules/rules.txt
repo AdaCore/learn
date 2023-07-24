@@ -1,0 +1,112 @@
+-----------------------
+-- Concurrency (CON) --
+-----------------------
+
+-- CON01 is mutually exclusive with the following rule(s): CON02
+-- CON01 is active by default. CON02 is commented out.  Modify rules file as needed.
++R:CON01_Use_the_Ravenscar_Profile:uses_ravenscar_profile
+--+R:CON02_Use_the_Jorvik_Profile:uses_jorvik_profile
+
++R:CON03_Avoid_Shared_Variables_for_Inter-task_Communication:Volatile_Objects_Without_Address_Clauses
+
+--------------------------------------
+-- Dynamic Storage Management (DYN) --
+--------------------------------------
+
++R:DYN01_Common_High_Integrity_Restrictions:TBD
+
++R:DYN02_Traditional_Static_Allocation_Policy:TBD
+
++R:DYN03_Access_Types_Without_Allocators_Policy:TBD
+
++R:DYN04_Minimal_Dynamic_Allocation_Policy:TBD
+
++R:DYN05_User-Defined_Storage_Pools_Policy:TBD
+
++R:DYN06_Statically_Determine_Maximum_Stack_Requirements:TBD
+
+---------------------------
+-- Exception Usage (EXU) --
+---------------------------
+
++R:EXU01_Don't_Raise_Language-Defined_Exceptions:Raising_Predefined_Exceptions
+
++R:EXU02_No_Unhandled_Application-Defined_Exceptions:Unhandled_Exceptions
+
++R:EXU03_No_Exception_Propagation_Beyond_Name_Visibility:Non_Visible_Exceptions
+
++R:EXU04_Prove_Absence_of_Run-time_Exceptions:Unimplemented_Use_SPARK_Analysis
+
+---------------------------------------
+-- Object-Oriented Programming (OOP) --
+---------------------------------------
+
+-- OOP01 is mutually exclusive with the following rule(s): OOP02
+-- OOP01 is active by default. OOP02 is commented out.  Modify rules file as needed.
++R:OOP01_No_Class-wide_Constructs_Policy:no_classwide_constructs
+--+R:OOP02_Static_Dispatching_Only_Policy:no_dynamic_dispatching
+
++R:OOP03_Limit_Inheritance_Hierarchy_Depth:Deep_Inheritance_Hierarchies:2
+
++R:OOP04_Limit_Statically-Dispatched_Calls_To_Primitive_Operations:Direct_Calls_To_Primitives
+
++R:OOP05_Use_Explicit_Overriding_Annotations:Style_Checks:O
+
++R:OOP06_Use_Class-wide_Pre/Post_Contracts:Specific_Pre_Post
+
++R:OOP07_Ensure_Local_Type_Consistency:Unimplemented_Use_SPARK_Analysis
+
+----------------------------
+-- Safe Reclamation (RCL) --
+----------------------------
+
++R:RCL01_No_Multiple_Reclamations:TBD
+
++R:RCL02_Only_Reclaim_Allocated_Storage:TBD
+
++R:RCL03_Only_Reclaim_To_The_Same_Pool:TBD
+
+---------------------------------------
+-- Robust Programming Practice (RPP) --
+---------------------------------------
+
++R:RPP01_No_Use_of_"others"_in_Case_Constructs:OTHERS_In_CASE_Statements
+
++R:RPP02_No_Enumeration_Ranges_in_Case_Constructs:Enumeration_Ranges_In_CASE_Statements
+
++R:RPP03_Limited_Use_of_"others"_In_Aggregates:OTHERS_In_Aggregates
+
++R:RPP04_No_Unassigned_Mode-Out_Procedure_Parameters:Unassigned_OUT_Parameters
+
++R:RPP05_No_Use_of_"others"_in_Exception_Handlers:OTHERS_In_Exception_Handlers
+
++R:RPP06_Avoid_Function_Side-Effects:TBD
+
++R:RPP07_Functions_Only_Have_Mode_"in":TBD
+
++R:RPP08_Limit_Parameter_Aliasing:TBD
+
++R:RPP09_Use_Precondition_and_Postcondition_Contracts:TBD
+
++R:RPP10_Do_Not_Re-Verify_Preconditions_In_Subprogram_Bodies:TBD
+
++R:RPP11_Always_Use_the_Result_of_Function_Calls:TBD
+
++R:RPP12_No_Recursion:Recursive_Subprograms
+
++R:RPP13_No_Reuse_of_Standard_Typemarks:TBD
+
++R:RPP14_Use_Symbolic_Constants_For_Literal_Values:Numeric_Literals
+
+--------------------------------
+-- Software Engineering (SWE) --
+--------------------------------
+
++R:SWE01_Use_SPARK_Extensively:TBD
+
++R:SWE02_Enable_Optional_Warnings_and_Treat_As_Errors:TBD
+
++R:SWE03_Use_A_Static_Analysis_Tool_Extensively:TBD
+
++R:SWE04_Hide_Implementation_Artifacts:Visible_Components
+

@@ -1,0 +1,15 @@
+# Flag where specified profile is used
+
+@memoized
+fun profile_name_matches ( assoc_list, profile ) =
+    assoc_list.f_expr.p_name_is(profile)
+
+@unit_check(message="Pragma Profile found")
+fun uses_profile(unit, profile = "") = [
+    {message: "Pragma Profile (" & profile & ") found",
+     loc: node}
+    for node in from unit.root select p_node@PragmaNode
+    when
+        p_node.f_id?.p_name_is ("profile") and
+        profile_name_matches ( p_node.f_args[1], profile )
+]
