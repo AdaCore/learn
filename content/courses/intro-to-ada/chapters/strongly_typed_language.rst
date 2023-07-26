@@ -68,7 +68,7 @@ several things we can do with them.
 Every type declaration in Ada starts with the :ada:`type` keyword (except for
 :ref:`task types <Intro_Ada_Task_Types>`). After the type, we can see a range that looks
 a lot like
-the ranges that we use in for loops, that defines the low and high bound of the
+the ranges that we use in :ada:`for` loops, that defines the low and high bound of the
 type. Every integer in the inclusive range of the bounds is a valid value for
 the type.
 
@@ -96,7 +96,7 @@ them. Here is how :ada:`Integer` might be defined for a typical processor:
 value for :ada:`Integer` is -2\ :sup:`31`, and the last valid value is
 2\ :sup:`31` - 1.
 
-Ada does not mandate the range of the built-in type Integer. An implementation
+Ada does not mandate the range of the built-in type :ada:`Integer`. An implementation
 for a 16-bit target would likely  choose the range -2\ :sup:`15` through
 2\ :sup:`15` - 1.
 
@@ -128,8 +128,8 @@ There are two types of overflow checks:
 * Type-level overflow, when the result of an operation is outside the range
   defined for the type.
 
-Mainly for efficiency reasons, while machine level overflow always results in
-an exception, type level overflows will only be checked at specific boundaries,
+Mainly for efficiency reasons, while machine-level overflow always results in
+an exception, type-level overflows will only be checked at specific boundaries,
 like assignment:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Strongly_Typed_Language.Overflow_Check_2
@@ -150,7 +150,7 @@ like assignment:
        --  Loop body executed 13 times
     end Main;
 
-Type level overflow will only be checked at specific points in the execution.
+Type-level overflow will only be checked at specific points in the execution.
 The result, as we see above, is that you might have an operation that overflows
 in an intermediate computation, but no exception will be raised because the
 final result does not overflow.
@@ -291,7 +291,7 @@ after the second operation.
 
 In addition to :ada:`Float`, an Ada implementation may offer data types with
 higher precision such as :ada:`Long_Float` and :ada:`Long_Long_Float`. Like
-Float, the standard does not indicate the exact precision of these types: it
+:ada:`Float`, the standard does not indicate the exact precision of these types: it
 only guarantees that the type :ada:`Long_Float`, for example, has at least the
 precision of :ada:`Float`. In order to guarantee that a certain precision
 requirement is met, we can define custom floating-point types, as we will see
@@ -557,7 +557,7 @@ will in turn prevent some subtle errors.
     The offending line must be changed to :ada:`F := Float (A) / Float (B);`
     in order to be accepted by the compiler.
 
-- You can use Ada's strong typing to help
+  You can use Ada's strong typing to help
   enforce invariants in your code, as in the example
   above: Since Miles and Meters are two different types, you cannot mistakenly
   convert an instance of one to an instance of the other.
@@ -610,7 +610,7 @@ treated as a distinct type in the interest of strong typing.
     end Main;
 
 The type :ada:`Social_Security` is said to be a *derived type*;
-its *parent type* is Integer.
+its *parent type* is :ada:`Integer`.
 
 As illustrated in this example, you can refine the valid range when defining a
 derived scalar type (such as integer, floating-point and enumeration).
@@ -719,7 +719,7 @@ an exception will be raised.
 Subtypes as type aliases
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Previously, we've seen that we can create new types by declaring
+Previously, we've seen that we can create new types by declaring e.g.
 :ada:`type Miles is new Float`. We could also create type aliases, which
 generate alternative names |mdash| *aliases* |mdash| for known types. Note that
 type aliases are sometimes called *type synonyms*.
