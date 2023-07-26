@@ -20,7 +20,7 @@ $ vagrant up
 ```
 This will spin up two vms:
 
-web: Is the the build system for the frontend web content. This includes the
+web: Is the build system for the frontend web content. This includes the
 webpack build system and sphinx build.
 
 epub: Is the publishing server. This includes all packages needed to

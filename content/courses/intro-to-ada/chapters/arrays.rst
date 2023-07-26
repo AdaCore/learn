@@ -278,7 +278,7 @@ Range attribute
 
 We noted earlier that hard coding bounds when iterating over an array is a bad
 idea, and showed how to use the array's index type/subtype to iterate over its
-range in a for loop.  That raises the question of how to write an iteration
+range in a :ada:`for` loop.  That raises the question of how to write an iteration
 when the array has an anonymous range for its bounds, since there is no name to
 refer to the range.  Ada solves that via several attributes of array objects:
 
@@ -389,7 +389,7 @@ index values for each array instance.
 
 If we define the index as :ada:`Discrete_Type range <>` then
 :ada:`Discrete_Type` serves as the type of the index, but different array
-instances may have different bounds from this type
+instances may have different bounds from this type.
 
 An array type that is defined with the :ada:`Discrete_Type range <>` syntax
 for its index is referred to as an unconstrained array type, and, as

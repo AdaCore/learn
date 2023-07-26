@@ -71,7 +71,7 @@ This is the implementation of the function above:
    doesn't require a specific file structure or specific file name extensions.
    For example, we could save both the specification and the implementation of
    the :ada:`Increment` function above in a file called :file:`increment.txt`.
-   (We could even store the entire source-code of a system in a single
+   (We could even store the entire source code of a system in a single
    file.) From the standard's perspective, this would be completely acceptable.
 
    The GNAT toolchain, however, requires the following file naming scheme:
@@ -157,8 +157,7 @@ perfectly acceptable to name every parameter if it makes the code clearer.
 Nested subprograms
 ~~~~~~~~~~~~~~~~~~
 
-As briefly mentioned earlier, Ada allows you to declare one subprogram inside
-of another.
+As briefly mentioned earlier, Ada allows you to declare one subprogram inside another.
 
 This is useful for two reasons:
 
@@ -261,8 +260,7 @@ to explicitly store it in a local variable.
 
     You then have two solutions to silence this warning:
 
-    - Either annotate the variable with pragma Unreferenced, thus:
-
+    - Either annotate the variable with :ada:`pragma Unreferenced` , e.g.:
     .. code-block:: ada
 
         B : Boolean := Read_Int (Stream, My_Int);
@@ -342,7 +340,7 @@ program will cause an error:
        B := Tmp;
     end Swap;
 
-The fact that this is the default mode is in itself very important. It
+The fact that :ada:`in` is the default mode is very important. It
 means that a parameter will not be modified unless you explicitly specify
 a mode in which modification is allowed.
 
@@ -380,7 +378,7 @@ modified after the call to :ada:`Swap`.
 
 .. attention::
 
-    While in out parameters look a bit like references in C++, or regular
+    While :ada:`in out` parameters look a bit like references in C++, or regular
     parameters in Java that are passed by-reference, the Ada language standard
     does not mandate "by reference" passing for in out parameters except for
     certain categories of types as will be explained later.
@@ -408,7 +406,7 @@ of return.
 
     Ada doesn't have a tuple construct and does not allow returning multiple
     values from a subprogram (except by declaring a full-fledged record type).
-    Hence, a way to return multiple values from a subprogram is to use out
+    Hence, a way to return multiple values from a subprogram is to use :ada:`out`
     parameters.
 
 For example, a procedure reading integers from the network could have one of
