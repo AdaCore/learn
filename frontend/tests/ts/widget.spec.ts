@@ -211,8 +211,8 @@ describe('Widget', () => {
           expect(receivedMessages).to.have.length(1);
 
           const expectSwitches = {
-            'Builder': ['-test'],
-            'Compiler': ['-test'],
+            'Builder': ['-g'],
+            'Compiler': ['-gnatX'],
           };
 
           const request: RunProgram.TS = JSON.parse(receivedMessages[0]) as RunProgram.TS;

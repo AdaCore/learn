@@ -70,7 +70,7 @@ describe('Download', () => {
 
   describe('#parseSwitches()', () => {
     it('should find no switches', () => {
-      const parsedSwitches = parseSwitches('{}');
+      const parsedSwitches = parseSwitches({Builder: [], Compiler: []});
       const expectedBuilder = 'for Switches ("Ada") use ();';
       const expectedCompiler = 'for Switches ("Ada") use ();';
       expect(parsedSwitches['--BUILDER_SWITCHES_PLACEHOLDER--']).to.equal(
@@ -82,7 +82,7 @@ describe('Download', () => {
     });
 
     it('should find builder switches', () => {
-      const parsedSwitches = parseSwitches('{"Builder": ["test1", "test2"]}');
+      const parsedSwitches = parseSwitches({Builder: ["test1", "test2"], Compiler: []});
       const expectedBuilder = 'for Switches ("Ada") use ("test1", "test2");';
       const expectedCompiler = 'for Switches ("Ada") use ();';
       expect(parsedSwitches['--BUILDER_SWITCHES_PLACEHOLDER--']).to.equal(
@@ -94,7 +94,7 @@ describe('Download', () => {
     });
 
     it('should find compiler switches', () => {
-      const parsedSwitches = parseSwitches('{"Compiler": ["test3", "test4"]}');
+      const parsedSwitches = parseSwitches({Builder: [], "Compiler": ["test3", "test4"]});
       const expectedBuilder = 'for Switches ("Ada") use ();';
       const expectedCompiler = 'for Switches ("Ada") use ("test3", "test4");';
       expect(parsedSwitches['--BUILDER_SWITCHES_PLACEHOLDER--']).to.equal(
@@ -107,8 +107,7 @@ describe('Download', () => {
 
     it('should find both switches', () => {
       const parsedSwitches = parseSwitches(
-        '{"Compiler": ["test3", "test4"], "Builder": ["test1", "test2"]}'
-      );
+        {Builder: ["test1", "test2"], Compiler: ["test3", "test4"]});
       const expectedBuilder = 'for Switches ("Ada") use ("test1", "test2");';
       const expectedCompiler = 'for Switches ("Ada") use ("test3", "test4");';
       expect(parsedSwitches['--BUILDER_SWITCHES_PLACEHOLDER--']).to.equal(
@@ -230,7 +229,7 @@ describe('Download', () => {
   describe('#getGprContents()', () => {
     it('should replace all placeholders', () => {
       const files: ResourceList = [{basename: 'main.adb', contents: ''}];
-      const gpr = getGprContents(files, '{}', 'main.adb');
+      const gpr = getGprContents(files, {Builder: [], Compiler: []}, 'main.adb');
       expect(gpr).to.not.contain('--MAIN_PLACEHOLDER--');
       expect(gpr).to.not.contain('--LANGUAGE_PLACEHOLDER--');
       expect(gpr).to.not.contain('--COMPILER_SWITCHES_PLACEHOLDER--');
