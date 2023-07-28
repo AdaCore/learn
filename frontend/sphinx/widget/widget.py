@@ -55,6 +55,24 @@ class Widget:
         self.__no_button: bool = False
         self.__chop_strategy: ChopStrategy = None
         self.__main = None
+        self.allowed_switches: Dict[str, List[str]] = {
+            "Builder": ["-g"],
+            "Compiler": [
+                "-g",
+                "-O0",
+                "-gnata",
+                "-gnatW8",
+                "-gnatwa",
+                "-gnato",
+                "-gnato0",
+                "-gnato11",
+                "-gnato23",
+                "-gnato21",
+                "-gnato22",
+                "-gnateE",
+                "-gnatX",
+            ],
+        }
 
     @property
     def button_group(self) -> List[Button]:
