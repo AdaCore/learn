@@ -261,6 +261,7 @@ to explicitly store it in a local variable.
     You then have two solutions to silence this warning:
 
     - Either annotate the variable with :ada:`pragma Unreferenced` , e.g.:
+
     .. code-block:: ada
 
         B : Boolean := Read_Int (Stream, My_Int);
