@@ -36,7 +36,7 @@ const languageMapping = {
 
 const cMainRegExp = /^(?:void|int) +main\(.*\)(?: |\n)*{/gm;
 
-interface UnparsedSwitches {
+export interface UnparsedSwitches {
   Builder: Array<string>;
   Compiler: Array<string>;
 }
@@ -64,26 +64,39 @@ export function getLanguages(files: ResourceList): string {
 }
 
 /**
- * Generate the values to replace the switch placeholders in the gpr file.
+ * Get the list of compiler switches
  * @param {string} rawSwitches provided by data-switches for the project.
- * @return {Switches} parsed switches.
+ * @return {UnparsedSwitches} switches.
  */
-export function parseSwitches(rawSwitches: string): ParsedSwitches {
+export function getUnparsedSwitches(rawSwitches: string): UnparsedSwitches {
   const parsed = JSON.parse(rawSwitches);
   const switches: UnparsedSwitches = {Builder: [], Compiler: []};
   for (const k in switches) {
     if (k in parsed) {
       const updatedSwitches = [];
       for (const origSwitch of parsed[k]) {
-        updatedSwitches.push(`"${origSwitch}"`);
+        updatedSwitches.push(`${origSwitch}`);
       }
       switches[k as keyof UnparsedSwitches] = updatedSwitches;
     }
   }
+  return switches;
+}
+
+/**
+ * Generate the values to replace the switch placeholders in the gpr file.
+ * @param {UnparsedSwitches} switches provided by data-switches
+ *                           for the project.
+ * @return {Switches} parsed switches.
+ */
+export function parseSwitches(switches: UnparsedSwitches): ParsedSwitches {
+  const builderSwitches = switches['Builder'].map((i) => `"${i}"`).join(', ');
+  const compilerSwitches = switches['Compiler'].map((i) => `"${i}"`).join(', ');
+
   const builder =
-    `for Switches ("Ada") use (${switches['Builder'].join(', ')});`;
+    `for Switches ("Ada") use (${builderSwitches});`;
   const compiler =
-    `for Switches ("Ada") use (${switches['Compiler'].join(', ')});`;
+    `for Switches ("Ada") use (${compilerSwitches});`;
   return {
     '--BUILDER_SWITCHES_PLACEHOLDER--': builder,
     '--COMPILER_SWITCHES_PLACEHOLDER--': compiler,
@@ -140,13 +153,13 @@ export function getMain(files: ResourceList, main: string): string {
 /**
  * Creates the contents of the gpr file for the generated project.
  * @param {ResourceList} files to be zipped. Used in main finding logic.
- * @param {string} switches to be included in the gpr file.
+ * @param {UnparsedSwitches} switches to be included in the gpr file.
  * @param {string} main provided by data-main for the project.
  * @return {string} the contents of the gpr file to be generated.
  */
 export function getGprContents(
     files: ResourceList,
-    switches: string,
+    switches: UnparsedSwitches,
     main: string
 ): string {
   const languages = getLanguages(files);
@@ -169,13 +182,13 @@ export function getGprContents(
 /**
  * Download a zip of the current Project
  * @param {ResourceList} files to be zipped
- * @param {string} switches to be included in the gpr file
+ * @param {UnparsedSwitches} switches to be included in the gpr file
  * @param {string} main provided by data-main for the project
  * @param {string} name of the zip
  */
 export function downloadProject(
     files: ResourceList,
-    switches: string,
+    switches: UnparsedSwitches,
     main: string,
     name: string
 ): void {

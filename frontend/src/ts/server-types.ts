@@ -7,7 +7,7 @@ import {ResourceList} from './resource';
 
 export namespace RunProgram {
 
-  interface SwitchType {
+  export interface SwitchType {
     [key : string]: Array<string>;
   }
 
