@@ -195,8 +195,10 @@ class Widget {
     dlButton.addEventListener('click', async () => {
       this.outputArea.reset();
       const files = this.collectResources();
+      const switches = JSON.parse(this.container.dataset.switches as string);
       const activeSwitches: UnparsedSwitches = {
-        Builder: [], Compiler: this.getActiveCompilerSwitches()};
+        Builder: switches['Builder'],
+        Compiler: this.getActiveCompilerSwitches()};
       const main = this.container.dataset.main as string;
       downloadProject(files, activeSwitches, main, this.name);
     });
