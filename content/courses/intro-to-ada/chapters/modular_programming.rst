@@ -328,7 +328,7 @@ Child of a child package
 
 So far, we've seen a two-level package hierarchy. But the hierarchy that we
 can potentially create isn't limited to that. For instance, we could extend
-the hierarchy of the previous source-code example by declaring a
+the hierarchy of the previous source code example by declaring a
 :ada:`Week.Child.Grandchild` package. In this case, :ada:`Week.Child` would
 be the parent of the :ada:`Grandchild` package. Let's consider this
 implementation:
@@ -569,7 +569,7 @@ useful when we don't :ada:`use` packages and want to avoid that the code
 becomes too verbose.
 
 Note we can also rename subprograms and objects inside packages. For instance,
-we could have just renamed the :ada:`Put_Line` procedure in the source-code
+we could have just renamed the :ada:`Put_Line` procedure in the source code
 example above:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Modular_Programming.Rename_Put_Line
