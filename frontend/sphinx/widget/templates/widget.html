@@ -41,6 +41,21 @@
                 </label>
             </div>
         </div>
+
+        <div class="dropdown-container settingsbar-item">
+            <button class="dropdown-btn">
+                <span class="fa fa-cog"></span>
+                Compiler options
+            </button>
+            <div id="{{ w.id }}.settings-bar.compiler-switches" class="dropdown-content compiler-switches">
+                {% for sw in w.allowed_switches['Compiler'] %}
+                    <label>
+                      <input id="{{ w.id }}.settings-bar.compiler-switches.{{ sw }}" type="checkbox" name="{{ sw }}" class="checkbox compiler-switch">{{ sw }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
         <button id="{{ w.id }}.settings-bar.reset-btn" type="button" class="settingsbar-item reset-btn" title="Reset editor to default state">
             <span class="fa fa-undo"></span>
             Reset

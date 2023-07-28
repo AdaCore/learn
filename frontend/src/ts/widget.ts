@@ -2,7 +2,8 @@ import {Area, OutputArea, LabContainer} from './areas';
 import {Editor, EditorTheme} from './editor';
 import {getElemsByClass, getElemById, getElemsByTag}
   from './dom-utils';
-import {downloadProject} from './download';
+import {downloadProject, UnparsedSwitches,
+  getUnparsedSwitches} from './download';
 import {Resource, ResourceList} from './resource';
 import {ServerWorker} from './server';
 import {RunProgram, CheckOutput} from './server-types';
@@ -167,6 +168,8 @@ class Widget {
       this.editor.refresh(isTabbed);
     });
 
+    this.initCompilerSwitches();
+
     const themeSetting =
       this.getElem('settings-bar', 'theme-setting') as HTMLInputElement;
     themeSetting.addEventListener('change', () => {
@@ -184,6 +187,7 @@ class Widget {
     resetButton.addEventListener('click', () => {
       if (window.confirm(Strings.RESET_CONFIRM_MSG)) {
         this.resetEditors();
+        this.initCompilerSwitches();
       }
     });
 
@@ -191,9 +195,10 @@ class Widget {
     dlButton.addEventListener('click', async () => {
       this.outputArea.reset();
       const files = this.collectResources();
-      const switches = this.container.dataset.switches as string;
+      const activeSwitches: UnparsedSwitches = {
+        Builder: [], Compiler: this.getActiveCompilerSwitches()};
       const main = this.container.dataset.main as string;
-      downloadProject(files, switches, main, this.name);
+      downloadProject(files, activeSwitches, main, this.name);
     });
 
     // grab reference to output area in the HTML and construct area
@@ -243,6 +248,79 @@ class Widget {
     return this.server + '/' + url + '/';
   }
 
+
+  /**
+   * Gets default compiler switches set on widget.
+   *
+   * @return {Array<string>} - The active compiler switches.
+   */
+  private getDefaultCompilerSwitches(): Array<string> {
+    return [
+      '-g',
+      '-O0',
+      '-gnata',
+      '-gnatwa',
+    ];
+  }
+
+  /**
+   * Gets active compiler switches set on widget.
+   *
+   * @return {Array<string>} - The active compiler switches.
+   */
+  private getActiveCompilerSwitches(): Array<string> {
+    const compilerSwitchesSetting =
+      this.getElem('settings-bar', 'compiler-switches');
+
+    const compilerSwitches =
+      compilerSwitchesSetting.getElementsByClassName(
+          'compiler-switch') as HTMLCollectionOf<HTMLInputElement>;
+
+    const defaultSwitches = this.getDefaultCompilerSwitches();
+
+    const activeCompilerSwitches: Array<string> = [];
+
+    for (const sw of compilerSwitches) {
+      if (!defaultSwitches.includes(sw.name)) {
+        if (sw.checked) {
+          activeCompilerSwitches.push(sw.name);
+        }
+      }
+    }
+
+    return activeCompilerSwitches;
+  }
+
+
+  /**
+   * Initialize compiler switches (checkboxes) on widget.
+   */
+  private initCompilerSwitches(): void {
+    const compilerSwitchesSetting =
+      this.getElem('settings-bar', 'compiler-switches');
+
+    const compilerSwitches =
+      compilerSwitchesSetting.getElementsByClassName(
+          'compiler-switch') as HTMLCollectionOf<HTMLInputElement>;
+
+    const rawUsedSwitches = this.container.dataset.switches as string;
+
+    const usedSwitches: UnparsedSwitches =
+     getUnparsedSwitches(rawUsedSwitches);
+
+    const defaultSwitches = this.getDefaultCompilerSwitches();
+
+    for (const sw of compilerSwitches) {
+      const switchName = sw.name;
+      sw.checked = usedSwitches['Compiler'].includes(switchName) ||
+        defaultSwitches.includes(switchName);
+      sw.disabled = defaultSwitches.includes(switchName);
+
+      // sw.addEventListener('change', () => {
+      // });
+    }
+  }
+
   /**
    * Gets an element by its id inside the current widget layout
    *
@@ -284,11 +362,14 @@ class Widget {
 
     const files = this.collectResources();
 
+    const switches = JSON.parse(this.container.dataset.switches as string);
+    switches['Compiler'] = this.getActiveCompilerSwitches();
+
     const serverData: RunProgram.TSData = {
       files: files,
       main: this.main,
       mode: mode,
-      switches: JSON.parse(this.container.dataset.switches as string),
+      switches: switches,
       name: this.name,
       lab: lab,
     };
