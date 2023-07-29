@@ -2,8 +2,8 @@ alabaster==0.7.13
 asttokens==2.2.1
 Babel==2.12.1
 backcall==0.2.0
-certifi==2023.5.7
-charset-normalizer==3.1.0
+certifi==2023.7.22
+charset-normalizer==3.2.0
 coverage==7.2.7
 decorator==5.1.1
 docutils==0.18.1
@@ -21,13 +21,13 @@ parso==0.8.3
 pdf2image==1.16.3
 pexpect==4.8.0
 pickleshare==0.7.5
-Pillow==9.5.0
-prompt-toolkit==3.0.38
+Pillow==10.0.0
+prompt-toolkit==3.0.39
 ptyprocess==0.7.0
 pure-eval==0.2.2
 pydot-ng==2.0.0
 Pygments==2.15.1
-pyparsing==3.0.9
+pyparsing==3.1.0
 requests==2.31.0
 six==1.16.0
 snowballstemmer==2.2.0
@@ -45,6 +45,6 @@ sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
 stack-data==0.6.2
 traitlets==5.9.0
-urllib3==2.0.3
+urllib3==2.0.4
 wcwidth==0.2.6
-websocket-client==1.5.3
+websocket-client==1.6.1
