@@ -368,22 +368,6 @@
 
 .. only:: builder_html
 
-    Download Ada and SPARK tools
-    ------------------------------
-
-    .. container:: download-button
-
-        .. image:: images/GNAT-Community-download.png
-            :target: https://www.adacore.com/download
-            :alt: GNAT Community Download
-            :width: 100pc
-
-    **Try Ada and SPARK now with GNAT Community edition.**
-
-    GNAT Community includes the Ada compiler and toolchain, the SPARK verifier and provers, and the GNAT Studio IDE.
-
-    -------------
-
     Professional Ada Training
     ---------------------------
 
