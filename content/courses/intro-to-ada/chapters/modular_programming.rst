@@ -582,3 +582,5 @@ example above:
     begin
        Say ("Hello");
     end Main;
+
+In this example, we rename the :ada:`Put_Line` procedure to :ada:`Say`.

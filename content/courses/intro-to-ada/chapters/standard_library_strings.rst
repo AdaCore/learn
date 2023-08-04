@@ -494,3 +494,8 @@ the :ada:`&` operator for unbounded strings. For example:
        S1 := S1 & " " & S2;
        Put_Line ("String: " & To_String (S1));
     end Show_Unbounded_String_Op;
+
+In this example, we're concatenating the unbounded :ada:`S1` and :ada:`S2`
+strings with the :ada:`"Hello"` and :ada:`"Hello!"` strings, respectively.
+Also, we're using the :ada:`Append` procedure, just like we did with bounded
+strings.
