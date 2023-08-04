@@ -73,6 +73,25 @@ class Widget:
                 "-gnatX",
             ],
         }
+        self.switch_description = {
+            "-g" : "Optimize for debug",
+            "-O0" : "No optimizations",
+            "-gnata" : "Assertions enabled",
+            "-gnatW8" : "UTF-8 encoding of source-code files",
+            "-gnatwa" : "Activate most optional warnings",
+            "-gnatyg0-s" : "Check default code style",
+            "-gnatyM50" : "Check maximum line length of 50 characters",
+            "-gnatyM80" : "Check maximum line length of 80 characters",
+            "-gnato" : "Enable numeric overflow checking",
+            "-gnato0" : "Suppresses overflow checking",
+            "-gnato11" : "Handling of intermediate overflow: strict mode",
+            "-gnato21" : "Handling of intermediate overflow: strict mode; minimized mode within assertions, pre/postconditions, and type invariants",
+            "-gnato22" : "Handling of intermediate overflow: minimized mode",
+            "-gnato23" : "Handling of intermediate overflow: minimized mode; eliminated mode within assertions, pre/postconditions, and type invariants",
+            "-gnateE" : "Generate extra information in exception messages",
+            "-gnatX" : "Enable GNAT implementation extensions and latest Ada version",
+        }
+
 
     @property
     def button_group(self) -> List[Button]:
