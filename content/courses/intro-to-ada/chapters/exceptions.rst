@@ -43,13 +43,26 @@ To raise an exception of our newly declared exception kind, do the following:
        --  abandoned; an exception of kind
        --  "My_Except" will bubble up until it
        --  is caught.
+    end Main;
 
+Here, the :ada:`My_Except` exception is raised. We can also specify a message:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Exceptions.Show_Exception
+    :class: ada-run-expect-failure
+
+    with Exceptions; use Exceptions;
+
+    procedure Main is
+    begin
        raise My_Except with "My exception message";
        --  Execution of current control flow
        --  abandoned; an exception of kind
        --  "My_Except" with associated string will
        --  bubble up until it is caught.
     end Main;
+
+In this case, we see an additional message when the exception is displayed.
+
 
 Handling an exception
 ---------------------
