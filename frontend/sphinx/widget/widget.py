@@ -220,7 +220,7 @@ class Widget:
                         if sw not in self.switches[pkg]:
                             self.switches[pkg].append(sw)
                 else:
-                    self.switches[pkg] = sw
+                    self.switches[pkg] = sw_lst
 
     def __parseLabIO(self, content: List[str]) -> List[str]:
         """Parses lab io data from Directive content
