@@ -1,8 +1,8 @@
 :prev_state: False
 :next_state: False
 
-Introduction to GNAT Toolchain
-==============================
+Introduction to the GNAT Toolchain
+==================================
 
 .. include:: ../global.txt
 
