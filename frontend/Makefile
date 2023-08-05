@@ -28,7 +28,7 @@ TEST_BUILDDIR   = tests/html
 HIDDEN_BOOKS 	?= $(CONTENT_DIR)/hidden.txt
 HIDDEN_CONTENTS	?= $(CONTENT_DIR)/hidden_contents.txt
 
-WEBSOCKET_URL_PROD      = wss://backend.learn.adacore.com
+WEBSOCKET_URL_PROD     ?= wss://backend.learn.adacore.com
 export CODE_SERVER_URL := wss://sandbox.backend.learn.adacore.com
 
 COMPLETE_SITE_BOOK = learning-ada
