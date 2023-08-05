@@ -1,51 +1,11 @@
 :prev_state: False
 
-GNAT Community
-==============
+GNAT Toolchain Basics
+=====================
 
 .. include:: ../../global.txt
 
-This chapter presents the steps needed to install the GNAT Community
-toolchain and how to use basic commands from the toolchain.
-
-Installation
-------------
-
-These are the basics steps to install GNAT Community on all platforms:
-
-    - Go to the
-      `AdaCore Community page <https://www.adacore.com/community>`_.
-
-    - Download the GNAT installer.
-
-    - Run the GNAT installer.
-
-        - Leave all options checked on the "Select Components" page.
-
-On Windows platforms, continue with the following steps:
-
-    - Add ``C:\GNAT\2020\bin`` to your ``Path`` environment variable.
-
-        - The environment variables can be found in the
-          ``System Properties`` window of the ``Control Panel``.
-
-    - You might need to restart your computer for the settings to take
-      effect.
-
-On Linux platforms, perform the following steps:
-
-    - Make sure the GNAT installer has execution permissions before
-      running it.
-
-    - Select the directory where you want to install the toolchain.
-
-        - For example: ``/home/me/GNAT/2020``
-
-    - Add the path to the ``bin`` directory (within the toolchain
-      directory) as the first directory in your ``PATH`` environment
-      variable.
-
-        - For example: ``/home/me/GNAT/2020/bin``.
+This chapter presents a couple of basic commands from the GNAT toolchain.
 
 Basic commands
 --------------
