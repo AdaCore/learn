@@ -40,6 +40,8 @@ class TestWidget(unittest.TestCase):
     def test_parseArgs_switches(self):
         switches_in = "A(a,b,c);B(d,e,f);A(g)"
         switches_out = {
+            "Builder": [],
+            "Compiler": ["-gnata"],
             "A": ["a", "b", "c", "g"],
             "B": ["d", "e", "f"]
         }
