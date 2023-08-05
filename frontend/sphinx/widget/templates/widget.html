@@ -45,11 +45,11 @@
         <div class="dropdown-container settingsbar-item">
             <button class="dropdown-btn">
                 <span class="fa fa-cog"></span>
-                Compiler options
+                Switches
             </button>
             <div id="{{ w.id }}.settings-bar.compiler-switches" class="dropdown-content compiler-switches">
                 {% for sw in w.allowed_switches['Compiler'] %}
-                    <label>
+                    <label title="{{ w.switch_description[sw] }}" >
                       <input id="{{ w.id }}.settings-bar.compiler-switches.{{ sw }}" type="checkbox" name="{{ sw }}" class="checkbox compiler-switch">{{ sw }}
                     </label>
                 {% endfor %}

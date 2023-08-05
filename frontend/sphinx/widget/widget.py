@@ -63,16 +63,51 @@ class Widget:
                 "-gnata",
                 "-gnatW8",
                 "-gnatwa",
+                "-gnatyg0-s",
+                "-gnatyM50",
+                "-gnatyM80",
                 "-gnato",
                 "-gnato0",
                 "-gnato11",
-                "-gnato23",
                 "-gnato21",
                 "-gnato22",
+                "-gnato23",
                 "-gnateE",
                 "-gnatX",
             ],
         }
+        self.switch_description = {
+            "-g" : "Optimize for debug",
+            "-O0" : "No optimizations",
+            "-gnata" : "Assertions enabled",
+            "-gnatW8" : "UTF-8 encoding of source-code files",
+            "-gnatwa" : "Activate most optional warnings",
+            "-gnatyg0-s" : "Check default code style",
+            "-gnatyM50" : "Check maximum line length of 50 characters",
+            "-gnatyM80" : "Check maximum line length of 80 characters",
+            "-gnato" : "Enable numeric overflow checking",
+            "-gnato0" : "Suppresses overflow checking",
+            "-gnato11" : "Handling of intermediate overflow: strict mode",
+            "-gnato21" : "Handling of intermediate overflow: strict mode; minimized mode within assertions, pre/postconditions, and type invariants",
+            "-gnato22" : "Handling of intermediate overflow: minimized mode",
+            "-gnato23" : "Handling of intermediate overflow: minimized mode; eliminated mode within assertions, pre/postconditions, and type invariants",
+            "-gnateE" : "Generate extra information in exception messages",
+            "-gnatX" : "Enable GNAT implementation extensions and latest Ada version",
+        }
+
+        # Add default switches
+        self.default_switches: Dict[str, List[str]] = {
+            "Builder": [],
+            "Compiler": [
+                "-gnata",
+            ],
+        }
+
+        for category in self.default_switches:
+            self.switches[category] = []
+            for sw in self.default_switches[category]:
+                self.switches[category].append(sw)
+
 
     @property
     def button_group(self) -> List[Button]:
@@ -179,11 +214,13 @@ class Widget:
             match = regex.search(t)
             if match:
                 pkg = match.group(1)
-                sw = match.group(2).split(',')
+                sw_lst = match.group(2).split(',')
                 if pkg in self.switches.keys():
-                    self.switches[pkg].extend(sw)
+                    for sw in sw_lst:
+                        if sw not in self.switches[pkg]:
+                            self.switches[pkg].append(sw)
                 else:
-                    self.switches[pkg] = sw
+                    self.switches[pkg] = sw_lst
 
     def __parseLabIO(self, content: List[str]) -> List[str]:
         """Parses lab io data from Directive content

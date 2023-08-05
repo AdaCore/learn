@@ -212,7 +212,7 @@ describe('Widget', () => {
 
           const expectSwitches = {
             'Builder': ['-g'],
-            'Compiler': ['-gnatX'],
+            'Compiler': ['-gnata', '-gnatX'],
           };
 
           const request: RunProgram.TS = JSON.parse(receivedMessages[0]) as RunProgram.TS;
