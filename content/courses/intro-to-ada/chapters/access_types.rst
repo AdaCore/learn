@@ -267,3 +267,5 @@ incomplete type declaration:
           Prev, Next : Node_Acc;
        end record;
     end Simple_List;
+
+In this example, the :ada:`Node` and :ada:`Node_Acc` types are mutually dependent.

@@ -250,3 +250,5 @@ user-defined character types are also permitted:
        --   ^ Invalid: 'd' is not a valid
        --     literal for type My_Char
     end Character_Example;
+
+In this example, we're using characters in the definition of :ada:`My_Char`.
