@@ -201,9 +201,11 @@ class Widget:
             match = regex.search(t)
             if match:
                 pkg = match.group(1)
-                sw = match.group(2).split(',')
+                sw_lst = match.group(2).split(',')
                 if pkg in self.switches.keys():
-                    self.switches[pkg].extend(sw)
+                    for sw in sw_lst:
+                        if sw not in self.switches[pkg]:
+                            self.switches[pkg].append(sw)
                 else:
                     self.switches[pkg] = sw
 
