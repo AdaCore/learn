@@ -6,7 +6,7 @@ GNAT Tools
 .. include:: ../../global.txt
 
 In chapter we present a brief overview of some of the tools included
-in the GNAT Community toolchain.
+in the GNAT toolchain.
 
 For further details on how to use these tools, please refer to the
 `GNAT User's Guide <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn.html>`_.
