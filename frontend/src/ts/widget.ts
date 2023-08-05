@@ -310,14 +310,36 @@ class Widget {
 
     const defaultSwitches = this.getDefaultCompilerSwitches();
 
+    const allMutuallyExclSw: Array<Array<string>> = [
+      ['-gnato', '-gnato0', '-gnato11', '-gnato21', '-gnato22', '-gnato23'],
+      ['-gnatyM50', '-gnatyM80'],
+    ];
+
     for (const sw of compilerSwitches) {
       const switchName = sw.name;
       sw.checked = usedSwitches['Compiler'].includes(switchName) ||
         defaultSwitches.includes(switchName);
       sw.disabled = defaultSwitches.includes(switchName);
 
-      // sw.addEventListener('change', () => {
-      // });
+      sw.addEventListener('change', () => {
+        //
+        // Handle mutually exclusive switches when a single
+        // switch is changed by the user.
+        //
+        const isChecked = sw.checked;
+        for (const mutuallyExclSw of allMutuallyExclSw) {
+          if (mutuallyExclSw.includes(switchName)) {
+            // 1. Deactivate all mutually exclusive switches
+            for (const sw2 of compilerSwitches) {
+              if (mutuallyExclSw.includes(sw2.name)) {
+                sw2.checked = false;
+              }
+            }
+            // 2. Restore state for the switch changed by the user
+            sw.checked = isChecked;
+          }
+        }
+      });
     }
   }
 
