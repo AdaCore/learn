@@ -95,6 +95,19 @@ class Widget:
             "-gnatX" : "Enable GNAT implementation extensions and latest Ada version",
         }
 
+        # Add default switches
+        self.default_switches: Dict[str, List[str]] = {
+            "Builder": [],
+            "Compiler": [
+                "-gnata",
+            ],
+        }
+
+        for category in self.default_switches:
+            self.switches[category] = []
+            for sw in self.default_switches[category]:
+                self.switches[category].append(sw)
+
 
     @property
     def button_group(self) -> List[Button]:
