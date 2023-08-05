@@ -260,8 +260,6 @@ class Widget {
     return [
       '-g',
       '-O0',
-      '-gnata',
-      '-gnatwa',
     ];
   }
 
