@@ -612,7 +612,7 @@ with 32-bit characters |mdash| such as :ada:`Wide_Wide_String`. For example,
 let's say we want to use the :ada:`"♥♫"` string again to initialize a constant
 of :ada:`Wide_Wide_String` type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_W8
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_W8 switches=Compiler(-gnatW8);
 
     with Ada.Text_IO;
     with Ada.Wide_Wide_Text_IO;
