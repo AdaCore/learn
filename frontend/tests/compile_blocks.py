@@ -141,6 +141,20 @@ class Block(object):
                     compiler_switches = [str.strip(l)
                         for l in compiler_switches.groups()[0].split(",")]
 
+            # Add default switches
+            default_switches = {
+                "Builder": [],
+                "Compiler": [
+                    "-gnata",
+                ],
+            }
+
+            for category in default_switches:
+                for sw in default_switches[category]:
+                    if sw not in compiler_switches:
+                        compiler_switches.append(sw)
+
+
         def start_config_block(i, line, indent):
             blocks.append(ConfigBlock(rst_file,
                 **dict(
