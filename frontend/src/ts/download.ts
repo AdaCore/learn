@@ -16,7 +16,7 @@ const MAIN_GPR = `project Main is
    --LANGUAGE_PLACEHOLDER--
 
    package Compiler is
-      for Default_Switches ("Ada") use ("-g", "-O0", "-gnata", "-gnatwa");
+      for Default_Switches ("Ada") use ("-g", "-O0");
       --COMPILER_SWITCHES_PLACEHOLDER--
    end Compiler;
 
