@@ -856,16 +856,160 @@ change the discriminant. However, the last assignment raises the
 discriminant.
 
 
+.. _Adv_Ada_Self_Reference_Access_Types:
+
 Self-reference
 --------------
+
+As we've discussed in the section about
+:ada:`incomplete types <Adv_Ada_Incomplete_Types>`, we can use incomplete types
+to create a recursive, self-referencing type. Let's revisit a code example from
+that section:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Self_Reference.Linked_List_Example
+
+    package Linked_List_Example is
+
+       type Integer_List;
+
+       type Next is access Integer_List;
+
+       type Integer_List is record
+          I : Integer;
+          N : Next;
+       end record;
+
+    end Linked_List_Example;
+
+Here, we're using the incomplete type :ada:`Integer_List` in the declaration of
+the :ada:`Next` type, which we then use in the complete declaration of the
+:ada:`Integer_List` type.
+
+Self-references are useful, for example, to create unbounded containers |mdash|
+such as the linked lists mentioned in the example above. Let's extend this code
+example and partially implement a generic package for linked lists:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Self_Reference.Linked_List_Example
+
+    generic
+       type T is private;
+    package Linked_Lists is
+
+       type List is limited private;
+
+       procedure Append_Front
+          (L : in out List;
+           E :        T);
+
+       procedure Append_Rear
+          (L : in out List;
+           E :        T);
+
+       procedure Show (L : List);
+
+    private
+
+       --  Incomplete type declaration:
+       type Component;
+
+       --  Using incomplete type:
+       type List is access Component;
+
+       type Component is record
+          Value : T;
+          Next  : List;
+          --      ^^^^
+          --   Self-reference via access type
+       end record;
+
+    end Linked_Lists;
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Linked_Lists is
+
+       procedure Append_Front
+          (L : in out List;
+           E :        T)
+       is
+          New_First : constant List := new
+            Component'(Value => E,
+                       Next  => L);
+       begin
+          L := New_First;
+       end Append_Front;
+
+       procedure Append_Rear
+          (L : in out List;
+           E :        T)
+       is
+          New_Last : constant List := new
+            Component'(Value => E,
+                       Next  => null);
+       begin
+          if L = null then
+             L := New_Last;
+          else
+             declare
+                Last : List := L;
+             begin
+                while Last.Next /= null loop
+                   Last := Last.Next;
+                end loop;
+                Last.Next := New_Last;
+             end;
+          end if;
+       end Append_Rear;
+
+       procedure Show (L : List) is
+          Curr : List := L;
+       begin
+          if L = null then
+             Put_Line ("[ ]");
+          else
+             Put ("[");
+             loop
+                Put (Curr.Value'Image);
+                Put (" ");
+                exit when Curr.Next = null;
+                Curr := Curr.Next;
+             end loop;
+             Put_Line ("]");
+          end if;
+       end Show;
+
+    end Linked_Lists;
+
+    with Linked_Lists;
+
+    procedure Test_Linked_List is
+        package Integer_Lists is new
+          Linked_Lists (T => Integer);
+        use Integer_Lists;
+
+        L : List;
+    begin
+        Append_Front (L, 3);
+        Append_Rear (L, 4);
+        Append_Rear (L, 5);
+        Append_Front (L, 2);
+        Append_Front (L, 1);
+        Append_Rear (L, 6);
+        Append_Rear (L, 7);
+
+        Show (L);
+    end Test_Linked_List;
+
+In this example, we declare an incomplete type :ada:`Component` in the private
+part of the generic :ada:`Linked_Lists` package. We use this incomplete type to
+declare the access type :ada:`List`, which is then used as a self-reference in
+the :ada:`Next` component of the :ada:`Component` type.
 
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
-
-.. todo::
-
-    Complete section!
 
 
 .. _Adv_Ada_Dereferencing:
