@@ -620,8 +620,10 @@ example that implements linked lists:
           --      ^^^^^^^^^^^^^^^^
           --       Self-reference
           --
-          --       (The "Component" type is still
-          --        incomplete at this point.)
+          --       (Note that we haven't finished the
+          --       declaration of the "Component" type
+          --       yet, but we're already referring to
+          --       it.)
 
           Value : T;
        end record;
@@ -714,10 +716,11 @@ example that implements linked lists:
 
 Here, in the declaration of the :ada:`Component` type (in the private part of
 the generic :ada:`Linked_Lists` package), we declare :ada:`Next` as an
-anonymous access type that refers to the :ada:`Component` type. (Note that,
-at this point, the :ada:`Component` type is still an incomplete type.) Then, we
-declare :ada:`List` as a general access type (with :ada:`Component` as the
-designated subtype).
+anonymous access type that refers to the :ada:`Component` type. (Note that
+at this point, we haven't finished the declaration of the :ada:`Component`
+type yet, but we're already using it as the designated subtype of an anonymous
+access type.) Then, we declare :ada:`List` as a general access type (with
+:ada:`Component` as the designated subtype).
 
 It's worth mentioning that the :ada:`List` type and the anonymous
 :ada:`access Component` type aren't the same type, although they share the same
