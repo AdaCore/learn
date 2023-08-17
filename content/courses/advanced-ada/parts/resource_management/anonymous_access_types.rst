@@ -616,13 +616,14 @@ example that implements linked lists:
     private
 
        type Component is record
-          Value : T;
           Next  : access Component;
           --      ^^^^^^^^^^^^^^^^
           --       Self-reference
           --
           --       (The "Component" type is still
           --        incomplete at this point.)
+
+          Value : T;
        end record;
 
        type List is access all Component;
