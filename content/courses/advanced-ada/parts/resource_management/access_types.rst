@@ -4163,8 +4163,11 @@ Controlled type for access types
 In the previous code example, the :ada:`Destroy` procedure had to be called
 to deallocate the hidden access object. We could make sure that this
 deallocation happens automatically by using a controlled (or limited
-controlled) type. (We discuss controlled types
-:ref:`in another chapter <Adv_Ada_Finalization>`.)
+controlled) type. (We discuss controlled types in another chapter.)
+
+.. todo::
+
+    Add link to Adv_Ada_Finalization
 
 Let's adapt the previous example and declare :ada:`Info` as a limited
 controlled type:
