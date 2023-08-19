@@ -4050,26 +4050,236 @@ caller.
 Design strategies for access types
 ----------------------------------
 
-.. todo::
+Previously, we learned about
+:ref:`dangling references <Adv_Ada_Dangling_References>` and discussed the
+effects of
+:ref:`dereferencing them <Adv_Ada_Dereferencing_Dangling_References>`.
+Also, we've seen the relationship between
+:ref:`unchecked deallocation and dangling references <Adv_Ada_Unchecked_Deallocation_Dangling_References>`.
+Ensuring that all calls to :ada:`Free` for a specific access type will never
+cause dangling references can become an arduous task |mdash| if not impossible
+|mdash| if those calls are located in different parts of the source code.
 
-    Complete section!
+Although we used access types directly in the main application in many of the
+previous code examples from this chapter, this approach was in fact selected
+just for illustration purposes |mdash| i.e. to make the code look simpler. In
+general, however, we should avoid this approach. Instead, our recommendation is
+to encapsulate the access types in some form of abstraction. In this section,
+we discuss design strategies for access types that take this recommendation
+into account.
 
-    (See PR #752 for details.)
+Abstract data type for access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    It's not practical for the programmer to make every possible dangling
-    reference become null if the calls to Free are strewn throughout the code.
-    That means the suggested design is to not use Free in client code, but
-    instead hide its use within the bigger abstraction. That way all the
-    occurrences of the calls to Free are in one package, and the programmer of
-    that package then can prevent dangling references. For example, if we have
-    a bank account that involves dynamic allocation for some part of an
-    account, the bank account is a private type (or limited), and the access
-    values are hidden in the private part. Thus when an account is closed the
-    allocated memory can be freed without the possibility of leaving dangling
-    references. That will work as long as the reference cannot be copied when
-    copying bank account objects, in which case we'd want the type to be
-    limited as well as private. Or we'd make it a controlled type so that
-    Finalize can call Free.
+The simplest form of abstraction is of course an abstract data type. For
+example, we could declare a limited private type, which allows us to hide
+the access type and to avoid copies of references that could potentially
+become dangling references. (We discuss limited private types later
+:ref:`in another chapter <Adv_Ada_Limited_Private_Types>`.)
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Design_Strategies.Access_Type_Abstraction
+
+    package Access_Type_Abstraction is
+
+       type Info is limited private;
+
+       function Init (I : Integer) return Info;
+
+       function Copy (Obj : Info) return Info;
+
+       procedure Destroy (Obj : in out Info);
+
+       function To_Integer (Obj : Info)
+                            return Integer;
+
+    private
+
+       type Info is access Integer;
+
+    end Access_Type_Abstraction;
+
+    with Ada.Unchecked_Deallocation;
+
+    package body Access_Type_Abstraction is
+
+       function Init (I : Integer) return Info is
+       begin
+          return new Integer'(I);
+       end Init;
+
+       function Copy (Obj : Info) return Info is
+       begin
+           return Init (Obj.all);
+       end Copy;
+
+       procedure Destroy (Obj : in out Info) is
+          procedure Free is
+            new Ada.Unchecked_Deallocation
+              (Object => Integer,
+               Name   => Info);
+       begin
+          Free (Obj);
+       end Destroy;
+
+       function To_Integer (Obj : Info)
+                            return Integer is
+       begin
+          return Obj.all;
+       end To_Integer;
+
+    end Access_Type_Abstraction;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_Type_Abstraction;
+    use  Access_Type_Abstraction;
+
+    procedure Show_Access_Type_Abstraction is
+       Obj_1 : Info := Init (100);
+       Obj_2 : Info := Copy (Obj_1);
+    begin
+       Put_Line ("Obj_1 : " &
+                 To_Integer (Obj_1)'Image);
+       Put_Line ("Obj_2 : " &
+                 To_Integer (Obj_2)'Image);
+       Destroy (Obj_1);
+       Destroy (Obj_2);
+    end Show_Access_Type_Abstraction;
+
+In this example, we hide an access type in the :ada:`Info` type |mdash| a
+limited private type. We allocate an object of this type in the :ada:`Init`
+function and deallocate it in the :ada:`Destroy` procedure. Also, we make
+sure that the reference isn't copied in the :ada:`Copy` function |mdash|
+we only copy the designated value in this function. This strategy eliminates
+the possibility of dangling references, as each reference is encapsulated in
+an object of :ada:`Info` type.
+
+
+Controlled type for access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous code example, the :ada:`Destroy` procedure had to be called
+to deallocate the hidden access object. We could make sure that this
+deallocation happens automatically by using a controlled (or limited
+controlled) type. (We discuss controlled types
+:ref:`in another chapter <Adv_Ada_Finalization>`.)
+
+Let's adapt the previous example and declare :ada:`Info` as a limited
+controlled type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Design_Strategies.Access_Type_Limited_Controlled_Abstraction
+
+    with Ada.Finalization;
+
+    package Access_Type_Abstraction is
+
+       type Info is new
+         Ada.Finalization.Limited_Controlled
+           with private;
+
+       procedure Init (Obj : in out Info;
+                       I   :        Integer);
+
+       procedure Copy (To   : in out Info;
+                       From :        Info);
+
+       function To_Integer (Obj : Info)
+                            return Integer;
+
+    private
+
+       type Integer_Access is access Integer;
+
+       type Info is new
+         Ada.Finalization.Limited_Controlled with
+       record
+          IA : Integer_Access;
+       end record;
+
+       procedure Initialize (Obj : in out Info);
+       procedure Finalize (Obj : in out Info);
+
+    end Access_Type_Abstraction;
+
+    with Ada.Unchecked_Deallocation;
+
+    package body Access_Type_Abstraction is
+
+       procedure Initialize (Obj : in out Info) is
+       begin
+          --  Put_Line ("Initializing Info");
+          Obj.IA := new Integer'(0);
+       end Initialize;
+
+       procedure Finalize (Obj : in out Info) is
+          procedure Free is
+            new Ada.Unchecked_Deallocation
+              (Object => Integer,
+               Name   => Integer_Access);
+       begin
+          --  Put_Line ("Finalizing Info");
+          Free (Obj.IA);
+       end Finalize;
+
+       procedure Init (Obj : in out Info;
+                       I   :        Integer) is
+       begin
+          Obj.IA.all := I;
+       end Init;
+
+       procedure Copy (To   : in out Info;
+                       From :        Info) is
+       begin
+          To.IA.all := From.IA.all;
+       end Copy;
+
+       function To_Integer (Obj : Info)
+                            return Integer is
+       begin
+          return Obj.IA.all;
+       end To_Integer;
+
+    end Access_Type_Abstraction;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_Type_Abstraction;
+    use  Access_Type_Abstraction;
+
+    procedure Show_Access_Type_Abstraction is
+       Obj_1, Obj_2 : Info;
+    begin
+       Obj_1.Init (100);
+       Copy (To => Obj_2, From => Obj_1);
+
+       Put_Line ("Obj_1 : " &
+                 To_Integer (Obj_1)'Image);
+       Put_Line ("Obj_2 : " &
+                 To_Integer (Obj_2)'Image);
+    end Show_Access_Type_Abstraction;
+
+Of course, because we're using the
+:ada:`Limited_Controlled` type from the :ada:`Ada.Finalization` package,
+we had to adapt the prototype of the subprograms from the
+:ada:`Access_Type_Abstraction`. In this version of the code, we only have
+the allocation taking place in the :ada:`Init` procedure, but we don't have a
+:ada:`Destroy` procedure for deallocation: this call was moved to the
+:ada:`Finalize` procedure.
+
+Since objects of the :ada:`Info` type |mdash| such as :ada:`Obj_1` in the
+:ada:`Show_Access_Type_Abstraction` procedure |mdash| are now controlled, the
+:ada:`Finalize` procedure is automatically called when they get out of scope.
+In this procedure, which we override for the :ada:`Info` type, we perform the
+deallocation of the internal access object :ada:`IA`. (You may uncomment the
+calls to :ada:`Put_Line` in the body of the :ada:`Initialize` and
+:ada:`Finalize` subprograms to confirm that these subprograms are called in the
+background.)
+
+
+Access types to access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 .. _Adv_Ada_Access_To_Subprograms:
