@@ -2431,6 +2431,8 @@ Now that we've discussed the accessibility levels of this code example, let's
 see how the accessibility rules use those levels.
 
 
+.. _Adv_Ada_Accessibility_Rules_Operations:
+
 Operations on Access Types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -4311,9 +4313,202 @@ the :ada:`Valid_Work_Handler` type.
 Accessibility Rules and Access-To-Subprograms
 ---------------------------------------------
 
-.. todo::
+In general, the accessibility rules that we discussed
+:ref:`previously for access-to-objects <Adv_Ada_Accessibility_Levels_Intro>`
+also apply to access-to-subprograms. In this section, we discuss minor
+differences when applying those rules to access-to-subprograms.
 
-    Complete section!
+In our discussion about accessibility rules, we've looked into
+:ref:`accessibility levels <Adv_Ada_Accessibility_Levels>` and
+the :ref:`accessibility rules <Adv_Ada_Accessibility_Rules>` that are based on
+those levels. The same accessibility rules apply to access-to-subprograms.
+:ref:`As we said previously  <Adv_Ada_Accessibility_Rules_Operations>`,
+operations targeting objects at a *less-deep* level are illegal, as it's the
+case for subprograms as well:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Rules_Access_To_Subprograms.Access_To_Subprogram_Accessibility_Error_Less_Deep
+
+    package Access_To_Subprogram_Types is
+
+       type Access_To_Procedure is
+         access procedure (I : in out Integer);
+
+       type Access_To_Function is
+         access function (I : Integer) return Integer;
+
+    end Access_To_Subprogram_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    procedure Show_Access_To_Subprogram_Error is
+       Func : Access_To_Function;
+
+       Value : Integer := 0;
+    begin
+       declare
+          function Add_One (I : Integer)
+                            return Integer is
+            (I + 1);
+       begin
+          Func := Add_One'Access;
+          --  This assignment is illegal because the
+          --  Access_To_Function type is less deep
+          --  than Add_One.
+       end;
+
+       Put_Line ("Value: " & Value'Image);
+       Value := Func (Value);
+       Put_Line ("Value: " & Value'Image);
+    end Show_Access_To_Subprogram_Error;
+
+Obviously, we can correct this error by putting the :ada:`Add_One` function
+at the same level as the :ada:`Access_To_Function` type, i.e. at library
+level:
+
+.. code:: ada run_button main=show_access_to_subprogram_error.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Rules_Access_To_Subprograms.Access_To_Subprogram_Accessibility_Error_Less_Deep_Fix
+
+    package Access_To_Subprogram_Types is
+
+       type Access_To_Procedure is
+         access procedure (I : in out Integer);
+
+       type Access_To_Function is
+         access function (I : Integer) return Integer;
+
+    end Access_To_Subprogram_Types;
+
+    function Add_One (I : Integer) return Integer;
+
+    function Add_One (I : Integer) return Integer is
+    begin
+       return I + 1;
+    end Add_One;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    with Add_One;
+
+    procedure Show_Access_To_Subprogram_Error is
+       Func : Access_To_Function;
+
+       Value : Integer := 0;
+    begin
+       Func := Add_One'Access;
+
+       Put_Line ("Value: " & Value'Image);
+       Value := Func (Value);
+       Put_Line ("Value: " & Value'Image);
+    end Show_Access_To_Subprogram_Error;
+
+As a recommendation, resolving accessibility issue in the case of
+access-to-subprograms is best done by refactoring the subprograms of your
+source code |mdash| for example, moving subprograms to a different level.
+
+Unchecked Access
+~~~~~~~~~~~~~~~~
+
+Previously, we discussed about the
+:ref:`Unchecked_Access attribute <Adv_Ada_Unchecked_Access>`, which we can use
+to circumvent accessibility issues in specific cases for access-to-objects. We
+also said in that section that this attribute only exists for objects, not for
+subprograms. We can use the previous example to illustrate this limitation:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Rules_Access_To_Subprograms.Access_To_Subprogram_Accessibility_Error_Same_Lifetime
+
+    package Access_To_Subprogram_Types is
+
+       type Access_To_Procedure is
+         access procedure (I : in out Integer);
+
+       type Access_To_Function is
+         access function (I : Integer) return Integer;
+
+    end Access_To_Subprogram_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    procedure Show_Access_To_Subprogram_Error is
+       Func : Access_To_Function;
+
+       function Add_One (I : Integer)
+                return Integer is
+         (I + 1);
+
+       Value : Integer := 0;
+    begin
+       Func := Add_One'Access;
+
+       Put_Line ("Value: " & Value'Image);
+       Value := Func (Value);
+       Put_Line ("Value: " & Value'Image);
+    end Show_Access_To_Subprogram_Error;
+
+When we analyze the :ada:`Show_Access_To_Subprogram_Error` procedure, we see
+that the :ada:`Func` object and the :ada:`Add_One` function have the same
+lifetime. Therefore, in this very specific case, we could safely assign
+:ada:`Add_One'Access` to :ada:`Func` and call :ada:`Func` for :ada:`Value`.
+Due to the accessibility rules, however, this assignment is illegal.
+(Obviously, the accessibility issue here is that the
+:ada:`Access_To_Function` type has a potentially longer lifetime.)
+
+In the case of access-to-objects, we could use :ada:`Unchecked_Access` to
+enforce assignments that we consider safe after careful analysis. However,
+because this attribute isn't available for access-to-subprograms, the best
+solution is to move the subprogram to a level that allows the assignment to
+be legal, as we said before.
+
+.. admonition:: In the GNAT toolchain
+
+    GNAT offers an equivalent for :ada:`Unchecked_Access` that can be used for
+    subprograms: the :ada:`Unrestricted_Access` attribute. Note, however, that
+    this attribute is not portable.
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Rules_Access_To_Subprograms.Unrestricted_Access
+
+        package Access_To_Subprogram_Types is
+
+           type Access_To_Procedure is
+             access procedure (I : in out Integer);
+
+           type Access_To_Function is
+             access function (I : Integer) return Integer;
+
+        end Access_To_Subprogram_Types;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Access_To_Subprogram_Types;
+        use  Access_To_Subprogram_Types;
+
+        procedure Show_Access_To_Subprogram_Error is
+           Func : Access_To_Function;
+
+           function Add_One (I : Integer)
+                    return Integer is
+             (I + 1);
+
+           Value : Integer := 0;
+        begin
+           Func := Add_One'Unrestricted_Access;
+           --              ^^^^^^^^^^^^^^^^^^^
+           --       Allowing access to local function
+
+           Put_Line ("Value: " & Value'Image);
+           Value := Func (Value);
+           Put_Line ("Value: " & Value'Image);
+        end Show_Access_To_Subprogram_Error;
+
+    As we can see, the :ada:`Unrestricted_Access` attribute can be safely used
+    in this specific case to circumvent the accessibility rule limitation.
 
 
 ..
