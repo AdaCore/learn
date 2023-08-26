@@ -4327,6 +4327,7 @@ operations targeting objects at a *less-deep* level are illegal, as it's the
 case for subprograms as well:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Rules_Access_To_Subprograms.Access_To_Subprogram_Accessibility_Error_Less_Deep
+    :class: ada-expect-compile-error
 
     package Access_To_Subprogram_Types is
 
@@ -4420,6 +4421,7 @@ also said in that section that this attribute only exists for objects, not for
 subprograms. We can use the previous example to illustrate this limitation:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Rules_Access_To_Subprograms.Access_To_Subprogram_Accessibility_Error_Same_Lifetime
+    :class: ada-expect-compile-error
 
     package Access_To_Subprogram_Types is
 
