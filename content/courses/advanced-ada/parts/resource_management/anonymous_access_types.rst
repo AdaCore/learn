@@ -252,20 +252,553 @@ cover more specific details on anonymous access types.
 Anonymous Access-To-Object Types
 --------------------------------
 
+In the
+:ref:`previous chapter <Adv_Ada_Access_Types_Terminology>`, we introduced
+named access-to-object types and used those types throughout the chapter. Also,
+in the :ref:`previous section <Adv_Ada_Anonymous_Access_Types>`, we've seen
+some simple examples of anonymous access-to-object types:
+
+.. code-block:: ada
+
+    procedure Add_One (A : access Integer);
+    --                     ^ Anonymous access type
+
+    A : access Integer;
+    --  ^ Anonymous access type
+
+In addition to parameters and objects, we can use anonymous access types in
+discriminants, components of array and record types, renamings and function
+return types. (We discuss
+:ref:`anonymous access discriminants <Adv_Ada_Anonymous_Access_Discriminants>`
+and :ref:`anonymous access parameters <Adv_Ada_Anonymous_Access_Parameter>`
+later on.) Let's see a code example that includes all these cases:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.All_Anonymous_Access_To_Object_Types
+
+    package All_Anonymous_Access_To_Object_Types is
+
+       procedure Add_One (A : access Integer) is null;
+       --                     ^ Anonymous access type
+
+       AI : access Integer;
+       --  ^ Anonymous access type
+
+       type Rec (AI : access Integer) is private;
+       --             ^ Anonymous access type
+
+       type Access_Array is
+          array (Positive range <>) of
+            access Integer;
+       --   ^ Anonymous access type
+
+       Arr : array (1 .. 5) of access Integer;
+       --                      ^ Anonymous access type
+
+       AI_Renaming : access Integer renames AI;
+       --            ^ Anonymous access type
+
+       function Init_Access_Integer
+         return access Integer is (null);
+       --       ^ Anonymous access type
+
+    private
+
+       type Rec (AI : access Integer) is record
+       --             ^ Anonymous access type
+          Internal_AI : access Integer;
+       --               ^ Anonymous access type
+
+       end record;
+
+    end All_Anonymous_Access_To_Object_Types;
+
+In this example, we see multiple examples of anonymous access-to-object types:
+
+- as the :ada:`A` parameter of the :ada:`Add_One` procedure;
+
+- in the declaration of the :ada:`AI` access object;
+
+- as the :ada:`AI` discriminant of the :ada:`Rec` type;
+
+- as the component type of the :ada:`Access_Array` type;
+
+- as the component type of the :ada:`Arr` array;
+
+- in the :ada:`AI_Renaming` renaming;
+
+- as the return type of the :ada:`Init_Access_Integer`;
+
+- as the :ada:`Internal_AI` of component of the :ada:`Rec` type.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
 
-.. todo::
 
-    Complete section!
+Not Null Anonymous Access-To-Object Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As expected, :ada:`null` is a valid value for an anonymous access type.
+However, we can forbid :ada:`null` as a valid value by using
+:ada:`not null` in the anonymous access type declaration. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.All_Not_Null_Anonymous_Access_To_Object_Types
+
+    package All_Anonymous_Access_To_Object_Types is
+
+       procedure Add_One (A : not null access Integer)
+         is null;
+       --                     ^ Anonymous access type
+
+       I : aliased Integer;
+
+       AI : not null access Integer := I'Access;
+       --   ^ Anonymous access type
+       --                              ^^^^^^^^
+       --              Initialization required!
+
+       type Rec (AI : not null access Integer) is
+          private;
+       --             ^ Anonymous access type
+
+       type Access_Array is
+          array (Positive range <>) of
+            not null access Integer;
+       --   ^ Anonymous access type
+
+       Arr : array (1 .. 5) of
+         not null access Integer :=
+       --  ^ Anonymous access type
+           (others => I'Access);
+       --   ^^^^^^^^^^^^^^^^^^
+       --         Initialization required!
+
+       AI_Renaming : not null access Integer
+         renames AI;
+       --            ^ Anonymous access type
+
+       function Init_Access_Integer
+         return not null access Integer is (I'Access);
+       --       ^ Anonymous access type
+       --                                   ^^^^^^^^
+       --                   Initialization required!
+
+    private
+
+       type Rec (AI : not null access Integer) is
+       record
+       --             ^ Anonymous access type
+          Internal_AI : not null access Integer;
+       --               ^ Anonymous access type
+
+       end record;
+
+    end All_Anonymous_Access_To_Object_Types;
+
+As you might have noticed, we took the previous code example and used
+:ada:`not null` for each usage instance of the anonymous access type.
+In this sense, this version of the code example is very similar to previous
+one. Note, however, that we now have to explicitly initialize some elements
+to avoid the :ada:`Constraint_Error` exception being raised at runtime. This
+is the case for example for the :ada:`AI` access object:
+
+.. code-block:: ada
+
+    AI : not null access Integer := I'Access;
+
+If we hadn't initialized :ada:`AI` explicitly with :ada:`I'Access`, it would
+have been set to :ada:`null`, which would fail the :ada:`not null` constraint
+of the anonymous access type. Similarly, we also have to initialize the
+:ada:`Arr` array and return a valid access object for the
+:ada:`Init_Access_Integer` function.
 
 
 .. _Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types:
 
-
 Drawbacks of Anonymous Access-To-Object Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Anonymous access-to-object types have important drawbacks. For example, some
+features that are available for named access types aren't available for the
+anonymous access types. Also, most of the drawbacks are related to how
+anonymous access-to-object types can potentially make the allocation and
+deallocation quite complicated or even error-prone.
+
+For starters, some pool-related features aren't available for anonymous
+access-to-object types. For example, we cannot specify which pool is going to
+be used in the allocation of an anonymous access-to-object. In fact, the memory
+pool selection is compiler-dependent, so we cannot rely on an object being
+allocated in a specific pool when using :ada:`new` with an anonymous
+access-to-object type. (In contrast, as we know, each named access type has an
+associated pool, so objects allocated via :ada:`new` will be allocated on that
+pool.) Also, we cannot identify which pool was selected for the allocation of a
+specific object, so we don't have any information to use for the deallocation of
+that object.
+
+Because the pool selection is hidden from us, this makes the memory
+deallocation more complicated. For example, we cannot instantiate the
+:ada:`Ada.Unchecked_Deallocation` procedure for anonymous access types. Also,
+some of the methods we could use to circumvent this limitation are error-prone,
+as we discuss in this section.
+
+Also, storage-related features are available: specifying the storage size |mdash|
+especially, specifying that the access type has a storage size of zero |mdash|
+isn't possible.
+
+Missing features
+^^^^^^^^^^^^^^^^
+
+Let's see a code example that shows some of the features that aren't available
+for anonymous access-to-object types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Missing_Anonymous_Access_To_Object_Features
+
+    with Ada.Unchecked_Deallocation;
+
+    package Missing_Features is
+
+       --  We cannot specify which pool will be used
+       --  in the anonymous access-to-object
+       --  allocation; the pool is selected by the
+       --  compiler:
+       IA : access Integer := new Integer;
+
+       --
+       --  All the features below aren't available
+       --  for an anonymous access-to-object:
+       --
+
+       --  Having a specific storage pool associated
+       --  with the access type:
+       type Integer_Access is
+          access Integer;
+
+       --  Specifying a deallocation function for the
+       --  access type:
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Integer_Access);
+
+       --  Specifying a limited storage size for
+       --  the access type:
+       type Integer_Access_Store_128 is
+          access Integer
+            with Storage_Size => 128;
+
+       --  Limiting the storage size for the
+       --  access type to zero:
+       type Integer_Access_Store_0 is
+          access Integer
+            with Storage_Size => 0;
+
+    end Missing_Features;
+
+In the :ada:`Missing_Features` package, we see some of the features that we
+cannot use for the anonymous :ada:`access Integer` type, but that are available
+for equivalent named access types:
+
+- There's no specific memory pool associated with the access object :ada:`IA`.
+  In contrast the :ada:`Integer_Access` has an associated pool.
+
+- We cannot instantiate the :ada:`Ada.Unchecked_Deallocation` procedure for
+  the :ada:`access Integer` type. However, we can instantiate it for named
+  access types such as the :ada:`Integer_Access` type.
+
+- We cannot use the :ada:`Storage_Size` attribute for the :ada:`access Integer`
+  type, but we're allowed to use it with named access types, which we do in the
+  declaration of the :ada:`Integer_Access_Store_128` and
+  :ada:`Integer_Access_Store_0` types.
+
+
+Dangerous memory deallocation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We could make up for the absence of the :ada:`Ada.Unchecked_Deallocation`
+procedure for anonymous access-to-object types by converting those access
+objects (of anonymous access types) to a named type that has the same
+designated subtype. For example, if we have an access object :ada:`IA` of
+an anonymous :ada:`access Integer` type, we can convert it to the named
+:ada:`Integer_Access` type, provided this named access type is compatible
+with the anonymous access type, e.g.:
+
+.. code-block:: ada
+
+    type Integer_Access is access all Integer
+
+Let's see a complete code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Deallocation_Anonymous_Access_To_Object_Erronoeus
+
+    with Ada.Unchecked_Deallocation;
+
+    procedure Show_Dangerous_Deallocation is
+       type Integer_Access is
+          access all Integer;
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Integer_Access);
+
+       IA : access Integer;
+    begin
+       IA := new Integer;
+       IA.all := 30;
+
+       --  Potentially erroneous deallocation via type
+       --  conversion:
+       Free (Integer_Access (IA));
+
+    end Show_Dangerous_Deallocation;
+
+This example declares the :ada:`IA` access object of the anonymous
+:ada:`access Integer` type. After allocating an object for :ada:`IA` via
+:ada:`new`, we try to deallocate it by first converting it to the
+:ada:`Integer_Access` type, so that we can call the :ada:`Free` procedure to
+actually deallocate the object. Although this code compiles, it'll only work
+if both :ada:`access Integer` and :ada:`Integer_Access` types are using the
+same memory pool. Since we cannot really determine this, the result is
+potentially erroneous: it'll work if the compiler selected the same pool, but
+it'll fail otherwise.
+
+.. admonition:: Important
+
+    Because allocating memory for anonymous access types is potentially
+    dangerous, we can use the :ada:`No_Anonymous_Allocators` restriction
+    |mdash| which is available since Ada 2012 |mdash| to prevent this kind
+    of memory allocation being used in the code. For example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.No_Anonymous_Allocators
+
+        pragma Restrictions(No_Anonymous_Allocators);
+
+        procedure Show_Dangerous_Allocation is
+           IA : access Integer;
+        begin
+           IA := new Integer;
+           IA.all := 30;
+        end Show_Dangerous_Allocation;
+
+Possible solution using named access types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A better solution to avoid issues when allocating and deallocating memory
+for anonymous access-to-object types is to allocate the object using a known
+pool. As mentioned before, the memory pool associated with a named access
+type is well-defined, so we can use this kind of types for memory allocation.
+In fact, we can use a named memory type to allocate an object via :ada:`new`,
+and then associate this allocated object with the access object of anonymous
+access type.
+
+Let's see a code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Deallocation_Anonymous_Access_To_Object_1
+
+    with Ada.Unchecked_Deallocation;
+
+    procedure Show_Successful_Deallocation is
+
+       type Integer_Access is
+          access Integer;
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Integer,
+            Name   => Integer_Access);
+
+       IA       : access Integer;
+       Typed_IA : Integer_Access;
+
+    begin
+       Typed_IA := new Integer;
+       IA := Typed_IA;
+       IA.all := 30;
+
+       --  Deallocation of the access object that has
+       --  an associated type:
+       Free (Typed_IA);
+
+    end Show_Successful_Deallocation;
+
+In this example, all operations related to memory allocation are exclusively
+making use of the :ada:`Integer_Access` type, which is a named access type.
+In fact, :ada:`new Integer` allocates the object in the pool associated with
+the :ada:`Integer_Access` type, and the call to :ada:`Free` deallocates this
+object from that pool. Therefore, associating this object with the :ada:`IA`
+access object |mdash| in the :ada:`IA := Typed_IA` assignment |mdash| doesn't
+creates problems afterwards in the object's deallocation. (When calling
+:ada:`Free`, we only refer to the object of named access type, so the object
+is deallocated from a known pool.)
+
+Of course, a potential issue here is that :ada:`IA` becomes a
+:ref:`dangling reference <Adv_Ada_Dangling_References>` after the call to
+:ada:`Free`. Therefore, we can improve this solution by completely hiding
+the memory allocation and deallocation for the anonymous access types in
+subprograms |mdash| e.g. as part of a package. By doing so, we don't expose
+the named access type, thereby reducing the possibility of dangling references.
+
+In fact, we can generalize this approach with the following (generic) package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Hidden_Alloc_Dealloc_Anonymous_Access_To_Object
+
+    generic
+       type T is private;
+    package Hidden_Anonymous_Allocation is
+
+       function New_T
+         return not null access T;
+
+       procedure Free (Obj: access T);
+
+    end Hidden_Anonymous_Allocation;
+
+    with Ada.Unchecked_Deallocation;
+
+    package body Hidden_Anonymous_Allocation is
+
+       type T_Access is access all T;
+
+       procedure T_Access_Free is
+         new Ada.Unchecked_Deallocation
+           (Object => T,
+            Name   => T_Access);
+
+       function New_T
+         return not null access T is
+       begin
+          return T_Access'(new T);
+          --  Using allocation of the T_Access type:
+          --  object is allocated in T_Access's pool
+       end New_T;
+
+       procedure Free (Obj: access T) is
+          Tmp : T_Access := T_Access (Obj);
+       begin
+          T_Access_Free (Tmp);
+          --  Using deallocation procedure of the
+          --  T_Access type
+       end Free;
+
+    end Hidden_Anonymous_Allocation;
+
+In the generic :ada:`Hidden_Anonymous_Allocation` package, :ada:`New_T`
+allocates a new object internally and returns an anonymous access to this
+object. The :ada:`Free` procedure deallocates this object.
+
+In the body of the :ada:`Hidden_Anonymous_Allocation` package, we use the named
+access type :ada:`T_Access` to handle the actual memory allocation and
+deallocation. As expected, because those operations happen on the pool
+associated with the :ada:`T_Access` type, we don't have to worry about
+potential deallocation issues.
+
+Finally, we can instantiate this package for the type we want to have
+anonymous access types for, say a type named :ada:`Rec`. Then, when using
+the :ada:`Rec` type in the main subprogram, we can simply call the
+corresponding subprograms for memory allocation and deallocation. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Hidden_Alloc_Dealloc_Anonymous_Access_To_Object
+
+    with Hidden_Anonymous_Allocation;
+
+    package Info is
+
+       type Rec is private;
+
+       function New_Rec return not null access Rec;
+
+       procedure Free (Obj: access Rec);
+
+    private
+
+       type Rec is record
+          I : Integer;
+       end record;
+
+       package Rec_Allocation is new
+         Hidden_Anonymous_Allocation (T => Rec);
+
+       function New_Rec return not null access Rec
+         renames Rec_Allocation.New_T;
+
+       procedure Free (Obj: access Rec)
+         renames Rec_Allocation.Free;
+
+    end Info;
+
+    with Info; use Info;
+
+    procedure Show_Info_Allocation_Deallocation is
+       RA : not null access Rec := New_Rec;
+    begin
+       Free (RA);
+    end Show_Info_Allocation_Deallocation;
+
+In this example, we instantiate the :ada:`Hidden_Anonymous_Allocation` package
+in the :ada:`Info` package, which also defines the :ada:`Rec` type. We
+associate the  :ada:`New_T` and :ada:`Free` subprograms with the :ada:`Rec`
+type by using subprogram renaming. Finally, in the
+:ada:`Show_Info_Allocation_Deallocation` procedure, we use these subprograms
+to allocate and deallocate the type.
+
+Possible solution using the stack
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Another approach that we could consider to avoid memory deallocation issues
+for anonymous access-to-object types is by simply using the stack for the
+object allocation. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Deallocation_Anonymous_Access_To_Object_2
+
+    with Ada.Unchecked_Deallocation;
+
+    procedure Show_Automatic_Deallocation is
+       I  : aliased Integer;
+       --   ^ Allocating object on the stack
+
+       IA : access Integer;
+    begin
+       IA := I'Access;
+       --  Indirect allocation on the stack.
+
+       IA.all := 30;
+
+       --  Automatic deallocation at the end of the
+       --  procedure because the integer variable is
+       --  on the stack.
+    end Show_Automatic_Deallocation;
+
+In this case, we allocate the :ada:`I` object on the stack by simply declaring
+it. Then, we get access to it and assign it to the :ada:`IA` access object.
+
+With this approach, we're indirectly allocating an object on the stack for an
+anonymous access type. Also, because we know that the :ada:`I` is automatically
+deallocated when it gets out of scope, we don't have to worry about explicitly
+deallocating the object referred by :ada:`IA`.
+
+When to use anonymous access-to-objects types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In summary, anonymous access-to-object types have many drawbacks that often
+outweigh :ref:`their benefits <Adv_Ada_Anonymous_Access_Benefits>`. In fact,
+allocation for those types can quickly become very complicated. Therefore, in
+general, they're not a good alternative to named access type. Indeed, the
+difficulties that we've just seen might make them a much worse option than
+just using named access types instead.
+
+We might consider using anonymous access-to-objects types only in cases when we
+reach a point in our implementation work where using named access types becomes
+impossible |mdash| or when using them becomes even more complicated than
+equivalent solutions using anonymous access types. This scenario, however, is
+usually the exception rather than the rule. Thus, as a general guideline, we
+should always aim to use named access types.
+
+That being said, an important exception to this advice is when we're
+:ref:`interfacing to other languages <Adv_Ada_Anonymous_Access_Interfacing_Other_Languages>`.
+In this case, as we'll discuss later, using anonymous access-to-objects types
+can be significantly simpler (compared to named access types) without the
+drawbacks that we've just discussed.
 
 
 .. _Adv_Ada_Anonymous_Access_Discriminants:
