@@ -9,6 +9,8 @@ this chapter, we discuss further details about access types and techniques when
 using them. Before we dig into details, however, we're going to make sure
 we understand the terminology.
 
+.. _Adv_Ada_Access_Types_Terminology:
+
 Access types: Terminology
 -------------------------
 
