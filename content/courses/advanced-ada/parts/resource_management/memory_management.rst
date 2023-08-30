@@ -32,6 +32,9 @@ Address vs. access
     Complete section!
 
 
+
+.. _Adv_Ada_Finalization:
+
 Finalization
 ------------
 
