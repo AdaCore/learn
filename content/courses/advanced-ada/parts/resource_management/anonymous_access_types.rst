@@ -91,6 +91,8 @@ whenever possible. (Anonymous access-to-object types have
 :ref:`drawbacks that we discuss later <Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types>`.)
 
 
+.. _Adv_Ada_Anonymous_Access_Benefits:
+
 Benefits of anonymous access types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1448,6 +1450,8 @@ operations for tagged types. We discuss this
 
 
 .. _Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages:
+
+.. _Adv_Ada_Anonymous_Access_Interfacing_Other_Languages:
 
 Interfacing To Other Languages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
