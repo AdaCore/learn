@@ -28,14 +28,14 @@ module.exports = function(env) {
     plugins: [
       new ShellPlugin({
         onBuildStart:{
-          scripts: ['make cleanall -j4'],
+          scripts: ['make cleanall'],
           blocking: true,
           parallel: false
         },
         onBuildExit:{
-          scripts: ['make local -j4'],
+          scripts: ['make local'],
           blocking: false,
-          parallel: true
+          parallel: false
         },
         // dev=false here to force every build to trigger make, the default is
         // first build only.
