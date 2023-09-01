@@ -574,7 +574,7 @@ it'll fail otherwise.
     .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.No_Anonymous_Allocators
         :class: ada-expect-compile-error
 
-        pragma Restrictions(No_Anonymous_Allocators);
+        pragma Restrictions (No_Anonymous_Allocators);
 
         procedure Show_Dangerous_Allocation is
            IA : access Integer;
@@ -652,7 +652,7 @@ In fact, we can generalize this approach with the following (generic) package:
        function New_T
          return not null access T;
 
-       procedure Free (Obj: access T);
+       procedure Free (Obj : access T);
 
     end Hidden_Anonymous_Allocation;
 
@@ -675,7 +675,7 @@ In fact, we can generalize this approach with the following (generic) package:
           --  object is allocated in T_Access's pool
        end New_T;
 
-       procedure Free (Obj: access T) is
+       procedure Free (Obj : access T) is
           Tmp : T_Access := T_Access (Obj);
        begin
           T_Access_Free (Tmp);
@@ -711,7 +711,7 @@ example:
 
        function New_Rec return not null access Rec;
 
-       procedure Free (Obj: access Rec);
+       procedure Free (Obj : access Rec);
 
     private
 
@@ -725,7 +725,7 @@ example:
        function New_Rec return not null access Rec
          renames Rec_Allocation.New_T;
 
-       procedure Free (Obj: access Rec)
+       procedure Free (Obj : access Rec)
          renames Rec_Allocation.Free;
 
     end Info;
@@ -733,7 +733,7 @@ example:
     with Info; use Info;
 
     procedure Show_Info_Allocation_Deallocation is
-       RA : not null access Rec := New_Rec;
+       RA : constant not null access Rec := New_Rec;
     begin
        Free (RA);
     end Show_Info_Allocation_Deallocation;
@@ -753,8 +753,6 @@ for anonymous access-to-object types is by simply using the stack for the
 object allocation. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Deallocation_Anonymous_Access_To_Object_2
-
-    with Ada.Unchecked_Deallocation;
 
     procedure Show_Automatic_Deallocation is
        I  : aliased Integer;
