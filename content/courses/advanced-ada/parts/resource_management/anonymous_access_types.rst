@@ -572,6 +572,7 @@ it'll fail otherwise.
     of memory allocation being used in the code. For example:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.No_Anonymous_Allocators
+        :class: ada-expect-compile-error
 
         pragma Restrictions(No_Anonymous_Allocators);
 
