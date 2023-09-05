@@ -149,7 +149,7 @@ example, we could call the C function :ada:`Get_Value`:
            External_Name => "my_func";
 
        --  Imports function 'my_func' from C and
-       --  rename it to 'Get_Value'
+       --  renames it to 'Get_Value'
 
        V : int;
     begin
