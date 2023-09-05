@@ -430,7 +430,7 @@ looks like when using both indices and cursors:
 The Reference Manual requires that the worst-case complexity for
 accessing an element be O(log N).
 
-Another way of modifing elements of a vector is using a *process
+Another way of modifying elements of a vector is using a *process
 procedure*, which takes an individual element and does some processing on
 it.  You can call :ada:`Update_Element` and pass both a cursor and an access
 to the process procedure. For example:
