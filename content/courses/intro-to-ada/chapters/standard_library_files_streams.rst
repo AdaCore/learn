@@ -504,7 +504,7 @@ corrupted. Unfortunately, strong data typing doesn't help you in this
 case. Writing simple procedures for file I/O (as in the example above) may
 help ensuring that the file format is consistent.
 
-Like direct I/O, stream I/O supports also allows you to access any location
+Like direct I/O, stream I/O support also allows you to access any location
 in the file. However, when doing so, you need to be extremely careful that
 the position of the new index is consistent with the data types you're
 expecting.
