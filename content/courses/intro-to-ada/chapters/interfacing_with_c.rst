@@ -318,7 +318,7 @@ example, but this time have the counter incremented in Ada code:
 
     end C_API;
 
-The variable is then increment in :ada:`My_Func`:
+The variable is then incremented in :ada:`My_Func`:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Vars
 
