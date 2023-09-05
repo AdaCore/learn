@@ -286,7 +286,7 @@ As we see by running the application, the value of the counter is the
 number of times :c:`my_func` was called.
 
 We can use the :ada:`External_Name` aspect to give a different name
-for the variable in the Ada application in the same we do for
+for the variable in the Ada application in the same way we do for
 subprograms.
 
 Using Ada variables in C
