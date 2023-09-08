@@ -3018,6 +3018,71 @@ Here, we're converting from the :ada:`L1_Integer_Access` type to the
 :ada:`L1_B_Integer_Access`, which are both at the same level.
 
 
+.. _Adv_Ada_Accessibility_Rules_Access_Values_As_Parameters:
+
+Accessibility rules on parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that the accessibility rules also apply to access values as subprogram
+parameters. For example, compilation fails for this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Checks_Parameters
+    :class: ada-expect-compile-error
+
+    package Names is
+
+       type Name is access all String;
+
+       type Constant_Name is
+         access constant String;
+
+       procedure Show (N : Constant_Name);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    --  with Ada.Characters.Handling;
+    --  use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Show (N : Constant_Name) is
+       begin
+          --  for I in N'Range loop
+          --     N (I) := To_Lower (N (I));
+          --  end loop;
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       S : aliased String := "John";
+    begin
+       Show (S'Access);
+    end Show_Names;
+
+In this case, the :ada:`S'Access` cannot be used as the actual parameter for
+the :ada:`N` parameter of the :ada:`Show` procedure because it's in a deeper
+level. If we allocate the string via :ada:`new`, however, the code compiles
+as expected:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Checks_Parameters
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       S : Name := new String'("John");
+    begin
+       Show (Constant_Name (S));
+    end Show_Names;
+
+This version of the code works because both object and access object have the same level.
+
+
 .. _Adv_Ada_Dangling_References:
 
 Dangling References
