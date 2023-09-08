@@ -33,7 +33,7 @@ When we compare this example with the previous one, we see that the declaration
 an access object of this anonymous type.
 
 To be more precise, :ada:`A : access Integer` is an
-:ref:`access parameter <Adv_Ada_Anonymous_Access_Parameter>` and it's
+:ref:`access parameter <Adv_Ada_Access_Parameters>` and it's
 specifying an
 :ref:`anonymous access-to-object type <Adv_Ada_Anonymous_Access_To_Object_Types>`.
 Another flavor of anonymous access types are
@@ -760,10 +760,10 @@ using anonymous access types in the declaration of the :ada:`B` and :ada:`A`
 components.
 
 
-.. _Adv_Ada_Anonymous_Access_Parameter:
+.. _Adv_Ada_Access_Parameters:
 
-Anonymous Access parameters
----------------------------
+Access parameters
+-----------------
 
 
 Interfacing To Other Languages
