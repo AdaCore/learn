@@ -2100,6 +2100,10 @@ number of coefficients, as this information is automatically available from the
 array initialization |mdash| via the allocation of the :ada:`Data` array for
 the :ada:`Coefficients` type.
 
+Note that the :ada:`Coefficients` type is defined as :ada:`access constant`.
+We discuss :ref:`access-to-constant types <Adv_Ada_General_Access_Modifiers>`
+in more details later on.
+
 This is the adapted :ada:`Process` procedure:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Ragged_Arrays.Ragged_Table
