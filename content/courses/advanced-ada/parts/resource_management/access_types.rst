@@ -1524,6 +1524,10 @@ part of the generic :ada:`Linked_Lists` package. We use this incomplete type to
 declare the access type :ada:`List`, which is then used as a self-reference in
 the :ada:`Next` component of the :ada:`Component` type.
 
+Note that we're using the :ada:`List` type
+:ref:`as a parameter <Adv_Ada_Parameters_As_Access_Values>` for the
+:ada:`Append_Front`, :ada:`Append_Rear` and :ada:`Show` procedures.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
