@@ -866,7 +866,7 @@ In addition to
 we can use access types for the parameter of a subprograms. For example, the
 :ada:`N` parameter of the :ada:`Show` procedure below has an access type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names
 
     package Names is
 
