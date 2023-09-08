@@ -1241,7 +1241,8 @@ have it as a limited private type instead:
 
        function Init (S : String) return Name;
 
-       function Equal (N1, N2 : Name) return Boolean;
+       function Equal (N1, N2 : Name)
+                       return Boolean;
 
        procedure Show (N : Name)
          with Post => Equal (N'Old = N);
@@ -1253,7 +1254,8 @@ have it as a limited private type instead:
        function Init (S : String) return Name is
          (new String'(S));
 
-       function Equal (N1, N2 : Name) return Boolean is
+       function Equal (N1, N2 : Name)
+                       return Boolean is
          (N1.all = N2.all);
 
     end Names;
@@ -1309,23 +1311,27 @@ change the internal state of the actual parameter.
 
            function Init (S : String) return Name;
 
-           function To_Constant_Name (N : Name)
-                                      return Constant_Name;
+           function To_Constant_Name
+             (N : Name)
+              return Constant_Name;
 
            procedure Show (N : Constant_Name);
 
         private
 
-           type Name is access String;
+           type Name is
+             access String;
 
-           type Constant_Name is access constant String;
+           type Constant_Name is
+             access constant String;
 
            function Init (S : String) return Name is
              (new String'(S));
 
-           function To_Constant_Name (N : Name)
-                                      return Constant_Name is
-             (Constant_Name (N));
+           function To_Constant_Name
+             (N : Name)
+              return Constant_Name is
+                (Constant_Name (N));
 
         end Names;
 
