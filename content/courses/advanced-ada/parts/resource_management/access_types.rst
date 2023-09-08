@@ -2097,8 +2097,8 @@ for the :ada:`Calc_Table`:
 Now, we aren't wasting memory space because each data component has the right
 size that is required for each quality level. Also, we don't need to store the
 number of coefficients, as this information is automatically available from the
-array initialization (via the allocation of the :ada:`Data` array for the
-:ada:`Coefficients` type).
+array initialization |mdash| via the allocation of the :ada:`Data` array for
+the :ada:`Coefficients` type.
 
 This is the adapted :ada:`Process` procedure:
 
