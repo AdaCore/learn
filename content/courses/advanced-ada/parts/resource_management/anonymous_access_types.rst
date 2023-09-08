@@ -1848,6 +1848,60 @@ is the case in the :ada:`L0_AO := L1_IA` and the
 access objects doesn't impose additional hurdles.
 
 
+.. _Adv_Ada_Accessibility_Rules_Access_Parameters:
+
+Accessibility rules on access parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous chapter, we saw that the accessibility rules also apply to
+:ref:`access values as subprograms parameters <Adv_Ada_Accessibility_Rules_Access_Values_As_Parameters>`.
+In the case of access parameters, the rules are a bit less strict (as you may
+generally expect for anonymous access types), and the accessibility rules are
+checked at runtime. This allows use to use access values that would be illegal
+in the case of named access types because of their accessibility levels.
+
+Let's adapt a previous code example to make use of access parameters:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Checks_Parameters
+
+    package Names is
+
+       procedure Show (N : access constant String);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    --  with Ada.Characters.Handling;
+    --  use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Show (N : access constant String) is
+       begin
+          --  for I in N'Range loop
+          --     N (I) := To_Lower (N (I));
+          --  end loop;
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       S : aliased String := "John";
+    begin
+       Show (S'Access);
+    end Show_Names;
+
+As we've seen in the previous chapter, compilation fails when we use named
+access types in this code example. In the case of access parameters, using
+:ada:`S'Access` doesn't make the compilation fail, nor does the accessibility
+check fail at runtime because :ada:`S` is still in scope when we call the
+:ada:`Show` procedure.
+
+
 .. _Adv_Ada_Anonymous_Access_To_Subprograms:
 
 Anonymous Access-To-Subprograms
