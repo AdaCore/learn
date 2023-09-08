@@ -912,6 +912,169 @@ especially C: this is our next topic.
 Interfacing To Other Languages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+We can use access parameters to interface to other languages. This can be
+particularly useful when interfacing to C code that makes use of pointers.
+For example, let's assume we want to call the :c:`add_one` function below in
+our Ada implementation:
+
+.. code:: c manual_chop no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    !operations_c.h
+    void add_one(int *p_i);
+
+    !operations_c.c
+    void add_one(int *p_i)
+    {
+        *p_i = *p_i + 1;
+    }
+
+We could map the :c:`int *` parameter of :ada:`add_one` to
+:ada:`access Integer` in the Ada specification:
+
+.. code-block:: ada
+
+    procedure Add_One (IA : access Integer)
+      with Import, Convention => C;
+
+This is a complete code example:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    package Operations is
+
+       procedure Add_One (IA : access Integer)
+         with Import, Convention => C;
+
+    end Operations;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Operations;  use Operations;
+
+    procedure Show_Operations is
+       I : aliased Integer := 42;
+    begin
+       Put_Line (I'Image);
+       Add_One (I'Access);
+       Put_Line (I'Image);
+    end Show_Operations;
+
+Once again, we can replace access parameters with simpler types by using the
+appropriate parameter mode. In this case, we could replace
+:ada:`access Integer` by :ada:`aliased in out Integer`. This is the modified
+version of the code:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    package Operations is
+
+       procedure Add_One
+        (IA : aliased in out Integer)
+           with Import, Convention => C;
+
+    end Operations;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Operations;  use Operations;
+
+    procedure Show_Operations is
+       I : aliased Integer := 42;
+    begin
+       Put_Line (I'Image);
+       Add_One (I);
+       Put_Line (I'Image);
+    end Show_Operations;
+
+However, there are situations where aliased objects cannot be used. For
+example, suppose we want to allocate memory inside a C function. In this case,
+the pointer to that memory block must be mapped to an access type in Ada.
+
+Let's extend the previous C code example and introduce the :c:`alloc_integer`
+and :c:`dealloc_integer` functions, which allocate and deallocate an integer
+value:
+
+.. code:: c manual_chop no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    !operations_c.h
+    int * alloc_integer();
+
+    void dealloc_integer(int *p_i);
+
+    void add_one(int *p_i);
+
+    !operations_c.c
+    #include <stdlib.h>
+
+    int * alloc_integer()
+    {
+        return malloc(sizeof(int));
+    }
+
+    void dealloc_integer(int *p_i)
+    {
+        free (p_i);
+    }
+
+    void add_one(int *p_i)
+    {
+        *p_i = *p_i + 1;
+    }
+
+In this case, we really have to use access types to interface to these C
+functions. In fact, we need an access result type to interface to the
+:c:`alloc_integer()` function, and an access parameter in the case of the
+:c:`dealloc_integer()` function. This is the corresponding specification in
+Ada:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    package Operations is
+
+       function Alloc_Integer return access Integer
+         with Import, Convention => C;
+
+       procedure Dealloc_Integer (IA : access Integer)
+         with Import, Convention => C;
+
+       procedure Add_One
+        (IA : aliased in out Integer)
+           with Import, Convention => C;
+
+    end Operations;
+
+Note that we're still using an aliased integer type for the :ada:`Add_One`
+procedure, while we're using access types for the other two subprograms.
+
+Finally, as expected, we can use this specification in a test application:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Operations;  use Operations;
+
+    procedure Show_Operations is
+       I : access Integer := Alloc_Integer;
+    begin
+       I.all := 42;
+       Put_Line (I.all'Image);
+
+       Add_One (I.all);
+       Put_Line (I.all'Image);
+
+       Dealloc_Integer (I);
+    end Show_Operations;
+
+In this application, we get a C pointer from the :c:`alloc_integer` function
+and encapsulate it in an Ada access type, which we then assign to :ada:`I`. In
+the last line of the procedure, we call :ada:`Dealloc_Integer` and pass
+:ada:`I` to it, which deallocates the memory block indicated by the C pointer.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`__
+
 
 User-Defined References
 -----------------------
