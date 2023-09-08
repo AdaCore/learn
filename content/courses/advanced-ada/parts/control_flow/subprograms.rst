@@ -412,7 +412,9 @@ Aliased parameters
 
 When a parameter is specified as *aliased*, it is always passed by
 reference, independently of the type we're using. In this sense, we can use this
-keyword to circumvent the rules mentioned so far.
+keyword to circumvent the rules mentioned so far. (We discuss more about
+:ref:`aliasing <Adv_Ada_Aliasing>` and
+:ref:`aliased parameters <Adv_Ada_Access_Types_Aliased_Parameters>` later on.)
 
 Let's rewrite a previous code example that has a parameter of elementary type
 and change it to *aliased*:
@@ -453,9 +455,26 @@ and change it to *aliased*:
        Update_Value (A, A'Address);
     end Show_By_Copy_By_Ref_Params;
 
-As we can see, :ada:`A` is now passed by reference. (Note that we can only pass
-aliased objects to aliased parameters. We discuss aliased objects later
-:ref:`in another chapter <Adv_Ada_Aliased_Objects>`.)
+As we can see, :ada:`A` is now passed by reference.
+
+Note that we can only pass aliased objects to aliased parameters. If we try to
+pass a non-aliased object, we get a compilation error:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
+    :class: ada-expect-compile-error
+
+    with Machine_X; use Machine_X;
+
+    procedure Show_By_Copy_By_Ref_Params is
+       A : Integer := 5;
+    begin
+       Update_Value (A, A'Address);
+    end Show_By_Copy_By_Ref_Params;
+
+Again, we discuss more about
+:ref:`aliased parameters <Adv_Ada_Access_Types_Aliased_Parameters>` and
+:ref:`aliased objects <Adv_Ada_Aliased_Objects>` later on in the context of
+access types.
 
 
 Parameter Associations
