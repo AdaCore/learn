@@ -765,6 +765,149 @@ components.
 Access parameters
 -----------------
 
+In the previous chapter, we talked about
+:ref:`parameters as access values <Adv_Ada_Parameters_As_Access_Values>`. As
+you might have expected, we can also use anonymous access types as parameters
+of a subprogram. However, they're limited to be :ada:`in` parameters of a
+subprogram or return type of a function (also called the access result type):
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Names
+
+    package Names is
+
+       function Init (S1, S2 : String)
+                      return access String;
+       --             ^^^^^^^^^^^^^^^^^^^^
+       --  Anonymous access type as the access
+       --  result type.
+
+       procedure Show (N : access constant String);
+       --                  ^^^^^^^^^^^^^^^^^^^^^^
+       --  Anonymous access type as a parameter type.
+
+    end Names;
+
+In this example, we have a string as the access result type of the
+:ada:`Init` function, and another string as the access parameter of the
+:ada:`Show` procedure.
+
+This is the complete code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Names
+
+    package Names is
+
+       function Init (S1, S2 : String)
+                      return access String;
+
+       procedure Show (N : access constant String);
+
+    private
+
+       function Init (S1, S2 : String)
+                      return access String is
+         (new String'(S1 & "-" & S2));
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Names is
+
+       procedure Show (N : access constant String) is
+       begin
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       N : access String := Init ("Lily", "Ann");
+    begin
+       Show (N);
+    end Show_Names;
+
+Note that we're not using the :ada:`in` parameter mode in the
+:ada:`Show` procedure above. Usually, this parameter mode can be omitted,
+as it is the default parameter mode |mdash| :ada:`procedure P (I : Integer)`
+is the same as :ada:`procedure P (I : in Integer)`. However, in the case of
+the :ada:`Show` procedure, the :ada:`in` parameter mode isn't just optionally
+absent. In fact, for access parameters, the parameter mode is always implied
+as :ada:`in`, so writing it explicitly is actually forbidden. In other words,
+we can only write :ada:`N : access String` or
+:ada:`N : access constant String`, but we cannot write
+:ada:`N : in access String` or :ada:`N : in access constant String`.
+
+.. admonition:: For further reading...
+
+    When we discussed
+    :ref:`parameters as access values <Adv_Ada_Parameters_As_Access_Values>`
+    in the previous chapter, we saw how we can simply use different
+    parameter modes to write a program instead of using access types.
+    Basically, to implement the same functionality, we just replaced the access
+    types by selecting the correct parameter modes instead and used *simpler*
+    data types.
+
+    Let's do the same exercise again, this time by adapting the previous code
+    example with anonymous access types:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Names_String
+
+        package Names is
+
+           function Init (S1, S2 : String)
+                          return String;
+
+           procedure Show (N : String);
+
+        private
+
+           function Init (S1, S2 : String)
+                          return String is
+             (S1 & "-" & S2);
+
+        end Names;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Names is
+
+           procedure Show (N : String) is
+           begin
+              Put_Line ("Name: " & N);
+           end Show;
+
+        end Names;
+
+        with Names; use Names;
+
+        procedure Show_Names is
+           N : String := Init ("Lily", "Ann");
+        begin
+           Show (N);
+        end Show_Names;
+
+    Although we're using simple strings instead of access types in this version
+    of the code example, we're still getting a similar behavior. However, there
+    is a small, yet important difference in the way the string returned by
+    :ada:`Init` is being allocated: while the previous implementation (which
+    was using an access result type) was allocating the string on the heap,
+    we're now allocating the string on the stack.
+
+Later on, we talk about the
+:ref:`accessibility rules in the case of access parameters <Adv_Ada_Accessibility_Rules_Access_Parameters>`.
+
+In general, we should avoid access parameters whenever possible and simply use
+objects and parameter modes directly, as it makes the design simpler and less
+error-prone. The only exception is when we're interfacing to other languages,
+especially C: this is our next topic.
+
+.. admonition:: In the Ada Reference Manual
+
+    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`__
+
 
 Interfacing To Other Languages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
