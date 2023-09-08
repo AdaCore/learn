@@ -2039,12 +2039,12 @@ address we're specifying (instead of assigning registers for those components).
 Aliased parameters
 ~~~~~~~~~~~~~~~~~~
 
-In addition to objects and components, we can declare aliased parameters. This
-allows us to get access to those parameters in the body of a subprogram. We do
-this by using the :ada:`aliased` keyword before the parameter mode.
+In addition to objects and components, we can declare
+:ref:`aliased parameters <Adv_Ada_Aliased_Parameters>`, as we already discussed
+in an earlier chapter. As we mentioned there, aliased parameters are always
+passed by reference, independently of the type we're using.
 
-The parameter mode indicates which type we must use for the access type, as
-we'll discuss soon:
+The parameter mode indicates which type we must use for the access type:
 
 +------------------------+--------------------+
 | Parameter mode         | Type               |
@@ -2056,7 +2056,8 @@ we'll discuss soon:
 | :ada:`aliased in out`  | Access-to-variable |
 +------------------------+--------------------+
 
-Let's see an example:
+Using aliased parameters in a subprogram allows us to get access to those
+parameters in the body of that subprogram. Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Aliased_Rec_Component
 
