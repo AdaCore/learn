@@ -4071,6 +4071,9 @@ Design strategies for access types
 Access to subprograms
 ---------------------
 
+So far in this chapter, we focused mainly on access-to-objects. However, we can
+use access types to subprograms. This is the topic of this section.
+
 Static vs. dynamic calls
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
