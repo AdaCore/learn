@@ -1612,6 +1612,7 @@ Now, we can simply loop over the coefficients by writing
 :ada:`for J in Calc_Table (Q)'Range loop`, as each element of :ada:`Calc_Table`
 automatically has the correct range.
 
+.. _Adv_Ada_Aliasing:
 
 Aliasing
 --------
@@ -1752,6 +1753,9 @@ In the next sections, we discuss these features in more details.
 
     - :arm22:`3.3.1 Object Declarations <3-3-1>`
     - :arm22:`3.10 Access Types <3-10>`
+
+
+.. _Adv_Ada_General_Access_Modifiers:
 
 General access modifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2029,6 +2033,8 @@ address we're specifying (instead of assigning registers for those components).
 
     - :arm22:`3.6 Array Types <3-6>`
 
+
+.. _Adv_Ada_Access_Types_Aliased_Parameters:
 
 Aliased parameters
 ~~~~~~~~~~~~~~~~~~
@@ -2765,6 +2771,8 @@ encapsulating access types in well-designed abstract data types.
 
     - :arm22:`Unchecked Access Value Creation <13-10>`
 
+
+.. _Adv_Ada_Unchecked_Deallocation:
 
 Unchecked Deallocation
 ----------------------
