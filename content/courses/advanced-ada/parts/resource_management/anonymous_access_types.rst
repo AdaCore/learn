@@ -1566,8 +1566,7 @@ We can declare subprogram parameters using anonymous types:
        is
           I : Integer := 0;
        begin
-          --  P (I);
-          P.all (I);
+          P (I);
        end Proc;
 
     end Anonymous_Access_To_Subprogram;
