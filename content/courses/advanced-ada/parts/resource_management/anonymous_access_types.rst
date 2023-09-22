@@ -1625,7 +1625,7 @@ Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
 In fact, in terms of usage, anonymous access-to-subprogram types are very
 similar to named access-to-subprogram types. The major differences can be found
 in the corresponding
-:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Anonymous_Access_To_Subprograms>`.
+:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms>`.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -1951,7 +1951,7 @@ memory leak can occur.
 
 Also, anonymous access-to-subprogram types can be easier to use than named
 access-to-subprogram types because of their less strict
-:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Anonymous_Access_To_Subprograms>`.
+:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms>`.
 Some of the accessibility issues we might encounter when using named
 access-to-subprogram types can be solved by declaring them as anonymous types.
 (We discuss the accessibility rules of anonymous access-to-subprogram types in
