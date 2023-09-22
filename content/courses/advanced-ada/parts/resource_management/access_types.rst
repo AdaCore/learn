@@ -3563,9 +3563,10 @@ the :ada:`P` procedure by simply passing :ada:`I` as a parameter. In this case,
 :ada:`P` is automatically dereferenced. We may, however, explicitly dereference
 :ada:`P` by writing :ada:`P.all (I)`.
 
-Next, we can get access to a subprogram by using the :ada:`Access` attribute:
+Before we use this package, let's implement a simple procedure that we'll use
+later on:
 
-.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
 
     procedure Add_Ten (I : in out Integer);
 
@@ -3573,6 +3574,11 @@ Next, we can get access to a subprogram by using the :ada:`Access` attribute:
     begin
        I := I + 10;
     end Add_Ten;
+
+Now, we can get access to a subprogram by using the :ada:`Access` attribute and
+pass it as an actual parameter:
+
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
 
     with Access_To_Subprogram_Params;
     use  Access_To_Subprogram_Params;
