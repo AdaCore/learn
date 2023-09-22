@@ -3675,6 +3675,117 @@ subprogram call, or in a subprogram call. In the code example, we're passing
 :ada:`P` (in the :ada:`P (Some_Int)` calls).
 
 
+Components of access-to-subprogram type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to declaring subprogram parameters and objects of
+access-to-subprogram types, we can declare components of these types. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    package Access_To_Subprogram_Types is
+
+       type Access_To_Procedure is
+         access procedure (I : in out Integer);
+
+       type Access_To_Function is
+         access function (I : Integer) return Integer;
+
+       type Access_To_Procedure_Array is
+         array (Positive range <>) of
+           Access_To_Procedure;
+
+       type Access_To_Function_Array is
+         array (Positive range <>) of
+           Access_To_Function;
+
+       type Rec_Access_To_Procedure is record
+          AP : Access_To_Procedure;
+       end record;
+
+       type Rec_Access_To_Function is record
+          AF : Access_To_Function;
+       end record;
+
+    end Access_To_Subprogram_Types;
+
+Here, the access-to-procedure type :ada:`Access_To_Procedure` is used as a
+component of the array type :ada:`Access_To_Procedure_Array`  and the record
+type :ada:`Rec_Access_To_Procedure`. Similarly, the access-to-function type
+:ada:`Access_To_Function` type is used as a component of the array type
+:ada:`Access_To_Function_Array` and the record type
+:ada:`Rec_Access_To_Function`.
+
+Let's see two test applications using these types. First, let's use the
+:ada:`Access_To_Procedure_Array` array type in a test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    with Add_Ten;
+    with Add_Twenty;
+
+    procedure Show_Access_To_Subprograms is
+       PA : constant
+              Access_To_Procedure_Array (1 .. 2) :=
+                (Add_Ten'Access,
+                 Add_Twenty'Access);
+
+       Some_Int : Integer := 0;
+    begin
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       for I in PA'Range loop
+          PA (I) (Some_Int);
+          Put_Line ("Some_Int: " & Some_Int'Image);
+       end loop;
+    end Show_Access_To_Subprograms;
+
+Here, we declare the :ada:`PA` array and use the access to the :ada:`Add_Ten`
+and :ada:`Add_Twenty` procedures as its components. We can call any of these
+procedures by simply specifying the index of the component, e.g.
+:ada:`PA (2)`. Once we specify the procedure we want to use, we simply pass
+the parameters, e.g.: :ada:`PA (2) (Some_Int)`.
+
+Now, let's use the :ada:`Rec_Access_To_Procedure` record type in a test
+application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    with Add_Ten;
+    with Add_Twenty;
+
+    procedure Show_Access_To_Subprograms is
+       RA       : Rec_Access_To_Procedure;
+       Some_Int : Integer := 0;
+    begin
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       RA := (AP => Add_Ten'Access);
+       RA.AP (Some_Int);
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       RA := (AP => Add_Twenty'Access);
+       RA.AP (Some_Int);
+       Put_Line ("Some_Int: " & Some_Int'Image);
+    end Show_Access_To_Subprograms;
+
+Here, we declare two record aggregates where we specify the :ada:`AP`
+component, e.g.: :ada:`(AP => Add_Ten'Access)`, which indicates the
+access-to-subprogram we want to use. We can call the subprogram by simply
+accessing the :ada:`AP` component, i.e.: :ada:`RA.AP`.
+
+
 Selecting subprograms
 ~~~~~~~~~~~~~~~~~~~~~
 
