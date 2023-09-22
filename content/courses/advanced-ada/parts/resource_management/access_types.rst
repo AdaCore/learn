@@ -3440,8 +3440,6 @@ If :ada:`X (Index)` occurs inside :ada:`Process_Array`, there is no need
 to check that :ada:`Index` is in range, because the check is pushed to the
 caller.
 
-.. _Adv_Ada_Access_To_Subprograms:
-
 .. _Adv_Ada_Design_Strategies_Access_Types:
 
 Design strategies for access types
@@ -3468,6 +3466,8 @@ Design strategies for access types
     limited as well as private. Or we'd make it a controlled type so that
     Finalize can call Free.
 
+
+.. _Adv_Ada_Access_To_Subprograms:
 
 Access to subprograms
 ---------------------
