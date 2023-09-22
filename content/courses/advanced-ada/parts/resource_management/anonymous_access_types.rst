@@ -1549,16 +1549,17 @@ Anonymous Access-To-Subprograms
 
 We can declare subprogram parameters using anonymous types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
 
-    package Access_To_Subprogram_Params is
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
+
+    package Anonymous_Access_To_Subprogram is
 
        procedure Proc
          (P : access procedure (I : in out Integer));
 
-    end Access_To_Subprogram_Params;
+    end Anonymous_Access_To_Subprogram;
 
-    package body Access_To_Subprogram_Params is
+    package body Anonymous_Access_To_Subprogram is
 
        procedure Proc
          (P : access procedure (I : in out Integer))
@@ -1569,7 +1570,9 @@ We can declare subprogram parameters using anonymous types:
           P.all (I);
        end Proc;
 
-    end Access_To_Subprogram_Params;
+    end Anonymous_Access_To_Subprogram;
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
 
     procedure Add_Ten (I : in out Integer);
 
@@ -1578,18 +1581,27 @@ We can declare subprogram parameters using anonymous types:
        I := I + 10;
     end Add_Ten;
 
-    with Access_To_Subprogram_Params;
-    use  Access_To_Subprogram_Params;
+    procedure Add_Twenty (I : in out Integer);
+
+    procedure Add_Twenty (I : in out Integer) is
+    begin
+       I := I + 20;
+    end Add_Twenty;
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
+
+    with Anonymous_Access_To_Subprogram;
+    use  Anonymous_Access_To_Subprogram;
 
     with Add_Ten;
 
-    procedure Show_Access_To_Subprograms is
+    procedure Show_Anonymous_Access_To_Subprograms is
     begin
        Proc (Add_Ten'Access);
        --            ^ Getting access to Add_Ten
        --              procedure and passing it
        --              to Proc
-    end Show_Access_To_Subprograms;
+    end Show_Anonymous_Access_To_Subprograms;
 
 
 .. admonition:: In the Ada Reference Manual
