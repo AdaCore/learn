@@ -3916,6 +3916,130 @@ respectively, as the :ada:`IP` discriminant. The procedure we specified here
 is then called inside a call to the :ada:`Process` procedure.
 
 
+Access-to-subprograms as formal parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use access-to-subprograms types when declaring formal parameters. For
+example, let's revisit the :ada:`Custom_Processing` package from the previous
+section and convert it into a generic package.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    generic
+       type T is private;
+
+       --
+       --  Declaring formal access-to-subprogram
+       --  type:
+       --
+       type T_Processing is
+         access procedure (Element : in out T);
+
+       --
+       --  Declaring formal access-to-subprogram
+       --  parameter:
+       --
+       Proc : T_Processing;
+
+       with function Image_T (Element : T)
+                              return String;
+    package Gen_Custom_Processing is
+
+       type Rec is private;
+
+       procedure Init (R     : in out Rec;
+                       Value :        T);
+
+       procedure Process (R : in out Rec);
+
+       procedure Show (R : Rec);
+
+    private
+
+       type Rec is record
+          Comp : T;
+       end record;
+
+    end Gen_Custom_Processing;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Gen_Custom_Processing is
+
+       procedure Init (R     : in out Rec;
+                       Value :        T) is
+       begin
+          R.Comp := Value;
+       end Init;
+
+       procedure Process (R : in out Rec) is
+       begin
+          Proc (R.Comp);
+       end Process;
+
+       procedure Show (R : Rec) is
+       begin
+          Put_Line ("R.Comp = "
+                    & Image_T (R.Comp));
+       end Show;
+
+    end Gen_Custom_Processing;
+
+In this version of the procedure, instead of declaring :ada:`Proc` as a
+discriminant of the :ada:`Rec` record, we're declaring it as a formal parameter
+of the :ada:`Gen_Custom_Processing` package. Also, we're declaring an
+access-to-subprogram type (:ada:`T_Processing`) as a formal parameter. (Note
+that, in contrast to these two parameters that we've just mentioned,
+:ada:`Image_T` is not a formal access-to-subprogram parameter: it's actually
+just a formal subprogram.)
+
+We then instantiate the :ada:`Gen_Custom_Processing` package in our test
+application:
+
+.. code:: ada run_button main=show_access_to_subprogram_as_formal_parameter.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Gen_Custom_Processing;
+
+    with Add_Ten;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure
+      Show_Access_To_Subprogram_As_Formal_Parameter
+    is
+       type Integer_Processing is
+         access procedure (I : in out Integer);
+
+       package Custom_Processing is new
+         Gen_Custom_Processing
+           (T            => Integer,
+            T_Processing => Integer_Processing,
+            --              ^^^^^^^^^^^^^^^^^^
+            --              access-to-subprogram type
+            Proc         => Add_Ten'Access,
+            --              ^^^^^^^^^^^^^^^^^^
+            --              access-to-subprogram
+            Image_T      => Integer'Image);
+       use Custom_Processing;
+
+       R_Add_Ten  : Rec;
+
+    begin
+       Init (R_Add_Ten,  1);
+
+       Put_Line ("---- R_Add_Ten ----");
+       Show (R_Add_Ten);
+
+       Put_Line ("Calling Process procedure...");
+       Process (R_Add_Ten);
+       Show (R_Add_Ten);
+    end Show_Access_To_Subprogram_As_Formal_Parameter;
+
+Here, we instantiate the :ada:`Gen_Custom_Processing` package as
+:ada:`Custom_Processing` and specify the access-to-subprogram type and the
+access-to-subprogram.
+
+
 Selecting subprograms
 ~~~~~~~~~~~~~~~~~~~~~
 
