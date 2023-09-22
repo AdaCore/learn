@@ -1932,6 +1932,32 @@ won't repeat this discussion here. If anything in this code example is still
 unclear to you, make sure to revisit that section from the previous chapter.
 
 
+Application of anonymous access-to-subprogram types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In general, there isn't much that speaks against using anonymous
+access-to-subprogram types. We can say, for example, that they're much more
+useful than
+:ref:`anonymous access-to-objects types <Adv_Ada_Anonymous_Access_To_Object_Types>`,
+which have
+:ref:`many drawbacks <Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types>` |mdash|
+as we discussed earlier.
+
+There isn't much to be concerned when using anonymous access-to-subprogram
+types. For example, we cannot allocate or deallocate a subprogram. As a
+consequence, we won't have storage management issues affecting these types
+because the access to those subprograms will always be available and no
+memory leak can occur.
+
+Also, anonymous access-to-subprogram types can be easier to use than named
+access-to-subprogram types because of their less strict
+:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Anonymous_Access_To_Subprograms>`.
+Some of the accessibility issues we might encounter when using named
+access-to-subprogram types can be solved by declaring them as anonymous types.
+(We discuss the accessibility rules of anonymous access-to-subprogram types in
+the next section.)
+
+
 .. _Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms:
 
 Accessibility Rules and Anonymous Access-To-Subprograms
