@@ -3573,6 +3573,8 @@ later on:
        I := I + 10;
     end Add_Ten;
 
+.. _Adv_Ada_Access_To_Subprogram_Params_Example:
+
 Now, we can get access to a subprogram by using the :ada:`Access` attribute and
 pass it as an actual parameter:
 
