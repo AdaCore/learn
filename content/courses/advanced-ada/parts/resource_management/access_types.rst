@@ -3786,6 +3786,136 @@ access-to-subprogram we want to use. We can call the subprogram by simply
 accessing the :ada:`AP` component, i.e.: :ada:`RA.AP`.
 
 
+Access-to-subprogram as discriminant types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As you might expect, we can use access-to-subprogram types when declaring
+discriminants. In fact, when we were talking about
+:ref:`discriminants as access values <Adv_Ada_Discriminants_As_Access_Values>`
+earlier on, we used access-to-object types in our code examples, but we could
+have used access-to-subprogram types as well. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    package Custom_Processing is
+
+       --  Declaring an access type:
+       type Integer_Processing is
+         access procedure (I : in out Integer);
+
+       --  Declaring a discriminant with this
+       --  access type:
+       type Rec (IP : Integer_Processing) is
+         private;
+
+       procedure Init (R     : in out Rec;
+                       Value :        Integer);
+
+       procedure Process (R : in out Rec);
+
+       procedure Show (R : Rec);
+
+    private
+
+       type Rec (IP : Integer_Processing) is
+       record
+          I : Integer := 0;
+       end record;
+
+    end Custom_Processing;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Custom_Processing is
+
+       procedure Init (R     : in out Rec;
+                       Value :        Integer) is
+       begin
+          R.I := Value;
+       end Init;
+
+       procedure Process (R : in out Rec) is
+       begin
+          R.IP (R.I);
+          --  ^^^^^^
+          --  Calling procedure that we specified as
+          --  the record's discriminant
+       end Process;
+
+       procedure Show (R : Rec) is
+       begin
+          Put_Line ("R.I = "
+                    & Integer'Image (R.I));
+       end Show;
+
+    end Custom_Processing;
+
+In this example, we declare the access-to-subprogram type
+:ada:`Integer_Processing`, which we use as the :ada:`IP` discriminant of the
+:ada:`Rec` type. In the :ada:`Process` procedure, we call the :ada:`IP`
+procedure that we specified as the record's discriminant (:ada:`R.IP (R.I)`).
+
+Before we look at a test application for this package, let's implement
+another small procedure:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    procedure Mult_Two (I : in out Integer);
+
+    procedure Mult_Two (I : in out Integer) is
+    begin
+       I := I * 2;
+    end Mult_Two;
+
+Now, let's look at the test application:
+
+.. code:: ada run_button main=show_access_to_subprogram_discriminants.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    with Custom_Processing; use Custom_Processing;
+
+    with Add_Ten;
+    with Mult_Two;
+
+    procedure Show_Access_To_Subprogram_Discriminants
+    is
+
+       R_Add_Ten  : Rec (IP => Add_Ten'Access);
+       --                ^^^^^^^^^^^^^^^^^^^^
+       --       Using access-to-subprogram as a
+       --       discriminant
+
+       R_Mult_Two : Rec (IP => Mult_Two'Access);
+       --                ^^^^^^^^^^^^^^^^^^^^^
+       --       Using access-to-subprogram as a
+       --       discriminant
+
+    begin
+       Init (R_Add_Ten,  1);
+       Init (R_Mult_Two, 2);
+
+       Put_Line ("---- R_Add_Ten ----");
+       Show (R_Add_Ten);
+
+       Put_Line ("Calling Process procedure...");
+       Process (R_Add_Ten);
+       Show (R_Add_Ten);
+
+       Put_Line ("---- R_Mult_Two ----");
+       Show (R_Mult_Two);
+
+       Put_Line ("Calling Process procedure...");
+       Process (R_Mult_Two);
+       Show (R_Mult_Two);
+    end Show_Access_To_Subprogram_Discriminants;
+
+In this procedure, we declare the :ada:`R_Add_Ten` and :ada:`R_Mult_Two` of
+:ada:`Rec` type and specify the access to :ada:`Add_Ten` and :ada:`Mult_Two`,
+respectively, as the :ada:`IP` discriminant. The procedure we specified here
+is then called inside a call to the :ada:`Process` procedure.
+
+
 Selecting subprograms
 ~~~~~~~~~~~~~~~~~~~~~
 
