@@ -1547,8 +1547,13 @@ access objects doesn't impose additional hurdles.
 Anonymous Access-To-Subprograms
 -------------------------------
 
-We can declare subprogram parameters using anonymous types:
+In the previous chapter, we talked about
+:ref:`named access-to-subprogram types <Adv_Ada_Access_To_Subprograms>`. Now,
+we'll see that the anonymous version of those types isn't much different from
+the named version.
 
+Let's start our discussion by declaring a subprogram parameter using an
+anonymous access-to-procedure type:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
 
@@ -1571,6 +1576,16 @@ We can declare subprogram parameters using anonymous types:
 
     end Anonymous_Access_To_Subprogram;
 
+In this example, we use the anonymous
+:ada:`access procedure (I : in out Integer)` type as a parameter of the
+:ada:`Proc` procedure. Note that we need an identifier in the declaration:
+we cannot leave :ada:`I` out and write
+:ada:`access procedure (in out Integer)`.
+
+Before we look at a test application that makes use of the
+:ada:`Anonymous_Access_To_Subprogram` package, let's implement two simple
+procedures that we'll use later on:
+
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
 
     procedure Add_Ten (I : in out Integer);
@@ -1587,6 +1602,8 @@ We can declare subprogram parameters using anonymous types:
        I := I + 20;
     end Add_Twenty;
 
+Finally, this is our test application:
+
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
 
     with Anonymous_Access_To_Subprogram;
@@ -1602,14 +1619,17 @@ We can declare subprogram parameters using anonymous types:
        --              to Proc
     end Show_Anonymous_Access_To_Subprograms;
 
+Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
+:ada:`Proc` procedure. Note that this implementation is not different from the
+:ref:`example for named access-to-subprogram types <Adv_Ada_Access_To_Subprogram_Params_Example>`.
+In fact, in terms of usage, anonymous access-to-subprogram types are very
+similar to named access-to-subprogram types. The major differences can be found
+in the corresponding
+:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Anonymous_Access_To_Subprograms>`.
 
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
-
-.. todo::
-
-    Complete section!
 
 
 .. _Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms:
