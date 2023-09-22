@@ -3603,6 +3603,78 @@ Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
     - :arm22:`3.10 Access Types <3-10>`
 
 
+Objects of access-to-subprogram type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous example, the :ada:`Proc` procedure had a parameter of
+access-to-subprogram type. In addition to parameters, we can of course declare
+*objects* of access-to-subprogram types as well. For example, we can extend
+our previous test application and declare an object :ada:`P` of
+access-to-subprogram type. Before we do so, however, let's implement another
+small procedure that we'll use later on:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    procedure Add_Twenty (I : in out Integer);
+
+    procedure Add_Twenty (I : in out Integer) is
+    begin
+       I := I + 20;
+    end Add_Twenty;
+
+In addition to :ada:`Add_Ten`, we've implemented the :ada:`Add_Twenty`
+procedure, which we use in our extended test application:
+
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    with Access_To_Subprogram_Params;
+    use  Access_To_Subprogram_Params;
+
+    with Add_Ten;
+    with Add_Twenty;
+
+    procedure Show_Access_To_Subprograms is
+       P        : Access_To_Procedure;
+       Some_Int : Integer := 0;
+    begin
+       P := Add_Ten'Access;
+       --           ^ Getting access to Add_Ten
+       --             procedure and assigning it
+       --             to P
+
+       Proc (P);
+       --    ^ Passing access-to-subprogram as an
+       --      actual parameter
+
+       P (Some_Int);
+       --  ^ Using access-to-subprogram object in a
+       --    subprogram call
+
+       P := Add_Twenty'Access;
+       --              ^ Getting access to Add_Twenty
+       --                procedure and assigning it
+       --                to P
+
+       Proc (P);
+       P (Some_Int);
+    end Show_Access_To_Subprograms;
+
+In the :ada:`Show_Access_To_Subprograms` procedure,
+we see the declaration of our access-to-subprogram object :ada:`P` (of
+:ada:`Access_To_Procedure` type). We get access to the :ada:`Add_Ten` procedure
+and assign it to :ada:`P`, and we then do the same for the :ada:`Add_Twenty`
+procedure.
+
+We can use an access-to-subprogram object either as the actual parameter of a
+subprogram call, or in a subprogram call. In the code example, we're passing
+:ada:`P` as the actual parameter of the :ada:`Proc` procedure
+(in the :ada:`Proc (P)` calls), and we're calling the subprogram assigned to
+:ada:`P` (in the :ada:`P (Some_Int)` calls).
+
+
 Selecting subprograms
 ~~~~~~~~~~~~~~~~~~~~~
 
