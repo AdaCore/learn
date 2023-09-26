@@ -318,7 +318,7 @@ before. By running this program, we see that the CPU time is significantly
 lower than the 5 seconds we've seen before. This is because the
 :ada:`delay` statement doesn't require much CPU time.  The results will be
 different if we change the implementation of
-:ada:`Computational_Intensive_App` to use a mathematical functions in a long
+:ada:`Computational_Intensive_App` to use a mathematical function in a long
 loop. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_Math

@@ -149,7 +149,7 @@ example, we could call the C function :ada:`Get_Value`:
            External_Name => "my_func";
 
        --  Imports function 'my_func' from C and
-       --  rename it to 'Get_Value'
+       --  renames it to 'Get_Value'
 
        V : int;
     begin
@@ -286,7 +286,7 @@ As we see by running the application, the value of the counter is the
 number of times :c:`my_func` was called.
 
 We can use the :ada:`External_Name` aspect to give a different name
-for the variable in the Ada application in the same we do for
+for the variable in the Ada application in the same way we do for
 subprograms.
 
 Using Ada variables in C
@@ -318,7 +318,7 @@ example, but this time have the counter incremented in Ada code:
 
     end C_API;
 
-The variable is then increment in :ada:`My_Func`:
+The variable is then incremented in :ada:`My_Func`:
 
 .. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Vars
 
