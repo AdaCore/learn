@@ -120,6 +120,10 @@
     "extends": "@istanbuljs/nyc-config-typescript",
     "check-coverage": true,
     "all": true,
+    "branches": ">75",
+    "lines": ">80",
+    "functions": ">80",
+    "statements": ">80",
     "include": [
       "src/**/*.ts"
     ],
