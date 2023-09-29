@@ -42,3 +42,6 @@ export const MACHINE_BUSY_LABEL =
 export const CONSOLE_OUTPUT_LABEL = 'Console Output';
 
 export const CLI_FILE = 'cli.txt';
+
+export const COMPILER_SWITCH_REMOVE_HELP_MESSAGE =
+'Click on this message to remove it.';
