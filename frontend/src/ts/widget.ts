@@ -364,7 +364,8 @@ class Widget {
       });
 
       b.addEventListener('click', () => {
-        d.innerHTML = switchName + ': ' + b.title;
+        d.innerHTML = '<b>' + switchName + '</b>: ' +
+            b.title;
         d.classList.remove('disabled');
       });
     }
