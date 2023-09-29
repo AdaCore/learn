@@ -272,6 +272,11 @@ div {
     font-size: 0.85em;
 }
 
+.compiler-switch-help-info-click-remove {
+    background-color: $color-settingsbar-bg;
+    font-size: 0.70em;
+}
+
 div {
     &.file {
         display: none;

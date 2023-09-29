@@ -365,7 +365,11 @@ class Widget {
 
       b.addEventListener('click', () => {
         d.innerHTML = '<b>' + switchName + '</b>: ' +
-            b.title;
+            b.title + '<br/>' +
+            '<div class="compiler-switch-help-info-click-remove">(' +
+            Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE +
+            ')</div>';
+
         d.classList.remove('disabled');
       });
     }
