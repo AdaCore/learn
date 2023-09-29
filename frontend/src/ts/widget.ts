@@ -159,6 +159,7 @@ class Widget {
         tabbedView = 'false';
       }
       cookies.set('tabbed_view', tabbedView, {expires: 3650});
+      this.setTabbedView(tabSetting.checked);
 
       // Current approach: just reload the page to
       // set the correct theme for all widgets.
@@ -182,6 +183,7 @@ class Widget {
         theme = 'dark';
       }
       cookies.set('theme', theme, {expires: 3650});
+      this.setTheme(theme);
 
       // Current approach: just reload the page to
       // set the correct theme for all widgets.
