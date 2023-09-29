@@ -396,10 +396,11 @@ describe('Widget', () => {
     });
 
     describe('Settings Bar', () => {
+      let editorDiv: HTMLElement;
       let editor: ace.Editor;
 
       before(() => {
-        const editorDiv = getElemById(root.id + '.editors.editor');
+        editorDiv = getElemById(root.id + '.editors.editor');
         editor = ace.edit(editorDiv);
       });
 
@@ -413,9 +414,25 @@ describe('Widget', () => {
       });
 
       it('should have a checkbox that switches tab setting', () => {
-        // const box = getElemById(root.id + '.settings-bar.tab-setting') as
-        //     HTMLInputElement;
-        // expect.fail('Test not implemented.');
+        const nonTabbedEditorDiv: HTMLElement = getElemById(root.id + '.editors.non-tabbed-editor');
+        const box = getElemById(root.id + '.settings-bar.tab-setting') as
+            HTMLInputElement;
+
+        const origIsTabbedView : boolean = !editorDiv.hidden;
+        expect(nonTabbedEditorDiv.hidden).to.equal(origIsTabbedView);
+
+        box.checked = !box.checked;
+        triggerEvent(box, 'change');
+        expect(editorDiv.hidden).to.equal(origIsTabbedView);
+        expect(nonTabbedEditorDiv.hidden).to.not.equal(origIsTabbedView);
+
+        //  Test hiding / showing buttons for tabbed view
+        const tabs = getElemById(root.id + '.tab');
+        const headers = getElemsByTag(tabs, 'button');
+
+        for (const h of headers) {
+          expect(h.hidden).to.equal(origIsTabbedView);
+        }
       });
 
       it('should have a button that resets the editor', () => {
