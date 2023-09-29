@@ -11,7 +11,7 @@ export const DOWNLOAD_MAINTENANCE =
 // const SETTINGS_TOOLTIP = 'Modify settings for this editor';
 
 export const SETTINGS_TABBED_EDITOR_LABEL =
-'Enable tabbed editor view for this editor';
+'Use tabbed editor view';
 
 export const SETTINGS_THEME_EDITOR_LABEL =
 'Use the dark theme';

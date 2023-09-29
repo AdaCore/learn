@@ -9628,6 +9628,11 @@ typedoc@^0.24.8:
     minimatch "^9.0.0"
     shiki "^0.14.1"
 
+typescript-cookies@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/typescript-cookies/-/typescript-cookies-0.0.5.tgz#538b00cce4de2c256b5d22f39b6b2dbcdb6c3c92"
+  integrity sha512-J+3lR5z3qokjiVSktlMoXXVwIPBETBdiALxR1jqNlQLBEZB9pQj+SJRexlw2CudIVVaMpFZYtizjtW+hlxz+yQ==
+
 typescript@>=5.1.6:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"

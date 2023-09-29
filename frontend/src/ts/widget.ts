@@ -1,3 +1,5 @@
+import cookies from 'typescript-cookies';
+
 import {Area, OutputArea, LabContainer} from './areas';
 import {Editor, EditorTheme} from './editor';
 import {getElemsByClass, getElemById, getElemsByTag}
@@ -141,45 +143,49 @@ class Widget {
       });
     }
 
+    // Get tabbed view status from cookie
+    const cookieTabbedView = cookies.get('tabbed_view') as string;
+    const tabbedView = (cookieTabbedView != 'false');
+
     // attach handlers to the settings bar items
     const tabSetting =
       this.getElem('settings-bar', 'tab-setting') as HTMLInputElement;
-    tabSetting.checked = true;
+    tabSetting.checked = tabbedView;
+    this.setTabbedView(tabbedView);
+
     tabSetting.addEventListener('change', () => {
-      const isTabbed: boolean = tabSetting.checked;
-
-      const editorContainer =
-        this.getElem('editors', 'editor');
-      const nontabbedEditorContainer =
-        this.getElem('editors', 'non-tabbed-editor');
-
-      //  Show / hide editor containers
-      editorContainer.hidden = ! isTabbed;
-      nontabbedEditorContainer.hidden = isTabbed;
-
-      //  Show / hide buttons (for tabbed view)
-      const tab = this.getElem('tab');
-      const headers = getElemsByTag(tab, 'button');
-      for (const h of headers) {
-        h.hidden = ! isTabbed;
+      let tabbedView = 'true';
+      if (!tabSetting.checked) {
+        tabbedView = 'false';
       }
+      cookies.set('tabbed_view', tabbedView, {expires: 3650});
 
-      // Ask editor to refresh ACE editor
-      this.editor.refresh(isTabbed);
+      // Current approach: just reload the page to
+      // set the correct theme for all widgets.
+      location.reload();
     });
 
     this.initCompilerSwitches();
 
+    // Get selected theme from cookie
+    const cookieTheme = cookies.get('theme') as string;
+
     const themeSetting =
       this.getElem('settings-bar', 'theme-setting') as HTMLInputElement;
+    // Set checkbox according to value from cookie
+    themeSetting.checked = (cookieTheme == 'dark');
+    this.setTheme(cookieTheme);
+
     themeSetting.addEventListener('change', () => {
-      let theme = EditorTheme.Light;
+      let theme = 'light';
       if (themeSetting.checked) {
-        theme = EditorTheme.Dark;
+        theme = 'dark';
       }
-      for (const t of this.viewMap.values()) {
-        t.editor.setTheme(theme);
-      }
+      cookies.set('theme', theme, {expires: 3650});
+
+      // Current approach: just reload the page to
+      // set the correct theme for all widgets.
+      location.reload();
     });
 
     const resetButton =
@@ -374,6 +380,49 @@ class Widget {
       });
     }
   }
+
+  /**
+   * Set the editor theme
+   *
+   * @param {string} themeStr - the theme for the editor
+   */
+  private setTheme(themeStr : string) : void {
+    let theme = EditorTheme.Light;
+    if (themeStr == 'dark') {
+      theme = EditorTheme.Dark;
+    }
+
+    for (const t of this.viewMap.values()) {
+      t.editor.setTheme(theme);
+    }
+  }
+
+  /**
+   * Set status for tabbed view of editor
+   *
+   * @param {string} isTabbed - use tabbed view
+   */
+  private setTabbedView(isTabbed : boolean) : void {
+    const editorContainer =
+      this.getElem('editors', 'editor');
+    const nontabbedEditorContainer =
+      this.getElem('editors', 'non-tabbed-editor');
+
+    //  Show / hide editor containers
+    editorContainer.hidden = ! isTabbed;
+    nontabbedEditorContainer.hidden = isTabbed;
+
+    //  Show / hide buttons (for tabbed view)
+    const tab = this.getElem('tab');
+    const headers = getElemsByTag(tab, 'button');
+    for (const h of headers) {
+      h.hidden = ! isTabbed;
+    }
+
+    // Ask editor to refresh ACE editor
+    this.editor.refresh(isTabbed);
+  }
+
 
   /**
    * Gets an element by its id inside the current widget layout
