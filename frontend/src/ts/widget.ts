@@ -299,9 +299,9 @@ class Widget {
     const compilerSwitchesSetting =
       this.getElem('settings-bar', 'compiler-switches');
 
-    const compilerSwitches =
+    const compilerSwitchEntries =
       compilerSwitchesSetting.getElementsByClassName(
-          'compiler-switch') as HTMLCollectionOf<HTMLInputElement>;
+          'compiler-switch-entry') as HTMLCollectionOf<HTMLDivElement>;
 
     const rawUsedSwitches = this.container.dataset.switches as string;
 
@@ -315,7 +315,16 @@ class Widget {
       ['-gnatyM50', '-gnatyM80'],
     ];
 
-    for (const sw of compilerSwitches) {
+    for (const swe of compilerSwitchEntries) {
+      const sw : HTMLInputElement =
+        swe.getElementsByClassName(
+            'compiler-switch')[0] as HTMLInputElement;
+      const swHelpSpan : HTMLSpanElement =
+        swe.getElementsByClassName(
+            'compiler-switch-help')[0] as HTMLSpanElement;
+      const b : HTMLButtonElement =
+        swHelpSpan.getElementsByTagName('button')[0] as HTMLButtonElement;
+
       const switchName = sw.name;
       sw.checked = usedSwitches['Compiler'].includes(switchName) ||
         defaultSwitches.includes(switchName);
@@ -330,7 +339,10 @@ class Widget {
         for (const mutuallyExclSw of allMutuallyExclSw) {
           if (mutuallyExclSw.includes(switchName)) {
             // 1. Deactivate all mutually exclusive switches
-            for (const sw2 of compilerSwitches) {
+            for (const swe2 of compilerSwitchEntries) {
+              const sw2 : HTMLInputElement =
+                swe2.getElementsByClassName(
+                    'compiler-switch')[0] as HTMLInputElement;
               if (mutuallyExclSw.includes(sw2.name)) {
                 sw2.checked = false;
               }
@@ -339,6 +351,21 @@ class Widget {
             sw.checked = isChecked;
           }
         }
+      });
+
+      const d =
+        compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-help-info')[0];
+      d.addEventListener('click', () => {
+        if (! d.classList.contains('disabled')) {
+          d.innerHTML = '';
+          d.classList.add('disabled');
+        }
+      });
+
+      b.addEventListener('click', () => {
+        d.innerHTML = switchName + ': ' + b.title;
+        d.classList.remove('disabled');
       });
     }
   }

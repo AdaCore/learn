@@ -248,6 +248,29 @@ pre.widget {
     }
 }
 
+div {
+    .compiler-switch-entry {
+        overflow: hidden;
+    }
+
+    .compiler-switch-name {
+        float: left;
+    }
+
+    .compiler-switch-help {
+        float: right;
+    }
+
+    .compiler-switches-entries {
+        padding: 10px;
+        transition: 1.0s;
+    }
+}
+
+.compiler-switch-help-info {
+    background-color: $color-settingsbar-bg;
+    font-size: 0.85em;
+}
 
 div {
     &.file {

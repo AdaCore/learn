@@ -48,11 +48,24 @@
                 Switches
             </button>
             <div id="{{ w.id }}.settings-bar.compiler-switches" class="dropdown-content compiler-switches">
-                {% for sw in w.allowed_switches['Compiler'] %}
-                    <label title="{{ w.switch_description[sw] }}" >
-                      <input id="{{ w.id }}.settings-bar.compiler-switches.{{ sw }}" type="checkbox" name="{{ sw }}" class="checkbox compiler-switch">{{ sw }}
-                    </label>
-                {% endfor %}
+                <div class="compiler-switches-entries">
+                  {% for sw in w.allowed_switches['Compiler'] %}
+                    <div class="compiler-switch-entry">
+                      <span class="compiler-switch-name">
+                        <label>
+                          <input id="{{ w.id }}.settings-bar.compiler-switches.{{ sw }}" type="checkbox" name="{{ sw }}" class="checkbox compiler-switch">{{ sw }}
+                        </label>
+                      </span>
+                      <span class="compiler-switch-help">
+                        <button id="{{ w.id }}.settings-bar.compiler-switches-help.{{ sw }}" type="button" title="{{ w.switch_description[sw] }}">
+                          <span class="fa fa-question-circle"></span>
+                        </button>
+                      </span>
+                    </div>
+                  {% endfor %}
+                  </div>
+                  <label class="compiler-switch-help-info disabled">
+                  </label>
             </div>
         </div>
 
