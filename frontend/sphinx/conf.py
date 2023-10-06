@@ -229,10 +229,13 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 #
 html_theme_options = {
     'logo_only': True,
+#    'analytics_id': '',
+#    'analytics_anonymize_ip': False,
     'display_version': False,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',
+#    'style_nav_header_background': 'white',
     # Toc options
     'collapse_navigation': False,
     'sticky_navigation': False,
