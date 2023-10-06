@@ -56,7 +56,7 @@ def get_file_from_conf_ini(path_to_file):
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018 – 2022, AdaCore'
+copyright = u'2018 – 2023, AdaCore. All rights reserved.'
 author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
@@ -240,6 +240,8 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+
+html_show_sphinx = False
 
 html_logo = "img/logo.svg"
 
