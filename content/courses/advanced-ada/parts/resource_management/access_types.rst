@@ -3670,9 +3670,9 @@ procedure.
 
 We can use an access-to-subprogram object either as the actual parameter of a
 subprogram call, or in a subprogram call. In the code example, we're passing
-:ada:`P` as the actual parameter of the :ada:`Proc` procedure
-(in the :ada:`Proc (P)` calls), and we're calling the subprogram assigned to
-:ada:`P` (in the :ada:`P (Some_Int)` calls).
+:ada:`P` as the actual parameter of the :ada:`Proc` procedure in the
+:ada:`Proc (P)` calls. Also, we're calling the subprogram assigned to
+(designated by the current value of) :ada:`P` in the :ada:`P (Some_Int)` calls.
 
 
 Components of access-to-subprogram type
