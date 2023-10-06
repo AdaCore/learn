@@ -4407,7 +4407,7 @@ level:
        Put_Line ("Value: " & Value'Image);
     end Show_Access_To_Subprogram_Error;
 
-As a recommendation, resolving accessibility issue in the case of
+As a recommendation, resolving accessibility issues in the case of
 access-to-subprograms is best done by refactoring the subprograms of your
 source code |mdash| for example, moving subprograms to a different level.
 
