@@ -56,7 +56,7 @@ def get_file_from_conf_ini(path_to_file):
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018 – 2022, AdaCore'
+copyright = u'2018 – 2023, AdaCore. All rights reserved'
 author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
@@ -229,10 +229,13 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 #
 html_theme_options = {
     'logo_only': True,
+#    'analytics_id': '',
+#    'analytics_anonymize_ip': False,
     'display_version': False,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',
+#    'style_nav_header_background': 'white',
     # Toc options
     'collapse_navigation': False,
     'sticky_navigation': False,
@@ -240,6 +243,8 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+
+html_show_sphinx = False
 
 html_logo = "img/logo.svg"
 
