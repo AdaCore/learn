@@ -54,9 +54,7 @@ from being allocated for the access types, even though the pools would never be
 used. A direct way to accomplish this is to use pragma Default_Storage_Pool
 with a parameter of :ada:`null` like so:
 
-.. code:: Ada
-
-   pragma Default_Storage_Pool (null);
+   :ada:`pragma Default_Storage_Pool (null);`
 
 The above would also ensure no allocations can occur with access types that
 have the default pool as their associated storage pool (per
