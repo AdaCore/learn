@@ -91,6 +91,7 @@
         Ada for the Embedded C Developer <courses/Ada_For_The_Embedded_C_Developer/index>
         SPARK Ada for the MISRA C Developer <courses/SPARK_for_the_MISRA_C_Developer/index>
         Introduction to the GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>
+        Guidelines for Safe and Secure Ada/SPARK <coding_standards/ada_coding_standards/index>
 
     .. only:: no_hidden_books
 
