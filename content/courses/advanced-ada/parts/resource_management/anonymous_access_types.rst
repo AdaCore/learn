@@ -1547,29 +1547,46 @@ access objects doesn't impose additional hurdles.
 Anonymous Access-To-Subprograms
 -------------------------------
 
-We can declare subprogram parameters using anonymous types:
+In the previous chapter, we talked about
+:ref:`named access-to-subprogram types <Adv_Ada_Access_To_Subprograms>`. Now,
+we'll see that the anonymous version of those types isn't much different from
+the named version.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_To_Subprograms.Access_To_Subprogram_Params
+Let's start our discussion by declaring a subprogram parameter using an
+anonymous access-to-procedure type:
 
-    package Access_To_Subprogram_Params is
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
+
+    package Anonymous_Access_To_Subprogram is
 
        procedure Proc
          (P : access procedure (I : in out Integer));
 
-    end Access_To_Subprogram_Params;
+    end Anonymous_Access_To_Subprogram;
 
-    package body Access_To_Subprogram_Params is
+    package body Anonymous_Access_To_Subprogram is
 
        procedure Proc
          (P : access procedure (I : in out Integer))
        is
           I : Integer := 0;
        begin
-          --  P (I);
-          P.all (I);
+          P (I);
        end Proc;
 
-    end Access_To_Subprogram_Params;
+    end Anonymous_Access_To_Subprogram;
+
+In this example, we use the anonymous
+:ada:`access procedure (I : in out Integer)` type as a parameter of the
+:ada:`Proc` procedure. Note that we need an identifier in the declaration:
+we cannot leave :ada:`I` out and write
+:ada:`access procedure (in out Integer)`.
+
+Before we look at a test application that makes use of the
+:ada:`Anonymous_Access_To_Subprogram` package, let's implement two simple
+procedures that we'll use later on:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
 
     procedure Add_Ten (I : in out Integer);
 
@@ -1578,27 +1595,367 @@ We can declare subprogram parameters using anonymous types:
        I := I + 10;
     end Add_Ten;
 
-    with Access_To_Subprogram_Params;
-    use  Access_To_Subprogram_Params;
+    procedure Add_Twenty (I : in out Integer);
+
+    procedure Add_Twenty (I : in out Integer) is
+    begin
+       I := I + 20;
+    end Add_Twenty;
+
+Finally, this is our test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
+
+    with Anonymous_Access_To_Subprogram;
+    use  Anonymous_Access_To_Subprogram;
 
     with Add_Ten;
 
-    procedure Show_Access_To_Subprograms is
+    procedure Show_Anonymous_Access_To_Subprograms is
     begin
        Proc (Add_Ten'Access);
        --            ^ Getting access to Add_Ten
        --              procedure and passing it
        --              to Proc
-    end Show_Access_To_Subprograms;
+    end Show_Anonymous_Access_To_Subprograms;
 
+Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
+:ada:`Proc` procedure. Note that this implementation is not different from the
+:ref:`example for named access-to-subprogram types <Adv_Ada_Access_To_Subprogram_Params_Example>`.
+In fact, in terms of usage, anonymous access-to-subprogram types are very
+similar to named access-to-subprogram types. The major differences can be found
+in the corresponding
+:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms>`.
 
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
 
-.. todo::
 
-    Complete section!
+Examples of anonymous access-to-subprogram usage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the section about
+:ref:`named access-to-subprogram types <Adv_Ada_Access_To_Subprograms>`, we've
+seen a couple of different usages for those types. In all those examples
+we discussed, we could instead have used anonymous access-to-subprogram types.
+Let's see a code example that illustrates that:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
+
+    package All_Anonymous_Access_To_Subprogram is
+
+       --
+       --  Anonymous access-to-subprogram as
+       --  subprogram parameter:
+       --
+       procedure Proc
+         (P : access procedure (I : in out Integer));
+
+       --
+       --  Anonymous access-to-subprogram in
+       --  array type declaration:
+       --
+       type Access_To_Procedure_Array is
+         array (Positive range <>) of
+           access procedure (I : in out Integer);
+
+       protected type Protected_Integer is
+
+         procedure Mult_Ten;
+
+         procedure Mult_Twenty;
+
+       private
+         I : Integer := 1;
+       end Protected_Integer;
+
+       --
+       --  Anonymous access-to-subprogram as
+       --  component of a record type.
+       --
+       type Rec_Access_To_Procedure is record
+          AP  : access procedure (I : in out Integer);
+       end record;
+
+       --
+       --  Anonymous access-to-subprogram as
+       --  discriminant:
+       --
+       type Rec_Access_To_Procedure_Discriminant
+              (AP : access procedure
+                      (I : in out Integer)) is
+       record
+          I : Integer := 0;
+       end record;
+
+       procedure Process
+         (R : in out
+                Rec_Access_To_Procedure_Discriminant);
+
+       generic
+          type T is private;
+
+          --
+          --  Anonymous access-to-subprogram as
+          --  formal parameter:
+          --
+          Proc_T : access procedure
+                     (Element : in out T);
+       procedure Gen_Process (Element : in out T);
+
+    end All_Anonymous_Access_To_Subprogram;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body All_Anonymous_Access_To_Subprogram is
+
+       procedure Proc
+         (P : access procedure (I : in out Integer))
+       is
+          I : Integer := 0;
+       begin
+          Put_Line
+            ("Calling procedure for Proc...");
+          P (I);
+          Put_Line ("Finished.");
+       end Proc;
+
+       procedure Process
+         (R : in out
+                Rec_Access_To_Procedure_Discriminant)
+       is
+       begin
+          Put_Line
+            ("Calling procedure for"
+             & " Rec_Access_To_Procedure_Discriminant"
+             & " type...");
+          R.AP (R.I);
+          Put_Line ("Finished.");
+       end Process;
+
+       procedure Gen_Process (Element : in out T) is
+       begin
+          Put_Line
+            ("Calling procedure for Gen_Process...");
+          Proc_T (Element);
+          Put_Line ("Finished.");
+       end Gen_Process;
+
+       protected body Protected_Integer is
+
+          procedure Mult_Ten is
+          begin
+             I := I * 10;
+          end Mult_Ten;
+
+          procedure Mult_Twenty is
+          begin
+             I := I * 20;
+          end Mult_Twenty;
+
+       end Protected_Integer;
+
+    end All_Anonymous_Access_To_Subprogram;
+
+In the :ada:`All_Anonymous_Access_To_Subprogram` package, we see examples of
+anonymous access-to-subprogram types:
+
+- as a subprogram parameter;
+
+- in an array type declaration;
+
+- as a component of a record type;
+
+- as a record type discriminant;
+
+- as a formal parameter of a generic procedure.
+
+Let's implement a test application that makes use of this package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Anonymous_Access_To_Subprogram_Example
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Add_Ten;
+    with Add_Twenty;
+
+    with All_Anonymous_Access_To_Subprogram;
+    use  All_Anonymous_Access_To_Subprogram;
+
+    procedure Show_Anonymous_Access_To_Subprograms is
+       --
+       --  Anonymous access-to-subprogram as
+       --  an object:
+       --
+       P   : access procedure (I : in out Integer);
+
+       --
+       --  Array of anonymous access-to-subprogram
+       --  components
+       --
+       PA  : constant
+              Access_To_Procedure_Array (1 .. 2) :=
+                (Add_Ten'Access,
+                 Add_Twenty'Access);
+
+       --
+       --  Anonymous array of anonymous
+       --  access-to-subprogram components:
+       --
+       PAA : constant
+              array (1 .. 2) of access
+                procedure (I : in out Integer) :=
+                  (Add_Ten'Access,
+                   Add_Twenty'Access);
+
+       --
+       --  Record with anonymous
+       --  access-to-subprogram components:
+       --
+       RA : constant Rec_Access_To_Procedure :=
+              (AP => Add_Ten'Access);
+
+       --
+       --  Record with anonymous
+       --  access-to-subprogram discriminant:
+       --
+       RD : Rec_Access_To_Procedure_Discriminant
+              (AP => Add_Twenty'Access) :=
+                (AP => Add_Twenty'Access, I => 0);
+
+       --
+       --  Generic procedure with formal anonymous
+       --  access-to-subprogram:
+       --
+       procedure Process_Integer is new
+         Gen_Process (T      => Integer,
+                      Proc_T => Add_Twenty'Access);
+
+       --
+       --  Object (APP) of anonymous
+       --  access-to-protected-subprogram:
+       --
+       PI  : Protected_Integer;
+       APP : constant access protected procedure :=
+               PI.Mult_Ten'Access;
+
+       Some_Int : Integer := 0;
+    begin
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       --
+       --  Using object of
+       --  anonymous access-to-subprogram type:
+       --
+       P := Add_Ten'Access;
+       Proc (P);
+       P (Some_Int);
+
+       P := Add_Twenty'Access;
+       Proc (P);
+       P (Some_Int);
+
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       --
+       --  Using array with component of
+       --  anonymous access-to-subprogram type:
+       --
+        Put_Line
+          ("Calling procedure from PA array...");
+
+       for I in PA'Range loop
+          PA (I) (Some_Int);
+          Put_Line ("Some_Int: " & Some_Int'Image);
+       end loop;
+
+       Put_Line ("Finished.");
+
+       Put_Line
+         ("Calling procedure from PAA array...");
+
+       for I in PA'Range loop
+          PAA (I) (Some_Int);
+          Put_Line ("Some_Int: " & Some_Int'Image);
+       end loop;
+
+       Put_Line ("Finished.");
+
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       --
+       --  Using record with component of
+       --  anonymous access-to-subprogram type:
+       --
+       RA.AP (Some_Int);
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       --
+       --  Using record with discriminant of
+       --  anonymous access-to-subprogram type:
+       --
+       Process (RD);
+       Put_Line ("RD.I: " & RD.I'Image);
+
+       --
+       --  Using procedure instantiated with
+       --  formal anonymous access-to-subprogram:
+       --
+       Process_Integer (Some_Int);
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       --
+       --  Using object of anonymous
+       --  access-to-protected-subprogram type:
+       --
+       APP.all;
+    end Show_Anonymous_Access_To_Subprograms;
+
+In the :ada:`Show_Anonymous_Access_To_Subprograms` procedure, we see examples
+of anonymous access-to-subprogram types in:
+
+- in objects (:ada:`P`) and (:ada:`APP`);
+
+- in arrays (:ada:`PA` and :ada:`PAA`);
+
+- in records (:ada:`RA` and :ada:`RD`);
+
+- in the binding to a formal parameter (:ada:`Proc_T`) of an instantiated
+  procedure (:ada:`Process_Integer`);
+
+- as a parameter of a procedure (:ada:`Proc`).
+
+Because we already discussed all these usages in the section about
+:ref:`named access-to-subprogram types <Adv_Ada_Access_To_Subprograms>`, we
+won't repeat this discussion here. If anything in this code example is still
+unclear to you, make sure to revisit that section from the previous chapter.
+
+
+Application of anonymous access-to-subprogram types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In general, there isn't much that speaks against using anonymous
+access-to-subprogram types. We can say, for example, that they're much more
+useful than
+:ref:`anonymous access-to-objects types <Adv_Ada_Anonymous_Access_To_Object_Types>`,
+which have
+:ref:`many drawbacks <Adv_Ada_Drawbacks_Anonymous_Access_To_Object_Types>` |mdash|
+as we discussed earlier.
+
+There isn't much to be concerned when using anonymous access-to-subprogram
+types. For example, we cannot allocate or deallocate a subprogram. As a
+consequence, we won't have storage management issues affecting these types
+because the access to those subprograms will always be available and no
+memory leak can occur.
+
+Also, anonymous access-to-subprogram types can be easier to use than named
+access-to-subprogram types because of their less strict
+:ref:`accessibility rules <Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms>`.
+Some of the accessibility issues we might encounter when using named
+access-to-subprogram types can be solved by declaring them as anonymous types.
+(We discuss the accessibility rules of anonymous access-to-subprogram types in
+the next section.)
 
 
 .. _Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms:

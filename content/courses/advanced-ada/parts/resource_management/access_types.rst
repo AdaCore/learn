@@ -3440,8 +3440,6 @@ If :ada:`X (Index)` occurs inside :ada:`Process_Array`, there is no need
 to check that :ada:`Index` is in range, because the check is pushed to the
 caller.
 
-.. _Adv_Ada_Access_To_Subprograms:
-
 .. _Adv_Ada_Design_Strategies_Access_Types:
 
 Design strategies for access types
@@ -3468,6 +3466,8 @@ Design strategies for access types
     limited as well as private. Or we'd make it a controlled type so that
     Finalize can call Free.
 
+
+.. _Adv_Ada_Access_To_Subprograms:
 
 Access to subprograms
 ---------------------
@@ -3563,9 +3563,10 @@ the :ada:`P` procedure by simply passing :ada:`I` as a parameter. In this case,
 :ada:`P` is automatically dereferenced. We may, however, explicitly dereference
 :ada:`P` by writing :ada:`P.all (I)`.
 
-Next, we can get access to a subprogram by using the :ada:`Access` attribute:
+Before we use this package, let's implement a simple procedure that we'll use
+later on:
 
-.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
 
     procedure Add_Ten (I : in out Integer);
 
@@ -3573,6 +3574,13 @@ Next, we can get access to a subprogram by using the :ada:`Access` attribute:
     begin
        I := I + 10;
     end Add_Ten;
+
+.. _Adv_Ada_Access_To_Subprogram_Params_Example:
+
+Now, we can get access to a subprogram by using the :ada:`Access` attribute and
+pass it as an actual parameter:
+
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
 
     with Access_To_Subprogram_Params;
     use  Access_To_Subprogram_Params;
@@ -3593,6 +3601,443 @@ Here, we get access to the :ada:`Add_Ten` procedure and pass it to the
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
+
+
+Objects of access-to-subprogram type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous example, the :ada:`Proc` procedure had a parameter of
+access-to-subprogram type. In addition to parameters, we can of course declare
+*objects* of access-to-subprogram types as well. For example, we can extend
+our previous test application and declare an object :ada:`P` of
+access-to-subprogram type. Before we do so, however, let's implement another
+small procedure that we'll use later on:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    procedure Add_Twenty (I : in out Integer);
+
+    procedure Add_Twenty (I : in out Integer) is
+    begin
+       I := I + 20;
+    end Add_Twenty;
+
+In addition to :ada:`Add_Ten`, we've implemented the :ada:`Add_Twenty`
+procedure, which we use in our extended test application:
+
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    with Access_To_Subprogram_Params;
+    use  Access_To_Subprogram_Params;
+
+    with Add_Ten;
+    with Add_Twenty;
+
+    procedure Show_Access_To_Subprograms is
+       P        : Access_To_Procedure;
+       Some_Int : Integer := 0;
+    begin
+       P := Add_Ten'Access;
+       --           ^ Getting access to Add_Ten
+       --             procedure and assigning it
+       --             to P
+
+       Proc (P);
+       --    ^ Passing access-to-subprogram as an
+       --      actual parameter
+
+       P (Some_Int);
+       --  ^ Using access-to-subprogram object in a
+       --    subprogram call
+
+       P := Add_Twenty'Access;
+       --              ^ Getting access to Add_Twenty
+       --                procedure and assigning it
+       --                to P
+
+       Proc (P);
+       P (Some_Int);
+    end Show_Access_To_Subprograms;
+
+In the :ada:`Show_Access_To_Subprograms` procedure,
+we see the declaration of our access-to-subprogram object :ada:`P` (of
+:ada:`Access_To_Procedure` type). We get access to the :ada:`Add_Ten` procedure
+and assign it to :ada:`P`, and we then do the same for the :ada:`Add_Twenty`
+procedure.
+
+We can use an access-to-subprogram object either as the actual parameter of a
+subprogram call, or in a subprogram call. In the code example, we're passing
+:ada:`P` as the actual parameter of the :ada:`Proc` procedure in the
+:ada:`Proc (P)` calls. Also, we're calling the subprogram assigned to
+(designated by the current value of) :ada:`P` in the :ada:`P (Some_Int)` calls.
+
+
+Components of access-to-subprogram type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to declaring subprogram parameters and objects of
+access-to-subprogram types, we can declare components of these types. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    package Access_To_Subprogram_Types is
+
+       type Access_To_Procedure is
+         access procedure (I : in out Integer);
+
+       type Access_To_Function is
+         access function (I : Integer) return Integer;
+
+       type Access_To_Procedure_Array is
+         array (Positive range <>) of
+           Access_To_Procedure;
+
+       type Access_To_Function_Array is
+         array (Positive range <>) of
+           Access_To_Function;
+
+       type Rec_Access_To_Procedure is record
+          AP : Access_To_Procedure;
+       end record;
+
+       type Rec_Access_To_Function is record
+          AF : Access_To_Function;
+       end record;
+
+    end Access_To_Subprogram_Types;
+
+Here, the access-to-procedure type :ada:`Access_To_Procedure` is used as a
+component of the array type :ada:`Access_To_Procedure_Array`  and the record
+type :ada:`Rec_Access_To_Procedure`. Similarly, the access-to-function type
+:ada:`Access_To_Function` type is used as a component of the array type
+:ada:`Access_To_Function_Array` and the record type
+:ada:`Rec_Access_To_Function`.
+
+Let's see two test applications using these types. First, let's use the
+:ada:`Access_To_Procedure_Array` array type in a test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    with Add_Ten;
+    with Add_Twenty;
+
+    procedure Show_Access_To_Subprograms is
+       PA : constant
+              Access_To_Procedure_Array (1 .. 2) :=
+                (Add_Ten'Access,
+                 Add_Twenty'Access);
+
+       Some_Int : Integer := 0;
+    begin
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       for I in PA'Range loop
+          PA (I) (Some_Int);
+          Put_Line ("Some_Int: " & Some_Int'Image);
+       end loop;
+    end Show_Access_To_Subprograms;
+
+Here, we declare the :ada:`PA` array and use the access to the :ada:`Add_Ten`
+and :ada:`Add_Twenty` procedures as its components. We can call any of these
+procedures by simply specifying the index of the component, e.g.
+:ada:`PA (2)`. Once we specify the procedure we want to use, we simply pass
+the parameters, e.g.: :ada:`PA (2) (Some_Int)`.
+
+Now, let's use the :ada:`Rec_Access_To_Procedure` record type in a test
+application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    with Add_Ten;
+    with Add_Twenty;
+
+    procedure Show_Access_To_Subprograms is
+       RA       : Rec_Access_To_Procedure;
+       Some_Int : Integer := 0;
+    begin
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       RA := (AP => Add_Ten'Access);
+       RA.AP (Some_Int);
+       Put_Line ("Some_Int: " & Some_Int'Image);
+
+       RA := (AP => Add_Twenty'Access);
+       RA.AP (Some_Int);
+       Put_Line ("Some_Int: " & Some_Int'Image);
+    end Show_Access_To_Subprograms;
+
+Here, we declare two record aggregates where we specify the :ada:`AP`
+component, e.g.: :ada:`(AP => Add_Ten'Access)`, which indicates the
+access-to-subprogram we want to use. We can call the subprogram by simply
+accessing the :ada:`AP` component, i.e.: :ada:`RA.AP`.
+
+
+Access-to-subprogram as discriminant types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As you might expect, we can use access-to-subprogram types when declaring
+discriminants. In fact, when we were talking about
+:ref:`discriminants as access values <Adv_Ada_Discriminants_As_Access_Values>`
+earlier on, we used access-to-object types in our code examples, but we could
+have used access-to-subprogram types as well. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    package Custom_Processing is
+
+       --  Declaring an access type:
+       type Integer_Processing is
+         access procedure (I : in out Integer);
+
+       --  Declaring a discriminant with this
+       --  access type:
+       type Rec (IP : Integer_Processing) is
+         private;
+
+       procedure Init (R     : in out Rec;
+                       Value :        Integer);
+
+       procedure Process (R : in out Rec);
+
+       procedure Show (R : Rec);
+
+    private
+
+       type Rec (IP : Integer_Processing) is
+       record
+          I : Integer := 0;
+       end record;
+
+    end Custom_Processing;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Custom_Processing is
+
+       procedure Init (R     : in out Rec;
+                       Value :        Integer) is
+       begin
+          R.I := Value;
+       end Init;
+
+       procedure Process (R : in out Rec) is
+       begin
+          R.IP (R.I);
+          --  ^^^^^^
+          --  Calling procedure that we specified as
+          --  the record's discriminant
+       end Process;
+
+       procedure Show (R : Rec) is
+       begin
+          Put_Line ("R.I = "
+                    & Integer'Image (R.I));
+       end Show;
+
+    end Custom_Processing;
+
+In this example, we declare the access-to-subprogram type
+:ada:`Integer_Processing`, which we use as the :ada:`IP` discriminant of the
+:ada:`Rec` type. In the :ada:`Process` procedure, we call the :ada:`IP`
+procedure that we specified as the record's discriminant (:ada:`R.IP (R.I)`).
+
+Before we look at a test application for this package, let's implement
+another small procedure:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    procedure Mult_Two (I : in out Integer);
+
+    procedure Mult_Two (I : in out Integer) is
+    begin
+       I := I * 2;
+    end Mult_Two;
+
+Now, let's look at the test application:
+
+.. code:: ada run_button main=show_access_to_subprogram_discriminants.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    with Custom_Processing; use Custom_Processing;
+
+    with Add_Ten;
+    with Mult_Two;
+
+    procedure Show_Access_To_Subprogram_Discriminants
+    is
+
+       R_Add_Ten  : Rec (IP => Add_Ten'Access);
+       --                ^^^^^^^^^^^^^^^^^^^^
+       --       Using access-to-subprogram as a
+       --       discriminant
+
+       R_Mult_Two : Rec (IP => Mult_Two'Access);
+       --                ^^^^^^^^^^^^^^^^^^^^^
+       --       Using access-to-subprogram as a
+       --       discriminant
+
+    begin
+       Init (R_Add_Ten,  1);
+       Init (R_Mult_Two, 2);
+
+       Put_Line ("---- R_Add_Ten ----");
+       Show (R_Add_Ten);
+
+       Put_Line ("Calling Process procedure...");
+       Process (R_Add_Ten);
+       Show (R_Add_Ten);
+
+       Put_Line ("---- R_Mult_Two ----");
+       Show (R_Mult_Two);
+
+       Put_Line ("Calling Process procedure...");
+       Process (R_Mult_Two);
+       Show (R_Mult_Two);
+    end Show_Access_To_Subprogram_Discriminants;
+
+In this procedure, we declare the :ada:`R_Add_Ten` and :ada:`R_Mult_Two` of
+:ada:`Rec` type and specify the access to :ada:`Add_Ten` and :ada:`Mult_Two`,
+respectively, as the :ada:`IP` discriminant. The procedure we specified here
+is then called inside a call to the :ada:`Process` procedure.
+
+
+Access-to-subprograms as formal parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use access-to-subprograms types when declaring formal parameters. For
+example, let's revisit the :ada:`Custom_Processing` package from the previous
+section and convert it into a generic package.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    generic
+       type T is private;
+
+       --
+       --  Declaring formal access-to-subprogram
+       --  type:
+       --
+       type T_Processing is
+         access procedure (Element : in out T);
+
+       --
+       --  Declaring formal access-to-subprogram
+       --  parameter:
+       --
+       Proc : T_Processing;
+
+       with function Image_T (Element : T)
+                              return String;
+    package Gen_Custom_Processing is
+
+       type Rec is private;
+
+       procedure Init (R     : in out Rec;
+                       Value :        T);
+
+       procedure Process (R : in out Rec);
+
+       procedure Show (R : Rec);
+
+    private
+
+       type Rec is record
+          Comp : T;
+       end record;
+
+    end Gen_Custom_Processing;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Gen_Custom_Processing is
+
+       procedure Init (R     : in out Rec;
+                       Value :        T) is
+       begin
+          R.Comp := Value;
+       end Init;
+
+       procedure Process (R : in out Rec) is
+       begin
+          Proc (R.Comp);
+       end Process;
+
+       procedure Show (R : Rec) is
+       begin
+          Put_Line ("R.Comp = "
+                    & Image_T (R.Comp));
+       end Show;
+
+    end Gen_Custom_Processing;
+
+In this version of the procedure, instead of declaring :ada:`Proc` as a
+discriminant of the :ada:`Rec` record, we're declaring it as a formal parameter
+of the :ada:`Gen_Custom_Processing` package. Also, we're declaring an
+access-to-subprogram type (:ada:`T_Processing`) as a formal parameter. (Note
+that, in contrast to these two parameters that we've just mentioned,
+:ada:`Image_T` is not a formal access-to-subprogram parameter: it's actually
+just a formal subprogram.)
+
+We then instantiate the :ada:`Gen_Custom_Processing` package in our test
+application:
+
+.. code:: ada run_button main=show_access_to_subprogram_as_formal_parameter.adb project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_To_Subprograms.Access_To_Subprogram_Types
+
+    with Gen_Custom_Processing;
+
+    with Add_Ten;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure
+      Show_Access_To_Subprogram_As_Formal_Parameter
+    is
+       type Integer_Processing is
+         access procedure (I : in out Integer);
+
+       package Custom_Processing is new
+         Gen_Custom_Processing
+           (T            => Integer,
+            T_Processing => Integer_Processing,
+            --              ^^^^^^^^^^^^^^^^^^
+            --              access-to-subprogram type
+            Proc         => Add_Ten'Access,
+            --              ^^^^^^^^^^^^^^^^^^
+            --              access-to-subprogram
+            Image_T      => Integer'Image);
+       use Custom_Processing;
+
+       R_Add_Ten  : Rec;
+
+    begin
+       Init (R_Add_Ten,  1);
+
+       Put_Line ("---- R_Add_Ten ----");
+       Show (R_Add_Ten);
+
+       Put_Line ("Calling Process procedure...");
+       Process (R_Add_Ten);
+       Show (R_Add_Ten);
+    end Show_Access_To_Subprogram_As_Formal_Parameter;
+
+Here, we instantiate the :ada:`Gen_Custom_Processing` package as
+:ada:`Custom_Processing` and specify the access-to-subprogram type and the
+access-to-subprogram.
 
 
 Selecting subprograms
