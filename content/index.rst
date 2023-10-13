@@ -84,6 +84,7 @@
             :maxdepth: 1
             :caption: Upcoming Courses
 
+            Ada Idioms <courses/ada-idioms/index>
             Advanced SPARK <courses/advanced-spark/index>
 
     .. toctree::
