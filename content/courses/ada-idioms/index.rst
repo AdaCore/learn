@@ -98,4 +98,7 @@ Ada Idioms
     :caption: Contents:
 
     Introduction <chapters/introduction>
+    Fundamental Design Idioms for Packages <chapters/fundamental_idioms_for_packages>
+    Constructor Functions For Type Extensions <chapters/constructor_functions_for_type_extensions>
+    Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
     Appendices <chapters/appendices>
