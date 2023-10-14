@@ -551,7 +551,7 @@ index is not declared in the declarative section!
     Something peculiar that you may have noticed about declarations in Ada is
     that they are backwards from the way C does declarations. The C language
     expects the type followed by the variable name. Ada expects the variable
-    name followed by a semicolon and then the type.
+    name followed by a colon and then the type.
 
 The next block in the Ada example is between the :ada:`begin` and :ada:`end`
 keywords. This is where your statements will live. You can create new scopes by
