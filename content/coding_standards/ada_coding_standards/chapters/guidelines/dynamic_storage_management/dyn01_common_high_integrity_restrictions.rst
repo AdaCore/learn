@@ -23,8 +23,7 @@ Goal
 Reference
 +++++++++++
 
-`Ada RM H.4 - High Integrity Restrictions
-<http://www.ada-auth.org/standards/2xrm/html/RM-H-4.html>`_
+:arm:`Ada RM H.4 \\- High Integrity Restrictions`
 
 +++++++++++++
 Description

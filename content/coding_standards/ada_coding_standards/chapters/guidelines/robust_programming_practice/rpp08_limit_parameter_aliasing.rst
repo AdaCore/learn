@@ -23,11 +23,9 @@ Goal
 Reference
 +++++++++++
 
-`Ada RM 6.2 - Formal Parameter Modes
-<http://www.ada-auth.org/standards/2xrm/html/RM-6-2.html>`_,
+:arm:`Ada RM 6.2 \\- Formal Parameter Modes`
 
-`SPARK RM 6.4.2 - Anti-Aliasing
-<https://docs.adacore.com/spark2014-docs/html/lrm/subprograms.html#anti-aliasing>`_
+:arm:`SPARK RM 6.4.2 \\- Anti-Aliasing`
 
 +++++++++++++
 Description

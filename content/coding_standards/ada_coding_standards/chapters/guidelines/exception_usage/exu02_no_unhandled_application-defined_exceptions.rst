@@ -69,15 +69,13 @@ continue executing normally, i.e., they do not complete as a result of the
 environment task completion. Alternatively, however, instead of waiting for
 them, the implementation has permission to abort the dependent application
 tasks, per
-`Ada RM 10.2(30) - Program Execution
-<http://www.ada-auth.org/standards/2xrm/html/RM-10-2.html>`_.
+:arm:`Ada RM 10.2\\(30\\) \\- Program Execution`
 The resulting application-specific effect is undefined.
 
 Finally, whether the environment task waited for the dependent tasks or aborted
 them, the semantics of further execution beyond that point are undefined. There
 is no concept of a calling environment beyond the environment task
-(`Ada RM 10.2(30) - Program Execution
-<http://www.ada-auth.org/standards/2xrm/html/RM-10-2.html>`_).
+(:arm:`Ada RM 10.2\\(30\\) \\- Program Execution`)
 In some systems there is no calling environment, such as bare-metal platforms
 with only an Ada run-time library and no operating system.
 
