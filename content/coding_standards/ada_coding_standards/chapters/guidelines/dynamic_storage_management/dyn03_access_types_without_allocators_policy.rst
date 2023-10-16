@@ -58,8 +58,7 @@ with a parameter of :ada:`null` like so:
 
 The above would also ensure no allocations can occur with access types that
 have the default pool as their associated storage pool (per
-`Ada RM 13.11.3(6.1/3) - Default Storage Pools
-<http://ada-auth.org/standards/12rm/html/RM-13-11-3.html>`_)
+:arm:`Ada RM 13.11.3\\(6.1\\/3\\) \\- Default Storage Pools`
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Applicable vulnerability within ISO TR 24772-2

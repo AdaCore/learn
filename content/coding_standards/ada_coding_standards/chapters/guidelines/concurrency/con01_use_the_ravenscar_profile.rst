@@ -28,8 +28,7 @@ Goal
 Reference
 +++++++++++
 
-`Ada RM D.13 - The Ravenscar and Jorvik Profiles
-<http://ada-auth.org/standards/22rm/html/RM-D-13.html>`_
+:arm:`Ada RM D.13 \\- The Ravenscar and Jorvik Profiles`
 
 +++++++++++++
 Description
