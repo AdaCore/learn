@@ -1,8 +1,0 @@
-__pycache__
-
-# Vi swap
-.*.sw?
-
-# Ada build files
-**/build/*
-**/.~*
