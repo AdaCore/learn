@@ -2,7 +2,7 @@
 Functions Only Have Mode "in" (RPP07)
 ---------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../global.txt
 
 **Level** :math:`\rightarrow` Required
 

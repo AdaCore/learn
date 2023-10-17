@@ -2,7 +2,7 @@
 No Use of "others" in Case Constructs (RPP01)
 -----------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../global.txt
 
 **Level** :math:`\rightarrow` Required
 

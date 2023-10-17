@@ -2,7 +2,7 @@
 Limit Statically-Dispatched Calls To Primitive Operations (OOP04)
 -------------------------------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

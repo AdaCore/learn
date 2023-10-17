@@ -2,7 +2,7 @@
 Use Explicit Overriding Annotations (OOP05)
 ---------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../global.txt
 
 **Level** :math:`\rightarrow` Required
 

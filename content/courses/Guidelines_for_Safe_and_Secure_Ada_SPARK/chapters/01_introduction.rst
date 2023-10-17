@@ -2,7 +2,7 @@
 Introduction
 **************
 
-.. include:: ../../global.txt
+.. include:: ../global.txt
 
 Ada is a general purpose, high-level programming language designed to support
 the construction of long-lived, highly-reliable applications.  Like all

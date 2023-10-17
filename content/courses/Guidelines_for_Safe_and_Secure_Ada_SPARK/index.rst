@@ -4,7 +4,7 @@
 Guidelines for Safe and Secure Ada/SPARK
 ==========================================
 
-.. include:: ../global.txt
+.. include:: global.txt
 
 .. only:: builder_epub
 
