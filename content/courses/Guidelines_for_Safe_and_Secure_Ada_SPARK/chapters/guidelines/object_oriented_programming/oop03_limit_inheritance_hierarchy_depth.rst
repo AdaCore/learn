@@ -2,7 +2,7 @@
 Limit Inheritance Hierarchy Depth (OOP03)
 -------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

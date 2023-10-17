@@ -2,7 +2,7 @@
 Don't Raise Language-Defined Exceptions (EXU01)
 -------------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../global.txt
 
 **Level** :math:`\rightarrow` Required
 
