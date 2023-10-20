@@ -1,4 +1,5 @@
 import './styles/learn.scss';
+import './styles/learn-dark.scss';
 import {getElemsByClass, getElemById} from './ts/dom-utils';
 import {widgetFactory} from './ts/widget';
 import {scrollTop} from './ts/scrolltop';

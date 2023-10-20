@@ -1,0 +1,12 @@
+@import 'variables';
+@import 'variables-dark';
+
+@media (prefers-color-scheme: dark) {
+
+    html {
+        background-color: $color-darktheme-bg-dark !important;
+    }
+    body {
+        background-color: $color-darktheme-bg-dark !important;
+    }
+}
