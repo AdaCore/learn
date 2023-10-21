@@ -15,3 +15,15 @@ $color-darktheme-border:                #444;
 $color-darktheme-code-font:             #DE935F;
 $color-darktheme-code-bg:               $color-darktheme-bg-dark;
 $color-darktheme-code-border:           darken($color-darktheme-border, 50%);
+
+$color-darktheme-tab-active-font:       rgb(200, 200, 200);
+$color-darktheme-tab-hover-font:        lighten($color-darktheme-tab-active-font, 20%);
+$color-darktheme-tab-font:              darken($color-darktheme-tab-active-font, 30%);
+
+$color-darktheme-widget-border:         $color-darktheme-border;
+
+$color-darktheme-widget-output-area:    rgb(23, 23, 23);
+
+$color-darktheme-widget-info:           rgb(234, 234, 234);
+
+$color-darktheme-settingsbar-bg:        rgb(50, 50, 50);

@@ -114,6 +114,109 @@
         background-color: $color-darktheme-theme-alt-bg;
     }
 
+    //
+    // theme overrides: widget
+    //
+
+    .tab {
+        button {
+            color: $color-darktheme-tab-font;
+            &:hover {
+                color: $color-darktheme-tab-hover-font;
+            }
+            &.active {
+                color: $color-darktheme-tab-active-font;
+                border-top: 2px solid $color-darktheme-theme-bg-dark;
+                border-left: 1px solid $color-darktheme-widget-border;
+                border-right: 1px solid $color-darktheme-widget-border;
+            }
+        }
+    }
+
+    .settings-bar {
+        background-color: $color-darktheme-settingsbar-bg;
+        color: white;
+
+        button {
+            background-color: transparent;
+            color: white;
+        }
+
+        .dropdown-container {
+            .dropdown-content {
+                background-color: $color-darktheme-bg-dark;
+
+                a {
+                    color: white;
+
+                    &:hover {
+                        background-color: #ddd;
+                    }
+                }
+            }
+        }
+    }
+
+    .compiler-switch-help-info {
+        background-color: $color-darktheme-settingsbar-bg;
+    }
+
+    .compiler-switch-help-info-click-remove {
+        background-color: $color-darktheme-settingsbar-bg;
+    }
+
+    div {
+        &.editor-container {
+            border: 1px solid $color-darktheme-widget-border;
+        }
+        &.editor_label {
+            border: 1px solid $color-darktheme-widget-border;
+            color: $color-font-grey;
+        }
+        &.non-tabbed-links {
+            border: 1px solid $color-darktheme-widget-border;
+        }
+        &.code_block_info {
+            background: $color-darktheme-widget-output-area;
+        }
+        &.code_block_info_contents {
+            color: $color-font-grey;
+        }
+        &.output_line {
+            color: $color-font-grey;
+        }
+        &.output_msg {
+            color: $color-widget-msg;
+            &:hover {
+                background-color: #fdd;
+            }
+        }
+        &.output_msg_info {
+            color: $color-darktheme-widget-info;
+            &:hover {
+                background-color: $color-widget-msg-info-bg-hover;
+            }
+        }
+        &.output_info {
+            color: $color-darktheme-widget-info;
+        }
+        &.output_error {
+            color: $color-widget-error;
+        }
+        &.output_success {
+            color: $color-widget-success;
+        }
+        &.output-area {
+            background: $color-darktheme-widget-output-area;
+        }
+    }
+
+    .read-only {
+        background-color: $color-widget-readonly;
+        opacity: 0.2;
+        position: absolute;
+    }
+
     a.ebook-download-button {
         background-color: $color-darktheme-theme-bg-dark;
     }
