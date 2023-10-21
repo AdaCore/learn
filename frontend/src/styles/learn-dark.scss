@@ -9,6 +9,19 @@
     body {
         background-color: $color-darktheme-bg-dark !important;
     }
+    label {
+        color: white;
+    }
+    .rst-content code,
+    .rst-content tt,
+    code {
+        color: $color-darktheme-code-font;
+        background-color: $color-darktheme-code-bg !important;
+    }
+    pre {
+        color: $color-darktheme-code-font;
+        background-color: $color-darktheme-code-bg !important;
+    }
     .wy-nav-content-wrap {
         background: $color-darktheme-bg-dark !important;
     }
@@ -18,6 +31,11 @@
     }
     .admonition-in-other-languages {
         background: $color-darktheme-theme-alt-bg;
+    }
+    .rst-content {
+        .highlight {
+            background: $color-darktheme-theme-alt-bg;
+        }
     }
     .rst-content .admonition,
     .rst-content .admonition-todo,
