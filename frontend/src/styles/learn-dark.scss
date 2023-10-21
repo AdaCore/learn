@@ -17,10 +17,12 @@
     code {
         color: $color-darktheme-code-font;
         background-color: $color-darktheme-code-bg !important;
+        border: 1px solid $color-darktheme-code-border;
     }
     pre {
         color: $color-darktheme-code-font;
         background-color: $color-darktheme-code-bg !important;
+        border: 1px solid $color-darktheme-code-border;
     }
     .wy-nav-content-wrap {
         background: $color-darktheme-bg-dark !important;
@@ -58,6 +60,7 @@
     }
     .rst-content div[class^=highlight],
     .rst-content pre.literal-block {
+        border: 1px solid $color-darktheme-code-border;
         color: $color-darktheme-code-font;
     }
     .rst-content code.literal,
