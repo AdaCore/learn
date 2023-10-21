@@ -1197,6 +1197,7 @@ The image below depicts this design.
 .. image:: images/idiom_1_diagram.png
   :width: 600
   :alt: Diagram for Design Idiom #1
+  :class: dark-mode-invert-image
 
 The :ada:`DMA_Interrupt_Controller` described earlier actually uses this
 design.
@@ -1333,6 +1334,7 @@ The image below depicts this design.
 .. image:: images/idiom_2_diagram.png
   :width: 600
   :alt: Diagram for Design Idiom #2
+  :class: dark-mode-invert-image
 
 In this approach, the task synchronizes with the handler using a
 :ada:`Suspension_Object` variable. The type :ada:`Suspension_Object` is
