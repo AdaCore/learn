@@ -33,6 +33,15 @@
     body {
         background-color: $color-darktheme-bg-dark !important;
     }
+    img {
+        &.dark-mode-invert-image {
+            -webkit-filter: invert(0.9);
+            filter: invert(0.9);
+        }
+        &.dark-mode-light-background {
+            background-color: lightgrey !important;
+        }
+    }
     label {
         color: white;
     }
