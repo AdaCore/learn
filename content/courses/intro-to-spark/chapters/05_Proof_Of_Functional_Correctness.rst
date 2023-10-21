@@ -750,6 +750,7 @@ As shown below, the control flow is divided into three parts.
 
 .. image:: 05_loop.png
    :align: center
+   :class: dark-mode-light-background
 
 The first, shown in yellow, starts earlier in the subprogram and enters the
 loop statement. The loop itself is divided into two parts.  Red represents

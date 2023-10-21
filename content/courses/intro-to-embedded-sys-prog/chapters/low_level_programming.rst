@@ -57,6 +57,7 @@ as well, but let's focus on the address.
 .. image:: images/memory-mapped-device.png
   :width: 600
   :alt: Memory-mapped device with Ada object declared at specific address
+  :class: dark-mode-invert-image
 
 If the hardware presents an interface consisting of multiple fields
 within individual memory cells, we can use a record type instead of a
@@ -530,6 +531,7 @@ showing what the category "scalar types" includes:
 .. image:: images/scalar_types_tree.png
   :width: 600
   :alt: Scalar types tree
+  :class: dark-mode-invert-image
 
 Consider type :ada:`Boolean`, which has two possible values. One bit
 will suffice, and indeed the language standard requires
@@ -595,6 +597,7 @@ For example, consider this record type and its components:
 .. image:: images/unoptimized-record-component-order.png
   :width: 600
   :alt: Memory allocated to a record with unoptimized layout
+  :class: dark-mode-invert-image
 
 In the figure, we see a record type with some components, and a sample
 layout for that record type assuming the compiler does not reorder the
@@ -650,6 +653,7 @@ declaration order:
 .. image:: images/optimized-record-component-order.png
   :width: 600
   :alt: Memory allocated to a record with optimized layout
+  :class: dark-mode-invert-image
 
 Now :ada:`R'Size` will report 56 bits instead of 80. The one trailing byte will
 still be padding, but only that one.
@@ -1260,6 +1264,7 @@ the components:
 .. image:: images/unoptimized-record-component-order.png
   :width: 600
   :alt: Memory allocated to a record with unoptimized layout
+  :class: dark-mode-invert-image
 
 As a result, :ada:`R'Size` will be 80 bits (10 bytes), but those last two bytes
 will be will be allocated to objects, for an :ada:`Object_Size` of 96 bits (12
@@ -1291,6 +1296,7 @@ the record representation clause, are depicted for comparison:
 .. image:: images/record_layout_with_rep_clause.png
   :width: 600
   :alt: Memory allocated to a record with optimized layout
+  :class: dark-mode-invert-image
 
 :ada:`R'Size` will be 56 bits (7 bytes), but that last padding byte will also
 be allocated to objects, so the :ada:`Object_Size` will be 64 bits (8 bytes).
@@ -2159,6 +2165,7 @@ e.g., record types, access types, task types, and so on.
 .. image:: images/scalar_types_tree.png
   :width: 600
   :alt: Scalar types tree
+  :class: dark-mode-invert-image
 
 When the requirements for meaningful instantiations are not respected
 and the :ada:`Target` type is a scalar type, the result returned from the call
@@ -2347,6 +2354,7 @@ record type:
 .. image:: images/unoptimized-record-component-order.png
   :width: 600
   :alt: A record type layout with unused bytes
+  :class: dark-mode-invert-image
 
 As we discussed earlier, between the bytes that are allocated to the
 record components are some other bytes that are not used at all. As

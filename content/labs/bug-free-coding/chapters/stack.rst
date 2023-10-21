@@ -22,6 +22,7 @@ A stack is like a pile of dishes...
 .. image:: pile_of_dishes.png
     :align: center
     :scale: 55 %
+    :class: dark-mode-invert-image
 
 #. The pile starts out empty.
 
@@ -42,18 +43,23 @@ Here's what should happen if we pushed the string :ada:`MLH` onto the stack.
 
     .. image:: push_1.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
     .. image:: push_2.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
     .. image:: push_3.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
     .. image:: push_4.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
     .. image:: push_5.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
 The list starts out empty. Each time we push a character onto the stack,
 :ada:`Last` increments by :ada:`1`.
@@ -67,15 +73,19 @@ clear it.
 
     .. image:: pop_1.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
     .. image:: pop_2.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
     .. image:: pop_3.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
     .. image:: pop_4.png
         :scale: 50 %
+        :class: dark-mode-invert-image
 
 Note that :ada:`pop` and :ada:`clear` don't unset the :ada:`Storage` array's
 elements, they just change the value of :ada:`Last`.
