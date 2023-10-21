@@ -16,6 +16,15 @@ $color-darktheme-code-font:             #DE935F;
 $color-darktheme-code-bg:               $color-darktheme-bg-dark;
 $color-darktheme-code-border:           darken($color-darktheme-border, 50%);
 
+$color-darktheme-menu-bg-l1:            #222222;
+$color-darktheme-menu-bg-l2:            lighten($color-darktheme-menu-bg-l1, 5%);
+$color-darktheme-menu-bg-l3:            lighten($color-darktheme-menu-bg-l1, 10%);
+$color-darktheme-menu-bg-hover:         darken($color-darktheme-menu-bg-l1,  20%);
+
+$color-darktheme-menu-font:             #f0f0f0;
+$color-darktheme-menu-alt-font:         #e8e8e8;
+$color-darktheme-menu-alt-font-hover:   lighten($color-darktheme-menu-alt-font, 20%);
+
 $color-darktheme-tab-active-font:       rgb(200, 200, 200);
 $color-darktheme-tab-hover-font:        lighten($color-darktheme-tab-active-font, 20%);
 $color-darktheme-tab-font:              darken($color-darktheme-tab-active-font, 30%);
