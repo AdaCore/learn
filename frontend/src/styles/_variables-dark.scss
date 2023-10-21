@@ -6,5 +6,8 @@ $color-darktheme-bg-dark:               #111111;
 $color-darktheme-content-bg:            black;
 $color-darktheme-content-font:          #edc;
 
+$color-darktheme-border:                #444;
+
 $color-darktheme-code-font:             #DE935F;
 $color-darktheme-code-bg:               $color-darktheme-bg-dark;
+$color-darktheme-code-border:           darken($color-darktheme-border, 50%);
