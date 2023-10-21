@@ -9,4 +9,11 @@
     body {
         background-color: $color-darktheme-bg-dark !important;
     }
+    .wy-nav-content-wrap {
+        background: $color-darktheme-bg-dark !important;
+    }
+    .wy-nav-content {
+        background: $color-darktheme-content-bg !important;
+        color: $color-darktheme-content-font;
+    }
 }
