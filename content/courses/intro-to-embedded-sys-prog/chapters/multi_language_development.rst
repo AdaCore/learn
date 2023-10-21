@@ -1269,6 +1269,7 @@ Graphically that looks like this:
 .. image:: images/lckr_and_lcck_for_gpio_pin_locking.png
   :width: 600
   :alt: gpio pin locking register
+  :class: dark-mode-invert-image
 
 Therefore, the Ada types are:
 

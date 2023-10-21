@@ -47,6 +47,7 @@ for critical software development. SPARK builds on that foundation.
 
 .. image:: 01_spark_ada.png
    :align: center
+   :class: dark-mode-invert-image
 
 Version 2012 of Ada introduced the use of `aspects`, which can be used
 for subprogram contracts, and version 2014 of SPARK added its own
