@@ -38,23 +38,23 @@ a {
     }
 }
 
-@mixin menu_vertical_current_hover_colors {
+@mixin menu_vertical_current_hover_light_mode_colors {
     &:hover {
         background-color: #777777;
         color: darkorange;
     }
 }
 
-@mixin menu_vertical_current_colors {
-    @include menu_vertical_current_hover_colors;
+@mixin menu_vertical_current_light_mode_colors {
+    @include menu_vertical_current_hover_light_mode_colors;
 
     &:visited {
         color: #303030;
-        @include menu_vertical_current_hover_colors;
+        @include menu_vertical_current_hover_light_mode_colors;
     }
 }
 
-@mixin non_menu_vertical_current_hover_colors {
+@mixin menu_vertical_alt_current_hover_light_mode_colors {
     color: #e8e8e8;
     &:hover {
         color: lightgoldenrodyellow;
@@ -67,10 +67,10 @@ a {
     }
     li {
         a {
-            @include non_menu_vertical_current_hover_colors;
+            @include menu_vertical_alt_current_hover_light_mode_colors;
 
             &:visited {
-                @include non_menu_vertical_current_hover_colors;
+                @include menu_vertical_alt_current_hover_light_mode_colors;
             }
         }
         &.current {
@@ -78,16 +78,16 @@ a {
                 background-color: #eeeeee;
                 color: #303030;
 
-                @include menu_vertical_current_colors;
+                @include menu_vertical_current_light_mode_colors;
             }
             &.toctree-l2 {
                 li.toctree-l3>a {
-                    @include menu_vertical_current_colors;
+                    @include menu_vertical_current_light_mode_colors;
                 }
             }
             &.toctree-l3 {
                 li.toctree-l4>a {
-                    @include menu_vertical_current_colors;
+                    @include menu_vertical_current_light_mode_colors;
                 }
             }
         }
