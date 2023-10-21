@@ -1,6 +1,30 @@
 @import 'variables';
 @import 'variables-dark';
 
+@mixin menu_vertical_current_hover_dark_mode_colors {
+    &:hover {
+        background-color: #777777;
+        color: darkorange;
+    }
+}
+
+@mixin menu_vertical_current_dark_mode_colors {
+    @include menu_vertical_current_hover_dark_mode_colors;
+    color: $color-darktheme-menu-font;
+
+    &:visited {
+        color: $color-darktheme-menu-font;
+        @include menu_vertical_current_hover_dark_mode_colors;
+    }
+}
+
+@mixin menu_vertical_alt_current_hover_dark_mode_colors {
+    color: $color-darktheme-menu-alt-font;
+    &:hover {
+        color: $color-darktheme-menu-alt-font-hover;
+    }
+}
+
 @media (prefers-color-scheme: dark) {
 
     html {
@@ -45,6 +69,103 @@
         background: $color-darktheme-content-bg !important;
         color: $color-darktheme-content-font;
     }
+
+    .wy-side-nav-search {
+        background-color: $color-darktheme-theme-bg-dark;
+    }
+
+    .wy-nav-side {
+        background-color: darken($color-darktheme-menu-bg-l1, 10%);
+    }
+
+    .wy-menu-vertical {
+        li {
+            button.toctree-expand {
+                color: lightgrey;
+            }
+            button.toctree-expand:before {
+                color: lightgrey;
+            }
+            ul {
+                background-color: $color-darktheme-menu-bg-l1;
+            }
+            a {
+                @include menu_vertical_alt_current_hover_dark_mode_colors;
+                background-color: $color-darktheme-menu-bg-l1;
+
+                &:hover {
+                    background-color: $color-darktheme-menu-bg-hover;
+                }
+
+                &:visited {
+                    @include menu_vertical_alt_current_hover_dark_mode_colors;
+                    background-color: $color-darktheme-menu-bg-l1;
+
+                    &:hover {
+                        background-color: $color-darktheme-menu-bg-hover;
+                    }
+                }
+            }
+            &.toctree-l2 {
+                &.current>a {
+                    background-color: $color-darktheme-menu-bg-l1;
+                }
+            }
+            &.current {
+                background-color: $color-darktheme-menu-bg-l1;
+
+                a {
+                    background-color: $color-darktheme-menu-bg-l1;
+                    @include menu_vertical_current_dark_mode_colors;
+
+                    &:hover {
+                        background-color: $color-darktheme-menu-bg-hover;
+                    }
+                    &:visited {
+                        background-color: $color-darktheme-menu-bg-l1;
+                        &:hover {
+                            background-color: $color-darktheme-menu-bg-hover;
+                        }
+                    }
+                }
+                &.toctree-l2 {
+                    background-color: $color-darktheme-menu-bg-l1;
+
+                    li.toctree-l3>a {
+                        @include menu_vertical_current_dark_mode_colors;
+
+                        background-color: $color-darktheme-menu-bg-l2;
+                        &:hover {
+                            background-color: $color-darktheme-menu-bg-hover;
+                        }
+                        &:visited {
+                            background-color: $color-darktheme-menu-bg-l2;
+                            &:hover {
+                                background-color: $color-darktheme-menu-bg-hover;
+                            }
+                        }
+                    }
+                }
+                &.toctree-l3 {
+                    li.toctree-l4>a {
+                        @include menu_vertical_current_dark_mode_colors;
+
+                        background-color: $color-darktheme-menu-bg-l3;
+                        &:hover {
+                            background-color: $color-darktheme-menu-bg-hover;
+                        }
+                        &:visited {
+                            background-color: $color-darktheme-menu-bg-l3;
+                            &:hover {
+                                background-color: $color-darktheme-menu-bg-hover;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     .admonition-in-other-languages {
         background: $color-darktheme-theme-alt-bg;
     }
