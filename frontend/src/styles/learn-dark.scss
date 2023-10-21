@@ -68,6 +68,13 @@
     .wy-nav-content {
         background: $color-darktheme-content-bg !important;
         color: $color-darktheme-content-font;
+        ::selection {
+            // color: #333333;
+            // background: lightyellow;
+
+            // background: #002770;
+            background: #474747;
+        }
     }
 
     .wy-side-nav-search {
