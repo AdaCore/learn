@@ -67,4 +67,37 @@
     .rst-content tt.literal {
         color: $color-darktheme-code-font;
     }
+    .rst-content table.docutils thead,
+    .rst-content table.field-list thead,
+    .wy-table thead {
+        background: #666666 !important;
+        color: #cccccc !important;
+    }
+    .rst-content table.docutils,
+    .wy-table-bordered-all {
+        border: 1px solid $color-darktheme-border;
+    }
+    .rst-content table.docutils td,
+    .wy-table-bordered-all td {
+        border-bottom: 1px solid $color-darktheme-border;
+        border-left: 1px solid $color-darktheme-border;
+    }
+    .wy-table-bordered {
+        border: 1px solid $color-darktheme-border;
+    }
+    .wy-table-bordered-rows td {
+        border-bottom: 1px solid $color-darktheme-border;
+    }
+    .wy-table-horizontal td,
+    .wy-table-horizontal th {
+        border-bottom: 1px solid $color-darktheme-border;
+    }
+
+    .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td,
+    .wy-table-backed,
+    .wy-table-odd td,
+    .wy-table-striped tr:nth-child(2n-1) td {
+        background-color: $color-darktheme-theme-alt-bg;
+    }
+
 }
