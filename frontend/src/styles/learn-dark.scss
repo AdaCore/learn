@@ -24,6 +24,20 @@
         background-color: $color-darktheme-code-bg !important;
         border: 1px solid $color-darktheme-code-border;
     }
+    .btn {
+        background-color: $color-darktheme-theme-bg-dark;
+        color: #fff;
+
+        &:hover {
+            background-color: lighten($color-darktheme-theme-bg-dark, 10%);
+        }
+    }
+
+    .btn-neutral {
+        background-color: #b3b6b6 !important;
+        color: #404040 !important;
+    }
+
     .wy-nav-content-wrap {
         background: $color-darktheme-bg-dark !important;
     }
@@ -100,4 +114,7 @@
         background-color: $color-darktheme-theme-alt-bg;
     }
 
+    a.ebook-download-button {
+        background-color: $color-darktheme-theme-bg-dark;
+    }
 }
