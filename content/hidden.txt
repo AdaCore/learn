@@ -1,1 +1,2 @@
 courses/advanced-spark
+courses/ada-idioms
