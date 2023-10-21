@@ -56,4 +56,12 @@
         // background: #6ab0de;
         background: #1a608e;
     }
+    .rst-content div[class^=highlight],
+    .rst-content pre.literal-block {
+        color: $color-darktheme-code-font;
+    }
+    .rst-content code.literal,
+    .rst-content tt.literal {
+        color: $color-darktheme-code-font;
+    }
 }
