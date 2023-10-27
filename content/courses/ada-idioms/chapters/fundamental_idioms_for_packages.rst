@@ -362,6 +362,8 @@ internal representation directly.
 Consider the following revision to the package :ada:`Integer_Stacks`, now as
 an ADT:
 
+.. _Ada_Idioms_Abstract_Data_Types_Code_Example:
+
 .. code-block:: ada
 
     package Integer_Stacks is
@@ -552,6 +554,8 @@ by no means necessarily included. In general, the additional text required for
 private types is worth the protections afforded.
 
 
+.. _Ada_Idioms_Abstract_Data_Machines:
+
 Fundamental Idiom 4: Abstract Data Machines
 -------------------------------------------
 
@@ -627,6 +631,8 @@ declarations representing the abstraction's state.
 Consider the following ADM version of the package :ada:`Integer_Stacks`, now
 renamed to :ada:`Integer_Stack` for reasons we will discuss shortly. In this
 version we declare the state in the package body.
+
+.. _Ada_Idioms_Abstract_Data_Machines_Code_Example:
 
 .. code-block:: ada
 
