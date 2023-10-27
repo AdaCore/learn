@@ -111,7 +111,9 @@
       "plugin:@typescript-eslint/recommended",
       "google"
     ],
-    "rules": {},
+    "rules": {
+      "max-len": ["error", {"ignoreRegExpLiterals": true}]
+    },
     "parserOptions": {
       "ecmaVersion": 6,
       "sourceType": "module"
