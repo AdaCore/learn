@@ -527,14 +527,29 @@ class Widget {
       case 'stdout': {
         // Split multiline messages into single lines for processing
         const outMsgList = data.split(/\r?\n/);
+        const slocRegex = /^(?:.* )?(?<file>[a-zA-Z._0-9-]+\.ad(?:s|b)):(?<row>\d+)(?::(?<col>\d+): (?<type>\S+):)?/;
         for (const outMsg of outMsgList) {
-          const ctRegex = /^([a-zA-Z._0-9-]+):(\d+):(\d+):(.+)$/m;
-          const rtRegex = /^raised .+ : ([a-zA-Z._0-9-]+):(\d+) (.+)$/m;
-          const ctMatchFound = outMsg.match(ctRegex);
-          const rtMatchFound = outMsg.match(rtRegex);
+          const match = outMsg.match(slocRegex);
+          if (!match) {
+            homeArea.addLine(outMsg);
+            continue;
+          }
+          const basename = match.groups!.file;
+          const view = this.viewMap.get(basename);
+          if (!view) {
+            // File not found, so just print the message to the homeArea
+            homeArea.addLine(outMsg);
+            continue;
+          }
+
+          const row = parseInt(match.groups!.row);
+          const col =
+            match.groups?.col == undefined ? 0 : parseInt(match.groups.col);
+          const msgType =
+            match.groups?.type == undefined ? 'error' : match.groups.type;
+
           // Lines that contain a sloc are clickable:
-          const cb = (basename: string, row: number, col: number,
-              view: EditorView): void => {
+          const cb = (): void => {
             if (window.getSelection()?.toString() == '') {
               view.header.scrollIntoView(true);
               view.header.click();
@@ -543,51 +558,14 @@ class Widget {
             }
           };
 
-          if (ctMatchFound?.length == 5) {
-            const basename = ctMatchFound[1];
-            const view = this.viewMap.get(basename);
-            const row = parseInt(ctMatchFound[2]);
-            const col = parseInt(ctMatchFound[3]);
+          view.editor.setGutterAnnotation(basename, row, col, outMsg, msgType);
 
-            if (!view) {
-              throw Error('Basename not found: ' + basename);
-            }
-
-            if (ctMatchFound[4].indexOf(' info:') === 0) {
-              homeArea.addInfo(outMsg, () => {
-                cb(basename, row, col, view);
-              });
-              view.editor.setGutterAnnotation(basename, row, col, outMsg,
-                  'info');
-            } else {
-              if (ctMatchFound[4].indexOf(' warning:') === 0) {
-                view.editor.setGutterAnnotation(basename, row, col, outMsg,
-                    'warning');
-              } else {
-                view.editor.setGutterAnnotation(basename, row, col, outMsg,
-                    'error');
-              }
-              homeArea.addMsg(outMsg, () => {
-                cb(basename, row, col, view);
-              });
-            }
-          } else if (rtMatchFound?.length == 4) {
-            const basename = rtMatchFound[1];
-            const view = this.viewMap.get(basename);
-            const row = parseInt(rtMatchFound[2]);
-            const col = 1;
-
-            if (!view) {
-              throw Error('Basename not found: ' + basename);
-            }
-
-            homeArea.addMsg(outMsg, () => {
-              cb(basename, row, col, view);
-            });
-            view.editor.setGutterAnnotation(basename, row, col, outMsg,
-                'error');
+          // If the message if of type info, addInfo
+          // Otherwise, addMsg
+          if (msgType == 'info') {
+            homeArea.addInfo(outMsg, cb);
           } else {
-            homeArea.addLine(outMsg);
+            homeArea.addMsg(outMsg, cb);
           }
         }
         break;
