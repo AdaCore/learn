@@ -28,8 +28,8 @@ that does not reveal the components added, if any. The parent type could itself
 be an extended type, but the point is that these types will all be private
 types one way or another. Declarations as private types and private extensions
 are not required by the language for inheritance, but as argued in the ADT
-idiom discussion, is recommended in the strongest terms. OOP doesn't change
-that, and in fact the encapsulation and information hiding that are
+idiom discussion, doing so is recommended in the strongest terms. OOP doesn't
+change that, and in fact the encapsulation and information hiding that are
 characteristic of the ADT idiom are foundational principles for OOP types.
 
 For an example of a private extension, given a tagged type named
@@ -87,9 +87,10 @@ units. In the following discussion, *abstract* has the OOP sense unless stated
 otherwise.
 
 When a tagged type is extended, inherited constructor functions automatically
-become abstract functions for the extended type. Assuming concrete types, the
-type extension will be illegal because only abstract types can have abstract
-subprograms.  Thus, the compiler prevents this situation.
+become abstract functions for the extended type. Assuming the extended child
+type is not abstract, the type extension will be illegal because only abstract
+types can have abstract subprograms.  Thus, the compiler prevents this
+situation.
 
 For an example, both for the code and the Ada rules, consider this simple
 package declaration that presents the tagged private type
@@ -194,7 +195,8 @@ private part and body of a child package have compile-time visibility to the
 parent package's private part.
 
 Any package declaring a tagged type, either directly or by type extension,
-will have a *constructors* child package. For example:
+will have a *constructors* child package if constructors are required. For
+example:
 
 .. code-block:: ada
 

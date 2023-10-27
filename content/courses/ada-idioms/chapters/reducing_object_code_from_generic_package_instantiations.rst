@@ -9,11 +9,11 @@ Problem Statement
 Generic unit instantiations are often, but not always, implemented by an Ada
 compiler as a form of *macro expansion*. In this approach, the compiler
 produces separate, dedicated object code for every instantiation.  The macro
-expansion approach can result in large total object code size for the
-executable when there are many instances, especially when the generic packages
-instantiated contain a lot of unit declarations. For example, the generic I/O
-packages contained within package :ada:`Ada.Text_IO` are themselves relatively
-large.
+expansion approach can produce better run-time performance but can result in
+large total object code size for the executable when there are many instances,
+especially when the generic packages instantiated contain a lot of unit
+declarations. For example, the generic I/O packages contained within package
+:ada:`Ada.Text_IO` are themselves relatively large.
 
 The alternative compiler implementation approach is *code-sharing*, in which
 distinct instantiations of a given generic unit are implemented with shared
@@ -104,14 +104,16 @@ As a result, the application has twenty instantiations (at least) of
 
 If the compiler happens to use the macro-expansion implementation, that means
 the application executable will have twenty copies of the object code defined
-by the generic :ada:`Float_IO`.
+by the generic :ada:`Float_IO`. For example, GNAT performs some internal
+restructuring to avoid this problem for these specific language-defined generic
+units, but not for application-defined generics.
 
 Instead, we can simply instantiate the generic at the library level:
 
 .. code-block:: ada
 
     with Ada.Text_IO, Common;
-    package Real_IO is new Ada.Text_IO.Float_IO( Common.Real );
+    package Real_IO is new Ada.Text_IO.Float_IO (Common.Real);
 
 Because the instantiation occurred at the library level, the resulting instance
 is declared at the library level, and can therefore be named in a "with-clause"
