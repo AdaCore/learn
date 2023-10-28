@@ -4085,18 +4085,26 @@ Let's see an example:
 
        type Info is limited private;
 
-       function Init (I : Integer) return Info;
+       function To_Info (S : String) return Info;
+
+       function To_String (Obj : Info)
+                           return String;
 
        function Copy (Obj : Info) return Info;
 
-       procedure Destroy (Obj : in out Info);
+       procedure Copy (To   : in out Info;
+                       From :        Info);
 
-       function To_Integer (Obj : Info)
-                            return Integer;
+       procedure Append (Obj : in out Info;
+                         S   : String);
+
+       procedure Reset (Obj : in out Info);
+
+       procedure Destroy (Obj : in out Info);
 
     private
 
-       type Info is access Integer;
+       type Info is access String;
 
     end Access_Type_Abstraction;
 
@@ -4104,30 +4112,45 @@ Let's see an example:
 
     package body Access_Type_Abstraction is
 
-       function Init (I : Integer) return Info is
-       begin
-          return new Integer'(I);
-       end Init;
+       function To_Info (S : String) return Info is
+         (new String'(S));
+
+       function To_String (Obj : Info)
+                           return String is
+         (if Obj /= null then Obj.all else "");
 
        function Copy (Obj : Info) return Info is
+         (To_Info (Obj.all));
+
+       procedure Copy (To   : in out Info;
+                       From :        Info) is
        begin
-           return Init (Obj.all);
+          Destroy (To);
+          To := To_Info (From.all);
        end Copy;
+
+       procedure Append (Obj : in out Info;
+                         S   : String) is
+          New_Info : constant Info :=
+                       To_Info (To_String (Obj) & S);
+       begin
+          Destroy (Obj);
+          Obj := New_Info;
+       end Append;
+
+       procedure Reset (Obj : in out Info) is
+       begin
+          Destroy (Obj);
+       end Reset;
 
        procedure Destroy (Obj : in out Info) is
           procedure Free is
             new Ada.Unchecked_Deallocation
-              (Object => Integer,
+              (Object => String,
                Name   => Info);
        begin
           Free (Obj);
        end Destroy;
-
-       function To_Integer (Obj : Info)
-                            return Integer is
-       begin
-          return Obj.all;
-       end To_Integer;
 
     end Access_Type_Abstraction;
 
@@ -4136,20 +4159,65 @@ Let's see an example:
     with Access_Type_Abstraction;
     use  Access_Type_Abstraction;
 
-    procedure Show_Access_Type_Abstraction is
-       Obj_1 : Info := Init (100);
+    procedure Main is
+       Obj_1 : Info := To_Info ("hello");
        Obj_2 : Info := Copy (Obj_1);
     begin
-       Put_Line ("Obj_1 : " &
-                 To_Integer (Obj_1)'Image);
-       Put_Line ("Obj_2 : " &
-                 To_Integer (Obj_2)'Image);
+       Put_Line ("TO_INFO / COPY");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       Reset (Obj_1);
+       Append (Obj_2, " world");
+
+       Put_Line ("RESET / APPEND");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       Copy (From => Obj_2,
+             To   => Obj_1);
+
+       Put_Line ("COPY");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
        Destroy (Obj_1);
        Destroy (Obj_2);
-    end Show_Access_Type_Abstraction;
+
+       Put_Line ("DESTROY");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       Append (Obj_1, "hey");
+
+       Put_Line ("APPEND");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("----------");
+
+       Put_Line ("APPEND");
+       Append (Obj_1, " there");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+
+       Destroy (Obj_1);
+       Destroy (Obj_2);
+    end Main;
 
 In this example, we hide an access type in the :ada:`Info` type |mdash| a
-limited private type. We allocate an object of this type in the :ada:`Init`
+limited private type. We allocate an object of this type in the :ada:`To_Info`
 function and deallocate it in the :ada:`Destroy` procedure. Also, we make
 sure that the reference isn't copied in the :ada:`Copy` function |mdash|
 we only copy the designated value in this function. This strategy eliminates
@@ -4178,28 +4246,32 @@ controlled type:
 
     package Access_Type_Abstraction is
 
-       type Info is new
-         Ada.Finalization.Limited_Controlled
-           with private;
+       type Info is limited private;
 
-       procedure Init (Obj : in out Info;
-                       I   :        Integer);
+       function To_Info (S : String) return Info;
+
+       function To_String (Obj : Info)
+                           return String;
+
+       function Copy (Obj : Info) return Info;
 
        procedure Copy (To   : in out Info;
                        From :        Info);
 
-       function To_Integer (Obj : Info)
-                            return Integer;
+       procedure Append (Obj : in out Info;
+                         S   :        String);
+
+       procedure Reset (Obj : in out Info);
 
     private
 
-       type Integer_Access is access Integer;
+       type String_Access is access String;
 
        type Info is new
          Ada.Finalization.Limited_Controlled with
-       record
-          IA : Integer_Access;
-       end record;
+          record
+             Str_A : String_Access;
+          end record;
 
        procedure Initialize (Obj : in out Info);
        procedure Finalize (Obj : in out Info);
@@ -4210,39 +4282,87 @@ controlled type:
 
     package body Access_Type_Abstraction is
 
+       --
+       --  STRING_ACCESS SUBPROGRAMS
+       --
+
+       function To_String_Access (S : String)
+                                  return String_Access
+       is
+         (new String'(S));
+
+       function To_String (S : String_Access)
+                           return String is
+         (if S /= null then S.all else "");
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => String,
+            Name   => String_Access);
+
+       procedure Copy (To   : in out String_Access;
+                       From :        String_Access) is
+       begin
+          Free (To);
+          To := To_String_Access (From.all);
+       end Copy;
+
+       procedure Append (Obj : in out String_Access;
+                         S   :        String) is
+          New_Str : constant String_Access :=
+                      To_String_Access
+                        (To_String (Obj) & S);
+       begin
+          Free (Obj);
+          Obj := New_Str;
+       end Append;
+
+       --
+       --  PRIVATE SUBPROGRAMS
+       --
+
        procedure Initialize (Obj : in out Info) is
        begin
-          --  Put_Line ("Initializing Info");
-          Obj.IA := new Integer'(0);
+          Obj.Str_A := null;
        end Initialize;
 
        procedure Finalize (Obj : in out Info) is
-          procedure Free is
-            new Ada.Unchecked_Deallocation
-              (Object => Integer,
-               Name   => Integer_Access);
        begin
           --  Put_Line ("Finalizing Info");
-          Free (Obj.IA);
+          Free (Obj.Str_A);
        end Finalize;
 
-       procedure Init (Obj : in out Info;
-                       I   :        Integer) is
-       begin
-          Obj.IA.all := I;
-       end Init;
+       --
+       --  PUBLIC SUBPROGRAMS
+       --
+
+       function To_Info (S : String) return Info is
+         (Ada.Finalization.Limited_Controlled
+          with Str_A => To_String_Access (S));
+
+       function To_String (Obj : Info)
+                           return String is
+         (To_String (Obj.Str_A));
+
+       function Copy (Obj : Info) return Info is
+         (To_Info (To_String (Obj.Str_A)));
 
        procedure Copy (To   : in out Info;
                        From :        Info) is
        begin
-          To.IA.all := From.IA.all;
+          Copy (To.Str_A, From.Str_A);
        end Copy;
 
-       function To_Integer (Obj : Info)
-                            return Integer is
+       procedure Append (Obj : in out Info;
+                         S   :        String) is
        begin
-          return Obj.IA.all;
-       end To_Integer;
+          Append (Obj.Str_A, S);
+       end Append;
+
+       procedure Reset (Obj : in out Info) is
+       begin
+          Free (Obj.Str_A);
+       end Reset;
 
     end Access_Type_Abstraction;
 
@@ -4251,31 +4371,73 @@ controlled type:
     with Access_Type_Abstraction;
     use  Access_Type_Abstraction;
 
-    procedure Show_Access_Type_Abstraction is
-       Obj_1, Obj_2 : Info;
+    procedure Main is
+       Obj_1 : Info := To_Info ("hello");
+       Obj_2 : Info := Copy (Obj_1);
     begin
-       Obj_1.Init (100);
-       Copy (To => Obj_2, From => Obj_1);
+       Put_Line ("TO_INFO / COPY");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
 
-       Put_Line ("Obj_1 : " &
-                 To_Integer (Obj_1)'Image);
-       Put_Line ("Obj_2 : " &
-                 To_Integer (Obj_2)'Image);
-    end Show_Access_Type_Abstraction;
+       Reset (Obj_1);
+       Append (Obj_2, " world");
+
+       Put_Line ("RESET / APPEND");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       Copy (From => Obj_2,
+             To   => Obj_1);
+
+       Put_Line ("COPY");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       Reset (Obj_1);
+       Reset (Obj_2);
+
+       Put_Line ("RESET");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       Append (Obj_1, "hey");
+
+       Put_Line ("APPEND");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("----------");
+
+       Put_Line ("APPEND");
+       Append (Obj_1, " there");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+    end Main;
 
 Of course, because we're using the
 :ada:`Limited_Controlled` type from the :ada:`Ada.Finalization` package,
 we had to adapt the prototype of the subprograms from the
 :ada:`Access_Type_Abstraction`. In this version of the code, we only have
-the allocation taking place in the :ada:`Init` procedure, but we don't have a
-:ada:`Destroy` procedure for deallocation: this call was moved to the
+the allocation taking place in the :ada:`To_Info` procedure, but we don't have
+a :ada:`Destroy` procedure for deallocation: this call was moved to the
 :ada:`Finalize` procedure.
 
 Since objects of the :ada:`Info` type |mdash| such as :ada:`Obj_1` in the
 :ada:`Show_Access_Type_Abstraction` procedure |mdash| are now controlled, the
 :ada:`Finalize` procedure is automatically called when they get out of scope.
 In this procedure, which we override for the :ada:`Info` type, we perform the
-deallocation of the internal access object :ada:`IA`. (You may uncomment the
+deallocation of the internal access object :ada:`Str_A`. (You may uncomment the
 calls to :ada:`Put_Line` in the body of the :ada:`Initialize` and
 :ada:`Finalize` subprograms to confirm that these subprograms are called in the
 background.)
