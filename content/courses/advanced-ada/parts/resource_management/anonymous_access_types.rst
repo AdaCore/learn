@@ -1854,7 +1854,7 @@ Accessibility rules on access parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the previous chapter, we saw that the accessibility rules also apply to
-:ref:`access values as subprograms parameters <Adv_Ada_Accessibility_Rules_Access_Values_As_Parameters>`.
+:ref:`access values as subprogram parameters <Adv_Ada_Accessibility_Rules_Access_Values_As_Parameters>`.
 In the case of access parameters, the rules are a bit less strict (as you may
 generally expect for anonymous access types), and the accessibility rules are
 checked at runtime. This allows use to use access values that would be illegal

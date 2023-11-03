@@ -863,7 +863,7 @@ Parameters as Access Values
 
 In addition to
 :ref:`using discriminants as access values <Adv_Ada_Discriminants_As_Access_Values>`,
-we can use access types for the parameter of a subprograms. For example, the
+we can use access types for subprogram formal parameters. For example, the
 :ada:`N` parameter of the :ada:`Show` procedure below has an access type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names
@@ -2570,7 +2570,7 @@ address we're specifying (instead of assigning registers for those components).
 Aliased parameters
 ~~~~~~~~~~~~~~~~~~
 
-In addition to objects and components, we can declare
+In addition to aliased objects and components, we can declare
 :ref:`aliased parameters <Adv_Ada_Aliased_Parameters>`, as we already discussed
 in an earlier chapter. As we mentioned there, aliased parameters are always
 passed by reference, independently of the type we're using.
