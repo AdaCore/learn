@@ -2997,6 +2997,84 @@ access-to-subprogram types can be solved by declaring them as anonymous types.
 the next section.)
 
 
+Readability
+~~~~~~~~~~~
+
+Note that readability suffers if you use a *cascade* of anonymous
+access-to-subprograms. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Readability_Issue
+
+    package Readability_Issue is
+
+       function F
+         return access
+           function (A : Integer)
+                     return access
+                       function (B : Float)
+                                 return Integer;
+
+    end Readability_Issue;
+
+    package Readability_Issue.Functions is
+
+       function To_Integer (V : Float)
+                            return Integer is
+         (Integer (V));
+
+       function Select_Conversion
+         (A : Integer)
+          return access
+            function (B : Float)
+                      return Integer is
+         (To_Integer'Access);
+
+    end Readability_Issue.Functions;
+
+    with Readability_Issue.Functions;
+    use  Readability_Issue.Functions;
+
+    package body Readability_Issue is
+
+       function F
+         return access
+           function (A : Integer)
+                     return access
+                       function (B : Float)
+                           return Integer is
+         (Select_Conversion'Access);
+
+    end Readability_Issue;
+
+In this example, the definition of :ada:`F` might compile fine, but it's simply
+too long to be readable. Not only that: we need to carry this *chain* to other
+functions as well |mdash| such as the :ada:`Select_Conversion` function above.
+Also, using these functions in an application is not straightforward:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Readability_Issue
+
+    with Readability_Issue;
+    use  Readability_Issue;
+
+    procedure Show_Readability_Issue is
+       F1 : access
+              function (A : Integer)
+                        return access
+                          function (B : Float)
+                                    return Integer
+            := F;
+       F2 : access function (B : Float)
+                             return Integer
+            := F1 (2);
+       I  : Integer := F2 (0.1);
+    begin
+       I := F1 (2) (0.1);
+    end Show_Readability_Issue;
+
+Therefore, our recommendation is to avoid this kind of *access cascading* by
+carefully designing your application. In general, you won't need that.
+
+
 .. _Adv_Ada_Accessibility_Rules_Anonymous_Access_To_Subprograms:
 
 Accessibility Rules and Anonymous Access-To-Subprograms
