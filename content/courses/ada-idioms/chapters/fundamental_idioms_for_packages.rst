@@ -779,8 +779,8 @@ following illustrates the approach:
 
     with Interfaces; use Interfaces;
     package Rotary_Switch is
-       subtype Rotary_Switch_Values is Unsigned_8 range 0 .. 15;
-       function State return Rotary_Switch_Values;
+       subtype Values is Unsigned_8 range 0 .. 15;
+       function State return Values;
     end Rotary_Switch;
 
 Clients can then call the function :ada:`Rotary_Switch.State` to get the
@@ -792,9 +792,9 @@ details.
     with System.Storage_Elements;  use System.Storage_Elements;
     package body Rotary_Switch is
        Switch : Unsigned_8 with Volatile, Address => To_Address (16#FFC0_0801#);
-       function State return Rotary_Switch_Values is
+       function State return Values is
        begin
-          if Switch in Rotary_Switch_Values then
+          if Switch in Values then
              return Switch;
           else
              raise Program_Error;
