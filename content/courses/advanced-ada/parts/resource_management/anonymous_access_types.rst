@@ -3003,7 +3003,7 @@ Readability
 Note that readability suffers if you use a *cascade* of anonymous
 access-to-subprograms. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Readability_Issue
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Readability_Issue
 
     package Readability_Issue is
 
@@ -3051,7 +3051,7 @@ too long to be readable. Not only that: we need to carry this *chain* to other
 functions as well |mdash| such as the :ada:`Select_Conversion` function above.
 Also, using these functions in an application is not straightforward:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Readability_Issue
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Subprograms.Readability_Issue
 
     with Readability_Issue;
     use  Readability_Issue;
@@ -3130,6 +3130,7 @@ compilation error, i.e. the assignment :ada:`P := Add_One'Access` becomes
 legal:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Simple_Example_Anonymous
+    :class: ada-run-expect-failure
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3253,7 +3254,6 @@ To circumvent the compilation error, we could also use anonymous
 access-to-subprograms instead:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Access_To_Subprogram_Parameter_Anonymous
-    :class: ada-run-expect-failure
 
     package Access_To_Subprogram_Types is
 
