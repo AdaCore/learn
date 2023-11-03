@@ -2296,6 +2296,8 @@ type) and display its information by calling the :ada:`Show` procedure.
         - :arm22:`A.18.2 The Generic Package Containers.Vectors <A-18-2>`
 
 
+.. _Adv_Ada_Anonymous_Access_Types_Accessibility_Rules:
+
 Anonymous Access Types and Accessibility Rules
 ----------------------------------------------
 
@@ -3000,7 +3002,476 @@ the next section.)
 Accessibility Rules and Anonymous Access-To-Subprograms
 -------------------------------------------------------
 
-.. todo::
+In principle, the
+:ref:`accessibility rules for anonymous access types <Adv_Ada_Anonymous_Access_Types_Accessibility_Rules>`
+that we've seen before apply to anonymous access-to-subprograms as well. Also,
+we had a discussion about
+:ref:`accessibility rules and access-to-subprograms <Adv_Ada_Accessibility_Rules_Access_To_Subprograms>`
+in the previous chapter. In this section, we review some of the rules that we
+already know and discuss how they relate to anonymous access-to-subprograms.
 
-    Complete section!
+.. admonition:: In the Ada Reference Manual
 
+    - :arm22:`3.10 Access Types <3-10>`
+
+
+Named vs. anonymous access-to-subprograms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's see an example of a named access-to-subprogram type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Simple_Example_Named
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Access_To_Subprogram_Error is
+
+       type PI is access
+         procedure (I : in out Integer);
+
+       P : PI;
+
+       I : Integer := 0;
+    begin
+       declare
+          procedure Add_One (I : in out Integer) is
+          begin
+             I := I + 1;
+          end Add_One;
+       begin
+          P := Add_One'Access;
+       end;
+    end Show_Access_To_Subprogram_Error;
+
+In this example, we get a compilation error because the lifetime of the
+:ada:`Add_One` procedure is shorter than the access type :ada:`PI`.
+
+In contrast, using an anonymous access-to-subprogram type eliminates the
+compilation error, i.e. the assignment :ada:`P := Add_One'Access` becomes
+legal:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Simple_Example_Anonymous
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Access_To_Subprogram_Error is
+       P : access procedure (I : in out Integer);
+
+       I : Integer := 0;
+    begin
+       declare
+          procedure Add_One (I : in out Integer) is
+          begin
+             I := I + 1;
+          end Add_One;
+       begin
+          P := Add_One'Access;
+          --  ERROR: Add_One is out-of-scope after
+          --         this line.
+       end;
+    end Show_Access_To_Subprogram_Error;
+
+In this case, the compiler introduces an accessibility check, which fails at
+runtime because the lifetime of :ada:`Add_One` is shorter than the lifetime of
+the access object :ada:`P`.
+
+
+Named vs. anonymous access-to-subprograms as parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Using anonymous access-to-subprograms as parameters allows us to pass
+subprograms at any level. For certain applications, the restrictions that are
+applied to named access types might be too strict, so using anonymous
+access-to-subprograms might be a good way to circumvent those restrictions.
+
+
+Named access-to-subprograms as a parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's see an example using a named access-to-procedure type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Access_To_Subprogram_Parameter_Named
+    :class: ada-expect-compile-error
+
+    package Access_To_Subprogram_Types is
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Process_Procedure is
+         access
+           procedure (Arr : in out Integer_Array);
+
+       procedure Process
+         (Arr : in out Integer_Array;
+          P   :        Process_Procedure);
+
+    end Access_To_Subprogram_Types;
+
+    package body Access_To_Subprogram_Types is
+
+       procedure Process
+         (Arr : in out Integer_Array;
+          P   :        Process_Procedure) is
+       begin
+          P (Arr);
+       end Process;
+
+    end Access_To_Subprogram_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    procedure Show_Access_To_Subprogram_Error is
+
+       procedure Add_One
+         (Arr : in out Integer_Array) is
+       begin
+          for E of Arr loop
+             E := E + 1;
+          end loop;
+       end Add_One;
+
+       procedure Display
+         (Arr : in out Integer_Array) is
+       begin
+          for I in Arr'Range loop
+             Put_Line ("Arr (" &
+                       Integer'Image (I)
+                       & "): "
+                      & Integer'Image (Arr (I)));
+          end loop;
+       end Display;
+
+       Arr : Integer_Array (1 .. 3) := (1, 2, 3);
+    begin
+       Process (Arr, Display'Access);
+
+       Put_Line ("Add_One...");
+       Process (Arr, Add_One'Access);
+
+       Process (Arr, Display'Access);
+    end Show_Access_To_Subprogram_Error;
+
+In this example, we declare the :ada:`Process_Procedure` type in the
+:ada:`Access_To_Subprogram_Types` package and use it in the :ada:`Process`
+procedure, which we call in the :ada:`Show_Access_To_Subprogram_Error`
+procedure. The accessibility rules trigger a compilation error because the
+accesses (:ada:`Add_One'Access` and :ada:`Display'Access`) are at a
+deeper level than the access-to-procedure type (:ada:`Process_Procedure`).
+
+As we know already, there's no :ada:`Unchecked_Access` attribute that
+we could use here. An easy way to make this code compile could be to move
+:ada:`Add_One` and :ada:`Display` to the library level.
+
+
+Anonymous access-to-subprograms as a parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To circumvent the compilation error, we could also use anonymous
+access-to-subprograms instead:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Access_To_Subprogram_Parameter_Anonymous
+    :class: ada-run-expect-failure
+
+    package Access_To_Subprogram_Types is
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       procedure Process
+         (Arr : in out Integer_Array;
+          P   : access procedure
+                  (Arr : in out Integer_Array));
+
+    end Access_To_Subprogram_Types;
+
+    package body Access_To_Subprogram_Types is
+
+       procedure Process
+         (Arr : in out Integer_Array;
+          P   : access procedure
+                  (Arr : in out Integer_Array)) is
+       begin
+          P (Arr);
+       end Process;
+
+    end Access_To_Subprogram_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Access_To_Subprogram_Types;
+    use  Access_To_Subprogram_Types;
+
+    procedure Show_Access_To_Subprogram_Error is
+
+       procedure Add_One
+         (Arr : in out Integer_Array) is
+       begin
+          for E of Arr loop
+             E := E + 1;
+          end loop;
+       end Add_One;
+
+       procedure Display
+         (Arr : in out Integer_Array) is
+       begin
+          for I in Arr'Range loop
+             Put_Line ("Arr (" &
+                       Integer'Image (I)
+                       & "): "
+                      & Integer'Image (Arr (I)));
+          end loop;
+       end Display;
+
+       Arr : Integer_Array (1 .. 3) := (1, 2, 3);
+    begin
+       Process (Arr, Display'Access);
+
+       Put_Line ("Add_One...");
+       Process (Arr, Add_One'Access);
+
+       Process (Arr, Display'Access);
+    end Show_Access_To_Subprogram_Error;
+
+Now, the code is accepted by the compiler because anonymous
+access-to-subprograms used as parameters allow passing of subprograms at any
+level. Also, we don't see a run-time exception because the subprograms are
+still *accessible* when we call :ada:`Process`.
+
+
+Iterator
+~~~~~~~~
+
+A typical example that illustrates well the necessity of using anonymous
+access-to-subprograms is that of a container iterator. In fact, many of the
+standard Ada containers |mdash| the child packages of :ada:`Ada.Containers`
+|mdash| make use of anonymous access-to-subprograms for their :ada:`Iterate`
+subprograms.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`A.18.2 The Package Containers.Vectors <A-18-2>`
+    - :arm22:`A.18.4 Maps <A-18-4>`
+    - :arm22:`A.18.7 Sets <A-18-7>`
+
+
+Using named access-to-subprograms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's start with a simplified container type (:ada:`Data_Container`) using a
+named access-to-subprogram type (:ada:`Process_Element`) for iteration:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Iterator_Named
+
+    generic
+       type Element is private;
+    package Data_Processing is
+
+       type Data_Container (Last : Positive) is
+         private;
+
+       Data_Container_Full : exception;
+
+       procedure Append (D : in out Data_Container;
+                         E :        Element);
+
+       type Process_Element is
+         not null access procedure (E : Element);
+
+       procedure Iterate
+         (D    : Data_Container;
+          Proc : Process_Element);
+
+    private
+
+       type Data_Container_Storage is
+         array (Positive range <>) of Element;
+
+       type Data_Container (Last : Positive) is
+       record
+          S    : Data_Container_Storage (1 .. Last);
+          Curr : Natural := 0;
+       end record;
+
+    end Data_Processing;
+
+    package body Data_Processing is
+
+       procedure Append (D : in out Data_Container;
+                         E :        Element) is
+       begin
+          if D.Curr < D.S'Last then
+             D.Curr := D.Curr + 1;
+             D.S (D.Curr) := E;
+          else
+             raise Data_Container_Full;
+             --  NOTE: This is just a dummy
+             --        implementation. A better
+             --        strategy is to add actual error
+             --        handling when the container is
+             --        full.
+          end if;
+       end Append;
+
+       procedure Iterate
+         (D    : Data_Container;
+          Proc : Process_Element) is
+       begin
+          for I in D.S'First .. D.Curr loop
+             Proc (D.S (I));
+          end loop;
+       end Iterate;
+
+    end Data_Processing;
+
+In this example, we declare the :ada:`Process_Element` type in the
+generic :ada:`Data_Processing` package, and we use it in the :ada:`Iterate`
+procedure. We then instantiate this package as :ada:`Float_Data_Processing`,
+and we use it in the :ada:`Show_Access_To_Subprograms` procedure:
+
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Iterator_Named
+    :class: ada-expect-compile-error
+
+    with Data_Processing;
+
+    package Float_Data_Processing is
+      new Data_Processing (Element => Float);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Float_Data_Processing;
+    use  Float_Data_Processing;
+
+    procedure Show_Access_To_Subprograms is
+
+       procedure Display (F : Float) is
+       begin
+          Put_Line ("F :" & Float'Image (F));
+       end Display;
+
+       D : Data_Container (5);
+    begin
+        Append (D, 1.0);
+        Append (D, 2.0);
+        Append (D, 3.0);
+
+        Iterate (D, Display'Access);
+    end Show_Access_To_Subprograms;
+
+Using :ada:`Display'Access` in the call to :ada:`Iterate` triggers a
+compilation error because its lifetime is shorter than the lifetime of the
+:ada:`Process_Element` type.
+
+
+Using anonymous access-to-subprograms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now, let's use an anonymous access-to-subprogram type in the :ada:`Iterate`
+procedure:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Iterator_Anonymous
+
+    generic
+       type Element is private;
+    package Data_Processing is
+
+       type Data_Container (Last : Positive) is
+         private;
+
+       Data_Container_Full : exception;
+
+       procedure Append (D : in out Data_Container;
+                         E :        Element);
+
+       procedure Iterate
+         (D    : Data_Container;
+          Proc : not null access
+                   procedure (E : Element));
+
+    private
+
+       type Data_Container_Storage is
+         array (Positive range <>) of Element;
+
+       type Data_Container (Last : Positive) is
+       record
+          S    : Data_Container_Storage (1 .. Last);
+          Curr : Natural := 0;
+       end record;
+
+    end Data_Processing;
+
+    package body Data_Processing is
+
+       procedure Append (D : in out Data_Container;
+                         E :        Element) is
+       begin
+          if D.Curr < D.S'Last then
+             D.Curr := D.Curr + 1;
+             D.S (D.Curr) := E;
+          else
+             raise Data_Container_Full;
+             --  NOTE: This is just a dummy
+             --        implementation. A better
+             --        strategy is to add actual error
+             --        handling when the container is
+             --        full.
+          end if;
+       end Append;
+
+       procedure Iterate
+         (D    : Data_Container;
+          Proc : not null access
+                   procedure (E : Element)) is
+       begin
+          for I in D.S'First .. D.Curr loop
+             Proc (D.S (I));
+          end loop;
+       end Iterate;
+
+    end Data_Processing;
+
+Note that the only changes we did to the package were to remove the
+:ada:`Process_Element` type and replace the type of the :ada:`Proc` parameter
+of the :ada:`Iterate` procedure from a named type (:ada:`Process_Element`) to
+an anonymous type (:ada:`not null access procedure (E : Element)`).
+
+Now, the same test application we used before
+(:ada:`Show_Access_To_Subprograms`) compiles as expected:
+
+.. code:: ada run_button main=show_access_to_subprograms.adb project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Accessibility_Rules_Anonymous_Access_To_Subprograms.Iterator_Anonymous
+
+    with Data_Processing;
+
+    package Float_Data_Processing is
+      new Data_Processing (Element => Float);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Float_Data_Processing;
+    use  Float_Data_Processing;
+
+    procedure Show_Access_To_Subprograms is
+
+       procedure Display (F : Float) is
+       begin
+          Put_Line ("F :" & Float'Image (F));
+       end Display;
+
+       D : Data_Container (5);
+    begin
+        Append (D, 1.0);
+        Append (D, 2.0);
+        Append (D, 3.0);
+
+        Iterate (D, Display'Access);
+    end Show_Access_To_Subprograms;
+
+Remember that the compiler introduces an accessibility check in the call to
+:ada:`Iterate`, which is successful because the lifetime of
+:ada:`Display'Access` is the same as the lifetime of the :ada:`Proc` parameter
+of :ada:`Iterate`.
