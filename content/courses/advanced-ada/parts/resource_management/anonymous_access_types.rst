@@ -904,6 +904,10 @@ objects and parameter modes directly, as it makes the design simpler and less
 error-prone. One exception is when we're interfacing to other languages,
 especially C: this is our
 :ref:`next topic <Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages>`.
+Another time when access parameters are vital is for inherited primitive
+operations for tagged types. We discuss this
+:ref:`later on <Adv_Ada_Access_Parameters_Inherited_Primitive_Operations_Tagged_Types>`.
+
 
 .. admonition:: In the Ada Reference Manual
 
@@ -1077,6 +1081,129 @@ the last line of the procedure, we call :ada:`Dealloc_Integer` and pass
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
+
+
+.. _Adv_Ada_Access_Parameters_Inherited_Primitive_Operations_Tagged_Types:
+
+Inherited Primitive Operations For Tagged Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to declare inherited primitive operations for tagged types that use
+access types, we need to use access parameters. The reason is that, to be a
+primitive operation for some tagged type |mdash| and hence inheritable |mdash|
+the subprogram must reference the tagged type name directly in the parameter
+profile. This means that a named access type won't suffice, because only the
+access type name would appear in the profile. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Inherited_Primitives
+    :class: ada-expect-compile-error
+
+    package Inherited_Primitives is
+
+       type T is tagged private;
+
+       type T_Access is access all T;
+
+       procedure Proc (N : T_Access);
+       --  Proc is not a primitive of type T.
+
+       type T_Child is new T with private;
+
+       type T_Child_Access is access all T_Child;
+
+    private
+
+       type T is tagged null record;
+
+       type T_Child is new T with null record;
+
+    end Inherited_Primitives;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Inherited_Primitives is
+
+       procedure Proc (N : T_Access) is null;
+
+    end Inherited_Primitives;
+
+    with Inherited_Primitives;
+    use  Inherited_Primitives;
+
+    procedure Show_Inherited_Primitives is
+       Obj       : T_Access       := new T;
+       Obj_Child : T_Child_Access := new T_Child;
+    begin
+       Proc (Obj);
+       Proc (Obj_Child);
+       --    ^^^^^^^^^
+       --    ERROR: Proc is not inherited!
+    end Show_Inherited_Primitives;
+
+In this example, :ada:`Proc` is not a primitive of type :ada:`T` because it's
+referring to type :ada:`T_Access`, not type :ada:`T`. This means that
+:ada:`Proc` isn't inherited when we derive the :ada:`T_Child` type. Therefore,
+when we call :ada:`Proc (Obj_Child)`, a compilation error occurs because the
+compiler expects type :ada:`T_Access` |mdash| there's no
+:ada:`Proc (N : T_Child_Access)` that could be used here.
+
+If we replace :ada:`T_Access` in the :ada:`Proc` procedure with an an access
+parameter (:ada:`access T`), the subprogram becomes a primitive of :ada:`T`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Inherited_Primitives
+
+    package Inherited_Primitives is
+
+       type T is tagged private;
+
+       procedure Proc (N : access T);
+       --  Proc is a primitive of type T.
+
+       type T_Child is new T with private;
+
+    private
+
+       type T is tagged null record;
+
+       type T_Child is new T with null record;
+
+    end Inherited_Primitives;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Inherited_Primitives is
+
+       procedure Proc (N : access T) is null;
+
+    end Inherited_Primitives;
+
+    with Inherited_Primitives;
+    use  Inherited_Primitives;
+
+    procedure Show_Inherited_Primitives is
+       Obj       : access T       := new T;
+       Obj_Child : access T_Child := new T_Child;
+    begin
+       Proc (Obj);
+       Proc (Obj_Child);
+       --    ^^^^^^^^^
+       --    OK: Proc is inherited!
+    end Show_Inherited_Primitives;
+
+Now, the child type :ada:`T_Child` (derived from the :ada:`T`) inherits the
+primitive operation :ada:`Proc`. This inherited operation has an access
+parameter designating the child type:
+
+.. code-block:: ada
+
+       type T_Child is new T with private;
+
+       procedure Proc (N : access T_Child);
+       --  Implicitly inherited primitive operation
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.9.2 Dispatching Operations of Tagged Types <3-9-2>`
 
 
 User-Defined References
