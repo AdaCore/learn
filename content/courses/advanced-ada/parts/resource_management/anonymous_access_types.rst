@@ -906,7 +906,7 @@ especially C: this is our next topic.
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`__
+    - :arm22:`3.10 Access Types <3-10>`
 
 
 Interfacing To Other Languages
@@ -1073,7 +1073,7 @@ the last line of the procedure, we call :ada:`Dealloc_Integer` and pass
 
 .. admonition:: In the Ada Reference Manual
 
-    - `3.10 Access Types <https://www.adaic.org/resources/add_content/standards/12rm/html/RM-3-10.html>`__
+    - :arm22:`3.10 Access Types <3-10>`
 
 
 User-Defined References
