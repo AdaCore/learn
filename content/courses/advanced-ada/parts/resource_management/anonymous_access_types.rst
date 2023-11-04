@@ -901,13 +901,16 @@ Later on, we talk about the
 
 In general, we should avoid access parameters whenever possible and simply use
 objects and parameter modes directly, as it makes the design simpler and less
-error-prone. The only exception is when we're interfacing to other languages,
-especially C: this is our next topic.
+error-prone. One exception is when we're interfacing to other languages,
+especially C: this is our
+:ref:`next topic <Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages>`.
 
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.10 Access Types <3-10>`
 
+
+.. _Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages:
 
 Interfacing To Other Languages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
