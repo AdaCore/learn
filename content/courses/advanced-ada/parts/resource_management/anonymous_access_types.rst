@@ -1169,8 +1169,6 @@ parameter (:ada:`access T`), the subprogram becomes a primitive of :ada:`T`:
 
     end Inherited_Primitives;
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
     package body Inherited_Primitives is
 
        procedure Proc (N : access T) is null;
