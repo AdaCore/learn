@@ -4435,7 +4435,7 @@ a :ada:`Destroy` procedure for deallocation: this call was moved to the
 
 Since objects of the :ada:`Info` type |mdash| such as :ada:`Obj_1` in the
 :ada:`Show_Access_Type_Abstraction` procedure |mdash| are now controlled, the
-:ada:`Finalize` procedure is automatically called when they get out of scope.
+:ada:`Finalize` procedure is automatically called when they go out of scope.
 In this procedure, which we override for the :ada:`Info` type, we perform the
 deallocation of the internal access object :ada:`Str_A`. (You may uncomment the
 calls to :ada:`Put_Line` in the body of the :ada:`Initialize` and
