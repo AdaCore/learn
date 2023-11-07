@@ -4323,7 +4323,16 @@ controlled type:
 
        procedure Initialize (Obj : in out Info) is
        begin
+          --  Put_Line ("Initializing Info");
           Obj.Str_A := null;
+          --  ^^^^^^^^^^^^^
+          --  NOTE: This line has just been added to
+          --        illustrate the "automatic" call to
+          --        Initialize. Actually, this
+          --        assignment isn't needed, as
+          --        the Str_A component is
+          --        automatically initialized to null
+          --        upon object construction.
        end Initialize;
 
        procedure Finalize (Obj : in out Info) is
