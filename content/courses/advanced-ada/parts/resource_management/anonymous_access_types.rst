@@ -33,7 +33,7 @@ When we compare this example with the previous one, we see that the declaration
 an access object of this anonymous type.
 
 To be more precise, :ada:`A : access Integer` is an
-:ref:`access parameter <Adv_Ada_Anonymous_Access_Parameter>` and it's
+:ref:`access parameter <Adv_Ada_Access_Parameters>` and it's
 specifying an
 :ref:`anonymous access-to-object type <Adv_Ada_Anonymous_Access_To_Object_Types>`.
 Another flavor of anonymous access types are
@@ -760,14 +760,448 @@ using anonymous access types in the declaration of the :ada:`B` and :ada:`A`
 components.
 
 
-.. _Adv_Ada_Anonymous_Access_Parameter:
+.. _Adv_Ada_Access_Parameters:
 
-Anonymous Access parameters
----------------------------
+Access parameters
+-----------------
 
+In the previous chapter, we talked about
+:ref:`parameters as access values <Adv_Ada_Parameters_As_Access_Values>`. As
+you might have expected, we can also use anonymous access types as parameters
+of a subprogram. However, they're limited to be :ada:`in` parameters of a
+subprogram or return type of a function (also called the access result type):
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Names
+
+    package Names is
+
+       function Init (S1, S2 : String)
+                      return access String;
+       --             ^^^^^^^^^^^^^^^^^^^^
+       --  Anonymous access type as the access
+       --  result type.
+
+       procedure Show (N : access constant String);
+       --                  ^^^^^^^^^^^^^^^^^^^^^^
+       --  Anonymous access type as a parameter type.
+
+    end Names;
+
+In this example, we have a string as the access result type of the
+:ada:`Init` function, and another string as the access parameter of the
+:ada:`Show` procedure.
+
+This is the complete code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Names
+
+    package Names is
+
+       function Init (S1, S2 : String)
+                      return access String;
+
+       procedure Show (N : access constant String);
+
+    private
+
+       function Init (S1, S2 : String)
+                      return access String is
+         (new String'(S1 & "-" & S2));
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Names is
+
+       procedure Show (N : access constant String) is
+       begin
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       N : access String := Init ("Lily", "Ann");
+    begin
+       Show (N);
+    end Show_Names;
+
+Note that we're not using the :ada:`in` parameter mode in the
+:ada:`Show` procedure above. Usually, this parameter mode can be omitted,
+as it is the default parameter mode |mdash| :ada:`procedure P (I : Integer)`
+is the same as :ada:`procedure P (I : in Integer)`. However, in the case of
+the :ada:`Show` procedure, the :ada:`in` parameter mode isn't just optionally
+absent. In fact, for access parameters, the parameter mode is always implied
+as :ada:`in`, so writing it explicitly is actually forbidden. In other words,
+we can only write :ada:`N : access String` or
+:ada:`N : access constant String`, but we cannot write
+:ada:`N : in access String` or :ada:`N : in access constant String`.
+
+.. admonition:: For further reading...
+
+    When we discussed
+    :ref:`parameters as access values <Adv_Ada_Parameters_As_Access_Values>`
+    in the previous chapter, we saw how we can simply use different
+    parameter modes to write a program instead of using access types.
+    Basically, to implement the same functionality, we just replaced the access
+    types by selecting the correct parameter modes instead and used *simpler*
+    data types.
+
+    Let's do the same exercise again, this time by adapting the previous code
+    example with anonymous access types:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Names_String
+
+        package Names is
+
+           function Init (S1, S2 : String)
+                          return String;
+
+           procedure Show (N : String);
+
+        private
+
+           function Init (S1, S2 : String)
+                          return String is
+             (S1 & "-" & S2);
+
+        end Names;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Names is
+
+           procedure Show (N : String) is
+           begin
+              Put_Line ("Name: " & N);
+           end Show;
+
+        end Names;
+
+        with Names; use Names;
+
+        procedure Show_Names is
+           N : String := Init ("Lily", "Ann");
+        begin
+           Show (N);
+        end Show_Names;
+
+    Although we're using simple strings instead of access types in this version
+    of the code example, we're still getting a similar behavior. However, there
+    is a small, yet important difference in the way the string returned by
+    :ada:`Init` is being allocated: while the previous implementation (which
+    was using an access result type) was allocating the string on the heap,
+    we're now allocating the string on the stack.
+
+Later on, we talk about the
+:ref:`accessibility rules in the case of access parameters <Adv_Ada_Accessibility_Rules_Access_Parameters>`.
+
+In general, we should avoid access parameters whenever possible and simply use
+objects and parameter modes directly, as it makes the design simpler and less
+error-prone. One exception is when we're interfacing to other languages,
+especially C: this is our
+:ref:`next topic <Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages>`.
+Another time when access parameters are vital is for inherited primitive
+operations for tagged types. We discuss this
+:ref:`later on <Adv_Ada_Access_Parameters_Inherited_Primitive_Operations_Tagged_Types>`.
+
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+
+.. _Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages:
 
 Interfacing To Other Languages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use access parameters to interface to other languages. This can be
+particularly useful when interfacing to C code that makes use of pointers.
+For example, let's assume we want to call the :c:`add_one` function below in
+our Ada implementation:
+
+.. code:: c manual_chop no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    !operations_c.h
+    void add_one(int *p_i);
+
+    !operations_c.c
+    void add_one(int *p_i)
+    {
+        *p_i = *p_i + 1;
+    }
+
+We could map the :c:`int *` parameter of :ada:`add_one` to
+:ada:`access Integer` in the Ada specification:
+
+.. code-block:: ada
+
+    procedure Add_One (IA : access Integer)
+      with Import, Convention => C;
+
+This is a complete code example:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    package Operations is
+
+       procedure Add_One (IA : access Integer)
+         with Import, Convention => C;
+
+    end Operations;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Operations;  use Operations;
+
+    procedure Show_Operations is
+       I : aliased Integer := 42;
+    begin
+       Put_Line (I'Image);
+       Add_One (I'Access);
+       Put_Line (I'Image);
+    end Show_Operations;
+
+Once again, we can replace access parameters with simpler types by using the
+appropriate parameter mode. In this case, we could replace
+:ada:`access Integer` by :ada:`aliased in out Integer`. This is the modified
+version of the code:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    package Operations is
+
+       procedure Add_One
+        (IA : aliased in out Integer)
+           with Import, Convention => C;
+
+    end Operations;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Operations;  use Operations;
+
+    procedure Show_Operations is
+       I : aliased Integer := 42;
+    begin
+       Put_Line (I'Image);
+       Add_One (I);
+       Put_Line (I'Image);
+    end Show_Operations;
+
+However, there are situations where aliased objects cannot be used. For
+example, suppose we want to allocate memory inside a C function. In this case,
+the pointer to that memory block must be mapped to an access type in Ada.
+
+Let's extend the previous C code example and introduce the :c:`alloc_integer`
+and :c:`dealloc_integer` functions, which allocate and deallocate an integer
+value:
+
+.. code:: c manual_chop no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    !operations_c.h
+    int * alloc_integer();
+
+    void dealloc_integer(int *p_i);
+
+    void add_one(int *p_i);
+
+    !operations_c.c
+    #include <stdlib.h>
+
+    int * alloc_integer()
+    {
+        return malloc(sizeof(int));
+    }
+
+    void dealloc_integer(int *p_i)
+    {
+        free (p_i);
+    }
+
+    void add_one(int *p_i)
+    {
+        *p_i = *p_i + 1;
+    }
+
+In this case, we really have to use access types to interface to these C
+functions. In fact, we need an access result type to interface to the
+:c:`alloc_integer()` function, and an access parameter in the case of the
+:c:`dealloc_integer()` function. This is the corresponding specification in
+Ada:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    package Operations is
+
+       function Alloc_Integer return access Integer
+         with Import, Convention => C;
+
+       procedure Dealloc_Integer (IA : access Integer)
+         with Import, Convention => C;
+
+       procedure Add_One
+        (IA : aliased in out Integer)
+           with Import, Convention => C;
+
+    end Operations;
+
+Note that we're still using an aliased integer type for the :ada:`Add_One`
+procedure, while we're using access types for the other two subprograms.
+
+Finally, as expected, we can use this specification in a test application:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Operations;  use Operations;
+
+    procedure Show_Operations is
+       I : access Integer := Alloc_Integer;
+    begin
+       I.all := 42;
+       Put_Line (I.all'Image);
+
+       Add_One (I.all);
+       Put_Line (I.all'Image);
+
+       Dealloc_Integer (I);
+    end Show_Operations;
+
+In this application, we get a C pointer from the :c:`alloc_integer` function
+and encapsulate it in an Ada access type, which we then assign to :ada:`I`. In
+the last line of the procedure, we call :ada:`Dealloc_Integer` and pass
+:ada:`I` to it, which deallocates the memory block indicated by the C pointer.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.10 Access Types <3-10>`
+
+
+.. _Adv_Ada_Access_Parameters_Inherited_Primitive_Operations_Tagged_Types:
+
+Inherited Primitive Operations For Tagged Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to declare inherited primitive operations for tagged types that use
+access types, we need to use access parameters. The reason is that, to be a
+primitive operation for some tagged type |mdash| and hence inheritable |mdash|
+the subprogram must reference the tagged type name directly in the parameter
+profile. This means that a named access type won't suffice, because only the
+access type name would appear in the profile. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Inherited_Primitives
+    :class: ada-expect-compile-error
+
+    package Inherited_Primitives is
+
+       type T is tagged private;
+
+       type T_Access is access all T;
+
+       procedure Proc (N : T_Access);
+       --  Proc is not a primitive of type T.
+
+       type T_Child is new T with private;
+
+       type T_Child_Access is access all T_Child;
+
+    private
+
+       type T is tagged null record;
+
+       type T_Child is new T with null record;
+
+    end Inherited_Primitives;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Inherited_Primitives is
+
+       procedure Proc (N : T_Access) is null;
+
+    end Inherited_Primitives;
+
+    with Inherited_Primitives;
+    use  Inherited_Primitives;
+
+    procedure Show_Inherited_Primitives is
+       Obj       : T_Access       := new T;
+       Obj_Child : T_Child_Access := new T_Child;
+    begin
+       Proc (Obj);
+       Proc (Obj_Child);
+       --    ^^^^^^^^^
+       --    ERROR: Proc is not inherited!
+    end Show_Inherited_Primitives;
+
+In this example, :ada:`Proc` is not a primitive of type :ada:`T` because it's
+referring to type :ada:`T_Access`, not type :ada:`T`. This means that
+:ada:`Proc` isn't inherited when we derive the :ada:`T_Child` type. Therefore,
+when we call :ada:`Proc (Obj_Child)`, a compilation error occurs because the
+compiler expects type :ada:`T_Access` |mdash| there's no
+:ada:`Proc (N : T_Child_Access)` that could be used here.
+
+If we replace :ada:`T_Access` in the :ada:`Proc` procedure with an an access
+parameter (:ada:`access T`), the subprogram becomes a primitive of :ada:`T`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Inherited_Primitives
+
+    package Inherited_Primitives is
+
+       type T is tagged private;
+
+       procedure Proc (N : access T);
+       --  Proc is a primitive of type T.
+
+       type T_Child is new T with private;
+
+    private
+
+       type T is tagged null record;
+
+       type T_Child is new T with null record;
+
+    end Inherited_Primitives;
+
+    package body Inherited_Primitives is
+
+       procedure Proc (N : access T) is null;
+
+    end Inherited_Primitives;
+
+    with Inherited_Primitives;
+    use  Inherited_Primitives;
+
+    procedure Show_Inherited_Primitives is
+       Obj       : access T       := new T;
+       Obj_Child : access T_Child := new T_Child;
+    begin
+       Proc (Obj);
+       Proc (Obj_Child);
+       --    ^^^^^^^^^
+       --    OK: Proc is inherited!
+    end Show_Inherited_Primitives;
+
+Now, the child type :ada:`T_Child` (derived from the :ada:`T`) inherits the
+primitive operation :ada:`Proc`. This inherited operation has an access
+parameter designating the child type:
+
+.. code-block:: ada
+
+       type T_Child is new T with private;
+
+       procedure Proc (N : access T_Child);
+       --  Implicitly inherited primitive operation
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.9.2 Dispatching Operations of Tagged Types <3-9-2>`
 
 
 User-Defined References
@@ -1540,6 +1974,60 @@ are only violated when the target object in the assignment is *less* deep. This
 is the case in the :ada:`L0_AO := L1_IA` and the
 :ada:`L0_IA := L0_Integer_Access (L1_AO)` assignments. Otherwise, mixing those
 access objects doesn't impose additional hurdles.
+
+
+.. _Adv_Ada_Accessibility_Rules_Access_Parameters:
+
+Accessibility rules on access parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous chapter, we saw that the accessibility rules also apply to
+:ref:`access values as subprogram parameters <Adv_Ada_Accessibility_Rules_Access_Values_As_Parameters>`.
+In the case of access parameters, the rules are a bit less strict (as you may
+generally expect for anonymous access types), and the accessibility rules are
+checked at runtime. This allows use to use access values that would be illegal
+in the case of named access types because of their accessibility levels.
+
+Let's adapt a previous code example to make use of access parameters:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Checks_Parameters
+
+    package Names is
+
+       procedure Show (N : access constant String);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    --  with Ada.Characters.Handling;
+    --  use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Show (N : access constant String) is
+       begin
+          --  for I in N'Range loop
+          --     N (I) := To_Lower (N (I));
+          --  end loop;
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       S : aliased String := "John";
+    begin
+       Show (S'Access);
+    end Show_Names;
+
+As we've seen in the previous chapter, compilation fails when we use named
+access types in this code example. In the case of access parameters, using
+:ada:`S'Access` doesn't make the compilation fail, nor does the accessibility
+check fail at runtime because :ada:`S` is still in scope when we call the
+:ada:`Show` procedure.
 
 
 .. _Adv_Ada_Anonymous_Access_To_Subprograms:

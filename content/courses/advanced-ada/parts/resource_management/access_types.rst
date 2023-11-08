@@ -856,6 +856,529 @@ change the discriminant. However, the last assignment raises the
 discriminant.
 
 
+.. _Adv_Ada_Parameters_As_Access_Values:
+
+Parameters as Access Values
+---------------------------
+
+In addition to
+:ref:`using discriminants as access values <Adv_Ada_Discriminants_As_Access_Values>`,
+we can use access types for subprogram formal parameters. For example, the
+:ada:`N` parameter of the :ada:`Show` procedure below has an access type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names
+
+    package Names is
+
+       type Name is access String;
+
+       procedure Show (N : Name);
+
+    end Names;
+
+This is the complete code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names
+
+    package Names is
+
+       type Name is access String;
+
+       procedure Show (N : Name);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Names is
+
+       procedure Show (N : Name) is
+       begin
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       N : Name := new String'("John");
+    begin
+       Show (N);
+    end Show_Names;
+
+Note that in this example, the :ada:`Show` procedure is basically just
+displaying the string. Since the procedure isn't doing anything that justifies
+the need for an access type, we could have implemented it with a *simpler*
+type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names_String
+
+    package Names is
+
+       type Name is access String;
+
+       procedure Show (N : String);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Names is
+
+       procedure Show (N : String) is
+       begin
+          Put_Line ("Name: " & N);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       N : Name := new String'("John");
+    begin
+       Show (N.all);
+    end Show_Names;
+
+It's important to highlight the difference between passing an access value to
+a subprogram and passing an object by reference. In both versions of this code
+example, the compiler will make use of a reference for the actual parameter of
+the :ada:`N` parameter of the :ada:`Show` procedure. However, the difference
+between these two cases is that:
+
+- :ada:`N : Name` is a reference to an object (because it's an access value)
+  that is passed by value, and
+
+- :ada:`N : String` is an object passed by reference.
+
+Changing the referenced object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since the :ada:`Name` type gives us access to an object in the :ada:`Show`
+procedure, we could actually change this object inside the procedure. To
+illustrate this, let's change the :ada:`Show` procedure to lower each
+character of the string before displaying it (and rename the procedure to
+:ada:`Lower_And_Show`):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Changed_Names
+
+    package Names is
+
+       type Name is access String;
+
+       procedure Lower_And_Show (N : Name);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Characters.Handling;
+    use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Lower_And_Show (N : Name) is
+       begin
+          for I in N'Range loop
+             N (I) := To_Lower (N (I));
+          end loop;
+          Put_Line ("Name: " & N.all);
+       end Lower_And_Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Changed_Names is
+       N : Name := new String'("John");
+    begin
+       Lower_And_Show (N);
+    end Show_Changed_Names;
+
+Notice that, again, we could have implemented the :ada:`Lower_And_Show`
+procedure without using an access type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Changed_Names_String
+
+    package Names is
+
+       type Name is access String;
+
+       procedure Lower_And_Show (N : in out String);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Characters.Handling;
+    use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Lower_And_Show (N : in out String) is
+       begin
+          for I in N'Range loop
+             N (I) := To_Lower (N (I));
+          end loop;
+          Put_Line ("Name: " & N);
+       end Lower_And_Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Changed_Names is
+       N : Name := new String'("John");
+    begin
+       Lower_And_Show (N.all);
+    end Show_Changed_Names;
+
+Replace the access value
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Instead of changing the object in the :ada:`Lower_And_Show` procedure, we
+could replace the access value by another one |mdash| for example, by
+allocating a new string inside the procedure. In this case, we have to pass the
+access value by reference using the :ada:`in out` parameter mode:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Replaced_Names
+
+    package Names is
+
+       type Name is access String;
+
+       procedure Lower_And_Show (N : in out Name);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Characters.Handling;
+    use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Lower_And_Show (N : in out Name) is
+       begin
+          N := new String'(To_Lower (N.all));
+          Put_Line ("Name: " & N.all);
+       end Lower_And_Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Changed_Names is
+       N : Name := new String'("John");
+    begin
+       Lower_And_Show (N);
+    end Show_Changed_Names;
+
+Now, instead of changing the object referenced by :ada:`N`, we're actually
+replacing it with a new object that we allocate inside the
+:ada:`Lower_And_Show` procedure.
+
+As expected, contrary to the previous examples, we cannot implement this
+code by relying on parameter modes to replace the object. In fact, we have to
+use access types for this kind of operations.
+
+Note that this implementation creates a memory leak. In a proper
+implementation, we should make sure to
+:ref:`deallocate the object <Adv_Ada_Unchecked_Deallocation>`, as explained
+later on.
+
+
+Side-effects on designated objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In previous code examples from this section, we've seen that passing a
+parameter by reference using the :ada:`in` or :ada:`in out` parameter modes
+is an alternative to using access values as parameters. Let's focus on the
+subprogram declarations of those code examples and their parameter modes:
+
++-----------------------+-----------------+-----------------+
+| Subprogram            | Parameter type  | Parameter mode  |
++=======================+=================+=================+
+| :ada:`Show`           | :ada:`Name`     | :ada:`in`       |
++-----------------------+-----------------+-----------------+
+| :ada:`Show`           | :ada:`String`   | :ada:`in`       |
++-----------------------+-----------------+-----------------+
+| :ada:`Lower_And_Show` | :ada:`Name`     | :ada:`in`       |
++-----------------------+-----------------+-----------------+
+| :ada:`Lower_And_Show` | :ada:`String`   | :ada:`in out`   |
++-----------------------+-----------------+-----------------+
+
+When we analyze the information from this table, we see that in the case of
+using strings with different parameter modes, we have a clear indication
+whether the subprogram might change the object or not. For example,
+we know that a call to :ada:`Show (N : String)` won't change the string object
+that we're passing as the actual parameter.
+
+In the case of passing an access value, we cannot know whether the
+designated object is going to be altered by a call to the subprogram. In fact,
+in both :ada:`Show` and :ada:`Lower_And_Show` procedures, the parameter is the
+same: :ada:`N : Name` |mdash| in other words, the parameter mode is :ada:`in`
+in both cases. Here, there's no clear indication about the effects of a
+subprogram call on the designated object.
+
+The simplest way to ensure that the object isn't changed in the subprogram is
+by using
+:ref:`access-to-constant types <Adv_Ada_General_Access_Modifiers>`, which we
+discuss later on. In this case, we're basically saying that the object we're
+accessing in :ada:`Show` is constant, so we cannot possibly change it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names_Constant
+
+    package Names is
+
+       type Name is access String;
+
+       type Constant_Name is access constant String;
+
+       procedure Show (N : Constant_Name);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    --  with Ada.Characters.Handling;
+    --  use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Show (N : Constant_Name) is
+       begin
+          --  for I in N'Range loop
+          --     N (I) := To_Lower (N (I));
+          --  end loop;
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       N : Name := new String'("John");
+    begin
+       Show (Constant_Name (N));
+    end Show_Names;
+
+In this case, the :ada:`Constant_Name` type ensures that the :ada:`N`
+parameter won't be changed in the :ada:`Show` procedure. Note that we need
+to convert from :ada:`Name` to :ada:`Constant_Name` to be able to call the
+:ada:`Show` procedure (in the :ada:`Show_Names` procedure). Although using
+:ada:`in String` is still a simpler solution, this approach works fine.
+
+(Feel free to uncomment the call to :ada:`To_Lower` in the :ada:`Show`
+procedure and the corresponding with- and use-clauses to see that the
+compilation fails when trying to change the constant object.)
+
+We could also mitigate the problem by using contracts. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names_Postcondition
+
+    package Names is
+
+       type Name is access String;
+
+       procedure Show (N : Name)
+         with Post => N.all'Old = N.all;
+       --             ^^^^^^^^^^^^^^^^^
+       --     we promise that we won't change
+       --     the object
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    --  with Ada.Characters.Handling;
+    --  use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Show (N : Name) is
+       begin
+          --  for I in N'Range loop
+          --     N (I) := To_Lower (N (I));
+          --  end loop;
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       N : Name := new String'("John");
+    begin
+       Show (N);
+    end Show_Names;
+
+Although a bit more verbose than a simple :ada:`in String`, the information in
+the specification of :ada:`Show` at least gives us an indication that the
+object won't be affected by the call to this subprogram. Note that this code
+actually compiles if we try to modify :ada:`N.all` in the :ada:`Show`
+procedure, but the post-condition fails at runtime when we do that.
+
+(By uncommentating and building the code again, you'll see an exception being
+raised at runtime when trying to change the object.)
+
+In the postcondition above, we're using :ada:`'Old` to refer to the original
+object before the subprogram call. Unfortunately, we cannot use this attribute
+when dealing with
+:ref:`limited private types <Adv_Ada_Limited_Private_Types>` |mdash| or limited
+types in general. For example, let's change the declaration of :ada:`Name` and
+have it as a limited private type instead:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names_Limited_Private
+    :class: ada-expect-compile-error
+
+    package Names is
+
+       type Name is limited private;
+
+       function Init (S : String) return Name;
+
+       function Equal (N1, N2 : Name)
+                       return Boolean;
+
+       procedure Show (N : Name)
+         with Post => Equal (N'Old = N);
+
+    private
+
+       type Name is access String;
+
+       function Init (S : String) return Name is
+         (new String'(S));
+
+       function Equal (N1, N2 : Name)
+                       return Boolean is
+         (N1.all = N2.all);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    --  with Ada.Characters.Handling;
+    --  use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Show (N : Name) is
+       begin
+          --  for I in N'Range loop
+          --     N (I) := To_Lower (N (I));
+          --  end loop;
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       N : Name := Init ("John");
+    begin
+       Show (N);
+    end Show_Names;
+
+In this case, we have no means to indicate that a call to :ada:`Show` won't
+change the internal state of the actual parameter.
+
+.. admonition:: For further reading...
+
+    As an alternative, we could declare a new :ada:`Constant_Name` type that
+    is also limited private. If we use this type in :ada:`Show` procedure,
+    we're at least indicating (in the type name) that the type is supposed to
+    be constant |mdash| even though we're not directly providing means to
+    actually ensure that no modifications occur in a call to the procedure.
+    However, the fact that we declare this type as an access-to-constant (in
+    the private part of the specification) makes it clear that a call to
+    :ada:`Show` won't change the designated object.
+
+    Let's look at the adapted code:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Parameters_As_Access_Values.Names_Constant_Limited_Private
+
+        package Names is
+
+           type Name is limited private;
+
+           type Constant_Name is limited private;
+
+           function Init (S : String) return Name;
+
+           function To_Constant_Name
+             (N : Name)
+              return Constant_Name;
+
+           procedure Show (N : Constant_Name);
+
+        private
+
+           type Name is
+             access String;
+
+           type Constant_Name is
+             access constant String;
+
+           function Init (S : String) return Name is
+             (new String'(S));
+
+           function To_Constant_Name
+             (N : Name)
+              return Constant_Name is
+                (Constant_Name (N));
+
+        end Names;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        --  with Ada.Characters.Handling;
+        --  use  Ada.Characters.Handling;
+
+        package body Names is
+
+           procedure Show (N : Constant_Name) is
+           begin
+              --  for I in N'Range loop
+              --     N (I) := To_Lower (N (I));
+              --  end loop;
+              Put_Line ("Name: " & N.all);
+           end Show;
+
+        end Names;
+
+        with Names; use Names;
+
+        procedure Show_Names is
+           N : Name := Init ("John");
+        begin
+           Show (To_Constant_Name (N));
+        end Show_Names;
+
+    In this version of the source code, the :ada:`Show` procedure doesn't have
+    any side-effects, as we cannot modify :ada:`N` inside the procedure.
+
+Having the information about the effects of a subprogram call to an object is
+very important: we can use this information to set expectations |mdash| and
+avoid unexpected changes to an object. Also, this information can be used to
+prove that a program works as expected. Therefore, whenever possible, we should
+avoid access values as parameters. Instead, we can rely on appropriate
+parameter modes and pass an object by reference.
+
+There are cases, however, where the design of our application doesn't permit
+replacing the access type with simple parameter modes. Whenever we have an
+abstract data type encapsulated as a limited private type |mdash| such as in
+the last code example |mdash|, we might have no means to avoid access values
+as parameters. In this case, using the access type is of course justifiable.
+We'll see such a case in the
+:ref:`next section <Adv_Ada_Self_Reference_Access_Types>`.
+
+
 .. _Adv_Ada_Self_Reference_Access_Types:
 
 Self-reference
@@ -1006,6 +1529,10 @@ In this example, we declare an incomplete type :ada:`Component` in the private
 part of the generic :ada:`Linked_Lists` package. We use this incomplete type to
 declare the access type :ada:`List`, which is then used as a self-reference in
 the :ada:`Next` component of the :ada:`Component` type.
+
+Note that we're using the :ada:`List` type
+:ref:`as a parameter <Adv_Ada_Parameters_As_Access_Values>` for the
+:ada:`Append_Front`, :ada:`Append_Rear` and :ada:`Show` procedures.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -1576,8 +2103,12 @@ for the :ada:`Calc_Table`:
 Now, we aren't wasting memory space because each data component has the right
 size that is required for each quality level. Also, we don't need to store the
 number of coefficients, as this information is automatically available from the
-array initialization (via the allocation of the :ada:`Data` array for the
-:ada:`Coefficients` type).
+array initialization |mdash| via the allocation of the :ada:`Data` array for
+the :ada:`Coefficients` type.
+
+Note that the :ada:`Coefficients` type is defined as :ada:`access constant`.
+We discuss :ref:`access-to-constant types <Adv_Ada_General_Access_Modifiers>`
+in more details later on.
 
 This is the adapted :ada:`Process` procedure:
 
@@ -1612,6 +2143,7 @@ Now, we can simply loop over the coefficients by writing
 :ada:`for J in Calc_Table (Q)'Range loop`, as each element of :ada:`Calc_Table`
 automatically has the correct range.
 
+.. _Adv_Ada_Aliasing:
 
 Aliasing
 --------
@@ -1752,6 +2284,9 @@ In the next sections, we discuss these features in more details.
 
     - :arm22:`3.3.1 Object Declarations <3-3-1>`
     - :arm22:`3.10 Access Types <3-10>`
+
+
+.. _Adv_Ada_General_Access_Modifiers:
 
 General access modifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2030,15 +2565,17 @@ address we're specifying (instead of assigning registers for those components).
     - :arm22:`3.6 Array Types <3-6>`
 
 
+.. _Adv_Ada_Access_Types_Aliased_Parameters:
+
 Aliased parameters
 ~~~~~~~~~~~~~~~~~~
 
-In addition to objects and components, we can declare aliased parameters. This
-allows us to get access to those parameters in the body of a subprogram. We do
-this by using the :ada:`aliased` keyword before the parameter mode.
+In addition to aliased objects and components, we can declare
+:ref:`aliased parameters <Adv_Ada_Aliased_Parameters>`, as we already discussed
+in an earlier chapter. As we mentioned there, aliased parameters are always
+passed by reference, independently of the type we're using.
 
-The parameter mode indicates which type we must use for the access type, as
-we'll discuss soon:
+The parameter mode indicates which type we must use for the access type:
 
 +------------------------+--------------------+
 | Parameter mode         | Type               |
@@ -2050,7 +2587,8 @@ we'll discuss soon:
 | :ada:`aliased in out`  | Access-to-variable |
 +------------------------+--------------------+
 
-Let's see an example:
+Using aliased parameters in a subprogram allows us to get access to those
+parameters in the body of that subprogram. Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Aliasing.Aliased_Rec_Component
 
@@ -2494,6 +3032,71 @@ Here, we're converting from the :ada:`L1_Integer_Access` type to the
 :ada:`L1_B_Integer_Access`, which are both at the same level.
 
 
+.. _Adv_Ada_Accessibility_Rules_Access_Values_As_Parameters:
+
+Accessibility rules on parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that the accessibility rules also apply to access values as subprogram
+parameters. For example, compilation fails for this example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Checks_Parameters
+    :class: ada-expect-compile-error
+
+    package Names is
+
+       type Name is access all String;
+
+       type Constant_Name is
+         access constant String;
+
+       procedure Show (N : Constant_Name);
+
+    end Names;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    --  with Ada.Characters.Handling;
+    --  use  Ada.Characters.Handling;
+
+    package body Names is
+
+       procedure Show (N : Constant_Name) is
+       begin
+          --  for I in N'Range loop
+          --     N (I) := To_Lower (N (I));
+          --  end loop;
+          Put_Line ("Name: " & N.all);
+       end Show;
+
+    end Names;
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       S : aliased String := "John";
+    begin
+       Show (S'Access);
+    end Show_Names;
+
+In this case, the :ada:`S'Access` cannot be used as the actual parameter for
+the :ada:`N` parameter of the :ada:`Show` procedure because it's in a deeper
+level. If we allocate the string via :ada:`new`, however, the code compiles
+as expected:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Levels_Rules_Introduction.Accessibility_Checks_Parameters
+
+    with Names; use Names;
+
+    procedure Show_Names is
+       S : Name := new String'("John");
+    begin
+       Show (Constant_Name (S));
+    end Show_Names;
+
+This version of the code works because both object and access object have the same level.
+
+
 .. _Adv_Ada_Dangling_References:
 
 Dangling References
@@ -2765,6 +3368,8 @@ encapsulating access types in well-designed abstract data types.
 
     - :arm22:`Unchecked Access Value Creation <13-10>`
 
+
+.. _Adv_Ada_Unchecked_Deallocation:
 
 Unchecked Deallocation
 ----------------------
@@ -3471,6 +4076,9 @@ Design strategies for access types
 
 Access to subprograms
 ---------------------
+
+So far in this chapter, we focused mainly on access-to-objects. However, we can
+use access types to subprograms. This is the topic of this section.
 
 Static vs. dynamic calls
 ~~~~~~~~~~~~~~~~~~~~~~~~
