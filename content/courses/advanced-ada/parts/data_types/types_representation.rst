@@ -2772,7 +2772,9 @@ pointer arithmetic.) The concept of addresses does exist in Ada, but it's
 mainly reserved for very specific applications, mostly related to low-level
 programming. In general, other approaches |mdash| such as using access types
 |mdash| are more than sufficient. (We discuss
-:doc:`access types <../resource_management/access_types>` in another chapter.)
+:doc:`access types <../resource_management/access_types>` in another chapter.
+Also, later on in that chapter, we discuss the
+:ref:`relation between access types and addresses <Adv_Ada_Access_Address>`.)
 In this section, we discuss some details about using addresses in Ada.
 
 We make use of the :ada:`Address` type, which is defined in :ada:`System`

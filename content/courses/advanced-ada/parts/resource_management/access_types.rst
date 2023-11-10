@@ -59,6 +59,13 @@ In our previous code example, :ada:`Integer` is the designated subtype of the
 :ada:`Integer_Access` type, and :ada:`function return Integer` is the
 designated profile of the :ada:`Init_Integer_Access` type.
 
+.. admonition:: Important
+
+    In contrast to other programming languages, an access type is not a
+    pointer, and it doesn't just indicate an address in memory. We discuss more
+    about :ref:`addresses <Adv_Ada_Access_Address>` later on.
+
+
 Access object and designated object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -5967,3 +5974,138 @@ be legal, as we said before.
         `Gem #33: Accessibility Checks <https://www.adacore.com/gems/gem-33>`__,
         `Gem #41 <https://www.adacore.com/gems/gem-41>`__ and
         `Gem #44: <https://www.adacore.com/gems/gem-44>`__.
+
+
+.. _Adv_Ada_Access_Address:
+
+Access and Address
+------------------
+
+As we know, an access type is not a pointer, and it doesn't just indicate an
+address in memory. In fact, to represent an address in Ada, we use
+:ref:`the Address type <Adv_Ada_Addresses>`. Also, as we discussed earlier,
+we can use operators such as :ada:`<`, :ada:`>`, :ada:`+` and :ada:`-` for
+addresses. In contrast to that, those operators aren't available for access
+types |mdash| except, of course, for :ada:`=` and :ada:`/=`.
+
+In certain situations, however, we might need to convert between access types
+and addresses. In this section, we discuss how to do so.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm22:`13.7 The Package System <13-7>`
+
+
+Address and access conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The generic :ada:`System.Address_To_Access_Conversions` package allows us to
+convert between access types and addresses. This might be useful for specific
+low-level operations. Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Show_Access_Address
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with System.Address_To_Access_Conversions;
+    with System.Address_Image;
+
+    procedure Show_Address is
+
+       package Integer_AAC is
+         new System.Address_To_Access_Conversions
+           (Object => Integer);
+       use Integer_AAC;
+
+       subtype Integer_Access is
+         Integer_AAC.Object_Pointer;
+       --  This is similar to:
+       --
+       --  type Integer_Access is access all Integer;
+
+       I  : aliased Integer := 5;
+       AI : Integer_Access  := I'Access;
+    begin
+       Put_Line ("I'Address : "
+                 & System.Address_Image (I'Address));
+
+       Put_Line ("AI.all'Address : "
+                 & System.Address_Image
+                     (AI.all'Address));
+
+       Put_Line ("To_Address (AI) : "
+                 & System.Address_Image
+                     (To_Address (AI)));
+    end Show_Address;
+
+In this example, we instantiate the generic
+:ada:`System.Address_To_Access_Conversions` package using :ada:`Integer`
+as our target object type. This new package (:ada:`Integer_AAC`) has an
+:ada:`Object_Pointer` type, which is equivalent to a declaration such as
+:ada:`type Integer_Access is access all Integer`. (In this example, we
+declare :ada:`Integer_Access` as a subtype of
+:ada:`Integer_AAC.Object_Pointer` to illustrate that.)
+
+The :ada:`Integer_AAC` package also includes the :ada:`To_Address` function,
+which converts an access object to an address. If the actual parameter is
+not null, :ada:`To_Address` returns the same information as if we were using
+the :ada:`Address` attribute for the designated object. In other words,
+:ada:`To_Address (AI) = AI.all'Address` when :ada:`AI /= null`.
+
+If the access value is null, :ada:`To_Address` returns :ada:`Null_Address`,
+while :ada:`.all'Address` makes the :ref:`access check <Adv_Ada_Access_Check>`
+fail because we have to dereference the access object (via :ada:`.all`) before
+retrieving its address (via the :ada:`Address` attribute).
+
+In addition to the :ada:`To_Address` function, the :ada:`To_Pointer` function
+is available to convert from an address to an object of access type. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Show_Access_Address
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with System;      use System;
+
+    with System.Address_To_Access_Conversions;
+    with System.Address_Image;
+
+    procedure Show_Address is
+
+       package Integer_AAC is
+         new System.Address_To_Access_Conversions
+           (Object => Integer);
+       use Integer_AAC;
+
+       subtype Integer_Access is
+         Integer_AAC.Object_Pointer;
+
+       I          : aliased Integer := 5;
+       AI_1, AI_2 : Integer_Access;
+       A          : Address;
+    begin
+       AI_1 := I'Access;
+       A    := To_Address (AI_1);
+       AI_2 := To_Pointer (A);
+
+       Put_Line ("AI_1.all'Address : "
+                 & System.Address_Image
+                     (AI_1.all'Address));
+       Put_Line ("AI_2.all'Address : "
+                 & System.Address_Image
+                     (AI_2.all'Address));
+
+       if AI_1 = AI_2 then
+          Put_Line ("AI_1 = AI_2");
+       else
+          Put_Line ("AI_1 /= AI_2");
+       end if;
+    end Show_Address;
+
+Here, we convert the :ada:`A` address back to an access value by calling
+:ada:`To_Pointer (A)`. (When running this object, we see that :ada:`AI_1`
+and :ada:`AI_2` have the same access value.)
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.7.2 The Package System.Address_To_Access_Conversions <13-7-2>`
