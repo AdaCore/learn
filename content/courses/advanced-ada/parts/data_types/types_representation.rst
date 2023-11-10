@@ -2933,10 +2933,18 @@ the :ada:`I` variable).
     In this case, :ada:`R` will refer to the address in memory that we're
     specifying (:ada:`16#FFFF00A0#` in this case).
 
+    As explained in the
+    `GNAT Reference Manual <https://gcc.gnu.org/onlinedocs/gnat_rm/Attribute-To_005fAddress.html>`_,
+    the :ada:`System'To_Address` attribute denotes a function identical to
+    :ada:`To_Address` (from the :ada:`System.Storage_Elements` package) except
+    that it is a static attribute. (We talk about the
+    :ref:`To_Address function <Adv_Ada_Address_Integer>` function later on.)
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`13.3 Operational and Representation Attributes <13-3>`
     - :arm22:`13.7 The Package System <13-7>`
+    - :arm22:`13.7.1 The Package System.Storage_Elements <13-7-1>`
 
 
 .. _Adv_Ada_Address_Comparison:
