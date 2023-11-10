@@ -796,7 +796,7 @@ usually the exception rather than the rule. Thus, as a general guideline, we
 should always aim to use named access types.
 
 That being said, an important exception to this advice is when we're
-:ref:`interfacing to other languages <Adv_Ada_Anonymous_Access_Interfacing_Other_Languages>`.
+:ref:`interfacing to other languages <Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages>`.
 In this case, as we'll discuss later, using anonymous access-to-objects types
 can be significantly simpler (compared to named access types) without the
 drawbacks that we've just discussed.
@@ -1449,8 +1449,6 @@ operations for tagged types. We discuss this
 
 
 .. _Adv_Ada_Access_Parameters_Interfacing_To_Other_Languages:
-
-.. _Adv_Ada_Anonymous_Access_Interfacing_Other_Languages:
 
 Interfacing To Other Languages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
