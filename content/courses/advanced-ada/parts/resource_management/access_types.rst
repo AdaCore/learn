@@ -5850,6 +5850,8 @@ As a recommendation, resolving accessibility issues in the case of
 access-to-subprograms is best done by refactoring the subprograms of your
 source code |mdash| for example, moving subprograms to a different level.
 
+.. _Adv_Ada_Accessibility_Rules_Access_To_Subprograms_Unchecked_Access:
+
 Unchecked Access
 ~~~~~~~~~~~~~~~~
 
