@@ -399,7 +399,7 @@ However, we can forbid :ada:`null` as a valid value by using
 
 As you might have noticed, we took the previous code example and used
 :ada:`not null` for each usage instance of the anonymous access type.
-In this sense, this version of the code example is very similar to previous
+In this sense, this version of the code example is very similar to the previous
 one. Note, however, that we now have to explicitly initialize some elements
 to avoid the :ada:`Constraint_Error` exception being raised at runtime. This
 is the case for example for the :ada:`AI` access object:
@@ -430,12 +430,12 @@ For starters, some pool-related features aren't available for anonymous
 access-to-object types. For example, we cannot specify which pool is going to
 be used in the allocation of an anonymous access-to-object. In fact, the memory
 pool selection is compiler-dependent, so we cannot rely on an object being
-allocated in a specific pool when using :ada:`new` with an anonymous
+allocated from a specific pool when using :ada:`new` with an anonymous
 access-to-object type. (In contrast, as we know, each named access type has an
-associated pool, so objects allocated via :ada:`new` will be allocated on that
-pool.) Also, we cannot identify which pool was selected for the allocation of a
-specific object, so we don't have any information to use for the deallocation of
-that object.
+associated pool, so objects allocated via :ada:`new` will be allocated from
+that pool.) Also, we cannot identify which pool was selected for the allocation
+of a specific object, so we don't have any information to use for the
+deallocation of that object.
 
 Because the pool selection is hidden from us, this makes the memory
 deallocation more complicated. For example, we cannot instantiate the
@@ -443,9 +443,9 @@ deallocation more complicated. For example, we cannot instantiate the
 some of the methods we could use to circumvent this limitation are error-prone,
 as we discuss in this section.
 
-Also, storage-related features are available: specifying the storage size |mdash|
-especially, specifying that the access type has a storage size of zero |mdash|
-isn't possible.
+Also, storage-related features aren't available: specifying the storage size
+|mdash| especially, specifying that the access type has a storage size of zero
+|mdash| isn't possible.
 
 Missing features
 ^^^^^^^^^^^^^^^^
@@ -516,13 +516,13 @@ for equivalent named access types:
 Dangerous memory deallocation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We could make up for the absence of the :ada:`Ada.Unchecked_Deallocation`
-procedure for anonymous access-to-object types by converting those access
-objects (of anonymous access types) to a named type that has the same
-designated subtype. For example, if we have an access object :ada:`IA` of
-an anonymous :ada:`access Integer` type, we can convert it to the named
-:ada:`Integer_Access` type, provided this named access type is compatible
-with the anonymous access type, e.g.:
+We might think that we could make up for the absence of the
+:ada:`Ada.Unchecked_Deallocation` procedure for anonymous access-to-object
+types by converting those access objects (of anonymous access types) to a named
+type that has the same designated subtype. For example, if we have an access
+object :ada:`IA` of an anonymous :ada:`access Integer` type, we can convert it
+to the named :ada:`Integer_Access` type, provided this named access type is
+compatible with the anonymous access type, e.g.:
 
 .. code-block:: ada
 
@@ -626,11 +626,11 @@ Let's see a code example:
 
 In this example, all operations related to memory allocation are exclusively
 making use of the :ada:`Integer_Access` type, which is a named access type.
-In fact, :ada:`new Integer` allocates the object in the pool associated with
+In fact, :ada:`new Integer` allocates the object from the pool associated with
 the :ada:`Integer_Access` type, and the call to :ada:`Free` deallocates this
-object from that pool. Therefore, associating this object with the :ada:`IA`
-access object |mdash| in the :ada:`IA := Typed_IA` assignment |mdash| doesn't
-creates problems afterwards in the object's deallocation. (When calling
+object back into that pool. Therefore, associating this object with the
+:ada:`IA` access object |mdash| in the :ada:`IA := Typed_IA` assignment |mdash|
+doesn't creates problems afterwards in the object's deallocation. (When calling
 :ada:`Free`, we only refer to the object of named access type, so the object
 is deallocated from a known pool.)
 
@@ -672,7 +672,7 @@ In fact, we can generalize this approach with the following (generic) package:
        begin
           return T_Access'(new T);
           --  Using allocation of the T_Access type:
-          --  object is allocated in T_Access's pool
+          --  object is allocated from T_Access's pool
        end New_T;
 
        procedure Free (Obj : access T) is
@@ -750,7 +750,7 @@ Possible solution using the stack
 
 Another approach that we could consider to avoid memory deallocation issues
 for anonymous access-to-object types is by simply using the stack for the
-object allocation. For example:
+object creation. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.Deallocation_Anonymous_Access_To_Object_2
 
@@ -761,7 +761,8 @@ object allocation. For example:
        IA : access Integer;
     begin
        IA := I'Access;
-       --  Indirect allocation on the stack.
+       --  Indirect allocation:
+       --  object creation on the stack.
 
        IA.all := 30;
 
@@ -770,13 +771,14 @@ object allocation. For example:
        --  on the stack.
     end Show_Automatic_Deallocation;
 
-In this case, we allocate the :ada:`I` object on the stack by simply declaring
+In this case, we create the :ada:`I` object on the stack by simply declaring
 it. Then, we get access to it and assign it to the :ada:`IA` access object.
 
-With this approach, we're indirectly allocating an object on the stack for an
-anonymous access type. Also, because we know that the :ada:`I` is automatically
-deallocated when it gets out of scope, we don't have to worry about explicitly
-deallocating the object referred by :ada:`IA`.
+With this approach, we're indirectly allocating an object for an anonymous
+access type by creating it on the stack. Also, because we know that the
+:ada:`I` is automatically deallocated when it gets out of scope, we don't
+have to worry about explicitly deallocating the object referred by
+:ada:`IA`.
 
 When to use anonymous access-to-objects types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -784,7 +786,7 @@ When to use anonymous access-to-objects types
 In summary, anonymous access-to-object types have many drawbacks that often
 outweigh :ref:`their benefits <Adv_Ada_Anonymous_Access_Benefits>`. In fact,
 allocation for those types can quickly become very complicated. Therefore, in
-general, they're not a good alternative to named access type. Indeed, the
+general, they're not a good alternative to named access types. Indeed, the
 difficulties that we've just seen might make them a much worse option than
 just using named access types instead.
 
