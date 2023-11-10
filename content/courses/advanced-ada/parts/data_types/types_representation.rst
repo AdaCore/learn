@@ -2981,6 +2981,59 @@ of the :ada:`J` object using the :ada:`=`, :ada:`<` and :ada:`>` operators.
     - :arm22:`13.7 The Package System <13-7>`
 
 
+.. _Adv_Ada_Address_Integer:
+
+Address to integer conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :ada:`System.Storage_Elements` package offers an integer representation of
+an address via the :ada:`Integer_Address` type, which is an integer type
+unrelated to common integer types such as :ada:`Integer` and
+:ada:`Long_Integer`. (The actual definition of :ada:`Integer_Address` is
+compiler-dependent, and it can be a signed or modular integer subtype.)
+
+We can convert between the :ada:`Address` and :ada:`Integer_Address` types by
+using the :ada:`To_Address` and :ada:`To_Integer` functions. Let's see an
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Pointer_Arith_Ada
+
+    with System;      use System;
+
+    with System.Storage_Elements;
+    use  System.Storage_Elements;
+
+    with System.Address_Image;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Address is
+       I      : Integer;
+       A1, A2 : Address;
+       IA     : Integer_Address;
+    begin
+       A1 := I'Address;
+       IA := To_Integer (A1);
+       A2 := To_Address (IA);
+
+       Put_Line ("A1 : "
+                  & System.Address_Image (A1));
+       Put_Line ("IA : "
+                  & Integer_Address'Image (IA));
+       Put_Line ("A2 : "
+                  & System.Address_Image (A2));
+    end Show_Address;
+
+Here, we retrieve the address of the :ada:`I` object and store it in the
+:ada:`A1` address. Then, we convert :ada:`A1` to an integer address by calling
+:ada:`To_Integer` (and store it in :ada:`IA`). Finally, we convert this
+integer address back to an actual address by calling :ada:`To_Address`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.7.1 The Package System.Storage_Elements <13-7-1>`
+
+
 .. _Adv_Ada_Address_Arithmetic:
 
 Address arithmetic
