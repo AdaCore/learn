@@ -2666,7 +2666,7 @@ specify the address of the memory-mapped register.
 
 Later on, we talk again about the
 :ref:`Address aspect <Adv_Ada_Address_Aspect>` and the GNAT-specific
-:ref:`<Adv_Ada_System_To_Address> System.To_Address attribute`.
+:ref:`System'To_Address attribute <Adv_Ada_System_To_Address>`.
 
 In addition to atomic objects, we can declare atomic types |mdash| similar to
 what we've seen before for volatile objects. For example:
