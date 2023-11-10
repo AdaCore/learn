@@ -2601,6 +2601,9 @@ As you can see in the output of the application, even though we specify the
 :ada:`Pack` aspect for the :ada:`Flags` type, the compiler allocates eight
 storage units, one per each component of the :ada:`F` array.
 
+
+.. _Adv_Ada_Shared_Variable_Control_Atomic:
+
 Atomic
 ~~~~~~
 
@@ -2660,6 +2663,10 @@ use the aspect to declare a shared hardware register:
 Note that the :ada:`Address` aspect allows for assigning a variable to a
 specific location in the memory. In this example, we're using this aspect to
 specify the address of the memory-mapped register.
+
+Later on, we talk again about the
+:ref:`Address aspect <Adv_Ada_Address_Aspect>` and the GNAT-specific
+:ref:`<Adv_Ada_System_To_Address> System.To_Address attribute`.
 
 In addition to atomic objects, we can declare atomic types |mdash| similar to
 what we've seen before for volatile objects. For example:
@@ -2752,6 +2759,339 @@ these array declarations are equivalent:
    .. todo::
 
       Add to previous section!
+
+
+.. _Adv_Ada_Addresses:
+
+Addresses
+---------
+
+In other languages, such as C, the concept of pointers and addresses plays
+a prominent role. (In fact, in C, many optimizations rely on the usage of
+pointer arithmetic.) The concept of addresses does exist in Ada, but it's
+mainly reserved for very specific applications, mostly related to low-level
+programming. In general, other approaches |mdash| such as using access types
+|mdash| are more than sufficient. (We discuss
+:doc:`access types <../resource_management/access_types>` in another chapter.)
+In this section, we discuss some details about using addresses in Ada.
+
+We make use of the :ada:`Address` type, which is defined in :ada:`System`
+package, to handle addresses. In contrast to other programming languages (such
+as C or C++), an address in Ada isn't an integer value |mdash| its definition
+actually depends on the compiler implementation, but for now, let's consider
+it to be a private type.
+
+The :ada:`Address` type has support for
+:ref:`address comparison <Adv_Ada_Address_Comparison>` and
+:ref:`address arithmetic <Adv_Ada_Address_Arithmetic>` (also
+known as *pointer arithmetic* in C). We discuss these topics later in this
+section. First, let's talk about the :ada:`Address` attribute and the
+:ada:`Address` aspect.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.7 The Package System <13-7>`
+
+
+.. _Adv_Ada_Address_Attribute:
+
+Address attribute
+~~~~~~~~~~~~~~~~~
+
+The :ada:`Address` attribute allows us to get the address of an object.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Address_Attribute
+
+    with System; use System;
+
+    procedure Use_Address is
+       I : aliased Integer := 5;
+       A : Address;
+    begin
+       A := I'Address;
+    end Use_Address;
+
+Here, we're assigning the address of the :ada:`I` object to the :ada:`A` address.
+
+.. admonition:: In the GNAT toolchain
+
+    GNAT offers a very useful extension to the :ada:`System` package to
+    retrieve a string for an address: :ada:`System.Address_Image`. This is the
+    function profile:
+
+    .. code-block:: ada
+
+        function System.Address_Image
+          (A : System.Address) return String;
+
+    We can use this function to display the address in an user message, for
+    example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Show_Address_Attribute
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with System.Address_Image;
+
+        procedure Show_Address_Attribute is
+           I  : aliased Integer := 5;
+        begin
+           Put_Line ("Address : "
+                     & System.Address_Image (I'Address));
+        end Show_Address_Attribute;
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm22:`13.7 The Package System <13-7>`
+
+
+.. _Adv_Ada_Address_Aspect:
+
+Address aspect
+~~~~~~~~~~~~~~
+
+Usually, we let the compiler select the address of an object in memory, or let
+it use a register to store that object. However, we can specify the address of
+an object with the :ada:`Address` aspect. In this case, the compiler won't
+select an address automatically, but use the address that we're specifying. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Address_Aspect
+
+    with System; use System;
+    with System.Address_Image;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Address is
+
+       I_Main   : Integer;
+       I_Mapped : Integer
+                    with Address => I_Main'Address;
+    begin
+       Put_Line ("I_Main'Address   : "
+                  & System.Address_Image
+                      (I_Main'Address));
+       Put_Line ("I_Mapped'Address : "
+                  & System.Address_Image
+                      (I_Mapped'Address));
+    end Show_Address;
+
+This approach allows us to create an overlay. For example:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Simple_Overlay
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Simple_Overlay is
+       type State is (Off, State_1, State_2)
+         with Size => Integer'Size;
+
+       for State use (Off     => 0,
+                      State_1 => 32,
+                      State_2 => 64);
+
+       S : State;
+       I : Integer
+         with Address => S'Address, Import, Volatile;
+    begin
+       S := State_2;
+       Put_Line ("I = " & Integer'Image (I));
+    end Simple_Overlay;
+
+Here, :ada:`I` is an overlay of :ada:`S`, as it uses :ada:`S'Address`. With
+this approach, we can either use the enumeration directly (by using the
+:ada:`S` object of :ada:`State` type) or its integer representation (by using
+the :ada:`I` variable).
+
+.. _Adv_Ada_System_To_Address:
+
+.. admonition:: In the GNAT toolchain
+
+    We could call the GNAT-specific :ada:`System'To_Address` attribute when using
+    the :ada:`Address` aspect, as we did while talking about the
+    :ref:`Atomic <Adv_Ada_Shared_Variable_Control_Atomic>` aspect:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Show_Access_Address
+
+        with System;
+
+        package Shared_Var_Types is
+
+        private
+           R : Integer
+                 with Atomic,
+                      Address =>
+                        System'To_Address (16#FFFF00A0#);
+
+        end Shared_Var_Types;
+
+    In this case, :ada:`R` will refer to the address in memory that we're
+    specifying (:ada:`16#FFFF00A0#` in this case).
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm22:`13.7 The Package System <13-7>`
+
+
+.. _Adv_Ada_Address_Comparison:
+
+Address comparison
+~~~~~~~~~~~~~~~~~~
+
+We can compare addresses using the common comparison operators. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Address_Aspect
+
+    with System; use System;
+    with System.Address_Image;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Address is
+
+       I, J : Integer;
+    begin
+       Put_Line ("I'Address   : "
+                  & System.Address_Image
+                      (I'Address));
+       Put_Line ("J'Address   : "
+                  & System.Address_Image
+                      (J'Address));
+
+       if I'Address = J'Address then
+          Put_Line ("I'Address = J'Address");
+       elsif I'Address < J'Address then
+          Put_Line ("I'Address < J'Address");
+       else
+          Put_Line ("I'Address > J'Address");
+       end if;
+    end Show_Address;
+
+In this example, we compare the address of the :ada:`I` object with the address
+of the :ada:`J` object using the :ada:`=`, :ada:`<` and :ada:`>` operators.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.7 The Package System <13-7>`
+
+
+.. _Adv_Ada_Address_Arithmetic:
+
+Address arithmetic
+~~~~~~~~~~~~~~~~~~~~
+
+Although Ada supports address arithmetic, which we discuss in this section, it
+should be reserved for very specific applications such as low-level
+programming. However, even in situations that require close access to the
+underlying hardware, using address arithmetic might not be the approach you
+should consider |mdash| make sure to evaluate other options first!
+
+Ada supports address arithmetic via the :ada:`System.Storage_Elements` package,
+which includes operators such as :ada:`+` and :ada:`-` for addresses. Let's see
+a code example where we iterate over an array by incrementing an address that
+*points* to each component in memory:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Pointer_Arith_Ada
+
+    with System;      use System;
+
+    with System.Storage_Elements;
+    use  System.Storage_Elements;
+
+    with System.Address_Image;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Address is
+
+       Arr : array (1 .. 10) of Integer;
+       A   : Address := Arr (1)'Address;
+       --               ^^^^^^^^^^^^^^^
+       --   Initializing address object with
+       --   address of the first component of Arr.
+
+    begin
+       for I in Arr'Range loop
+          declare
+             Curr : Integer
+                      with Address => A;
+          begin
+             Curr := I;
+             Put_Line ("Curr'Address : "
+                       & System.Address_Image
+                           (Curr'Address));
+          end;
+
+          --
+          --  Address arithmetic
+          --
+          A := A + Storage_Offset (Integer'Size)
+                     / Storage_Unit;
+          --     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          --       Moving to next component
+       end loop;
+
+       for I in Arr'Range loop
+         Put_Line ("Arr ("
+                   & Integer'Image (I)
+                   & ") :"
+                   & Integer'Image (Arr (I)));
+       end loop;
+    end Show_Address;
+
+In this example, we initialize the address :ada:`A` by retrieving the address
+of the first component of the array :ada:`Arr`. Then, in the loop, we declare
+an overlay :ada:`Curr` using the current value of the :ada:`A` address. We can
+then operate on this overlay |mdash| here, we assign :ada:`I` to :ada:`Curr`.
+Finally, in the loop, we increment address :ada:`A` and make it *point* to the
+next component in the :ada:`Arr` array |mdash| to do so, we calculate the size
+of an :ada:`Integer` component in storage units. (For details on storage units,
+see the section on
+:ref:`storage size attribute <Adv_Ada_Storage_Size_Attribute>`.)
+
+.. admonition:: In other languages
+
+    The code example above corresponds (more or less) to the following C code:
+
+    .. code:: c manual_chop run_button main=main.c project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Pointer_Arith_C
+
+        !main.c
+        #include <stdio.h>
+
+        int main(int argc, const char * argv[])
+        {
+            int i;
+            int arr[10];
+
+            int *a = arr;
+            /* int *a = &arr[0]; */
+
+            for (i = 0; i < 10; i++)
+            {
+                *a++ = i;
+                printf("curr address: %p\n", a);
+            }
+
+            for (i = 0; i < 10; i++)
+            {
+                printf("arr[%d]: %d\n", i, arr[i]);
+            }
+
+            return 0;
+        }
+
+    While pointer arithmetic is very common in C, using address arithmetic in
+    Ada is far from common, and it should be only used when it's really
+    necessary to do so.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm22:`13.7.1 The Package System.Storage_Elements <13-7-1>`
 
 
 Discarding names
