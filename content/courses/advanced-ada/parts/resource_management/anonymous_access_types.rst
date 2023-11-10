@@ -3146,8 +3146,8 @@ legal:
           end Add_One;
        begin
           P := Add_One'Access;
-          --  ERROR: Add_One is out-of-scope after
-          --         this line.
+          --  RUNTIME ERROR: Add_One is out-of-scope
+          --                 after this line.
        end;
     end Show_Access_To_Subprogram_Error;
 
