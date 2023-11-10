@@ -472,8 +472,18 @@ for anonymous access-to-object types:
 
        --  Having a specific storage pool associated
        --  with the access type:
+       type String_Access is
+         access String;
+       --  Automatically creates
+       --  String_Access'Storage_Pool
+
        type Integer_Access is
-          access Integer;
+         access Integer
+           with Storage_Pool =>
+                  String_Access'Storage_Pool;
+       --       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       --         Using the pool from another
+       --         access type.
 
        --  Specifying a deallocation function for the
        --  access type:
@@ -501,7 +511,10 @@ cannot use for the anonymous :ada:`access Integer` type, but that are available
 for equivalent named access types:
 
 - There's no specific memory pool associated with the access object :ada:`IA`.
-  In contrast the :ada:`Integer_Access` has an associated pool.
+  In contrast, named types |mdash| such as :ada:`String_Access` and
+  :ada:`Integer_Access` |mdash| have an associated pool, and we can use the
+  :ada:`Storage_Pool` aspect and the :ada:`Storage_Pool` attribute to
+  customize them.
 
 - We cannot instantiate the :ada:`Ada.Unchecked_Deallocation` procedure for
   the :ada:`access Integer` type. However, we can instantiate it for named
