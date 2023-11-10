@@ -3163,6 +3163,12 @@ Using anonymous access-to-subprograms as parameters allows us to pass
 subprograms at any level. For certain applications, the restrictions that are
 applied to named access types might be too strict, so using anonymous
 access-to-subprograms might be a good way to circumvent those restrictions.
+They also allow the component developer to be independent of the clients'
+specific access types.
+
+Note that the increased flexibility for anonymous access-to-subprograms means
+that some of the checks that are performed at compile time for named
+access-to-subprograms are done at runtime for anonymous access-to-subprograms.
 
 
 Named access-to-subprograms as a parameter
