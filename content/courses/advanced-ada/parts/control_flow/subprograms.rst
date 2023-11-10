@@ -131,7 +131,8 @@ and
 
 have different addresses, so they are different objects. Therefore, we conclude
 that this parameter is being passed by value, even though it has the
-:ada:`in out` mode.
+:ada:`in out` mode. (We talk more about addresses and the :ada:`'Address`
+attribute :ref:`later on <Adv_Ada_Address_Attribute>`).
 
 As we know, when a parameter is passed by copy, it is first copied to a
 temporary object. In the case of a parameter with :ada:`in out` mode, the
