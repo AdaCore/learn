@@ -272,7 +272,7 @@ In addition to parameters and objects, we can use anonymous access types in
 discriminants, components of array and record types, renamings and function
 return types. (We discuss
 :ref:`anonymous access discriminants <Adv_Ada_Anonymous_Access_Discriminants>`
-and :ref:`anonymous access parameters <Adv_Ada_Anonymous_Access_Parameter>`
+and :ref:`anonymous access parameters <Adv_Ada_Access_Parameters>`
 later on.) Let's see a code example that includes all these cases:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_To_Object_Types.All_Anonymous_Access_To_Object_Types
