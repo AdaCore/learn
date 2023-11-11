@@ -2779,9 +2779,12 @@ In this section, we discuss some details about using addresses in Ada.
 
 We make use of the :ada:`Address` type, which is defined in the :ada:`System`
 package, to handle addresses. In contrast to other programming languages (such
-as C or C++), an address in Ada isn't an integer value |mdash| its definition
-actually depends on the compiler implementation, but for now, let's consider
-it to be a private type.
+as C or C++), an address in Ada isn't an integer value: its definition depends
+on the compiler implementation, and it's actually driven directly by the
+hardware. For now, let's consider it to usually be a private type |mdash| this
+can be seen as an attempt to achieve application code portability, given the
+variations in hardware that result in different definitions of what an address
+actually is.
 
 The :ada:`Address` type has support for
 :ref:`address comparison <Adv_Ada_Address_Comparison>` and
