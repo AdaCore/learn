@@ -6004,14 +6004,14 @@ The generic :ada:`System.Address_To_Access_Conversions` package allows us to
 convert between access types and addresses. This might be useful for specific
 low-level operations. Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Show_Access_Address
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Address_Conversion
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     with System.Address_To_Access_Conversions;
     with System.Address_Image;
 
-    procedure Show_Address is
+    procedure Show_Address_Conversion is
 
        package Integer_AAC is
          new System.Address_To_Access_Conversions
@@ -6037,7 +6037,7 @@ low-level operations. Let's see an example:
        Put_Line ("To_Address (AI) : "
                  & System.Address_Image
                      (To_Address (AI)));
-    end Show_Address;
+    end Show_Address_Conversion;
 
 In this example, we instantiate the generic
 :ada:`System.Address_To_Access_Conversions` package using :ada:`Integer`
@@ -6062,7 +6062,7 @@ In addition to the :ada:`To_Address` function, the :ada:`To_Pointer` function
 is available to convert from an address to an object of access type. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Show_Access_Address
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Address_Conversion
 
     with Ada.Text_IO; use Ada.Text_IO;
     with System;      use System;
@@ -6070,7 +6070,7 @@ example:
     with System.Address_To_Access_Conversions;
     with System.Address_Image;
 
-    procedure Show_Address is
+    procedure Show_Address_Conversion is
 
        package Integer_AAC is
          new System.Address_To_Access_Conversions
@@ -6100,7 +6100,7 @@ example:
        else
           Put_Line ("AI_1 /= AI_2");
        end if;
-    end Show_Address;
+    end Show_Address_Conversion;
 
 Here, we convert the :ada:`A` address back to an access value by calling
 :ada:`To_Pointer (A)`. (When running this object, we see that :ada:`AI_1`
