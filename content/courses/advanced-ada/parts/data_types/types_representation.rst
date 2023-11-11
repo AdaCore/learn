@@ -2868,7 +2868,7 @@ example:
 
     procedure Show_Address is
 
-       I_Main   : Integer;
+       I_Main   : aliased Integer;
        I_Mapped : Integer
                     with Address => I_Main'Address;
     begin
