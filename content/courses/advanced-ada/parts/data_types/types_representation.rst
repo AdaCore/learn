@@ -2777,7 +2777,7 @@ Also, later on in that chapter, we discuss the
 :ref:`relation between access types and addresses <Adv_Ada_Access_Address>`.)
 In this section, we discuss some details about using addresses in Ada.
 
-We make use of the :ada:`Address` type, which is defined in :ada:`System`
+We make use of the :ada:`Address` type, which is defined in the :ada:`System`
 package, to handle addresses. In contrast to other programming languages (such
 as C or C++), an address in Ada isn't an integer value |mdash| its definition
 actually depends on the compiler implementation, but for now, let's consider
