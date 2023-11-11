@@ -3072,10 +3072,13 @@ a code example where we iterate over an array by incrementing an address that
     procedure Show_Address is
 
        Arr : array (1 .. 10) of Integer;
-       A   : Address := Arr (1)'Address;
-       --               ^^^^^^^^^^^^^^^
+       A   : Address := Arr'Address;
+       --               ^^^^^^^^^^^
        --   Initializing address object with
        --   address of the first component of Arr.
+       --
+       --   We could write this as well:
+       --   ___ := Arr (1)'Address
 
     begin
        for I in Arr'Range loop
@@ -3107,7 +3110,12 @@ a code example where we iterate over an array by incrementing an address that
     end Show_Address;
 
 In this example, we initialize the address :ada:`A` by retrieving the address
-of the first component of the array :ada:`Arr`. Then, in the loop, we declare
+of the first component of the array :ada:`Arr`. (Note that we could have
+written :ada:`Arr(1)'Address` instead of :ada:`Arr'Address`. In any
+case, the language guarantees that :ada:`Arr'Address` gives us the address of
+the first component, i.e. :ada:`Arr'Address = Arr(1)'Address`.)
+
+Then, in the loop, we declare
 an overlay :ada:`Curr` using the current value of the :ada:`A` address. We can
 then operate on this overlay |mdash| here, we assign :ada:`I` to :ada:`Curr`.
 Finally, in the loop, we increment address :ada:`A` and make it *point* to the
