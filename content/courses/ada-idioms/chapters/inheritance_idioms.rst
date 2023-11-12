@@ -188,7 +188,7 @@ then we will show the two idiom expressions in separate subsections.
   inheritance has cases in which it is useful, however those cases are very
   narrow in applicability.
 
-- We will assume that both the parent type and the child type are both private
+- We will assume that the parent type and the child type are both private
   types, i.e., abstract data types, because that is the best practice. See the
   :ref:`Abstract Data Type idiom <Ada_Idioms_Abstract_Data_Types>` for
   justification and details.
@@ -205,9 +205,9 @@ then we will show the two idiom expressions in separate subsections.
 - Whether the child type is visibly derived will vary with the
   :ref:`inheritance idiom <Ada_Idioms_Implementation_Inheritance>` solution.
 
-To avoid unnecessary code duplication, the two idiom solutions use the same
-parent type, declared as a simple tagged private type. The parent type could
-itself be derived from some other tagged type, but that changes nothing
+To avoid unnecessary code duplication, examples for the two idiom solutions use
+the same parent type, declared as a simple tagged private type. The parent type
+could itself be derived from some other tagged type, but that changes nothing
 conceptually significant. The parent type is declared in package :ada:`P`, as
 follows:
 
@@ -239,8 +239,8 @@ part of the package:
     package Q is
       type Child is new Parent with private;
       --  implicit, inherited primitive Parent operations declared here,
-      --  now for type Child additional primitives for Child explicitly
-      --  declared, if any
+      --  now for type Child
+      --  additional primitives for Child explicitly declared, if any
     private
       type Child is new Parent with record ... end record;
     end Q;
@@ -248,9 +248,9 @@ part of the package:
 The primitive operations from the parent type are implicitly, automatically
 declared immediately after the private extension declaration. That means those
 operations are in the visible part of the package, hence clients can invoke
-them. Any additional operations for the interface will be explicitly declared in
-the visible part as well, as will be any overriding declarations for those
-inherited operations that are to be changed.
+them. Any additional operations for the client interface will be explicitly
+declared in the visible part as well, as will be any overriding declarations for
+those inherited operations that are to be changed.
 
 For example, here is a basic bank account
 :ref:`ADT <Ada_Idioms_Abstract_Data_Types>` that we will use as the parent type
@@ -436,7 +436,7 @@ Recall that with Implementation Inheritance clients do not have compile-time
 visibility to the *is-a* relationship between the parent and child types. We
 meet that requirement by not making the child visibly derived from the parent.
 Therefore, we declare the child type as a simple tagged private type and only
-mention the parent in the child type's completion located in the package private
+mention the parent in the child type's completion in the package private
 part:
 
 .. code-block:: ada
