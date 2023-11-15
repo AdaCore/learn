@@ -38,7 +38,7 @@ only be handled via :ada:`others` past that point. That situation prevents
 handling the exception specifically, and violates RPP05.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

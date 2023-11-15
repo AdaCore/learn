@@ -41,7 +41,7 @@ recognized and are artifacts of the underlying run-time library or operating
 system implementation.)
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 4.10 Storage Pool

@@ -45,7 +45,7 @@ of paths and thus corresponding language-defined checks that could have been
 the cause.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

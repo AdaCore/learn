@@ -41,7 +41,7 @@ unintentionally use the locally-scoped :ada:`Integer` rather than the original
 attributes (and may not even be of the same base type).
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

@@ -44,7 +44,7 @@ possibility includes the case in which new components are added to an existing
 composite type.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.5 Enumerator issues [CCB]

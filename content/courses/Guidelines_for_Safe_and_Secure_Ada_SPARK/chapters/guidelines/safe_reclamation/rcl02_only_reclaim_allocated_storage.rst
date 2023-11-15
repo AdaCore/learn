@@ -36,7 +36,7 @@ This is possible because Ada allows creation of access values designating
 declared (aliased) objects.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.39 Memory leak and heap fragmentation [XYL]

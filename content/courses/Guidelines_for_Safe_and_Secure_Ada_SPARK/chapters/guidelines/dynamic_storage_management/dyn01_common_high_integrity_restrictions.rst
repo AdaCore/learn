@@ -23,7 +23,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`Ada RM H.4 \\- High Integrity Restrictions`
+:arm:`H.4 High Integrity Restrictions <H-4>`
 
 +++++++++++++
 Description
@@ -43,7 +43,7 @@ reclaimed at once. (That restriction does not apply to objects created by
 allocators in the application.)
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 4.10 Storage Pool

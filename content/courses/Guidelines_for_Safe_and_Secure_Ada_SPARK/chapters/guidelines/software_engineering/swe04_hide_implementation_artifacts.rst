@@ -51,7 +51,7 @@ components. Once the application code size becomes non-trivial, the cost of
 retrofit is extremely high.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

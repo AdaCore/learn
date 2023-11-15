@@ -58,10 +58,10 @@ with a parameter of :ada:`null` like so:
 
 The above would also ensure no allocations can occur with access types that
 have the default pool as their associated storage pool (per
-:arm:`Ada RM 13.11.3\\(6.1\\/3\\) \\- Default Storage Pools`
+:arm:`13.11.3\\(6.1\\/3\\) Default Storage Pools <13-11>`
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.14 Dangling reference to heap [XYK]

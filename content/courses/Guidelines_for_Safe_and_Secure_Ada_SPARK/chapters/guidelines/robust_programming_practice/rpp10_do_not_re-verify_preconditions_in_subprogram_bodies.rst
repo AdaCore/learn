@@ -33,7 +33,7 @@ Do not re-verify preconditions in the corresponding subprogram bodies. It is a
 waste of cycles and confuses the reader as well.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

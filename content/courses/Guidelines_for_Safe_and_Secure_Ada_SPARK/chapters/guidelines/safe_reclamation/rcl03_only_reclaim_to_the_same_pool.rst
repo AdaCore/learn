@@ -30,9 +30,9 @@ Description
 +++++++++++++
 
 When deallocating, ensure that the pool to which the storage will be returned
-was the same pool from which it was allocated. Execution is erroneous
+is the same pool from which it was allocated. Execution is erroneous
 otherwise, meaning anything can happen
-(:arm:`Ada RM 13.11.2\\(16\\) \\- Unchecked Storage Deallocation`
+(:arm:`13.11.2\\(16\\) Unchecked Storage Deallocation <13-11>`
 
 Each access type has an associated storage pool, either implicitly by default,
 or explicitly with a storage pool specified by the programmer. The implicit
@@ -40,7 +40,7 @@ default pool might not be the same pool used for another access type, even an
 access type designating the same subtype.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.39 Memory leak and heap fragmentation [XYL]

@@ -49,7 +49,7 @@ iterating over an array, it is better to use
 than using :ada:`1 .. Array_Object'Length`.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

@@ -28,7 +28,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`Ada RM D.13 \\- The Ravenscar and Jorvik Profiles`
+:arm:`D.13 The Ravenscar and Jorvik Profiles <D-13>`
 
 +++++++++++++
 Description
@@ -76,7 +76,7 @@ The profile is equivalent to the following set of pragmas:
            No_Dependence => System.Multiprocessors.Dispatching_Domains);
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.59 Concurrency - Activation [GGA]

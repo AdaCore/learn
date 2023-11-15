@@ -58,7 +58,7 @@ In this approach no storage-related constructs are disallowed unless the SPARK
 subset is applied.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 4.10 Storage Pool

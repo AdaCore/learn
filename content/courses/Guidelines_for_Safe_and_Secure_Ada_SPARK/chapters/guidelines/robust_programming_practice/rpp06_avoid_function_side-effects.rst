@@ -23,7 +23,7 @@ Goal
 Reference
 +++++++++++
 
-MISRA C Rule 13.3 "The value of an expression and its persistent side effects
+MISRA C Rule 13.2 "The value of an expression and its persistent side effects
 shall be the same under all permitted evaluation orders"
 
 +++++++++++++
@@ -47,7 +47,7 @@ rule are anticipated but should only be allowed on a per-instance basis after
 careful analysis.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.24 Side-effects and order of evaluation [SAM]

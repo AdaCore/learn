@@ -38,8 +38,8 @@ is possible. The term *applicable* means that there is no dynamic call chain
 that can reach the active exception which does not also include a handler that
 will be invoked for that exception, somewhere in that chain.
 
-When an unhandled exception occurrence is raised in the sequence of statements
-of an application task and reaches the body of that task, the task completes
+When an unhandled exception occurs in the sequence of statements
+of an application task and propagates to task's body, the task terminates
 abnormally. No *notification* of some sort is required or defined by the
 language, although some vendors' implementations may print out a log message or
 provide some other non-standard response. (Note that such a notification
@@ -69,18 +69,18 @@ continue executing normally, i.e., they do not complete as a result of the
 environment task completion. Alternatively, however, instead of waiting for
 them, the implementation has permission to abort the dependent application
 tasks, per
-:arm:`Ada RM 10.2\\(30\\) \\- Program Execution`
+:arm:`10.2\\(30\\) Program Execution <10-2>`
 The resulting application-specific effect is undefined.
 
 Finally, whether the environment task waited for the dependent tasks or aborted
 them, the semantics of further execution beyond that point are undefined. There
 is no concept of a calling environment beyond the environment task
-(:arm:`Ada RM 10.2\\(30\\) \\- Program Execution`)
+(:arm:`10.2\\(30\\) Program Execution <10-2>`).
 In some systems there is no calling environment, such as bare-metal platforms
 with only an Ada run-time library and no operating system.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.36 Ignored error status and unhandled exceptions [OYB]

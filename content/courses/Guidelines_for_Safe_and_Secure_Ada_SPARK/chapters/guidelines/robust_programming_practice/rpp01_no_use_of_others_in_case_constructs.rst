@@ -49,7 +49,7 @@ as a result, Ada's :ada:`others` alternative doesn't play C's defensive code
 role and therefore a stronger guideline can be adopted.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.27 Switch statements and static analysis [CLL]

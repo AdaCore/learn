@@ -123,7 +123,7 @@ type can properly substitute for parent type objects. Note that static proof of
 consistency provides an even higher degree of confidence.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.42 Violations of the Liskov substitution principle of the contract model

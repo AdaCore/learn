@@ -23,7 +23,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`Ada RM 6.2 \\- Formal Parameter Modes`
+:arm:`6.2 Formal Parameter Modes <6-2>`
 
 :arm:`SPARK RM 6.4.2 \\- Anti-Aliasing`
 
@@ -77,7 +77,7 @@ prohibited in this context:
    * A prohibited construct enclosed in parentheses.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.32 Passing parameters and return values [CSJ]

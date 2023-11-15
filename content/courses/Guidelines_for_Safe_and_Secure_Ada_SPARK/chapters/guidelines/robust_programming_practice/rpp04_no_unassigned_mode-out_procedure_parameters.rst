@@ -43,7 +43,7 @@ of the actual parameter's value might not occur immediately after the call
 returns.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.32 Passing parameters and return values [CSJ]

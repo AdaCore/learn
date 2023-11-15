@@ -52,7 +52,7 @@ In this approach the following constructs are not allowed:
    * Unchecked Deallocations
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 4.10 Storage Pool
