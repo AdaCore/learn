@@ -1,5 +1,5 @@
 ---------------------------------------------------
-Use Symbolic Constants For Literal Values (RPP14)
+Use Symbolic Constants for Literal Values (RPP14)
 ---------------------------------------------------
 
 **Level** :math:`\rightarrow` Advisory

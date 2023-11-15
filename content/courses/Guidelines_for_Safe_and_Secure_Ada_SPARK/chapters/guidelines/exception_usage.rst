@@ -45,7 +45,7 @@ identify the exceptions that are possible and how they will be addressed.
 .. toctree::
    :maxdepth: 1
 
-   Don't Raise Language-Defined Exceptions (EXU01) <exception_usage/exu01_dont_raise_language-defined_exceptions.rst>
+   Do Not Raise Language-Defined Exceptions (EXU01) <exception_usage/exu01_dont_raise_language-defined_exceptions.rst>
    No Unhandled Application-Defined Exceptions (EXU02) <exception_usage/exu02_no_unhandled_application-defined_exceptions.rst>
    No Exception Propagation Beyond Name Visibility (EXU03) <exception_usage/exu03_no_exception_propagation_beyond_name_visibility.rst>
    Prove Absence of Run-time Exceptions (EXU04) <exception_usage/exu04_prove_absence_of_run-time_exceptions.rst>

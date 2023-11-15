@@ -1,5 +1,5 @@
 ---------------------------------------
-Only Reclaim To The Same Pool (RCL03)
+Only Reclaim to the Same Pool (RCL03)
 ---------------------------------------
 
 **Level** :math:`\rightarrow` Mandatory

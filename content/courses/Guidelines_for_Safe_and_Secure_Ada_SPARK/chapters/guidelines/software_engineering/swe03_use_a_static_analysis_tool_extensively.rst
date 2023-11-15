@@ -1,5 +1,5 @@
 ------------------------------------------------
-Use A Static Analysis Tool Extensively (SWE03)
+Use a Static Analysis Tool Extensively (SWE03)
 ------------------------------------------------
 
 **Level** :math:`\rightarrow` Mandatory

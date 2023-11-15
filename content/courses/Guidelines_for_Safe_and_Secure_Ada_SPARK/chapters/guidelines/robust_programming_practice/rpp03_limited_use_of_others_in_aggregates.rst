@@ -1,5 +1,5 @@
 -----------------------------------------------
-Limited Use of "others" In Aggregates (RPP03)
+Limited Use of "others" in Aggregates (RPP03)
 -----------------------------------------------
 
 .. include:: ../../../global.txt
