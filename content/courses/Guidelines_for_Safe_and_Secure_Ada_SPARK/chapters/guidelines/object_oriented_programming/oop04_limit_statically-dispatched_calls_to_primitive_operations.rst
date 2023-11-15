@@ -1,5 +1,5 @@
 -------------------------------------------------------------------
-Limit Statically-Dispatched Calls To Primitive Operations (OOP04)
+Limit Statically-Dispatched Calls to Primitive Operations (OOP04)
 -------------------------------------------------------------------
 
 .. include:: ../../../global.txt

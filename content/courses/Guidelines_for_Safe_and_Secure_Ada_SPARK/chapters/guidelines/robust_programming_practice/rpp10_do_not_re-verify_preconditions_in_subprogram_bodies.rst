@@ -1,5 +1,5 @@
 -------------------------------------------------------------
-Do Not Re-Verify Preconditions In Subprogram Bodies (RPP10)
+Do Not Re-Verify Preconditions in Subprogram Bodies (RPP10)
 -------------------------------------------------------------
 
 **Level** :math:`\rightarrow` Advisory
