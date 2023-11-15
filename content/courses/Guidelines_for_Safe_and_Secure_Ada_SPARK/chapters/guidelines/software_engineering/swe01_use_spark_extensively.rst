@@ -37,7 +37,7 @@ proof is not intended, with some parts in Ada when features outside the SPARK
 subset are essential.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

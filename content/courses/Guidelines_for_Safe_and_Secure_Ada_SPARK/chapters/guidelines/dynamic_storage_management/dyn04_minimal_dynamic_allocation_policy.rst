@@ -48,7 +48,7 @@ Note that some operating systems intended for this domain directly support this
 policy.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 4.10 Storage Pool

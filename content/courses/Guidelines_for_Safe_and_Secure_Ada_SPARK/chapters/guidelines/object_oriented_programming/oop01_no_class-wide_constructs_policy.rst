@@ -42,7 +42,7 @@ calls can only occur when a class-wide value is passed as the parameter to a
 primitive operation of a tagged type.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.43 Redispatching [PPH]

@@ -56,7 +56,7 @@ lessening it, by requiring the reader to understand multiple superclasses in
 order to understand the behavior of a given subclass.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.41 Inheritance [RIP]

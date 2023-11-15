@@ -41,7 +41,7 @@ subprogram could return normally without having applied any recovery for
 the specific exception occurrence, which is likely a coding error.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

@@ -41,7 +41,7 @@ stack usage analysis extremely difficult, requiring, for example, manual supply 
 limits.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.35 Recursion [GDL]

@@ -58,7 +58,7 @@ and all those it calls, directly or indirectly, to know whether any global
 objects were accessed.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.42 Violations of the Liskov substitution principle or the contract model

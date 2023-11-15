@@ -40,7 +40,7 @@ However, this can lead to side effects and aliasing.
 This rule disallows all modes except mode :ada:`in` for functions.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.24 Side-effects and order of evaluation [SAM]

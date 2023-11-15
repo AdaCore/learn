@@ -46,7 +46,7 @@ Note that functions will not have side-effects (due to RPP06) so it is only the
 returned value that is of interest here.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.47 Inter-language calling [DJS]

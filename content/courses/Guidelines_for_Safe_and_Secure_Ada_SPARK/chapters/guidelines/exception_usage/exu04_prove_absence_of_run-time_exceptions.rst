@@ -49,7 +49,7 @@ the restriction is not ideal. However, proof of the absence of run-time errors
 is possible using the SPARK subset of Ada.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 N/A

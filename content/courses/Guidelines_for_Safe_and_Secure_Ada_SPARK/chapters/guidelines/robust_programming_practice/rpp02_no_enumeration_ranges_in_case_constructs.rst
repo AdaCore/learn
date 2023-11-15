@@ -43,7 +43,7 @@ enumeration value to be added but not handled with a specific alternative, when
 a specific alternative was intended.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.5 Enumerator issues [CCB]

@@ -28,7 +28,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`Ada RM D.13 \\- The Ravenscar and Jorvik Profiles`
+:arm:`D.13 The Ravenscar and Jorvik Profiles <D-13>`
 
 +++++++++++++
 Description
@@ -82,10 +82,10 @@ of the Jorvik profile.
     No_Dependence => Ada.Synchronous_Barriers
 
 Jorvik also replaces restriction Simple_Barriers with Pure_Barriers (a weaker
-requirement than Simple_Barriers).
+requirement than the restriction Simple_Barriers).
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.59 Concurrency - Activation [GGA]

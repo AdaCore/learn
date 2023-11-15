@@ -41,7 +41,7 @@ checked by the analyzer and be error-free prior to check-in. Similarly, each
 nightly build should produce a CodePeer baseline for the project.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.6 Conversion errors [FLC]

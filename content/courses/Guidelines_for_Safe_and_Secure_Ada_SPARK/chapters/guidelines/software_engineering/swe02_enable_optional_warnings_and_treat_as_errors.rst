@@ -48,7 +48,7 @@ be disabled. In other cases, a different mechanism might be appropriate, such
 as aspect (or pragma) Unreferenced.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.18 Dead Store [WXQ]
@@ -83,7 +83,7 @@ Compliant Code Example
       ... code not referencing This
    end P;
 
-The compiler will no longer issue a warning that the formal Parameter This is
+The compiler will no longer issue a warning that the formal parameter This is
 not referenced. Of course, if that changes and This becomes referenced, the
 compiler will flag the pragma.
 

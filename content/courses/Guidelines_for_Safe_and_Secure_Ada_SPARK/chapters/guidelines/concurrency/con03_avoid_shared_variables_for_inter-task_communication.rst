@@ -26,7 +26,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`Ada RM D.13 \\- The Ravenscar Profile`
+:arm:`D.13 The Ravenscar Profile <D-13>`
 
 +++++++++++++
 Description
@@ -37,7 +37,7 @@ for inter-task communication, such use is less robust and less reliable than
 encapsulating shared variables within protected objects.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.56 Undefined behaviour [EWF]
@@ -52,7 +52,7 @@ Noncompliant Code Example
   :dedent: 3
 
 Note that variables marked as :ada:`Atomic` are also :ada:`Volatile`, per the
-:arm:`Ada RM C.6\\/8\\(3\\) \\- Shared Variable Control`
+:arm:`C.6\\/8\\(3\\) Shared Variable Control <C-6>`
 
 ++++++++++++++++++++++++
 Compliant Code Example

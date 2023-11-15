@@ -46,7 +46,7 @@ result, it only makes sense to use the class-wide form in this situation.
 Note: this approach will be required for OOP07 (Ensure Local Type Consistency).
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.42 Violations of the Liskov substitution principle or the contract model

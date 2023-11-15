@@ -63,7 +63,7 @@ Of course, incorrect marking errors are flagged by the compiler. If a
 subprogram is explicitly marked as overriding but is not actually overriding,
 the compiler will reject the code.  Likewise, if a primitive subprogram is
 explicitly marked as not overriding, but actually is overriding, the compiler
-will reject the code
+will reject the code.
 
 However, most subprograms are not overriding so it would be a heavy burden on
 the programmer to make them explicitly indicate that fact. That's not to
@@ -93,7 +93,7 @@ indicator when overriding a language-defined operator. The switches also apply
 to inherited primitive subprograms for non-tagged types.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
-Applicable vulnerability within ISO TR 24772-2
+Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.34 Subprogram signature mismatch [OTR]
