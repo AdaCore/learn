@@ -38,3 +38,28 @@ Level
       of the code may be impacted, the reason for the non-conformance
       should be understood.
 
+-------------
+Remediation
+-------------
+
+**Remediation** indicates the the level of difficulty to modify/update
+code that does not follow this particular rule.
+
+   High
+      Failure to follow this rule will likely cause an unreasonable
+      amount of modifications/updates to bring the code base into compliance.
+
+   Medium
+      Failure to follow this rule will likely cause a large amount of
+      modifications/updates to bring the code base into compliance, but
+      those changes may still be cost-effective.
+
+   Low
+      Failure to follow this rule may cause a small amount of
+      modifications/updates to bring the code base into compliance, but
+      those changes will be minor compared to the benefit.
+  
+   N/A
+      This rule is more of a design decision (as opposed to a coding
+      flaw) and therefore, if the rule is violated, it is done so
+      with a specific purpose.
