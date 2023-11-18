@@ -473,7 +473,8 @@ if __name__ == "__main__":
     has_error = False
 
     for f in args.json_files:
-        check_status = check_code_block_json(f)
-        has_error |= check_status
+        check_error = check_code_block_json(f)
+        if check_error:
+            has_error = True
 
     exit(has_error)
