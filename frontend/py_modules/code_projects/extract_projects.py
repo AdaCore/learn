@@ -297,6 +297,7 @@ def analyze_file(rst_file):
             except Exception as e:
                 print(e.message)
                 print("Error while updating code for the block, continuing with next one!")
+                block.to_json_file()
                 continue
 
             project_block_dir, ref_block = prepare_project_block_dir(latest_project_dir)
@@ -305,9 +306,11 @@ def analyze_file(rst_file):
             if block.no_check:
                 if verbose:
                     print("Skipping code block {}".format(loc))
+                block.to_json_file()
                 continue
 
             if block.syntax_only:
+                block.to_json_file()
                 continue
 
             compile_error = False
