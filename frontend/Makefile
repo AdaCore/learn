@@ -182,8 +182,8 @@ test_content_courses: \
 test_content: test_content_courses
 	@cd $(SRC_TEST_DIR) \
 		&& zip -9 -r $(COMPLETE_SITE_BOOK)_code.zip . \
-			-x "extracted_projects.json" \
-			-x "block_checks.json" \
+			-x "*extracted_projects.json" \
+			-x "*block_checks.json" \
 			-x "*.log" -x "*/latest*"
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
