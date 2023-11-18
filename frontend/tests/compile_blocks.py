@@ -32,6 +32,7 @@ import colors as C
 
 import code_projects.fmt_utils as fmt_utils
 
+EXTRACTED_PROJECTS_JSON = "extracted_projects.json"
 
 if __name__ == "__main__":
     CALL_SCRIPTS = True
@@ -64,6 +65,12 @@ if __name__ == "__main__":
         and not args.keep_files):
         shutil.rmtree(args.build_dir)
 
+    extracted_projects_json = None
+    if args.build_dir:
+        extracted_projects_json = \
+            os.path.abspath(args.build_dir) + "/" + \
+            EXTRACTED_PROJECTS_JSON
+
     if CALL_SCRIPTS:
         PATH_CODE_PROJECTS = \
             os.path.dirname(os.path.realpath(__file__)) + \
@@ -89,6 +96,11 @@ if __name__ == "__main__":
             if args.max_columns:
                 cmd_extract_projects += " --max-columns " + \
                     str(args.max_columns)
+
+            if extracted_projects_json:
+                cmd_extract_projects += " --extracted_projects " + \
+                    extracted_projects_json
+
             if len(args.rst_files) > 0:
                 cmd_extract_projects += " " + " ".join(args.rst_files)
 
@@ -109,6 +121,9 @@ if __name__ == "__main__":
             if args.max_columns:
                 cmd_check_projects += " --max-columns " + \
                     str(args.max_columns)
+            if extracted_projects_json:
+                cmd_check_projects += " --extracted_projects " + \
+                    extracted_projects_json
 
             ret_value = os.system(cmd_check_projects)
             test_error = test_error or ret_value != 0

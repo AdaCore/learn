@@ -10,26 +10,46 @@ import glob
 
 import blocks
 import check_code_block
+import extract_projects
 import fmt_utils
 
 verbose = False
 all_diagnostics = False
 max_columns = 0 # no check for max. columns
 
-def get_projects(build_dir):
+
+def get_blocks(json_files_regex_list):
     projects = dict()
 
+    for json_regex in json_files_regex_list:
+        for json_file in glob.iglob(json_regex, recursive=True):
+            json_file_path = os.path.abspath(json_file)
+            b = blocks.CodeBlock.from_json_file(json_file_path)
+
+            if not b.project in projects:
+                projects[b.project] = list()
+            projects[b.project].append((b, json_file_path))
+
+    return projects
+
+
+def get_projects(build_dir, projects_list_file=None):
+    json_files_regex_list = list()
+
     os.chdir(build_dir)
-    base_project_dir = "projects"
 
-    json_files_regex = base_project_dir + "/**/block_info.json"
-    for json_file in glob.iglob(json_files_regex, recursive=True):
-        json_file_path = os.path.abspath(json_file)
-        b = blocks.CodeBlock.from_json_file(json_file_path)
+    if projects_list_file is not None:
+        extracted_projects = \
+            extract_projects.ProjectsList.from_json_file(projects_list_file)
 
-        if not b.project in projects:
-            projects[b.project] = list()
-        projects[b.project].append((b, json_file_path))
+        for prj in extracted_projects.projects:
+            json_files_regex_list.append(extract_projects.get_project_dir(prj) +
+                                         "/**/block_info.json")
+    else:
+        json_files_regex_list.append(extract_projects.BASE_PROJECT_DIR +
+                                     "/**/block_info.json")
+
+    projects = get_blocks(json_files_regex_list)
 
     return projects
 
@@ -41,13 +61,13 @@ def check_block(block, json_file):
     return has_error
 
 
-def check_projects(build_dir):
+def check_projects(build_dir, projects_list_file=None):
 
     check_error = False
 
     work_dir = os.getcwd()
 
-    projects = get_projects(build_dir)
+    projects = get_projects(build_dir, projects_list_file)
 
     for project in projects:
 
@@ -79,6 +99,7 @@ if __name__ == "__main__":
                         help='Show more information')
     parser.add_argument('--all-diagnostics', '-A', action='store_true')
     parser.add_argument('--max-columns', type=int, default=0)
+    parser.add_argument('--extracted_projects', type=str, default=None)
 
     args = parser.parse_args()
 
@@ -86,7 +107,7 @@ if __name__ == "__main__":
     all_diagnostics = args.all_diagnostics
     max_columns = args.max_columns
 
-    test_error = check_projects(args.build_dir)
+    test_error = check_projects(args.build_dir, args.extracted_projects)
 
     if test_error:
         fmt_utils.simple_error("TEST ERROR")

@@ -9,6 +9,8 @@ The default behavior is to:
 import os
 import shutil
 import re
+import json
+
 from widget.chop import manual_chop, real_gnatchop
 
 import blocks
@@ -34,6 +36,27 @@ class Diag(object):
 verbose = False
 code_block = None
 code_block_at = None
+
+EXTRACTED_PROJECTS_JSON = "extracted_projects.json"
+BASE_PROJECT_DIR = "projects"
+
+
+def standard_projects_list_filename(build_dir):
+    standard_projects_list = (build_dir + "/" + BASE_PROJECT_DIR + "/" +
+        EXTRACTED_PROJECTS_JSON)
+    return standard_projects_list
+
+def check_standard_projects_list_file(build_dir):
+    projects_list_file = \
+        standard_projects_list_filename(build_dir)
+
+    if os.path.exists(projects_list_file):
+        return projects_list_file
+    else:
+        return None
+
+def get_project_dir(project):
+    return BASE_PROJECT_DIR + "/" + project.replace(".", "/")
 
 
 COMMON_ADC = """
@@ -130,8 +153,37 @@ def write_project_file(main_file, compiler_switches, spark_mode):
 
     return gpr_filename
 
+class ProjectsList(object):
+    @staticmethod
+    def from_json_file(json_filename=None):
 
-def analyze_file(rst_file):
+        if json_filename is None:
+            json_filename = "projects.json"
+
+        if os.path.isfile(json_filename):
+            with open(json_filename, u'r') as f:
+                projects_info = json.load(f)
+                return ProjectsList(**projects_info)
+
+        return None
+
+    def __init__(self, projects=None):
+        self.projects = projects if projects is not None else \
+            list()
+
+    def to_json_file(self, json_filename=None):
+        projects_info = vars(self)
+
+        if json_filename is None:
+            json_filename = "projects.json"
+        with open(json_filename, u'w') as f:
+            json.dump(projects_info, f, indent=4)
+
+    def append(self, project):
+        self.projects.append(project)
+
+
+def analyze_file(rst_file, extracted_projects_list_file=None):
 
     analysis_error = False
 
@@ -178,6 +230,14 @@ def analyze_file(rst_file):
 
     projects = dict()
 
+    extr_prjs = None
+    if extracted_projects_list_file is not None:
+        if os.path.exists(extracted_projects_list_file):
+            extr_prjs = ProjectsList.from_json_file(extracted_projects_list_file)
+        else:
+            print ("Error: output JSON file not found")
+            exit(1)
+
     for (i, b) in code_blocks:
         if b.project is None:
             print ("Error: project not set in {} at line {}".format(
@@ -189,14 +249,15 @@ def analyze_file(rst_file):
         projects[b.project].append((i, b))
 
     work_dir = os.getcwd()
-    base_project_dir = "projects"
 
     for project in projects:
+        if extr_prjs is not None:
+            extr_prjs.append(project)
 
         latest_project_dir = "latest"
 
         def init_project_dir(project):
-            project_dir = base_project_dir + "/" + project.replace(".", "/")
+            project_dir = get_project_dir(project)
 
             if os.path.exists(project_dir):
                 if verbose:
@@ -350,6 +411,9 @@ def analyze_file(rst_file):
 
             block.to_json_file()
 
+        if extr_prjs is not None:
+            extr_prjs.to_json_file(extracted_projects_list_file)
+
         os.chdir(work_dir)
 
     return analysis_error
@@ -370,6 +434,7 @@ if __name__ == "__main__":
     parser.add_argument('--all-diagnostics', '-A', action='store_true')
     parser.add_argument('--code-block-at', type=int, default=0)
     parser.add_argument('--max-columns', type=int, default=0)
+    parser.add_argument('--extracted_projects', type=str)
 
     args = parser.parse_args()
 
@@ -382,12 +447,18 @@ if __name__ == "__main__":
     if not os.path.exists(args.build_dir):
         os.makedirs(args.build_dir)
 
-    os.chdir(args.build_dir)
-
     test_error = False
 
+    if args.extracted_projects is not None:
+        # Init JSON file containing list of extracted projects
+        extr_prjs = None
+        extr_prjs = ProjectsList()
+        extr_prjs.to_json_file(args.extracted_projects)
+
+    os.chdir(args.build_dir)
+
     for f in args.rst_files:
-        analysis_error = analyze_file(f)
+        analysis_error = analyze_file(f, args.extracted_projects)
         if analysis_error:
             test_error = True
 
