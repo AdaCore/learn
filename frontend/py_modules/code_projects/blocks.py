@@ -154,9 +154,6 @@ class Block(object):
 
     def to_json_file(self, json_filename=None):
         block_info = vars(self)
-        # block_info = self.__dict__
-        # print("BLOCK_INFO")
-        # print(block_info)
 
         if json_filename is None:
             json_filename = "block_info.json"

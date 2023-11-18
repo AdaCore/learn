@@ -69,8 +69,6 @@ if __name__ == "__main__":
             os.path.dirname(os.path.realpath(__file__)) + \
             "/../py_modules/code_projects"
 
-        args.verbose = True
-
         if RUN_PROJECT_EXTRACTION:
             cmd_extract_projects = PATH_CODE_PROJECTS + \
                 "/extract_projects.py"
