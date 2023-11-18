@@ -184,6 +184,7 @@ test_content: test_content_courses
 		&& zip -9 -r $(COMPLETE_SITE_BOOK)_code.zip . \
 			-x "*extracted_projects.json" \
 			-x "*block_checks.json" \
+			-x "*/gnatprove/*" \
 			-x "*.log" -x "*/latest*"
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
