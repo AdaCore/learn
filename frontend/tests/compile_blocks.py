@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
             if args.build_dir:
                 cmd_extract_projects += " --build-dir " + \
-                    args.build_dir
+                    os.path.abspath(args.build_dir)
             if args.verbose:
                 cmd_extract_projects += " --verbose"
             if args.code_block:
