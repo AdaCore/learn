@@ -3,6 +3,7 @@ import re
 import hashlib
 import json
 
+import colors as C
 
 class Block(object):
     @staticmethod
