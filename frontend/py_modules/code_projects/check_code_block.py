@@ -19,6 +19,7 @@ import glob
 import re
 
 import blocks
+import checks
 import fmt_utils
 
 verbose = False
@@ -54,6 +55,17 @@ def check_block(block : blocks.CodeBlock,
             raise e
 
         return output
+
+    def set_versions():
+        gcc_version = None
+        gnat_version = None
+        try:
+            gcc_version = run("gcc", "--version").partition('\n')[0]
+            gnat_version = run("gnat", "--version").partition('\n')[0]
+            gnat_prove_version = run("gnatprove", "--version").partition('\n')[0]
+        except:
+            pass
+        return gcc_version, gnat_version, gnat_prove_version
 
     def extract_diagnostics(lines):
         diags = []
@@ -120,8 +132,15 @@ def check_block(block : blocks.CodeBlock,
     if verbose:
         print(fmt_utils.header("Checking code block {}".format(loc)))
 
+    gcc_version, gnat_version, gnat_prove_version = set_versions()
+
+    block_check = checks.BlockCheck(text_hash=block.text_hash, text_hash_short=block.text_hash_short)
+    block_check.status_ok = True
+
     # Syntax check
     if 'nosyntax-check' not in block.classes:
+        check_error = False
+
         for source_file in block.source_files:
 
             try:
@@ -137,15 +156,24 @@ def check_block(block : blocks.CodeBlock,
 
                 if out:
                     print_error(loc, "Failed to syntax check example")
-                    has_error = True
+                    check_error = True
             except S.CalledProcessError:
                 print_error(loc, "Failed to syntax check example")
-                has_error = True
+                check_error = True
+
+        code_check = checks.CodeCheck(version=gcc_version,
+                                      status_ok=(not check_error))
+        block_check.add_check("SYNTAX", code_check)
+
+        if check_error:
+            has_error = True
 
     if block.syntax_only:
         cleanup_project(block.language,
                         block.project_filename,
                         block.project_main_file)
+        block_check.status_ok = not has_error
+        block_check.to_json_file()
         return has_error
 
     compile_error = False
@@ -153,11 +181,12 @@ def check_block(block : blocks.CodeBlock,
     is_prove_error_class = False
 
     if block.compile_it:
+        check_error = False
 
         if block.language == "ada":
-
+            cmdline = ["gprclean", "-P", block.project_filename]
             try:
-                run("gprclean", "-P", block.project_filename)
+                run(*cmdline)
                 out = run("gprbuild", "-q", "-P", block.project_filename)
             except S.CalledProcessError as e:
                 if 'ada-expect-compile-error' in block.classes:
@@ -165,39 +194,64 @@ def check_block(block : blocks.CodeBlock,
                 else:
                     print_error(loc, "Failed to compile example")
                     print(e.output)
-                    has_error = True
+                    check_error = True
                 out = str(e.output.decode("utf-8"))
 
             out = remove_string(out, "using project")
             with open("build.log", u"w") as logfile:
                 logfile.write(out)
 
+            code_check = checks.CodeCheck(version=gnat_version,
+                                          status_ok=(not check_error),
+                                          logfile="build.log",
+                                          cmdline=str(cmdline))
+
+            block_check.add_check("BUILD", code_check)
+
+            if check_error:
+                has_error = True
+
         elif block.language == "c":
+            cmdline = None
             try:
-                cmd = ["gcc", "-o",
-                        P.splitext(block.project_main_file)[0]] + glob.glob('*.c')
-                out = run(*cmd)
+                cmdline = ["gcc", "-o",
+                           P.splitext(block.project_main_file)[0]] + glob.glob('*.c')
+                out = run(*cmdline)
             except S.CalledProcessError as e:
                 if 'c-expect-compile-error' in block.classes:
                     compile_error = True
                 else:
                     print_error(loc, "Failed to compile example")
                     print(e.output)
-                    has_error = True
+                    check_error = True
                 out = str(e.output.decode("utf-8"))
             with open("build.log", u"w") as logfile:
                 logfile.write(out)
 
+            code_check = checks.CodeCheck(version=gcc_version,
+                                          status_ok=(not check_error),
+                                          logfile="build.log",
+                                          cmdline=str(cmdline))
+
+            block_check.add_check("BUILD", code_check)
+
+            if check_error:
+                has_error = True
+
         if not compile_error and not has_error and block.run_it:
+            check_error = False
+            cmdline = None
+
             if block.language == "ada":
                 try:
-                    out = run("./{}".format(P.splitext(block.project_main_file)[0]))
+                    cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
+                    out = run(*cmdline)
 
                     if 'ada-run-expect-failure' in block.classes:
                         print_error(
                             loc, "Running of example should have failed"
                         )
-                        has_error = True
+                        check_error = True
 
                 except S.CalledProcessError as e:
                     if 'ada-run-expect-failure' in block.classes:
@@ -205,7 +259,7 @@ def check_block(block : blocks.CodeBlock,
                             print("Running of example expectedly failed")
                     else:
                         print_error(loc, "Running of example failed")
-                        has_error = True
+                        check_error = True
 
                     out = str(e.output.decode("utf-8"))
 
@@ -214,13 +268,14 @@ def check_block(block : blocks.CodeBlock,
 
             elif block.language == "c":
                 try:
-                    out = run("./{}".format(P.splitext(block.project_main_file)[0]))
+                    cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
+                    out = run(*cmdline)
 
                     if 'c-run-expect-failure' in block.classes:
                         print_error(
                             loc, "Running of example should have failed"
                         )
-                        has_error = True
+                        check_error = True
 
                 except S.CalledProcessError as e:
                     if 'c-run-expect-failure' in block.classes:
@@ -228,13 +283,23 @@ def check_block(block : blocks.CodeBlock,
                             print("Running of example expectedly failed")
                     else:
                         print_error(loc, "Running of example failed")
-                        has_error = True
+                        check_error = True
                     out = str(e.output.decode("utf-8"))
 
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)
 
+            code_check = checks.CodeCheck(status_ok=(not check_error),
+                                          logfile="run.log",
+                                          cmdline=str(cmdline))
+
+            block_check.add_check("RUN", code_check)
+
+            if check_error:
+                has_error = True
+
     if False:
+        check_error = False
 
         for source_file in block.source_files:
             if block.language == "ada":
@@ -246,7 +311,7 @@ def check_block(block : blocks.CodeBlock,
                         compile_error = True
                     else:
                         print_error(loc, "Failed to compile example")
-                        has_error = True
+                        check_error = True
                     out = str(e.output.decode("utf-8"))
 
                 with open("compile.log", u"w+") as logfile:
@@ -260,13 +325,17 @@ def check_block(block : blocks.CodeBlock,
                         compile_error = True
                     else:
                         print_error(loc, "Failed to compile example")
-                        has_error = True
+                        check_error = True
                     out = str(e.output.decode("utf-8"))
 
                 with open("compile.log", u"w+") as logfile:
                     logfile.write(out)
 
+            if check_error:
+                has_error = True
+
     if block.prove_it:
+        check_error = False
 
         if block.language == "ada":
 
@@ -296,44 +365,69 @@ def check_block(block : blocks.CodeBlock,
                 else:
                     print_error(loc, "Failed to prove example")
                     print(e.output)
-                    has_error = True
+                    check_error = True
                 out = str(e.output.decode("utf-8"))
 
             out = remove_string(out, "Summary logged in")
             with open("prove.log", u"w") as logfile:
                 logfile.write(out)
+
+            code_check = checks.CodeCheck(version=gnat_prove_version,
+                                          status_ok=(not check_error),
+                                          logfile="prove.log",
+                                          cmdline=str(line))
+
+            block_check.add_check("PROVE", code_check)
+
         else:
             print_error(loc, "Wrong language selected for prove button")
             print(e.output)
+            check_error = True
+
+            code_check = checks.CodeCheck(status_ok=(not check_error))
+            block_check.add_check("PROVE", code_check)
+
+        if check_error:
             has_error = True
 
-    if len(block.buttons) == 0:
-        print_error(loc, "Expected at least 'no_button' indicator, got none!")
-        has_error = True
 
-    if 'ada-expect-compile-error' in block.classes:
-        if not any(b in ['compile', 'run'] for b in block.buttons):
-            print_error(loc, "Expected compile or run button, got none!")
-            has_error = True
-        if not compile_error:
-            print_error(loc, "Expected compile error, got none!")
-            has_error = True
+    if True:
+        check_error = False
 
-    if 'ada-expect-prove-error' in block.classes:
-        if not block.prove_it:
-            print_error(loc, "Expected prove button, got none!")
-            has_error = True
+        if len(block.buttons) == 0:
+            print_error(loc, "Expected at least 'no_button' indicator, got none!")
+            check_error = True
 
-    if block.prove_it:
-        if is_prove_error_class and not prove_error:
-            print_error(loc, "Expected prove error, got none!")
-            has_error = True
+        if 'ada-expect-compile-error' in block.classes:
+            if not any(b in ['compile', 'run'] for b in block.buttons):
+                print_error(loc, "Expected compile or run button, got none!")
+                check_error = True
+            if not compile_error:
+                print_error(loc, "Expected compile error, got none!")
+                check_error = True
 
-    if (any (c in ['ada-run-expect-failure','ada-norun'] for
-                c in block.classes)
-        and not 'run' in block.buttons):
-        print_error(loc, "Expected run button, got none!")
-        has_error = True
+        if 'ada-expect-prove-error' in block.classes:
+            if not block.prove_it:
+                print_error(loc, "Expected prove button, got none!")
+                check_error = True
+
+        if block.prove_it:
+            if is_prove_error_class and not prove_error:
+                print_error(loc, "Expected prove error, got none!")
+                check_error = True
+
+        if (any (c in ['ada-run-expect-failure','ada-norun'] for
+                    c in block.classes)
+            and not 'run' in block.buttons):
+            print_error(loc, "Expected run button, got none!")
+            check_error = True
+
+        code_check = checks.CodeCheck(status_ok=(not check_error))
+
+        block_check.add_check("BUTTONS", code_check)
+
+        if check_error:
+            has_error = True
 
     if not has_error and verbose:
         fmt_utils.simple_success("SUCCESS")
@@ -344,6 +438,9 @@ def check_block(block : blocks.CodeBlock,
 
     if all_diagnostics:
         print_diags()
+
+    block_check.status_ok = not has_error
+    block_check.to_json_file()
 
     return has_error
 
