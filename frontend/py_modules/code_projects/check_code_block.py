@@ -22,9 +22,12 @@ import blocks
 import checks
 import fmt_utils
 
+LOOK_FOR_PREVIOUS_CHECKS = True
+
 verbose = False
 all_diagnostics = False
 max_columns = 0 # no check for max. columns
+force_checks = False
 
 
 class Diag(object):
@@ -42,7 +45,8 @@ def check_block(block : blocks.CodeBlock,
                 json_file : str,
                 verbose : bool = verbose,
                 all_diagnostics : bool = all_diagnostics,
-                max_columns : int = max_columns):
+                max_columns : int = max_columns,
+                force_checks : bool = force_checks):
 
     def run(*run_args):
         if verbose:
@@ -128,6 +132,24 @@ def check_block(block : blocks.CodeBlock,
         if verbose:
             print("Skipping code block {}".format(loc))
         return has_error
+
+    if LOOK_FOR_PREVIOUS_CHECKS:
+        ref_block_check = None
+
+        try:
+            ref_block_check = checks.BlockCheck.from_json_file()
+        except:
+            pass
+
+        if ref_block_check is not None and not force_checks:
+            has_error = not ref_block_check.status_ok
+            if verbose:
+                print("Code block {} already checked. Skipping...".format(loc))
+            if has_error:
+                print_error(
+                    loc, "Previous check of example has failed"
+                )
+            return has_error
 
     if verbose:
         print(fmt_utils.header("Checking code block {}".format(loc)))
@@ -450,7 +472,8 @@ def check_code_block_json(json_file):
     b = blocks.CodeBlock.from_json_file(json_file)
 
     has_error = check_block(b, json_file, verbose,
-                            all_diagnostics, max_columns)
+                            all_diagnostics, max_columns,
+                            force_checks)
 
     return has_error
 
@@ -463,12 +486,15 @@ if __name__ == "__main__":
                         help='Show more information')
     parser.add_argument('--all-diagnostics', '-A', action='store_true')
     parser.add_argument('--max-columns', type=int, default=0)
+    parser.add_argument('--force', '-f', action='store_true',
+                        help="Force checks even if previous check exists.")
 
     args = parser.parse_args()
 
     verbose = args.verbose
     all_diagnostics = args.all_diagnostics
     max_columns = args.max_columns
+    force_checks = args.force
 
     has_error = False
 
