@@ -89,7 +89,8 @@ if __name__ == "__main__":
     test_error = check_projects(args.build_dir)
 
     if test_error:
-        fmt_utils.simple_success("TEST ERROR")
+        fmt_utils.simple_error("TEST ERROR")
         exit(1)
     elif verbose:
         fmt_utils.simple_success("TEST SUCCESS")
+
