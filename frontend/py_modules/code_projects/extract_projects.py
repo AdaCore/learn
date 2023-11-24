@@ -186,15 +186,6 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
             if block.line_start < code_block_at < block.line_end:
                 block.run = True
 
-    def extract_diagnostics(lines):
-        diags = []
-        r = re.compile("(.+?):(\d+):(\d+): (.+)")
-        for l in lines:
-            m = r.match(l)
-            if m:
-                f, l, c, t = m.groups()
-                diags.append(Diag(f, int(l), int(c), t))
-        return diags
 
     def remove_string(some_text, rem):
         return re.sub(".*" + rem + ".*\n?","", some_text)
