@@ -29,6 +29,7 @@ Here are the available classes for annotation:
 import argparse
 import os
 import colors as C
+import shutil
 
 import code_projects.fmt_utils as fmt_utils
 
