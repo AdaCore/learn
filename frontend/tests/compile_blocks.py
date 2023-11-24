@@ -35,7 +35,7 @@ from datetime import datetime
 import code_projects.fmt_utils as fmt_utils
 
 EXTRACTED_PROJECTS_JSON = "extracted_projects_TIMESTAMP.json"
-USE_TIMESTAMP = False
+USE_TIMESTAMP = True
 
 if __name__ == "__main__":
     CALL_SCRIPTS = True
