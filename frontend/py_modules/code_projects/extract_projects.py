@@ -149,7 +149,7 @@ class ProjectsList(object):
 
     def __init__(self, projects=None):
         self.projects = projects if projects is not None else \
-            list()
+            dict()
 
     def to_json_file(self, json_filename):
         projects_info = vars(self)
@@ -157,8 +157,8 @@ class ProjectsList(object):
         with open(json_filename, u'w') as f:
             json.dump(projects_info, f, indent=4)
 
-    def append(self, project):
-        self.projects.append(project)
+    def add(self, project):
+        self.projects[project] = True
 
 
 def analyze_file(rst_file, extracted_projects_list_file=None):
