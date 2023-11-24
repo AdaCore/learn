@@ -30,10 +30,11 @@ import argparse
 import os
 import colors as C
 import shutil
+from datetime import datetime
 
 import code_projects.fmt_utils as fmt_utils
 
-EXTRACTED_PROJECTS_JSON = "extracted_projects.json"
+EXTRACTED_PROJECTS_JSON = "extracted_projects_TIMESTAMP.json"
 
 if __name__ == "__main__":
     CALL_SCRIPTS = True
@@ -66,11 +67,13 @@ if __name__ == "__main__":
         and not args.keep_files):
         shutil.rmtree(args.build_dir)
 
-    extracted_projects_json = None
-    if args.build_dir:
-        extracted_projects_json = \
-            os.path.abspath(args.build_dir) + "/" + \
-            EXTRACTED_PROJECTS_JSON
+    extracted_projects_json = \
+        os.path.abspath(args.build_dir) + "/" + \
+        EXTRACTED_PROJECTS_JSON.replace("TIMESTAMP",
+                                        datetime.now().strftime("%Y%m%d_%H%M%S"))
+
+    if args.verbose:
+        print("Storing list of project in " + extracted_projects_json)
 
     if CALL_SCRIPTS:
         PATH_CODE_PROJECTS = \
