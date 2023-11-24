@@ -80,6 +80,9 @@ def check_projects(build_dir, projects_list_file=None):
 
         for block, json_file in projects[project]:
 
+            if not block.active:
+                continue
+
             os.chdir(work_dir)  # change to work directory using absolute path
 
             has_error = check_block(block, json_file)
