@@ -81,9 +81,11 @@ if __name__ == "__main__":
             cmd_extract_projects = PATH_CODE_PROJECTS + \
                 "/extract_projects.py"
 
-            if args.build_dir:
-                cmd_extract_projects += " --build-dir " + \
-                    os.path.abspath(args.build_dir)
+            cmd_extract_projects += " --build-dir " + \
+                os.path.abspath(args.build_dir)
+            cmd_extract_projects += " --extracted_projects " + \
+                extracted_projects_json
+
             if args.verbose:
                 cmd_extract_projects += " --verbose"
             if args.code_block:
@@ -98,10 +100,6 @@ if __name__ == "__main__":
                 cmd_extract_projects += " --max-columns " + \
                     str(args.max_columns)
 
-            if extracted_projects_json:
-                cmd_extract_projects += " --extracted_projects " + \
-                    extracted_projects_json
-
             if len(args.rst_files) > 0:
                 cmd_extract_projects += " " + " ".join(args.rst_files)
 
@@ -112,9 +110,9 @@ if __name__ == "__main__":
             cmd_check_projects = PATH_CODE_PROJECTS + \
                 "/check_projects.py"
 
-            if args.build_dir:
-                cmd_check_projects += " --build-dir " + \
-                    os.path.abspath(args.build_dir)
+            cmd_check_projects += " --extracted_projects " + \
+                extracted_projects_json
+
             if args.verbose:
                 cmd_check_projects += " --verbose"
             if args.all_diagnostics:
@@ -122,9 +120,6 @@ if __name__ == "__main__":
             if args.max_columns:
                 cmd_check_projects += " --max-columns " + \
                     str(args.max_columns)
-            if extracted_projects_json:
-                cmd_check_projects += " --extracted_projects " + \
-                    extracted_projects_json
 
             ret_value = os.system(cmd_check_projects)
             test_error = test_error or ret_value != 0
