@@ -35,6 +35,7 @@ from datetime import datetime
 import code_projects.fmt_utils as fmt_utils
 
 EXTRACTED_PROJECTS_JSON = "extracted_projects_TIMESTAMP.json"
+USE_TIMESTAMP = False
 
 if __name__ == "__main__":
     CALL_SCRIPTS = True
@@ -67,10 +68,15 @@ if __name__ == "__main__":
         and not args.keep_files):
         shutil.rmtree(args.build_dir)
 
-    extracted_projects_json = \
-        os.path.abspath(args.build_dir) + "/" + \
-        EXTRACTED_PROJECTS_JSON.replace("TIMESTAMP",
-                                        datetime.now().strftime("%Y%m%d_%H%M%S"))
+    if USE_TIMESTAMP:
+        extracted_projects_json = \
+            os.path.abspath(args.build_dir) + "/" + \
+            EXTRACTED_PROJECTS_JSON.replace("TIMESTAMP",
+                                            datetime.now().strftime("%Y%m%d_%H%M%S"))
+    else:
+        extracted_projects_json = \
+            os.path.abspath(args.build_dir) + "/" + \
+            EXTRACTED_PROJECTS_JSON.replace("_TIMESTAMP", "")
 
     if args.verbose:
         print("Storing list of project in " + extracted_projects_json)
