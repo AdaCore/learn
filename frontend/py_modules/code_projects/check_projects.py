@@ -101,11 +101,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-dir', '-B', type=str, default=None,
                         help='Dir in which to build code')
+    parser.add_argument('--extracted_projects', type=str, default=None,
+                        help='JSON file containing list of extracted projects')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Show more information')
     parser.add_argument('--all-diagnostics', '-A', action='store_true')
     parser.add_argument('--max-columns', type=int, default=0)
-    parser.add_argument('--extracted_projects', type=str, default=None)
 
     args = parser.parse_args()
 
