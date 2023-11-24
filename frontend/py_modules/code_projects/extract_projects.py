@@ -182,10 +182,12 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
 
     if code_block_at:
         for i, block in code_blocks:
-            block.run = False
+            block.active = False
             if block.line_start < code_block_at < block.line_end:
-                block.run = True
-
+                block.active = True
+    else:
+        for i, block in code_blocks:
+            block.active = True
 
     def remove_string(some_text, rem):
         return re.sub(".*" + rem + ".*\n?","", some_text)
@@ -201,6 +203,9 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
             exit(1)
 
     for (i, b) in code_blocks:
+        if not b.active:
+            continue
+
         if b.project is None:
             print ("Error: project not set in {} at line {}".format(
                 rst_file, str(b.line_start)))

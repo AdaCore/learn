@@ -177,7 +177,7 @@ class CodeBlock(Block):
 
     def __init__(self, rst_file, line_start, line_end, text, language, project,
                  main_file, compiler_switches, classes, manual_chop, buttons,
-                 run=None,no_check=None,syntax_only=None,run_it=None,
+                 active=None,no_check=None,syntax_only=None,run_it=None,
                  compile_it=None,prove_it=None,
                  source_files=None,
                  project_filename=None,spark_project_filename=None,
@@ -194,14 +194,14 @@ class CodeBlock(Block):
         self.classes = classes
         self.manual_chop = manual_chop
         self.buttons = buttons
-        self.run = run if run is not None else True
+        self.active = active if active is not None else True
 
         self.no_check = no_check if no_check is not None else \
             any(sphinx_class in ["ada-nocheck", "c-nocheck"]
                 for sphinx_class in self.classes)
 
         self.syntax_only = syntax_only if syntax_only is not None else \
-            'ada-syntax-only' in self.classes or not self.run
+            'ada-syntax-only' in self.classes
 
         self.run_it = run_it if run_it is not None else \
             (('ada-run' in self.classes

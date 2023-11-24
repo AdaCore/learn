@@ -471,6 +471,9 @@ def check_code_block_json(json_file):
 
     b = blocks.CodeBlock.from_json_file(json_file)
 
+    if not b.active:
+        print("WARNING: Block is deactivated. Checking it nevertheless...")
+
     has_error = check_block(b, json_file, verbose,
                             all_diagnostics, max_columns,
                             force_checks)
