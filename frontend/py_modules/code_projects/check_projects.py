@@ -16,6 +16,7 @@ import fmt_utils
 verbose = False
 all_diagnostics = False
 max_columns = 0 # no check for max. columns
+force_checks = False
 
 
 def get_blocks(json_files_regex_list):
@@ -59,7 +60,8 @@ def get_projects(build_dir, projects_list_file=None):
 
 def check_block(block, json_file):
     has_error = check_code_block.check_block(
-        block, json_file, verbose, all_diagnostics, max_columns)
+        block, json_file, verbose, all_diagnostics, max_columns,
+        force_checks)
 
     return has_error
 
@@ -107,12 +109,16 @@ if __name__ == "__main__":
                         help='Show more information')
     parser.add_argument('--all-diagnostics', '-A', action='store_true')
     parser.add_argument('--max-columns', type=int, default=0)
+    parser.add_argument('--force', '-f', action='store_true',
+                        help="Force checks even if previous check exists.")
 
     args = parser.parse_args()
 
     verbose = args.verbose
     all_diagnostics = args.all_diagnostics
     max_columns = args.max_columns
+    force_checks = args.force
+
     if args.build_dir:
         build_dir = args.build_dir
         extracted_projects = args.extracted_projects
