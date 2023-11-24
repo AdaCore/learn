@@ -190,9 +190,12 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
     if extracted_projects_list_file is not None:
         if os.path.exists(extracted_projects_list_file):
             extr_prjs = ProjectsList.from_json_file(extracted_projects_list_file)
+            if verbose:
+                print ("Extracted list of projects from existing JSON file.")
         else:
-            print ("Error: output JSON file not found")
-            exit(1)
+            extr_prjs = ProjectsList()
+            if verbose:
+                print ("JSON file with list of projects will be created.")
 
     for (i, b) in code_blocks:
         if not b.active:
@@ -211,7 +214,7 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
 
     for project in projects:
         if extr_prjs is not None:
-            extr_prjs.append(project)
+            extr_prjs.add(project)
 
         latest_project_dir = "latest"
 
@@ -370,10 +373,10 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
 
             block.to_json_file()
 
+        os.chdir(work_dir)
+
         if extr_prjs is not None:
             extr_prjs.to_json_file(extracted_projects_list_file)
-
-        os.chdir(work_dir)
 
     return analysis_error
 
