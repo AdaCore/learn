@@ -96,7 +96,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--build-dir', '-B', type=str, default="build",
+    parser.add_argument('--build-dir', '-B', type=str, default=None,
                         help='Dir in which to build code')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Show more information')
@@ -109,8 +109,14 @@ if __name__ == "__main__":
     verbose = args.verbose
     all_diagnostics = args.all_diagnostics
     max_columns = args.max_columns
+    if args.build_dir:
+        build_dir = args.build_dir
+        extracted_projects = args.extracted_projects
+    else:
+        build_dir = os.path.dirname(args.extracted_projects)
+        extracted_projects = os.path.basename(args.extracted_projects)
 
-    test_error = check_projects(args.build_dir, args.extracted_projects)
+    test_error = check_projects(build_dir, extracted_projects)
 
     if test_error:
         fmt_utils.simple_error("TEST ERROR")
