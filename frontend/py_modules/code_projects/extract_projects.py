@@ -37,23 +37,7 @@ verbose = False
 code_block = None
 code_block_at = None
 
-EXTRACTED_PROJECTS_JSON = "extracted_projects.json"
 BASE_PROJECT_DIR = "projects"
-
-
-def standard_projects_list_filename(build_dir):
-    standard_projects_list = (build_dir + "/" + BASE_PROJECT_DIR + "/" +
-        EXTRACTED_PROJECTS_JSON)
-    return standard_projects_list
-
-def check_standard_projects_list_file(build_dir):
-    projects_list_file = \
-        standard_projects_list_filename(build_dir)
-
-    if os.path.exists(projects_list_file):
-        return projects_list_file
-    else:
-        return None
 
 def get_project_dir(project):
     return BASE_PROJECT_DIR + "/" + project.replace(".", "/")
