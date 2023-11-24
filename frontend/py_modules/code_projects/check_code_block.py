@@ -145,6 +145,8 @@ def check_block(block : blocks.CodeBlock,
             has_error = not ref_block_check.status_ok
             if verbose:
                 print("Code block {} already checked. Skipping...".format(loc))
+            if __name__ == '__main__':
+                print("WARNING: Code block {} already checked: use '--force' to re-run the check. Skipping...".format(loc))
             if has_error:
                 print_error(
                     loc, "Previous check of example has failed"
