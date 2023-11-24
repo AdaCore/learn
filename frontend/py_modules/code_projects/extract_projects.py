@@ -138,10 +138,7 @@ def write_project_file(main_file, compiler_switches, spark_mode):
 
 class ProjectsList(object):
     @staticmethod
-    def from_json_file(json_filename=None):
-
-        if json_filename is None:
-            json_filename = "projects.json"
+    def from_json_file(json_filename):
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:
@@ -154,11 +151,9 @@ class ProjectsList(object):
         self.projects = projects if projects is not None else \
             list()
 
-    def to_json_file(self, json_filename=None):
+    def to_json_file(self, json_filename):
         projects_info = vars(self)
 
-        if json_filename is None:
-            json_filename = "projects.json"
         with open(json_filename, u'w') as f:
             json.dump(projects_info, f, indent=4)
 
