@@ -386,7 +386,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('rst_files', type=str, nargs="+",
                         help="The rst file from which to extract doc")
-    parser.add_argument('--build-dir', '-B', type=str, default="build",
+    parser.add_argument('--build-dir', '-B', type=str, default=None,
                         help='Dir in which to build code')
     parser.add_argument('--extracted_projects', type=str, default=None,
                         help='JSON file containing list of extracted projects')
@@ -404,22 +404,33 @@ if __name__ == "__main__":
 
     verbose = args.verbose
     code_block_at = args.code_block_at
+    extracted_projects = args.extracted_projects
+    build_dir = args.build_dir
 
-    if not os.path.exists(args.build_dir):
-        os.makedirs(args.build_dir)
+    if extracted_projects is None and \
+       build_dir is None:
+        print("ERROR: at least --extracted_projects or --build-dir should be specified (or both).")
+        exit(1)
+
+    if extracted_projects:
+        extracted_projects = os.path.abspath(extracted_projects)
+
+    if build_dir is None:
+        build_dir = os.path.dirname(extracted_projects)
+        if build_dir == '': ## Special case: no directory in path
+            build_dir = os.getcwd()
+        if verbose:
+            print("Build directory is set to: " + build_dir)
+
+    if not os.path.exists(build_dir):
+        os.makedirs(build_dir)
 
     test_error = False
 
-    if args.extracted_projects is not None:
-        # Init JSON file containing list of extracted projects
-        extr_prjs = None
-        extr_prjs = ProjectsList()
-        extr_prjs.to_json_file(args.extracted_projects)
-
-    os.chdir(args.build_dir)
+    os.chdir(build_dir)
 
     for f in args.rst_files:
-        analysis_error = analyze_file(f, args.extracted_projects)
+        analysis_error = analyze_file(f, extracted_projects)
         if analysis_error:
             test_error = True
 
