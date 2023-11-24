@@ -55,17 +55,15 @@ if __name__ == "__main__":
 
     parser.add_argument('--keep_files', '-k', action='store_true',
                         help='Keep files generated in the test')
-    parser.add_argument('--code-block', '-b', type=str, default=0)
     parser.add_argument('--all-diagnostics', '-A', action='store_true')
     parser.add_argument('--code-block-at', type=int, default=0)
     parser.add_argument('--max-columns', type=int, default=0)
 
     args = parser.parse_args()
 
-    # Remove the build dir, but only if the user didn't ask for a specific
-    # subset of code_blocks
-    if (os.path.exists(args.build_dir) and not args.code_block
-        and not args.keep_files):
+    # Remove the build dir, but only if the user didn't ask for keeping
+    # files
+    if (os.path.exists(args.build_dir) and not args.keep_files):
         shutil.rmtree(args.build_dir)
 
     if USE_TIMESTAMP:
@@ -97,9 +95,6 @@ if __name__ == "__main__":
 
             if args.verbose:
                 cmd_extract_projects += " --verbose"
-            if args.code_block:
-                cmd_extract_projects += " --code-block " + \
-                    str(args.code_block)
             if args.all_diagnostics:
                 cmd_extract_projects += " --all-diagnostics"
             if args.code_block_at:

@@ -34,7 +34,6 @@ class Diag(object):
 
 
 verbose = False
-code_block = None
 code_block_at = None
 
 BASE_PROJECT_DIR = "projects"
@@ -186,18 +185,6 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
             block.run = False
             if block.line_start < code_block_at < block.line_end:
                 block.run = True
-
-    if code_block:
-        expr = "code_blocks[{}]".format(code_block)
-        subset = eval(expr, globals(), locals())
-        if not isinstance(code_blocks, list):
-            subset = [subset]
-
-        for i, block in code_blocks:
-            block.run = False
-
-        for i, cb in subset:
-            cb.run = True
 
     def extract_diagnostics(lines):
         diags = []
@@ -414,7 +401,6 @@ if __name__ == "__main__":
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Show more information')
 
-    parser.add_argument('--code-block', '-b', type=str, default=0)
     parser.add_argument('--all-diagnostics', '-A', action='store_true')
     parser.add_argument('--code-block-at', type=int, default=0)
     parser.add_argument('--max-columns', type=int, default=0)
@@ -425,7 +411,6 @@ if __name__ == "__main__":
     args.rst_files = [os.path.abspath(f) for f in args.rst_files]
 
     verbose = args.verbose
-    code_block = args.code_block
     code_block_at = args.code_block_at
 
     if not os.path.exists(args.build_dir):
