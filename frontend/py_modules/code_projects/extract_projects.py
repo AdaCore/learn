@@ -180,9 +180,6 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
             block.active = False
             if block.line_start < code_block_at < block.line_end:
                 block.active = True
-    else:
-        for i, block in code_blocks:
-            block.active = True
 
     def remove_string(some_text, rem):
         return re.sub(".*" + rem + ".*\n?","", some_text)
