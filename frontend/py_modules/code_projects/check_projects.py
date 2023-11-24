@@ -42,9 +42,12 @@ def get_projects(build_dir, projects_list_file=None):
         extracted_projects = \
             extract_projects.ProjectsList.from_json_file(projects_list_file)
 
-        for prj in extracted_projects.projects:
-            json_files_regex_list.append(extract_projects.get_project_dir(prj) +
-                                         "/**/block_info.json")
+        if extracted_projects:
+            for prj in extracted_projects.projects:
+                json_files_regex_list.append(extract_projects.get_project_dir(prj) +
+                                            "/**/block_info.json")
+        else:
+            print("WARNING: no projects found in file: " + projects_list_file)
     else:
         json_files_regex_list.append(extract_projects.BASE_PROJECT_DIR +
                                      "/**/block_info.json")
