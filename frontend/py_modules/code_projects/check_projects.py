@@ -118,13 +118,24 @@ if __name__ == "__main__":
     all_diagnostics = args.all_diagnostics
     max_columns = args.max_columns
     force_checks = args.force
+    extracted_projects = args.extracted_projects
+
+    if args.build_dir is None and \
+        extracted_projects is None:
+        print("ERROR: at least --extracted_projects or --build-dir should be specified (or both).")
+        exit(1)
+
+    if extracted_projects:
+        extracted_projects = os.path.abspath(extracted_projects)
 
     if args.build_dir:
-        build_dir = args.build_dir
-        extracted_projects = args.extracted_projects
+        build_dir = os.path.abspath(args.build_dir)
     else:
-        build_dir = os.path.dirname(args.extracted_projects)
-        extracted_projects = os.path.basename(args.extracted_projects)
+        build_dir = os.path.dirname(extracted_projects)
+        if build_dir == '': ## Special case: no directory in path
+            build_dir = os.getcwd()
+        if verbose:
+            print("Build directory is set to: " + build_dir)
 
     test_error = check_projects(build_dir, extracted_projects)
 
