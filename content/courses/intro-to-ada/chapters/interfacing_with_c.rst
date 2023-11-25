@@ -375,7 +375,7 @@ This was our C header file:
 
 .. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds
 
-    !my_func.c
+    !test.h
     extern int func_cnt;
 
     int my_func (int a);
