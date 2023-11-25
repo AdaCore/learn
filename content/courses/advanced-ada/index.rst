@@ -118,8 +118,8 @@ Advanced Journey With Ada: A Flight In Progress
         Franco Gasperoni, Gary Dismukes, Javier Miranda, Patrick Rogers,
         Quentin Ochem, Robert Dewar, and Yannick Moy.
 
-    Special thanks to Patrick Rogers for sharing his training slides on access
-    types: many ideas from those slides were integrated into this course.
+        Special thanks to Patrick Rogers for sharing his training slides on access
+        types: many ideas from those slides were integrated into this course.
 
     This document was reviewed by Patrick Rogers and Tucker Taft.
 
