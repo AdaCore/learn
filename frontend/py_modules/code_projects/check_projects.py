@@ -50,8 +50,7 @@ def get_projects(build_dir, projects_list_file=None):
         else:
             print("WARNING: no projects found in file: " + projects_list_file)
     else:
-        json_files_regex_list.append(extract_projects.BASE_PROJECT_DIR +
-                                     "/**/block_info.json")
+        json_files_regex_list.append("./**/block_info.json")
 
     projects = get_blocks(json_files_regex_list)
 
