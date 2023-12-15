@@ -103,4 +103,5 @@ Ada Idioms
     Constructor Functions For Type Extensions <chapters/constructor_functions_for_type_extensions>
     Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
     Expressing Inheritance Idioms <chapters/inheritance_idioms>
+    Providing Component Access to Enclosing Record Objects <chapters/component_access_to_rec_objs>
     Appendices <chapters/appendices>

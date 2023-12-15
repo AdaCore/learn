@@ -1,3 +1,5 @@
+.. _Ada_Idioms_Inheritance_Idioms:
+
 Using Building Blocks to Express Inheritance Idioms
 ===================================================
 
