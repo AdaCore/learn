@@ -3,14 +3,25 @@ Memory Management
 
 .. include:: ../../../global.txt
 
-Size Information
+Maximum allocation size and alignment
+-------------------------------------
+
+.. todo::
+
+    Complete section!
+
+.. admonition:: Relevant topics
+
+    - :ada:`Max_Size_In_Storage_Elements`
+    - :arm22:`13.11.1 Storage Allocation Attributes <13-11-1>`
+    - :arm22:`13.11.4 Storage Subpools <13-11-4>`
+
+
+Storage elements
 ----------------
 
 .. admonition:: Relevant topics
 
-    - :ada:`Size`
-    - :ada:`Object_Size`
-    - :ada:`Max_Size_In_Storage_Elements`
     - :ada:`System.Storage_Elements` package
     - :ada:`System.Storage_Elements.Storage_Element'Size`
         - :arm22:`The Package System.Storage_Elements <13-7-1>`
