@@ -31,19 +31,6 @@ Storage elements
     Complete section!
 
 
-Address vs. access
-------------------
-
-.. admonition:: Relevant topics
-
-    - :arm22:`The Package System.Address_To_Access_Conversions <13-7-2>`
-
-.. todo::
-
-    Complete section!
-
-
-
 .. _Adv_Ada_Finalization:
 
 Finalization
