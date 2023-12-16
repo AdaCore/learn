@@ -4461,10 +4461,6 @@ calls to :ada:`Put_Line` in the body of the :ada:`Initialize` and
 background.)
 
 
-Access types to access types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 .. _Adv_Ada_Access_To_Subprograms:
 
 Access to subprograms
