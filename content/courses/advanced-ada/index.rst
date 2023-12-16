@@ -157,6 +157,7 @@ Advanced Journey With Ada: A Flight In Progress
     parts/data_types/index
     parts/control_flow/index
     parts/modular_prog/index
+    parts/resource_management/index
 
 .. only:: no_hidden_contents
 
@@ -164,7 +165,6 @@ Advanced Journey With Ada: A Flight In Progress
         :maxdepth: 4
         :caption: Contents
 
-        parts/resource_management/index
         parts/abstraction-oriented_prog/index
         parts/design_by_contracts/index
         parts/initialization/index
