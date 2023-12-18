@@ -231,17 +231,48 @@ package body for an extended type might very well do so itself, as shown below:
 Pros
 ----
 
-The issue is sidestepped entirely, and as an additional benefit, the parent
-packages are that much simpler because the constructor function declarations
-and bodies are no longer present there. The *constructors* child packages will
-be relatively brief since they contain only the constructor functions and any
-ancillary code required to implement them.
+The issue is sidestepped entirely, and as an additional benefit, the 
+parent packages are that much simpler because the constructor function 
+declarations and bodies are no longer present there. The *constructors* 
+child packages themselves will be relatively simple since they contain only the 
+constructor functions and any ancillary code required to implement them. 
+Simpler code enhances comprehension and correctness.
+
+Having the constructors declared in separate packages applies the principle of 
+Separation of Concerns, between the code defining the type's semantics and the 
+code for constructing objects of the type. This principle also enhances 
+comprehension.
 
 Cons
 ----
 
-There will be a child package for each tagged type, hence more packages and
-files.
+There will be a child package for each tagged type that requires constructors,
+hence more packages and files (assuming one unit per file, which is desirable in 
+itself, even if not required by the language). 
+
+Some developers might argue for having fewer files, presumably containing larger 
+units. In the author's experience larger units make comprehension, and therefore 
+correctness, unjustifiably difficult if smaller units are possible. Some units are 
+unavoidably large and complicated but often we can achieve relative simplicity.
+
+For those developers, however, the constructor package could be declared instead 
+as a nested package located within the package defining the tagged type. Doing so 
+would achieve the same effect as using a child package because the contained 
+functions would not be primitive. Therefore, they would not inherited.
+
+This alternative would reduce the number of files back to the minimum. However, 
+the defining package would be relatively more complicated because of this nested 
+package. Note that the nested package declaration would require a nested package 
+body too. 
+
+In short, the alternative reduces the number of files at the cost of additional 
+unit complexity. (If the issue with the larger number of files is difficulty in 
+locating individual entities of interest, any decent IDE will make doing so 
+trivial.)
+
+The alternative also loses the distinction between clients that use objects of 
+the type and clients that create those objects, because the latter will have 
+context clauses for the constructor packages.
 
 
 Relationship With Other Idioms
