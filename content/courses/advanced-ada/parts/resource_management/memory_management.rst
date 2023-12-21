@@ -212,7 +212,6 @@ By dividing the value returned by the :ada:`Max_Size_In_Storage_Elements` attrib
 
 .. admonition:: Relevant topics
 
-    - :ada:`Max_Size_In_Storage_Elements`
     - :arm22:`13.11.1 Storage Allocation Attributes <13-11-1>`
     - :arm22:`13.11.4 Storage Subpools <13-11-4>`
 
