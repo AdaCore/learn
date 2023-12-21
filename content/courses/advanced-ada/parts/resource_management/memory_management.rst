@@ -16,9 +16,16 @@ In this section, we expand our discussion on sizes and talk about the
 :ada:`Max_Size_In_Storage_Elements` and the :ada:`Max_Alignment_For_Allocation`
 attributes. These attributes return values that are important in the allocation
 of :ref:`memory subpools <Adv_Ada_Memory_Pools>` via the :ada:`Allocate`
-procedure from the :ada:`System.Storage_Pools.Subpools` package:
+procedure from the :ada:`System.Storage_Pools` and the
+:ada:`System.Storage_Pools.Subpools` packages:
 
 .. code-block:: ada
+
+    procedure Allocate(
+      Pool                     : in out Root_Storage_Pool;
+      Storage_Address          :    out Address;
+      Size_In_Storage_Elements :        Storage_Elements.Storage_Count;
+      Alignment                :        Storage_Elements.Storage_Count);
 
     procedure Allocate (
       Pool                     : in out Root_Storage_Pool_With_Subpools;
@@ -247,6 +254,7 @@ number of components.
 
 .. admonition:: Relevant topics
 
+    - :arm22:`13.11 Storage Management <13-11>`
     - :arm22:`13.11.1 Storage Allocation Attributes <13-11-1>`
     - :arm22:`13.11.4 Storage Subpools <13-11-4>`
 
