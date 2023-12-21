@@ -246,6 +246,7 @@ Finalization
     Complete section!
 
 
+.. _Adv_Ada_Memory_Pools:
 
 Memory pools
 ------------
