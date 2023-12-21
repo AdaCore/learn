@@ -48,6 +48,12 @@ elements when allocating memory for an access type whose designated subtype is
 maximum alignment that we can use when we allocate memory via the :ada:`new`
 allocator.
 
+.. admonition:: Relevant topics
+
+    - :arm22:`13.11 Storage Management <13-11>`
+    - :arm22:`13.11.1 Storage Allocation Attributes <13-11-1>`
+    - :arm22:`13.11.4 Storage Subpools <13-11-4>`
+
 
 Code example with scalar type
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -252,12 +258,6 @@ array of this type:
 By dividing the value returned by the :ada:`Max_Size_In_Storage_Elements`
 attribute with the size of each individual component, we can get the maximum
 number of components.
-
-.. admonition:: Relevant topics
-
-    - :arm22:`13.11 Storage Management <13-11>`
-    - :arm22:`13.11.1 Storage Allocation Attributes <13-11-1>`
-    - :arm22:`13.11.4 Storage Subpools <13-11-4>`
 
 
 Storage elements
