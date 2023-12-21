@@ -68,8 +68,8 @@ objects declared of a single type is by far the most reasonable approach.
 We assume the functional unit will be implemented as an
 :ref:`Abstract Data Type (ADT) <Ada_Idioms_Abstract_Data_Types>`. Strictly
 speaking, the ADT idiom is not required here, but that is the best approach for
-defining for types, for the good reasons given in that idiom entry. There's no
-reason not to use an ADT in this case so we will.
+defining major types, for the good reasons given in that idiom entry. There's
+no reason not to use an ADT in this case so we will.
 
 
 Solution
@@ -798,9 +798,6 @@ Next, the interrupt-driven extension.
           Transmission_Pending    : Boolean := False;
 
           procedure IRQ_Handler with Attach_Handler => IRQ;
-          --  The one interrupt handler for both sending and receiving. Calls the
-          --  respective Handle_* routines above for each incoming or outgoing
-          --  character interrupt on the USART.
 
         end IO_Manager;
 
