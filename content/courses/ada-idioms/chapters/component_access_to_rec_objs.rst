@@ -798,9 +798,6 @@ Next, the interrupt-driven extension.
           Transmission_Pending    : Boolean := False;
 
           procedure IRQ_Handler with Attach_Handler => IRQ;
-          --  The one interrupt handler for both sending and receiving. Calls the
-          --  respective Handle_* routines above for each incoming or outgoing
-          --  character interrupt on the USART.
 
         end IO_Manager;
 
