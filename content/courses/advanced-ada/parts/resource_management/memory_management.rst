@@ -13,10 +13,10 @@ In this section, we expand our discussion on sizes and talk about the :ada:`Max_
 .. code-block:: ada
 
     procedure Allocate (
-       Pool                     : in out Root_Storage_Pool_With_Subpools;
-       Storage_Address          :    out Address;
-       Size_In_Storage_Elements :        Storage_Elements.Storage_Count;
-       Alignment                :        Storage_Elements.Storage_Count);
+      Pool                     : in out Root_Storage_Pool_With_Subpools;
+      Storage_Address          :    out Address;
+      Size_In_Storage_Elements :        Storage_Elements.Storage_Count;
+      Alignment                :        Storage_Elements.Storage_Count);
 
 In fact, the :ada:`Max_Size_In_Storage_Elements` attribute indicates the maximum value that can be used for the actual :ada:`Size_In_Storage_Elements` parameter of the :ada:`Allocate` procedure . Likewise, the :ada:`Max_Alignment_For_Allocation` attribute indicates the maximum value for the actual :ada:`Alignment` parameter of the :ada:`Allocate` procedure. (We discuss more details about this procedure later on.)
 
