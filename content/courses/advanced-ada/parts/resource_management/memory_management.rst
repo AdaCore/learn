@@ -45,7 +45,8 @@ types. Therefore, the value returned by the :ada:`Max_Size_In_Storage_Elements`
 attribute for a subtype :ada:`S` indicates the maximum value of storage
 elements when allocating memory for an access type whose designated subtype is
 :ada:`S`, while the :ada:`Max_Alignment_For_Allocation` attribute indicates the
-maximum alignment that we can use for the allocation.
+maximum alignment that we can use when we allocate memory via the :ada:`new`
+allocator.
 
 
 Code example with scalar type
