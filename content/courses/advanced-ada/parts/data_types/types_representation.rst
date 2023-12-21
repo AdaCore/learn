@@ -105,6 +105,8 @@ course.
     - :arm22:`13.3 Operational and Representation Attributes <13-3>`
     - :arm22:`13.5.3 Bit Ordering <13-5-3>`
 
+.. _Adv_Ada_Data_Representation_Sizes:
+
 Sizes
 ~~~~~
 
