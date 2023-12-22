@@ -84,6 +84,7 @@
             :maxdepth: 1
             :caption: Upcoming Courses
 
+            Advanced Journey With Ada (UNPUBLISHED) <courses/advanced-ada/index_hidden>
             Ada Idioms <courses/ada-idioms/index>
             Advanced SPARK <courses/advanced-spark/index>
 
