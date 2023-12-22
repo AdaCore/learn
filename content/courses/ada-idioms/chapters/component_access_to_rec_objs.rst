@@ -210,8 +210,7 @@ There are various ways to make that happen (see
 reserved word :ada:`limited` in the type definition within the full view, as we
 did above. That is known as making the type *explicitly limited*.
 
-Let's have a brief refresher on private types, to understand why the compiler
-requires the type to be immutably limited.
+Why does the compiler require the type to be immutably limited? 
 
 Recall that a (non-tagged) private type need not be limited in both views. It
 can be limited in the partial client view but non-limited in the private full
@@ -224,23 +223,17 @@ view:
        -- the partial view for clients in package visible part
        ...
     private
-       type T is record    -- the full view in the package private part
+       type T is record -- the full view in the package private part
           ...
        end record;
     end Q;
 
-Clients must treat they type :ada:`Q.T` as if it is limited, but :ada:`Q.T`
+Clients must treat type :ada:`Q.T` as if it is limited, but :ada:`Q.T`
 isn't really limited because the full view defines reality. Clients simply
 have a more restricted view of the type than is really the case.
 
 Types that are explicitly limited really are limited, and always have a view as
-a limited type. Contrast that with the legal arrangement illustrated in package
-:ada:`Q` above, in which the partial view says the type :ada:`T` is limited but
-the full view does not. In that case, the view of the type :ada:`T` can change:
-it has a limited view in the package public part but not in the full view in
-the package private part and body.
-
-That's important because the type given in :ada:`type_name'Access` must be
+a limited type. That's important because the type given in :ada:`type_name'Access` must be
 aliased for :ada:`'Access` to be meaningful and possible on the corresponding
 objects. But if the type's view could change between limited and not limited,
 it will be aliased in some contexts and not aliased in others. To prevent that
@@ -270,7 +263,7 @@ implementation or an interrupt-driven implementation. We will first define a
 basic USART ADT, and then extend that to a new one that works with interrupts.
 
 At the most basic level, to work with a given USART device we must combine it
-with some other hardware, especially the IO pins that connect it to the
+with some other hardware, specifically the IO pins that connect it to the
 outside world. That combination will be represented by a new ADT, the type
 :ada:`Device` defined in package :ada:`Serial_IO`.
 
@@ -321,7 +314,7 @@ the package are elided for simplicity (the full code is
     end Serial_IO;
 
 When called, procedure :ada:`Initialize` does the hardware setup required, such
-as enabling the clocks for the USART and pins. We can ignore those details for
+as enabling power for the USART and pins. We can ignore those details for
 this discussion.
 
 Given this basic :ada:`Device` type we can then use inheritance (type
@@ -449,7 +442,7 @@ discriminants defined for this PO component. The third :ada:`IO_Manager`
 discriminant value, :ada:`Serial_Port'Access`, denotes the current instance of
 the :ada:`Serial_Port` type.  Thus the idiom requirements are achieved.
 
-Let's show that back-reference in use within the protected body.
+Let's see that back-reference in use within the protected body.
 
 As mentioned, there is one interrupt used for both sending and receiving, per
 :ada:`USART`.  Strictly speaking, the device itself does use two dedicated
@@ -512,15 +505,15 @@ Pros
 The solution is directly expressed, requiring only an access discriminant and
 the current instance semantics of :ada:`type_name'Access`.
 
-Although the real-word example is complex |mdash| multiple discriminants were
-used, and a type extension |mdash| the idiom solution itself requires little
+Although the real-word example is complex |mdash| multiple discriminants are
+involved, and a type extension |mdash| the idiom solution itself requires little
 text. Interrupt handling is relatively complex in any language.
 
 
 Cons
 -----------------
 
-The record type must be truly a limited type, but that is not the nearly severe
+The record type must be truly a limited type, but that is not the severe
 limitation it was in earlier versions of Ada. Note that although access
 discriminants are required, there is no dynamic allocation involved.
 
@@ -752,7 +745,7 @@ Next, the interrupt-driven extension.
           IRQ          : Interrupt_ID;
           IRQ_Priority : Interrupt_Priority)
        is new Serial_IO.Device with private;
-       --  A serial port that uses interrupts for I/O. Extends the serial port
+       --  A serial port that uses interrupts for I/O. Extends the Device
        --  abstraction that is itself a wrapper for the USARTs hardware.
 
        --  The procedures Initialize and Configure, among others, are implicitly
