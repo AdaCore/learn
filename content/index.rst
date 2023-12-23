@@ -11,10 +11,24 @@
     LEARN.ADACORE.COM
     ===================
 
+    .. only:: no_hidden_books
+
+        .. warning::
+
+            This version of the website contains UNPUBLISHED contents.
+            Please do not share it externally!
+
 .. only:: builder_latex or builder_epub
 
     Learning Ada
     ============
+
+    .. only:: no_hidden_books
+
+        .. warning::
+
+            This version of the book contains UNPUBLISHED contents.
+            Please do not share it externally!
 
 .. only:: builder_html
 
