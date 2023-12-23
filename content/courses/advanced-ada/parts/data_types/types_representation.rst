@@ -116,12 +116,12 @@ Ada offers multiple attributes to retrieve the size of a type or an object:
 | Attribute             | Description                                         |
 +=======================+=====================================================+
 | :ada:`Size`           | Size of the representation of a subtype or an       |
-|                       | object.                                             |
+|                       | object (in bits).                                   |
 +-----------------------+-----------------------------------------------------+
-| :ada:`Object_Size`    | Size of a component or an aliased object.           |
+| :ada:`Object_Size`    | Size of a component or an aliased object (in bits). |
 |                       |                                                     |
 +-----------------------+-----------------------------------------------------+
-| :ada:`Component_Size` | Size of a component of an array.                    |
+| :ada:`Component_Size` | Size of a component of an array (in bits).          |
 +-----------------------+-----------------------------------------------------+
 | :ada:`Storage_Size`   | Number of storage elements reserved for an access   |
 |                       | type or a task object.                              |
