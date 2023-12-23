@@ -263,15 +263,91 @@ number of components.
 Storage elements
 ----------------
 
+We saw parts of the :ada:`System.Storage_Elements` package while discussing
+about :ref:`addresses <Adv_Ada_Addresses>`. However, we haven't discussed yet
+the main types from that package: :ada:`Storage_Element` and
+:ada:`Storage_Array`.
+
+We defined :ref:`storage elements <Adv_Ada_Storage_Elements>` previously.
+In the :ada:`System.Storage_Elements` package, a storage element is represented
+by the :ada:`Storage_Element` type. Its size (:ada:`Storage_Element'Size`) is
+equal to :ada:`Storage_Unit` |mdash| which we also mentioned previously.
+
+The :ada:`Storage_Array` type is an array type of storage elements. This is its
+definition:
+
+.. code-block:: ada
+
+    type Storage_Array is
+      array (Storage_Offset range <>) of
+        aliased Storage_Element;
+
+A storage array is used to represent a contiguous sequence of storage elements
+in memory. In other words, you can think of an object of :ada:`Storage_Array`
+type as a (memory) buffer.
+
+.. admonition:: For further reading
+
+    Note that the :ada:`Storage_Offset` is a range type. It's used not only
+    in the definition of the :ada:`Storage_Array` but also in
+    :ref:`address arithmetic <Adv_Ada_Address_Arithmetic>`, which we discussed
+    in an earlier chapter.
+
+In fact, the :ada:`Storage_Array` is used in the generic :ada:`Storage_IO`
+package to define a memory buffer:
+
+.. code-block:: ada
+
+    with System.Storage_Elements;
+    use  System.Storage_Elements;
+
+    subtype Buffer_Type is
+      Storage_Array (1 .. Buffer_Size);
+
+Let's see a simple example that makes use of the :ada:`Storage_IO` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Storage_Elements
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO;    use Ada.Text_IO;
+    with Ada.Storage_IO;
+
+    procedure Show_Storage_IO is
+       type Rec is record
+          A, B : Integer;
+          C    : Float;
+       end record;
+
+       package Rec_Storage_IO is new
+         Ada.Storage_IO (Element_Type => Rec);
+       use Rec_Storage_IO;
+
+       Buf    : Buffer_Type;
+       R1, R2 : Rec;
+    begin
+       R1 := (1, 2, 3.0);
+       Put_Line ("R1 : " & R1'Image);
+
+       --  Writing from R1 to the buffer Buf:
+       Write (Buf, R1);
+
+       --  Reading from the buffer Buf to R2:
+       Read (Buf, R2);
+
+       Put_Line ("R2 : " & R2'Image);
+    end Show_Storage_IO;
+
+In this example, we instantiate the :ada:`Storage_IO` package for the
+:ada:`Rec` type and declare a buffer :ada:`Buf` of :ada:`Buffer_Type` type.
+(Note that :ada:`Buf` is essentially an array of :ada:`Storage_Array` type.)
+We then use this buffer and write an element to it (via :ada:`Write`) and read
+from it (via :ada:`Read`).
+
 .. admonition:: Relevant topics
 
-    - :ada:`System.Storage_Elements` package
-    - :ada:`System.Storage_Elements.Storage_Element'Size`
-        - :arm22:`The Package System.Storage_Elements <13-7-1>`
-
-.. todo::
-
-    Complete section!
+    - :arm22:`13.7.1 The Package System.Storage_Elements <13-7-1>`
+    - :arm22:`A.9 The Generic Package Storage_IO <A-9>`
 
 
 .. _Adv_Ada_Finalization:
