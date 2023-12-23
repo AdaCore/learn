@@ -61,7 +61,7 @@ Code example with scalar type
 Let's see a simple type :ada:`T` and two types based on it |mdash| an array and
 an access type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Storage_Elements
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Max_Allocation_Size_Alignment
 
     package Custom_Types is
 
@@ -78,7 +78,7 @@ The test procedure :ada:`Show_Sizes` shows the values returned by the
 :ada:`Size`, :ada:`Max_Size_In_Storage_Elements`, and
 :ada:`Max_Alignment_For_Allocation` attributes for the :ada:`T` type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Storage_Elements
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Max_Allocation_Size_Alignment
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with System;
@@ -123,7 +123,7 @@ In the original implementation of the :ada:`Custom_Types` package, we allowed
 the compiler to select the size of type :ada:`T`. We can be more specific in
 the type declarations and use the :ada:`Size` aspect for that type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Storage_Elements
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Max_Allocation_Size_Alignment
 
     package Custom_Types is
 
@@ -141,7 +141,7 @@ Let's see how this change affects the :ada:`Size`,
 :ada:`Max_Size_In_Storage_Elements`, and :ada:`Max_Alignment_For_Allocation`
 attributes:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Storage_Elements
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Max_Allocation_Size_Alignment
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with System;
@@ -192,7 +192,7 @@ Code example with array type
 Note that using the :ada:`Size` and :ada:`Max_Size_In_Storage_Elements`
 attributes on array types can give you a potentially higher number:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Storage_Elements
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Max_Allocation_Size_Alignment
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with System;
@@ -235,7 +235,7 @@ theoretically available for the array in the memory pool. This information
 allows us to calculate the (theoretical) maximum number of components for an
 array of this type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Storage_Elements
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Memory_Management.Max_Allocation_Size_Alignment
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with System;
