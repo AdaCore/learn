@@ -132,6 +132,24 @@ For the first three attributes, the size is measured in bits. In the case of
 size information depends your target architecture. We'll discuss some examples
 to better understand the differences among those attributes.
 
+.. _Adv_Ada_Storage_Elements:
+
+.. admonition:: Important
+
+    A storage element is the smallest element we can use to store data in
+    memory. As we'll see soon, a storage element corresponds to a byte in
+    many architectures.
+
+    The size of a storage element is represented by the
+    :ada:`System.Storage_Unit` constant. In other words, the storage unit
+    corresponds to the number of bits used for a single storage element.
+
+    In typical architectures, :ada:`System.Storage_Unit` is 8 bits. In this
+    specific case, a storage element is equal to a byte in memory. Note,
+    however, that :ada:`System.Storage_Unit` might have a value different than
+    eight in certain architectures.
+
+
 Size attribute and aspect
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -427,8 +445,7 @@ because we haven't indicated that memory should be reserved for this data type.
 Thus, the compiler doesn't reserve memory and simply sets the size to zero.
 
 Because :ada:`Storage_Size` gives us the number of storage elements, we have
-to multiply this value by :ada:`System.Storage_Unit` |mdash| which gives
-us the size (in bits) of a single storage element |mdash| to get the total
+to multiply this value by :ada:`System.Storage_Unit` to get the total
 storage size in bits. (In this particular example, however, the multiplication
 doesn't make any difference, as the number of storage elements is zero.)
 
@@ -517,9 +534,9 @@ In this case, we're reserving 8 storage elements in the declaration of
     type UInt_7_Reserved_Access is access UInt_7
       with Storage_Size => 8;
 
-Since each storage unit corresponds to one byte (8 bits) in this architecture,
-we're reserving a maximum of 64 bits for the :ada:`UInt_7_Reserved_Access`
-type.
+Since each storage element corresponds to one byte (8 bits) in this
+architecture, we're reserving a maximum of 64 bits (or 8 bytes) for the
+:ada:`UInt_7_Reserved_Access` type.
 
 This example raises an exception at runtime |mdash| a storage error, to be more
 specific. This is because the maximum reserved size is 64 bits, and the size of
