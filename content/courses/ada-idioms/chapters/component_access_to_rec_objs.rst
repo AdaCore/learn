@@ -403,7 +403,7 @@ enclosing :ada:`Serial_Port` record type.
     private
        ...
        procedure IRQ_Handler with Attach_Handler => IRQ;
-     end IO_Manager;
+    end IO_Manager;
 
 Note how the first two discriminants are used within the type declaration to
 give the priority of the PO and to attach the interrupt handler procedure
@@ -431,9 +431,10 @@ constrained with a discriminant value here, so we just pass the discriminant
 defined for :ada:`Serial_Port`.
 
 Why does :ada:`Serial_Port` also have a :ada:`Transceiver` discriminant? Just
-as :ada:`Serial_IO.Device` is a wrapper for the combination of a USART and IO
-pins, :ada:`Serial_Port` is a wrapper for :ada:`Serial_IO.Device`. Hence
-:ada:`Serial_Port` also needs a discriminant designating a :ada:`USART`.
+as :ada:`Serial_IO.Device` is a complete wrapper for the combination of a USART and IO
+pins, :ada:`Serial_Port` is a stand-alone wrapper for :ada:`Serial_IO.Device`. Hence
+:ada:`Serial_Port` also needs a discriminant designating a :ada:`USART`
+to be complete.
 
 The full definition of type :ada:`Serial_Port` contains the declaration of the
 component named :ada:`Controller`, of the protected type :ada:`IO_Manager`. The
