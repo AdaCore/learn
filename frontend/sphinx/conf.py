@@ -246,7 +246,10 @@ html_theme_options = {
 
 html_show_sphinx = False
 
-html_logo = "img/logo.svg"
+if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
+    html_logo = "img/logo.svg"
+else:
+    html_logo = "img/logo_sandbox.svg"
 
 html_favicon = "img/favicon.ico"
 

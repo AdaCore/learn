@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="114px"
+   height="42px"
+   viewBox="0 0 114 42"
+   version="1.1"
+   id="svg15"
+   sodipodi:docname="logo_sandbox.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview17"
+     pagecolor="#ffffff"
+     bordercolor="#cccccc"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="1"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="11.438596"
+     inkscape:cx="36.062118"
+     inkscape:cy="20.981596"
+     inkscape:window-width="3840"
+     inkscape:window-height="2046"
+     inkscape:window-x="3840"
+     inkscape:window-y="41"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg15" />
+  <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title2">Learn.adacore.com</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <defs
+     id="defs6" />
+  <g
+     id="Page-1"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     style="fill:#6c6753"
+     transform="translate(-0.41952945,-0.26335846)">
+    <g
+       id="Artboard"
+       transform="translate(-224,-42)"
+       fill="#FFFFFF"
+       style="fill:#6c6753">
+      <g
+         id="Logo-Copy"
+         transform="translate(73,34)"
+         style="fill:#6c6753">
+        <g
+           id="Learn.adacore.com"
+           transform="translate(151,8)"
+           style="fill:#6c6753">
+          <path
+             d="M 6.4988223,1.4815292 H 12.922822 V 24.845529 h 8.492 v 5.94 H 6.4988223 Z m 18.0399997,0 h 15.884 v 5.852 h -9.592 v 5.7199998 h 7.392 v 5.632 h -7.392 v 6.248 h 9.636 v 5.852 h -15.928 z m 32.868,29.3039998 -1.1,-5.28 h -6.952 l -1.1,5.28 h -5.94 l 6.864,-29.4359998 h 7.7 l 6.82,29.4359998 z m -4.576,-21.8679998 -2.42,11.6159998 h 4.884 l -2.376,-11.6159998 z m 20.064,11.3079998 v 10.56 h -6.424 V 1.4815292 h 10.12 c 5.06,0 8.052,2.992 8.052,7.7 v 3.3439998 c 0,3.124 -1.364,5.5 -3.696,6.732 l 4.356,11.528 h -6.644 l -3.916,-10.56 z m 0,-13.5959998 v 8.4919998 h 2.2 c 2.156,0 3.08,-1.1 3.08,-3.08 V 9.7535292 c 0,-2.024 -0.924,-3.124 -3.08,-3.124 z m 15.444,-5.148 h 6.38 l 7.127998,17.3359998 h 0.088 l -0.088,-17.3359998 h 5.588 V 30.785529 h -6.248 l -7.259998,-17.556 h -0.088 l 0.088,17.556 h -5.588 z"
+             id="LEARN"
+             style="fill:#6c6753" />
+          <text
+             xml:space="preserve"
+             style="font-size:13.327px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:0.768868"
+             x="20.544256"
+             y="45.29076"
+             id="text402"
+             transform="scale(1.110378,0.90059421)"
+             inkscape:label="SANDBOX"><tspan
+               sodipodi:role="line"
+               id="tspan400"
+               x="20.544256"
+               y="45.29076"
+               style="stroke-width:0.768868;fill:#000000">SANDBOX</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
