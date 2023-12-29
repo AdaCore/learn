@@ -6,6 +6,13 @@ Advanced Journey With Ada: A Flight In Progress (UNPUBLISHED)
 
 .. include:: ../global.txt
 
+.. only:: no_hidden_books
+
+    .. warning::
+
+        This version of the website contains UNPUBLISHED contents.
+        Please do not share it externally!
+
 .. toctree::
     :maxdepth: 4
     :caption: Unpublished Contents

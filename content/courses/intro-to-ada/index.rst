@@ -13,6 +13,13 @@ Introduction to Ada
 
 .. include:: ../global.txt
 
+.. only:: no_hidden_books
+
+    .. warning::
+
+        This version of the website contains UNPUBLISHED contents.
+        Please do not share it externally!
+
 .. only:: builder_epub
 
     Release |release|
