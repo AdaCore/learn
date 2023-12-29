@@ -288,7 +288,8 @@ type as a (memory) buffer.
 
 .. admonition:: For further reading
 
-    Note that the :ada:`Storage_Offset` is a range type. It's used not only
+    Note that the :ada:`Storage_Offset` is an integer type with a range defined
+    by the compiler implementation. It's used not only
     in the definition of the :ada:`Storage_Array` but also in
     :ref:`address arithmetic <Adv_Ada_Address_Arithmetic>`, which we discussed
     in an earlier chapter.
