@@ -264,7 +264,7 @@ Storage elements
 ----------------
 
 We saw parts of the :ada:`System.Storage_Elements` package while discussing
-about :ref:`addresses <Adv_Ada_Addresses>`. However, we haven't discussed yet
+:ref:`addresses <Adv_Ada_Addresses>`. However, we haven't discussed yet
 the main types from that package: :ada:`Storage_Element` and
 :ada:`Storage_Array`.
 
