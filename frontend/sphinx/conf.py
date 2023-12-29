@@ -218,7 +218,12 @@ extlinks_detect_hardcoded_links = True
 #html_theme = 'learn_theme'
 html_theme = 'sphinx_rtd_theme'
 
-html_title = "learn.adacore.com"
+if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
+    html_title = "learn.adacore.com"
+else:
+    html_title = "learn-sandbox.adacore.com"
+
+
 smartquotes = False
 
 html_theme_path = ['.'] # make sphinx search for themes in current dir
