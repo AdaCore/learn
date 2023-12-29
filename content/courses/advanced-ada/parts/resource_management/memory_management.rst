@@ -286,6 +286,13 @@ A storage array is used to represent a contiguous sequence of storage elements
 in memory. In other words, you can think of an object of :ada:`Storage_Array`
 type as a (memory) buffer.
 
+.. admonition:: Important
+
+    Note that arrays of :ada:`Storage_Array` type are guaranteed by the
+    language to be contiguous. In contrast, storage pools are not required to
+    be contiguous blocks of memory. However, each memory allocation in a
+    storage pool returns a pointer to a contiguous block of memory.
+
 .. admonition:: For further reading
 
     Note that the :ada:`Storage_Offset` is an integer type with a range defined
