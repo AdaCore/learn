@@ -3,9 +3,11 @@ courses/advanced-ada/parts/resource_management/limited_types.rst
 courses/advanced-ada/parts/resource_management/memory_management.rst
 courses/advanced-ada/parts/resource_management/restrictions.rst
 courses/advanced-ada/parts/resource_management/standard_containers.rst
+courses/advanced-ada/parts/resource_management/index_hidden.rst
 courses/advanced-ada/parts/interfacing_external/*.*
 courses/advanced-ada/parts/appendices/*.*
 courses/advanced-ada/parts/multithreading/*.*
 courses/advanced-ada/parts/initialization/*.*
 courses/advanced-ada/parts/abstraction-oriented_prog/*.*
 courses/advanced-ada/parts/design_by_contracts/*.*
+courses/advanced-ada/index_hidden.rst
