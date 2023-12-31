@@ -432,11 +432,11 @@ Ada doesn't offer multiple inheritance the way C++ does, but it does support a J
    }
 
    public interface I1 {
-      public void M2 () = 0;
+      public void M2 ();
    }
 
-   public class I2 {
-      public void M3 () = 0;
+   public interface I2 {
+      public void M3 ();
    }
 
    public class Child extends Root implements I1, I2 {
