@@ -1,5 +1,5 @@
-Accommodating Future Enhancements
-=========================================
+Programming by Extension
+========================
 
 .. include:: ../../global.txt
 
