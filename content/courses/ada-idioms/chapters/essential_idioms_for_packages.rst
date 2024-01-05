@@ -1,5 +1,5 @@
-Fundamental Design Idioms for Packages
-======================================
+Essential Design Idioms for Packages
+====================================
 
 .. include:: ../../global.txt
 
