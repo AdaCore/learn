@@ -8,6 +8,10 @@ Abstract Data Machines
 Motivation
 ----------
 
+.. todo::
+
+    Complete section!
+
 
 Solution
 --------
