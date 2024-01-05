@@ -50,8 +50,8 @@ a reflection of the degree of information hiding applied.
 
 .. _Ada_Idioms_Named_Collection_Of_Declarations:
 
-Fundamental Idiom 1: Named Collection of Declarations
------------------------------------------------------
+Essential Idiom 1: Named Collection of Declarations
+---------------------------------------------------
 
 In the first idiom the package declaration can contain other declarations only
 for the following:
@@ -107,8 +107,8 @@ idiom provides the way to declare it.
 
 .. _Ada_Idioms_Groups_Of_Related_Program_Units:
 
-Fundamental Idiom 2: Groups of Related Program Units
-----------------------------------------------------
+Essential Idiom 2: Groups of Related Program Units
+--------------------------------------------------
 
 In this idiom, the package can contain all of the declarations allowed by the
 first idiom, but will also contain declarations for operations, usually
