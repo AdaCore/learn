@@ -3,8 +3,8 @@ Reducing Object Code from Generic Package Instantiations
 
 .. include:: ../../global.txt
 
-Problem Statement
------------------
+Motivation
+----------
 
 Generic unit instantiations are often, but not always, implemented by an Ada
 compiler as a form of *macro expansion*. In this approach, the compiler

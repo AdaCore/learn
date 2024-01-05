@@ -5,8 +5,8 @@ Abstract Data Machines
 
 .. include:: ../../global.txt
 
-Problem Statement
------------------
+Motivation
+----------
 
 
 Solution

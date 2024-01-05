@@ -4,8 +4,8 @@ Constructor Functions For Type Extensions
 .. include:: ../../global.txt
 
 
-Problem Statement
------------------
+Motivation
+----------
 
 In languages supporting object-oriented programming (OOP), including Ada,
 *constructors* are not inherited when one type is derived from another. That's
