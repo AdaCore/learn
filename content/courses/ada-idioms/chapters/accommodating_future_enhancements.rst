@@ -3,8 +3,8 @@ Accommodating Future Enhancements
 
 .. include:: ../../global.txt
 
-Problem Statement
------------------
+Motivation
+----------
 
 When declaring entities in a package, developers should ensure that the client
 view |mdash| the package visible part |mdash| contains no implementation

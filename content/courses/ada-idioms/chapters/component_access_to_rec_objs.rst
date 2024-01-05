@@ -3,8 +3,8 @@ Providing Component Access to Enclosing Record Objects
 
 .. include:: ../../global.txt
 
-Problem Statement
------------------
+Motivation
+----------
 
 In some design situations we want to have a record component that is of a task
 or protected type. That in itself is trivially accomplished because task types
@@ -210,7 +210,7 @@ There are various ways to make that happen (see
 reserved word :ada:`limited` in the type definition within the full view, as we
 did above. That is known as making the type *explicitly limited*.
 
-Why does the compiler require the type to be immutably limited? 
+Why does the compiler require the type to be immutably limited?
 
 Recall that a (non-tagged) private type need not be limited in both views. It
 can be limited in the partial client view but non-limited in the private full
