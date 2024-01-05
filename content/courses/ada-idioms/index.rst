@@ -106,6 +106,8 @@ Ada Idioms
 
     Introduction <chapters/introduction>
     Essential Design Idioms for Packages <chapters/essential_idioms_for_packages>
+    Abstract Data Types <chapters/abstract_data_types>
+    Abstract Data Machines <chapters/abstract_data_machines>
     Accommodating Future Enhancements <chapters/accommodating_future_enhancements>
     Constructor Functions For Type Extensions <chapters/constructor_functions_for_type_extensions>
     Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
