@@ -6,8 +6,8 @@ Essential Design Idioms for Packages
 .. include:: ../../global.txt
 
 
-Problem Statement
------------------
+Motivation
+----------
 
 Packages, especially library packages, are modules, and as such they are the
 fundamental building blocks of Ada programs. There is no language-prescribed

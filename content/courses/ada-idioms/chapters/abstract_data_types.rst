@@ -5,8 +5,8 @@ Abstract Data Types
 
 .. include:: ../../global.txt
 
-Problem Statement
------------------
+Motivation
+----------
 
 In the previous idiom (the
 :ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>`),

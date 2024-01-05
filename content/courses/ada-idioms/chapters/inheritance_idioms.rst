@@ -5,8 +5,8 @@ Using Building Blocks to Express Inheritance Idioms
 
 .. include:: ../../global.txt
 
-Problem Statement
------------------
+Motivation
+----------
 
 Betrand Meyer's magisterial book on OOP [1]_ includes a taxonomy of inheritance
 idioms. Two especially well-known entries in that taxonomy are
