@@ -69,13 +69,13 @@ continue executing normally, i.e., they do not complete as a result of the
 environment task completion. Alternatively, however, instead of waiting for
 them, the implementation has permission to abort the dependent application
 tasks, per
-:arm:`10.2\\(30\\) Program Execution <10-2>`
+:arm:`Ada Reference Manual: 10.2 (30) Program Execution <10-2>`
 The resulting application-specific effect is undefined.
 
 Finally, whether the environment task waited for the dependent tasks or aborted
 them, the semantics of further execution beyond that point are undefined. There
 is no concept of a calling environment beyond the environment task
-(:arm:`10.2\\(30\\) Program Execution <10-2>`).
+(:arm:`Ada Reference Manual: 10.2 (30) Program Execution <10-2>`).
 In some systems there is no calling environment, such as bare-metal platforms
 with only an Ada run-time library and no operating system.
 

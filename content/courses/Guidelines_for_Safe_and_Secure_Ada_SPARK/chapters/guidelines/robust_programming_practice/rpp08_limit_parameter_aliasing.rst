@@ -25,9 +25,9 @@ Goal
 Reference
 +++++++++++
 
-:arm:`6.2 Formal Parameter Modes <6-2>`
+:arm:`Ada Reference Manual: 6.2 Formal Parameter Modes <6-2>`
 
-:arm:`SPARK RM 6.4.2 \\- Anti-Aliasing`
+:spark_rm_url:`SPARK Reference Manual: Anti-Aliasing <subprograms.html#anti-aliasing>`
 
 +++++++++++++
 Description

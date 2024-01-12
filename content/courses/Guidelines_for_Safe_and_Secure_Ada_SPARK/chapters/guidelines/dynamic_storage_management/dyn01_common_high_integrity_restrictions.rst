@@ -25,7 +25,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`H.4 High Integrity Restrictions <H-4>`
+:arm:`Ada Reference Manual: H.4 High Integrity Restrictions <H-4>`
 
 +++++++++++++
 Description

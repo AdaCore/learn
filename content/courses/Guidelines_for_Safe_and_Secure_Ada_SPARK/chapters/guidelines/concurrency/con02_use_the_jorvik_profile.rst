@@ -28,7 +28,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`D.13 The Ravenscar and Jorvik Profiles <D-13>`
+:arm:`Ada Reference Manual: D.13 The Ravenscar and Jorvik Profiles <D-13>`
 
 +++++++++++++
 Description

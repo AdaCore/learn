@@ -26,7 +26,7 @@ Goal
 Reference
 +++++++++++
 
-:arm:`D.13 The Ravenscar Profile <D-13>`
+:arm:`Ada Reference Manual: D.13 The Ravenscar Profile <D-13>`
 
 +++++++++++++
 Description
@@ -52,7 +52,7 @@ Noncompliant Code Example
   :dedent: 3
 
 Note that variables marked as :ada:`Atomic` are also :ada:`Volatile`, per the
-:arm:`C.6\\/8\\(3\\) Shared Variable Control <C-6>`
+:arm:`Ada Reference Manual: C.6 (8/3) Shared Variable Control <C-6>`
 
 ++++++++++++++++++++++++
 Compliant Code Example

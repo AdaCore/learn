@@ -25,7 +25,7 @@ Goal
 Reference
 +++++++++++
 
-[SPARK2014]_ Section 8 "Applying SPARK in Practice"
+:spark_ug:`SPARK User's Guide, section 8: "Applying SPARK in Practice" <usage_scenarios>`
 
 +++++++++++++
 Description

@@ -64,5 +64,5 @@ N/A
 Notes
 +++++++
 
-The GNATstack [GNATstack]_ tool can statically determine the maximum
-requirements per task.
+The :gnat_stack_ug_url:`GNATstack <index.html>` tool can statically determine
+the maximum requirements per task.

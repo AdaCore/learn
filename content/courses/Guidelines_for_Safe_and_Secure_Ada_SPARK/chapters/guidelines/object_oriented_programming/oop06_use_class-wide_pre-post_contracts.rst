@@ -28,7 +28,7 @@ Reference
 
 [AdaOOP2016]_ section 6.1.4
 
-[SPARK2014]_ section 7.5.2
+:spark_ugs:`SPARK User's Guide, section 7.5.2 <how_to_write_object_oriented_contracts.html#writing-contracts-on-dispatching-subprograms>`
 
 +++++++++++++
 Description

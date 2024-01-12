@@ -34,7 +34,7 @@ Description
 When deallocating, ensure that the pool to which the storage will be returned
 is the same pool from which it was allocated. Execution is erroneous
 otherwise, meaning anything can happen
-(:arm:`13.11.2\\(16\\) Unchecked Storage Deallocation <13-11>`
+(:arm:`Ada Reference Manual: 13.11.2 (16) Unchecked Storage Deallocation <13-11-2>`).
 
 Each access type has an associated storage pool, either implicitly by default,
 or explicitly with a storage pool specified by the programmer. The implicit

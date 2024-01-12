@@ -205,6 +205,20 @@ extlinks = {
                  '[SPARK User\'s Guide: %s]'),
     'spark_ugs': ('https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/%s',
                  '[SPARK User\'s Guide: %s]'),
+    'spark_rm': ('https://docs.adacore.com/spark2014-docs/html/lrm/%s.html',
+                 '[SPARK Reference Manual: %s]'),
+    'spark_rm_url': ('https://docs.adacore.com/spark2014-docs/html/lrm/%s',
+                     '[SPARK Reference Manual: %s]'),
+    'gnat_ugn': ('https://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/%s.html',
+                 '[GNAT User\'s Guide for Native Platforms: %s]'),
+    'gnat_rm': ('https://docs.adacore.com/live/wave/gnat_rm/html/gnat_rm/%s.html',
+                '[GNAT Reference Manual: %s]'),
+    'gnat_rm_url': ('https://docs.adacore.com/live/wave/gnat_rm/html/gnat_rm/%s',
+                    '[GNAT Reference Manual: %s]'),
+    'gnat_check_rm_url': ('https://docs.adacore.com/live/wave/lkql/html/gnatcheck_rm/gnatcheck_rm/%s.html',
+                          '[GNATcheck Reference Manual: %s]'),
+    'gnat_stack_ug_url': ('http://docs.adacore.com/live/wave/gnatstack/html/gnatstack_ug/%s',
+                          '[GNATstack User\'s Guide: %s]'),
     }
 
 extlinks_detect_hardcoded_links = True
