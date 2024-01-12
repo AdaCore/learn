@@ -2,7 +2,7 @@
 No Exception Propagation Beyond Name Visibility (EXU03)
 ---------------------------------------------------------
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 **Level** :math:`\rightarrow` Required
 
