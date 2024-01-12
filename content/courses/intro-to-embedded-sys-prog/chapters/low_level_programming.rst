@@ -1744,10 +1744,8 @@ can be one of the following characters:
 
 Increasing numeric values provide increasing amounts of information. The
 default is '1' and usually will suffice. See the GNAT User's Guide for
-Native Platforms for the details of the switch in section 4.3.15
-Debugging Control, available online here:
-
-https://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#debugging-control
+Native Platforms for the details of the switch in
+:gnat_ugn_url:`section 4.3.15 Debugging Control <building_executable_programs_with_gnat.html#debugging-control>`.
 
 You'll have to scroll down some to find that specific switch but it is
 worth finding and remembering. When you cannot understand what the

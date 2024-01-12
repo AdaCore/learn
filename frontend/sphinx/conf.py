@@ -211,6 +211,8 @@ extlinks = {
                      '[SPARK Reference Manual: %s]'),
     'gnat_ugn': ('https://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/%s.html',
                  '[GNAT User\'s Guide for Native Platforms: %s]'),
+    'gnat_ugn_url': ('https://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/%s',
+                     '[GNAT User\'s Guide for Native Platforms: %s]'),
     'gnat_rm': ('https://docs.adacore.com/live/wave/gnat_rm/html/gnat_rm/%s.html',
                 '[GNAT Reference Manual: %s]'),
     'gnat_rm_url': ('https://docs.adacore.com/live/wave/gnat_rm/html/gnat_rm/%s',
