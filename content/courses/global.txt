@@ -16,6 +16,11 @@
 
 .. role:: assembly(code)
 
+.. role:: rule(code)
+
+.. role:: switch(code)
+   :language: console
+
 .. include:: <isopub.txt>
 
 .. include:: <isoamsa.txt>
