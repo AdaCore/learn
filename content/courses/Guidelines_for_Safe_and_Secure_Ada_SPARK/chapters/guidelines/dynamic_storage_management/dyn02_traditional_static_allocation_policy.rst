@@ -33,8 +33,8 @@ Description
 
 The following restrictions must be in effect:
 
-   * No_Allocators
-   * No_Task_Allocators
+   * :ada:`No_Allocators`
+   * :ada:`No_Task_Allocators`
 
 Under the traditional approach, no dynamic allocations and no deallocations
 occur.  Only declared objects are used and no access types of any kind appear

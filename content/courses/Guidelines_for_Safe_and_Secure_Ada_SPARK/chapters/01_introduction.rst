@@ -59,7 +59,7 @@ then detected and enforced by the Ada compiler.
 Alternatively, the AdaCore GNATcheck utility program has rules precisely
 corresponding to those restriction identifiers, with the same degree of
 detection and enforcement. For example, the language restriction identifier
-No_Unchecked_Deallocation corresponds to the GNATcheck
+:ada:`No_Unchecked_Deallocation` corresponds to the GNATcheck
 **+RRestrictions:No_Unchecked_Deallocation** rule.
 
 The advantage of GNATcheck over the compiler is that all generated messages

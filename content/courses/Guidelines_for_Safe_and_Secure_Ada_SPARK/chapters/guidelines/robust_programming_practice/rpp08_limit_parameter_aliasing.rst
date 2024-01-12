@@ -73,8 +73,8 @@ its subcomponents as an actual parameter, the following constructs are also
 prohibited in this context:
 
    * A type conversion whose operand is a prohibited construct;
-   * A call to an instance of Unchecked_Conversion whose operand is a prohibited
-     construct;
+   * A call to an instance of :ada:`Unchecked_Conversion` whose operand is a
+     prohibited construct;
    * A qualified expression whose operand is a prohibited construct;
    * A prohibited construct enclosed in parentheses.
 

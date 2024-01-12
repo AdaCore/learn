@@ -44,10 +44,11 @@ compiler must be configured to treat warnings as errors, i.e.,  preventing
 object code generation.
 
 Note that warnings will occasionally be given for code usage that is
-intentional. In those cases the warnings should be disabled by using pragma
-Warnings with the parameter Off, and a string indicating the error message to
+intentional. In those cases the warnings should be disabled by using
+:ada:`pragma Warnings` with the parameter :ada:`Off`, and a string indicating
+the error message to
 be disabled. In other cases, a different mechanism might be appropriate, such
-as aspect (or pragma) Unreferenced.
+as aspect (or pragma) :ada:`Unreferenced`.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Applicable Vulnerability within ISO TR 24772-2
