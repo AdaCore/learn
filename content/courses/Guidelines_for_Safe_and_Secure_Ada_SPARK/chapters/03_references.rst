@@ -23,13 +23,7 @@ References
   *Language and Standard Libraries-ISO/IEC 8652:2020*
 
 .. [AdaOOP2016] AdaCore. 2016.
-  *High-Integrity Object-Oriented Programming in Ada, Version 1.4*
-
-.. [SPARK2014] AdaCore. "SPARK 2014 User's Guide."
-  http://docs.adacore.com/spark2014-docs/html/ug/index.html
-
-.. [GNATUG] Adacore. "GNAT User's Guide for Native Platforms."
-  http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn.html
+  `High-Integrity Object-Oriented Programming in Ada, Version 1.4 <https://www.adacore.com/uploads/techPapers/HighIntegrityAda.pdf>`_
 
 .. [LiskovWing1994] Liskov, B. and Wing, J. 1994. "A Behavioral Notion of
   Subtyping." *ACM Transactions on Programming Languages and Systems (TOPLAS)*
@@ -41,9 +35,6 @@ References
 .. [Meyer1997] Meyer, B. 1997. "Object-Oriented Software Construction."
   *Prentice Hall Professional Technical Reference* (2nd Edition)
 
-.. [GNATstack] AdaCore. "GNATstack User's Guide."
-  http://docs.adacore.com/live/wave/gnatstack/html/gnatstack_ug/index.html
-
 .. [CWE2019] MITRE. 2019. *Common Weakness Enumeration (CWE)*
 
 .. [SEI-Java] The Software Engineering Institute.
@@ -53,3 +44,10 @@ References
   *ISO/IEC TR 24772-2:20 Programming Languages -*
   *Guidance to Avoiding Vulnerabilities in Programming Languages -*
   *Part 2: Ada*
+
+- AdaCore.
+  `SPARK 2014 User's Guide. <http://docs.adacore.com/spark2014-docs/html/ug/index.html>`_
+- Adacore.
+  `GNAT User's Guide for Native Platforms <http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn.html>`_
+- AdaCore.
+  :gnat_stack_ug_url:`"GNATstack User's Guide" <index>`
