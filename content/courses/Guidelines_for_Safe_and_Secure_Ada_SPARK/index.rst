@@ -40,6 +40,8 @@ Guidelines for Safe and Secure Ada/SPARK
     applied to Ada/SPARK source code. The contents can be used as-is,
     or customized for a particular project.
 
+    This document was written by Michael Frank.
+
 .. only:: builder_html
 
     .. container:: ebook-download
