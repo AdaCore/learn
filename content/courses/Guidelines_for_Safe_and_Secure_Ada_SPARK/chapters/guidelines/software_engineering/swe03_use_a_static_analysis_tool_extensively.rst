@@ -2,6 +2,8 @@
 Use a Static Analysis Tool Extensively (SWE03)
 ------------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Mandatory
 
 Category

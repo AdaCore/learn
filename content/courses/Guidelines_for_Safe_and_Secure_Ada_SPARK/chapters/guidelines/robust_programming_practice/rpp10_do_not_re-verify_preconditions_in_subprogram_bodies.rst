@@ -2,6 +2,8 @@
 Do Not Re-Verify Preconditions in Subprogram Bodies (RPP10)
 -------------------------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Advisory
 
 Category

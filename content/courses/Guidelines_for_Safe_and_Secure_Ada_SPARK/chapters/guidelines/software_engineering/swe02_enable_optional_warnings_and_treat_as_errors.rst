@@ -2,6 +2,8 @@
 Enable Optional Warnings and Treat As Errors  (SWE02)
 -------------------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Required
 
 Category

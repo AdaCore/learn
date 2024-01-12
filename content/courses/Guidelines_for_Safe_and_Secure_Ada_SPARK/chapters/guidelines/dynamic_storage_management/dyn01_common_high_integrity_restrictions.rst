@@ -2,6 +2,8 @@
 Common High Integrity Restrictions (DYN01)
 --------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Required
 
 Category

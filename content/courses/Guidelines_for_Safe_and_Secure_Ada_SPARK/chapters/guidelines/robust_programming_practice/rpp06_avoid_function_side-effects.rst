@@ -2,6 +2,8 @@
 Avoid Function Side-Effects (RPP06)
 -------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Advisory
 
 Category

@@ -2,6 +2,8 @@
 Use Class-wide Pre/Post Contracts (OOP06)
 -------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Required
 
 Category

@@ -2,6 +2,8 @@
 Traditional Static Allocation Policy (DYN02)
 ----------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Advisory
 
 Category
