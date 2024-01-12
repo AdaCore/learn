@@ -2,6 +2,8 @@
 Statically Determine Maximum Stack Requirements (DYN06)
 ---------------------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Required
 
 Category

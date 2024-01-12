@@ -2,6 +2,8 @@
 Prove Absence of Run-time Exceptions (EXU04)
 ----------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Required
 
 Category

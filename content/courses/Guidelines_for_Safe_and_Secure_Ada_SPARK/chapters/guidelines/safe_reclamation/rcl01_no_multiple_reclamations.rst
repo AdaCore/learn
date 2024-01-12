@@ -2,6 +2,8 @@
 No Multiple Reclamations (RCL01)
 ----------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Mandatory
 
 Category

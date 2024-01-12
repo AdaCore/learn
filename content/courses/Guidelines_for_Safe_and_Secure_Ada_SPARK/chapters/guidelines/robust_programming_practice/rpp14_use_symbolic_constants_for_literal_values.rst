@@ -2,6 +2,8 @@
 Use Symbolic Constants for Literal Values (RPP14)
 ---------------------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Advisory
 
 Category

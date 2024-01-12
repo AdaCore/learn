@@ -2,6 +2,8 @@
 Only Reclaim to the Same Pool (RCL03)
 ---------------------------------------
 
+.. include:: ../../../../global.txt
+
 **Level** :math:`\rightarrow` Mandatory
 
 Category
