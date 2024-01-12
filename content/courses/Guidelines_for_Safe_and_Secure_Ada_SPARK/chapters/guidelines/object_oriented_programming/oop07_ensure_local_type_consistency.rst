@@ -27,7 +27,8 @@ Reference
 
 [AdaOOP2016]_ See section 4.2.
 
-[GNATUG]_ See section 5.10.11.
+:gnat_ugn:`GNAT User's Guide, section 5.10.11 <gnat_utility_programs>`
+
 
 +++++++++++++
 Description
