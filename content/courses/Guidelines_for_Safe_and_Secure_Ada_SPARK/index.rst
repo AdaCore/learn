@@ -40,12 +40,12 @@ Guidelines for Safe and Secure Ada/SPARK
         .. raw:: html
 
             <a class="ebook-download-button"
-            href="/pdf_books/courses/Ada_Coding_Standards.pdf">
+            href="/pdf_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.pdf">
                 Download PDF
             </a>
             <br>
             <a class="ebook-download-button"
-            href="/epub_books/courses/Ada_Coding_Standards.epub">
+            href="/epub_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.epub">
                 Download EPUB
             </a>
 
