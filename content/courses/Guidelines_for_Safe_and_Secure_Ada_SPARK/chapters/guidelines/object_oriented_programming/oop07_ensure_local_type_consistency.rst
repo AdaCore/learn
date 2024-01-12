@@ -170,8 +170,8 @@ is not
 changed. However, these postconditions are not class-wide so they are not
 inherited by subclasses.
 
-Now, in a subclass Square, the operations are overridden so that setting the
-width also sets the height to the same value, and vice versa. Thus the
+Now, in a subclass :ada:`Square`, the operations are overridden so that setting
+the width also sets the height to the same value, and vice versa. Thus the
 overridden operations do not maintain type consistency, but this fact is
 neither detected at run-time, nor could SPARK verify it statically (and SPARK
 is not used at all in these versions of the packages).
@@ -230,7 +230,7 @@ Compliant Code Example
    end P;
 
 Now the postconditions are class-wide so they are inherited by subclasses. In
-the subclass Square, the postconditions will not hold at run-time. Likewise,
+the subclass :ada:`Square`, the postconditions will not hold at run-time. Likewise,
 SPARK can now prove that type consistency is not verified because the
 postconditions are weaker than those inherited:
 

@@ -70,4 +70,4 @@ Notes
 +++++++
 
 The compiler will detect violations with the standard Ada restriction
-No_Dispatch applied.
+:ada:`No_Dispatch` applied.

@@ -68,7 +68,7 @@ Compliant Code Example
 Notes
 +++++++
 
-The compiler will detect violations with the restriction No_Recursion in place.
+The compiler will detect violations with the restriction :ada:`No_Recursion` in place.
 Note this is a dynamic check.
 
 The GNATcheck rule specified above is a static check, subject to the

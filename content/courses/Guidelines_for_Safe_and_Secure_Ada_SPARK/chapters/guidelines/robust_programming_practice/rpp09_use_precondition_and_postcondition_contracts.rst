@@ -32,7 +32,7 @@ minimum of two assertions per function."
 Description
 +++++++++++++
 
-Subprograms should declare Pre and/or Post contracts.  Developers should
+Subprograms should declare :ada:`Pre` and/or :ada:`Post` contracts.  Developers should
 consider specifying the Global contract as well, when the default does not
 apply.
 
@@ -53,7 +53,7 @@ the postcondition holds, either at run-time for Ada, or statically in SPARK.
 Not all subprograms will have both a precondition and a postcondition, some
 will have neither.
 
-The Global contract specifies interactions with those objects not local to the
+The :ada:`Global` contract specifies interactions with those objects not local to the
 corresponding subprogram body. As such, they help complete the specification
 because, otherwise, one would need to examine the body of the subprogram itself
 and all those it calls, directly or indirectly, to know whether any global

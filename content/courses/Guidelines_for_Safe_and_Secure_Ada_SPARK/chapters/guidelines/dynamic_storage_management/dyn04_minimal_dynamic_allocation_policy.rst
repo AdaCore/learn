@@ -33,8 +33,8 @@ Description
 
 The following restrictions must be in effect:
 
-   * No_Local_Allocators
-   * No_Dependence => Ada.Unchecked_Deallocation
+   * :ada:`No_Local_Allocators`
+   * :ada:`No_Dependence` => :ada:`Ada.Unchecked_Deallocation`
 
 In this approach dynamic allocation is only allowed during "start-up" and no
 later.  Deallocations never occur.  As a result, storage exhaustion should

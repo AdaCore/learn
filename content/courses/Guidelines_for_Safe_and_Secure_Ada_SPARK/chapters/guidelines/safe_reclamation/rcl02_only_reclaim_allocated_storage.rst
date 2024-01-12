@@ -68,4 +68,4 @@ Notes
 +++++++
 
 Enforcement of this rule can only be provided by manual code review, unless
-deallocation is forbidden via No_Unchecked_Deallocation.
+deallocation is forbidden via :ada:`No_Unchecked_Deallocation`.

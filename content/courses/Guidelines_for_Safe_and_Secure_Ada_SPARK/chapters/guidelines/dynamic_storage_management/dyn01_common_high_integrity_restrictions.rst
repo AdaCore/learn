@@ -33,10 +33,10 @@ Description
 
 The following restrictions must be in effect:
 
-   * No_Anonymous_Allocators
-   * No_Coextensions
-   * No_Access_Parameter_Allocators
-   * Immediate_Reclamation
+   * :ada:`No_Anonymous_Allocators`
+   * :ada:`No_Coextensions`
+   * :ada:`No_Access_Parameter_Allocators`
+   * :ada:`Immediate_Reclamation`
 
 The first three restrictions prevent problematic usage that, for example, may
 cause un-reclaimed (and unreclaimable) storage. The last restriction ensures
@@ -54,7 +54,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Noncompliant Code Example
 +++++++++++++++++++++++++++
 
-For No_Anonymous_Allocators:
+For :ada:`No_Anonymous_Allocators`:
 
    .. code-block:: Ada
 
@@ -62,14 +62,14 @@ For No_Anonymous_Allocators:
       ...
       X := new String'("Hello");
 
-For No_Coextensions:
+For :ada:`No_Coextensions`:
 
    .. code-block:: Ada
 
       type Object (Msg : access String) is ...
       Obj : Object (Msg => new String'("Hello"));
 
-For No_Access_Parameter_Allocators:
+For :ada:`No_Access_Parameter_Allocators`:
 
    .. code-block:: Ada
 
@@ -81,7 +81,7 @@ For No_Access_Parameter_Allocators:
 Compliant Code Example
 ++++++++++++++++++++++++
 
-For No_Anonymous_Allocators, use a named access type:
+For :ada:`No_Anonymous_Allocators`, use a named access type:
 
    .. code-block:: Ada
 
@@ -91,7 +91,7 @@ For No_Anonymous_Allocators, use a named access type:
       ...
       X := S;
 
-For No_Coextensions, use a variable of a named access type:
+For :ada:`No_Coextensions`, use a variable of a named access type:
 
    .. code-block:: Ada
 
@@ -100,7 +100,7 @@ For No_Coextensions, use a variable of a named access type:
       S : String_Reference := new String'("Hello");
       Obj : Object (Msg => S);
 
-For No_Access_Parameter_Allocators, use a variable of a named access type:
+For :ada:`No_Access_Parameter_Allocators`, use a variable of a named access type:
 
    .. code-block:: Ada
 

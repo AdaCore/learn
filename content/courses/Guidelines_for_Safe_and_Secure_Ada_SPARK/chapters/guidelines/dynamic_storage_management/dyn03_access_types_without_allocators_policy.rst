@@ -34,8 +34,8 @@ Description
 
 The following restrictions must be in effect:
 
-   * No_Allocators
-   * No_Dependence => Ada.Unchecked_Deallocation
+   * :ada:`No_Allocators`
+   * :ada:`No_Dependence` => :ada:`Ada.Unchecked_Deallocation`
 
 In this approach dynamic access values are only created via the attribute
 :ada:`'Access` applied to aliased objects. Allocation and deallocation never
@@ -50,10 +50,10 @@ In this approach the following constructs are not allowed:
    * Unchecked Deallocations
 
 Aspects should be applied to all access types in this approach, specifying a
-value of zero for the storage size.  Although the restriction No_Allocators is
+value of zero for the storage size.  Although the restriction :ada:`No_Allocators` is
 present, such clauses may be necessary to prevent any default storage pools
 from being allocated for the access types, even though the pools would never be
-used. A direct way to accomplish this is to use pragma Default_Storage_Pool
+used. A direct way to accomplish this is to use :ada:`pragma Default_Storage_Pool`
 with a parameter of :ada:`null` like so:
 
    :ada:`pragma Default_Storage_Pool (null);`
