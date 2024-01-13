@@ -81,7 +81,7 @@ in one of the generated ones.
 
 For documentation of other switches available for :program:`gnatchop`,
 please refer to the
-`gnatchop chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#renaming-files-with-gnatchop>`_
+:gnat_ugn_url:`gnatchop chapter <the_gnat_compilation_model.html#renaming-files-with-gnatchop>`
 of the GNAT User's Guide.
 
 gnatprep
@@ -95,7 +95,7 @@ way to do this uses a source-code preprocessor. However, in many cases
 where conditional compilation is needed, we can instead use the syntax
 of the Ada language or the functionality provided by
 :program:`GPRbuild` to avoid using a preprocessor in those cases. The
-`conditional compilation section <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#conditional-compilation>`_
+:gnat_ugn_url:`conditional compilation section <the_gnat_compilation_model.html#conditional-compilation>`
 of the GNAT User's Guide discusses how to do this in detail.
 
 Nevertheless, using a preprocessor is often the most straightforward
@@ -205,7 +205,7 @@ output file :file:`do_something.adb` has the same line numbering as the
 original file (:file:`do_something.org.adb`).
 
 The
-`gnatprep chapter <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/the_gnat_compilation_model.html#preprocessing-with-gnatprep>`_
+:gnat_ugn_url:`gnatprep chapter <the_gnat_compilation_model.html#preprocessing-with-gnatprep>`
 of the GNAT User's Guide contains further details about this tool, such as
 how to integrate :program:`gnatprep` with project files for
 :program:`GPRbuild` and how to replace symbols without using preprocessing
@@ -275,7 +275,7 @@ This shows all the memory we allocated and tells us that we didn't
 deallocate any of it.
 
 Please refer to the
-`chapter on gnatmem <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_and_program_execution.html#the-gnatmem-tool>`_
+:gnat_ugn_url:`chapter on gnatmem <gnat_and_program_execution.html#the-gnatmem-tool>`
 of the GNAT User's Guide for a more detailed discussion of
 :program:`gnatmem`.
 
@@ -317,7 +317,7 @@ This produces the following output:
     Average cyclomatic complexity: 1.00
 
 Please refer to the
-`section on gnatmetric <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-gnat-metrics-tool-gnatmetric>`_
+:gnat_ugn_url:`section on gnatmetric <gnat_utility_programs.html#the-gnat-metrics-tool-gnatmetric>`
 of the GNAT User's Guide for the many switches available for
 :program:`gnatmetric`, including the ability to generate reports in XML
 format.
@@ -476,7 +476,7 @@ specifying a project file. For example:
 :program:`gnatpp` has an extensive list of options, which allow for
 specifying the formatting of many aspects of the source and implementing
 many coding styles. These are extensively discussed in the
-`section on gnatpp <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-gnat-pretty-printer-gnatpp>`_
+:gnat_ugn_url:`section on gnatpp <gnat_utility_programs.html#the-gnat-pretty-printer-gnatpp>`
 of the GNAT User's Guide.
 
 gnatstub
@@ -547,6 +547,6 @@ also created:
 
 This is a good starting point for the implementation of the body. Please
 refer to the
-`section on gnatstub <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-body-stub-generator-gnatstub>`_
+:gnat_ugn_url:`section on gnatstub <gnat_utility_programs.html#the-body-stub-generator-gnatstub>`
 of the GNAT User's Guide for a detailed discussion of :program:`gnatstub`
 and its options.
