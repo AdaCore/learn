@@ -1,0 +1,12 @@
+# Flag each user defined exception that does not have
+# a corresponding handler.
+
+@check(message="this user defined exception does not have a corresponding handler",
+       category="Style", subcategory="Programming Practice")
+fun unhandled_exceptions(node) =
+    match node
+    | DefiningName(any parent is ExceptionDecl) => {
+		val num_ref = node.p_find_all_references(units().to_list).length;	
+        num_ref < 2
+      }
+    | *    => false
