@@ -56,7 +56,7 @@ def get_file_from_conf_ini(path_to_file):
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018 – 2023, AdaCore. All rights reserved'
+copyright = u'2018 – 2024, AdaCore. All rights reserved'
 author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
@@ -209,15 +209,15 @@ extlinks = {
                  '[SPARK Reference Manual: %s]'),
     'spark_rm_url': ('https://docs.adacore.com/spark2014-docs/html/lrm/%s',
                      '[SPARK Reference Manual: %s]'),
-    'gnat_ugn': ('https://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/%s.html',
+    'gnat_ugn': ('https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/%s.html',
                  '[GNAT User\'s Guide for Native Platforms: %s]'),
-    'gnat_ugn_url': ('https://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn/%s',
+    'gnat_ugn_url': ('https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/%s',
                      '[GNAT User\'s Guide for Native Platforms: %s]'),
     'gnat_rm': ('https://docs.adacore.com/live/wave/gnat_rm/html/gnat_rm/%s.html',
                 '[GNAT Reference Manual: %s]'),
     'gnat_rm_url': ('https://docs.adacore.com/live/wave/gnat_rm/html/gnat_rm/%s',
                     '[GNAT Reference Manual: %s]'),
-    'gnat_check_rm_url': ('https://docs.adacore.com/live/wave/lkql/html/gnatcheck_rm/gnatcheck_rm/%s.html',
+    'gnat_check_rm_url': ('https://docs.adacore.com/live/wave/lkql/html/gnatcheck_rm/gnatcheck_rm/%s',
                           '[GNATcheck Reference Manual: %s]'),
     'gnat_stack_ug_url': ('http://docs.adacore.com/live/wave/gnatstack/html/gnatstack_ug/%s',
                           '[GNATstack User\'s Guide: %s]'),

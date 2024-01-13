@@ -149,7 +149,7 @@ parameters.  It would be a good idea to use it if you have many of those.
 
 As discussed above, ``-gnatwa`` activates almost all warnings, but not
 all. Refer to the
-`section on warnings <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#warning-message-control>`_
+:gnat_ugn_url:`section on warnings <building_executable_programs_with_gnat.html#warning-message-control>`
 of the GNAT User's Guide to get a list of the remaining warnings you
 could enable in your project. One is ``-gnatw.o``, which displays
 warnings when the compiler detects modified but unreferenced :ada:`out`
@@ -233,7 +233,7 @@ Style checking
 GNAT provides many options to configure style checking of your code. The
 main compiler switch for this is ``-gnatyy``, which sets almost all
 standard style check options. As indicated by the
-`section on style checking <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html#style-checking>`_
+:gnat_ugn_url:`section on style checking <building_executable_programs_with_gnat.html#style-checking>`
 of the GNAT User's Guide, using this switch "is equivalent to
 ``-gnaty3aAbcefhiklmnprst``, that is all checking options enabled with the
 exception of ``-gnatyB``, ``-gnatyd``, ``-gnatyI``, ``-gnatyLnnn``,
