@@ -198,7 +198,7 @@ as buffer overflow, unless otherwise verified (e.g. through static
 analysis). Deactivation can be applied at the unit level, through the
 ``-gnatp`` compiler switch, or locally within a unit via the
 pragma :ada:`Suppress`. (Refer to the
-`GNAT User’s Guide for Native Platforms <https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/building_executable_programs_with_gnat.html>`_
+:gnat_ugn:`GNAT User’s Guide for Native Platforms <building_executable_programs_with_gnat>`
 for more details about the switch.)
 
 For example, we can write the following. Note the pragma on line 4 of
