@@ -50,4 +50,4 @@ References
 - Adacore.
   `GNAT User's Guide for Native Platforms <http://docs.adacore.com/live/wave/gnat_ugn/html/gnat_ugn/gnat_ugn.html>`_
 - AdaCore.
-  :gnat_stack_ug_url:`"GNATstack User's Guide" <index>`
+  :gnat_stack_ug_url:`"GNATstack User's Guide" <index.html>`
