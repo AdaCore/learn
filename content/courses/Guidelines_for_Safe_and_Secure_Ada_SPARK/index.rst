@@ -62,7 +62,13 @@ Guidelines for Safe and Secure Ada/SPARK
 .. toctree::
    :maxdepth: 4
 
-   Introduction <chapters/01_introduction>
-   Guidelines <chapters/02_guidelines>
-   References <chapters/03_references>
-   Annex A <chapters/10_annex_a>
+   Introduction <chapters/introduction>
+   Definitions <chapters/guidelines/definitions>
+   Dynamic Storage Management <chapters/guidelines/dynamic_storage_management>
+   Safe Reclamation <chapters/guidelines/safe_reclamation>
+   Concurrency <chapters/guidelines/concurrency>
+   Robust Programming Practice <chapters/guidelines/robust_programming_practice>
+   Exception Usage <chapters/guidelines/exception_usage>
+   Object-Oriented Programming <chapters/guidelines/object_oriented_programming>
+   Software Engineering <chapters/guidelines/software_engineering>
+   References <chapters/references>
