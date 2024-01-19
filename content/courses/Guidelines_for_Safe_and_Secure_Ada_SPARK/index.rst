@@ -62,6 +62,6 @@ Guidelines for Safe and Secure Ada/SPARK
 .. toctree::
    :maxdepth: 4
 
-   Introduction <chapters/01_introduction>
+   Introduction <chapters/introduction>
    Guidelines <chapters/02_guidelines>
-   References <chapters/03_references>
+   References <chapters/references>
