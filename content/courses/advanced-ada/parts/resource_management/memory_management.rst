@@ -293,6 +293,13 @@ type as a (memory) buffer.
     be contiguous blocks of memory. However, each memory allocation in a
     storage pool returns a pointer to a contiguous block of memory.
 
+    Also, arrays in general are not guaranteed to be contiguous |mdash| apart
+    from arrays of :ada:`Storage_Array` type, as we've just seen. In practice,
+    however, if you're using a modern architecture, you most likely won't
+    encounter an array that isn't allocated on a contiguous block. (You would
+    rather see an array allocated on non-contiguous blocks when using an older
+    architecture with segmented memory.)
+
 .. admonition:: For further reading
 
     Note that the :ada:`Storage_Offset` is an integer type with a range defined
