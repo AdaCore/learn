@@ -65,4 +65,3 @@ Guidelines for Safe and Secure Ada/SPARK
    Introduction <chapters/01_introduction>
    Guidelines <chapters/02_guidelines>
    References <chapters/03_references>
-   Annex A <chapters/10_annex_a>
