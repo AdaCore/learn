@@ -297,7 +297,7 @@ type as a (memory) buffer.
     from arrays of :ada:`Storage_Array` type, as we've just seen. In practice,
     however, if you're using a modern architecture, you most likely won't
     encounter an array that isn't allocated on a contiguous block. (You would
-    rather see an array allocated on non-contiguous blocks when using an older
+    perhaps see an array allocated on non-contiguous blocks when using an older
     architecture with segmented memory.)
 
 .. admonition:: For further reading
