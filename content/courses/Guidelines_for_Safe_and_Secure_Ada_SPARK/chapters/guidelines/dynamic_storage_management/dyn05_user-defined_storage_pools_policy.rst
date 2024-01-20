@@ -93,3 +93,8 @@ Notes
 
 Enforcement of this approach can only be provided by manual code review unless
 SPARK is used.
+
+However, the User-Defined Storage Pools Policy can be enforced statically by
+specifying :ada:`Default_Storage_Pool (null)`. This essentially requires all
+access types to have a specified storage pool if any allocators are used with
+the access type.
