@@ -498,9 +498,9 @@ And the corresponding C implementation:
     };
 
     static size_t
-    strlcpy(char       *dst,
-            const char *src,
-            size_t      dstsize)
+    strlcpy_stat(char       *dst,
+                 const char *src,
+                 size_t      dstsize)
     {
       size_t len = strlen(src);
       if (dstsize) {
@@ -532,17 +532,17 @@ And the corresponding C implementation:
     void test_set_name(struct test *t,
                        char        *name)
     {
-      strlcpy(t->name,
-              name,
-              sizeof(t->name));
+      strlcpy_stat(t->name,
+                   name,
+                   sizeof(t->name));
     }
 
     void test_set_address(struct test *t,
                           char        *address)
     {
-      strlcpy(t->address,
-              address,
-              sizeof(t->address));
+      strlcpy_stat(t->address,
+                   address,
+                   sizeof(t->address));
     }
 
     void test_display(const struct test *t)
