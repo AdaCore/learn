@@ -77,7 +77,7 @@ object we allocate (via :ada:`new`) is the *designated object*.
 
 For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Object_Allocated_Object.Simple_Allocation
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Terminology.Simple_Allocation
 
     procedure Show_Simple_Allocation is
 
@@ -105,7 +105,7 @@ An access object and a designated (allocated) object, both store values. The
 value of an access object is the *access value* and the value of a designated
 object is the *designated value*. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Value_Designated_Value.Values
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Terminology.Values
 
     procedure Show_Values is
 
@@ -282,7 +282,7 @@ type conversion is allowed is when both types have a common ancestor.
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.General_Access_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Pool_Specific_Access_Types
 
     pragma Ada_2022;
 
@@ -514,10 +514,10 @@ Let's see another code example, this time with task types:
     with Workers; use Workers;
 
     procedure Show_Workers is
-       Worker_Arr : Worker_Array (1 .. 50);
+       Worker_Arr : Worker_Array (1 .. 20);
     begin
        --
-       --  Allocating 50 workers at once:
+       --  Allocating 20 workers at once:
        --
        Worker_Arr := (others => new Worker);
 
@@ -539,7 +539,7 @@ In this example, we declare the task type :ada:`Worker`, the access type
 Using this approach, a task is only created when we allocate an individual
 component of an array of :ada:`Worker_Array` type. Thus, when we declare
 the :ada:`Worker_Arr` array in this example, we're only preparing a *container*
-of 50 workers, but we don't have any actual tasks yet. We bring the 50 tasks
+of 20 workers, but we don't have any actual tasks yet. We bring the 20 tasks
 into existence by writing :ada:`Worker_Arr := (others => new Worker)`.
 
 
