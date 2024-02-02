@@ -365,21 +365,6 @@ from it (via :ada:`Read`).
     - :arm22:`A.9 The Generic Package Storage_IO <A-9>`
 
 
-.. _Adv_Ada_Finalization:
-
-Finalization
-------------
-
-.. admonition:: Relevant topics
-
-    - :arm22:`Assignment and Finalization <7-6>`
-    - :arm22:`Completion and Finalization <7-6-1>`
-
-.. todo::
-
-    Complete section!
-
-
 .. _Adv_Ada_Memory_Pools:
 
 Memory pools
@@ -389,6 +374,19 @@ Memory pools
 
     - :arm22:`Memory pools <13-11>`
     - :arm22:`Default Storage Pools <13-11-3>`
+
+.. todo::
+
+    Complete section!
+
+
+.. _Adv_Ada_Memory_Subpools:
+
+Memory subpools
+---------------
+
+.. admonition:: Relevant topics
+
     - :arm22:`Storage subpools <13-11-4>`
     - :arm22:`Subpool Reclamation <13-11-5>`
 
