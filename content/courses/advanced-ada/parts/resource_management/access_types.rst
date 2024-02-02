@@ -1548,6 +1548,40 @@ Note that we're using the :ada:`List` type
     - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
 
 
+.. _Adv_Ada_Mutually_Dependent_Types_Access_Types:
+
+Mutually dependent types using access types
+-------------------------------------------
+
+In the section on
+:ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`, we've seen
+a code example where each type depends on the other one. We could rewrite that
+code example using access types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Mutually_Dependent_Access_Types.Example
+
+    package Mutually_Dependent is
+
+       type T2;
+       type T2_Access is access T2;
+
+       type T1 is record
+          B : T2_Access;
+       end record;
+
+       type T1_Access is access T1;
+
+       type T2 is record
+          A : T1_Access;
+       end record;
+
+    end Mutually_Dependent;
+
+In this example, :ada:`T1` and :ada:`T2` are mutually dependent types via the
+access types :ada:`T1_Access` and :ada:`T2_Access` |mdash|  we're using those
+access types in the declaration of the :ada:`B` and :ada:`A` components.
+
+
 .. _Adv_Ada_Dereferencing:
 
 Dereferencing
