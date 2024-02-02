@@ -1288,7 +1288,7 @@ In the section on
 a code example that was using named access types. We could now rewrite it using
 anonymous access types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Types.Mutually_Dependent_Anonymous_Access_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Mutually_Dependent_Anonymous_Access_Types.Example
 
     package Mutually_Dependent is
 
@@ -1887,7 +1887,7 @@ tagged type. For example, let's change the declaration of the
 :ada:`Id_Number` type from the previous code example and add a :ada:`Show`
 primitive.
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.User_Defined_References
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.Dereferencing_Tagged_Types
 
     package Info is
        type Id_Number (Id : Positive) is
@@ -1913,7 +1913,7 @@ primitive.
 Then, let's declare a reference type and a reference object in the test
 application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.User_Defined_References
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.User_Defined_References.Dereferencing_Tagged_Types
 
     with Info; use Info;
 

@@ -77,7 +77,7 @@ object we allocate (via :ada:`new`) is the *designated object*.
 
 For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Object_Allocated_Object.Simple_Allocation
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Terminology.Simple_Allocation
 
     procedure Show_Simple_Allocation is
 
@@ -105,7 +105,7 @@ An access object and a designated (allocated) object, both store values. The
 value of an access object is the *access value* and the value of a designated
 object is the *designated value*. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Value_Designated_Value.Values
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Terminology.Values
 
     procedure Show_Values is
 
@@ -282,7 +282,7 @@ type conversion is allowed is when both types have a common ancestor.
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.General_Access_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Pool_Specific_Access_Types
 
     pragma Ada_2022;
 
