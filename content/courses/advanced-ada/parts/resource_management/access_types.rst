@@ -514,10 +514,10 @@ Let's see another code example, this time with task types:
     with Workers; use Workers;
 
     procedure Show_Workers is
-       Worker_Arr : Worker_Array (1 .. 50);
+       Worker_Arr : Worker_Array (1 .. 20);
     begin
        --
-       --  Allocating 50 workers at once:
+       --  Allocating 20 workers at once:
        --
        Worker_Arr := (others => new Worker);
 
@@ -539,7 +539,7 @@ In this example, we declare the task type :ada:`Worker`, the access type
 Using this approach, a task is only created when we allocate an individual
 component of an array of :ada:`Worker_Array` type. Thus, when we declare
 the :ada:`Worker_Arr` array in this example, we're only preparing a *container*
-of 50 workers, but we don't have any actual tasks yet. We bring the 50 tasks
+of 20 workers, but we don't have any actual tasks yet. We bring the 20 tasks
 into existence by writing :ada:`Worker_Arr := (others => new Worker)`.
 
 
