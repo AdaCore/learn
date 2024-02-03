@@ -4309,16 +4309,6 @@ controlled type:
            (Object => String,
             Name   => String_Access);
 
-       procedure Append (Obj : in out String_Access;
-                         S   :        String) is
-          New_Str : constant String_Access :=
-                      To_String_Access
-                        (To_String (Obj) & S);
-       begin
-          Free (Obj);
-          Obj := New_Str;
-       end Append;
-
        --
        --  PRIVATE SUBPROGRAMS
        --
@@ -4368,8 +4358,12 @@ controlled type:
 
        procedure Append (Obj : in out Info;
                          S   :        String) is
+          New_Str_A : constant String_Access :=
+                        To_String_Access
+                          (To_String (Obj.Str_A) & S);
        begin
-          Append (Obj.Str_A, S);
+          Free (Obj.Str_A);
+          Obj.Str_A := New_Str_A;
        end Append;
 
        procedure Reset (Obj : in out Info) is
