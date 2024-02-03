@@ -4309,13 +4309,6 @@ controlled type:
            (Object => String,
             Name   => String_Access);
 
-       procedure Copy (To   : in out String_Access;
-                       From :        String_Access) is
-       begin
-          Free (To);
-          To := To_String_Access (From.all);
-       end Copy;
-
        procedure Append (Obj : in out String_Access;
                          S   :        String) is
           New_Str : constant String_Access :=
@@ -4368,7 +4361,9 @@ controlled type:
        procedure Copy (To   : in out Info;
                        From :        Info) is
        begin
-          Copy (To.Str_A, From.Str_A);
+          Free (To.Str_A);
+          To.Str_A := To_String_Access
+                        (To_String (From.Str_A));
        end Copy;
 
        procedure Append (Obj : in out Info;
@@ -4424,6 +4419,16 @@ controlled type:
        Reset (Obj_2);
 
        Put_Line ("RESET");
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       Copy (From => Obj_2,
+             To   => Obj_1);
+
+       Put_Line ("COPY");
        Put_Line ("Obj_1 : "
                  & To_String (Obj_1));
        Put_Line ("Obj_2 : "
