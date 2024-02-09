@@ -2816,6 +2816,8 @@ Here, the qualified expression :ada:`Int_Not_Zero'(0)` checks the dynamic
 predicate of the subtype. (This predicate check fails at runtime.)
 
 
+.. _Adv_Ada_Default_Initial_Values:
+
 Default initial values
 ----------------------
 

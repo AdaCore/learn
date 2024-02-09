@@ -2702,6 +2702,9 @@ and build intuition on how to best use access types in your code.
 
     - :arm22:`3.10.2 Operations of Access Types <3-10-2>`
 
+
+.. _Adv_Ada_Access_Types_Lifetime_of_Objects:
+
 Lifetime of objects
 ~~~~~~~~~~~~~~~~~~~
 
@@ -4240,11 +4243,8 @@ Controlled type for access types
 In the previous code example, the :ada:`Destroy` procedure had to be called
 to deallocate the hidden access object. We could make sure that this
 deallocation happens automatically by using a controlled (or limited
-controlled) type. (We discuss controlled types in another chapter.)
-
-.. todo::
-
-    Add link to Adv_Ada_Finalization
+controlled) type. (We discuss
+:ref:`controlled types <Adv_Ada_Controlled_Types_Overview>` in another chapter.)
 
 Let's adapt the previous example and declare :ada:`Info` as a limited
 controlled type:
