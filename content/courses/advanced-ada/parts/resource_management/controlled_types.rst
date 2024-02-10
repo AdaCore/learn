@@ -12,6 +12,10 @@ In this section, we introduce the concept of controlled types. We start with a
 review of lifetime of objects and discuss how controlled types allow us to
 control the initialization, adjustment and finalization of objects.
 
+.. admonition:: Relevant topics
+
+    - :arm22:`Assignment and Finalization <7-6>`
+
 
 Lifetime of objects
 ~~~~~~~~~~~~~~~~~~~
