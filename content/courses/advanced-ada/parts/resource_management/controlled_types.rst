@@ -247,11 +247,13 @@ Let's look at a simple example:
 When we run this application, we see the user messages indicating the calls to
 :ada:`Initialize` and :ada:`Finalize`.
 
-Note that if a controlled object isn't used in the application, the compiler
-might optimize it out. In this case, procedures :ada:`Initialize` and
-:ada:`Finalize` won't be called for this object, as it doesn't actually exist.
-You can see this effect by replacing the call to :ada:`Dummy (A)` in the
-:ada:`Show_Controlled_Types` procedure by a null statement (:ada:`null`).
+.. admonition:: For further reading...
+
+   Note that if a controlled object isn't used in the application, the compiler
+   might optimize it out. In this case, procedures :ada:`Initialize` and
+   :ada:`Finalize` won't be called for this object, as it doesn't actually
+   exist. You can see this effect by replacing the call to :ada:`Dummy (A)` in
+   the :ada:`Show_Controlled_Types` procedure by a null statement (:ada:`null`).
 
 
 Adjustment of controlled objects
