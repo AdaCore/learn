@@ -344,7 +344,7 @@ about this procedure :ref:`later on <Adv_Ada_Controlled_Types_Assignment>`.
 Limited controlled types
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ada offers controlled types in two flavors: *plain* controlled types |mdash|
+Ada offers controlled types in two flavors: nonlimited controlled types |mdash|
 such as the ones we've seen so far |mdash| and limited controlled types. Both
 types are declared in the :ada:`Ada.Finalization` package.
 
@@ -359,7 +359,8 @@ The following table summarizes the information:
 +-------------+---------------------------+-------------+----------+-----------+
 | Type        | Name                      | Initialize  | Finalize | Adjust    |
 +=============+===========================+=============+==========+===========+
-| Controlled  | :ada:`Controlled`         | Yes         | Yes      | Yes       |
+| Nonlimited  | :ada:`Controlled`         | Yes         | Yes      | Yes       |
+| Controlled  |                           |             |          |           |
 +-------------+---------------------------+-------------+----------+-----------+
 | Limited     | :ada:`Limited_Controlled` | Yes         | Yes      | Not       |
 | controlled  |                           |             |          | available |
