@@ -236,13 +236,25 @@ Types that are explicitly limited really are limited, and always have a view as
 a limited type. That's important because the type given in :ada:`type_name'Access` must be
 aliased for :ada:`'Access` to be meaningful and possible on the corresponding
 objects. But if the type's view could change between limited and not limited,
-it will be aliased in some contexts and not aliased in others. To prevent that
+it would be aliased in some contexts and not aliased in others. To prevent that
 complexity, the language requires the type's view to be permanently limited so
 that the type will be permanently aliased. An immutably limited type is
 permanently aliased. In practice, we're working with record types and type
 extensions, so just make the type definition explicitly limited and all will be
-well.
+well:
 
+.. code-block:: ada
+
+    package Q is
+       type T is limited private;
+       ...
+    private
+       type T is limited record 
+          ...
+       end record;
+    end Q;
+
+Then, as mentioned, you can choose whether the type will also be tagged. 
 
 Real-World Example
 ----------------------------------
@@ -452,10 +464,14 @@ indicating that transmission for a single 9-bit value has completed. But these
 two are signaled to the software on one interrupt line, and that is the value
 indicated by :ada:`IRQ`.
 
-Therefore, there is one interrupt handling protected procedure, named
-:ada:`IRQ_Handler`. In response to this interrupt, :ada:`IRQ_Handler`
-determines which event has occurred by checking a status register. Here is the
-body of that procedure:
+Therefore, there is one interrupt handling protected procedure, named 
+:ada:`IRQ_Handler`. In response to this interrupt, :ada:`IRQ_Handler` 
+determines which event has occurred by checking one of the 
+:ada:`Transceiver` status registers. The back-reference through 
+:ada:`Port` makes that possible. Other :ada:`Transceiver` routines are 
+also called via :ada:`Port`, and :ada:`Port.all` is passed to the 
+:ada:`Put` and :ada:`Get` 
+calls:
 
 .. code-block:: ada
 
@@ -488,11 +504,6 @@ body of that procedure:
           Transmission_Pending := False;
        end if;
     end IRQ_Handler;
-
-Note how the handler references the :ada:`Transceiver` via the :ada:`Port`
-discriminant. That's required, the PO cannot simply reference a
-:ada:`Serial_Port`\'s components directly. That is, again, the point of the
-idiom.
 
 In this example, although the PO only accesses the :ada:`Transceiver`
 component in the enclosing record object, additional functionality might need
@@ -533,16 +544,12 @@ But as described in the ADM discussion, the
 Notes
 -----------------
 
-    1. As a wrapper abstraction for a USART, package :ada:`Serial_IO` is still
-       more hardware-specific than absolutely necessary, as reflected in the
-       parameters' types for procedure :ada:`Initialize` and the corresponding
-       record component types. We could use the Hardware Abstraction Layer
-       (HAL) to further isolate the hardware dependencies, but that doesn't
-       affect the idiom expression itself.
-
-    2. We use the
-       `Ada Drivers Library (ADL) <https://github.com/AdaCore/Ada_Drivers_Library>`_
-       extensively in the IO example.
+As a wrapper abstraction for a USART, package :ada:`Serial_IO` is still
+more hardware-specific than absolutely necessary, as reflected in the
+parameters' types for procedure :ada:`Initialize` and the corresponding
+record component types. We could use the Hardware Abstraction Layer
+(HAL) to further isolate the hardware dependencies, but that doesn't
+affect the idiom expression itself.
 
 
 Bibliography
