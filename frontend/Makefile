@@ -42,12 +42,6 @@ help:                                                                          #
 		' $(MAKEFILE_LIST)
 
 
-test_engine: webpack-production                                                ## Test the engine.
-	@echo "===== ENGINE TEST ====="
-	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
-	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
-	@echo ""
-
 file_found = $(or $(and $(wildcard $(1)),1),0)
 
 rst_hidden_files = \
@@ -204,6 +198,12 @@ test_all_content: test_content test_hidden_content                             #
 	@echo ""
 
 ##@ General tests
+test_engine: webpack-production                                                ## Test the engine.
+	@echo "===== ENGINE TEST ====="
+	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
+	@echo ""
+
 test_parser:                                                                   ## Test parser.
 	@coverage run --source=widget -m unittest discover --start-directory sphinx
 	@coverage report --fail-under=90 -m
