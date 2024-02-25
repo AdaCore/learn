@@ -710,6 +710,75 @@ In the above, :ada:`Assertion_Error` is raised by the elaboration of
 :ada:`Obj2` because the DIC check necessarily fails. There is no check on the
 declaration of :ada:`Obj1` because it is initialized, explicitly.
 
+To recap, we can ensure initialization for objects of the type by detecting,
+during elaboration at run-time, any objects not explicitly initialized.
+
+This approach is sufficient because when elaboration of an object declaration
+raises an exception, no use of that object is possible. That's guaranteed
+because the frame containing that declarative part is immediately abandoned and
+the exception is propagated up to the previous level. A local handler never can
+apply. But even if there is a matching handler in the previous level, there's
+really nothing much to be done. Re-entering the frame containing the
+declaration will raise the exception all over again, necessarily. Thus the code
+will have to be changed and recompiled, meeting the goal of the idiom.
+
+We can illustrate this assurance using :ada:`Storage_Error`. Consider the
+following program, in which the main procedure calls an inner procedure
+:ada:`P`:
+
+.. code-block:: ada
+
+    with Text_IO; use Text_IO;
+
+    procedure Main is
+
+       procedure P (Output : out Float) is
+          N : array (Positive) of Float; -- Storage_Error is likely
+       begin
+          Put_Line ("P's body assigns N's components and uses them");
+          -- The following indexes and component values are arbitrary
+          -- and used purely for illustration...
+          N := (others => 0.0);
+          -- other computations and assignments to N ...
+          Output := N (5);
+       exception
+          when Storage_Error =>
+             Output := N (1);
+       end P;
+
+       X : Float;
+
+    begin
+       P (X);
+       Put_Line (X'Image);
+       Put_Line ("Done");
+    exception
+       when Storage_Error =>
+          Put_Line ("Main completes abnormally");
+    end Main;
+
+When :ada:`Main` calls :ada:`P`, the elaboration of the declarative part of
+:ada:`P` almost certainly fails because there is insufficient storage to
+allocate to the object :ada:`P.N`, hence :ada:`Storage_Error` is raised. (If
+your machine can handle the above, congratulations.) Even though procedure
+:ada:`P` has a handler specifically for :ada:`Storage_Error`, that handler
+never applies because the declarative part is immediately abandoned. Instead,
+the exception is raised in the caller, where it can be caught. This behavior is
+essential to ensure that problematic objects are not referenced in the local
+handlers. In the above, the handler in :ada:`P` for :ada:`Storage_Error`
+references the object :ada:`P.N` to assign the :ada:`P.Output` parameter. If
+that assignment could happen |mdash| again, it cannot |mdash| what would it
+mean, functionally? No one knows.
+
+Handling :ada:`Storage_Error` is a little tricky anyway. Does the OS give the
+program a chance to execute a handler? If so, is there sufficient storage
+remaining to execute the exception handler's statements? In any case you can
+see the problem that the declaration failure semantics preclude.
+
+Therefore, although the DIC solution is not enforced at compile-time, it is
+nevertheless sufficient to ensure no uninitialized object of the type can be
+used.
+
 
 Preventing Object Creation by Clients
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
