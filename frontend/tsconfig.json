@@ -1,11 +1,14 @@
 {
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "allowJs": true,
-        "target": "es5",
+        "target": "es2022",
         "esModuleInterop": true,
         "downlevelIteration": true,
         "strict": true,
+        "lib": ["es2022"],
+        "module": "CommonJS",
         "moduleResolution": "node"
     },
     "include": [
