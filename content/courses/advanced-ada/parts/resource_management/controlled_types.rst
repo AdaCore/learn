@@ -130,8 +130,17 @@ In this case, we can visualize the lifetime of those objects as follows:
     @enduml
 
 Even though these default initialization methods provide some control over the
-objects, they're not very flexible. Also, we don't have any means to perform
+objects, they might not be enough in certain situations.
+Also, we don't have any means to perform
 useful operations right before an object gets out of scope.
+
+.. admonition:: For further reading...
+
+    In general, record types have a very good default initialization
+    capability. They're the most common completion for private types, so the
+    facility is often used. In this sense, default initialization is the first
+    choice, as it's guaranteed and requires nothing of the client. In addition,
+    it's cheap at run-time compared to controlled types.
 
 
 Controlled objects
