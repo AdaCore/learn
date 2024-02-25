@@ -187,7 +187,7 @@ test_content: test_content_courses                                             #
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
 
-test_hidden_content:                                                           ## Test hidden courses.
+test_hidden_content:                                                           ## Test all hidden courses.
 test_hidden_content: \
 	test_content_courses_advanced-spark
 #	DEACTIVATED DUE TO FAILING TESTS:
@@ -204,12 +204,12 @@ test_engine: webpack-production                                                #
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 	@echo ""
 
-test_parser:                                                                   ## Test parser.
+test_parser:                                                                   ## Test the parser.
 	@coverage run --source=widget -m unittest discover --start-directory sphinx
 	@coverage report --fail-under=90 -m
 
 ##@ Build website
-publish:                                                                       ## DEPRECATED: publish contents to learn website.
+publish:                                                                       ## [DEPRECATED] Publish contents to the learn website.
 	@echo "Publishing current branch to learn..."
 	@if [ ! -d learn-html-pages ] ;\
         then \
@@ -259,15 +259,15 @@ sphinx-sandbox:
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
-site:                                                                          ## Build learn website.
+site:                                                                          ## Build the learn website.
 site: cleanall test_content webpack-production sphinx-production all_books complete_site_books
 	@echo Building $@
 
-site-sandbox:                                                                  ## Build learn-sandbox website.
+site-sandbox:                                                                  ## Build the learn-sandbox website.
 site-sandbox: cleanall test_content webpack-sandbox sphinx-sandbox all_books complete_site_books
 	@echo Building $@
 
-site-testing: cleantest                                                        ## Build testing version of learn website.
+site-testing: cleantest                                                        ## Build a testing version of the learn website.
 	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
         "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
@@ -386,7 +386,7 @@ $(call generate_book_list,EPUB)
 epub_books: $(EPUB_BOOKS)                                                      ## Build all EPUB books.
 	@echo $@ completed.
 
-complete_site_books:                                                           ## Build single e-books (PDF/EPUB) for complete website.
+complete_site_books:                                                           ## Build single e-books (PDF/EPUB) with the complete website.
 complete_site_books: 	$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf \
 			$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub
 	@echo $@ completed.
@@ -395,11 +395,11 @@ all_books: pdf_books epub_books                                                #
 	@echo $@ completed.
 
 ##@ Clean-ups
-cleanall:                                                                      ## Clean all website publishing data.
+cleanall:                                                                      ## Delete all local website publishing data.
 	@rm -rf "$(BUILDDIR)"
 	@rm -f $(BUILD_MANIFEST)
 
-cleantest:                                                                     ## Clean all test data.
+cleantest:                                                                     ## Delete all test data.
 	@rm -rf "$(TEST_BUILDDIR)"
 
 
