@@ -27,7 +27,7 @@ scalar components.
 
 These facilities are often sufficient to express an abstraction's initial
 state. For example, we can expect that container objects will be initially
-empty. For example, a bounded stack ADT is almost certainly represented by a
+empty. Consider a bounded stack ADT. The representation is likely a
 record type containing an array component and a :ada:`Top` component indicating
 the index of the last array component used. We can default initialize objects
 to the empty state simply by setting :ada:`Top` to zero in the record
@@ -41,8 +41,8 @@ component's declaration:
        Top    : Natural := 0;
     end record;
 
-For an unbounded container such as a simple binary tree, we'll use an access
-type for the representation, and the automatic default value null initializes
+For an unbounded container such as a simple binary tree, if the representation
+is an access type, the automatic default value :ada:`null` initializes
 :ada:`Tree` objects to the empty state.
 
 .. code-block:: ada
@@ -84,7 +84,8 @@ function call.
        ...
     end;
 
-The initial value can also specify constraints, if required. The object
+The initial value can also specify constraints, if required.
+In the code above, the object
 :ada:`Prompt` has a lower bound of :ada:`Positive'First` and an upper bound set
 to the length of the literal. The specific bounds of :ada:`Reply` are
 determined by the function, and need not start at :ada:`Positive'First`.
@@ -281,7 +282,8 @@ The parentheses are required as usual, but the *box* symbol appears inside,
 instead of one or more discriminant declarations. The box symbol always
 indicates *not specified here* so in this case no discriminants are included in
 the view. There may or may not be discriminants in the full view, but client's
-don't have compile-time visibility to that information.
+don't have compile-time visibility to that information because the type is
+private.
 
 Unknown discriminants can be specified for various kinds of types, not only
 private types. See the
@@ -723,7 +725,7 @@ For a concrete example, we can apply the Singleton design pattern to represent
 the *time stamp counter* (:wikipedia:`TSC <Time_Stamp_Counter>`) provided by
 x86 architectures. The TSC is a 64-bit hardware register incremented once per
 clock cycle, starting from zero at power-up. We can use it to make a timestamp
-abstraction. As explained on that
+abstraction. As explained by
 :wikipedia:`Wikipedia page <Time_Stamp_Counter>`, some care is required when
 using the register for that purpose on modern hardware, but it will suffice to
 illustrate the idiom solution. Note that the Singleton pattern is itself
@@ -828,9 +830,9 @@ for example:
     end Demo_TimeStamp;
 
 The above calls the :ada:`Timestamp.Counter` function and then implicitly
-dereferenced the resulting access value to call the :ada:`Sample` function
+dereferences the resulting access value to call the :ada:`Sample` function
 using the distinguished receiver syntax. The resulting number is then converted
-to a :ada:`String` value and output to standard output.
+to a :ada:`String` value and output to :ada:`Standard_Output`.
 
 We could have instead used positional call notation for the call to
 :ada:`Sample`:
@@ -875,7 +877,7 @@ no object of type :ada:`Cycle_Counter` is created. At most one
 
 We could instead declare :ada:`The_Instance` as a :ada:`Cycle_Counter` object
 in the package body, mark it as aliased, and return a corresponding access
-value designating it. But when objects are large, declaring one that is might
+value designating it. But when objects are large, declaring one that might
 never be used is wasteful. The indirection avoids that wasted storage at the
 cost of an access object, which is small. On the other hand, now the heap is
 involved.
