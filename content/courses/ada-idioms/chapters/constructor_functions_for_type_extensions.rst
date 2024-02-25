@@ -1,5 +1,5 @@
-Constructor Functions For Type Extensions
-=========================================
+Constructor Functions For Abstract Data Types
+=============================================
 
 .. include:: ../../global.txt
 
@@ -163,8 +163,8 @@ Failing to compile is safe |mdash| it prevents clients from having a callable
 function that in general cannot suffice |mdash| but requires an alternative so
 that sufficient constructor functions are possible.
 
-Therefore, a general design idiom is required that allows constructor functions
-with concrete tagged (private) types.
+Therefore, a general design idiom is required defining constructor functions
+for concrete tagged Abstract Data Types.
 
 Solution
 --------
