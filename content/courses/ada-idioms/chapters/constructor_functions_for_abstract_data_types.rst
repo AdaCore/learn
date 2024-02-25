@@ -49,13 +49,17 @@ visible to client code, conforming to ADT requirements. That's what the word
 
 Functions and procedures that manipulate objects of the private type are
 *primitive operations* for the type if they are declared in the same package as
-the type declaration itself. Only the primitive operations are inherited during
-type derivation.
+the type declaration itself. (That location provides the compile-time visibility
+to the type's representation that is required to implement the subprograms.)
+Only the primitive operations are inherited during type derivation.
 
 Instead of a distinct constructor syntax, Ada uses regular functions to
-construct objects of types but the issues are the same. Therefore, Ada language
-rules prevent these *constructor functions* from being legally inherited, even
-though they are primitive operations for the type.
+construct objects of types but the issues are the same. By definition, these so-called
+*constructor functions* return an object of the type in question. Other primitive
+functions are not constructors and can be inherited without difficulty.
+
+Therefore, Ada language rules prevent constructor functions from being legally
+inherited, even though they are primitive operations for the type.
 
 The explanation and illustration for these rules first requires explanation of
 the word *abstract*. We mentioned above that the package enclosing the
@@ -65,7 +69,7 @@ type will be designed with the
 the details.)
 
 The term *abstract* also has a meaning in OOP, one that is unrelated to an ADT.
-In OOP, an *abstract* type is one that defines an interface but not an
+In OOP, an *abstract* type is one that defines an interface but at most a partial
 implementation. As such, the type can serve as the ancestor type for derived
 types but cannot be used to declare objects.  An abstract type in Ada includes
 the reserved word :ada:`abstract` in the declaration. For example:
@@ -84,15 +88,16 @@ example:
     procedure Do_Something (This : in out Foo) is abstract;
 
 In contrast, *concrete* types have an actual representation and can be used to
-declare objects. Likewise, concrete subprograms are callable, implemented
-units. In the following discussion, *abstract* has the OOP sense unless stated
+declare objects. Likewise, concrete subprograms are fully implemented, callable
+units. In the following discussion, *abstract* has this OOP sense unless stated
 otherwise.
 
-When a tagged type is extended, inherited constructor functions automatically
+We that definition in place, we can explain how Ada prevents constructor inheritance:
+whenever a tagged type is extended, all inherited constructor functions automatically
 become abstract functions for the extended type. Assuming the extended child
 type is not abstract, the type extension will be illegal because only abstract
 types can have abstract subprograms.  Thus, the compiler prevents this
-situation.
+inappropriate constructor inheritance.
 
 For an example, both for the code and the Ada rules, consider this simple
 package declaration that presents the tagged private type
@@ -110,7 +115,6 @@ package declaration that presents the tagged private type
           Y : Float := 0.0;
        end record;
     end Graphics;
-
 
 Note in particular the primitive function named :ada:`Make` that constructs a
 value of type :ada:`Shape`. The two formal parameters are assigned to the
@@ -153,7 +157,7 @@ inherited as if declared explicitly abstract:
     -- as actually inherited, implicitly
 
 Note the reserved word :ada:`abstract` in the implicit function declaration.
-This declaration doesn't actually appear in the package because all the
+This declaration doesn't actually appear in the source code because all the
 inherited primitive operations are implicitly declared.
 
 Another rule specifies that only abstract types can have abstract primitive
@@ -165,7 +169,7 @@ Failing to compile is safe |mdash| it prevents clients from having a callable
 function that in general cannot suffice |mdash| but requires an alternative so
 that sufficient constructor functions are possible.
 
-Therefore, a general design idiom is required defining constructor functions
+Therefore, a general design idiom is required for defining constructor functions
 for concrete tagged Abstract Data Types.
 
 Solution
@@ -187,16 +191,15 @@ The actual term is a *hierarchical library package* but *child* conveys the
 concept and is less of a mouthful.
 
 Operations declared in a child package are not primitive operations for the
-type in the parent package, so they are not inherited when the type is
-extended. Such functions will not become automatically abstract because they
-are not inherited in the first place.
+type in the parent package, so they are not inherited when that type is
+extended. Consequently they do not become abstract.
 
 In addition, the required visibility to the parent type's representation in the
 private part will be available to the functions' implementations because the
 private part and body of a child package have compile-time visibility to the
 parent package's private part.
 
-Any package declaring a tagged type, either directly or by type extension,
+In this idiom, any package declaring a tagged type, either directly or by type extension,
 will have a *constructors* child package if constructors are required. For
 example:
 
@@ -229,6 +232,11 @@ package body for an extended type might very well do so itself, as shown below:
        function Make (X, Y, R : Float) return Circle is
          (Circle'(Make (X, Y) with Radius => R));
     end Geometry.Constructors;
+
+Of course, the name "Constructors" is not required for the child packages. It could
+be "Ctors", for example (a name common in C++), or something else. But whatever the
+choice, regularity enhances comprehension so the same child package name should
+be used throughout.
 
 Pros
 ----
