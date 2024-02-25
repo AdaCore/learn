@@ -34,14 +34,15 @@ export CODE_SERVER_URL := wss://sandbox.backend.learn.adacore.com
 COMPLETE_SITE_BOOK = learning-ada
 
 
-help:
-	@echo "make test_content  - run the testsuite"
-	@echo "make test_engine  - generate the engine test html"
-	@echo "make html   - generates the html"
-	@echo "make latexpdf - generates the PDF document"
-	@echo "make pdf_books - generates the PDF document for each course and labs"
 
-test_engine: webpack-production
+help:                                                                          ## Show this help.
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"}             \
+		/^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-60s\033[0m %s\n", $$1, $$2 }     \
+		/^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) }                    \
+		' $(MAKEFILE_LIST)
+
+
+test_engine: webpack-production                                                ## Test the engine.
 	@echo "===== ENGINE TEST ====="
 	@$(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	"$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
@@ -83,91 +84,94 @@ define test_content
 	@echo ""
 endef
 
-test_content_courses_intro-to-ada:
+##@ Test source-code examples of individual courses
+test_content_courses_intro-to-ada:                                             ## Test course: Intro to Ada.
 	@echo "===== INTRO TO ADA ====="
 	$(eval MAX_SRC_COLUMNS := 50)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/intro-to-ada/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_intro-to-spark:
+test_content_courses_intro-to-spark:                                           ## Test course: Intro to SPARK.
 	@echo "===== INTRO TO SPARK ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/intro-to-spark/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_intro-to-embedded-sys-prog:
+test_content_courses_intro-to-embedded-sys-prog:                               ## Test course: Intro to Embedded System Programming.
 	@echo "===== INTRO TO EMBEDDED SYS PROG ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/intro-to-embedded-sys-prog/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_advanced-ada:
+test_content_courses_advanced-ada:                                             ## Test course: Advanced Ada.
 	@echo "===== ADVANCED ADA ====="
 	$(eval MAX_SRC_COLUMNS := 50)
 	$(eval DIR_LEVELS := 1)
 	$(eval CONTENT_CHAPTERS := courses/advanced-ada/parts)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_advanced-spark:
+test_content_courses_advanced-spark:                                           ## Test course: Advanced SPARK.
 	@echo "===== ADVANCED SPARK ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/advanced-spark/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_ada-idioms:
+test_content_courses_ada-idioms:                                               ## Test course: Ada Idioms.
 	@echo "===== ADA IDIOMS ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/ada-idioms/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_whats-new-in-ada-2022:
+test_content_courses_whats-new-in-ada-2022:                                    ## Test course: What's New in Ada 2022.
 	@echo "===== WHAT'S NEW IN ADA 2022 ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/whats-new-in-ada-2022/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_SPARK_for_the_MISRA_C_Developer:
+test_content_courses_SPARK_for_the_MISRA_C_Developer:                          ## Test course: SPARK for the MISRA-C Developer.
 	@echo "===== SPARK FOR MISRA C DEV ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/SPARK_for_the_MISRA_C_Developer/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_Ada_For_The_CPP_Java_Developer:
+test_content_courses_Ada_For_The_CPP_Java_Developer:                           ## Test course: Ada for the C++/Java Developer.
 	@echo "===== ADA FOR THE CPP JAVA DEV ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/Ada_For_The_CPP_Java_Developer/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_Ada_For_The_Embedded_C_Developer:
+test_content_courses_Ada_For_The_Embedded_C_Developer:                         ## Test course: Ada for the Embedded C Developer.
 	@echo "===== ADA FOR THE EMBEDDED C DEV ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/Ada_For_The_Embedded_C_Developer/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_GNAT_Toolchain_Intro:
+test_content_courses_GNAT_Toolchain_Intro:                                     ## Test course: Intro to the GNAT Toolchain.
 	@echo "===== GNAT TOOLCHAIN INTRO ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
 	$(eval CONTENT_CHAPTERS := courses/GNAT_Toolchain_Intro/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_training_examples:
+test_content_training_examples:                                                ## Test course: training examples (Fundamentals of Ada).
 	@echo "===== TRAINING EXAMPLES: FUNDAMENTALS OF ADA ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 1)
 	$(eval CONTENT_CHAPTERS := training_examples/fundamentals_of_ada)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses: \
+##@ Test source-code examples of various courses
+test_content_courses:                                                          ## Test all published courses.
+test_content_courses:  \
 	test_content_courses_intro-to-ada \
 	test_content_courses_intro-to-spark \
 	test_content_courses_intro-to-embedded-sys-prog \
@@ -179,7 +183,7 @@ test_content_courses: \
 	test_content_courses_GNAT_Toolchain_Intro
 	@echo ""
 
-test_content: test_content_courses
+test_content: test_content_courses                                             ## Test all published courses and create source-code zip file.
 	@cd $(SRC_TEST_DIR) \
 		&& zip -9 -r $(COMPLETE_SITE_BOOK)_code.zip . \
 			-x "*extracted_projects*.json" \
@@ -189,20 +193,23 @@ test_content: test_content_courses
 	@mkdir -p $(BUILDDIR)/zip
 	@mv $(SRC_TEST_DIR)/$(COMPLETE_SITE_BOOK)_code.zip $(BUILDDIR)/zip
 
+test_hidden_content:                                                           ## Test hidden courses.
 test_hidden_content: \
 	test_content_courses_advanced-spark
 #	DEACTIVATED DUE TO FAILING TESTS:
 #		test_content_training_examples
 	@echo ""
 
-test_all_content: test_content test_hidden_content
+test_all_content: test_content test_hidden_content                             ## Test all (published and hidden) courses.
 	@echo ""
 
-test_parser:
+##@ General tests
+test_parser:                                                                   ## Test parser.
 	@coverage run --source=widget -m unittest discover --start-directory sphinx
 	@coverage report --fail-under=90 -m
 
-publish:
+##@ Build website
+publish:                                                                       ## DEPRECATED: publish contents to learn website.
 	@echo "Publishing current branch to learn..."
 	@if [ ! -d learn-html-pages ] ;\
         then \
@@ -252,13 +259,15 @@ sphinx-sandbox:
         "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 # Build the site pointing to 'cloudchecker.learn.r53.adacore.com'
+site:                                                                          ## Build learn website.
 site: cleanall test_content webpack-production sphinx-production all_books complete_site_books
 	@echo Building $@
 
+site-sandbox:                                                                  ## Build learn-sandbox website.
 site-sandbox: cleanall test_content webpack-sandbox sphinx-sandbox all_books complete_site_books
 	@echo Building $@
 
-site-testing: cleantest
+site-testing: cleantest                                                        ## Build testing version of learn website.
 	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
         "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
@@ -354,10 +363,11 @@ generate_book_list = \
 		$(if $(findstring 0,$(HIDDEN_BOOK)),$(eval $(TARGET_TYPE)_BOOKS += $($(TARGET_TYPE)_BOOKS_DIR)/$(SPHINX_DIR)/$(SPHINX_BOOK_FULL))) \
 	)
 
+##@ Generate e-books
 # Generate list: PDF_BOOKS
 $(call generate_book_list,PDF)
 
-pdf_books: $(PDF_BOOKS)
+pdf_books: $(PDF_BOOKS)                                                        ## Build all PDF books.
 	@echo $@ completed.
 
 EPUB_BOOKS_DIR := $(BUILDDIR)/epub_books
@@ -373,21 +383,23 @@ $(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub:
 # Generate list: EPUB_BOOKS
 $(call generate_book_list,EPUB)
 
-epub_books: $(EPUB_BOOKS)
+epub_books: $(EPUB_BOOKS)                                                      ## Build all EPUB books.
 	@echo $@ completed.
 
+complete_site_books:                                                           ## Build single e-books (PDF/EPUB) for complete website.
 complete_site_books: 	$(PDF_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).pdf \
 			$(EPUB_BOOKS_DIR)/$(COMPLETE_SITE_BOOK).epub
 	@echo $@ completed.
 
-all_books: pdf_books epub_books
+all_books: pdf_books epub_books                                                ## Build all e-books (PDF/EPUB formats).
 	@echo $@ completed.
 
-cleanall:
+##@ Clean-ups
+cleanall:                                                                      ## Clean all website publishing data.
 	@rm -rf "$(BUILDDIR)"
 	@rm -f $(BUILD_MANIFEST)
 
-cleantest:
+cleantest:                                                                     ## Clean all test data.
 	@rm -rf "$(TEST_BUILDDIR)"
 
 
