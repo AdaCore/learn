@@ -10,7 +10,8 @@ Overview
 
 In this section, we introduce the concept of controlled types. We start with a
 review of lifetime of objects and discuss how controlled types allow us to
-control the initialization, adjustment and finalization of objects.
+control the initialization, post-copy (e.g. assignment) adjustment and
+finalization of objects.
 
 .. admonition:: Relevant topics
 
@@ -41,6 +42,8 @@ the typical lifetime of an object:
 
 In simple terms, an object :ada:`A` is first created before we can make use of
 it. When object :ada:`A` is about to get out of scope, it is finalized.
+Note that finalization might not entail any actual code execution |mdash| but
+it often does.
 
 Let's analyze the lifetime of object :ada:`A` in a procedure :ada:`P`:
 
