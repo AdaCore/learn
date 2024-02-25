@@ -10,7 +10,8 @@ Motivation
 ----------
 
 Developers are responsible for ensuring that no uninitialized objects are read
-in Ada. Default initialization is a good way to meet this requirement because
+in Ada programs. Default initialization is a good way to meet this requirement
+because
 it is guaranteed to happen and requires no actions on the part of the client
 code. But of the many kinds of types provided by Ada, only access types have a
 language-defined default initial value. Fortunately, Ada supports user-defined
