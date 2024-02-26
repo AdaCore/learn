@@ -4309,23 +4309,6 @@ controlled type:
            (Object => String,
             Name   => String_Access);
 
-       procedure Copy (To   : in out String_Access;
-                       From :        String_Access) is
-       begin
-          Free (To);
-          To := To_String_Access (From.all);
-       end Copy;
-
-       procedure Append (Obj : in out String_Access;
-                         S   :        String) is
-          New_Str : constant String_Access :=
-                      To_String_Access
-                        (To_String (Obj) & S);
-       begin
-          Free (Obj);
-          Obj := New_Str;
-       end Append;
-
        --
        --  PRIVATE SUBPROGRAMS
        --
@@ -4368,13 +4351,19 @@ controlled type:
        procedure Copy (To   : in out Info;
                        From :        Info) is
        begin
-          Copy (To.Str_A, From.Str_A);
+          Free (To.Str_A);
+          To.Str_A := To_String_Access
+                        (To_String (From.Str_A));
        end Copy;
 
        procedure Append (Obj : in out Info;
                          S   :        String) is
+          New_Str_A : constant String_Access :=
+                        To_String_Access
+                          (To_String (Obj.Str_A) & S);
        begin
-          Append (Obj.Str_A, S);
+          Free (Obj.Str_A);
+          Obj.Str_A := New_Str_A;
        end Append;
 
        procedure Reset (Obj : in out Info) is
@@ -4393,52 +4382,92 @@ controlled type:
        Obj_1 : Info := To_Info ("hello");
        Obj_2 : Info := Copy (Obj_1);
     begin
+       --
+       --  TO_INFO / COPY
+       --
        Put_Line ("TO_INFO / COPY");
+
        Put_Line ("Obj_1 : "
                  & To_String (Obj_1));
        Put_Line ("Obj_2 : "
                  & To_String (Obj_2));
        Put_Line ("----------");
+
+       --
+       --  RESET:  Obj_1
+       --  APPEND: Obj_2
+       --
+       Put_Line ("RESET / APPEND");
 
        Reset (Obj_1);
        Append (Obj_2, " world");
 
-       Put_Line ("RESET / APPEND");
        Put_Line ("Obj_1 : "
                  & To_String (Obj_1));
        Put_Line ("Obj_2 : "
                  & To_String (Obj_2));
        Put_Line ("----------");
+
+       --
+       --  COPY: Obj_2 => Obj_1
+       --
+       Put_Line ("COPY");
 
        Copy (From => Obj_2,
              To   => Obj_1);
 
-       Put_Line ("COPY");
        Put_Line ("Obj_1 : "
                  & To_String (Obj_1));
        Put_Line ("Obj_2 : "
                  & To_String (Obj_2));
        Put_Line ("----------");
+
+       --
+       --  RESET: Obj_1, Obj_2
+       --
+       Put_Line ("RESET");
 
        Reset (Obj_1);
        Reset (Obj_2);
 
-       Put_Line ("RESET");
        Put_Line ("Obj_1 : "
                  & To_String (Obj_1));
        Put_Line ("Obj_2 : "
                  & To_String (Obj_2));
        Put_Line ("----------");
 
+       --
+       --  COPY: Obj_2 => Obj_1
+       --
+       Put_Line ("COPY");
+
+       Copy (From => Obj_2,
+             To   => Obj_1);
+
+       Put_Line ("Obj_1 : "
+                 & To_String (Obj_1));
+       Put_Line ("Obj_2 : "
+                 & To_String (Obj_2));
+       Put_Line ("----------");
+
+       --
+       --  APPEND: Obj_1 with "hey"
+       --
+       Put_Line ("APPEND");
+
        Append (Obj_1, "hey");
 
-       Put_Line ("APPEND");
        Put_Line ("Obj_1 : "
                  & To_String (Obj_1));
        Put_Line ("----------");
 
+       --
+       --  APPEND: Obj_1 with "there"
+       --
        Put_Line ("APPEND");
+
        Append (Obj_1, " there");
+
        Put_Line ("Obj_1 : "
                  & To_String (Obj_1));
     end Main;
