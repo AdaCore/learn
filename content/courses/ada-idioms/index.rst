@@ -113,4 +113,5 @@ Ada Idioms
     Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
     Expressing Inheritance Idioms <chapters/inheritance_idioms>
     Providing Component Access to Enclosing Record Objects <chapters/component_access_to_rec_objs>
+    Controlling Object Initialization and Creation <chapters/controlling_obj_initialization_creation>
     Appendices <chapters/appendices>

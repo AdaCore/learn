@@ -1,3 +1,5 @@
+.. _Ada_Idioms_Programming_By_Extension:
+
 Programming by Extension
 ========================
 
