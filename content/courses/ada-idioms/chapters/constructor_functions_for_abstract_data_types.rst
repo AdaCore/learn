@@ -1,3 +1,5 @@
+.. _Ada_Idioms_Constructor_Functions_For_Abstract_Data_Types:
+
 Constructor Functions For Abstract Data Types
 =============================================
 
