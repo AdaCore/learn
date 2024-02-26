@@ -510,7 +510,7 @@ value. The compiler will not compile the code containing the declaration
 otherwise. The only constructor function provided is
 :ada:`Configured_Controller` so it is guaranteed to be called. (A later child
 package could add another
-:ref:`constructor function <Ada_Idioms_Constructor_Functions_For_Type_Extensions>`.
+:ref:`constructor function <Ada_Idioms_Constructor_Functions_For_Abstract_Data_Types>`.
 For that matter, we probably should have declared this one in a child package.
 In any case one of them is guaranteed to be called.)
 
