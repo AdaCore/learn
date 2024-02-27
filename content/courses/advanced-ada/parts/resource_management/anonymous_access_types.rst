@@ -1284,9 +1284,9 @@ Mutually dependent types using anonymous access types
 -----------------------------------------------------
 
 In the section on
-:ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`, we've seen
-a code example that was using named access types. We could now rewrite it using
-anonymous access types:
+:ref:`mutually dependent types using access types <Adv_Ada_Mutually_Dependent_Types_Access_Types>`,
+we've seen a code example that was using named access types. We could now
+rewrite it using anonymous access types:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Mutually_Dependent_Anonymous_Access_Types.Example
 
