@@ -558,3 +558,20 @@ extension, we also need to override the :ada:`Create` function.)
 Since we're now introducing elements from object-oriented programming, we could
 consider using interfaces instead of null records. We'll discuss this topic
 :ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
+
+
+..
+    NEW SECTION:
+
+   .. _Adv_Ada_Per_Object_Expressions:
+
+   Per-Object Expressions
+   ----------------------
+
+   .. todo::
+
+      Complete section!
+
+   .. admonition:: Relevant topics
+
+      - :arm22:`3.8 Record Types <3-8>`
