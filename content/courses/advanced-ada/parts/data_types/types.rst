@@ -1480,8 +1480,9 @@ declaration of the :ada:`Integer_List` type, we need to start with an
 incomplete declaration of the :ada:`Integer_List` type and then complete it
 after the declaration of :ada:`Next`.
 
-Incomplete types are useful to declare mutually dependent types, as we'll
-see in the next section. Also, we can also have formal incomplete types, as
+Incomplete types are useful to declare
+:ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`, as we'll
+see later on. Also, we can also have formal incomplete types, as
 we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
 
 .. admonition:: In the Ada Reference Manual
