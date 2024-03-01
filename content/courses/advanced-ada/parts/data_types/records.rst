@@ -8,7 +8,8 @@ Records
 Mutually dependent types
 ------------------------
 
-In this section, we discuss how to use incomplete types to declare mutually
+In this section, we discuss how to use
+:ref:`incomplete types <Adv_Ada_Incomplete_Types>` to declare mutually
 dependent types. Let's start with this example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
