@@ -92,7 +92,7 @@ declare objects. Likewise, concrete subprograms are fully implemented, callable
 units. In the following discussion, *abstract* has this OOP sense unless stated
 otherwise.
 
-We that definition in place, we can explain how Ada prevents constructor inheritance:
+With that definition in place, we can explain how Ada prevents constructor inheritance:
 whenever a tagged type is extended, all inherited constructor functions automatically
 become abstract functions for the extended type. Assuming the extended child
 type is not abstract, the type extension will be illegal because only abstract
