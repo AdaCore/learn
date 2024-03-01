@@ -6,6 +6,7 @@ Data types
 
     types
     types_representation
+    records
     aggregates
     arrays
     strings
