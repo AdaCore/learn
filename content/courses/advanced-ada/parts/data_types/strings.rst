@@ -1360,8 +1360,8 @@ write useful information to the buffer:
     package Custom_Numerics is
 
        type Float_Integer is record
-         F : Float;
-         I : Integer;
+         F : Float   := 0.0;
+         I : Integer := 0;
        end record
          with Dynamic_Predicate =>
                 Integer (Float_Integer.F) =
@@ -1580,7 +1580,7 @@ untagged types, as we can see in the following example:
        use Ada.Strings.Text_Buffers;
 
        type T is tagged record
-          I : Integer;
+          I : Integer := 0;
        end record
          with Put_Image => Put_Image_T;
 
@@ -1595,7 +1595,7 @@ untagged types, as we can see in the following example:
        type T_Child_2 is new T with null record;
 
        type T_Child_3 is new T with record
-          I3 : Integer;
+          I3 : Integer := 0;
        end record
          with Put_Image => Put_Image_T_Child_3;
 
