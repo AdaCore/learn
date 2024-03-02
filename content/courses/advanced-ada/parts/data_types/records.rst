@@ -12,7 +12,7 @@ In this section, we discuss how to use
 :ref:`incomplete types <Adv_Ada_Incomplete_Types>` to declare mutually
 dependent types. Let's start with this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Mutually_Dependent_Types.Mutually_Dependent
     :class: ada-expect-compile-error
 
     package Mutually_Dependent is
@@ -47,7 +47,7 @@ For example, we could declare an incomplete type :ada:`T2` and then declare
 the component :ada:`B` of the :ada:`T1` record as an access to :ada:`T2`.
 This is the corrected version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Mutually_Dependent_Types.Mutually_Dependent
 
     package Mutually_Dependent is
 
@@ -68,7 +68,7 @@ We could strive for consistency and declare two incomplete types and two
 accesses, but this isn't strictly necessary in this case. Here's the adapted
 code:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Mutually_Dependent_Types.Mutually_Dependent
 
     package Mutually_Dependent is
 
@@ -106,7 +106,7 @@ cannot store any information. When declaring a null record, we simply
 write :ada:`null` instead of declaring actual components, as we usually do for
 records. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Null_Record
 
     package Null_Recs is
 
@@ -119,7 +119,7 @@ records. For example:
 Note that the syntax can be simplified to :ada:`is null record`, which is much
 more common than the previous form:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Null_Record
 
     package Null_Recs is
 
@@ -130,7 +130,7 @@ more common than the previous form:
 Although a null record doesn't have components, we can still specify
 subprograms for it. For example, we could specify an addition operation for it:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Null_Record
 
     package Null_Recs is
 
@@ -178,7 +178,7 @@ the implementation details of the API in the first stage.
 
 Consider this example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Device
 
     package Devices is
 
@@ -261,7 +261,7 @@ it (as there's nothing to be implemented). We could, however, move those user
 messages from the :ada:`Show_Devices` procedure to a dummy implementation of
 the :ada:`Devices` package. This is the adapted code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Device
 
     package Devices is
 
@@ -357,7 +357,7 @@ complex prototypes with them. We could, for instance, design an application
 that makes use of many null records, or even have types that depend on or
 derive from null records. Let's see a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Derived_Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Derived_Device
 
     package Many_Devices is
 
@@ -407,7 +407,7 @@ we can start implementing some of the functionality needed for the
 :ada:`Device` type. For example, we can store information about the current
 activation state in the record:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Device
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Device
 
     package Devices is
 
@@ -503,7 +503,7 @@ Tagged null records
 
 A null record may be tagged, as we can see in this example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Tagged_Null_Record
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Tagged_Null_Record
 
     package Null_Recs is
 
@@ -522,7 +522,7 @@ As we see in this example, a type can be :ada:`tagged`, or even
 As expected, in addition to deriving from tagged types, we can also extend
 them. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Null_Records.Extended_Device
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Null_Records.Extended_Device
 
     package Devices is
 
