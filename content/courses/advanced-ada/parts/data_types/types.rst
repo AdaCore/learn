@@ -1480,101 +1480,10 @@ declaration of the :ada:`Integer_List` type, we need to start with an
 incomplete declaration of the :ada:`Integer_List` type and then complete it
 after the declaration of :ada:`Next`.
 
-Incomplete types are useful to declare mutually dependent types, as we'll
-see in the next section. Also, we can also have formal incomplete types, as
+Incomplete types are useful to declare
+:ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`, as we'll
+see later on. Also, we can also have formal incomplete types, as
 we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
-
-.. admonition:: In the Ada Reference Manual
-
-    - :arm22:`3.10.1 Incomplete Type Declarations <3-10-1>`
-
-
-.. _Adv_Ada_Mutually_Dependent_Types:
-
-Mutually dependent types
-------------------------
-
-In this section, we discuss how to use incomplete types to declare mutually
-dependent types. Let's start with this example:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
-    :class: ada-expect-compile-error
-
-    package Mutually_Dependent is
-
-       type T1 is record
-          B : T2;
-       end record;
-
-       type T2 is record
-          A : T1;
-       end record;
-
-    end Mutually_Dependent;
-
-When you try to compile this example, you get a compilation error. The first
-problem with this code is that, in the declaration of the :ada:`T1` record, the
-compiler doesn't know anything about :ada:`T2`. We could solve this by
-declaring an incomplete type (:ada:`type T2;`) before the declaration of
-:ada:`T1`. This, however, doesn't solve all the problems in the code: the
-compiler still doesn't know the size of :ada:`T2`, so we cannot create a
-component of this type. We could, instead, declare an access type and use it
-here. By doing this, even though the compiler doesn't know the size of
-:ada:`T2`, it knows the size of an access type designating :ada:`T2`, so the
-record component can be of such an access type.
-
-To summarize, in order to solve the compilation error above, we need to:
-
-- use at least one incomplete type;
-- declare at least one component as an access to an object.
-
-For example, we could declare an incomplete type :ada:`T2` and then declare
-the component :ada:`B` of the :ada:`T1` record as an access to :ada:`T2`.
-This is the corrected version:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
-
-    package Mutually_Dependent is
-
-       type T2;
-       type T2_Access is access T2;
-
-       type T1 is record
-          B : T2_Access;
-       end record;
-
-       type T2 is record
-          A : T1;
-       end record;
-
-    end Mutually_Dependent;
-
-We could strive for consistency and declare two incomplete types and two
-accesses, but this isn't strictly necessary in this case. Here's the adapted
-code:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Mutually_Dependent_Types.Mutually_Dependent
-
-    package Mutually_Dependent is
-
-       type T1;
-       type T1_Access is access T1;
-
-       type T2;
-       type T2_Access is access T2;
-
-       type T1 is record
-          B : T2_Access;
-       end record;
-
-       type T2 is record
-          A : T1_Access;
-       end record;
-
-    end Mutually_Dependent;
-
-Later on, we'll see that these code examples can be written using
-:ref:`anonymous access types <Adv_Ada_Mutually_Dependent_Types_Using_Anonymous_Access_Types>`.
 
 .. admonition:: In the Ada Reference Manual
 
