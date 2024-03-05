@@ -385,15 +385,15 @@
 
 .. only:: builder_html
 
-    Professional Ada Training
-    ---------------------------
+    Ada Training
+    ------------
 
     **Get professional Ada training** from
     `Adacore <https://www.adacore.com/training>`_.
 
-    .. container:: pro-training-logo
+    .. container:: ada-training-logo
 
-        .. image:: images/pro_ada_training_logo.png
+        .. image:: images/ada_training_logo.png
             :target: https://www.adacore.com/training
             :alt: Ada training
             :width: 100pc
