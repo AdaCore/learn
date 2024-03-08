@@ -631,7 +631,8 @@ Let's look at another example using :ref:`anonymous access types <Adv_Ada_Anonym
 
        type T is private;
 
-       type T_Processor (Selected_T : access T) is private;
+       type T_Processor (Selected_T : access T) is
+         private;
 
     private
 
@@ -640,7 +641,8 @@ Let's look at another example using :ref:`anonymous access types <Adv_Ada_Anonym
        type T_Container (Selected_T : access T) is
          null record;
 
-       type T_Processor (Selected_T : access T) is record
+       type T_Processor (Selected_T : access T) is
+       record
           E : T_Container (Selected_T);
           --               ^^^^^^^^^^
           --    Per-object expression
