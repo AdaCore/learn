@@ -560,18 +560,131 @@ consider using interfaces instead of null records. We'll discuss this topic
 :ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
 
 
-..
-    NEW SECTION:
 
-   .. _Adv_Ada_Per_Object_Expressions:
+.. _Adv_Ada_Per_Object_Expressions:
 
-   Per-Object Expressions
-   ----------------------
+Per-Object Expressions
+----------------------
 
-   .. todo::
+In record type declarations, we might want to define a component that makes use
+of a name that refers to a discriminant of the record type, or to the record
+type itself. The expression where we use that name is called a per-object
+expression.
 
-      Complete section!
+The term "per-object" comes from the fact that, in the component definition,
+we're referring to a piece of information that will be known just when creating
+an object of that type. For example, if the per-object expression refers to a
+discriminant of a type :ada:`T`, the actual value of that discriminant will
+only be specified when we declare an object of type :ada:`T`. Therefore, the
+component definition is specific for that individual object |mdash| but not
+necessarily for other objects of the same type, as we might use different
+values for the discriminant.
 
-   .. admonition:: Relevant topics
+The constraint that contains a per-object expression is called a per-object
+constraint. The actual constraint of that component isn't completely known when
+we declare the record type, but only later on when an object of that type is
+created.
 
-      - :arm22:`3.8 Record Types <3-8>`
+In addition to referring to discriminants, per-object expressions can also
+refer to the record type itself, as we'll see later.
+
+Let's start with a simple record declaration:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression
+
+    package Rec_Per_Object_Expressions is
+
+       type Stack (S : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Stack (S : Positive) is record
+          Arr : Integer_Array (1 .. S);
+          --                   ^^^^^^
+          --
+          --                        S
+          --                        ^
+          --    Per-object expression
+          --
+          --                   1 .. S
+          --                   ^^^^^^
+          --    Per-object constraint
+
+          Top : Natural := 0;
+       end record;
+
+    end Rec_Per_Object_Expressions;
+
+In this example, we see the :ada:`Stack` record type with a discriminant
+:ada:`S`. In the declaration of the :ada:`Arr` component of the that type,
+:ada:`S` is a per-object expression, as it refers to the :ada:`S` discriminant.
+Also, :ada:`1 .. S` is a per-object constraint.
+
+Let's look at another example using :ref:`anonymous access types <Adv_Ada_Anonymous_Access_Types>`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Access_Discriminant
+
+    package Rec_Per_Object_Expressions is
+
+       type T is private;
+
+       type T_Processor (Selected_T : access T) is
+         private;
+
+    private
+
+       type T is null record;
+
+       type T_Container (Selected_T : access T) is
+         null record;
+
+       type T_Processor (Selected_T : access T) is
+       record
+          E : T_Container (Selected_T);
+          --               ^^^^^^^^^^
+          --    Per-object expression
+          --    Per-object constraint
+       end record;
+
+    end Rec_Per_Object_Expressions;
+
+Let's focus on the :ada:`T_Processor` type from this example. The
+:ada:`Selected_T` discriminant is being used in the definition of the :ada:`E`
+component. In this case, :ada:`Selected_T` is at the same time a per-object
+expression and a per-object constraint.
+
+Finally, per-object expressions can also refer to the record type we're
+declaring. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Access_Discriminant
+
+    package Rec_Per_Object_Expressions is
+
+       type T is limited private;
+
+    private
+
+       type T_Processor (Selected_T : access T) is
+         null record;
+
+       type T is limited record
+          E : T_Processor (T'Access);
+          --               ^^^^^^^^
+          --  Per-object expression
+          --  Per-object constraint
+       end record;
+
+    end Rec_Per_Object_Expressions;
+
+In this example, when we write :ada:`T'Access` within the declaration of the
+:ada:`T` record type, the actual value for the :ada:`Access` attribute will be
+known when an object of :ada:`T` type is created. In that sense,
+:ada:`T'Access` is a per-object expression |mdash| and a per-object constraint
+as well.
+
+.. admonition:: Relevant topics
+
+   - :arm22:`3.8 Record Types <3-8>`
