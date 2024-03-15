@@ -59,20 +59,21 @@ We could visualize the lifetime as follows:
 
 .. uml::
    :align: center
-   :width: 230pt
+   :width: 300pt
 
     @startuml
-    start
-    group block's declarative part
-        :Create object A;
-    end group
-    group block's handled sequence of statements;
-        :Use object A;
-    end group
-    group block's end part
-        :Destroy object A;
-    end group
-    stop
+        actor Processing
+        participant "object A" as A
+
+        group block's declarative part
+            Processing -> A ** : << create >>
+        end
+        group block's handled sequence of statements;
+            Processing -> A : << use >>
+        end
+        group block's end part
+            Processing -> A !! : << finalize >>
+        end
     @enduml
 
 In other words, object :ada:`A` is created in the declarative part of :ada:`P`
@@ -117,16 +118,22 @@ In this case, we can visualize the lifetime of those objects as follows:
 
 .. uml::
    :align: center
-   :width: 100pt
+   :width: 300pt
 
     @startuml
-    start
-    :Create object A;
-    :Initialize object A
-     with default value;
-    :Use object A;
-    :Finalize object A;
-    stop
+        actor Processing
+        participant "object A" as A
+
+        group block's declarative part
+            Processing -> A ** : << create >>
+            Processing -> A : << initialize with \ndefault value >>
+        end
+        group block's handled sequence of statements;
+            Processing -> A : << use >>
+        end
+        group block's end part
+            Processing -> A !! : << finalize >>
+        end
     @enduml
 
 Even though these default initialization methods provide some control over the
@@ -156,38 +163,40 @@ We can visualize the lifetime of controlled objects as follows:
 
 .. uml::
    :align: center
-   :width: 100pt
+   :width: 200pt
 
     @startuml
-    start
-    :Create object A;
-    :Call Initialize (A);
-    :Use object A;
-    :Call Finalize (A);
-    :Finalize object A;
-    stop
+        actor Processing
+        participant "object A" as A
+
+        Processing -> A ** : << create >>
+        Processing -> A : Initialize (A)
+        Processing -> A : << use >>
+        Processing -> A : Finalize (A)
+        Processing -> A !! : << finalize >>
     @enduml
 
 In the context of a block statement, the lifetime becomes:
 
 .. uml::
    :align: center
-   :width: 230pt
+   :width: 300pt
 
     @startuml
-    start
-    group block's declarative part
-        :Create object A;
-        :Call Initialize (A);
-    end group
-    group block's handled sequence of statements;
-        :Use object A;
-    end group
-    group block's end part
-        :Call Finalize (A);
-        :Finalize object A;
-    end group
-    stop
+        actor Processing
+        participant "object A" as A
+
+        group block's declarative part
+            Processing -> A ** : << create >>
+            Processing -> A : Initialize (A)
+        end
+        group block's handled sequence of statements;
+            Processing -> A : << use >>
+        end
+        group block's end part
+            Processing -> A : Finalize (A)
+            Processing -> A !! : << finalize >>
+        end
     @enduml
 
 Let's look at a simple example:
@@ -600,17 +609,18 @@ We can visualize the lifetime as follows:
 
 .. uml::
    :align: center
-   :width: 200pt
+   :width: 300pt
 
     @startuml
-    start
-    :Create object A;
-    :Initialize subcomponents of object A
-     (with default values or calls to Initialize);
-    :Call Initialize (A);
-    :Use object A;
-    :Finalize object A;
-    stop
+        actor Processing
+        participant "object A" as A
+
+        Processing -> A ** : << create >>
+        Processing -> A : << initialize subcomponents of object A\n(with default values or calls to Initialize) >>
+        Processing -> A : Initialize (A)
+        Processing -> A : << use >>
+        Processing -> A : Finalize (A)
+        Processing -> A !! : << finalize >>
     @enduml
 
 In order to see this effect, let's start by implementing two controlled types:
