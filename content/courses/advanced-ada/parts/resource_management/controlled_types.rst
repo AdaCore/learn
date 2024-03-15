@@ -1084,7 +1084,7 @@ type. This is the updated code:
     end Show_Controlled_Types;
 
 When we run this application, we see that the :ada:`W` component is activated
-only after type :ada:`T` and all its subcomponents have been initialized.
+only after all other subcomponents of type :ada:`T` have been initialized.
 
 
 .. _Adv_Ada_Controlled_Types_Assignment:
