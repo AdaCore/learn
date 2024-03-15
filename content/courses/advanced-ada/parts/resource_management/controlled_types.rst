@@ -94,7 +94,7 @@ For example, objects of access types are initialized by default to :ada:`null`.
 Likewise, we can declare
 :ref:`types with default initial value <Adv_Ada_Default_Initial_Values>`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Controlled_Types.Overview.Default_Initialization
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Default_Initialization
 
     pragma Ada_2022;
 
@@ -192,7 +192,7 @@ In the context of a block statement, the lifetime becomes:
 
 Let's look at a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Controlled_Types.Overview.Simple_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Simple_Example
 
     with Ada.Finalization;
 
@@ -283,7 +283,7 @@ do not offer an :ada:`Adjust` procedure.)
 
 Let's extend the previous code example and override the :ada:`Adjust` procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Controlled_Types.Overview.Simple_Example_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Simple_Example_2
 
     with Ada.Finalization;
 
@@ -396,7 +396,7 @@ ID to each controlled object.
 
 Let's start with the complete code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Controlled_Types.Overview.Simple_Example_With_Id
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Simple_Example_With_Id
 
     with Ada.Finalization;
 
