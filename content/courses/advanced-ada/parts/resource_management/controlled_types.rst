@@ -569,16 +569,607 @@ Finally, the new version of object :ada:`A` (the one whose ID is 3) and object
 :ada:`Finalize (B)` before the :ada:`Show_Controlled_Types` procedure ends.
 
 
+.. _Adv_Ada_Controlled_Types_Initialization:
+
 Initialization
 --------------
+
+In this section, we cover some details about the initialization of controlled
+types. Most of those details are related to the initialization order. In
+principle, as stated in the Ada Reference Manual, ":ada:`Initialize` and other
+initialization operations are done in an arbitrary order," except in the
+situations that we describe later on.
 
 .. admonition:: Relevant topics
 
     - :arm22:`Assignment and Finalization <7-6>`
 
-.. todo::
+Subcomponents
+~~~~~~~~~~~~~
 
-    Complete section!
+We've seen before that default initialization is a way of controlling the
+initialization of arbitrary types. In the case of controlled types, the default
+initialization of its subcomponents always takes places before the call to
+:ada:`Initialize`.
+
+Similarly, a controlled type might have subcomponents of controlled types.
+These subcomponents are initialized by a call to the :ada:`Initialize`
+procedure of each of those controlled types.
+
+We can visualize the lifetime as follows:
+
+.. uml::
+   :align: center
+   :width: 200pt
+
+    @startuml
+    start
+    :Create object A;
+    :Initialize subcomponents of object A
+     (with default values or calls to Initialize);
+    :Call Initialize (A);
+    :Use object A;
+    :Finalize object A;
+    stop
+    @enduml
+
+In order to see this effect, let's start by implementing two controlled types:
+:ada:`Sub_1` and :ada:`Sub_2`:
+
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    package Subs is
+
+       type Sub_1 is tagged private;
+
+       type Sub_2 is tagged private;
+
+    private
+
+       type Sub_1 is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize (E : in out Sub_1);
+
+       overriding
+       procedure Finalize (E : in out Sub_1);
+
+       type Sub_2 is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize (E : in out Sub_2);
+
+       overriding
+       procedure Finalize (E : in out Sub_2);
+
+    end Subs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Subs is
+
+       procedure Initialize (E : in out Sub_1) is
+       begin
+          Put_Line ("Initialize: Sub_1...");
+       end Initialize;
+
+       procedure Finalize (E : in out Sub_1) is
+       begin
+          Put_Line ("Finalize: Sub_1...");
+       end Finalize;
+
+       procedure Initialize (E : in out Sub_2) is
+       begin
+          Put_Line ("Initialize: Sub_2...");
+       end Initialize;
+
+       procedure Finalize (E : in out Sub_2) is
+       begin
+          Put_Line ("Finalize: Sub_2...");
+       end Finalize;
+
+    end Subs;
+
+Now, let's use those controlled types as components of a type :ada:`T`. In
+addition, let's declare an integer component :ada:`I` with default
+initialization. This is how the complete code looks like:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    with Subs; use  Subs;
+
+    package Simple_Controlled_Types is
+
+       type T is tagged private;
+
+       procedure Dummy (E : T);
+
+    private
+
+       function Default_Init return Integer;
+
+       type T is new
+         Ada.Finalization.Controlled with
+       record
+          S1 : Sub_1;
+          S2 : Sub_2;
+          I  : Integer := Default_Init;
+       end record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       function Default_Init return Integer is
+       begin
+          Put_Line ("Default_Init: Integer...");
+          return 42;
+       end Default_Init;
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy: T...)");
+       end Dummy;
+
+       procedure Initialize (E : in out T) is
+       begin
+          Put_Line ("Initialize: T...");
+       end Initialize;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize: T...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    procedure Show_Controlled_Types is
+       A : T;
+    begin
+       Dummy (A);
+    end Show_Controlled_Types;
+
+When we run this application, we see that the :ada:`Sub_1` and :ada:`Sub_2`
+components are initialized by calls to their respective :ada:`Initialize`
+procedures, and the :ada:`I` component is initialized with its default value
+(via a call to the :ada:`Default_Init` function). Finally, after all
+subcomponents of type :ada:`T` have been initialized, the :ada:`Initialize`
+procedure is called for the type :ada:`T` itself.
+
+This diagram shows the initialization sequence:
+
+.. uml::
+    :align: center
+    :width: 400pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.S1" as Sub_1
+        participant "T.S2" as Sub_2
+        participant "T.I" as I
+
+        Processing -> type_t : << initialize subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Initialize (Sub_1)
+            type_t -> Sub_2 : Initialize (Sub_2)
+            type_t -> I : Default_Init (Integer)
+        deactivate type_t
+        Processing -> type_t : Initialize (T)
+    @enduml
+
+
+Components with access discriminants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Record types with access discriminants are a special case. In fact, according
+to the Ada Reference Manual, "if an object has a component with an access
+discriminant constrained by a
+:ref:`per-object expression <Adv_Ada_Per_Object_Expressions>`,
+:ada:`Initialize` is applied to this component after any components that do not
+have such discriminants. For an object with several components with such a
+discriminant, :ada:`Initialize` is applied to them in order of their component
+declarations."
+
+Let's see a code example. First, we implement another package with controlled
+types:
+
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Access_Discriminant_Code_Example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    package Selections is
+
+       type Selection is private;
+
+       type Selection_1 (S : access Selection) is
+         tagged private;
+
+       type Selection_2 (S : access Selection) is
+         tagged private;
+
+    private
+
+       type Selection is null record;
+
+       type Selection_1 (S : access Selection) is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize
+         (E : in out Selection_1);
+
+       overriding
+       procedure Finalize
+          (E : in out Selection_1);
+
+       type Selection_2 (S : access Selection) is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize
+         (E : in out Selection_2);
+
+       overriding
+       procedure Finalize
+         (E : in out Selection_2);
+
+    end Selections;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Selections is
+
+       procedure Initialize
+         (E : in out Selection_1) is
+       begin
+          Put_Line ("Initialize: Selection_1...");
+       end Initialize;
+
+       procedure Finalize
+         (E : in out Selection_1) is
+       begin
+          Put_Line ("Finalize: Selection_1...");
+       end Finalize;
+
+       procedure Initialize
+         (E : in out Selection_2) is
+       begin
+          Put_Line ("Initialize: Selection_2...");
+       end Initialize;
+
+       procedure Finalize
+         (E : in out Selection_2) is
+       begin
+          Put_Line ("Finalize: Selection_2...");
+       end Finalize;
+
+    end Selections;
+
+In this example, we see the declaration of the :ada:`Selection_1` and
+:ada:`Selection_2` types, which are controlled types with an access
+discriminant of :ada:`Selection` type. Now, let's use these types in the
+declaration of the :ada:`T` type from the
+:ref:`previous example <Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example>`
+and add two new components (:ada:`Sel_1` and :ada:`Sel_2`):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    with Subs;       use  Subs;
+    with Selections; use  Selections;
+
+    package Simple_Controlled_Types is
+
+       type T (S1 : access Selection;
+               S2 : access Selection) is
+         tagged private;
+
+       procedure Dummy (E : T);
+
+    private
+
+       function Default_Init return Integer;
+
+       type T (S1 : access Selection;
+               S2 : access Selection) is new
+         Ada.Finalization.Controlled with
+       record
+          Sel_1 : Selection_1 (S1);
+          Sel_2 : Selection_2 (S2);
+          S_1   : Sub_1;
+          I     : Integer := Default_Init;
+       end record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       function Default_Init return Integer is
+       begin
+          Put_Line ("Default_Init: Integer...");
+          return 42;
+       end Default_Init;
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy: T...)");
+       end Dummy;
+
+       procedure Initialize (E : in out T) is
+       begin
+          Put_Line ("Initialize: T...");
+       end Initialize;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize: T...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    with Selections;
+    use  Selections;
+
+    procedure Show_Controlled_Types is
+       S1, S2 : aliased Selection;
+       A : T (S1'Access, S2'Access);
+    begin
+       Dummy (A);
+    end Show_Controlled_Types;
+
+When running this example, we see that all other subcomponents |mdash| to be
+more precise, those subcomponents that require initialization |mdash| are
+initialized before the :ada:`Sub_1` and :ada:`Sub_2` components are initialized
+via calls to their corresponding :ada:`Initialize` procedure. Note that,
+although :ada:`Sub_1` and :ada:`Sub_2` are the last components to be
+initialized, they are still initialized before the call to the
+:ada:`Initialize` procedure of type :ada:`T`.
+
+This diagram shows the initialization sequence:
+
+.. uml::
+    :align: center
+    :width: 500pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.Sel_1" as Selection_1
+        participant "T.Sel_2" as Selection_2
+        participant "T.S_1" as Sub_1
+        participant "T.I" as I
+
+        Processing -> type_t : << initialize standard subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Initialize (Sub_1)
+            type_t -> I : Default_Init (Integer)
+        deactivate type_t
+
+        Processing -> type_t : << initialize subcomponents \nwith access discriminant / per-object expression >>
+        activate type_t
+            type_t -> Selection_1 : Initialize (Selection_1)
+            type_t -> Selection_2 : Initialize (Selection_2)
+        deactivate type_t
+
+        Processing -> type_t : Initialize (T)
+    @enduml
+
+
+Task activation
+~~~~~~~~~~~~~~~
+
+Components of task types also require special treatment. According to the Ada
+Reference Manual, "for an allocator, any task activations follow all calls on
+:ada:`Initialize`."
+
+As always, let's analyze an example that illustrates this. First, we implement
+another package called :ada:`Workers` with a simple task type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
+
+    package Workers is
+
+       task type Worker is
+          entry Start;
+          entry Stop;
+       end Worker;
+
+    end Workers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Workers is
+
+       task body Worker is
+
+          function Init return Integer is
+          begin
+             Put_Line ("Activating Worker task...");
+             return 0;
+          end Init;
+
+          I : Integer := Init;
+       begin
+
+          accept Start do
+            Put_Line ("Worker.Start accepted...");
+             I := I + 1;
+          end Start;
+
+          accept Stop do
+            Put_Line ("Worker.Stop accepted...");
+             I := I - 1;
+          end Stop;
+       end Worker;
+
+    end Workers;
+
+Let's extend the declaration of the :ada:`T` type from the
+:ref:`previous example <Adv_Ada_Controlled_Types_Initialization_Subcomponents_Access_Discriminant_Code_Example>`
+and declare a new component of :ada:`Worker` type. Note that we have to change
+:ada:`T` to a limited controlled type because of this new component of task
+type. This is the updated code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    with Subs;       use  Subs;
+    with Selections; use  Selections;
+    with Workers;    use  Workers;
+
+    package Simple_Controlled_Types is
+
+       type T (S : access Selection) is
+         tagged limited private;
+
+       procedure Start_Work (E : T);
+       procedure Stop_Work (E : T);
+
+    private
+
+       function Default_Init return Integer;
+
+       type T (S : access Selection) is new
+         Ada.Finalization.Limited_Controlled with
+       record
+          W     : Worker;
+          Sel_1 : Selection_1 (S);
+          S1    : Sub_1;
+          I     : Integer := Default_Init;
+       end record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       function Default_Init return Integer is
+       begin
+          Put_Line ("Default_Init: Integer...");
+          return 42;
+       end Default_Init;
+
+       procedure Start_Work (E : T) is
+       begin
+          --  Starting Worker task:
+          E.W.Start;
+
+       end Start_Work;
+
+       procedure Stop_Work (E : T) is
+       begin
+          --  Stopping Worker task:
+          E.W.Stop;
+       end Stop_Work;
+
+       procedure Initialize (E : in out T) is
+       begin
+          Put_Line ("Initialize: T...");
+       end Initialize;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize: T...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    with Selections; use  Selections;
+
+    procedure Show_Controlled_Types is
+       type T_Access is access T;
+
+       S : aliased Selection;
+       A : constant T_Access := new T (S'Access);
+    begin
+       Start_Work (A.all);
+       Stop_Work (A.all);
+    end Show_Controlled_Types;
+
+When we run this application, we see that the :ada:`W` component is activated
+only after all other subcomponents of type :ada:`T` have been initialized.
+
+This diagram shows the initialization sequence:
+
+.. uml::
+    :align: center
+    :width: 500pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.W" as Worker
+        participant "T.Sel_1" as Selection_1
+        participant "T.S_1" as Sub_1
+        participant "T.I" as I
+
+        Processing -> type_t : << initialize standard subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Initialize (Sub_1)
+            type_t -> I : Default_Init (Integer)
+        deactivate type_t
+
+        Processing -> type_t : << initialize subcomponents \nwith access discriminant / per-object expression >>
+        activate type_t
+            type_t -> Selection_1 : Initialize (Selection_1)
+        deactivate type_t
+
+        Processing -> type_t : << activate task components >>
+        activate type_t
+            type_t -> Worker : << activate Worker >>
+        deactivate type_t
+
+        Processing -> type_t : Initialize (T)
+    @enduml
 
 
 .. _Adv_Ada_Controlled_Types_Assignment:
