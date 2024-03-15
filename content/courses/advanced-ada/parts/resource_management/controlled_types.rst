@@ -703,7 +703,7 @@ initialization. This is how the complete code looks like:
        record
           S1 : Sub_1;
           S2 : Sub_2;
-          I : Integer := Default_Init;
+          I  : Integer := Default_Init;
        end record;
 
        overriding
