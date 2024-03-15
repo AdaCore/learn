@@ -757,6 +757,28 @@ procedures, and the :ada:`I` component is initialized with its default value
 subcomponents of type :ada:`T` have been initialized, the :ada:`Initialize`
 procedure is called for the type :ada:`T` itself.
 
+This diagram shows the initialization sequence:
+
+.. uml::
+    :align: center
+    :width: 400pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.S1" as Sub_1
+        participant "T.S2" as Sub_2
+        participant "T.I" as I
+
+        Processing -> type_t : << initialize subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Initialize (Sub_1)
+            type_t -> Sub_2 : Initialize (Sub_2)
+            type_t -> I : Default_Init (Integer)
+        deactivate type_t
+        Processing -> type_t : Initialize (T)
+    @enduml
+
 
 Components with access discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -941,6 +963,36 @@ although :ada:`Sub_1` and :ada:`Sub_2` are the last components to be
 initialized, they are still initialized before the call to the
 :ada:`Initialize` procedure of type :ada:`T`.
 
+This diagram shows the initialization sequence:
+
+.. uml::
+    :align: center
+    :width: 500pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.Sel_1" as Selection_1
+        participant "T.Sel_2" as Selection_2
+        participant "T.S_1" as Sub_1
+        participant "T.I" as I
+
+        Processing -> type_t : << initialize standard subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Initialize (Sub_1)
+            type_t -> I : Default_Init (Integer)
+        deactivate type_t
+
+        Processing -> type_t : << initialize subcomponents \nwith access discriminant / per-object expression >>
+        activate type_t
+            type_t -> Selection_1 : Initialize (Selection_1)
+            type_t -> Selection_2 : Initialize (Selection_2)
+        deactivate type_t
+
+        Processing -> type_t : Initialize (T)
+    @enduml
+
+
 Task activation
 ~~~~~~~~~~~~~~~
 
@@ -1085,6 +1137,39 @@ type. This is the updated code:
 
 When we run this application, we see that the :ada:`W` component is activated
 only after all other subcomponents of type :ada:`T` have been initialized.
+
+This diagram shows the initialization sequence:
+
+.. uml::
+    :align: center
+    :width: 500pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.W" as Worker
+        participant "T.Sel_1" as Selection_1
+        participant "T.S_1" as Sub_1
+        participant "T.I" as I
+
+        Processing -> type_t : << initialize standard subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Initialize (Sub_1)
+            type_t -> I : Default_Init (Integer)
+        deactivate type_t
+
+        Processing -> type_t : << initialize subcomponents \nwith access discriminant / per-object expression >>
+        activate type_t
+            type_t -> Selection_1 : Initialize (Selection_1)
+        deactivate type_t
+
+        Processing -> type_t : << activate task components >>
+        activate type_t
+            type_t -> Worker : << activate Worker >>
+        deactivate type_t
+
+        Processing -> type_t : Initialize (T)
+    @enduml
 
 
 .. _Adv_Ada_Controlled_Types_Assignment:
