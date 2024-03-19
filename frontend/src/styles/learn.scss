@@ -503,15 +503,15 @@ div {
 a.ebook-download-button {
     background-color: $color-theme-bg-dark;
     display: block;
-    padding: 10px 15px;
+    padding-top: 2px;
+    padding-left: 1em;
+    padding-right: 1em;
     text-decoration: none;
     color: #FFF;
     font-weight: 600;
     float: none;
     font-family: sans-serif;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin-top: 2px;
 
     &:before {
         font-family: $icon-font;
@@ -522,6 +522,7 @@ a.ebook-download-button {
     }
 }
 
+
 div.ebook-download {
     display: block;
     float: right;
@@ -529,27 +530,36 @@ div.ebook-download {
     overflow: hidden;
 }
 
-div.frontpage-ebook-download {
-    float: right;
-}
-
 div.frontpage-ebook-and-buttons-block {
-    margin-right: 20px;
-    display: block;
-    float: left;
-    padding-bottom: 20px;
-    flex-shrink: 0;
+    width: 19%;
+    height:auto;
+    margin:0.5%;
 }
 
-div.frontpage-ebooks-row {
-    display: block;
+// Larger size for the full course cover that is alone above the others
+div.frontpage-ebook-and-buttons-block.full-learning-ada-cover {
+    width: 30%;
+}
+
+// if the screen is too small, use a fixed with instead of a percentage of the
+// available space.
+@media only screen and (max-width: 600px) {
+    div.frontpage-ebook-and-buttons-block {
+        width: 150px;
+    }
+
+    // Larger size for the full course cover
+    div.frontpage-ebook-and-buttons-block.full-learning-ada-cover {
+        width: 210px;
+    }
 }
 
 div.frontpage-ebooks {
-    display: block;
-    float: none;
-    border: 5px solid transparent;
-    overflow: hidden;
+    display:inline-flex;
+    flex-wrap:wrap;
+    flex-direction:row;
+    width:100%;
+    margin-bottom:1.4em;
 }
 
 // download buttons
