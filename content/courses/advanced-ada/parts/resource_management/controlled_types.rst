@@ -281,6 +281,8 @@ When we run this application, we see the user messages indicating the calls to
    the :ada:`Show_Controlled_Types` procedure by a null statement (:ada:`null`).
 
 
+.. _Adv_Ada_Controlled_Types_Overview_Adjustment:
+
 Adjustment of controlled objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
