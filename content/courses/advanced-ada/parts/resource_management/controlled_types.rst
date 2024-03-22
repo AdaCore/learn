@@ -68,7 +68,7 @@ We could visualize the lifetime as follows:
         group block's declarative part
             Processing -> A ** : << create >>
         end
-        group block's handled sequence of statements;
+        group block's handled sequence of statements
             Processing -> A : << use >>
         end
         group block's end part
@@ -128,7 +128,7 @@ In this case, we can visualize the lifetime of those objects as follows:
             Processing -> A ** : << create >>
             Processing -> A : << initialize with \ndefault value >>
         end
-        group block's handled sequence of statements;
+        group block's handled sequence of statements
             Processing -> A : << use >>
         end
         group block's end part
@@ -190,7 +190,7 @@ In the context of a block statement, the lifetime becomes:
             Processing -> A ** : << create >>
             Processing -> A : Initialize (A)
         end
-        group block's handled sequence of statements;
+        group block's handled sequence of statements
             Processing -> A : << use >>
         end
         group block's end part
@@ -280,6 +280,8 @@ When we run this application, we see the user messages indicating the calls to
    exist. You can see this effect by replacing the call to :ada:`Dummy (A)` in
    the :ada:`Show_Controlled_Types` procedure by a null statement (:ada:`null`).
 
+
+.. _Adv_Ada_Controlled_Types_Overview_Adjustment:
 
 Adjustment of controlled objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -696,7 +698,7 @@ initialization. This is how the complete code looks like:
 
     with Ada.Finalization;
 
-    with Subs; use  Subs;
+    with Subs; use Subs;
 
     package Simple_Controlled_Types is
 
@@ -892,8 +894,8 @@ and add two new components (:ada:`Sel_1` and :ada:`Sel_2`):
 
     with Ada.Finalization;
 
-    with Subs;       use  Subs;
-    with Selections; use  Selections;
+    with Subs;       use Subs;
+    with Selections; use Selections;
 
     package Simple_Controlled_Types is
 
@@ -1062,9 +1064,9 @@ type. This is the updated code:
 
     with Ada.Finalization;
 
-    with Subs;       use  Subs;
-    with Selections; use  Selections;
-    with Workers;    use  Workers;
+    with Subs;       use Subs;
+    with Selections; use Selections;
+    with Workers;    use Workers;
 
     package Simple_Controlled_Types is
 
@@ -1133,7 +1135,7 @@ type. This is the updated code:
     with Simple_Controlled_Types;
     use  Simple_Controlled_Types;
 
-    with Selections; use  Selections;
+    with Selections; use Selections;
 
     procedure Show_Controlled_Types is
        type T_Access is access T;
