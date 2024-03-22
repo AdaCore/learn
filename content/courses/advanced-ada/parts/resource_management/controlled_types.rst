@@ -696,7 +696,7 @@ initialization. This is how the complete code looks like:
 
     with Ada.Finalization;
 
-    with Subs; use  Subs;
+    with Subs; use Subs;
 
     package Simple_Controlled_Types is
 
@@ -892,8 +892,8 @@ and add two new components (:ada:`Sel_1` and :ada:`Sel_2`):
 
     with Ada.Finalization;
 
-    with Subs;       use  Subs;
-    with Selections; use  Selections;
+    with Subs;       use Subs;
+    with Selections; use Selections;
 
     package Simple_Controlled_Types is
 
@@ -1062,9 +1062,9 @@ type. This is the updated code:
 
     with Ada.Finalization;
 
-    with Subs;       use  Subs;
-    with Selections; use  Selections;
-    with Workers;    use  Workers;
+    with Subs;       use Subs;
+    with Selections; use Selections;
+    with Workers;    use Workers;
 
     package Simple_Controlled_Types is
 
@@ -1133,7 +1133,7 @@ type. This is the updated code:
     with Simple_Controlled_Types;
     use  Simple_Controlled_Types;
 
-    with Selections; use  Selections;
+    with Selections; use Selections;
 
     procedure Show_Controlled_Types is
        type T_Access is access T;
