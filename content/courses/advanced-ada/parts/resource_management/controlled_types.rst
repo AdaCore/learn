@@ -68,7 +68,7 @@ We could visualize the lifetime as follows:
         group block's declarative part
             Processing -> A ** : << create >>
         end
-        group block's handled sequence of statements;
+        group block's handled sequence of statements
             Processing -> A : << use >>
         end
         group block's end part
@@ -128,7 +128,7 @@ In this case, we can visualize the lifetime of those objects as follows:
             Processing -> A ** : << create >>
             Processing -> A : << initialize with \ndefault value >>
         end
-        group block's handled sequence of statements;
+        group block's handled sequence of statements
             Processing -> A : << use >>
         end
         group block's end part
@@ -190,7 +190,7 @@ In the context of a block statement, the lifetime becomes:
             Processing -> A ** : << create >>
             Processing -> A : Initialize (A)
         end
-        group block's handled sequence of statements;
+        group block's handled sequence of statements
             Processing -> A : << use >>
         end
         group block's end part
