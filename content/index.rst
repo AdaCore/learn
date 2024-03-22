@@ -120,233 +120,214 @@
 
     .. container:: frontpage-ebooks
 
-        .. container:: frontpage-ebooks-row
+        .. container:: frontpage-ebook-and-buttons-block full-learning-ada-cover
 
-            .. container:: frontpage-ebook-and-buttons-block
+            .. image:: images/page-1-of-learning-ada.jpeg
+                :alt: Learning Ada (e-book)
 
-                .. image:: images/page-1-of-learning-ada.jpeg
-                    :alt: Learning Ada (e-book)
-                    :width: 149pt
+            .. raw:: html
 
-                .. raw:: html
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/learning-ada.pdf">
+                            PDF
+                        </a>
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/learning-ada.pdf">
-                                PDF
-                            </a>
+                        <a class="ebook-download-button" href="/epub_books/learning-ada.epub">
+                            EPUB
+                        </a>
 
-                            <a class="ebook-download-button" href="/epub_books/learning-ada.epub">
-                                EPUB
-                            </a>
-
-                            <a class="ebook-download-button" href="/zip/learning-ada_code.zip">
-                                ZIP (source code)
-                            </a>
-                        </div>
+                        <a class="ebook-download-button" href="/zip/learning-ada_code.zip">
+                            ZIP (source code)
+                        </a>
+                    </div>
 
 
     Alternatively, download individual courses and laboratories as e-books:
 
     .. container:: frontpage-ebooks
 
-        .. container:: frontpage-ebooks-row
+        .. container:: frontpage-ebook-and-buttons-block
 
-            .. container:: frontpage-ebook-and-buttons-block
+            .. image:: images/page-1-of-intro-to-ada.jpeg
+                :alt: Introduction to Ada (e-book)
+                :target: /courses/intro-to-ada/index.html
 
-                .. image:: images/page-1-of-intro-to-ada.jpeg
-                    :alt: Introduction to Ada (e-book)
-                    :width: 149pt
+            .. raw:: html
 
-                .. raw:: html
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/intro-to-ada.pdf">
+                            PDF
+                        </a>
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-ada.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/intro-to-ada.epub">
-                                EPUB
-                            </a>
-                        </div>
+                        <a class="ebook-download-button" href="/epub_books/courses/intro-to-ada.epub">
+                            EPUB
+                        </a>
+                    </div>
 
 
-            .. container:: frontpage-ebook-and-buttons-block
+        .. container:: frontpage-ebook-and-buttons-block
 
-                .. image:: images/page-1-of-intro-to-ada-labs.jpeg
-                    :alt: Introduction to Ada: Laboratories (e-book)
-                    :width: 149pt
+            .. image:: images/page-1-of-intro-to-ada-labs.jpeg
+                :alt: Introduction to Ada: Laboratories (e-book)
+                :target: /labs/intro-to-ada/index.html 
 
-                .. raw:: html
+            .. raw:: html
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
-                                PDF
-                            </a>
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
+                            PDF
+                        </a>
 
-                            <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
-                                EPUB
-                            </a>
-                        </div>
+                        <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
+                            EPUB
+                        </a>
+                    </div>
 
+        .. container:: frontpage-ebook-and-buttons-block
 
-        .. container:: frontpage-ebooks-row
+            .. image:: images/page-1-of-advanced-ada-temp.jpeg
+                :alt: Advanced Journey With Ada: A Flight In Progress (e-book)
+                :target: /courses/advanced-ada/index.html
 
-            .. container:: frontpage-ebook-and-buttons-block
+            .. raw:: html
 
-                .. image:: images/page-1-of-advanced-ada-temp.jpeg
-                    :alt: Advanced Journey With Ada: A Flight In Progress (e-book)
-                    :width: 149pt
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
+                            PDF
+                        </a>
 
-                .. raw:: html
+                        <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
+                            EPUB
+                        </a>
+                    </div>
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-ada.pdf">
-                                PDF
-                            </a>
+        .. container:: frontpage-ebook-and-buttons-block
 
-                            <a class="ebook-download-button" href="/epub_books/courses/advanced-ada.epub">
-                                EPUB
-                            </a>
-                        </div>
+            .. image:: images/page-1-of-intro-to-spark.jpeg
+                :alt: Introduction to SPARK (e-book)
+                :target: courses/intro-to-spark/index.html
 
+            .. raw:: html
 
-            .. container:: frontpage-ebook-and-buttons-block
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/intro-to-spark.pdf">
+                            PDF
+                        </a>
 
-                .. image:: images/page-1-of-intro-to-spark.jpeg
-                    :alt: Introduction to SPARK (e-book)
-                    :width: 149pt
+                        <a class="ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
+                            EPUB
+                        </a>
+                    </div>
 
-                .. raw:: html
+        .. container:: frontpage-ebook-and-buttons-block
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-spark.pdf">
-                                PDF
-                            </a>
+            .. image:: images/page-1-of-intro-to-embedded-sys-prog.jpeg
+                :alt: Introduction to Embedded Systems Programming (e-book)
+                :target: /courses/intro-to-embedded-sys-prog/index.html
 
-                            <a class="ebook-download-button" href="/epub_books/courses/intro-to-spark.epub">
-                                EPUB
-                            </a>
-                        </div>
+            .. raw:: html
 
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
+                            PDF
+                        </a>
 
-        .. container:: frontpage-ebooks-row
-
-            .. container:: frontpage-ebook-and-buttons-block
-
-                .. image:: images/page-1-of-intro-to-embedded-sys-prog.jpeg
-                    :alt: Introduction to Embedded Systems Programming (e-book)
-                    :width: 149pt
-
-                .. raw:: html
-
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/intro-to-embedded-sys-prog.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
-                                EPUB
-                            </a>
-                        </div>
+                        <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
+                            EPUB
+                        </a>
+                    </div>
 
 
-            .. container:: frontpage-ebook-and-buttons-block
+        .. container:: frontpage-ebook-and-buttons-block
 
-                .. image:: images/page-1-of-whats-new-in-ada-2022.jpeg
-                    :alt: What's New in Ada 2022 (e-book)
-                    :width: 149pt
+            .. image:: images/page-1-of-whats-new-in-ada-2022.jpeg
+                :alt: What's New in Ada 2022 (e-book)
+                :target: /courses/whats-new-in-ada-2022/index.html
 
-                .. raw:: html
+            .. raw:: html
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/whats-new-in-ada-2022.pdf">
-                                PDF
-                            </a>
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/whats-new-in-ada-2022.pdf">
+                            PDF
+                        </a>
 
-                            <a class="ebook-download-button" href="/epub_books/courses/whats-new-in-ada-2022.epub">
-                                EPUB
-                            </a>
-                        </div>
+                        <a class="ebook-download-button" href="/epub_books/courses/whats-new-in-ada-2022.epub">
+                            EPUB
+                        </a>
+                    </div>
 
+        .. container:: frontpage-ebook-and-buttons-block
 
-        .. container:: frontpage-ebooks-row
+            .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
+                :alt: Ada for the C++ and Java Developer (e-book)
+                :target: /courses/Ada_For_The_CPP_Java_Developer/index.html
 
-            .. container:: frontpage-ebook-and-buttons-block
+            .. raw:: html
 
-                .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
-                    :alt: Ada for the C++ and Java Developer (e-book)
-                    :width: 149pt
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+                            PDF
+                        </a>
 
-                .. raw:: html
+                        <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
+                            EPUB
+                        </a>
+                    </div>
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
-                                PDF
-                            </a>
+        .. container:: frontpage-ebook-and-buttons-block
 
-                            <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
-                                EPUB
-                            </a>
-                        </div>
+            .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
+                :alt: Ada for the Embedded C Developer (e-book)
+                :target: /courses/Ada_For_The_Embedded_C_Developer/index.html
 
+            .. raw:: html
 
-            .. container:: frontpage-ebook-and-buttons-block
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf">
+                            PDF
+                        </a>
 
-                .. image:: images/page-1-of-Ada_For_The_Embedded_C_Developer.jpeg
-                    :alt: Ada for the Embedded C Developer (e-book)
-                    :width: 149pt
+                        <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub">
+                            EPUB
+                        </a>
+                    </div>
 
-                .. raw:: html
+        .. container:: frontpage-ebook-and-buttons-block
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_Embedded_C_Developer.pdf">
-                                PDF
-                            </a>
+            .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
+                :alt: SPARK for the MISRA-C Developer (e-book)
+                :target: /courses/SPARK_for_the_MISRA_C_Developer/index.html
 
-                            <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_Embedded_C_Developer.epub">
-                                EPUB
-                            </a>
-                        </div>
+            .. raw:: html
 
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                            PDF
+                        </a>
 
-        .. container:: frontpage-ebooks-row
-
-            .. container:: frontpage-ebook-and-buttons-block
-
-                .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
-                    :alt: SPARK for the MISRA-C Developer (e-book)
-                    :width: 149pt
-
-                .. raw:: html
-
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
-                                EPUB
-                            </a>
-                        </div>
+                        <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
+                            EPUB
+                        </a>
+                    </div>
 
 
-            .. container:: frontpage-ebook-and-buttons-block
+        .. container:: frontpage-ebook-and-buttons-block
 
-                .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
-                    :alt: Introduction to GNAT Toolchain (e-book)
-                    :width: 149pt
+            .. image:: images/page-1-of-GNAT_Toolchain_Intro.jpeg
+                :alt: Introduction to GNAT Toolchain (e-book)
+                :target: courses/GNAT_Toolchain_Intro/index.html
 
-                .. raw:: html
+            .. raw:: html
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
-                                PDF
-                            </a>
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/GNAT_Toolchain_Intro.pdf">
+                            PDF
+                        </a>
 
-                            <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
-                                EPUB
-                            </a>
-                        </div>
+                        <a class="ebook-download-button" href="/epub_books/courses/GNAT_Toolchain_Intro.epub">
+                            EPUB
+                        </a>
+                    </div>
 
 
     -------------
@@ -360,25 +341,23 @@
 
     .. container:: frontpage-ebooks
 
-        .. container:: frontpage-ebooks-row
+         .. container:: frontpage-ebook-and-buttons-block
 
-            .. container:: frontpage-ebook-and-buttons-block
+             .. image:: images/page-1-of-advanced-spark.jpeg
+                 :alt: Advanced SPARK (e-book)
+                 :target: /courses/advanced-spark/index.html
 
-                .. image:: images/page-1-of-advanced-spark.jpeg
-                    :alt: Advanced SPARK (e-book)
-                    :width: 149pt
+             .. raw:: html
 
-                .. raw:: html
+                     <div class="frontpage-ebook-download">
+                         <a class="ebook-download-button" href="/pdf_books/courses/advanced-spark.pdf">
+                             PDF
+                         </a>
 
-                        <div class="frontpage-ebook-download">
-                            <a class="ebook-download-button" href="/pdf_books/courses/advanced-spark.pdf">
-                                PDF
-                            </a>
-
-                            <a class="ebook-download-button" href="/epub_books/courses/advanced-spark.epub">
-                                EPUB
-                            </a>
-                        </div>
+                         <a class="ebook-download-button" href="/epub_books/courses/advanced-spark.epub">
+                             EPUB
+                         </a>
+                     </div>
 
 
     -------------
