@@ -625,10 +625,10 @@ We can visualize the lifetime as follows:
         Processing -> A !! : << finalize >>
     @enduml
 
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example:
+
 In order to see this effect, let's start by implementing two controlled types:
 :ada:`Sub_1` and :ada:`Sub_2`:
-
-.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
 
@@ -804,10 +804,10 @@ have such discriminants. For an object with several components with such a
 discriminant, :ada:`Initialize` is applied to them in order of their component
 declarations."
 
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Access_Discriminant_Code_Example:
+
 Let's see a code example. First, we implement another package with controlled
 types:
-
-.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Access_Discriminant_Code_Example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
 
