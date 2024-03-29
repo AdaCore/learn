@@ -1315,7 +1315,9 @@ Adjustment of subcomponents
 
 In principle, the order in which components are adjusted is arbitrary. However,
 adjustments of subcomponents will happen before the adjustment of the component
-itself.
+itself. The subcomponents must be adjusted before the enclosing object because
+the semantics of the adjustment of the whole might depend on the states of the
+parts (the subcomponents), so those states must already be in place.
 
 Let's revisit a
 :ref:`previous code example <Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example>`.
