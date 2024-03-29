@@ -294,6 +294,18 @@ right after the copy to an object has been performed. (As we'll see later on,
 :ref:`limited controlled types <Adv_Ada_Limited_Controlled_Types_Overview>`
 do not offer an :ada:`Adjust` procedure.)
 
+The :wikipedia:`deep copy <Object_copying#Deep_copy>` of objects is a typical
+example where adjustments are necessary. When we assign an object :ada:`B` to
+an object :ada:`A`, we're essentially doing a shallow copy. If we have
+references to other objects in the source object :ada:`B`, those references
+will be copied as well, so both target :ada:`A` and source :ada:`B` will be
+referring to the same objects. When performing a deep copy, however, we want
+the information from the dereferenced objects to be copied, not the references
+themselves. Therefore, we have to first allocate new objects for the target
+object :ada:`A` and copy the information from the original references |mdash|
+the ones we copied from the source object :ada:`B` |mdash| to the new objects.
+This kind of processing can be performed in the :ada:`Adjust` procedure.
+
 As an example, let's extend the previous code example and override the
 :ada:`Adjust` procedure:
 
