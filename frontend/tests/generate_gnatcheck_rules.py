@@ -164,7 +164,8 @@ def process_source ( source, output, detail ):
 if __name__== "__main__":
 
     parser = argparse.ArgumentParser(
-        description='Use coding standards to generate a rules file for using with "gnatcheck"')
+        description='Parse the Guidelines for Safe and Secure Ada/SPARK source files ' +
+                    'in order to generate a rules file for using with GNATcheck')
 
     parser.add_argument('--source',
                         help='Directory containing source files for guidelines (will be searched recursively)',
