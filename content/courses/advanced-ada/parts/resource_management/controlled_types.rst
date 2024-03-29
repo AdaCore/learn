@@ -286,13 +286,28 @@ When we run this application, we see the user messages indicating the calls to
 Adjustment of controlled objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When copying controlled objects, we might need to adjust the target object.
-This is made possible by overriding the :ada:`Adjust` procedure, which is called
+An assignment is a full bit-wise copy of the entire right-hand side to the
+entire left-hand side. When copying controlled objects, however, we might
+need to adjust the target object. This is made possible by overriding the
+:ada:`Adjust` procedure, which is called
 right after the copy to an object has been performed. (As we'll see later on,
 :ref:`limited controlled types <Adv_Ada_Limited_Controlled_Types_Overview>`
 do not offer an :ada:`Adjust` procedure.)
 
-Let's extend the previous code example and override the :ada:`Adjust` procedure:
+The :wikipedia:`deep copy <Object_copying#Deep_copy>` of objects is a typical
+example where adjustments are necessary. When we assign an object :ada:`B` to
+an object :ada:`A`, we're essentially doing a shallow copy. If we have
+references to other objects in the source object :ada:`B`, those references
+will be copied as well, so both target :ada:`A` and source :ada:`B` will be
+referring to the same objects. When performing a deep copy, however, we want
+the information from the dereferenced objects to be copied, not the references
+themselves. Therefore, we have to first allocate new objects for the target
+object :ada:`A` and copy the information from the original references |mdash|
+the ones we copied from the source object :ada:`B` |mdash| to the new objects.
+This kind of processing can be performed in the :ada:`Adjust` procedure.
+
+As an example, let's extend the previous code example and override the
+:ada:`Adjust` procedure:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Simple_Example_2
 
@@ -625,10 +640,10 @@ We can visualize the lifetime as follows:
         Processing -> A !! : << finalize >>
     @enduml
 
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example:
+
 In order to see this effect, let's start by implementing two controlled types:
 :ada:`Sub_1` and :ada:`Sub_2`:
-
-.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
 
@@ -804,10 +819,10 @@ have such discriminants. For an object with several components with such a
 discriminant, :ada:`Initialize` is applied to them in order of their component
 declarations."
 
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Access_Discriminant_Code_Example:
+
 Let's see a code example. First, we implement another package with controlled
 types:
-
-.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents_Access_Discriminant_Code_Example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
 
@@ -1189,13 +1204,315 @@ This diagram shows the initialization sequence:
 Assignment
 ----------
 
+We already talked about
+:ref:`adjustments <Adv_Ada_Controlled_Types_Overview_Adjustment>` previously.
+As we already mentioned, an actual assignment is a full bit-wise copy of the
+entire right-hand side to the entire left-hand side, so the adjustment (via a
+call to :ada:`Adjust`) is a way to "work around" that, when necessary. In this
+section, we'll look into some details about the adjustment of controlled types.
+
 .. admonition:: Relevant topics
 
     - :arm22:`Assignment and Finalization <7-6>`
 
-.. todo::
 
-    Complete section!
+Assignment using anonymous object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :arm22:`Ada Reference Manual <7-6>` mentions that an anonymous object is
+created during the assignment of objects of controlled type. A simple
+:ada:`A := B` operation for nonlimited controlled types can be expanded to the
+following illustrative code:
+
+.. code-block:: ada
+
+    procedure P is
+       A, B: Some_Controlled_Type;
+    begin
+       --
+       --  A := B;
+       --
+       B_To_A_Assignment : declare
+          Anon_Obj : Some_Controlled_Type;
+       begin
+          Anon_Obj := B;
+          Adjust (Anon_Obj);
+          Finalize (A);
+          A := Anon_Obj;
+          Finalize (Anon_Obj);
+       end B_To_A_Assignment;
+    end P;
+
+The first assignment happens to the anonymous object :ada:`Anon_Obj`. After the
+adjustment of :ada:`Anon_Obj` and the finalization of the original version of
+:ada:`A`, the actual assignment to :ada:`A` can take place |mdash| and
+:ada:`Anon_Obj` can be discarded after it has been properly finalized. With
+this strategy, we have a chance to finalize the original version of :ada:`A`
+before the assignment overwrites the object.
+
+Of course, this expanded code isn't really efficient, and the compiler has some
+freedom to improve the performance of the generated machine code. Whenever
+possible, it'll typically optimize the anonymous object out and build the
+object in place. (The :arm22:`Ada Reference Manual <7-6>` describes the rules
+when this is possible or not.)
+
+Also, the :ada:`A := Anon_Obj` statement in the code above doesn't necessarily
+translate to an actual assignment in the generated machine code. Typically, a
+compiler may treat :ada:`Anon_Obj` as the new :ada:`A` and destroy the original
+version of :ada:`A` (i.e. the object that used to be :ada:`A`). In this case,
+the code becomes something like this:
+
+.. code-block:: ada
+
+    procedure P is
+       A, B: Some_Controlled_Type;
+    begin
+       --
+       --  A := B;
+       --
+       B_To_A_Assignment : declare
+          Anon_Obj : Some_Controlled_Type;
+       begin
+          Anon_Obj := B;
+          Finalize (A);
+          Adjust (Anon_Obj);
+          declare
+             A : Some_Controlled_Type renames Anon_Obj;
+          begin
+             --  Now, we treat Anon_Obj as the new A.
+             --  Further processing continues here...
+
+          end;
+       end B_To_A_Assignment;
+    end P;
+
+In some cases, the compiler is required to build the object in place. A typical
+example is when an object of controlled type is initialized by assigning an
+aggregate to it:
+
+.. code-block:: ada
+
+    C: constant Some_Controlled_Type :=
+        (Ada.Finalization.Controlled with ...);
+    --  C is built in place,
+    --  no anonymous object is used here.
+
+Also, it's possible that :ada:`Adjust` and :ada:`Finalize` aren't called at
+all. Consider an assignment like this: :ada:`A := A;`. In this case, since the
+object on both sides is the same, the compiler is allowed to simply skip the
+assignment and not do anything.
+
+For more details about possible optimizations and compiler behavior, please
+refer to the :arm22:`Ada Reference Manual <7-6>` .
+
+In general, the advice is simply: use :ada:`Adjust` and :ada:`Finalize` solely
+for their intended purposes. In other words, don't implement extraneous
+side-effects into those procedures, as they might not be called at run-time.
+
+
+Adjustment of subcomponents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In principle, the order in which components are adjusted is arbitrary. However,
+adjustments of subcomponents will happen before the adjustment of the component
+itself. The subcomponents must be adjusted before the enclosing object because
+the semantics of the adjustment of the whole might depend on the states of the
+parts (the subcomponents), so those states must already be in place.
+
+Let's revisit a
+:ref:`previous code example <Adv_Ada_Controlled_Types_Initialization_Subcomponents_Code_Example>`.
+First, we override the :ada:`Adjust` procedure of the :ada:`Sub_1` and
+:ada:`Sub_2` types from the :ada:`Subs` package.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Adjustment.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    package Subs is
+
+       type Sub_1 is tagged private;
+
+       type Sub_2 is tagged private;
+
+    private
+
+       type Sub_1 is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize (E : in out Sub_1);
+
+       overriding
+       procedure Adjust (E : in out Sub_1);
+
+       overriding
+       procedure Finalize (E : in out Sub_1);
+
+       type Sub_2 is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize (E : in out Sub_2);
+
+       overriding
+       procedure Adjust (E : in out Sub_2);
+
+       overriding
+       procedure Finalize (E : in out Sub_2);
+
+    end Subs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Subs is
+
+       procedure Initialize (E : in out Sub_1) is
+       begin
+          Put_Line ("Initialize: Sub_1...");
+       end Initialize;
+
+       procedure Adjust (E : in out Sub_1) is
+       begin
+          Put_Line ("Adjust: Sub_1...");
+       end Adjust;
+
+       procedure Finalize (E : in out Sub_1) is
+       begin
+          Put_Line ("Finalize: Sub_1...");
+       end Finalize;
+
+       procedure Initialize (E : in out Sub_2) is
+       begin
+          Put_Line ("Initialize: Sub_2...");
+       end Initialize;
+
+       procedure Adjust (E : in out Sub_2) is
+       begin
+          Put_Line ("Adjust: Sub_2...");
+       end Adjust;
+
+       procedure Finalize (E : in out Sub_2) is
+       begin
+          Put_Line ("Finalize: Sub_2...");
+       end Finalize;
+
+    end Subs;
+
+Next, we override the :ada:`Adjust` procedure of the :ada:`T` type from the
+:ada:`Simple_Controlled_Types` package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Adjustment.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    with Subs; use Subs;
+
+    package Simple_Controlled_Types is
+
+       type T is tagged private;
+
+       procedure Dummy (E : T);
+
+    private
+
+       function Default_Init return Integer;
+
+       type T is new
+         Ada.Finalization.Controlled with
+       record
+          S1 : Sub_1;
+          S2 : Sub_2;
+          I  : Integer := Default_Init;
+       end record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Adjust (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       function Default_Init return Integer is
+       begin
+          Put_Line ("Default_Init: Integer...");
+          return 42;
+       end Default_Init;
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy: T...)");
+       end Dummy;
+
+       procedure Initialize (E : in out T) is
+       begin
+          Put_Line ("Initialize: T...");
+       end Initialize;
+
+       procedure Adjust (E : in out T) is
+       begin
+          Put_Line ("Adjust: T...");
+       end Adjust;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize: T...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+Finally, this is the main application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Adjustment.Controlled_Initialization
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    procedure Show_Controlled_Types is
+       A, B : T;
+    begin
+       Dummy (A);
+
+       Put_Line ("----------");
+       Put_Line ("A := B");
+       A := B;
+       Put_Line ("----------");
+    end Show_Controlled_Types;
+
+When running this code, we see that the :ada:`S1` and :ada:`S2` components are
+adjusted before the adjustment of the parent type :ada:`T` takes place.
+
+This diagram shows the adjustment sequence:
+
+.. uml::
+    :align: center
+    :width: 400pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.S1" as Sub_1
+        participant "T.S2" as Sub_2
+        participant "T.I" as I
+
+        Processing -> type_t : << adjust subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Adjust (Sub_1)
+            type_t -> Sub_2 : Adjust (Sub_2)
+        deactivate type_t
+        Processing -> type_t : Adjust (T)
+    @enduml
 
 
 .. _Adv_Ada_Finalization:
