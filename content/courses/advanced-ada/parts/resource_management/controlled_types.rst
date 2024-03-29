@@ -1206,8 +1206,10 @@ Assignment
 
 We already talked about
 :ref:`adjustments <Adv_Ada_Controlled_Types_Overview_Adjustment>` previously.
-In this section, we'll look into some details about the adjustment of
-controlled types.
+As we already mentioned, an actual assignment is a full bit-wise copy of the
+entire right-hand side to the entire left-hand side, so the adjustment (via a
+call to :ada:`Adjust`) is a way to "work around" that, when necessary. In this
+section, we'll look into some details about the adjustment of controlled types.
 
 .. admonition:: Relevant topics
 
