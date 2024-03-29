@@ -294,7 +294,8 @@ right after the copy to an object has been performed. (As we'll see later on,
 :ref:`limited controlled types <Adv_Ada_Limited_Controlled_Types_Overview>`
 do not offer an :ada:`Adjust` procedure.)
 
-Let's extend the previous code example and override the :ada:`Adjust` procedure:
+As an example, let's extend the previous code example and override the
+:ada:`Adjust` procedure:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Simple_Example_2
 
