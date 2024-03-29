@@ -286,8 +286,10 @@ When we run this application, we see the user messages indicating the calls to
 Adjustment of controlled objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When copying controlled objects, we might need to adjust the target object.
-This is made possible by overriding the :ada:`Adjust` procedure, which is called
+An assignment is a full bit-wise copy of the entire right-hand side to the
+entire left-hand side. When copying controlled objects, however, we might
+need to adjust the target object. This is made possible by overriding the
+:ada:`Adjust` procedure, which is called
 right after the copy to an object has been performed. (As we'll see later on,
 :ref:`limited controlled types <Adv_Ada_Limited_Controlled_Types_Overview>`
 do not offer an :ada:`Adjust` procedure.)
