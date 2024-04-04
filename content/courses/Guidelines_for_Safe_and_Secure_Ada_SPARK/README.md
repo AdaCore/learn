@@ -11,7 +11,7 @@ the standards to fit their own needs and coding styles.
 
 In addition, many of the standards we want to enforce could be verified
 automatically with a static analysis tool. This repository assumes the
-`GNATcheck` tool will be used. Most of the standards specify the specific
+`GNATcheck` tool will be used. Most of the standards contain the specific
 rule that would be used to verify compliance.
 
 This README file contains instructions on how to customize content
@@ -37,10 +37,10 @@ define their own rules.
 
 ### Python
 
-You will notice that many of the specific coding standards specify
+You will notice that many of the individual coding standards specify
 the verification method as **GNATcheck rule**. For these methods,
-a specific `GNATcheck` rule is specified, using the RST role **rule**
-to specify formatting for the rule. In the **tools** folder is a
+a particular `GNATcheck` rule is specified, using the RST role **rule**
+to identify formatting for the rule. In the **tools** folder is a
 python script **generate_rules_file.py** that can be used to build
 a rules input file for `GNATcheck`. To use that script, you would
 obviously need to install a version of Python (3.9 or better should work).
