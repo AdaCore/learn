@@ -26,8 +26,8 @@ jobs:
         repo_owner="AdaCore"
         repo_name="learn-latest-html-pages"
         event_type="trigger-workflow"
-        service=${{ github.event.inputs.target_service }}"
-        version="${{ github.event.inputs.target_version }}"
+        service="publish-learn-latest"
+        version="${GITHUB_WORKFLOW_SHA}"
 
         curl -L \
           -X POST \
