@@ -1,14 +1,6 @@
 name: Publish learn-latest
 
-on:
-  workflow_dispatch:
-    inputs:
-      target_service:
-        description: 'publish-learn-latest'
-        required: true
-      target_version:
-        description: ${GITHUB_WORKFLOW_SHA}
-        required: true
+on: [push]
 
 jobs:
   trigger:
