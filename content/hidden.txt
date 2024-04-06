@@ -1,3 +1,2 @@
 courses/advanced-spark
 courses/ada-idioms
-courses/Guidelines_for_Safe_and_Secure_Ada_SPARK
