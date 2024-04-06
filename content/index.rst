@@ -329,6 +329,23 @@
                         </a>
                     </div>
 
+        .. container:: frontpage-ebook-and-buttons-block
+
+            .. image:: images/page-1-of-Guidelines_for_Safe_and_Secure_Ada_SPARK.jpeg
+                :alt: Guidelines for Safe and Secure Ada/SPARK (e-book)
+                :target: courses/Guidelines_for_Safe_and_Secure_Ada_SPARK/index.html
+
+            .. raw:: html
+
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.pdf">
+                            PDF
+                        </a>
+
+                        <a class="ebook-download-button" href="/epub_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.epub">
+                            EPUB
+                        </a>
+                    </div>
 
     -------------
 
