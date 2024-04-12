@@ -3,11 +3,20 @@ Limited Types
 
 .. include:: ../../../global.txt
 
+So far, we discussed nonlimited types in most cases. In this chapter, we
+discuss limited types.
+
+We can think of limited types as an easy way to avoid inappropriate semantics.
+For example, a lock should not be copied |mdash| neither directly, via
+assignment, nor with pass-by-copy. Similarly, a *file*, which is really a file
+descriptor, should not be copied. In this chapter, we'll see example of
+unwanted side-effects that arise if we don't use limited types for these cases.
+
+
 Assignment and equality
 -----------------------
 
-So far, we discussed nonlimited types in most cases. Limited types, in
-contrast, have the following restrictions, which we discussed in the
+Limited types have the following restrictions, which we discussed in the
 :ref:`Introduction to Ada <Intro_Ada_Limited_Types>` course:
 
 - copying objects of limited types via direct assignments is forbidden; and
