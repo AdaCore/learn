@@ -414,7 +414,7 @@ specification and its body.
 
 A general rule in SPARK is that once :ada:`SPARK_Mode` has been set to
 `Off`, it can never be switched `On` again in the same part of a package or
-subprogram. This prevents setting :ada:`SPARK_Mode` to `On` for subunits of
+subprogram. This prevents setting :ada:`SPARK_Mode` to `On` for local units of
 a unit with :ada:`SPARK_Mode` `Off` and switching back to :ada:`SPARK_Mode`
 `On` for a part of a given unit where it was set fo `Off` in a previous
 part.
