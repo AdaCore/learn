@@ -26,11 +26,10 @@ Limited types have the following restrictions, which we discussed in the
 (Of course, in the case of nonlimited types, assignments are possible and the
 equality operator is available.)
 
-A good reason for having these restrictions for limited types is that the
-assignment and equality operations may have side-effects that lead to erroneous
-programs, even though they are perfectly OK in many cases. Programs can become
-erroneous when we use those operations on record types that have components of
-access types, for example:
+By having these restrictions for limited types, we avoid inappropriate
+side-effects for assignment and equality operations. As an example of
+inappropriate side-effects, consider the case when we apply those operations on
+record types that have components of access types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Assignment_Equality.Wrong_Assignment_Equality
 
