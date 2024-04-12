@@ -1032,7 +1032,11 @@ implicitly limited. We can see that when trying to assign to objects of
     end Show_Implicitly_Limited;
 
 Here, the compiler indicates that the assignment is forbidden because the
-:ada:`Rec` type has a component of limited type.
+:ada:`Rec` type has a component of limited type. The rationale for this rule is
+that an object of a limited type doesn't allow assignment or equality,
+including the case in which that object is a component of some enclosing
+composite object. If we allowed the enclosing object to be copied or tested for
+equality, we'd be doing it for all the components, too.
 
 .. admonition:: In the Ada Reference Manual
 
