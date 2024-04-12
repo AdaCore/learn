@@ -3,11 +3,20 @@ Limited Types
 
 .. include:: ../../../global.txt
 
+So far, we discussed nonlimited types in most cases. In this chapter, we
+discuss limited types.
+
+We can think of limited types as an easy way to avoid inappropriate semantics.
+For example, a lock should not be copied |mdash| neither directly, via
+assignment, nor with pass-by-copy. Similarly, a *file*, which is really a file
+descriptor, should not be copied. In this chapter, we'll see example of
+unwanted side-effects that arise if we don't use limited types for these cases.
+
+
 Assignment and equality
 -----------------------
 
-So far, we discussed nonlimited types in most cases. Limited types, in
-contrast, have the following restrictions, which we discussed in the
+Limited types have the following restrictions, which we discussed in the
 :ref:`Introduction to Ada <Intro_Ada_Limited_Types>` course:
 
 - copying objects of limited types via direct assignments is forbidden; and
@@ -17,11 +26,10 @@ contrast, have the following restrictions, which we discussed in the
 (Of course, in the case of nonlimited types, assignments are possible and the
 equality operator is available.)
 
-A good reason for having these restrictions for limited types is that the
-assignment and equality operations may have side-effects that lead to erroneous
-programs, even though they are perfectly OK in many cases. Programs can become
-erroneous when we use those operations on record types that have components of
-access types, for example:
+By having these restrictions for limited types, we avoid inappropriate
+side-effects for assignment and equality operations. As an example of
+inappropriate side-effects, consider the case when we apply those operations on
+record types that have components of access types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Assignment_Equality.Wrong_Assignment_Equality
 
@@ -1024,7 +1032,11 @@ implicitly limited. We can see that when trying to assign to objects of
     end Show_Implicitly_Limited;
 
 Here, the compiler indicates that the assignment is forbidden because the
-:ada:`Rec` type has a component of limited type.
+:ada:`Rec` type has a component of limited type. The rationale for this rule is
+that an object of a limited type doesn't allow assignment or equality,
+including the case in which that object is a component of some enclosing
+composite object. If we allowed the enclosing object to be copied or tested for
+equality, we'd be doing it for all the components, too.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -1350,7 +1362,8 @@ an object of type :ada:`T` is created, giving package :ada:`P` full
 control over initialization of objects.
 
 Ideally, limited and non-limited types should be just the same, except for
-the essential difference: you can't copy limited objects. By allowing
+the essential difference: you can't copy limited objects (and there's no
+language-defined equality operator). By allowing
 functions and aggregates for limited types, we're very close to this goal.
 Some languages have a specific feature called *constructor*. In Ada, a
 *constructor* is just a function that creates a new object.
@@ -2017,8 +2030,21 @@ are always passed by reference.
 
 Here, it's important to understand when a type is explicitly limited and when
 it's not |mdash| using the :ada:`limited` keyword in a part of the declaration
-doesn't necessary ensure this, as we'll see later. Let's start with an example
-of an explicitly limited type:
+doesn't necessary ensure this, as we'll see later.
+
+.. admonition:: For further reading...
+
+    As an example, consider the case of a lock (as an abstract data type). If
+    such a lock object were passed by copy, the :ada:`Acquire` and
+    :ada:`Release` operations would be working on copies of this object, not on
+    the original one. This would lead to timing-dependent bugs.
+
+    .. todo::
+
+        Add link to chapter the in the Ada Idioms course that explains this
+        topic in more details (once it's available).
+
+Let's start with an example of an explicitly limited type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
 
