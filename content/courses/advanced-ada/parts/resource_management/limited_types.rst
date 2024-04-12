@@ -2030,8 +2030,21 @@ are always passed by reference.
 
 Here, it's important to understand when a type is explicitly limited and when
 it's not |mdash| using the :ada:`limited` keyword in a part of the declaration
-doesn't necessary ensure this, as we'll see later. Let's start with an example
-of an explicitly limited type:
+doesn't necessary ensure this, as we'll see later.
+
+.. admonition:: For further reading...
+
+    As an example, consider the case of a lock (as an abstract data type). If
+    such a lock object were passed by copy, the :ada:`Acquire` and
+    :ada:`Release` operations would be working on copies of this object, not on
+    the original one. This would lead to timing-dependent bugs.
+
+    .. todo::
+
+        Add link to chapter the in the Ada Idioms course that explains this
+        topic in more details (once it's available).
+
+Let's start with an example of an explicitly limited type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
 
