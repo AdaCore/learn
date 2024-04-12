@@ -1362,7 +1362,8 @@ an object of type :ada:`T` is created, giving package :ada:`P` full
 control over initialization of objects.
 
 Ideally, limited and non-limited types should be just the same, except for
-the essential difference: you can't copy limited objects. By allowing
+the essential difference: you can't copy limited objects (and there's no
+language-defined equality operator). By allowing
 functions and aggregates for limited types, we're very close to this goal.
 Some languages have a specific feature called *constructor*. In Ada, a
 *constructor* is just a function that creates a new object.
