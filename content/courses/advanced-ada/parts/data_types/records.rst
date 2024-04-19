@@ -707,3 +707,120 @@ so-called *current instance*.
 .. admonition:: Relevant topics
 
    - :arm22:`3.8 Record Types <3-8>`
+
+Restrictions on per-object expressions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are some important restrictions on per-object expressions and per-object
+constraints:
+
+#. From all type attributes, only access attributes (:ada:`T'Access` and
+   :ada:`T'Unchecked_Access`) can be used in a per-object expression.
+
+    - Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
+
+    - For example, the following code example doesn't compile:
+
+        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Range_Constraint
+            :class: ada-expect-compile-error
+
+            package Rec_Per_Object_Expressions is
+
+               type Bit_Field is
+                 array (Positive range <>) of Boolean
+                   with Pack;
+
+               type T is record
+                  Arr : Bit_Field (1 .. T'Size);
+                  --                    ^^^^^^
+                  --  ERROR: per-object range constraint
+                  --         using the Size attribute
+                  --         is illegal.
+               end record;
+
+            end Rec_Per_Object_Expressions;
+
+#. Within a per-object index constraint or discriminant constraint, each
+   per-object expression must be the name of a discriminant directly, without
+   any further computation.
+
+    - Therefore, we're allowed to write :ada:`(1 .. S)` |mdash| as we've seen
+      in a previous example |mdash|. However, writing :ada:`(1 .. S - 1)` would
+      be illegal.
+
+    - For example, the following adaptation to the previous code example
+      doesn't compile:
+
+        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression
+            :class: ada-expect-compile-error
+
+            package Rec_Per_Object_Expressions is
+
+               type Stack (S : Positive) is private;
+
+            private
+
+               type Integer_Array is
+                 array (Natural range <>) of Integer;
+
+               type Stack (S : Positive) is record
+                  Arr : Integer_Array (0 .. S - 1);
+                  --                        ^^^^^
+                  --  ERROR: computation in per-object
+                  --         expression is illegal.
+
+                  Top : Integer := -1;
+               end record;
+
+            end Rec_Per_Object_Expressions;
+
+    .. admonition:: Important
+
+        On the other hand, the default expression for a component of a
+        discriminated record can be an arbitrary per-object expression. This
+        might include function calls or uses of any defined operator. For this
+        reason, the following code example is accepted by the compiler:
+
+        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression
+
+            package Rec_Per_Object_Expressions is
+
+               type Stack (S : Positive) is private;
+
+            private
+
+               type Integer_Array is
+                 array (Positive range <>) of Integer;
+
+               type Stack (S : Positive) is record
+                  Arr : Integer_Array (1 .. S);
+
+                  Top : Natural := 0;
+
+                  Overflow_Warning : Positive
+                    := S * 9 / 10;
+                  --   ^^^^^^^^^^
+                  --   Per-object expression
+                  --   using computation for
+                  --   the default expression.
+               end record
+                 with
+                   Dynamic_Predicate =>
+                     Overflow_Warning in
+                       (S + 1) / 2 .. S - 1;
+                  --
+                  --   (S + 1) / 2
+                  --   ^^^^^^^^^^^
+                  --   Per-object expression
+                  --   using computation.
+                  --
+                  --                  S - 1
+                  --                  ^^^^^
+                  --   Per-object expression
+                  --   using computation.
+
+            end Rec_Per_Object_Expressions;
+
+.. admonition:: Relevant topics
+
+   - :arm22:`3.8 Record Types <3-8>`
