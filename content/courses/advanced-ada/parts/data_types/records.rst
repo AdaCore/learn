@@ -695,6 +695,10 @@ known when an object of :ada:`T` type is created. In that sense,
 :ada:`T'Access` is a per-object expression |mdash| :ada:`(T'Access)` is the
 corresponding per-object constraint.
 
+Note that :ada:`T'Access` is referring to the type within a type definition.
+This is generally treated as a reference to the object being created, the
+so-called *current instance*.
+
 .. admonition:: Relevant topics
 
    - :arm22:`3.8 Record Types <3-8>`
