@@ -583,7 +583,8 @@ values for the discriminant.
 The constraint that contains a per-object expression is called a per-object
 constraint. The actual constraint of that component isn't completely known when
 we declare the record type, but only later on when an object of that type is
-created.
+created. (Note that the syntax of a constraint includes the parentheses or the
+keyword :ada:`range`.)
 
 In addition to referring to discriminants, per-object expressions can also
 refer to the record type itself, as we'll see later.
@@ -609,9 +610,9 @@ Let's start with a simple record declaration:
           --                        ^
           --    Per-object expression
           --
-          --                   1 .. S
-          --                   ^^^^^^
-          --    Per-object constraint
+          --                  (1 .. S)
+          --                  ^^^^^^^^
+          --     Per-object constraint
 
           Top : Natural := 0;
        end record;
@@ -621,7 +622,7 @@ Let's start with a simple record declaration:
 In this example, we see the :ada:`Stack` record type with a discriminant
 :ada:`S`. In the declaration of the :ada:`Arr` component of the that type,
 :ada:`S` is a per-object expression, as it refers to the :ada:`S` discriminant.
-Also, :ada:`1 .. S` is a per-object constraint.
+Also, :ada:`(1 .. S)` is a per-object constraint.
 
 Let's look at another example using :ref:`anonymous access types <Adv_Ada_Anonymous_Access_Types>`:
 
@@ -644,17 +645,21 @@ Let's look at another example using :ref:`anonymous access types <Adv_Ada_Anonym
        type T_Processor (Selected_T : access T) is
        record
           E : T_Container (Selected_T);
+          --
+          --               Selected_T
           --               ^^^^^^^^^^
           --    Per-object expression
-          --    Per-object constraint
+          --
+          --              (Selected_T)
+          --              ^^^^^^^^^^^^
+          --     Per-object constraint
        end record;
 
     end Rec_Per_Object_Expressions;
 
 Let's focus on the :ada:`T_Processor` type from this example. The
 :ada:`Selected_T` discriminant is being used in the definition of the :ada:`E`
-component. In this case, :ada:`Selected_T` is at the same time a per-object
-expression and a per-object constraint.
+component. The per-object constraint is :ada:`(Selected_T)`.
 
 Finally, per-object expressions can also refer to the record type we're
 declaring. For example:
@@ -672,9 +677,14 @@ declaring. For example:
 
        type T is limited record
           E : T_Processor (T'Access);
+          --
+          --               T'Access
           --               ^^^^^^^^
           --  Per-object expression
-          --  Per-object constraint
+          --
+          --              (T'Access)
+          --              ^^^^^^^^^^
+          --   Per-object constraint
        end record;
 
     end Rec_Per_Object_Expressions;
@@ -682,8 +692,8 @@ declaring. For example:
 In this example, when we write :ada:`T'Access` within the declaration of the
 :ada:`T` record type, the actual value for the :ada:`Access` attribute will be
 known when an object of :ada:`T` type is created. In that sense,
-:ada:`T'Access` is a per-object expression |mdash| and a per-object constraint
-as well.
+:ada:`T'Access` is a per-object expression |mdash| :ada:`(T'Access)` is the
+corresponding per-object constraint.
 
 .. admonition:: Relevant topics
 
