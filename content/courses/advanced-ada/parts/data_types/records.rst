@@ -699,6 +699,11 @@ Note that :ada:`T'Access` is referring to the type within a type definition.
 This is generally treated as a reference to the object being created, the
 so-called *current instance*.
 
+.. todo::
+
+    - Add link to Adv_Ada_Reference_Current_Instance section ("Access Types:
+      Reference to current instance") once it's available.
+
 .. admonition:: Relevant topics
 
    - :arm22:`3.8 Record Types <3-8>`
