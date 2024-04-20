@@ -1976,18 +1976,6 @@ This diagram shows the finalization sequence:
     @enduml
 
 
-Completion
-----------
-
-.. admonition:: Relevant topics
-
-    - :arm22:`Completion and Finalization <7-6-1>`
-
-.. todo::
-
-    Complete section!
-
-
 .. _Adv_Ada_Controlled_Types_Exception_Handling:
 
 Controlled Types and Exception Handling
