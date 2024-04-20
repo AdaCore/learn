@@ -1551,6 +1551,8 @@ Completion
     Complete section!
 
 
+.. _Adv_Ada_Controlled_Types_Exception_Handling:
+
 Controlled Types and Exception Handling
 ---------------------------------------
 
