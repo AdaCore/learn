@@ -671,18 +671,12 @@ In order to see this effect, let's start by implementing two controlled types:
        overriding
        procedure Initialize (E : in out Sub_1);
 
-       overriding
-       procedure Finalize (E : in out Sub_1);
-
        type Sub_2 is new
          Ada.Finalization.Controlled
            with null record;
 
        overriding
        procedure Initialize (E : in out Sub_2);
-
-       overriding
-       procedure Finalize (E : in out Sub_2);
 
     end Subs;
 
@@ -695,20 +689,10 @@ In order to see this effect, let's start by implementing two controlled types:
           Put_Line ("Initialize: Sub_1...");
        end Initialize;
 
-       procedure Finalize (E : in out Sub_1) is
-       begin
-          Put_Line ("Finalize: Sub_1...");
-       end Finalize;
-
        procedure Initialize (E : in out Sub_2) is
        begin
           Put_Line ("Initialize: Sub_2...");
        end Initialize;
-
-       procedure Finalize (E : in out Sub_2) is
-       begin
-          Put_Line ("Finalize: Sub_2...");
-       end Finalize;
 
     end Subs;
 
@@ -743,9 +727,6 @@ initialization. This is how the complete code looks like:
        overriding
        procedure Initialize (E : in out T);
 
-       overriding
-       procedure Finalize (E : in out T);
-
     end Simple_Controlled_Types;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -767,11 +748,6 @@ initialization. This is how the complete code looks like:
        begin
           Put_Line ("Initialize: T...");
        end Initialize;
-
-       procedure Finalize (E : in out T) is
-       begin
-          Put_Line ("Finalize: T...");
-       end Finalize;
 
     end Simple_Controlled_Types;
 
@@ -859,20 +835,12 @@ types:
        procedure Initialize
          (E : in out Selection_1);
 
-       overriding
-       procedure Finalize
-          (E : in out Selection_1);
-
        type Selection_2 (S : access Selection) is new
          Ada.Finalization.Controlled
            with null record;
 
        overriding
        procedure Initialize
-         (E : in out Selection_2);
-
-       overriding
-       procedure Finalize
          (E : in out Selection_2);
 
     end Selections;
@@ -887,23 +855,11 @@ types:
           Put_Line ("Initialize: Selection_1...");
        end Initialize;
 
-       procedure Finalize
-         (E : in out Selection_1) is
-       begin
-          Put_Line ("Finalize: Selection_1...");
-       end Finalize;
-
        procedure Initialize
          (E : in out Selection_2) is
        begin
           Put_Line ("Initialize: Selection_2...");
        end Initialize;
-
-       procedure Finalize
-         (E : in out Selection_2) is
-       begin
-          Put_Line ("Finalize: Selection_2...");
-       end Finalize;
 
     end Selections;
 
@@ -946,9 +902,6 @@ and add two new components (:ada:`Sel_1` and :ada:`Sel_2`):
        overriding
        procedure Initialize (E : in out T);
 
-       overriding
-       procedure Finalize (E : in out T);
-
     end Simple_Controlled_Types;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -970,11 +923,6 @@ and add two new components (:ada:`Sel_1` and :ada:`Sel_2`):
        begin
           Put_Line ("Initialize: T...");
        end Initialize;
-
-       procedure Finalize (E : in out T) is
-       begin
-          Put_Line ("Finalize: T...");
-       end Finalize;
 
     end Simple_Controlled_Types;
 
@@ -1116,9 +1064,6 @@ type. This is the updated code:
        overriding
        procedure Initialize (E : in out T);
 
-       overriding
-       procedure Finalize (E : in out T);
-
     end Simple_Controlled_Types;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1148,11 +1093,6 @@ type. This is the updated code:
        begin
           Put_Line ("Initialize: T...");
        end Initialize;
-
-       procedure Finalize (E : in out T) is
-       begin
-          Put_Line ("Finalize: T...");
-       end Finalize;
 
     end Simple_Controlled_Types;
 
