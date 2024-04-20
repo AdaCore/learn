@@ -150,6 +150,8 @@ useful operations right before an object gets out of scope.
     it's cheap at run-time compared to controlled types.
 
 
+.. _Adv_Ada_Controlled_Types_Overview_Controlled_Objects:
+
 Controlled objects
 ~~~~~~~~~~~~~~~~~~
 
@@ -198,6 +200,8 @@ In the context of a block statement, the lifetime becomes:
             Processing -> A !! : << finalize >>
         end
     @enduml
+
+.. _Adv_Ada_Controlled_Types_Overview_Simple_Example:
 
 Let's look at a simple example:
 
@@ -610,6 +614,9 @@ situations that we describe later on.
 
     - :arm22:`Assignment and Finalization <7-6>`
 
+
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents:
+
 Subcomponents
 ~~~~~~~~~~~~~
 
@@ -806,6 +813,8 @@ This diagram shows the initialization sequence:
         Processing -> type_t : Initialize (T)
     @enduml
 
+
+.. _Adv_Ada_Controlled_Types_Initialization_Components_Access_Disciminants:
 
 Components with access discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
