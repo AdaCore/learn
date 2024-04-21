@@ -821,7 +821,3 @@ There are some important restrictions on per-object constraints:
                   --   using computation.
 
             end Rec_Per_Object_Expressions;
-
-.. admonition:: Relevant topics
-
-   - :arm22:`3.8 Record Types <3-8>`
