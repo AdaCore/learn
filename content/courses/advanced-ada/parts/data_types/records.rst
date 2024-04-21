@@ -708,12 +708,12 @@ so-called *current instance*.
 
    - :arm22:`3.8 Record Types <3-8>`
 
-Restrictions on per-object expressions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are some important restrictions on per-object expressions and per-object
-constraints:
 
+Restrictions
+~~~~~~~~~~~~
+
+There are some important restrictions on per-object constraints:
 
 #. We can only use access attributes (:ada:`T'Access` and
    :ada:`T'Unchecked_Access`) in per-object range constraints.
