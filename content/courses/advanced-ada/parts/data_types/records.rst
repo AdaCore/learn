@@ -836,7 +836,7 @@ There are some important restrictions on per-object constraints:
     - For example, the following adaptation to the previous code example
       doesn't compile:
 
-        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression
+        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Range_Computation
             :class: ada-expect-compile-error
 
             package Rec_Per_Object_Expressions is
