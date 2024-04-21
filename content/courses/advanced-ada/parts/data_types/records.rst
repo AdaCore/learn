@@ -859,3 +859,8 @@ There are some important restrictions on per-object constraints:
 
             end Rec_Per_Object_Expressions;
 
+      In this example, using the computation :ada:`S - 1` to specify the
+      range of :ada:`Arr` isn't permitted. (Note that,
+      :ref:`as we've seen before <Adv_Ada_Per_Object_Expressions_Default_Value>`,
+      this restriction doesn't apply when the computation is used in a
+      per-object expression that calculates the default value of a component.)
