@@ -709,6 +709,7 @@ so-called *current instance*.
    - :arm22:`3.8 Record Types <3-8>`
 
 
+.. _Adv_Ada_Per_Object_Expressions_Restrictions:
 
 Restrictions
 ~~~~~~~~~~~~
