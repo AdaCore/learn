@@ -709,6 +709,89 @@ so-called *current instance*.
    - :arm22:`3.8 Record Types <3-8>`
 
 
+.. _Adv_Ada_Per_Object_Expressions_Default_Value:
+
+Default value
+~~~~~~~~~~~~~
+
+We can also use per-object expressions to calculate the default value of a
+record component:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Default_Value
+
+    package Rec_Per_Object_Expressions is
+
+       type T (D : Positive) is private;
+
+    private
+
+       type T (D : Positive) is record
+          V : Natural := D - 1;
+          --             ^^^^^
+          --    Per-object expression
+
+          S : Natural := D'Size;
+          --             ^^^^^^
+          --    Per-object expression
+       end record;
+
+    end Rec_Per_Object_Expressions;
+
+Here, we calculate the default value of :ada:`V` using the per-object
+expression :ada:`D - 1`, and the default of value of :ada:`S` using the
+per-object :ada:`D'Size`.
+
+The default expression for a component of a discriminated record can be
+an arbitrary per-object expression. (This contrasts with
+:ref:`important restrictions <Adv_Ada_Per_Object_Expressions_Restrictions>`
+that exist for per-object constraints, as we discuss later on.) Such
+expressions might include function calls or uses of any defined operator. For
+this reason, the following code example is accepted by the compiler:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Computation
+
+    package Rec_Per_Object_Expressions is
+
+       type Stack (S : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Stack (S : Positive) is record
+          Arr : Integer_Array (1 .. S);
+
+          Top : Natural := 0;
+
+          Overflow_Warning : Positive
+            := S * 9 / 10;
+          --   ^^^^^^^^^^
+          --   Per-object expression
+          --   using computation for
+          --   the default expression.
+       end record
+         with
+           Dynamic_Predicate =>
+             Overflow_Warning in
+               (S + 1) / 2 .. S - 1;
+          --
+          --   (S + 1) / 2
+          --   ^^^^^^^^^^^
+          --   Per-object expression
+          --   using computation.
+          --
+          --                  S - 1
+          --                  ^^^^^
+          --   Per-object expression
+          --   using computation.
+
+    end Rec_Per_Object_Expressions;
+
+In this example, we can identify multiple per-object expressions that use
+a computation: :ada:`S * 9 / 10`, :ada:`(S + 1) / 2`, and :ada:`S - 1`.
+
+
 .. _Adv_Ada_Per_Object_Expressions_Restrictions:
 
 Restrictions
@@ -776,49 +859,3 @@ There are some important restrictions on per-object constraints:
 
             end Rec_Per_Object_Expressions;
 
-    .. admonition:: Important
-
-        On the other hand, the default expression for a component of a
-        discriminated record can be an arbitrary per-object expression. This
-        might include function calls or uses of any defined operator. For this
-        reason, the following code example is accepted by the compiler:
-
-        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression
-
-            package Rec_Per_Object_Expressions is
-
-               type Stack (S : Positive) is private;
-
-            private
-
-               type Integer_Array is
-                 array (Positive range <>) of Integer;
-
-               type Stack (S : Positive) is record
-                  Arr : Integer_Array (1 .. S);
-
-                  Top : Natural := 0;
-
-                  Overflow_Warning : Positive
-                    := S * 9 / 10;
-                  --   ^^^^^^^^^^
-                  --   Per-object expression
-                  --   using computation for
-                  --   the default expression.
-               end record
-                 with
-                   Dynamic_Predicate =>
-                     Overflow_Warning in
-                       (S + 1) / 2 .. S - 1;
-                  --
-                  --   (S + 1) / 2
-                  --   ^^^^^^^^^^^
-                  --   Per-object expression
-                  --   using computation.
-                  --
-                  --                  S - 1
-                  --                  ^^^^^
-                  --   Per-object expression
-                  --   using computation.
-
-            end Rec_Per_Object_Expressions;
