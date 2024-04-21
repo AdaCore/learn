@@ -714,8 +714,9 @@ Restrictions on per-object expressions
 There are some important restrictions on per-object expressions and per-object
 constraints:
 
-#. From all type attributes, only access attributes (:ada:`T'Access` and
-   :ada:`T'Unchecked_Access`) can be used in a per-object expression.
+
+#. We can only use access attributes (:ada:`T'Access` and
+   :ada:`T'Unchecked_Access`) in per-object range constraints.
 
     - Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
 
