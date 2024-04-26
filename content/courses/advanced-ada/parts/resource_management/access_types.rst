@@ -1582,6 +1582,12 @@ access types :ada:`T1_Access` and :ada:`T2_Access` |mdash|  we're using those
 access types in the declaration of the :ada:`B` and :ada:`A` components.
 
 
+.. todo::
+
+    - Add section: Reference to current instance
+    - Add anchor: Adv_Ada_Reference_Current_Instance
+
+
 .. _Adv_Ada_Dereferencing:
 
 Dereferencing

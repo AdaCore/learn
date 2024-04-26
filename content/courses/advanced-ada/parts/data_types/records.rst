@@ -568,7 +568,7 @@ Per-Object Expressions
 
 In record type declarations, we might want to define a component that makes use
 of a name that refers to a discriminant of the record type, or to the record
-type itself. The expression where we use that name is called a per-object
+type itself. An expression where we use such a name is called a per-object
 expression.
 
 The term "per-object" comes from the fact that, in the component definition,
@@ -583,7 +583,8 @@ values for the discriminant.
 The constraint that contains a per-object expression is called a per-object
 constraint. The actual constraint of that component isn't completely known when
 we declare the record type, but only later on when an object of that type is
-created.
+created. (Note that the syntax of a constraint includes the parentheses or the
+keyword :ada:`range`.)
 
 In addition to referring to discriminants, per-object expressions can also
 refer to the record type itself, as we'll see later.
@@ -609,9 +610,9 @@ Let's start with a simple record declaration:
           --                        ^
           --    Per-object expression
           --
-          --                   1 .. S
-          --                   ^^^^^^
-          --    Per-object constraint
+          --                  (1 .. S)
+          --                  ^^^^^^^^
+          --     Per-object constraint
 
           Top : Natural := 0;
        end record;
@@ -621,7 +622,7 @@ Let's start with a simple record declaration:
 In this example, we see the :ada:`Stack` record type with a discriminant
 :ada:`S`. In the declaration of the :ada:`Arr` component of the that type,
 :ada:`S` is a per-object expression, as it refers to the :ada:`S` discriminant.
-Also, :ada:`1 .. S` is a per-object constraint.
+Also, :ada:`(1 .. S)` is a per-object constraint.
 
 Let's look at another example using :ref:`anonymous access types <Adv_Ada_Anonymous_Access_Types>`:
 
@@ -644,17 +645,21 @@ Let's look at another example using :ref:`anonymous access types <Adv_Ada_Anonym
        type T_Processor (Selected_T : access T) is
        record
           E : T_Container (Selected_T);
+          --
+          --               Selected_T
           --               ^^^^^^^^^^
           --    Per-object expression
-          --    Per-object constraint
+          --
+          --              (Selected_T)
+          --              ^^^^^^^^^^^^
+          --     Per-object constraint
        end record;
 
     end Rec_Per_Object_Expressions;
 
 Let's focus on the :ada:`T_Processor` type from this example. The
 :ada:`Selected_T` discriminant is being used in the definition of the :ada:`E`
-component. In this case, :ada:`Selected_T` is at the same time a per-object
-expression and a per-object constraint.
+component. The per-object constraint is :ada:`(Selected_T)`.
 
 Finally, per-object expressions can also refer to the record type we're
 declaring. For example:
@@ -672,9 +677,14 @@ declaring. For example:
 
        type T is limited record
           E : T_Processor (T'Access);
+          --
+          --               T'Access
           --               ^^^^^^^^
           --  Per-object expression
-          --  Per-object constraint
+          --
+          --              (T'Access)
+          --              ^^^^^^^^^^
+          --   Per-object constraint
        end record;
 
     end Rec_Per_Object_Expressions;
@@ -682,9 +692,175 @@ declaring. For example:
 In this example, when we write :ada:`T'Access` within the declaration of the
 :ada:`T` record type, the actual value for the :ada:`Access` attribute will be
 known when an object of :ada:`T` type is created. In that sense,
-:ada:`T'Access` is a per-object expression |mdash| and a per-object constraint
-as well.
+:ada:`T'Access` is a per-object expression |mdash| :ada:`(T'Access)` is the
+corresponding per-object constraint.
+
+Note that :ada:`T'Access` is referring to the type within a type definition.
+This is generally treated as a reference to the object being created, the
+so-called *current instance*.
+
+.. todo::
+
+    - Add link to Adv_Ada_Reference_Current_Instance section ("Access Types:
+      Reference to current instance") once it's available.
 
 .. admonition:: Relevant topics
 
    - :arm22:`3.8 Record Types <3-8>`
+
+
+.. _Adv_Ada_Per_Object_Expressions_Default_Value:
+
+Default value
+~~~~~~~~~~~~~
+
+We can also use per-object expressions to calculate the default value of a
+record component:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Default_Value
+
+    package Rec_Per_Object_Expressions is
+
+       type T (D : Positive) is private;
+
+    private
+
+       type T (D : Positive) is record
+          V : Natural := D - 1;
+          --             ^^^^^
+          --    Per-object expression
+
+          S : Natural := D'Size;
+          --             ^^^^^^
+          --    Per-object expression
+       end record;
+
+    end Rec_Per_Object_Expressions;
+
+Here, we calculate the default value of :ada:`V` using the per-object
+expression :ada:`D - 1`, and the default of value of :ada:`S` using the
+per-object :ada:`D'Size`.
+
+The default expression for a component of a discriminated record can be
+an arbitrary per-object expression. (This contrasts with
+:ref:`important restrictions <Adv_Ada_Per_Object_Expressions_Restrictions>`
+that exist for per-object constraints, as we discuss later on.) Such
+expressions might include function calls or uses of any defined operator. For
+this reason, the following code example is accepted by the compiler:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Computation
+
+    package Rec_Per_Object_Expressions is
+
+       type Stack (S : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Stack (S : Positive) is record
+          Arr : Integer_Array (1 .. S);
+
+          Top : Natural := 0;
+
+          Overflow_Warning : Positive
+            := S * 9 / 10;
+          --   ^^^^^^^^^^
+          --   Per-object expression
+          --   using computation for
+          --   the default expression.
+       end record
+         with
+           Dynamic_Predicate =>
+             Overflow_Warning in
+               (S + 1) / 2 .. S - 1;
+          --
+          --   (S + 1) / 2
+          --   ^^^^^^^^^^^
+          --   Per-object expression
+          --   using computation.
+          --
+          --                  S - 1
+          --                  ^^^^^
+          --   Per-object expression
+          --   using computation.
+
+    end Rec_Per_Object_Expressions;
+
+In this example, we can identify multiple per-object expressions that use
+a computation: :ada:`S * 9 / 10`, :ada:`(S + 1) / 2`, and :ada:`S - 1`.
+
+
+.. _Adv_Ada_Per_Object_Expressions_Restrictions:
+
+Restrictions
+~~~~~~~~~~~~
+
+There are some important restrictions on per-object constraints:
+
+# Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
+
+    - For example, the following code example doesn't compile:
+
+        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Range_Constraint
+            :class: ada-expect-compile-error
+
+            package Rec_Per_Object_Expressions is
+
+               type Bit_Field is
+                 array (Positive range <>) of Boolean
+                   with Pack;
+
+               type T is record
+                  Arr : Bit_Field (1 .. T'Size);
+                  --                    ^^^^^^
+                  --  ERROR: per-object range constraint
+                  --         using the Size attribute
+                  --         is illegal.
+               end record;
+
+            end Rec_Per_Object_Expressions;
+
+#. Within a per-object index constraint or discriminant constraint, each
+   per-object expression must be the name of a discriminant directly, without
+   any further computation.
+
+    - Therefore, we're allowed to write :ada:`(1 .. S)` |mdash| as we've seen
+      in a previous example |mdash|. However, writing :ada:`(1 .. S - 1)` would
+      be illegal.
+
+    - For example, the following adaptation to the previous code example
+      doesn't compile:
+
+        .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Per_Object_Expressions.Per_Object_Expression_Range_Computation
+            :class: ada-expect-compile-error
+
+            package Rec_Per_Object_Expressions is
+
+               type Stack (S : Positive) is private;
+
+            private
+
+               type Integer_Array is
+                 array (Natural range <>) of Integer;
+
+               type Stack (S : Positive) is record
+                  Arr : Integer_Array (0 .. S - 1);
+                  --                        ^^^^^
+                  --  ERROR: computation in per-object
+                  --         expression is illegal.
+
+                  Top : Integer := -1;
+               end record;
+
+            end Rec_Per_Object_Expressions;
+
+      In this example, using the computation :ada:`S - 1` to specify the
+      range of :ada:`Arr` isn't permitted. (Note that,
+      :ref:`as we've seen before <Adv_Ada_Per_Object_Expressions_Default_Value>`,
+      this restriction doesn't apply when the computation is used in a
+      per-object expression that calculates the default value of a component.)
+
+#. We can only use access attributes (:ada:`T'Access` and
+   :ada:`T'Unchecked_Access`) in per-object constraints.
