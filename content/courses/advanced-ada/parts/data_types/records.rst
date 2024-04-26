@@ -800,7 +800,7 @@ Restrictions
 There are some important restrictions on per-object constraints:
 
 #. We can only use access attributes (:ada:`T'Access` and
-   :ada:`T'Unchecked_Access`) in per-object range constraints.
+   :ada:`T'Unchecked_Access`) in per-object constraints.
 
     - Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
 
