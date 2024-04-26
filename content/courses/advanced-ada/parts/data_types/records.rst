@@ -799,10 +799,7 @@ Restrictions
 
 There are some important restrictions on per-object constraints:
 
-#. We can only use access attributes (:ada:`T'Access` and
-   :ada:`T'Unchecked_Access`) in per-object constraints.
-
-    - Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
+# Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
 
     - For example, the following code example doesn't compile:
 
@@ -864,3 +861,6 @@ There are some important restrictions on per-object constraints:
       :ref:`as we've seen before <Adv_Ada_Per_Object_Expressions_Default_Value>`,
       this restriction doesn't apply when the computation is used in a
       per-object expression that calculates the default value of a component.)
+
+#. We can only use access attributes (:ada:`T'Access` and
+   :ada:`T'Unchecked_Access`) in per-object constraints.
