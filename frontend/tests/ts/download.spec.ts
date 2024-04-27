@@ -229,12 +229,18 @@ describe('Download', () => {
   describe('#getGprContents()', () => {
     it('should replace all placeholders', () => {
       const files: ResourceList = [{basename: 'main.adb', contents: ''}];
-      const gpr = getGprContents(files, {Builder: [], Compiler: []}, 'main.adb');
+      const gpr = getGprContents(files, {Builder: [], Compiler: []}, 'main.adb', false);
       expect(gpr).to.not.contain('--MAIN_PLACEHOLDER--');
       expect(gpr).to.not.contain('--LANGUAGE_PLACEHOLDER--');
       expect(gpr).to.not.contain('--COMPILER_SWITCHES_PLACEHOLDER--');
       expect(gpr).to.not.contain('--BUILDER_SWITCHES_PLACEHOLDER--');
       expect(gpr).to.not.contain('--');
+      const gpr_spark = getGprContents(files, {Builder: [], Compiler: []}, 'main.adb', true);
+      expect(gpr_spark).to.not.contain('--MAIN_PLACEHOLDER--');
+      expect(gpr_spark).to.not.contain('--LANGUAGE_PLACEHOLDER--');
+      expect(gpr_spark).to.not.contain('--COMPILER_SWITCHES_PLACEHOLDER--');
+      expect(gpr_spark).to.not.contain('--BUILDER_SWITCHES_PLACEHOLDER--');
+      expect(gpr_spark).to.not.contain('--');
     });
   });
 });

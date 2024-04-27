@@ -9,6 +9,13 @@ pragma Restrictions (No_Use_Of_Pragma => Linker_Options);
 pragma Restrictions (No_Dependence => System.Machine_Code);
 pragma Restrictions (No_Dependence => Machine_Code);\n`;
 
+const SPARK_ADC = `pragma Profile(GNAT_Extended_Ravenscar);
+pragma Partition_Elaboration_Policy(Sequential);
+pragma SPARK_Mode (On);
+pragma Warnings (Off, "no Global contract available");
+pragma Warnings (Off, "subprogram * has no effect");
+pragma Warnings (Off, "file name does not match");\n`;
+
 const MAIN_GPR = `project Main is
 
    --MAIN_PLACEHOLDER--
@@ -27,6 +34,25 @@ const MAIN_GPR = `project Main is
    end Builder;
 
 end Main;\n`;
+
+const SPARK_GPR = `project Main_Spark is
+
+   --MAIN_PLACEHOLDER--
+
+   --LANGUAGE_PLACEHOLDER--
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-g", "-O0");
+      --COMPILER_SWITCHES_PLACEHOLDER--
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("Ada") use ("-g");
+      --BUILDER_SWITCHES_PLACEHOLDER--
+      for Global_Configuration_Pragmas use "main_spark.adc";
+   end Builder;
+
+end Main_Spark;\n`;
 
 const languageMapping = {
   '"Ada"': ['.adb', 'ads'],
@@ -155,17 +181,24 @@ export function getMain(files: ResourceList, main: string): string {
  * @param {ResourceList} files to be zipped. Used in main finding logic.
  * @param {UnparsedSwitches} switches to be included in the gpr file.
  * @param {string} main provided by data-main for the project.
+ * @param {boolean} sparkMode SPARK is being used.
  * @return {string} the contents of the gpr file to be generated.
  */
 export function getGprContents(
     files: ResourceList,
     switches: UnparsedSwitches,
-    main: string
+    main: string,
+    sparkMode: boolean
 ): string {
   const languages = getLanguages(files);
   const parsedSwitches = parseSwitches(switches);
   const newMain = getMain(files, main);
   let gpr = MAIN_GPR;
+
+  if (sparkMode) {
+    gpr = SPARK_GPR;
+  }
+
   gpr = gpr.replace('--MAIN_PLACEHOLDER--', newMain);
   gpr = gpr.replace('--LANGUAGE_PLACEHOLDER--', languages);
   gpr = gpr.replace(
@@ -185,12 +218,14 @@ export function getGprContents(
  * @param {UnparsedSwitches} switches to be included in the gpr file
  * @param {string} main provided by data-main for the project
  * @param {string} name of the zip
+ * @param {boolean} sparkMode SPARK is being used.*
  */
 export function downloadProject(
     files: ResourceList,
     switches: UnparsedSwitches,
     main: string,
-    name: string
+    name: string,
+    sparkMode: boolean
 ): void {
   const zip = new JSZip();
 
@@ -199,12 +234,25 @@ export function downloadProject(
     zip.file(f.basename, f.contents);
   }
 
+  let adcFile = COMMON_ADC;
+
   // Add the ADC to the zip
-  zip.file('main.adc', COMMON_ADC);
+  zip.file('main.adc', adcFile);
 
   // Add the gpr to the zip
-  const gpr = getGprContents(files, switches, main);
+  const gpr = getGprContents(files, switches, main, false);
   zip.file('main.gpr', gpr);
+
+  if (sparkMode) {
+    adcFile = SPARK_ADC;
+
+    // Add the ADC to the zip
+    zip.file('main_spark.adc', adcFile);
+
+    // Add the gpr to the zip
+    const gpr = getGprContents(files, switches, main, sparkMode);
+    zip.file('main_spark.gpr', gpr);
+  }
 
   // Create and download the zip
   zip.generateAsync({type: 'blob'}).then((blob) => {

@@ -208,7 +208,8 @@ class Widget {
         Builder: switches['Builder'],
         Compiler: this.getActiveCompilerSwitches()};
       const main = this.container.dataset.main as string;
-      downloadProject(files, activeSwitches, main, this.name);
+      const sparkMode = true;
+      downloadProject(files, activeSwitches, main, this.name, sparkMode);
     });
 
     // grab reference to output area in the HTML and construct area
