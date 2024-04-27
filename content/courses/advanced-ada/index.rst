@@ -114,19 +114,25 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. only:: not no_hidden_books
 
-        This document was written by Gustavo A. Hoffmann and Robert A. Duff,
-        with contributions from Franco Gasperoni, Gary Dismukes,
+        This document was written by Gustavo A. Hoffmann, with major
+        contributions from Robert A. Duff. The document also includes
+        contributions from Franco Gasperoni, Gary Dismukes,
         Patrick Rogers, and Robert Dewar.
 
     .. only:: no_hidden_books
 
-        This document was written by Gustavo A. Hoffmann and Robert A. Duff,
-        with contributions from Arnaud Charlet, Emmanuel Briot,
+        This document was written by Gustavo A. Hoffmann, with major
+        contributions from Robert A. Duff. The document also includes
+        contributions from Arnaud Charlet, Emmanuel Briot,
         Franco Gasperoni, Gary Dismukes, Javier Miranda, Patrick Rogers,
         Quentin Ochem, Robert Dewar, and Yannick Moy.
 
-        Special thanks to Patrick Rogers for sharing his training slides on access
-        types: many ideas from those slides were integrated into this course.
+    These contributions are clearly indicated in the document, together
+    with the original publication source.
+
+    Special thanks to Patrick Rogers for all comments and suggestions. In
+    particular, thanks for sharing the training slides on access types:
+    many ideas from those slides were integrated into this course.
 
     This document was reviewed by Patrick Rogers and Tucker Taft.
 
