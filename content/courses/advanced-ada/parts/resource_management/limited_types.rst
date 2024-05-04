@@ -484,6 +484,8 @@ and full views can have non-matching declarations.
     - :arm22:`7.5 Limited Types <7-5>`
 
 
+.. _Adv_Ada_Partial_Full_View_Limited:
+
 Partial and full view of limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -603,6 +605,7 @@ the compiler complains about the :ada:`To := From` assignment in the
 view is limited (so no assignment is possible). Of course, in the case of the
 objects of :ada:`Rec_Nonlimited_Full` type, this assignment is perfectly fine.
 
+.. _Adv_Ada_Tagged_Limited_Private_Types:
 
 Tagged limited private types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -644,6 +647,14 @@ example and try to compile it.)
 
     Add link to section that explains this topic in more details (once it's
     available).
+
+
+Subtypes of Limited Types
+-------------------------
+
+.. todo::
+
+    Complete section!
 
 
 Deriving from limited types
@@ -816,7 +827,7 @@ procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
 
     end Simple_Recs.Ext;
 
-    --  Copied the code to the
+    --  We copied the code to the
     --  Test_Child_Limitedness procedure (in the
     --  body of the Simple_Recs.Ext package) and
     --  commented it out here.
@@ -979,6 +990,22 @@ Now, compilation of :ada:`Test_Limitedness` fails because :ada:`Rec_Derived` is
 explicitly limited.
 
 
+Immutably Limited Types
+-----------------------
+
+.. todo::
+
+    Complete section!
+
+
+Limited Types and Discriminants
+-------------------------------
+
+.. todo::
+
+    Complete section!
+
+
 Record components of limited type
 ---------------------------------
 
@@ -1111,7 +1138,7 @@ We can also use them for limited types.
 
 Suppose we have the following limited type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Aggregates.Full_Coverage_Rules_Limited
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Aggregates.Full_Coverage_Rules_Limited
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1139,6 +1166,10 @@ accidentally making copies. After all, the type is probably private, so
 developers using this package might not be aware of the problem. We could
 also solve that problem with controlled types, but controlled types are
 expensive, and add unnecessary complexity if not needed.
+
+.. todo::
+
+   Add link to chapter on controlled types (once it's available).
 
 We can initialize objects of limited type with an aggregate. Here, we can say:
 
@@ -1176,7 +1207,7 @@ you can't copy them.
 
     Since Ada 2005, an aggregate is allowed to be limited; we can say:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Aggregates.Full_Coverage_Rules_Limited
+    .. code:: ada run_button main=show_aggregate_init.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Aggregates.Full_Coverage_Rules_Limited
 
         with Ada.Strings.Unbounded;
         use  Ada.Strings.Unbounded;
@@ -1210,7 +1241,7 @@ you can't copy them.
 
     For example, if we have an aggregate of type :ada:`String`, like this:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Aggregates.String_Box_Init
+    .. code:: ada run_button main=show_string_box_init.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Aggregates.String_Box_Init
 
         procedure Show_String_Box_Init is
             Uninitialized_Const_Str : constant String :=
@@ -1260,7 +1291,7 @@ to create and initialize objects.
 
 Let's see an example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions_Limited_Types.Constructor_Functions
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions_Limited_Types.Constructor_Functions
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1321,7 +1352,7 @@ As for aggregates, the result of :ada:`Make_T` is built in place (that is,
 in :ada:`My_T`), rather than being created and then copied into
 :ada:`My_T`. Adding another level of function call, we can do:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions_Limited_Types.Constructor_Functions
+.. code:: ada run_button main=show_rumplestiltskin_constructor.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Constructor_Functions_Limited_Types.Constructor_Functions
 
     with P; use P;
 
@@ -1467,8 +1498,7 @@ Previously, we discussed
 For most types, extended return statements are no big deal |mdash| it's just
 syntactic sugar. But for limited types, this syntax is almost essential:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Extended_Return_Limited
-    :class: ada-syntax-only
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Extended_Return_Limited_Error
 
     package Task_Construct_Error is
 
@@ -1503,7 +1533,7 @@ The return statement here is illegal, because :ada:`Result` is local to
 sense (which is why task types are limited). Since Ada 2005, we can write
 constructor functions for task types:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Extended_Return_Limited
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Extended_Return_Limited
 
     package Task_Construct is
 
@@ -1732,7 +1762,7 @@ Building objects from constructors
 We've earlier seen examples of constructor functions for limited types
 similar to this:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
 
     with Ada.Strings.Unbounded;
     use  Ada.Strings.Unbounded;
@@ -1792,7 +1822,7 @@ similar to this:
 It is useful to consider the various contexts in which these functions may
 be called. We've already seen things like:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
+.. code:: ada run_button main=show_rumplestiltskin_constructor.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1809,7 +1839,7 @@ This object will be finalized whenever the surrounding scope is left.
 
 We can also do:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
+.. code:: ada run_button main=show_parameter_constructor.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1826,7 +1856,7 @@ return from :ada:`Do_Something`.
 
 We can allocate initialized objects on the heap:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
+.. code:: ada run_button main=show_heap_constructor.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1858,7 +1888,7 @@ which will be finalized when the scope of :ada:`T_Ref` is left (long after
 We can create another limited type with a component of type :ada:`T`, and
 use an aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
+.. code:: ada run_button main=show_outer_type.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
 
     with P;     use P;
     with P.Aux; use P.Aux;
@@ -1884,7 +1914,7 @@ As usual, the function results are built in place, directly in
 The one case where we *cannot* call such constructor functions is in an
 assignment statement:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
+.. code:: ada run_button main=show_illegal_constructor.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
     :class: ada-expect-compile-error
 
     with P;     use P;
@@ -1900,7 +1930,7 @@ assignment statement:
 which is illegal because assignment statements involve copying. Likewise,
 we can't copy a limited object into some other object:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
+.. code:: ada run_button main=show_illegal_constructor.adb project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Building_Objects_From_Constructors.Building_Objs_From_Constructors
     :class: ada-expect-compile-error
 
     with P;     use P;
@@ -1926,6 +1956,7 @@ Default initialization
 Consider the following type declaration:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+    :class: ada-syntax-only
 
     package Type_Defaults is
        type Color_Enum is (Red, Blue, Green);
