@@ -962,9 +962,15 @@ the :ada:`Test_Limitedness` procedure to a new procedure in the body of the
 
 In the :ada:`Test_Child_Limitedness` procedure of the :ada:`Simple_Recs.Ext`
 package, we can use the :ada:`Rec_Derived` as a nonlimited type because its
-ancestor :ada:`Rec` is nonlimited in its full view. (Of course, if we uncomment
-the code in the :ada:`Test_Limitedness` procedure, compilation fails there
-because :ada:`Rec_Derived` is viewed as descending from a limited type.)
+ancestor :ada:`Rec` is nonlimited in its full view. (
+:ref:`As we've learned before <Adv_Ada_Limited_And_Nonlimited_Full_View>`, if a
+limited type is nonlimited in its full view, we can copy objects of this type
+in the private part of the package specification or in the package body.)
+
+*Outside* of the package, both :ada:`Rec` and :ada:`Rec_Derived` types are
+limited types. Therefore, if we uncomment the code in the
+:ada:`Test_Limitedness` procedure, compilation fails there (because
+:ada:`Rec_Derived` is viewed as descending from a limited type).
 
 
 Deriving from tagged limited private types
