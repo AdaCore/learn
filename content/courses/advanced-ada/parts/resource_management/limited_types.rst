@@ -868,6 +868,14 @@ Here, :ada:`Rec_Derived` is a limited type derived from the (limited private)
 :ada:`Rec` type. We can verify that :ada:`Rec_Derived` type is limited
 because the compilation of the :ada:`Test_Limitedness` procedure fails.
 
+
+Deriving from non-explicitly limited private types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Up to this point, we have discussed
+:ref:`explicitly limited types <Adv_Ada_Explicitly_Limited_Types>`. Now, let's
+see how derivation works with *non-explicitly* limited types.
+
 Any type derived from a limited type is always limited, even if the full view
 of its ancestor is nonlimited. For example, let's modify the full view of
 :ada:`Rec` and make it nonlimited (i.e. make it *not explicitly* limited):
