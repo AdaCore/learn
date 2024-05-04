@@ -827,7 +827,7 @@ procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
 
     end Simple_Recs.Ext;
 
-    --  Copied the code to the
+    --  We copied the code to the
     --  Test_Child_Limitedness procedure (in the
     --  body of the Simple_Recs.Ext package) and
     --  commented it out here.
