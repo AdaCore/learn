@@ -977,7 +977,10 @@ Deriving from tagged limited private types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The rules for deriving from tagged limited private types are slightly different
-than ones we've seen in the previous section. Let's look at an example:
+than the ones we've seen so far. This is because tagged limited types are
+always :ref:`explicitly limited types <Adv_Ada_Explicitly_Limited_Types>`.
+
+Let's look at an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Tagged_Limited_Private_Type
     :class: ada-expect-compile-error
