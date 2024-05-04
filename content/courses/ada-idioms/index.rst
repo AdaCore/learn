@@ -114,4 +114,5 @@ Ada Idioms
     Expressing Inheritance Idioms <chapters/inheritance_idioms>
     Providing Component Access to Enclosing Record Objects <chapters/component_access_to_rec_objs>
     Controlling Object Initialization and Creation <chapters/controlling_obj_initialization_creation>
+    Interrupt Handling <chapters/interrupt_handling>
     Appendices <chapters/appendices>

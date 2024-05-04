@@ -1,3 +1,5 @@
+.. _Ada_Idioms_Component_Access_To_Enclosing_Record_Objects:
+
 Providing Component Access to Enclosing Record Objects
 ======================================================
 
