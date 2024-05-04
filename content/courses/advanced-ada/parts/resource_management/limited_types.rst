@@ -1167,6 +1167,10 @@ developers using this package might not be aware of the problem. We could
 also solve that problem with controlled types, but controlled types are
 expensive, and add unnecessary complexity if not needed.
 
+.. todo::
+
+   Add link to chapter on controlled types (once it's available).
+
 We can initialize objects of limited type with an aggregate. Here, we can say:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Aggregates.Full_Coverage_Rules_Limited
