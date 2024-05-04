@@ -649,6 +649,14 @@ example and try to compile it.)
     available).
 
 
+Subtypes of Limited Types
+-------------------------
+
+.. todo::
+
+    Complete section!
+
+
 Deriving from limited types
 ---------------------------
 
@@ -980,6 +988,22 @@ explicit in the type declaration:
 
 Now, compilation of :ada:`Test_Limitedness` fails because :ada:`Rec_Derived` is
 explicitly limited.
+
+
+Immutably Limited Types
+-----------------------
+
+.. todo::
+
+    Complete section!
+
+
+Limited Types and Discriminants
+-------------------------------
+
+.. todo::
+
+    Complete section!
 
 
 Record components of limited type
