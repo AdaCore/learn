@@ -537,6 +537,27 @@ actually provide assignment. But the partial view can restrict what is actually
 possible, so a limited partial view need not be completed in the full view as a
 limited type.
 
+In addition, tagged limited private types cannot have a nonlimited full view.
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is tagged limited private;
+
+    private
+
+       type Rec is tagged record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+Here, compilation fails because the :ada:`Ref` is nonlimited in its full view.
+
+
 .. _Adv_Ada_Limited_And_Nonlimited_Full_View:
 
 Limited and nonlimited in full view
