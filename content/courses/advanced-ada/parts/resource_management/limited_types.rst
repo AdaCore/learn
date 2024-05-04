@@ -537,6 +537,7 @@ actually provide assignment. But the partial view can restrict what is actually
 possible, so a limited partial view need not be completed in the full view as a
 limited type.
 
+.. _Adv_Ada_Limited_And_Nonlimited_Full_View:
 
 Limited and nonlimited in full view
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
