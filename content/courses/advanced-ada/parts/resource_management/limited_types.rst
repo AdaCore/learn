@@ -898,13 +898,16 @@ Here, :ada:`Rec_Derived` is a limited type because the partial view of
 doesn't affect the :ada:`Rec_Derived` type |mdash| as we can verify with the
 compilation error in the :ada:`Test_Limitedness` procedure.
 
-Note, however, that a derived type becomes nonlimited in the private part or
-the body of a child package if it isn't explicitly limited. For example,
+Note, however, that a derived type becomes nonlimited in the
+**private part or the body** of a child package if it isn't explicitly limited.
+In this sense, the derived type inherits the *non-limitedness* of the parent's
+full view. For example,
 because we're declaring :ada:`Rec_Derived` as :ada:`is new Rec` in the child
 package (:ada:`Simple_Recs.Ext`), we're saying that :ada:`Rec_Derived` is
-limited *outside* this package, but nonlimited in the :ada:`Simple_Recs.Ext`
-package. We can verify this by copying the code from the :ada:`Test_Limitedness`
-procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
+limited *outside* this package, but nonlimited in the private part and body of
+the :ada:`Simple_Recs.Ext` package. We can verify this by copying the code from
+the :ada:`Test_Limitedness` procedure to a new procedure in the body of the
+:ada:`Simple_Recs.Ext` package:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Limited_Private_Type
 
