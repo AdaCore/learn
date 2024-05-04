@@ -710,9 +710,10 @@ Note that we cannot derive a limited type from a nonlimited ancestor:
 
     end Simple_Recs;
 
-As expected, the compiler indicates that :ada:`Rec` should be of limited type.
+As expected, the compiler indicates that the ancestor :ada:`Rec` should be of
+limited type.
 
-In fact, all the types in a derivation class are the same |mdash| either
+In fact, all types in a derivation class are the same |mdash| either
 limited or not. (That is especially important with dynamic dispatching via
 tagged types. We discuss this topic in another chapter.)
 
@@ -767,7 +768,7 @@ because the compilation of the :ada:`Test_Limitedness` procedure fails.
 
 Any type derived from a limited type is always limited, even if the full view
 of its ancestor is nonlimited. For example, let's modify the full view of
-:ada:`Rec` and make it nonlimited:
+:ada:`Rec` and make it nonlimited (i.e. make it *not explicitly* limited):
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Limited_Private_Type
     :class: ada-expect-compile-error
@@ -926,7 +927,7 @@ Deriving from limited interfaces
 The rules for limited interfaces are different from the ones for limited tagged
 types. In contrast to the rule we've seen in the previous section, a type that
 is derived from a limited type isn't automatically limited. In other words, it
-doesn't inherit the *limitedness* from the interface. For example:
+does **not** inherit the *limitedness* from the interface. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Interface_Limited_Private
 
@@ -1129,7 +1130,7 @@ Full coverage rules for limited types
 
 Previously, we discussed
 :ref:`full coverage rules for aggregates <Adv_Ada_Full_Coverage_Rules_Aggregates>`.
-We can also use them for limited types.
+They also apply to limited types.
 
 .. admonition:: Historically
 
