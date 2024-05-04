@@ -484,6 +484,8 @@ and full views can have non-matching declarations.
     - :arm22:`7.5 Limited Types <7-5>`
 
 
+.. _Adv_Ada_Partial_Full_View_Limited:
+
 Partial and full view of limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -603,6 +605,7 @@ the compiler complains about the :ada:`To := From` assignment in the
 view is limited (so no assignment is possible). Of course, in the case of the
 objects of :ada:`Rec_Nonlimited_Full` type, this assignment is perfectly fine.
 
+.. _Adv_Ada_Tagged_Limited_Private_Types:
 
 Tagged limited private types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
