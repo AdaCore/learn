@@ -754,7 +754,7 @@ we may actually declare a type as :ada:`limited private` in the
 public part of a package, while its full view is nonlimited. In this case, the
 limited type is not consider explicitly limited anymore.
 
-For example, if we make the full view of the :ada:`Rec` non-limited (by
+For example, if we make the full view of the :ada:`Rec` nonlimited (by
 removing the :ada:`limited` keyword in the private part), then the :ada:`Rec`
 type isn't explicitly limited anymore:
 
@@ -773,7 +773,7 @@ type isn't explicitly limited anymore:
     end Simple_Recs;
 
 Now, even though the :ada:`Rec` type was declared as limited private, the full
-view indicates that it's actually a non-limited type, so it isn't explicitly
+view indicates that it's actually a nonlimited type, so it isn't explicitly
 limited.
 
 Note that
@@ -937,7 +937,7 @@ compilation error in the :ada:`Test_Limitedness` procedure.
 
 Note, however, that a derived type becomes nonlimited in the
 **private part or the body** of a child package if it isn't explicitly limited.
-In this sense, the derived type inherits the *non-limitedness* of the parent's
+In this sense, the derived type inherits the *nonlimitedness* of the parent's
 full view. For example,
 because we're declaring :ada:`Rec_Derived` as :ada:`is new Rec` in the child
 package (:ada:`Simple_Recs.Ext`), we're saying that :ada:`Rec_Derived` is
@@ -1278,7 +1278,7 @@ In this section, we focus on using aggregates to initialize limited types.
         end Show_Non_Aggregate_Init;
 
     which has the maintenance problem the full coverage rules are supposed to
-    prevent. Or, make the type non-limited, and gain the benefits of
+    prevent. Or, make the type nonlimited, and gain the benefits of
     aggregates, but lose the ability to prevent copies.
 
 
@@ -1552,7 +1552,7 @@ prevents clients from creating default-initialized objects (that is,
 an object of type :ada:`T` is created, giving package :ada:`P` full
 control over initialization of objects.
 
-Ideally, limited and non-limited types should be just the same, except for
+Ideally, limited and nonlimited types should be just the same, except for
 the essential difference: you can't copy limited objects (and there's no
 language-defined equality operator). By allowing
 functions and aggregates for limited types, we're very close to this goal.
@@ -1561,7 +1561,7 @@ Some languages have a specific feature called *constructor*. In Ada, a
 
 .. admonition:: Historically
 
-    Prior to Ada 2005, *constructors* only worked for non-limited types. For
+    Prior to Ada 2005, *constructors* only worked for nonlimited types. For
     limited types, the only way to *construct* on declaration was via default
     values, which limits you to one constructor. And the only way to pass
     parameters to that construction was via discriminants.
@@ -1831,12 +1831,12 @@ procedure are the same object.
 
 .. admonition:: Important
 
-   When we use non-limited types, we're actually copying the returned object
+   When we use nonlimited types, we're actually copying the returned object
    |mdash| which was locally created in the function |mdash| to the object that
    we're assigning the function to.
 
    For example, let's modify the previous code and make :ada:`Simple_Rec`
-   non-limited:
+   nonlimited:
 
        .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Initialization_Return_Copy
 
