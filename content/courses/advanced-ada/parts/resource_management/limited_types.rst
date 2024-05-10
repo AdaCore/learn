@@ -591,7 +591,8 @@ For example:
 
     end Simple_Recs;
 
-Here, compilation fails because the :ada:`Ref` is nonlimited in its full view.
+Here, compilation fails because the type :ada:`Rec` is nonlimited in its full
+view.
 
 
 .. _Adv_Ada_Limited_And_Nonlimited_Full_View:
