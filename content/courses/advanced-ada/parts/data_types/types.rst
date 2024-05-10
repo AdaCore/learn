@@ -1621,6 +1621,8 @@ want to declare objects of this type.
 
     - :arm22:`7.3 Private Types and Private Extensions <7-3>`
 
+.. _Adv_Ada_Non_Record_Private_Types:
+
 Non-Record Private Types
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
