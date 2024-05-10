@@ -652,9 +652,49 @@ example and try to compile it.)
 Subtypes of Limited Types
 -------------------------
 
-.. todo::
+We can declare subtypes of limited types. For example:
 
-    Complete section!
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Limited_Subtype
+
+    package Simple_Recs is
+
+       type Limited_Integer_Array (L : Positive) is
+         limited private;
+
+       subtype Limited_Integer_Array_2 is
+         Limited_Integer_Array (2);
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Limited_Integer_Array (L : Positive) is
+         limited record
+          Arr : Integer_Array (1 .. L);
+       end record;
+
+    end Simple_Recs;
+
+Here, :ada:`Limited_Integer_Array_2` is a subtype of the
+:ada:`Limited_Integer_Array` type. Since :ada:`Limited_Integer_Array` is a
+limited type, the :ada:`Limited_Integer_Array_2` subtype is limited as well.
+In that sense, a subtype doesn't change the limitedness of its parent type.
+We can test this in a small application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Limited_Subtype
+    :class: ada-expect-compile-error
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Test_Limitedness is
+       Dummy_1, Dummy_2 : Limited_Integer_Array_2;
+    begin
+       Dummy_2 := Dummy_1;
+    end Test_Limitedness;
+
+As expected, compilations fails because :ada:`Limited_Integer_Array_2` is a
+limited (sub)type.
 
 
 Deriving from limited types
