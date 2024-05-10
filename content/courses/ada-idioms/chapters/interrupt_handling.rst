@@ -614,7 +614,11 @@ procedures simply call the appropriate routines for the parameter's
     begin
        Suspend_Until_True (This.Transmission_Complete);
     end Await_Transmission_Complete;
-    and likewise:
+
+and likewise:
+
+.. code-block:: ada
+
     procedure Await_Reception_Complete (This : in out Message) is
     begin
        Suspend_Until_True (This.Reception_Complete);
