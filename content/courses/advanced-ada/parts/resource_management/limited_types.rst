@@ -493,7 +493,7 @@ In principle, only record types can be declared limited, so we cannot use
 scalar or array types. For example, the following declarations won't compile:
 
 .. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Non_Record_Limited_Error
-    :class: ada-expect-compile-error
+    :class: ada-nocheck
 
     !non_record_limited_error.ads
     package Non_Record_Limited_Error is
