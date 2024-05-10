@@ -510,7 +510,40 @@ public part of a package), while its full view is nonlimited. For example:
     end Simple_Recs;
 
 In this case, only the partial view of :ada:`Rec` is limited, while its full
-view is nonlimited.
+view is nonlimited. When deriving from :ada:`Rec`, the view of the derived
+type is the same as for the parent type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+
+    package Simple_Recs.Child
+    is
+       type Rec_Derived is new Rec;
+       --  As for its parent, the
+       --  partial view of Rec_Derived
+       --  is limited, but the full view
+       --  is nonlimited.
+
+    end Simple_Recs.Child;
+
+Clients must nevertheless comply with their partial view, and treat the type as
+if it is in fact limited. In other words, if you use the :ada:`Rec` type in a
+subprogram or package outside of the :ada:`Simple_Recs` package (or its child
+packages), the type is limited from that perspective:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Use_Rec_In_Subprogram is
+       R1, R2 : Rec;
+    begin
+       R1.I := 1;
+       R2   := R1;
+    end Use_Rec_In_Subprogram;
+
+Here, compilation fails because the type :ada:`Rec` is limited from the
+procedure's perspective.
 
 Note that the opposite |mdash| declaring a type as :ada:`private` and its full
 full view as :ada:`limited private` |mdash| is not possible. For example:
