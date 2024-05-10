@@ -602,7 +602,7 @@ Limited and nonlimited in full view
 Declaring the full view of a type as limited or nonlimited has implications in
 the way we can use objects of this type in the package body. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Non_Limited_Partial_Full_View
     :class: ada-expect-compile-error
 
     package Simple_Recs is
