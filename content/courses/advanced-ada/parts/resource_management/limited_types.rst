@@ -484,6 +484,68 @@ and full views can have non-matching declarations.
     - :arm22:`7.5 Limited Types <7-5>`
 
 
+.. _Adv_Ada_Full_View_Limited_Non_Record:
+
+Non-Record Limited Types
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In principle, only record types can be declared limited, so we cannot use
+scalar or array types. For example, the following declarations won't compile:
+
+.. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Non_Record_Limited_Error
+    :class: ada-expect-compile-error
+
+    !non_record_limited_error.ads
+    package Non_Record_Limited_Error is
+
+       type Limited_Enumeration is limited (Off, On);
+
+       type Limited_Integer is new limited Integer;
+
+       type Integer_Array is array (Positive range <>) of Integer;
+
+       type Rec is new limited Integer_Array (1 .. 2);
+
+    end Non_Record_Limited_Error;
+
+However, we've mentioned
+:ref:`in a previous chapter <Adv_Ada_Non_Record_Private_Types>` that private
+types don't have to be record types necessarily. In this sense, limited private
+types makes it possible for us to use types other than record types in the full
+view and still benefit from the restrictions of limited types. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Non_Record_Limited
+
+    package Simple_Recs is
+
+       type Limited_Enumeration is
+         limited private;
+
+       type Limited_Integer is
+         limited private;
+
+       type Limited_Integer_Array_2 is
+         limited private;
+
+    private
+
+       type Limited_Enumeration is (Off, On);
+
+       type Limited_Integer is new Integer;
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Limited_Integer_Array_2 is
+         new Integer_Array (1 .. 2);
+
+    end Simple_Recs;
+
+Here, :ada:`Limited_Enumeration`, :ada:`Limited_Integer`, and
+:ada:`Limited_Integer_Array_2` are limited private types that encapsulate an
+enumeration type, an integer type, and a constrained array type, respectively.
+
+
 .. _Adv_Ada_Partial_Full_View_Limited:
 
 Partial and full view of limited types
