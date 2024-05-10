@@ -1684,7 +1684,7 @@ adding operators to it, for example:
 
     end Private_Integers;
 
-Now, we can use the :ada:`+` operator as a common integer variable:
+Now, let's use the new operator in a test application:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
 
@@ -1695,6 +1695,9 @@ Now, we can use the :ada:`+` operator as a common integer variable:
     begin
        A := A + B;
     end Show_Private_Integers;
+
+In this example, we use the :ada:`+` operator as a common integer variable.
+
 
 Type conversion
 ---------------
