@@ -1698,6 +1698,70 @@ Now, let's use the new operator in a test application:
 
 In this example, we use the :ada:`+` operator as a common integer variable.
 
+Limitations
+^^^^^^^^^^^
+
+There are, however, some limitations: we cannot use unconstrained types such as
+arrays or even discriminants for arrays. For example, the following
+declarations won't work:
+
+.. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
+    :class: ada-expect-compile-error
+
+    !private_arrays.ads
+    package Private_Arrays is
+
+       type Private_Unconstrained_Array is private;
+
+       type Private_Constrained_Array
+         (L : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Private_Unconstrained_Array is
+         array (Positive range <>) of Integer;
+
+       type Private_Constrained_Array
+         (L : Positive) is
+           array (1 .. 2) of Integer;
+
+       --  NOTE: using an array type fails as well:
+       --
+       --  type Private_Constrained_Array
+       --    (L : Positive) is
+       --      Integer_Array (1 .. L);
+
+    end Private_Arrays;
+
+As you might have guessed, the solution is to rewrite the declaration of
+:ada:`Private_Constrained_Array` using a record type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
+
+    package Private_Arrays is
+
+       type Private_Constrained_Array
+         (L : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Private_Constrained_Array
+         (L : Positive) is
+       record
+          Arr: Integer_Array  (1 .. 2);
+       end record;
+
+    end Private_Arrays;
+
+Now, the code compiles fine |mdash| but we had to use a record type in the
+full view to make it work.
+
 
 Type conversion
 ---------------
