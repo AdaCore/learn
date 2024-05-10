@@ -545,6 +545,9 @@ packages), the type is limited from that perspective:
 Here, compilation fails because the type :ada:`Rec` is limited from the
 procedure's perspective.
 
+Limitations
+^^^^^^^^^^^
+
 Note that the opposite |mdash| declaring a type as :ada:`private` and its full
 full view as :ada:`limited private` |mdash| is not possible. For example:
 
