@@ -140,14 +140,7 @@ Advanced Journey With Ada: A Flight In Progress
 
     .. admonition:: CHANGELOG
 
-        *Release 2023-05*
-
-        - First draft release including following parts:
-
-            - Data Types
-            - Control Flow
-            - Modular Programming
-
+        Changes are being tracked on the :doc:`CHANGELOG <changelog>` page.
 
 .. only:: builder_html
 
