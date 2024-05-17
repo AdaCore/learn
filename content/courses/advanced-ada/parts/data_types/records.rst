@@ -138,6 +138,109 @@ components in such a way that the resulting initialization value is always
 correct, independently of the order that those expressions are evaluated.
 
 
+Defaults and object declaration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+    This subsection was originally written by Robert A. Duff and published as
+    `Gem #12: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-12>`_.
+
+Consider the following type declaration:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
+    :class: ada-syntax-only
+
+    package Type_Defaults is
+       type Color_Enum is (Red, Blue, Green);
+
+       type T is private;
+    private
+       type T is
+          record
+             Color     : Color_Enum := Red;
+             Is_Gnarly : Boolean := False;
+             Count     : Natural;
+          end record;
+
+       procedure Do_Something;
+    end Type_Defaults;
+
+If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
+:ada:`Color` and :ada:`Is_Gnarly` to their defaults", we can do this:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+
+    package body Type_Defaults is
+
+       Object_100 : constant T :=
+                      (Color     => <>,
+                       Is_Gnarly => <>,
+                       Count     => 100);
+
+       procedure Do_Something is null;
+
+    end Type_Defaults;
+
+.. admonition:: Historically
+
+    Prior to Ada 2005, the following style was common:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+
+        package body Type_Defaults is
+
+           Object_100 : constant T :=
+                          (Color     => Red,
+                           Is_Gnarly => False,
+                           Count     => 100);
+
+           procedure Do_Something is null;
+
+        end Type_Defaults;
+
+    Here, we only wanted :ada:`Object_100` to be a default-initialized
+    :ada:`T`, with :ada:`Count` equal to :ada:`100`. It's a little bit annoying
+    that we had to write the default values :ada:`Red` and :ada:`False` twice.
+    What if we change our mind about :ada:`Red`, and forget to change it in all
+    the relevant places? Since Ada 2005, the :ada:`<>` notation comes to the
+    rescue, as we've just seen.
+
+On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
+but initialize all other components, including the ones we might add next
+week, to their defaults", we can do this:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+
+    package body Type_Defaults is
+
+       Object_100 : constant T := (Count  => 100,
+                                   others => <>);
+
+       procedure Do_Something is null;
+
+    end Type_Defaults;
+
+Note that if we add a component :ada:`Glorp : Integer;` to type :ada:`T`,
+then the :ada:`others` case leaves :ada:`Glorp` undefined just as this
+code would do:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+
+    package body Type_Defaults is
+
+       procedure Do_Something is
+          Object_100 : T;
+       begin
+          Object_100.Count := 100;
+       end Do_Something;
+
+    end Type_Defaults;
+
+Therefore, you should be careful and think twice before using
+:ada:`others`.
+
+
 Advanced Usages
 ~~~~~~~~~~~~~~~
 
