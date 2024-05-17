@@ -3,6 +3,12 @@ Records
 
 .. include:: ../../../global.txt
 
+.. _Adv_Ada_Record_Component_Default_Initialization:
+
+Default Initialization
+----------------------
+
+
 .. _Adv_Ada_Mutually_Dependent_Types:
 
 Mutually dependent types
