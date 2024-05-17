@@ -1,3 +1,5 @@
+.. _Ada_Idioms_Component_Access_To_Enclosing_Record_Objects:
+
 Providing Component Access to Enclosing Record Objects
 ======================================================
 
@@ -249,12 +251,12 @@ well:
        type T is limited private;
        ...
     private
-       type T is limited record 
+       type T is limited record
           ...
        end record;
     end Q;
 
-Then, as mentioned, you can choose whether the type will also be tagged. 
+Then, as mentioned, you can choose whether the type will also be tagged.
 
 Real-World Example
 ----------------------------------
@@ -464,13 +466,13 @@ indicating that transmission for a single 9-bit value has completed. But these
 two are signaled to the software on one interrupt line, and that is the value
 indicated by :ada:`IRQ`.
 
-Therefore, there is one interrupt handling protected procedure, named 
-:ada:`IRQ_Handler`. In response to this interrupt, :ada:`IRQ_Handler` 
-determines which event has occurred by checking one of the 
-:ada:`Transceiver` status registers. The back-reference through 
-:ada:`Port` makes that possible. Other :ada:`Transceiver` routines are 
-also called via :ada:`Port`, and :ada:`Port.all` is passed to the 
-:ada:`Put` and :ada:`Get` 
+Therefore, there is one interrupt handling protected procedure, named
+:ada:`IRQ_Handler`. In response to this interrupt, :ada:`IRQ_Handler`
+determines which event has occurred by checking one of the
+:ada:`Transceiver` status registers. The back-reference through
+:ada:`Port` makes that possible. Other :ada:`Transceiver` routines are
+also called via :ada:`Port`, and :ada:`Port.all` is passed to the
+:ada:`Put` and :ada:`Get`
 calls:
 
 .. code-block:: ada
