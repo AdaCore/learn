@@ -138,6 +138,49 @@ components in such a way that the resulting initialization value is always
 correct, independently of the order that those expressions are evaluated.
 
 
+Evaluation
+~~~~~~~~~~
+
+According to the Annotated Ada Reference Manual, the "default expression of a
+record component is only evaluated upon the creation of a default-initialized
+object of the record type." This means that the default expression is by itself
+not evaluated when we declare the record type, but when we create an object of
+this type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Initialization_Order
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Show_Initialization_Order is
+    begin
+       Put_Line ("Some processing first...");
+       Put_Line
+         ("Now, let's declare an object "
+          & "of the record type Rec...");
+
+       declare
+          R : Rec;
+       begin
+          Put_Line
+            ("An object of Rec type has "
+             & "just been created.");
+       end;
+
+    end Show_Initialization_Order;
+
+Here, we only see the information displayed by the :ada:`Init` function
+|mdash| which is called to initialize the :ada:`A` and :ada:`B` components of
+the :ada:`R` record |mdash| during the object creation. In other words,
+the default expressions :ada:`Init ("A", 1)` and :ada:`Init ("B", 2)` are *not*
+evaluated when we declare the :ada:`R` type, but when we create an object of
+this type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :aarm22:`3.8 Record Types <3-8>`
+
+
 Defaults and object declaration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
