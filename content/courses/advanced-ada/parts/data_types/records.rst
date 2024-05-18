@@ -212,7 +212,7 @@ Consider the following type declaration:
 If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
 :ada:`Color` and :ada:`Is_Gnarly` to their defaults", we can do this:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
 
     package body Type_Defaults is
 
@@ -229,7 +229,7 @@ If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
 
     Prior to Ada 2005, the following style was common:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
 
         package body Type_Defaults is
 
@@ -253,7 +253,7 @@ On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
 but initialize all other components, including the ones we might add next
 week, to their defaults", we can do this:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
 
     package body Type_Defaults is
 
@@ -268,7 +268,7 @@ Note that if we add a component :ada:`Glorp : Integer;` to type :ada:`T`,
 then the :ada:`others` case leaves :ada:`Glorp` undefined just as this
 code would do:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Default_Initialization.Default_Init
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
 
     package body Type_Defaults is
 
