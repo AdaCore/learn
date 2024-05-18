@@ -1110,6 +1110,21 @@ Let's look at a code example that shows instances of immutably limited types:
 
     end Show_Immutably_Limited_Types;
 
+    package body Show_Immutably_Limited_Types is
+
+       task body TT is
+       begin
+         accept Start;
+         accept Stop;
+       end TT;
+
+       protected body PT is
+         function Value return Integer is
+           (PT.A);
+       end PT;
+
+    end Show_Immutably_Limited_Types;
+
 In the :ada:`Show_Immutably_Limited_Types` package above, we see multiple
 instances of immutably limited types. (The comments in the source code indicate
 each type.)
