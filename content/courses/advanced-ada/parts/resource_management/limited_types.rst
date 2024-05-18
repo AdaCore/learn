@@ -920,6 +920,8 @@ declaration of :ada:`Rec_Derived`:
 the derived type, we must include it in its full view as well.)
 
 
+.. _Adv_Ada_Deriving_Limited_Interfaces:
+
 Deriving from limited interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
