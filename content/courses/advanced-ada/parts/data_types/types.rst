@@ -1739,6 +1739,12 @@ For example, the following declarations won't work:
 
     end Private_Arrays;
 
+Completing the private type with an unconstrained array type in the full view
+is not allowed because clients could expect, according to their view, to
+declare objects of the type. But doing so would not be allowed according to the
+full view. So this is another case of the partial view having to present
+clients with a sufficiently *true* view of the type's capabilities.
+
 One solution is to rewrite the declaration of :ada:`Private_Constrained_Array`
 using a record type:
 
@@ -1772,6 +1778,53 @@ using a record type:
 
 Now, the code compiles fine |mdash| but we had to use a record type in the
 full view to make it work.
+
+Another solution is to make the private type indefinite. In this case, the
+client's partial view would be consistent with a completion as an indefinite
+type in the private part:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
+
+    package Private_Arrays is
+
+       type Private_Constrained_Array (<>) is
+         private;
+
+       function Init
+         (L : Positive)
+          return Private_Constrained_Array;
+
+    private
+
+       type Private_Constrained_Array is
+         array (Positive range <>) of Integer;
+
+    end Private_Arrays;
+
+    package body Private_Arrays is
+
+       function Init
+         (L : Positive)
+          return Private_Constrained_Array
+       is
+          PCA : Private_Constrained_Array (1 .. L);
+       begin
+          return PCA;
+       end Init;
+
+    end Private_Arrays;
+
+    with Private_Arrays; use Private_Arrays;
+
+    procedure Declare_Private_Array is
+      Arr : Private_Constrained_Array := Init (5);
+    begin
+      null;
+    end Declare_Private_Array;
+
+The bounds for the object's declaration come from the required initial value
+when an object is declared. In this case, we initialize the object with a call
+to the :ada:`Init` function.
 
 
 Type conversion
