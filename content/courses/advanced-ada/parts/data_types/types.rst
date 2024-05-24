@@ -1698,7 +1698,8 @@ Now, let's use the new operator in a test application:
        A := A + B;
     end Show_Private_Integers;
 
-In this example, we use the :ada:`+` operator as a common integer variable.
+In this example, we use the :ada:`+` operator as if we were adding two common
+integer variables of :ada:`Integer` type.
 
 Limitations
 ^^^^^^^^^^^
