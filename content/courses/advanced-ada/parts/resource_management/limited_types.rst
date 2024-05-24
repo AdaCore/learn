@@ -1080,7 +1080,7 @@ Deriving from tagged limited private types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The rules for deriving from tagged limited private types are slightly different
-than the ones we've seen so far. This is because tagged limited types are
+than the rules we've seen so far. This is because tagged limited types are
 always :ref:`explicitly limited types <Adv_Ada_Explicitly_Limited_Types>`.
 
 Let's look at an example:
