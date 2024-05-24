@@ -1742,7 +1742,7 @@ declarations won't work:
 As you might have guessed, the solution is to rewrite the declaration of
 :ada:`Private_Constrained_Array` using a record type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
 
     package Private_Arrays is
 
@@ -1761,6 +1761,14 @@ As you might have guessed, the solution is to rewrite the declaration of
        end record;
 
     end Private_Arrays;
+
+    with Private_Arrays; use Private_Arrays;
+
+    procedure Declare_Private_Array is
+      Arr : Private_Constrained_Array (5);
+    begin
+      null;
+    end Declare_Private_Array;
 
 Now, the code compiles fine |mdash| but we had to use a record type in the
 full view to make it work.
