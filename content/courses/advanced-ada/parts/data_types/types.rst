@@ -1701,8 +1701,8 @@ Now, let's use the new operator in a test application:
 In this example, we use the :ada:`+` operator as if we were adding two common
 integer variables of :ada:`Integer` type.
 
-Limitations
-^^^^^^^^^^^
+Unconstrained Types
+^^^^^^^^^^^^^^^^^^^
 
 There are, however, some limitations: we cannot use unconstrained types such as
 arrays or even discriminants for arrays. For example, the following
