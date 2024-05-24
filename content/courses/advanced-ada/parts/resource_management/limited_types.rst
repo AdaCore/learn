@@ -605,6 +605,84 @@ the compiler complains about the :ada:`To := From` assignment in the
 view is limited (so no assignment is possible). Of course, in the case of the
 objects of :ada:`Rec_Nonlimited_Full` type, this assignment is perfectly fine.
 
+
+Limited private component
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Another example mentioned by the
+Ada Reference Manual (:arm22:`7.3.1 <7-3-1>`, 5/1) is about an array type whose
+component type is limited private, but nonlimited in its full view. Let's see a
+complete code example for that:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Nonlimited_Array
+    :class: ada-expect-compile-error
+
+    package Limited_Nonlimited_Arrays is
+
+       type Limited_Private is
+         limited private;
+
+       function Init return Limited_Private;
+
+       --  The array type Limited_Private_Array
+       --  is limited because the type of its
+       --  component is limited.
+       type Limited_Private_Array is
+         array (Positive range <>) of
+           Limited_Private;
+
+    private
+
+       type Limited_Private is
+       record
+          A : Integer;
+       end record;
+
+       --  Limited_Private_Array type is
+       --  nonlimited at this point because
+       --  its component is nonlimited.
+       --
+       --  The assignments below are OK:
+       A1 : Limited_Private_Array (1 .. 5);
+
+       A2 : Limited_Private_Array := A1;
+
+    end Limited_Nonlimited_Arrays;
+
+    package body Limited_Nonlimited_Arrays is
+
+       function Init return Limited_Private is
+         ((A => 1));
+
+    end Limited_Nonlimited_Arrays;
+
+    with Limited_Nonlimited_Arrays;
+    use  Limited_Nonlimited_Arrays;
+
+    procedure Show_Limited_Nonlimited_Array is
+       A3 : Limited_Private_Array (1 .. 2) :=
+              (others => Init);
+       A4 : Limited_Private_Array (1 .. 2);
+    begin
+       --  ERROR: this assignment is illegal because
+       --  Limited_Private_Array is limited, as
+       --  its component is limited at this point.
+       A4 := A3;
+    end Show_Limited_Nonlimited_Array;
+
+As we can see in this example, the limitedness of the array type
+:ada:`Limited_Private_Array` depends on the limitedness of its component type
+:ada:`Limited_Private`. In the private part of :ada:`Limited_Nonlimited_Arrays`
+package, where :ada:`Limited_Private` is nonlimited, the array type
+:ada:`Limited_Private_Array` becomes nonlimited as well. In contrast, in the
+:ada:`Show_Limited_Nonlimited_Array`, the array type is limited because its
+component is limited in that scope.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`7.3.1 Private Operations <7-3-1>`
+
+
 .. _Adv_Ada_Tagged_Limited_Private_Types:
 
 Tagged limited private types
@@ -1143,75 +1221,6 @@ addition, we have nonsynchronized limited interface types. As mentioned earlier
 in this chapter, a
 :ref:`type derived from a nonsynchronized limited interface <Adv_Ada_Deriving_Limited_Interfaces>`,
 can be nonlimited, so it's not immutably limited.
-
-Interestingly, a type can be both limited and nonlimited at the same, depending
-on the context. An example from the Ada Reference Manual
-(:arm22:`7.3.1 <7-3-1>`, 5/1) is that of an array type whose component type is
-limited private, but nonlimited in its full view:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Immutably_Limited_Types.Limited_Nonlimited_Array
-    :class: ada-expect-compile-error
-
-    package Limited_Nonlimited_Arrays is
-
-       type Limited_Private is
-         limited private;
-
-       function Init return Limited_Private;
-
-       --  The array type Limited_Private_Array
-       --  is limited because the type of its
-       --  component is limited.
-       type Limited_Private_Array is
-         array (Positive range <>) of
-           Limited_Private;
-
-    private
-
-       type Limited_Private is
-       record
-          A : Integer;
-       end record;
-
-       --  Limited_Private_Array type is
-       --  nonlimited at this point because
-       --  its component is nonlimited.
-       --
-       --  The assignments below are OK:
-       A1 : Limited_Private_Array (1 .. 5);
-
-       A2 : Limited_Private_Array := A1;
-
-    end Limited_Nonlimited_Arrays;
-
-    package body Limited_Nonlimited_Arrays is
-
-       function Init return Limited_Private is
-         ((A => 1));
-
-    end Limited_Nonlimited_Arrays;
-
-    with Limited_Nonlimited_Arrays;
-    use  Limited_Nonlimited_Arrays;
-
-    procedure Show_Limited_Nonlimited_Array is
-       A3 : Limited_Private_Array (1 .. 2) :=
-              (others => Init);
-       A4 : Limited_Private_Array (1 .. 2);
-    begin
-       --  ERROR: this assignment is illegal because
-       --  Limited_Private_Array is limited, as
-       --  its component is limited at this point.
-       A4 := A3;
-    end Show_Limited_Nonlimited_Array;
-
-As we can see in this example, the limitedness of the array type
-:ada:`Limited_Private_Array` depends on the limitedness of its component type
-:ada:`Limited_Private`. In the private part of :ada:`Limited_Nonlimited_Arrays`
-package, where :ada:`Limited_Private` is nonlimited, the array type
-:ada:`Limited_Private_Array` becomes nonlimited as well. In contrast, in the
-:ada:`Show_Limited_Nonlimited_Array`, the array type is limited because its
-component is limited in that scope.
 
 .. admonition:: In the Ada Reference Manual
 
