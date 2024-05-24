@@ -679,7 +679,9 @@ We can declare subtypes of limited types. For example:
 Here, :ada:`Limited_Integer_Array_2` is a subtype of the
 :ada:`Limited_Integer_Array` type. Since :ada:`Limited_Integer_Array` is a
 limited type, the :ada:`Limited_Integer_Array_2` subtype is limited as well.
-In that sense, a subtype doesn't change the limitedness of its parent type.
+A subtype just introduces a name for some constraints on an existing type. As
+such, a subtype doesn't change the limitedness of the constrained type.
+
 We can test this in a small application:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Limited_Subtype
