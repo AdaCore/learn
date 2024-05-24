@@ -1705,8 +1705,8 @@ Unconstrained Types
 ^^^^^^^^^^^^^^^^^^^
 
 There are, however, some limitations: we cannot use unconstrained types such as
-arrays or even discriminants for arrays. For example, the following
-declarations won't work:
+arrays or even discriminants for arrays in the same way as we did for scalars.
+For example, the following declarations won't work:
 
 .. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
     :class: ada-expect-compile-error
@@ -1739,8 +1739,8 @@ declarations won't work:
 
     end Private_Arrays;
 
-As you might have guessed, the solution is to rewrite the declaration of
-:ada:`Private_Constrained_Array` using a record type:
+One solution is to rewrite the declaration of :ada:`Private_Constrained_Array`
+using a record type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
 
