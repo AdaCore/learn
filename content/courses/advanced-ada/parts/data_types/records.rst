@@ -3,6 +3,322 @@ Records
 
 .. include:: ../../../global.txt
 
+.. _Adv_Ada_Record_Component_Default_Initialization:
+
+Default Initialization
+----------------------
+
+As mentioned in the
+:ref:`Introduction to Ada <Intro_Ada_Record_Default_Values>` course, record
+components can have default initial values. Also, we've seen that other kinds
+of types can have :ref:`default values <Adv_Ada_Default_Initial_Values>`.
+
+In the Ada Reference Manual, we refer to these default initial values as
+"default expressions of record components." The term *default expression*
+indicates that we can use any kind of expression for the default initialization
+of record components |mdash| which includes subprogram calls for example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Simple_Example
+
+    package Show_Default_Initialization is
+
+       function Init return Integer is
+         (42);
+
+       type Rec is record
+          A : Integer := Init;
+       end record;
+
+    end Show_Default_Initialization;
+
+In this example, the :ada:`A` component is initialized by default by a call to
+the :ada:`Init` procedure.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.8 Record Types <3-8>`
+
+
+Dependencies
+~~~~~~~~~~~~
+
+Default expressions cannot depend on other components. For example, if we have
+two components :ada:`A` and :ada:`B`, we cannot initialize :ada:`B` based on
+the value that :ada:`A` has:
+
+.. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.No_Dependency
+    :class: ada-expect-compile-error
+
+    !show_default_initialization_dependency.ads
+    package Show_Default_Initialization_Dependency is
+
+       function Init return Integer is
+         (42);
+
+       type Rec is record
+          A : Integer := Init;
+          B : Integer := Rec.A;  --  Illegal!
+       end record;
+
+    end Show_Default_Initialization_Dependency;
+
+In this example, we cannot initialize the :ada:`B` component based on the value
+of the :ada:`A` component. (In fact, the syntax :ada:`Rec.A` as a way to refer
+to the :ada:`A` component is only allowed in predicates, not in the record
+component declaration.)
+
+.. todo::
+
+    Add link to section on predicates once it's available.
+
+
+Initialization Order
+~~~~~~~~~~~~~~~~~~~~
+
+The default initialization of record components is performed in arbitrary
+order. In fact, the order is decided by the compiler, so we don't have control
+over it.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Initialization_Order
+
+    package Simple_Recs is
+
+       function Init (S : String;
+                      I : Integer)
+                      return Integer;
+
+       type Rec is record
+          A : Integer := Init ("A", 1);
+          B : Integer := Init ("B", 2);
+       end record;
+
+    end Simple_Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Recs is
+
+       function Init (S : String;
+                      I : Integer)
+                      return Integer is
+       begin
+          Put_Line (S & ": " & I'Image);
+          return I;
+       end Init;
+
+    end Simple_Recs;
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Show_Initialization_Order is
+       R : Rec;
+    begin
+       null;
+    end Show_Initialization_Order;
+
+When running this code example, you might see this:
+
+.. code-block:: none
+
+    A: 1
+    B: 2
+
+However, the compiler is allowed to rearrange the operations, so this output is
+possible as well:
+
+.. code-block:: none
+
+    B: 2
+    A: 1
+
+Therefore, we must write the default expression of each individual record
+components in such a way that the resulting initialization value is always
+correct, independently of the order that those expressions are evaluated.
+
+
+Evaluation
+~~~~~~~~~~
+
+According to the Annotated Ada Reference Manual, the "default expression of a
+record component is only evaluated upon the creation of a default-initialized
+object of the record type." This means that the default expression is by itself
+not evaluated when we declare the record type, but when we create an object of
+this type. It follows from this rule that the default is only evaluated when
+necessary, i.e,, when an explicit initial value is not specified in the object
+declaration.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Initialization_Order
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Show_Initialization_Order is
+    begin
+       Put_Line ("Some processing first...");
+       Put_Line
+         ("Now, let's declare an object "
+          & "of the record type Rec...");
+
+       declare
+          R : Rec;
+       begin
+          Put_Line
+            ("An object of Rec type has "
+             & "just been created.");
+       end;
+
+    end Show_Initialization_Order;
+
+Here, we only see the information displayed by the :ada:`Init` function
+|mdash| which is called to initialize the :ada:`A` and :ada:`B` components of
+the :ada:`R` record |mdash| during the object creation. In other words,
+the default expressions :ada:`Init ("A", 1)` and :ada:`Init ("B", 2)` are *not*
+evaluated when we declare the :ada:`R` type, but when we create an object of
+this type.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :aarm22:`3.8 Record Types <3-8>`
+
+
+Defaults and object declaration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+    This subsection was originally written by Robert A. Duff and published as
+    `Gem #12: Limited Types in Ada 2005 <https://www.adacore.com/gems/ada-gem-12>`_.
+
+Consider the following type declaration:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
+    :class: ada-syntax-only
+
+    package Type_Defaults is
+       type Color_Enum is (Red, Blue, Green);
+
+       type T is private;
+    private
+       type T is
+          record
+             Color     : Color_Enum := Red;
+             Is_Gnarly : Boolean := False;
+             Count     : Natural;
+          end record;
+
+       procedure Do_Something;
+    end Type_Defaults;
+
+If we want to say, "make :ada:`Count` equal :ada:`100`, but initialize
+:ada:`Color` and :ada:`Is_Gnarly` to their defaults", we can do this:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
+
+    package body Type_Defaults is
+
+       Object_100 : constant T :=
+                      (Color     => <>,
+                       Is_Gnarly => <>,
+                       Count     => 100);
+
+       procedure Do_Something is null;
+
+    end Type_Defaults;
+
+.. admonition:: Historically
+
+    Prior to Ada 2005, the following style was common:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
+
+        package body Type_Defaults is
+
+           Object_100 : constant T :=
+                          (Color     => Red,
+                           Is_Gnarly => False,
+                           Count     => 100);
+
+           procedure Do_Something is null;
+
+        end Type_Defaults;
+
+    Here, we only wanted :ada:`Object_100` to be a default-initialized
+    :ada:`T`, with :ada:`Count` equal to :ada:`100`. It's a little bit annoying
+    that we had to write the default values :ada:`Red` and :ada:`False` twice.
+    What if we change our mind about :ada:`Red`, and forget to change it in all
+    the relevant places? Since Ada 2005, the :ada:`<>` notation comes to the
+    rescue, as we've just seen.
+
+On the other hand, if we want to say, "make :ada:`Count` equal :ada:`100`,
+but initialize all other components, including the ones we might add next
+week, to their defaults", we can do this:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
+
+    package body Type_Defaults is
+
+       Object_100 : constant T := (Count  => 100,
+                                   others => <>);
+
+       procedure Do_Something is null;
+
+    end Type_Defaults;
+
+Note that if we add a component :ada:`Glorp : Integer;` to type :ada:`T`,
+then the :ada:`others` case leaves :ada:`Glorp` undefined just as this
+code would do:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Default_Init
+
+    package body Type_Defaults is
+
+       procedure Do_Something is
+          Object_100 : T;
+       begin
+          Object_100.Count := 100;
+       end Do_Something;
+
+    end Type_Defaults;
+
+Therefore, you should be careful and think twice before using
+:ada:`others`.
+
+
+Advanced Usages
+~~~~~~~~~~~~~~~
+
+In addition to expressions such as subprogram calls, we can use
+:ref:`per-object expressions <Adv_Ada_Per_Object_Expressions_Default_Value>`
+for the default value of a record component. (We discuss this topic later on
+in more details.)
+
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Per_Object_Expressions
+
+    package Rec_Per_Object_Expressions is
+
+       type T (D : Positive) is private;
+
+    private
+
+       type T (D : Positive) is record
+          V : Natural := D - 1;
+          --             ^^^^^
+          --    Per-object expression
+       end record;
+
+    end Rec_Per_Object_Expressions;
+
+In this example, component :ada:`V` is initialized by default with the
+per-object expression :ada:`D - 1`, where :ada:`D` refers to the discriminant
+:ada:`D`.
+
+
 .. _Adv_Ada_Mutually_Dependent_Types:
 
 Mutually dependent types
