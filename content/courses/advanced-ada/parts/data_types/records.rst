@@ -145,7 +145,11 @@ According to the Annotated Ada Reference Manual, the "default expression of a
 record component is only evaluated upon the creation of a default-initialized
 object of the record type." This means that the default expression is by itself
 not evaluated when we declare the record type, but when we create an object of
-this type. For example:
+this type. It follows from this rule that the default is only evaluated when
+necessary, i.e,, when an explicit initial value is not specified in the object
+declaration.
+
+Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Default_Initialization.Initialization_Order
 
