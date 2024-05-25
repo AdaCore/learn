@@ -730,6 +730,84 @@ the compiler complains about the :ada:`To := From` assignment in the
 view is limited (so no assignment is possible). Of course, in the case of the
 objects of :ada:`Rec_Nonlimited_Full` type, this assignment is perfectly fine.
 
+
+Limited private component
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Another example mentioned by the
+Ada Reference Manual (:arm22:`7.3.1 <7-3-1>`, 5/1) is about an array type whose
+component type is limited private, but nonlimited in its full view. Let's see a
+complete code example for that:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Nonlimited_Array
+    :class: ada-expect-compile-error
+
+    package Limited_Nonlimited_Arrays is
+
+       type Limited_Private is
+         limited private;
+
+       function Init return Limited_Private;
+
+       --  The array type Limited_Private_Array
+       --  is limited because the type of its
+       --  component is limited.
+       type Limited_Private_Array is
+         array (Positive range <>) of
+           Limited_Private;
+
+    private
+
+       type Limited_Private is
+       record
+          A : Integer;
+       end record;
+
+       --  Limited_Private_Array type is
+       --  nonlimited at this point because
+       --  its component is nonlimited.
+       --
+       --  The assignments below are OK:
+       A1 : Limited_Private_Array (1 .. 5);
+
+       A2 : Limited_Private_Array := A1;
+
+    end Limited_Nonlimited_Arrays;
+
+    package body Limited_Nonlimited_Arrays is
+
+       function Init return Limited_Private is
+         ((A => 1));
+
+    end Limited_Nonlimited_Arrays;
+
+    with Limited_Nonlimited_Arrays;
+    use  Limited_Nonlimited_Arrays;
+
+    procedure Show_Limited_Nonlimited_Array is
+       A3 : Limited_Private_Array (1 .. 2) :=
+              (others => Init);
+       A4 : Limited_Private_Array (1 .. 2);
+    begin
+       --  ERROR: this assignment is illegal because
+       --  Limited_Private_Array is limited, as
+       --  its component is limited at this point.
+       A4 := A3;
+    end Show_Limited_Nonlimited_Array;
+
+As we can see in this example, the limitedness of the array type
+:ada:`Limited_Private_Array` depends on the limitedness of its component type
+:ada:`Limited_Private`. In the private part of :ada:`Limited_Nonlimited_Arrays`
+package, where :ada:`Limited_Private` is nonlimited, the array type
+:ada:`Limited_Private_Array` becomes nonlimited as well. In contrast, in the
+:ada:`Show_Limited_Nonlimited_Array`, the array type is limited because its
+component is limited in that scope.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`7.3.1 Private Operations <7-3-1>`
+
+
 .. _Adv_Ada_Tagged_Limited_Private_Types:
 
 Tagged limited private types
@@ -1188,6 +1266,8 @@ declaration of :ada:`Rec_Derived`:
 the derived type, we must include it in its full view as well.)
 
 
+.. _Adv_Ada_Deriving_Limited_Interfaces:
+
 Deriving from limited interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1261,9 +1341,159 @@ explicitly limited.
 Immutably Limited Types
 -----------------------
 
+According to the Annotated Ada Reference Manual, "an immutably limited type is
+a type that cannot become nonlimited subsequently in a private part or in a
+child unit." In fact, while we were talking about
+:ref:`partial and full view of limited types <Adv_Ada_Partial_Full_View_Limited>`,
+we've seen that limited private types can become nonlimited in their full view.
+Such limited types are *not* immutably limited.
+
+The Annotated Ada Reference Manual also says that "if a view of the type makes
+it immutably limited, then no copying (assignment) operations are ever
+available for objects of the type. This allows other properties; for instance,
+it is safe for such objects to have access discriminants that have defaults or
+designate other limited objects." We'll see examples of this later on.
+
+Immutably limited types include:
+
+- explicitly limited types
+
 .. todo::
 
-    Complete section!
+    Add link to new subsection on explicitly limited types.
+
+- tagged limited types (i.e. with the keyword :ada:`limited`);
+
+- tagged limited private type;
+
+- limited private type that have at least one
+  :ref:`access discriminant <Adv_Ada_Anonymous_Access_Discriminants>` with a
+  default expression;
+
+- task types, protected types, and synchronized interfaces;
+
+- any types derived from immutably limited types.
+
+Let's look at a code example that shows instances of immutably limited types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Immutably_Limited_Types.Example
+
+    package Show_Immutably_Limited_Types is
+
+       --
+       --  Explicitly limited type
+       --
+       type Explicitly_Limited_Rec is limited
+       record
+          A : Integer;
+       end record;
+
+       --
+       --  Tagged limited type
+       --
+       type Limited_Tagged_Rec is tagged limited
+       record
+          A : Integer;
+       end record;
+
+       --
+       --  Tagged limited private type
+       --
+       type Limited_Tagged_Private is
+         tagged limited private;
+
+       --
+       --  Limited private type with an access
+       --  discriminant that has a default
+       --  expression
+       --
+       type Limited_Rec_Access_D
+         (AI : access Integer := new Integer) is
+           limited private;
+
+       --
+       --  Task type
+       --
+       task type TT is
+         entry Start;
+         entry Stop;
+       end TT;
+
+       --
+       --  Protected type
+       --
+       protected type PT is
+         function Value return Integer;
+       private
+         A : Integer;
+       end PT;
+
+      --
+      --  Synchronized interface
+      --
+      type SI is synchronized interface;
+
+      --
+      --  A type derived from an immutably
+      --  limited type
+      --
+      type Derived_Immutable is new
+        Explicitly_Limited_Rec;
+
+    private
+
+       type Limited_Tagged_Private is tagged limited
+       record
+          A : Integer;
+       end record;
+
+       type Limited_Rec_Access_D
+         (AI : access Integer := new Integer)
+       is limited
+         record
+           A : Integer;
+         end record;
+
+    end Show_Immutably_Limited_Types;
+
+    package body Show_Immutably_Limited_Types is
+
+       task body TT is
+       begin
+         accept Start;
+         accept Stop;
+       end TT;
+
+       protected body PT is
+         function Value return Integer is
+           (PT.A);
+       end PT;
+
+    end Show_Immutably_Limited_Types;
+
+In the :ada:`Show_Immutably_Limited_Types` package above, we see multiple
+instances of immutably limited types. (The comments in the source code indicate
+each type.)
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`7.5 Limited Types <7-5>`
+
+
+Non immutably limited types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Not every limited type is immutably limited. We already mentioned untagged
+private limited types, which can become nonlimited in their full view. In
+addition, we have nonsynchronized limited interface types. As mentioned earlier
+in this chapter, a
+:ref:`type derived from a nonsynchronized limited interface <Adv_Ada_Deriving_Limited_Interfaces>`,
+can be nonlimited, so it's not immutably limited.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`7.3.1 Private Operations <7-3-1>`
+    - :arm22:`7.5 Limited Types <7-5>`
 
 
 Limited Types and Discriminants
