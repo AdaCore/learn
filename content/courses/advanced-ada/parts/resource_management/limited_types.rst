@@ -484,6 +484,72 @@ and full views can have non-matching declarations.
     - :arm22:`7.5 Limited Types <7-5>`
 
 
+.. _Adv_Ada_Full_View_Limited_Non_Record:
+
+Non-Record Limited Types
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In principle, only record types can be declared limited, so we cannot use
+scalar or array types. For example, the following declarations won't compile:
+
+.. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Non_Record_Limited_Error
+    :class: ada-nocheck
+
+    !non_record_limited_error.ads
+    package Non_Record_Limited_Error is
+
+       type Limited_Enumeration is
+         limited (Off, On);
+
+       type Limited_Integer is new
+         limited Integer;
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Rec is new
+         limited Integer_Array (1 .. 2);
+
+    end Non_Record_Limited_Error;
+
+However, we've mentioned
+:ref:`in a previous chapter <Adv_Ada_Non_Record_Private_Types>` that private
+types don't have to be record types necessarily. In this sense, limited private
+types makes it possible for us to use types other than record types in the full
+view and still benefit from the restrictions of limited types. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Non_Record_Limited
+
+    package Simple_Recs is
+
+       type Limited_Enumeration is
+         limited private;
+
+       type Limited_Integer is
+         limited private;
+
+       type Limited_Integer_Array_2 is
+         limited private;
+
+    private
+
+       type Limited_Enumeration is (Off, On);
+
+       type Limited_Integer is new Integer;
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Limited_Integer_Array_2 is
+         new Integer_Array (1 .. 2);
+
+    end Simple_Recs;
+
+Here, :ada:`Limited_Enumeration`, :ada:`Limited_Integer`, and
+:ada:`Limited_Integer_Array_2` are limited private types that encapsulate an
+enumeration type, an integer type, and a constrained array type, respectively.
+
+
 .. _Adv_Ada_Partial_Full_View_Limited:
 
 Partial and full view of limited types
@@ -510,7 +576,43 @@ public part of a package), while its full view is nonlimited. For example:
     end Simple_Recs;
 
 In this case, only the partial view of :ada:`Rec` is limited, while its full
-view is nonlimited.
+view is nonlimited. When deriving from :ada:`Rec`, the view of the derived
+type is the same as for the parent type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+
+    package Simple_Recs.Child
+    is
+       type Rec_Derived is new Rec;
+       --  As for its parent, the
+       --  partial view of Rec_Derived
+       --  is limited, but the full view
+       --  is nonlimited.
+
+    end Simple_Recs.Child;
+
+Clients must nevertheless comply with their partial view, and treat the type as
+if it is in fact limited. In other words, if you use the :ada:`Rec` type in a
+subprogram or package outside of the :ada:`Simple_Recs` package (or its child
+packages), the type is limited from that perspective:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Use_Rec_In_Subprogram is
+       R1, R2 : Rec;
+    begin
+       R1.I := 1;
+       R2   := R1;
+    end Use_Rec_In_Subprogram;
+
+Here, compilation fails because the type :ada:`Rec` is limited from the
+procedure's perspective.
+
+Limitations
+^^^^^^^^^^^
 
 Note that the opposite |mdash| declaring a type as :ada:`private` and its full
 full view as :ada:`limited private` |mdash| is not possible. For example:
@@ -537,6 +639,29 @@ actually provide assignment. But the partial view can restrict what is actually
 possible, so a limited partial view need not be completed in the full view as a
 limited type.
 
+In addition, tagged limited private types cannot have a nonlimited full view.
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec is tagged limited private;
+
+    private
+
+       type Rec is tagged record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+Here, compilation fails because the type :ada:`Rec` is nonlimited in its full
+view.
+
+
+.. _Adv_Ada_Limited_And_Nonlimited_Full_View:
 
 Limited and nonlimited in full view
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -544,7 +669,7 @@ Limited and nonlimited in full view
 Declaring the full view of a type as limited or nonlimited has implications in
 the way we can use objects of this type in the package body. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Partial_Full_View
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Private_Types.Limited_Non_Limited_Partial_Full_View
     :class: ada-expect-compile-error
 
     package Simple_Recs is
@@ -649,6 +774,86 @@ example and try to compile it.)
     available).
 
 
+.. _Adv_Ada_Explicitly_Limited_Types:
+
+Explicitly limited types
+------------------------
+
+Under certain conditions, limited types can be called explicitly limited
+|mdash| note that using the :ada:`limited` keyword in a part of the declaration
+doesn't necessary ensure this, as we'll see later.
+
+Let's start with an example of an explicitly limited type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Explicitly_Limited_Types.Explicitly_Limited_Types
+
+    package Simple_Recs is
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+The :ada:`Rec` type is also explicitly limited when it's declared limited in
+the private type's completion (in the package's private part):
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Explicitly_Limited_Types.Explicitly_Limited_Types
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+In this case, :ada:`Rec` is limited both in the partial and in the full view,
+so it's considered explicitly limited.
+
+However, :ref:`as we've learned before <Adv_Ada_Partial_Full_View_Limited>`,
+we may actually declare a type as :ada:`limited private` in the
+public part of a package, while its full view is nonlimited. In this case, the
+limited type is not consider explicitly limited anymore.
+
+For example, if we make the full view of the :ada:`Rec` nonlimited (by
+removing the :ada:`limited` keyword in the private part), then the :ada:`Rec`
+type isn't explicitly limited anymore:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Explicitly_Limited_Types.Explicitly_Limited_Types
+
+    package Simple_Recs is
+
+       type Rec is limited private;
+
+    private
+
+       type Rec is record
+          I : Integer;
+       end record;
+
+    end Simple_Recs;
+
+Now, even though the :ada:`Rec` type was declared as limited private, the full
+view indicates that it's actually a nonlimited type, so it isn't explicitly
+limited.
+
+Note that
+:ref:`tagged limited private types <Adv_Ada_Tagged_Limited_Private_Types>` are
+always explicitly limited types |mdash| because, as we've learned before,
+they cannot have a nonlimited type declaration in its full view.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`6.2 Formal Parameter Modes <6-2>`
+    - :arm22:`6.4.1 Parameter Associations <6-4-1>`
+    - :arm22:`7.5 Limited Types <7-5>`
+
+
 Subtypes of Limited Types
 -------------------------
 
@@ -710,9 +915,10 @@ Note that we cannot derive a limited type from a nonlimited ancestor:
 
     end Simple_Recs;
 
-As expected, the compiler indicates that :ada:`Rec` should be of limited type.
+As expected, the compiler indicates that the ancestor :ada:`Rec` should be of
+limited type.
 
-In fact, all the types in a derivation class are the same |mdash| either
+In fact, all types in a derivation class are the same |mdash| either
 limited or not. (That is especially important with dynamic dispatching via
 tagged types. We discuss this topic in another chapter.)
 
@@ -765,9 +971,17 @@ Here, :ada:`Rec_Derived` is a limited type derived from the (limited private)
 :ada:`Rec` type. We can verify that :ada:`Rec_Derived` type is limited
 because the compilation of the :ada:`Test_Limitedness` procedure fails.
 
+
+Deriving from non-explicitly limited private types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Up to this point, we have discussed
+:ref:`explicitly limited types <Adv_Ada_Explicitly_Limited_Types>`. Now, let's
+see how derivation works with *non-explicitly* limited types.
+
 Any type derived from a limited type is always limited, even if the full view
 of its ancestor is nonlimited. For example, let's modify the full view of
-:ada:`Rec` and make it nonlimited:
+:ada:`Rec` and make it nonlimited (i.e. make it *not explicitly* limited):
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Limited_Private_Type
     :class: ada-expect-compile-error
@@ -787,13 +1001,16 @@ Here, :ada:`Rec_Derived` is a limited type because the partial view of
 doesn't affect the :ada:`Rec_Derived` type |mdash| as we can verify with the
 compilation error in the :ada:`Test_Limitedness` procedure.
 
-Note, however, that a derived type becomes nonlimited in the private part or
-the body of a child package if it isn't explicitly limited. For example,
+Note, however, that a derived type becomes nonlimited in the
+**private part or the body** of a child package if it isn't explicitly limited.
+In this sense, the derived type inherits the *nonlimitedness* of the parent's
+full view. For example,
 because we're declaring :ada:`Rec_Derived` as :ada:`is new Rec` in the child
 package (:ada:`Simple_Recs.Ext`), we're saying that :ada:`Rec_Derived` is
-limited *outside* this package, but nonlimited in the :ada:`Simple_Recs.Ext`
-package. We can verify this by copying the code from the :ada:`Test_Limitedness`
-procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
+limited *outside* this package, but nonlimited in the private part and body of
+the :ada:`Simple_Recs.Ext` package. We can verify this by copying the code from
+the :ada:`Test_Limitedness` procedure to a new procedure in the body of the
+:ada:`Simple_Recs.Ext` package:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Limited_Private_Type
 
@@ -848,16 +1065,25 @@ procedure to a new procedure in the body of the :ada:`Simple_Recs.Ext` package:
 
 In the :ada:`Test_Child_Limitedness` procedure of the :ada:`Simple_Recs.Ext`
 package, we can use the :ada:`Rec_Derived` as a nonlimited type because its
-ancestor :ada:`Rec` is nonlimited in its full view. (Of course, if we uncomment
-the code in the :ada:`Test_Limitedness` procedure, compilation fails there
-because :ada:`Rec_Derived` is viewed as descending from a limited type.)
+ancestor :ada:`Rec` is nonlimited in its full view. (
+:ref:`As we've learned before <Adv_Ada_Limited_And_Nonlimited_Full_View>`, if a
+limited type is nonlimited in its full view, we can copy objects of this type
+in the private part of the package specification or in the package body.)
+
+*Outside* of the package, both :ada:`Rec` and :ada:`Rec_Derived` types are
+limited types. Therefore, if we uncomment the code in the
+:ada:`Test_Limitedness` procedure, compilation fails there (because
+:ada:`Rec_Derived` is viewed as descending from a limited type).
 
 
 Deriving from tagged limited private types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The rules for deriving from tagged limited private types are slightly different
-than ones we've seen in the previous section. Let's look at an example:
+than the rules we've seen so far. This is because tagged limited types are
+always :ref:`explicitly limited types <Adv_Ada_Explicitly_Limited_Types>`.
+
+Let's look at an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Tagged_Limited_Private_Type
     :class: ada-expect-compile-error
@@ -926,7 +1152,7 @@ Deriving from limited interfaces
 The rules for limited interfaces are different from the ones for limited tagged
 types. In contrast to the rule we've seen in the previous section, a type that
 is derived from a limited type isn't automatically limited. In other words, it
-doesn't inherit the *limitedness* from the interface. For example:
+does **not** inherit the *limitedness* from the interface. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Deriving_From_Limited_Types.Derived_Interface_Limited_Private
 
@@ -1118,7 +1344,7 @@ In this section, we focus on using aggregates to initialize limited types.
         end Show_Non_Aggregate_Init;
 
     which has the maintenance problem the full coverage rules are supposed to
-    prevent. Or, make the type non-limited, and gain the benefits of
+    prevent. Or, make the type nonlimited, and gain the benefits of
     aggregates, but lose the ability to prevent copies.
 
 
@@ -1129,7 +1355,7 @@ Full coverage rules for limited types
 
 Previously, we discussed
 :ref:`full coverage rules for aggregates <Adv_Ada_Full_Coverage_Rules_Aggregates>`.
-We can also use them for limited types.
+They also apply to limited types.
 
 .. admonition:: Historically
 
@@ -1392,7 +1618,7 @@ prevents clients from creating default-initialized objects (that is,
 an object of type :ada:`T` is created, giving package :ada:`P` full
 control over initialization of objects.
 
-Ideally, limited and non-limited types should be just the same, except for
+Ideally, limited and nonlimited types should be just the same, except for
 the essential difference: you can't copy limited objects (and there's no
 language-defined equality operator). By allowing
 functions and aggregates for limited types, we're very close to this goal.
@@ -1401,7 +1627,7 @@ Some languages have a specific feature called *constructor*. In Ada, a
 
 .. admonition:: Historically
 
-    Prior to Ada 2005, *constructors* only worked for non-limited types. For
+    Prior to Ada 2005, *constructors* only worked for nonlimited types. For
     limited types, the only way to *construct* on declaration was via default
     values, which limits you to one constructor. And the only way to pass
     parameters to that construction was via discriminants.
@@ -1671,12 +1897,12 @@ procedure are the same object.
 
 .. admonition:: Important
 
-   When we use non-limited types, we're actually copying the returned object
+   When we use nonlimited types, we're actually copying the returned object
    |mdash| which was locally created in the function |mdash| to the object that
    we're assigning the function to.
 
    For example, let's modify the previous code and make :ada:`Simple_Rec`
-   non-limited:
+   nonlimited:
 
        .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Initialization_Return_Copy
 
@@ -2055,17 +2281,15 @@ Limited types as parameter
 
 Previously, we saw that
 :ref:`parameters can be passed by copy or by reference <Adv_Ada_Parameter_Modes_Associations>`.
-Also, we discussed the concept of by-copy and by-reference types. *Explicitly*
-limited types are by-reference types. Consequently, parameters of these types
+Also, we discussed the concept of by-copy and by-reference types.
+:ref:`Explicitly limited types <Adv_Ada_Explicitly_Limited_Types>`
+are by-reference types. Consequently, parameters of these types
 are always passed by reference.
-
-Here, it's important to understand when a type is explicitly limited and when
-it's not |mdash| using the :ada:`limited` keyword in a part of the declaration
-doesn't necessary ensure this, as we'll see later.
 
 .. admonition:: For further reading...
 
-    As an example, consider the case of a lock (as an abstract data type). If
+    As an example of the importance of this rule, consider the case of a lock
+    (as an abstract data type). If
     such a lock object were passed by copy, the :ada:`Acquire` and
     :ada:`Release` operations would be working on copies of this object, not on
     the original one. This would lead to timing-dependent bugs.
@@ -2075,20 +2299,15 @@ doesn't necessary ensure this, as we'll see later.
         Add link to chapter the in the Ada Idioms course that explains this
         topic in more details (once it's available).
 
-Let's start with an example of an explicitly limited type:
+Let's reuse an example of an explicitly limited type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
-
-    with System;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
 
     package Simple_Recs is
 
        type Rec is limited record
           I : Integer;
        end record;
-
-       procedure Proc (R : in out Rec;
-                       A :    out System.Address);
 
     end Simple_Recs;
 
@@ -2102,6 +2321,19 @@ We can run the :ada:`Test` application below and compare the address of the
 not:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
+
+    with System;
+
+    package Simple_Recs is
+
+       type Rec is limited record
+          I : Integer;
+       end record;
+
+       procedure Proc (R : in out Rec;
+                       A :    out System.Address);
+
+    end Simple_Recs;
 
     package body Simple_Recs is
 
@@ -2145,64 +2377,23 @@ When running the :ada:`Test` application, we confirm that :ada:`R` was passed
 by reference. Note, however, that the fact that :ada:`R` was passed by
 reference doesn't automatically imply that :ada:`Rec` is a by-reference type:
 the type could have been ambiguous, and the compiler could have just decided to
-pass the parameter by reference in this case. (We'll discuss this ambiguity
-later.)
+pass the parameter by reference in this case.
 
-The :ada:`Rec` type is also explicitly limited when it's declared limited in
-the private type's completion (in the package's private part):
+Therefore, we have to rely on the rules specified in the Ada Reference Manual:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
-    :class: ada-syntax-only
+#. If a limited type is explicitly limited, a parameter of this type is a
+   by-reference type.
 
-    with System;
+   - The rule applies to all kinds of explicitly limited types. For example,
+     consider private limited types where the type is declared limited in the
+     private type's completion (in the package's private part): a parameter of
+     this type is a by-reference type.
 
-    package Simple_Recs is
+#. If a limited type is not *explicitly* limited, a parameter of this type is
+   neither a by-copy nor a by-reference type.
 
-       type Rec is limited private;
-
-       procedure Proc (R : in out Rec;
-                       A :    out System.Address);
-
-    private
-
-       type Rec is limited record
-          I : Integer;
-       end record;
-
-    end Simple_Recs;
-
-In this case, :ada:`Rec` is limited both in the partial and in the full view,
-so it's considered explicitly limited.
-
-If we make the full view of the :ada:`Rec` non-limited (by removing the
-:ada:`limited` keyword in the private part), then the :ada:`Rec` type
-isn't explicitly limited anymore:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
-    :class: ada-syntax-only
-
-    with System;
-
-    package Simple_Recs is
-
-       type Rec is limited private;
-
-       procedure Proc (R : in out Rec;
-                       A :    out System.Address);
-
-    private
-
-       type Rec is record
-          I : Integer;
-       end record;
-
-    end Simple_Recs;
-
-Now, even though the :ada:`Rec` type was declared as limited private, the full
-view indicates that it's actually a non-limited type, so it isn't explicitly
-limited. In this case, :ada:`Rec` is neither a by-copy nor a by-reference
-type. Therefore, the decision whether the parameter is passed by reference or
-by copy is made by the compiler.
+   - In this case, the decision whether the parameter is passed by reference or
+     by copy is made by the compiler.
 
 .. admonition:: In the Ada Reference Manual
 

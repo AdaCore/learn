@@ -1617,83 +1617,214 @@ subprograms of the package body that make use of this type. Again, the partial
 view of the private type contains the most important information for users that
 want to declare objects of this type.
 
-.. admonition:: Important
-
-    Although it's very common to declare private types as record types, this is
-    not the only option. In fact, we could declare any type in the full view
-    |mdash| scalars, for example |mdash|, so we could declare a "private
-    integer" type:
-
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
-
-        package Private_Integers is
-
-           --  Partial view of private Integer type:
-           type Private_Integer is private;
-
-        private
-
-           --  Full view of private Integer type:
-           type Private_Integer is new Integer;
-
-        end Private_Integers;
-
-    This code compiles as expected, but isn't very useful. We can improve it by
-    adding operators to it, for example:
-
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
-
-        package Private_Integers is
-
-           --  Partial view of private Integer type:
-           type Private_Integer is private;
-
-           function "+" (Left, Right : Private_Integer)
-                         return Private_Integer;
-
-        private
-
-           --  Full view of private Integer type:
-           type Private_Integer is new Integer;
-
-        end Private_Integers;
-
-        package body Private_Integers is
-
-           function "+" (Left, Right : Private_Integer)
-                         return Private_Integer
-           is
-              Res : constant Integer :=
-                      Integer (Left) + Integer (Right);
-              --  Note that we're converting Left
-              --  and Right to Integer, which calls
-              --  the "+" operator of the Integer
-              --  type. Writing "Left + Right" would
-              --  have called the "+" operator of
-              --  Private_Integer, which leads to
-              --  recursive calls, as this is the
-              --  operator we're currently in.
-           begin
-              return Private_Integer (Res);
-           end "+";
-
-        end Private_Integers;
-
-    Now, we can use the :ada:`+` operator as a common integer variable:
-
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
-
-        with Private_Integers; use Private_Integers;
-
-        procedure Show_Private_Integers is
-           A, B : Private_Integer;
-        begin
-           A := A + B;
-        end Show_Private_Integers;
-
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`7.3 Private Types and Private Extensions <7-3>`
+
+.. _Adv_Ada_Non_Record_Private_Types:
+
+Non-Record Private Types
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Although it's very common to declare private types as record types, this is
+not the only option. In fact, we could declare any type in the full view
+|mdash| scalars, for example |mdash|, so we could declare a "private
+integer" type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
+
+    package Private_Integers is
+
+       --  Partial view of private Integer type:
+       type Private_Integer is private;
+
+    private
+
+       --  Full view of private Integer type:
+       type Private_Integer is new Integer;
+
+    end Private_Integers;
+
+This code compiles as expected, but isn't very useful. We can improve it by
+adding operators to it, for example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
+
+    package Private_Integers is
+
+       --  Partial view of private Integer type:
+       type Private_Integer is private;
+
+       function "+" (Left, Right : Private_Integer)
+                     return Private_Integer;
+
+    private
+
+       --  Full view of private Integer type:
+       type Private_Integer is new Integer;
+
+    end Private_Integers;
+
+    package body Private_Integers is
+
+       function "+" (Left, Right : Private_Integer)
+                     return Private_Integer
+       is
+          Res : constant Integer :=
+                  Integer (Left) + Integer (Right);
+          --  Note that we're converting Left
+          --  and Right to Integer, which calls
+          --  the "+" operator of the Integer
+          --  type. Writing "Left + Right" would
+          --  have called the "+" operator of
+          --  Private_Integer, which leads to
+          --  recursive calls, as this is the
+          --  operator we're currently in.
+       begin
+          return Private_Integer (Res);
+       end "+";
+
+    end Private_Integers;
+
+Now, let's use the new operator in a test application:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Integer
+
+    with Private_Integers; use Private_Integers;
+
+    procedure Show_Private_Integers is
+       A, B : Private_Integer;
+    begin
+       A := A + B;
+    end Show_Private_Integers;
+
+In this example, we use the :ada:`+` operator as if we were adding two common
+integer variables of :ada:`Integer` type.
+
+Unconstrained Types
+^^^^^^^^^^^^^^^^^^^
+
+There are, however, some limitations: we cannot use unconstrained types such as
+arrays or even discriminants for arrays in the same way as we did for scalars.
+For example, the following declarations won't work:
+
+.. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
+    :class: ada-expect-compile-error
+
+    !private_arrays.ads
+    package Private_Arrays is
+
+       type Private_Unconstrained_Array is private;
+
+       type Private_Constrained_Array
+         (L : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Private_Unconstrained_Array is
+         array (Positive range <>) of Integer;
+
+       type Private_Constrained_Array
+         (L : Positive) is
+           array (1 .. 2) of Integer;
+
+       --  NOTE: using an array type fails as well:
+       --
+       --  type Private_Constrained_Array
+       --    (L : Positive) is
+       --      Integer_Array (1 .. L);
+
+    end Private_Arrays;
+
+Completing the private type with an unconstrained array type in the full view
+is not allowed because clients could expect, according to their view, to
+declare objects of the type. But doing so would not be allowed according to the
+full view. So this is another case of the partial view having to present
+clients with a sufficiently *true* view of the type's capabilities.
+
+One solution is to rewrite the declaration of :ada:`Private_Constrained_Array`
+using a record type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
+
+    package Private_Arrays is
+
+       type Private_Constrained_Array
+         (L : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Private_Constrained_Array
+         (L : Positive) is
+       record
+          Arr : Integer_Array  (1 .. 2);
+       end record;
+
+    end Private_Arrays;
+
+    with Private_Arrays; use Private_Arrays;
+
+    procedure Declare_Private_Array is
+      Arr : Private_Constrained_Array (5);
+    begin
+      null;
+    end Declare_Private_Array;
+
+Now, the code compiles fine |mdash| but we had to use a record type in the
+full view to make it work.
+
+Another solution is to make the private type indefinite. In this case, the
+client's partial view would be consistent with a completion as an indefinite
+type in the private part:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_View.Private_Array
+
+    package Private_Arrays is
+
+       type Private_Constrained_Array (<>) is
+         private;
+
+       function Init
+         (L : Positive)
+          return Private_Constrained_Array;
+
+    private
+
+       type Private_Constrained_Array is
+         array (Positive range <>) of Integer;
+
+    end Private_Arrays;
+
+    package body Private_Arrays is
+
+       function Init
+         (L : Positive)
+          return Private_Constrained_Array
+       is
+          PCA : Private_Constrained_Array (1 .. L);
+       begin
+          return PCA;
+       end Init;
+
+    end Private_Arrays;
+
+    with Private_Arrays; use Private_Arrays;
+
+    procedure Declare_Private_Array is
+      Arr : Private_Constrained_Array := Init (5);
+    begin
+      null;
+    end Declare_Private_Array;
+
+The bounds for the object's declaration come from the required initial value
+when an object is declared. In this case, we initialize the object with a call
+to the :ada:`Init` function.
 
 
 Type conversion
