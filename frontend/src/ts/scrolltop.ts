@@ -1,8 +1,6 @@
 /**
  * Enables the scroll-to-top functionality
- *
- * @export
- * @param {HTMLButtonElement} btn
+ * @param {HTMLButtonElement} btn Button element
  */
 export function scrollTop(btn: HTMLButtonElement): void {
   btn.classList.add('hide');

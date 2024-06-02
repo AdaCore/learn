@@ -75,7 +75,7 @@ interface ParsedSwitches {
 /**
  * Generate the value to replace the language placeholder in the gpr file.
  * @param {ResourceList} files list of files to check.
- * @return {string} the value to replace the language placeholder.
+ * @returns {string} the value to replace the language placeholder.
  */
 export function getLanguages(files: ResourceList): string {
   const languages = new Set<string>();
@@ -92,7 +92,7 @@ export function getLanguages(files: ResourceList): string {
 /**
  * Get the list of compiler switches
  * @param {string} rawSwitches provided by data-switches for the project.
- * @return {UnparsedSwitches} switches.
+ * @returns {UnparsedSwitches} switches.
  */
 export function getUnparsedSwitches(rawSwitches: string): UnparsedSwitches {
   const parsed = JSON.parse(rawSwitches);
@@ -113,7 +113,7 @@ export function getUnparsedSwitches(rawSwitches: string): UnparsedSwitches {
  * Generate the values to replace the switch placeholders in the gpr file.
  * @param {UnparsedSwitches} switches provided by data-switches
  *                           for the project.
- * @return {Switches} parsed switches.
+ * @returns {ParsedSwitches} parsed switches.
  */
 export function parseSwitches(switches: UnparsedSwitches): ParsedSwitches {
   const builderSwitches = switches['Builder'].map((i) => `"${i}"`).join(', ');
@@ -132,7 +132,7 @@ export function parseSwitches(switches: UnparsedSwitches): ParsedSwitches {
 /**
  * Find which files could potentially contain the main procedure/function.
  * @param {ResourceList} files list of files to check.
- * @return {Array<string>} the filenames of each potential 'main' file.
+ * @returns {Array<string>} the filenames of each potential 'main' file.
  */
 export function findMains(files: ResourceList): Array<string> {
   if (files.length == 1) return [files[0].basename];
@@ -158,7 +158,7 @@ export function findMains(files: ResourceList): Array<string> {
  * Duplicate main finding logic from existing download setup
  * @param {ResourceList} files to be zipped. Used in main finding logic.
  * @param {string} main provided by data-main for the project.
- * @return {string} the file name that contains the main subprogram, with it's
+ * @returns {string} the file name that contains the main subprogram, with it's
  *                  file extension removed.
  */
 export function getMain(files: ResourceList, main: string): string {
@@ -182,7 +182,7 @@ export function getMain(files: ResourceList, main: string): string {
  * @param {UnparsedSwitches} switches to be included in the gpr file.
  * @param {string} main provided by data-main for the project.
  * @param {boolean} sparkMode SPARK is being used.
- * @return {string} the contents of the gpr file to be generated.
+ * @returns {string} the contents of the gpr file to be generated.
  */
 export function getGprContents(
     files: ResourceList,

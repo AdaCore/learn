@@ -23,7 +23,7 @@ interface SessionData {
 
 type SessionMap = Map<string, SessionData>;
 
-/** Class representing an Editor **/
+/** Class representing an Editor */
 export class Editor {
   private readonly editor: ace.Editor;
   private readonly nontabbedEditors : Array<ace.Editor>;
@@ -32,10 +32,9 @@ export class Editor {
   private maxLength = 0;
 
   /**
-  * Creates an instance of Editor.
-  *
-  * @param {HTMLDivElement} elem - The element that will contain the editor
-  */
+   * Creates an instance of Editor.
+   * @param {HTMLDivElement} elem - The element that will contain the editor
+   */
   constructor(elem: HTMLDivElement) {
     this.editor = ace.edit(elem);
     this.initACEEditor(this.editor);
@@ -50,10 +49,9 @@ export class Editor {
   }
 
   /**
-  * Configures the ACE editor
-  *
-  * @param {ace.Editor} editor - The ACE editor
-  */
+   * Configures the ACE editor
+   * @param {ace.Editor} editor - The ACE editor
+   */
   private initACEEditor(editor: ace.Editor) {
     editor.$blockScrolling = Infinity;
 
@@ -79,7 +77,6 @@ export class Editor {
 
   /**
    * Refresh editor sessions
-   *
    * @param {boolean} isTabbed - Use tabbed session
    */
   public refresh(isTabbed: boolean): void {
@@ -94,7 +91,6 @@ export class Editor {
 
   /**
    * Add a session to the editor
-   *
    * @param {string} basename - The name of the file
    * @param {string} content - The content of the session
    */
@@ -127,7 +123,6 @@ export class Editor {
 
   /**
    * Add a session to the editor
-   *
    * @param {string} basename - The name of the file
    * @param {HTMLDivElement} elem - The element that will contain the editor
    */
@@ -143,10 +138,9 @@ export class Editor {
 
   /**
    * Helper function to get session and throw exception if not found
-   *
    * @private
    * @param {string} basename - The session name to get
-   * @return {SessionData} - The session data
+   * @returns {SessionData} - The session data
    */
   private getSession(basename: string): SessionData {
     const session = this.sessions.get(basename);
@@ -160,7 +154,6 @@ export class Editor {
   /**
    * Change the editor active session to the one that corresponds to the
    * given basename
-   *
    * @param {string} basename - The name of the session to change to
    */
   public setSession(basename: string): void {
@@ -170,9 +163,8 @@ export class Editor {
 
   /**
    * Get the content of a session given a basename
-   *
    * @param {string} basename - The name of the session to get
-   * @return {string} - The content of the named session
+   * @returns {string} - The content of the named session
    */
   public getSessionContent(basename: string): string {
     const session = this.getSession(basename);
@@ -204,7 +196,6 @@ export class Editor {
 
   /**
    * Jump the editor to basename session and row:col
-   *
    * @param {string} basename - The name of the session to switch to
    * @param {number} line - The line number to goto
    * @param {number} col - The col + 1 to goto
@@ -217,7 +208,6 @@ export class Editor {
 
   /**
    * Add gutter annotations to the ace editor session
-   *
    * @param {string} basename - The name of the session
    * @param {number} line - The line number
    * @param {number} col - The column number

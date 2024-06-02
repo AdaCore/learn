@@ -20,8 +20,6 @@ type EditorMap = Map<string, EditorView>;
 
 /**
  * Defines the widget behavior
- *
- * @export
  * @class Widget
  */
 class Widget {
@@ -43,7 +41,6 @@ class Widget {
 
   /**
    * Creates an instance of Widget and attaches logic to DOM
-   *
    * @param {HTMLDivElement} elem - the container for the widget
    * @param {(EditorMap | undefined)} dep - The view of widgets with the same
    *  name on the current page
@@ -228,8 +225,7 @@ class Widget {
 
   /**
    * Collect resources from the current view
-   *
-   * @return {ResourceList} return the widget resources
+   * @returns {ResourceList} return the widget resources
    */
   protected collectResources(): ResourceList {
     const ret: ResourceList = [];
@@ -251,9 +247,8 @@ class Widget {
 
   /**
    * Construct the server address string
-   *
    * @param {string} url - the url suffix
-   * @return {string} - the full constructed url
+   * @returns {string} - the full constructed url
    */
   private serverAddress(url: string): string {
     return this.server + '/' + url + '/';
@@ -262,8 +257,7 @@ class Widget {
 
   /**
    * Gets default compiler switches set on widget.
-   *
-   * @return {Array<string>} - The active compiler switches.
+   * @returns {Array<string>} - The active compiler switches.
    */
   private getDefaultCompilerSwitches(): Array<string> {
     return [
@@ -274,8 +268,7 @@ class Widget {
 
   /**
    * Gets active compiler switches set on widget.
-   *
-   * @return {Array<string>} - The active compiler switches.
+   * @returns {Array<string>} - The active compiler switches.
    */
   private getActiveCompilerSwitches(): Array<string> {
     const compilerSwitchesSetting =
@@ -386,7 +379,6 @@ class Widget {
 
   /**
    * Set the editor theme
-   *
    * @param {string} themeStr - the theme for the editor
    */
   private setTheme(themeStr : string) : void {
@@ -402,7 +394,6 @@ class Widget {
 
   /**
    * Set status for tabbed view of editor
-   *
    * @param {string} isTabbed - use tabbed view
    */
   private setTabbedView(isTabbed : boolean) : void {
@@ -429,19 +420,15 @@ class Widget {
 
   /**
    * Gets an element by its id inside the current widget layout
-   *
    * The ids inside the widget are in the form:
    * <widget number>.<item>.<sub item>
-   *
    * This function will prepend the widget number to the args passed in.
    * An example would be:
-   *
    * this.getElem('foo', 'bar) would return an element with the ID
    * <widget number>.foo.bar
-   *
    * @protected
    * @param {...Array<string>} args - The list of args to append
-   * @return {HTMLElement} - The element with the ID
+   * @returns {HTMLElement} - The element with the ID
    */
   protected getElem(...args: Array<string>): HTMLElement {
     const fullId = [this.id].concat(args).join('.');
@@ -450,7 +437,6 @@ class Widget {
 
   /**
    * The main callback for the widget buttons
-   *
    * @param {string} mode - the mode of the button that triggered the event
    * @param {boolean} lab - specifies if this is a lab widget
    */
@@ -497,9 +483,8 @@ class Widget {
 
   /**
    * Returns the correct Area to place data in
-   *
    * @param {CheckOutput.FS} data - should be null for Widget
-   * @return {Area} the area to place returned data
+   * @returns {Area} the area to place returned data
    */
   protected getHomeArea(data: CheckOutput.FS): Area {
     if (data.ref !== undefined) {
@@ -510,7 +495,6 @@ class Widget {
 
   /**
    * Handle the msg data coming back from server
-   *
    * @param {CheckOutput.RunMsg} msg - the returned msg
    * @param {Area} homeArea - the area to place the rendered msg
    */
@@ -581,7 +565,7 @@ class Widget {
   /**
    * Process the output from "check_output" ajax request
    * @param {CheckOutput.FS} data - The data from check_output
-   * @return {number} the number of lines read by this function
+   * @returns {number} the number of lines read by this function
    */
   private processCheckOutput(data: CheckOutput.FS): boolean {
     const homeArea = this.getHomeArea(data);
@@ -613,14 +597,13 @@ class Widget {
 
 /**
  * The LabWidget class
- * @extends Widget
+ * @augments Widget
  */
 export class LabWidget extends Widget {
   private readonly labContainer: LabContainer;
 
   /**
    * Creates an instance of LabWidget and attaches logic to DOM
-   *
    * @param {HTMLDivElement} elem - the container for the widget
    * @param {(EditorMap | undefined)} dep - The view of widgets with the same
    *  name on the current page
@@ -645,7 +628,7 @@ export class LabWidget extends Widget {
   /**
    * Returns the correct Area to place data in
    * @param {CheckOutput.FS} data - if not null, the lab ref
-   * @return {Area} the area to place returned data
+   * @returns {Area} the area to place returned data
    */
   protected getHomeArea(data: CheckOutput.FS): Area {
     if (data.ref !== undefined) {
@@ -686,8 +669,6 @@ type WidgetMap = Map<string, EditorMap>
 type WidgetLike = Widget | LabWidget;
 /**
  * Entrypoint for widget creation
- *
- * @export
  * @param {Array<HTMLDivElement>} widgets - The collection of widgets
  *    found on the page
  */
