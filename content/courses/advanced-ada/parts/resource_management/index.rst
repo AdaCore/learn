@@ -6,3 +6,4 @@ Resource Management
 
     access_types
     anonymous_access_types
+    limited_types
