@@ -2,8 +2,6 @@ import {RunProgram, CheckOutput} from './server-types';
 
 /**
  * Worker class for server REST sequence
- *
- * @export
  * @class ServerWorker
  */
 export class ServerWorker {
@@ -14,10 +12,9 @@ export class ServerWorker {
 
   /**
    * The data processing callback for server data
-   *
    * @callback dataCallback
    * @param {CheckOutput.FS} data - The data to process
-   * @return {number} - The number of lines processed
+   * @returns {number} - The number of lines processed
    */
 
   /**
@@ -32,7 +29,6 @@ export class ServerWorker {
 
   /**
    * Entrypoint for initiating requests to the server
-   *
    * @param {RunProgram.TSData} serverData - The data to send
    * @param {number} timeout - The request timeout in ms
    */
@@ -88,9 +84,8 @@ export class ServerWorker {
 
   /**
    * Delay function
-   *
    * @param {number} ms - Number of milliseconds to delay-+
-   * @return {Promise<unknown>} - A promise to await
+   * @returns {Promise<unknown>} - A promise to await
    */
   public static delay(ms: number): Promise<unknown> {
     return new Promise((resolve) => setTimeout(resolve, ms));

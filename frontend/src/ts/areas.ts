@@ -1,13 +1,12 @@
 import * as Strings from './strings';
 import {CheckOutput} from './server-types';
 
-/** Class representing an Area **/
+/** Class representing an Area */
 export class Area {
   protected readonly container: HTMLDivElement;
 
   /**
    * Construct an Area
-   *
    * @param {HTMLDivElement} elem - A parent element.
    */
   constructor(elem: HTMLDivElement) {
@@ -16,7 +15,6 @@ export class Area {
 
   /**
    * The event callback signature for clickable divs
-   *
    * @callback eventCallback
    */
 
@@ -88,14 +86,13 @@ export class Area {
 
 /**
  * Class representing an OutputArea
- * @extends Area
+ * @augments Area
  */
 export class OutputArea extends Area {
   private spinner: HTMLDivElement;
 
   /**
    * Construct an OutputArea
-   *
    * @param {HTMLDivElement} elem (optional) - A parent element. If none is
    *  specified, one is created.
    */
@@ -149,7 +146,7 @@ export class OutputArea extends Area {
 
 /**
  * Class representing a LabArea
- * @extends Area
+ * @augments Area
  */
 export class LabArea extends Area {
   private readonly ref: number;
@@ -192,7 +189,7 @@ export class LabArea extends Area {
 
   /**
    * Render the LabArea
-   * @return {HTMLDivElement} Returns the obj holding the LabArea
+   * @returns {HTMLDivElement} Returns the obj holding the LabArea
    */
   public render(): HTMLDivElement {
     return this.wrapper;
@@ -203,7 +200,7 @@ export class LabArea extends Area {
    * @param {string} divClass - the class to apply to the div
    * @param {string} spanText - the text to put in the span
    * @param {string} result - the result text to display
-   * @return {HTMLDivElement} Returns the obj for the lab result
+   * @returns {HTMLDivElement} Returns the obj for the lab result
    */
   private resultHelper(divClass: string, spanText: string,
       result: string): HTMLDivElement {
@@ -251,7 +248,7 @@ export class LabArea extends Area {
 
   /**
    * Returns the ref number for the LabArea
-   * @return {number} The ref number
+   * @returns {number} The ref number
    */
   public getRef(): number {
     return this.ref;
@@ -260,9 +257,8 @@ export class LabArea extends Area {
 
 /**
  * Makes a lab area and creates the container element
- *
  * @param {number} ref - the lab reference
- * @return {LabArea} - The created lab area
+ * @returns {LabArea} - The created lab area
  */
 export function makeLabArea(ref: number): LabArea {
   const container = document.createElement('div');
@@ -276,7 +272,6 @@ export class LabContainer {
 
   /**
    * Constructs a LabContainer
-   *
    * @param {HTMLDivElement} elem - The parents div to render in
    */
   constructor(elem: HTMLDivElement) {
@@ -286,7 +281,7 @@ export class LabContainer {
   /**
    * Returns the LabArea corresponding to the ref number
    * @param {number} ref - The ref number to lookup
-   * @return {LabArea} the LabArea with the ref number
+   * @returns {LabArea} the LabArea with the ref number
    */
   public getLabArea(ref: number): LabArea {
     for (const l of this.labList) {
@@ -302,7 +297,7 @@ export class LabContainer {
   /**
    * Process the results from a lab submission
    * @param {CheckOutput.LabOutput} data - The lab submission data
-   * @return {boolean} the success/fail of the lab
+   * @returns {boolean} the success/fail of the lab
    */
   public processResults(data: CheckOutput.LabOutput): boolean {
     for (const index in data.cases) {
