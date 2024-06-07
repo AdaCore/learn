@@ -64,7 +64,7 @@ jobs:
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && \
         sudo sysctl -p
     - name: Install dependencies
-      run: yarn --frozen-lockfile
+      run: yarn --immutable
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
