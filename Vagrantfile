@@ -4,13 +4,6 @@ $frontend = <<-SHELL
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_20.x | bash -
 
-  # Add yarn to apt-get
-  curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
-    | gpg --dearmor \
-    | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-  echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" \
-    | tee /etc/apt/sources.list.d/yarn.list
-
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -22,8 +15,7 @@ $frontend = <<-SHELL
       plantuml \
       poppler-utils \
       libjpeg-dev \
-      make \
-      yarn
+      make
 
   # Install FSF GNAT
   # (Required tool: gnatchop)
@@ -45,6 +37,9 @@ $frontend = <<-SHELL
   echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 
   cd /vagrant/frontend
+  echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
+  yes | corepack enable
+  yes | yarn set version berry
   yarn
 
 SHELL
@@ -54,14 +49,6 @@ $epub = <<-SHELL
 
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_20.x | bash -
-
-  # Add yarn to apt-get
-  curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg \
-    | gpg --dearmor \
-    | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-  echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" \
-    | tee /etc/apt/sources.list.d/yarn.list
-
 
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
@@ -73,7 +60,6 @@ $epub = <<-SHELL
       graphviz \
       plantuml \
       make \
-      yarn \
       texlive-latex-base \
       texlive-latex-recommended \
       texlive-latex-extra \
@@ -120,6 +106,9 @@ $epub = <<-SHELL
   echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 
   cd /vagrant/frontend
+  echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
+  yes | corepack enable
+  yes | yarn set version berry
   yarn
 
 SHELL
