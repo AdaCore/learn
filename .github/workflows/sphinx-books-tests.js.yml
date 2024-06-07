@@ -23,10 +23,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - uses: actions/checkout@v2
+    - name: Enable Corepack
+      run: corepack enable
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
     - name: Install OS Deps
       run: |
         sudo apt-get update && \
