@@ -160,5 +160,6 @@
       "jsdom-global/register"
     ],
     "spec": "tests/**/*.spec.ts"
-  }
+  },
+  "packageManager": "yarn@4.2.2"
 }
