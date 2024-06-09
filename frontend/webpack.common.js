@@ -75,7 +75,7 @@ const css_rule = function(env) {
 
 const font_rule = function(env) {
   const fontloader_opts = {
-    name: '[name].[ext]?[hash]',
+    name: '[name].[ext]?[fullhash]',
     outputPath: 'fonts/',
     publicPath: '/_static/fonts/'
   };
@@ -107,7 +107,7 @@ module.exports = function(env) {
   return {
     entry: './src/index.ts',
     output: {
-      filename: '[name].[hash].js',
+      filename: '[name].[fullhash].js',
       path: path.resolve(__dirname, 'dist', 'html', '_static')
     },
     resolve: {
@@ -135,7 +135,7 @@ module.exports = function(env) {
     plugins: [
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        filename: '[name].[hash].css',
+        filename: '[name].[fullhash].css',
       }),
       new Chunks2JsonPlugin(),
       new ESLintPlugin(myEslintOptions),
