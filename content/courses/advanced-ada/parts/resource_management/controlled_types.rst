@@ -1555,3 +1555,11 @@ Controlled Types and Exception Handling
 .. todo::
 
     Complete section!
+
+
+Applications of Controlled Types
+--------------------------------
+
+.. todo::
+
+    Complete section!
