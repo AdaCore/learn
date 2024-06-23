@@ -1548,13 +1548,422 @@ Completion
 Controlled Types and Exception Handling
 ---------------------------------------
 
+In the previous section, we mainly focused on the normal completion of
+controlled types. However, when control is transferred out of the normal
+execution path due to an abort or an exception being raised, we speak of
+abnormal completion. In this section, we focus on those cases.
+
+Let's start with a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Exception_Handling.Simple_Exception
+    :class: ada-run-expect-failure
+
+    with Ada.Finalization;
+
+    package Simple_Controlled_Types is
+
+       type T is tagged private;
+
+       procedure Dummy (E : T);
+
+    private
+
+       type T is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy...)");
+       end Dummy;
+
+       procedure Initialize (E : in out T) is
+       begin
+          Put_Line ("Initialize...");
+       end Initialize;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    procedure Show_Simple_Exception is
+       A : T;
+
+       function Int_Last return Integer is
+         (Integer'Last);
+
+       Cnt : Positive := Int_Last;
+    begin
+       Cnt := Cnt + Cnt;
+
+       Dummy (A);
+
+       Put_Line (Cnt'Image);
+
+       --  When A is about to get out of
+       --  scope:
+       --
+       --  Finalize (A);
+       --
+    end Show_Simple_Exception;
+
+In this example, we're forcing an overflow to happen in the
+:ada:`Show_Simple_Exception` by adding one to the integer variable :ada:`Cnt`,
+which already has the value :ada:`Integer'Last`. The corresponding
+:ref:`overflow check <Adv_Ada_Overflow_Check>` raises the
+:ada:`Constraint_Error`.
+
+However, *before* this exception is raised, the finalization of the controlled
+object :ada:`A` is performed. In this sense, we have normal completion of the
+controlled type |mdash| even though an exception is being raised.
+
+.. admonition:: For further reading...
+
+   We already talked about the
+   :ref:`allocation check <Adv_Ada_Allocation_Check>`, which may raise a
+   :ada:`Program_Error` exception. In the code example for that section, we
+   used controlled types. Feel free to revisit the example.
+
 .. admonition:: Relevant topics
 
     - :arm22:`Completion and Finalization <7-6-1>`
 
+
+.. _Adv_Ada_Controlled_Types_Initialize_Exception:
+
+Exception raising in Initialize
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If an exception is raised in the :ada:`Initialize` procedure, we have abnormal
+completion. Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Exception_Handling.CT_Initialize_Exception
+    :class: ada-run-expect-failure
+
+    with Ada.Finalization;
+
+    package CT_Initialize_Exception is
+
+       type T is tagged private;
+
+       procedure Dummy (E : T);
+
+    private
+
+       type T is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end CT_Initialize_Exception;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body CT_Initialize_Exception is
+
+       function Int_Last return Integer is
+         (Integer'Last);
+
+       Cnt : Positive := Int_Last;
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy...)");
+       end Dummy;
+
+       procedure Initialize (E : in out T) is
+       begin
+          Put_Line ("Initialize...");
+          Cnt := Cnt + 1;
+       end Initialize;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize...");
+       end Finalize;
+
+    end CT_Initialize_Exception;
+
+    with CT_Initialize_Exception;
+    use  CT_Initialize_Exception;
+
+    procedure Show_Initialize_Exception is
+       A : T;
+    begin
+       Dummy (A);
+    end Show_Initialize_Exception;
+
+In the :ada:`Show_Initialize_Exception` procedure, we declare an object
+:ada:`A` of controlled type :ada:`T`. As we know, this declaration triggers a
+call to the :ada:`Initialize` procedure that we've implemented in the body of
+the :ada:`CT_Initialize_Exception` package. In the :ada:`Initialize` procedure,
+we're forcing an overflow to happen |mdash| by adding one to the :ada:`Cnt`
+variable, which already has the :ada:`Integer'Last` value.
+
+This is an example of abnormal completion, as the control is transferred out of
+the :ada:`Initialize` procedure, and the corresponding :ada:`Finalize`
+procedure is never called for object :ada:`A`.
+
+
+Bounded errors of controlled types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Bounded errors are an important topic when talking about exception and
+controlled types. In general, if an exception is raised in the :ada:`Adjust` or
+:ada:`Finalize` procedure, this is considered a bounded error |mdash| in its
+turn a bounded error raises a :ada:`Program_Error` exception.
+
+Note that the original exception raised in the :ada:`Adjust` or :ada:`Finalize`
+procedures could be any possible exception. For example, one of those
+procedures could raise a :ada:`Constraint_Error` exception. However, the actual
+exception that is raised at runtime is the :ada:`Program_Error` exception. This
+is because the bounded error, which raises the :ada:`Program_Error` exception,
+is more severe than the original exception coming from those procedures.
+
+(The behavior is different when the :ada:`Adjust` or :ada:`Finalize` procedure
+is called explicitly, as we'll see later.)
+
 .. todo::
 
-    Complete section!
+    - Add link to section on bounded errors (once it's available).
+
+Not every exception raised during an operation on controlled types is
+considered a bounded error. In fact, the case we've seen before, an
+:ref:`exception raised in the Initialize procedure <Adv_Ada_Controlled_Types_Initialize_Exception>`
+is not a bounded error.
+
+Here's a code example of a :ada:`Constraint_Error` exception being raised in
+the :ada:`Finalize` procedure:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Exception_Handling.CT_Finalize_Exception
+    :class: ada-run-expect-failure
+
+    with Ada.Finalization;
+
+    package CT_Finalize_Exception is
+
+       type T is tagged private;
+
+       procedure Dummy (E : T);
+
+       procedure Reset_Counter;
+
+    private
+
+       type T is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Adjust (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end CT_Finalize_Exception;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body CT_Finalize_Exception is
+
+       Cnt : Integer := Integer'Last;
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy...)");
+       end Dummy;
+
+       procedure Initialize (E : in out T) is
+       begin
+          Put_Line ("Initialize...");
+       end Initialize;
+
+       overriding
+       procedure Adjust (E : in out T) is
+       begin
+          Put_Line ("Adjust...");
+       end Adjust;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize...");
+          Cnt := Cnt + 1;
+       end Finalize;
+
+       procedure Reset_Counter is
+       begin
+          Cnt := 0;
+       end Reset_Counter;
+
+    end CT_Finalize_Exception;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with CT_Finalize_Exception;
+    use  CT_Finalize_Exception;
+
+    procedure Show_Finalize_Exception is
+       A, B : T;
+    begin
+       Dummy (A);
+
+       --  When A is about to get out of
+       --  scope:
+       --
+       --  Finalize (A);
+       --
+    end Show_Finalize_Exception;
+
+In this example, we're again forcing an overflow to happen (by adding one to
+the integer variable :ada:`Cnt`), this time in the :ada:`Finalize` procedure.
+When this procedure is implicitly called |mdash| when object :ada:`A` is about
+to get out of scope in the :ada:`Show_Finalize_Exception` procedure |mdash|
+the :ada:`Constraint_Error` exception is raised.
+
+As we've just seen, having an exception be raised during an implicit call to
+the :ada:`Finalize` procedure is a bounded error. Therefore, we see that the
+:ada:`Program_Error` exception is raised at runtime instead of the original
+:ada:`Constraint_Error` exception.
+
+As we hinted in the beginning, when the :ada:`Adjust` or the :ada:`Finalize`
+procedure is called *explicitly*, the exception raised in that procedure is
+*not* considered a bounded error. In this case, the original exception is
+raised.
+
+To show an example of such an explicit call, let's first move the overriden
+procedures for type :ada:`T` (:ada:`Initialize`, :ada:`Adjust` and
+:ada:`Finalize`) out of the private part of the package
+:ada:`CT_Finalize_Exception`, so they are now visible to clients. This allows
+us to call the :ada:`Finalize` procedure explicitly:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Exception_Handling.CT_Finalize_Exception
+
+    with Ada.Finalization;
+
+    package CT_Finalize_Exception is
+
+       type T is new
+         Ada.Finalization.Controlled
+       with null record;
+
+       overriding
+       procedure Initialize (E : in out T);
+
+       overriding
+       procedure Adjust (E : in out T);
+
+       overriding
+       procedure Finalize (E : in out T);
+
+       procedure Dummy (E : T);
+
+       procedure Reset_Counter;
+
+    end CT_Finalize_Exception;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with CT_Finalize_Exception;
+    use  CT_Finalize_Exception;
+
+    procedure Show_Finalize_Exception is
+       A : T;
+    begin
+       Dummy (A);
+
+       Finalize (A);
+
+       Put_Line ("After Finalize");
+    exception
+       when Constraint_Error =>
+          Put_Line ("Constraint_Error is being handled...");
+          Reset_Counter;
+    end Show_Finalize_Exception;
+
+Now, we're calling the :ada:`Finalize` procedure explicitly in the
+:ada:`Show_Finalize_Exception` procedure. As we know, due to the operation on
+:ada:`I` in the :ada:`Finalize` procedure, the :ada:`Constraint_Error`
+exception is raised in the procedure. Because we're handling this exception in
+the :ada:`Show_Finalize_Exception` procedure, we see the corresponding user
+message ("Constraint_Error is being handled...") at runtime.
+
+(Note that in the exception handling block, we're calling the
+:ada:`Reset_Counter` procedure. This prevents the :ada:`Constraint_Error` to be
+raised in the next call to :ada:`Finalize`.)
+
+
+Memory allocation and exceptions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When a memory block is allocated for controlled types and a bounded error
+occurs, there is no guarantee that this memory block will be deallocated.
+Roughly speaking, the compiler has the freedom |mdash| but not the obligation
+|mdash| to generate appropriate calls to :ada:`Finalize`, which may deallocate
+memory blocks.
+
+For example, we've seen that
+:ref:`subcomponents of controlled type <Adv_Ada_Controlled_Types_Initialization_Subcomponents>`
+of a controlled object :ada:`A` are initialized before the initialization of
+object :ada:`A` takes place. Because memory might have been allocated for the
+subcomponents, the compiler can insert code that attempts to finalize those
+subcomponents, which in turn deallocates the memory blocks (if they were
+allocated in the first place).
+
+We can visualize this strategy in the following diagram:
+
+.. uml::
+   :align: center
+   :width: 300pt
+
+    @startuml
+        actor Processing
+        participant "object A" as A
+
+        Processing -> A ** : << create >>
+        Processing -> A : << initialize subcomponents of object A\n(Memory was allocated here!) >>
+        Processing -> A : Initialize (A) \n << (An exception is raised here!) >>
+        Processing -> A !! : << finalize subcomponents\n(Deallocate memory.) >>
+    @enduml
+
+This strategy (of finalizing subcomponents that haven't raised exceptions)
+prevents memory leaks. However, this behavior very much depends on the compiler
+implementation. The :arm22:`Ada Reference Manual <7-6-1>` delineates (in the
+"Implementation Permissions" section) the cases where the compiler is allowed
+|mdash| but not required |mdash| to finalize objects when exceptions are
+raised.
+
+Because the actual behavior isn't defined, custom implementation of
+:ada:`Adjust` and :ada:`Finalize` procedures for controlled types should be
+designed very carefully in order to avoid exceptions, especially when memory
+is allocated in the :ada:`Initialize` procedure.
 
 
 Applications of Controlled Types
