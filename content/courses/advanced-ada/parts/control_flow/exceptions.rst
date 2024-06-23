@@ -688,6 +688,8 @@ Again, the check fails in the :ada:`T_Class (A)` conversion and raises a
 :ada:`Program_Error` exception.
 
 
+.. _Adv_Ada_Allocation_Check:
+
 Allocation Check
 ~~~~~~~~~~~~~~~~
 
