@@ -610,6 +610,9 @@ situations that we describe later on.
 
     - :arm22:`Assignment and Finalization <7-6>`
 
+
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents:
+
 Subcomponents
 ~~~~~~~~~~~~~
 
