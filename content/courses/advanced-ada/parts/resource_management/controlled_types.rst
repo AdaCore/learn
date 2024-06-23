@@ -1904,7 +1904,8 @@ us to call the :ada:`Finalize` procedure explicitly:
        Put_Line ("After Finalize");
     exception
        when Constraint_Error =>
-          Put_Line ("Constraint_Error is being handled...");
+          Put_Line
+            ("Constraint_Error is being handled...");
           Reset_Counter;
     end Show_Finalize_Exception;
 
