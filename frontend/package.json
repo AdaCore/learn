@@ -115,6 +115,7 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
+      "jsdoc/no-undefined-types": "off",
       "max-len": [
         "error",
         {
