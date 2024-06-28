@@ -169,7 +169,7 @@
 
             .. image:: images/page-1-of-intro-to-ada-labs.jpeg
                 :alt: Introduction to Ada: Laboratories (e-book)
-                :target: /labs/intro-to-ada/index.html 
+                :target: /labs/intro-to-ada/index.html
 
             .. raw:: html
 
