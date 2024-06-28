@@ -30,6 +30,7 @@ Release 2024-03
     - :ref:`Mutually dependent types using access types <Adv_Ada_Mutually_Dependent_Types_Access_Types>`
 
 - Improvements to sections:
+
     - :ref:`Design strategies for access types <Adv_Ada_Design_Strategies_Access_Types>`
 
 
