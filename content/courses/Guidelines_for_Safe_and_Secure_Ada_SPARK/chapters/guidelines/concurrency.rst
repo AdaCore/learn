@@ -33,8 +33,8 @@ High integrity applications are subject to a number of stringent analyses,
 including, for example, safety analyses and certification against rigorous
 industry standards. In addition, high integrity applications with real-time
 requirements must undergo timing analysis because they must be shown to meet
-deadlines prior to deployment -- failure to meet hard deadlines is unacceptable
-in this domain.
+deadlines prior to deployment |mdash| failure to meet hard deadlines is
+unacceptable in this domain.
 
 These analyses are applied both to the application and to the implementation of
 the underlying run-time library.  However, analysis of the complete set of
