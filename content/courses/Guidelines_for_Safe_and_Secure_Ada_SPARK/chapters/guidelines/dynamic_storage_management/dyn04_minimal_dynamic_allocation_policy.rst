@@ -25,7 +25,8 @@ Goal
 Reference
 +++++++++++
 
-Power of Ten rule 3 "Do not use dynamic memory allocation after initialization"
+Power of Ten rule 3: "Do not use dynamic memory allocation after
+initialization."
 
 +++++++++++++
 Description

@@ -3,6 +3,8 @@
 Definitions
 =============
 
+.. include:: ../../../global.txt
+
 This section contains terms and values used in the definitions of the rules set
 forth in this chapter.
 
@@ -58,7 +60,7 @@ code that does not follow this particular rule.
       Failure to follow this rule may cause a small amount of
       modifications/updates to bring the code base into compliance, but
       those changes will be minor compared to the benefit.
-  
+
    N/A
       This rule is more of a design decision (as opposed to a coding
       flaw) and therefore, if the rule is violated, it is done so

@@ -26,8 +26,8 @@ Goal
 Reference
 +++++++++++
 
-MISRA C Rule 8.7 "Functions and objects should not be defined with external
-linkage if they are referenced in only one translation unit"
+MISRA C Rule 8.7: "Functions and objects should not be defined with external
+linkage if they are referenced in only one translation unit."
 
 +++++++++++++
 Description

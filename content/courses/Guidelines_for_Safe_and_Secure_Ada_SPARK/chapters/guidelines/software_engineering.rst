@@ -3,6 +3,8 @@
 Software Engineering (SWE)
 ============================
 
+.. include:: ../../../global.txt
+
 *Goal*
    :Maintainability: :math:`\checkmark`
    :Reliability: :math:`\checkmark`

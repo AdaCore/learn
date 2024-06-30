@@ -44,7 +44,8 @@ during maintenance.
 This rule is meant to detect problematic cases of aliasing that are introduced
 through the actual parameters and between actual parameters and global
 variables in a subprogram call. It is a simplified version of the SPARK rule
-for anti-aliasing defined in *SPARK Reference Manual* section 6.4.2.
+for anti-aliasing defined in
+:spark_rm_url:`SPARK Reference Manual, section 6.4.2: Anti-Aliasing <subprograms.html#anti-aliasing>`.
 
 A formal parameter is said to be immutable when the subprogram cannot modify
 its value or modify the value of an object by dereferencing a part of the

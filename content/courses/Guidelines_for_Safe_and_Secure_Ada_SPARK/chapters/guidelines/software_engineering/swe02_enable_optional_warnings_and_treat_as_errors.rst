@@ -25,9 +25,9 @@ Goal
 Reference
 +++++++++++
 
-Power of 10 rule #10: All code must be compiled, from the first day of
+Power of 10 rule #10: "All code must be compiled, from the first day of
 development, with all compiler warnings enabled at the most
-pedantic setting available. All code must compile without warnings.
+pedantic setting available. All code must compile without warnings."
 
 +++++++++++++
 Description
@@ -86,9 +86,9 @@ Compliant Code Example
       ... code not referencing This
    end P;
 
-The compiler will no longer issue a warning that the formal parameter This is
-not referenced. Of course, if that changes and This becomes referenced, the
-compiler will flag the pragma.
+The compiler will no longer issue a warning that the formal parameter
+:ada:`This` is not referenced. Of course, if that changes and :ada:`This`
+becomes referenced, the compiler will flag the :ada:`pragma`.
 
 +++++++
 Notes

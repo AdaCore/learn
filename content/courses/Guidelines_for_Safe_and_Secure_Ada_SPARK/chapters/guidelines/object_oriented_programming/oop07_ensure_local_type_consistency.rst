@@ -68,8 +68,9 @@ but can never remove them, so more operations are found as we move down from
 the root. That is the nature of specialization. Note that the guarantee of an
 invoked operations' existence is essential for languages used in this domain.
 
-However, for this transparent manipulation to be functionally correct -- to
-accomplish what the caller intends -- the primitive operations of subclasses
+However, for this transparent manipulation to be functionally correct |mdash|
+to accomplish what the caller intends |mdash| the primitive operations of
+subclasses
 must be functionally indistinguishable from those of the superclasses. That
 doesn't mean the subclasses cannot make changes. Indeed, the entire point of
 subclasses is to make changes. In particular, functional changes can be either

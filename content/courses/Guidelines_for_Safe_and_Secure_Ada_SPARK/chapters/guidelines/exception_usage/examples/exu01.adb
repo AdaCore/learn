@@ -3,7 +3,7 @@ procedure Exu01 (X : in out Integer) is
 
    procedure Noncompliant (X : in out Integer) is
    begin
-      if X < Integer'last / 2
+      if X < Integer'Last / 2
       then
          X := X * 2;
       else
@@ -13,7 +13,7 @@ procedure Exu01 (X : in out Integer) is
 
    procedure Compliant (X : in out Integer) is
    begin
-      if X < Integer'last / 2
+      if X < Integer'Last / 2
       then
          X := X * 2;
       else

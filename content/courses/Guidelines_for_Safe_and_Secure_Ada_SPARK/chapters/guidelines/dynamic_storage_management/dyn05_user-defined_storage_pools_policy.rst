@@ -25,16 +25,20 @@ Goal
 Reference
 +++++++++++
 
-MISRA C Rule 21.3 "The memory allocation and deallocation functions of <stdlib.h>
-shall not be used"
+MISRA C Rule 21.3: "The memory allocation and deallocation functions of
+<stdlib.h> shall not be used."
 
 +++++++++++++
 Description
 +++++++++++++
 
-There are two issues that make storage utilization analysis difficult: 1) the
-predictability of the allocation and deallocation implementation, and 2) how
-access values are used by the application. The behavior of the underlying
+There are two issues that make storage utilization analysis difficult:
+
+1. the predictability of the allocation and deallocation implementation, and
+
+2. how access values are used by the application.
+
+The behavior of the underlying
 implementation is largely undefined and may, for example, consist of calls to
 the operating system (if present). Application code can manipulate access
 values beyond the scope of analysis.
