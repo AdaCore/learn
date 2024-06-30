@@ -3,6 +3,8 @@
 Safe Reclamation (RCL)
 ========================
 
+.. include:: ../../../global.txt
+
 *Goal*
    :Maintainability: :math:`\checkmark`
    :Reliability: :math:`\checkmark`

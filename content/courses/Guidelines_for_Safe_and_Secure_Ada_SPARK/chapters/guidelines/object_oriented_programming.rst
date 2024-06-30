@@ -3,6 +3,8 @@
 Object-Oriented Programming (OOP)
 ===================================
 
+.. include:: ../../../global.txt
+
 *Goal*
    :Maintainability: :math:`\checkmark`
    :Reliability: :math:`\checkmark`
