@@ -25,8 +25,8 @@ Goal
 Reference
 +++++++++++
 
-MISRA C Rule 1.3 "There shall be no occurrence of undefined or critical
-unspecified behaviour"
+MISRA C Rule 1.3: "There shall be no occurrence of undefined or critical
+unspecified behaviour."
 
 +++++++++++++
 Description

@@ -25,9 +25,9 @@ Goal
 Reference
 +++++++++++
 
-Power of 10 rule #10: All code must also be checked daily with at least one,
+Power of 10 rule #10: "All code must also be checked daily with at least one,
 but preferably more than one, strong static source code analyzer and should
-pass all analyses with zero warnings.
+pass all analyses with zero warnings."
 
 +++++++++++++
 Description

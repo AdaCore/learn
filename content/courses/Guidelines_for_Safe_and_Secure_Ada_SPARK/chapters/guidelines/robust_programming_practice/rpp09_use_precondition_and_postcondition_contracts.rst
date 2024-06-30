@@ -25,7 +25,7 @@ Goal
 Reference
 +++++++++++
 
-Power of Ten rule 5 "The assertion density of the code should average to a
+Power of Ten rule 5: "The assertion density of the code should average to a
 minimum of two assertions per function."
 
 +++++++++++++

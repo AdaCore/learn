@@ -25,7 +25,7 @@ Goal
 Reference
 +++++++++++
 
-MISRA C Dir 4.12 "Dynamic memory allocation shall not be used"
+MISRA C Dir 4.12: "Dynamic memory allocation shall not be used."
 
 +++++++++++++
 Description

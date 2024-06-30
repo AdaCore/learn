@@ -25,8 +25,8 @@ Goal
 Reference
 +++++++++++
 
-MISRA C Rule 13.2 "The value of an expression and its persistent side effects
-shall be the same under all permitted evaluation orders"
+MISRA C Rule 13.2: "The value of an expression and its persistent side effects
+shall be the same under all permitted evaluation orders."
 
 +++++++++++++
 Description

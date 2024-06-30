@@ -25,9 +25,11 @@ Goal
 Reference
 +++++++++++
 
-MISRA C Rule 17.7 "The value returned by a function having
-non-void return type shall be used" and directive 4.7 "If a function
-returns error information, that error information shall be tested."
+MISRA C Rule 17.7: "The value returned by a function having
+non-void return type shall be used," and
+
+Directive 4.7: "If a function returns error information, that error
+information shall be tested."
 
 +++++++++++++
 Description
