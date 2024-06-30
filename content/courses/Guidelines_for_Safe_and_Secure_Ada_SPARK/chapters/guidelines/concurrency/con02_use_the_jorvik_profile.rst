@@ -81,8 +81,9 @@ of the Jorvik profile.
     No_Dependence => Ada.Calendar
     No_Dependence => Ada.Synchronous_Barriers
 
-Jorvik also replaces restriction Simple_Barriers with Pure_Barriers (a weaker
-requirement than the restriction Simple_Barriers).
+Jorvik also replaces restriction :ada:`Simple_Barriers` with
+:ada:`Pure_Barriers` (a weaker requirement than the restriction
+:ada:`Simple_Barriers`).
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Applicable Vulnerability within ISO TR 24772-2

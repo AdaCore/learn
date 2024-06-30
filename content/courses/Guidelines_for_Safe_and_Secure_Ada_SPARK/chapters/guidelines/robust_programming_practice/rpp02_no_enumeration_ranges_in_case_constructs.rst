@@ -34,7 +34,7 @@ Description
 
 A range of enumeration literals must not be used as a choice in a
 :ada:`case` statement or a :ada:`case`
-expression. This includes explicit ranges (A .. B),
+expression. This includes explicit ranges :ada:`(A .. B)`,
 subtypes, and the
 :ada:`'Range` attribute. Much like the use of :ada:`others` in
 :ada:`case`

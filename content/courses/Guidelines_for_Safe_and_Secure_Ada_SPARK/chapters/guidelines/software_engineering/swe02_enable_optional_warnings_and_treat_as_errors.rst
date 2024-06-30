@@ -86,9 +86,9 @@ Compliant Code Example
       ... code not referencing This
    end P;
 
-The compiler will no longer issue a warning that the formal parameter This is
-not referenced. Of course, if that changes and This becomes referenced, the
-compiler will flag the pragma.
+The compiler will no longer issue a warning that the formal parameter
+:ada:`This` is not referenced. Of course, if that changes and :ada:`This`
+becomes referenced, the compiler will flag the :ada:`pragma`.
 
 +++++++
 Notes
