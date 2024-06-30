@@ -10,7 +10,7 @@ package Rpp14 is
       Number_Of_Bits : constant := 32;
       type Array_T is array (0 .. Number_Of_Bits) of Boolean;
       function Any_Set (X : Array_T) return Boolean is
-         (for some Flag in X'range => X (Flag));
+         (for some Flag in X'Range => X (Flag));
    end Compliant;
 
 end Rpp14;

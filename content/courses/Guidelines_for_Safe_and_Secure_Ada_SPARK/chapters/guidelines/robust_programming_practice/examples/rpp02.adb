@@ -5,9 +5,9 @@ procedure Rpp02 (X : in out Character) is
    begin
       case Digit_T (C) is
          when '0' | '9' =>
-            C := Character'succ (C);
+            C := Character'Succ (C);
          when '1' .. '8' =>
-            C := Character'pred (C);
+            C := Character'Pred (C);
       end case;
    end Noncompliant;
 
@@ -15,9 +15,9 @@ procedure Rpp02 (X : in out Character) is
    begin
       case Digit_T (C) is
          when '0' | '9' =>
-            C := Character'succ (C);
+            C := Character'Succ (C);
          when '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' =>
-            C := Character'pred (C);
+            C := Character'Pred (C);
       end case;
    end Compliant;
 
