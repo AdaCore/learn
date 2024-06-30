@@ -46,10 +46,10 @@ facilities that supports determinism, schedulability analysis, constrained
 memory utilization, and certification to the highest integrity levels. Four
 distinct application domains are specifically intended:
 
-   * Hard real-time applications requiring predictability,
-   * Safety-critical systems requiring formal, stringent certification,
+   * Hard real-time applications requiring predictability;
+   * Safety-critical systems requiring formal, stringent certification;
    * High-integrity applications requiring formal static analysis and
-     verification,
+     verification;
    * Embedded applications requiring both a small memory footprint and low
      execution overhead.
 
