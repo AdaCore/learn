@@ -2767,12 +2767,26 @@ these array declarations are equivalent:
 ..
     TO BE DONE:
 
-   :ada:`Full_Access_Only`
-   ~~~~~~~~~~~~~~~~~~~~~~~
+    :ada:`Full_Access_Only`
+    ~~~~~~~~~~~~~~~~~~~~~~~
+
+    .. admonition:: Relevant topics
+
+        - :arm22:`The Package System.Atomic_Operations <C-6-1>`
+
+    .. todo::
+
+        - **Briefly** discuss :ada:`Full_Access_Only`
+        - Add to previous section!
+
+..
+    TO BE DONE:
+
+    Package System.Atomic_Operations
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    .. admonition:: Relevant topics
 
-      - **Briefly** discuss :ada:`Full_Access_Only`
       - :arm22:`The Package System.Atomic_Operations <C-6-1>`
 
    .. todo::
