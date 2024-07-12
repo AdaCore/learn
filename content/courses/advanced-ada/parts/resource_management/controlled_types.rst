@@ -2748,7 +2748,10 @@ closed via the call to :ada:`Finalize`.
     :ada:`Initialize` procedure and opened the logfile there. This approach,
     however, would have prevented the client from specifying the location of
     the logfile in a simple way. Specifying the filename as a type discriminant
-    wouldn't work because we cannot use a string as a discriminant.
+    wouldn't work because we cannot use a string as a discriminant |mdash| as
+    we mentioned
+    :ref:`in a previous chapter <Adv_Ada_Indefinite_Subtype_Discriminant>`,
+    we cannot use indefinite subtypes as discriminants.
 
     If we had preferred this approach, we could generate a random name for the
     file in the :ada:`Initialize` procedure and store the file itself in a
