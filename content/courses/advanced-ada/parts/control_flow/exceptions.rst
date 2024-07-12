@@ -303,23 +303,6 @@ performed. Note that all examples are erroneous, so please avoid reusing them
 elsewhere.
 
 
-..
-    TO BE DONE:
-
-    :ada:`Program_Error_Check` and :ada:`Tasking_Check`
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. admonition:: In the Ada Reference Manual
-
-        - :arm22:`11.5 Suppressing Checks <11-5>`
-
-    .. todo::
-
-    - Add to previous section:
-        - :ada:`Program_Error_Check`
-        - :ada:`Tasking_Check`
-
-
 .. _Adv_Ada_Access_Check:
 
 Access Check
@@ -855,6 +838,36 @@ allocating memory. Let's revisit an example that we
 On each allocation (:ada:`new UInt_7`), a storage check is performed. Because
 there isn't enough reserved storage space before the second allocation, the
 checks fails and raises a :ada:`Storage_Error` exception.
+
+
+..
+    TO BE DONE:
+
+    :ada:`Program_Error_Check`
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm22:`11.5 Suppressing Checks <11-5>`
+
+    .. todo::
+
+        - Complete section!
+
+
+..
+    TO BE DONE:
+
+    :ada:`Tasking_Check`
+    ~~~~~~~~~~~~~~~~~~~~
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm22:`11.5 Suppressing Checks <11-5>`
+
+    .. todo::
+
+        - Complete section!
 
 
 .. admonition:: In the Ada Reference Manual
