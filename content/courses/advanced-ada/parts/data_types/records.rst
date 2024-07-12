@@ -876,6 +876,75 @@ consider using interfaces instead of null records. We'll discuss this topic
 :ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
 
 
+..
+    TO BE DONE:
+
+    Record discriminants
+    --------------------
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm:`3.7 Discriminants <3-7>`
+
+    .. todo::
+
+        - (MENTION: Per-object expressions)
+        - Known and unknown discriminant parts
+        - (MENTION: Object declaration and assignments)
+        - Private types
+        - Subtypes and access definitions
+        - (MOVE: Indefinite subtypes as discriminants)
+        - Default values
+            - (MENTION: Definite and Indefinite Subtypes)
+        - Derived types / subtypes
+
+
+..
+    TO BE DONE:
+
+    Discriminant constraints and operations
+    ---------------------------------------
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm:`3.7.1 Discriminant Constraints <3-7-1>`
+
+    .. todo::
+
+        - Discriminant constraint
+        - (MOVE: Constrained Attribute)
+
+
+..
+    TO BE DONE:
+
+    Unknown discriminants
+    ---------------------
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm:`3.7 Discriminants <3-7>`
+
+    .. todo::
+
+        - Complete section!
+
+
+..
+    TO BE DONE:
+
+    Variant parts
+    -------------
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm:`3.8.1 Variant Parts and Discrete Choices <3-8-1>`
+
+    .. todo::
+
+        - Complete section!
+
+
 
 .. _Adv_Ada_Per_Object_Expressions:
 

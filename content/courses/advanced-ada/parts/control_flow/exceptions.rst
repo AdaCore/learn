@@ -3,6 +3,21 @@ Exceptions
 
 .. include:: ../../../global.txt
 
+..
+    TO BE DONE:
+
+    Classification of Errors
+    ------------------------
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm:`1.1.5 Classification of Errors <1-1-5>`
+
+    .. todo::
+
+        - (MENTION: bounded errors)
+
+
 Asserts
 -------
 

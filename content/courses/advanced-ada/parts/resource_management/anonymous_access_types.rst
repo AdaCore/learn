@@ -3559,3 +3559,21 @@ Remember that the compiler introduces an accessibility check in the call to
 :ada:`Iterate`, which is successful because the lifetime of
 :ada:`Display'Access` is the same as the lifetime of the :ada:`Proc` parameter
 of :ada:`Iterate`.
+
+
+..
+    TO BE DONE:
+
+    Coextensions
+    ------------
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm22:`3.10.2 Operations of Access Types <3-10-2>`
+
+    .. todo::
+
+        Complete section!
+
+        Discuss:
+        - static / dynamic coextensions
