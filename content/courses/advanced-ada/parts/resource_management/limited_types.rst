@@ -1496,12 +1496,19 @@ can be nonlimited, so it's not immutably limited.
     - :arm22:`7.5 Limited Types <7-5>`
 
 
-Limited Types and Discriminants
--------------------------------
+..
+    TO BE DONE:
 
-.. todo::
+    Limited Types and Discriminants
+    -------------------------------
 
-    Complete section!
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm:`3.7 Discriminants <3-7>`
+
+    .. todo::
+
+        - Complete section!
 
 
 Record components of limited type

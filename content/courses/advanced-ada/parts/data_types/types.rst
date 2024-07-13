@@ -3,6 +3,18 @@ Types
 
 .. include:: ../../../global.txt
 
+..
+    TO BE DONE:
+
+    Objects
+    -------
+
+    .. todo::
+
+        - Definition of an object in Ada
+        - Difference to object-oriented programming
+
+
 Scalar Types
 ------------
 

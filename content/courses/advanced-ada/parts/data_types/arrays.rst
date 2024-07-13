@@ -523,3 +523,18 @@ we'd like to highlight the following aspects:
 - Resetting all values of an array of arrays is very similar to how we do it
   for multidimensional arrays. In fact, we can still use an aggregate with this
   form: :ada:`(others => (others => 0.0))`.
+
+
+..
+    TO BE DONE:
+
+    Array Subtypes
+    --------------
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm:`3.7 Discriminants <3-7>`
+
+    .. todo::
+
+        - Complete section!
