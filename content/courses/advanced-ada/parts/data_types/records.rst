@@ -879,6 +879,62 @@ consider using interfaces instead of null records. We'll discuss this topic
 Record discriminants
 --------------------
 
+
+
+.. _Adv_Ada_Indefinite_Subtype_Discriminant:
+
+Indefinite subtypes as discriminants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that we cannot use indefinite subtypes as discriminants. For example,
+the following code won't compile:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types_Error
+    :class: ada-expect-compile-error
+
+    package Unconstrained_Types is
+
+        type Integer_Array is
+            array (Positive range <>) of Integer;
+
+        type Simple_Record (Arr : Integer_Array) is
+        record
+            L : Natural := Arr'Length;
+        end record;
+
+    end Unconstrained_Types;
+
+:ada:`Integer_Array` is a correct type declaration |mdash| although
+the type itself is indefinite after the declaration. However, we cannot
+use it as the discriminant in the declaration of :ada:`Simple_Record`.
+We could, however, have a correct declaration by using discriminants as
+access values:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types_Error
+
+    package Unconstrained_Types is
+
+        type Integer_Array is
+            array (Positive range <>) of Integer;
+
+        type Integer_Array_Access is
+            access Integer_Array;
+
+        type Simple_Record
+            (Arr : Integer_Array_Access) is
+        record
+            L : Natural := Arr'Length;
+        end record;
+
+    end Unconstrained_Types;
+
+By adding the :ada:`Integer_Array_Access` type and using it in
+:ada:`Simple_Record`\'s type declaration, we can indirectly use an
+indefinite type in the declaration of another indefinite type. We discuss
+this topic later
+:ref:`in another chapter <Adv_Ada_Discriminants_As_Access_Values>`.
+
+
 .. admonition:: In the Ada Reference Manual
 
    - :arm:`3.7 Discriminants <3-7>`
