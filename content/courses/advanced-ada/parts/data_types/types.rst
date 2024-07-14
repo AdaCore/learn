@@ -1787,6 +1787,8 @@ when an object is declared. In this case, we initialize the object with a call
 to the :ada:`Init` function.
 
 
+.. _Adv_Ada_Type_Conversion:
+
 Type conversion
 ---------------
 
