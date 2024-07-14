@@ -1143,7 +1143,7 @@ so-called *current instance*.
     - Add link to Adv_Ada_Reference_Current_Instance section ("Access Types:
       Reference to current instance") once it's available.
 
-.. admonition:: Relevant topics
+.. admonition:: In the Ada Reference Manual
 
    - :arm22:`3.8 Record Types <3-8>`
 
