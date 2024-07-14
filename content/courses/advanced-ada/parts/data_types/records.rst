@@ -884,7 +884,7 @@ Record discriminants
 .. _Adv_Ada_Indefinite_Subtype_Discriminant:
 
 Indefinite subtypes as discriminants
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Note that we cannot use indefinite subtypes as discriminants. For example,
 the following code won't compile:
