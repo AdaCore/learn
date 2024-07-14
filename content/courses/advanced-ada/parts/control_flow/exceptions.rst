@@ -358,6 +358,8 @@ declaration of :ada:`SAI`, the null exclusion fails in the declaration
 itself (because the default value of the access type is :ada:`null`).
 
 
+.. _Adv_Ada_Discriminant_Check:
+
 Discriminant Check
 ~~~~~~~~~~~~~~~~~~
 
