@@ -886,8 +886,8 @@ Record discriminants
 Indefinite subtypes as discriminants
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Note that we cannot use indefinite subtypes as discriminants. For example,
-the following code won't compile:
+As we already implied, we cannot use indefinite subtypes as discriminants. For
+example, the following code won't compile:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types_Error
     :class: ada-expect-compile-error
