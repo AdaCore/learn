@@ -876,6 +876,8 @@ consider using interfaces instead of null records. We'll discuss this topic
 :ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
 
 
+.. _Adv_Ada_Record_Discriminants:
+
 Record discriminants
 --------------------
 
