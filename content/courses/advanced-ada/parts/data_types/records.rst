@@ -880,6 +880,10 @@ Record discriminants
 --------------------
 
 
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`3.7 Discriminants <3-7>`
+
 
 .. _Adv_Ada_Indefinite_Subtype_Discriminant:
 
@@ -935,9 +939,6 @@ this topic later
 :ref:`in another chapter <Adv_Ada_Discriminants_As_Access_Values>`.
 
 
-.. admonition:: In the Ada Reference Manual
-
-   - :arm:`3.7 Discriminants <3-7>`
 
 .. todo::
 
