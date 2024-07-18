@@ -25,7 +25,7 @@ Goal
 Reference
 +++++++++++
 
-[CWE2019]_ CWE-415: Double Free
+N/A
 
 +++++++++++++
 Description

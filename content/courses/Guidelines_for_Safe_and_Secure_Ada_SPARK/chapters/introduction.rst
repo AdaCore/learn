@@ -90,8 +90,21 @@ not without some exceptional situations allowing it to be violated. The project
 lead should consider which guidelines to apply and how best to apply
 each guideline selected.
 
+----------------------------
+Mapping to Other Standards
+----------------------------
+
 Many of these rules can also be considered *good* programming practices. As
 such, many of them can be directly correlated to the *ISO/IEC Guidance to
 Avoiding Vulnerabilities in Programming Languages* [TR24772]_. When a rule
 addresses one of these vulnerabilities, it is listed in the appropriate
 subsection.
+
+In addition, MITRE's list of Common Weakness Enumerations [MITRE_CWE]_
+contains many software issues that can be addressed by rules within this
+standard.  Where appropriate, each rule lists the CWE(s) that can be
+addressed. Note that software CWE's tend to be generalized across all
+languages, so that many of the weaknesses may be prevented by the language
+itself. For this reason, the CWEs identified within this document specifically
+address vulnerabilities that would not be addressed by the Ada language itself
+(i.e., using the language is not sufficient to prevent the vulnerability).
