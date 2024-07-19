@@ -103,7 +103,7 @@ subsection.
 In addition, MITRE's list of Common Weakness Enumerations [MITRE_CWE]_
 contains many software issues that can be addressed by rules within this
 standard.  Where appropriate, each rule lists the CWE(s) that can be
-addressed. Note that software CWE's tend to be generalized across all
+addressed. Note that software CWEs tend to be generalized across all
 languages, so that many of the weaknesses may be prevented by the language
 itself. For this reason, the CWEs identified within this document specifically
 address vulnerabilities that would not be addressed by the Ada language itself
