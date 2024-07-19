@@ -44,6 +44,13 @@ Applicable Vulnerability within ISO TR 24772-2
 
 N/A
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-670 - Always-Incorrect Control Flow Implementation
+* CWE-754 - Improper Check for Unusual or Exceptional Conditions
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

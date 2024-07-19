@@ -99,6 +99,12 @@ Applicable Vulnerability within ISO TR 24772-2
 * 6.34 Subprogram signature mismatch [OTR]
 * 6.41 Inheritance [RIP]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-685 - Function Call With Incorrect Number of Arguments
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

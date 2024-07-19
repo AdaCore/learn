@@ -56,6 +56,13 @@ Applicable Vulnerability within ISO TR 24772-2
 
 N/A
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-1106 - Insufficient Use of Symbolic Constants
+* CWE-547 - Use of Hard-coded, Security-relevant Constants
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

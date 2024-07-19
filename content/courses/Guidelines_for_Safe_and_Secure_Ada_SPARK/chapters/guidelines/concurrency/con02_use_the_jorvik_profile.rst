@@ -95,6 +95,14 @@ Applicable Vulnerability within ISO TR 24772-2
 * 6.62 Concurrency - Premature termination [CGS]
 * 6.63 Lock protocol errors [CGM]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-362 - Concurrent Execution using Shared Resource with Improper Synchronization
+* CWE-367 - Time-of-check Time-of-use (TOCTOU) Race Condition
+* CWE-366 - Race Condition within a Thread
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

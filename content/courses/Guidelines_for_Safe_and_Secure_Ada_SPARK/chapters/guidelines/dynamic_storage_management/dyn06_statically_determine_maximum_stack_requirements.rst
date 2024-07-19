@@ -48,6 +48,13 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 4.10 Storage Pool
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-770 - Allocation of Resources Without Limits or Throttling
+* CWE-789 - Uncontrolled Memory Allocation
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

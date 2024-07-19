@@ -48,6 +48,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.32 Passing parameters and return values [CSJ]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-457 - Use of Uninitialized Variable
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

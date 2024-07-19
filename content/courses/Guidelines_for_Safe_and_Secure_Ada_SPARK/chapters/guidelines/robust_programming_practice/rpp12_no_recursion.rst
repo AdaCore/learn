@@ -46,6 +46,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.35 Recursion [GDL]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-674 - Uncontrolled Recursion
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

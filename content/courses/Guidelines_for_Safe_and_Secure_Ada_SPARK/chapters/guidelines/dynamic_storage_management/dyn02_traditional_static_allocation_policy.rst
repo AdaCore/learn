@@ -59,6 +59,15 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 4.10 Storage Pool
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-401 - Missing Release of Memory after Effective Lifetime
+* CWE-758 - Reliance on Undefined, Unspecified, or Implementation-Defined Behavior
+* CWE-771 - Missing Reference to Active Allocated Resource
+* CWE-1325 - Improperly Controlled Sequential Memory Allocation
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

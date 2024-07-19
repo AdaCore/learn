@@ -82,6 +82,12 @@ Applicable Vulnerability within ISO TR 24772-2
 * 6.43 Redispatching [PPH]
 * 6.44 Polymorphic variables [BKK]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+N/A
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

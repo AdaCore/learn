@@ -55,6 +55,13 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.47 Inter-language calling [DJS]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-252 - Unchecked Return Value
+* CWE-563 - Assignment to Variable without Use
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

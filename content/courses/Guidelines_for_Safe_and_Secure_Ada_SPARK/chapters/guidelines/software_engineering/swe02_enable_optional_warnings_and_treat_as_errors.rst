@@ -59,6 +59,12 @@ Applicable Vulnerability within ISO TR 24772-2
 * 6.20 Identifier name reuse [YOW]
 * 6.22 Initialization of variables [LAV]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* CWE-1127 - Compilation with Insufficient Warnings or Errors
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++
