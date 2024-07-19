@@ -57,7 +57,6 @@ Applicable Common Weakness Enumeration
 * CWE-401 - Missing Release of Memory after Effective Lifetime
 * CWE-415 - Double Free
 * CWE-416 - Use After Free
-*  - 
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example
