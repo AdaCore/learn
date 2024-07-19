@@ -1917,8 +1917,8 @@ the :ada:`Show_Finalize_Exception` procedure, we see the corresponding user
 message ("Constraint_Error is being handled...") at runtime.
 
 (Note that in the exception handling block, we're calling the
-:ada:`Reset_Counter` procedure. This prevents the :ada:`Constraint_Error` to be
-raised in the next call to :ada:`Finalize`.)
+:ada:`Reset_Counter` procedure. This prevents :ada:`Constraint_Error` from
+being raised in the next call to :ada:`Finalize`.)
 
 
 Memory allocation and exceptions
