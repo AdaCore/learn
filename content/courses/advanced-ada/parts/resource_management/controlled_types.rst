@@ -1735,8 +1735,8 @@ Bounded errors of controlled types
 
 Bounded errors are an important topic when talking about exception and
 controlled types. In general, if an exception is raised in the :ada:`Adjust` or
-:ada:`Finalize` procedure, this is considered a bounded error |mdash| in its
-turn a bounded error raises a :ada:`Program_Error` exception.
+:ada:`Finalize` procedure, this is considered a bounded error. If the bounded
+error is detected, the :ada:`Program_Error` exception is raised.
 
 Note that the original exception raised in the :ada:`Adjust` or :ada:`Finalize`
 procedures could be any possible exception. For example, one of those
