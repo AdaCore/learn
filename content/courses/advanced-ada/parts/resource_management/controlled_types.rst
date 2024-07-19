@@ -1614,7 +1614,7 @@ Let's start with a simple example:
 
        Cnt : Positive := Int_Last;
     begin
-       Cnt := Cnt + Cnt;
+       Cnt := Cnt + 1;
 
        Dummy (A);
 
