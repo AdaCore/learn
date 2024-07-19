@@ -1472,7 +1472,7 @@ Finalization
 We mentioned finalization |mdash| and the :ada:`Finalize` procedure |mdash| at
 the
 :ref:`beginning of the chapter <Adv_Ada_Controlled_Types_Overview_Controlled_Objects>`.
-In this section, we discuss the topic in more details.
+In this section, we discuss the topic in more detail.
 
 .. admonition:: Relevant topics
 
@@ -1500,7 +1500,7 @@ Finalization via unchecked deallocation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When performing unchecked deallocation of a controlled type, the
-:ada:`Finalization` procedure is called right before the actual memory for the
+:ada:`Finalize` procedure is called right before the actual memory for the
 controlled object is deallocated.
 
 Let's see a simple example:
@@ -1592,7 +1592,7 @@ Subcomponents
 
 As we've seen in the section about
 :ref:`initialization of subcomponents <Adv_Ada_Controlled_Types_Initialization_Subcomponents>`,
-subcomponents of controlled type are initialized by a call to their
+subcomponents of a controlled type are initialized by a call to their
 corresponding :ada:`Initialize` procedure before the call to :ada:`Initialize`
 for the parent controlled type. In the case of finalization, the reverse order
 is applied: first, finalization of the parent type takes place, and then the
