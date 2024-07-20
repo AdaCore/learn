@@ -25,7 +25,7 @@ Goal
 Reference
 +++++++++++
 
-[CWE2019]_ CWE-415: Double Free
+N/A
 
 +++++++++++++
 Description
@@ -38,6 +38,13 @@ Applicable Vulnerability within ISO TR 24772-2
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 * 6.39 Memory leak and heap fragmentation [XYL]
+
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-415 - Double Free <415>`
+* :cwe:`CWE-416 - Use After Free <416>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

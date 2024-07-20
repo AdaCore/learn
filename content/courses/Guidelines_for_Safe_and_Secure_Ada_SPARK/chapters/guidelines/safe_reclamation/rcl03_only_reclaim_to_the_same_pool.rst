@@ -47,6 +47,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.39 Memory leak and heap fragmentation [XYL]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-401 - Missing Release of Memory after Effective Lifetime <401>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

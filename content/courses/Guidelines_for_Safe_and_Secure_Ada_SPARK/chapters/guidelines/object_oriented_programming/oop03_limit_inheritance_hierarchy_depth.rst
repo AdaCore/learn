@@ -61,6 +61,13 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.41 Inheritance [RIP]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-1074 - Class with Excessively Deep Inheritance <1074>`
+* :cwe:`CWE-1086 - Class with Excessive Number of Child Classes <1086>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

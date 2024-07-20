@@ -45,6 +45,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.24 Side-effects and order of evaluation [SAM]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+N/A
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

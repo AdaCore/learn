@@ -43,6 +43,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.39 Memory leak and heap fragmentation [XYL]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-590 - Free of Memory not on the Heap <590>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

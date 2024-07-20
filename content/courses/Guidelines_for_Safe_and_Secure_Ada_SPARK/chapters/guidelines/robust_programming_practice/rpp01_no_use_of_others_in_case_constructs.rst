@@ -54,6 +54,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.27 Switch statements and static analysis [CLL]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-478 - Missing Default Case in Multiple Condition Expression <478>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

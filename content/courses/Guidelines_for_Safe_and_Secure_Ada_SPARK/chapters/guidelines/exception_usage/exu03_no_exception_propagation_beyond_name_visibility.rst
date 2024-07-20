@@ -43,6 +43,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 N/A
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-248 - Uncaught Exception <248>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

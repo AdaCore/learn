@@ -48,6 +48,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.5 Enumerator issues [CCB]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+N/A
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

@@ -53,6 +53,12 @@ Applicable Vulnerability within ISO TR 24772-2
 * 6.24 Side-effects and order of evaluation [SAM]
 * 6.25 Likely incorrect expression [KOA]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+N/A
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

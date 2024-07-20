@@ -35,7 +35,7 @@ References
 .. [Meyer1997] Meyer, B. 1997. "Object-Oriented Software Construction."
   *Prentice Hall Professional Technical Reference* (2nd Edition)
 
-.. [CWE2019] MITRE. 2019. *Common Weakness Enumeration (CWE)*
+.. [MITRE_CWE] MITRE. `Common Weakness Enumeration (CWE) <https://cwe.mitre.org/index.html>`_
 
 .. [SEI-Java] The Software Engineering Institute.
   *SEI CERT Oracle Coding Standard for Java*

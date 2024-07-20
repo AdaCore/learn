@@ -42,6 +42,13 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.56 Undefined behaviour [EWF]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-567 - Unsynchronized Access to Shared Data in a Multithreaded Context <567>`
+* :cwe:`CWE-667 - Improper Locking <667>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

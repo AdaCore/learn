@@ -48,6 +48,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 N/A
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-843 - Access of Resource Using Incompatible Type ('Type Confusion') <843>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

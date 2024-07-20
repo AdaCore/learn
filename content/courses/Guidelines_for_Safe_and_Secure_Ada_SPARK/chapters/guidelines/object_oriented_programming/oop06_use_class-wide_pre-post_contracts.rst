@@ -54,6 +54,12 @@ Applicable Vulnerability within ISO TR 24772-2
 * 6.42 Violations of the Liskov substitution principle or the contract model
   [BLP]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+N/A
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

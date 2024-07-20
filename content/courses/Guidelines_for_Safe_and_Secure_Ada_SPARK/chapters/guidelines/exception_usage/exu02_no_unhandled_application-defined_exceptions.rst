@@ -85,6 +85,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.36 Ignored error status and unhandled exceptions [OYB]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-248 - Uncaught Exception <248>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

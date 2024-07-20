@@ -56,6 +56,13 @@ Applicable Vulnerability within ISO TR 24772-2
 
 N/A
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-1061 - Insufficient Encapsulation <1061>`
+* :cwe:`CWE-496 - Public Data Assigned to Private Array-Typed Field <496>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

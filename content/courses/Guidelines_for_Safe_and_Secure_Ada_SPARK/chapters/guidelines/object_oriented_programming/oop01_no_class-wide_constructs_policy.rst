@@ -49,6 +49,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 * 6.43 Redispatching [PPH]
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+N/A
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++

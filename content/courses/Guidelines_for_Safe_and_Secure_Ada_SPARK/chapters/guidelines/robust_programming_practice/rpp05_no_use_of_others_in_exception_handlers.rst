@@ -46,6 +46,12 @@ Applicable Vulnerability within ISO TR 24772-2
 
 N/A
 
+++++++++++++++++++++++++++++++++++++++++
+Applicable Common Weakness Enumeration
+++++++++++++++++++++++++++++++++++++++++
+
+* :cwe:`CWE-396 - Declaration of Catch for Generic Exception <396>`
+
 +++++++++++++++++++++++++++
 Noncompliant Code Example
 +++++++++++++++++++++++++++
