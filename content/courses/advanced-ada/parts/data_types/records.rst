@@ -1234,13 +1234,16 @@ Let's see a code example:
 
     package Recs is
 
-       type Usage_Mode is (Off, Simple_Usage, Advanced_Usage);
+       type Usage_Mode is (Off,
+                           Simple_Usage,
+                           Advanced_Usage);
 
        type Priv_Info is private;
 
        type Priv_Info_Access is access Priv_Info;
 
-       type Proc_Access is access procedure (P : in out Priv_Info);
+       type Proc_Access is
+         access procedure (P : in out Priv_Info);
 
        type Priv_Rec (Last  : Positive;
                       Usage : Usage_Mode;
@@ -1640,19 +1643,19 @@ account:
        --         constrained
     begin
        B1 := A1;
-       -- OK: discriminants match
+       --  OK: discriminants match
 
        B2 := A1;
-       -- CONSTRAINT_ERROR!
+       --  CONSTRAINT_ERROR!
 
        B2 := A2;
-       -- OK: discriminants match
+       --  OK: discriminants match
 
        C2 := A1;
-       -- CONSTRAINT_ERROR!
+       --  CONSTRAINT_ERROR!
 
        C2 := A2;
-       -- OK: discriminants match
+       --  OK: discriminants match
     end Show_Subtypes_With_Discriminants;
 
 For objects of :ada:`Sub_T` subtype, we *have to* specify the value of each
@@ -1722,16 +1725,16 @@ as expected, we have to perform a
        --         constrained
     begin
        B1 := T_Derived (A1);
-       -- OK: discriminants match
+       --  OK: discriminants match
 
        B2 := T_Derived (A1);
-       -- ERROR!
+       --  ERROR!
 
        C2 := T_Derived_2 (A1);
-       -- CONSTRAINT_ERROR!
+       --  CONSTRAINT_ERROR!
 
        C2 := T_Derived_2 (A2);
-       -- OK: discriminants match
+       --  OK: discriminants match
     end Show_Derived_With_Discriminants;
 
 Once again, a discriminant check is performed when assigning objects to ensure
