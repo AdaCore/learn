@@ -1537,7 +1537,7 @@ example, if a discriminant of a mutable subtype is used to constraint a
 component of indefinite subtype, we might see storage errors at runtime. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Mutable_Subtype_Storage_Error
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Mutable_Subtype_Error
 
     package Mutability is
 
@@ -1560,7 +1560,7 @@ example:
 
     with Mutability;  use Mutability;
 
-    procedure Show_Storage_Error is
+    procedure Show_Mutable_Subtype_Error is
        A : T_Mutable_Array (10);
        B : T_Mutable_Array (20);
     begin
@@ -1570,7 +1570,7 @@ example:
                  & B'Size'Image);
 
        A := B;  --  STORAGE ERROR!
-    end Show_Storage_Error;
+    end Show_Mutable_Subtype_Error;
 
 In this case, the assignment :ada:`A := B` raises the :ada:`Storage_Error`
 exception at runtime. Here, the :ref:`storage check <Adv_Ada_Storage_Check>`
