@@ -1184,7 +1184,7 @@ Restrictions
 
 There are some important restrictions on per-object constraints:
 
-# Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
+#. Per-object range constraints such as :ada:`1 .. T'Size` are not allowed.
 
     - For example, the following code example doesn't compile:
 
