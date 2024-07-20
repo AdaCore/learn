@@ -1496,7 +1496,7 @@ via assignments |mdash| in this case, no
 Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Mutable_Subtype
-    :class: ada-expect-compile-error
+    :class: ada-run-expect-failure
 
     package Mutability is
 
@@ -1538,6 +1538,7 @@ component of indefinite subtype, we might see the corresponding checks fail at
 runtime. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Mutable_Subtype_Error
+    :class: ada-run-expect-failure
 
     package Mutability is
 
@@ -1620,7 +1621,7 @@ When declaring objects of these subtypes, we need to take the constraints into
 account:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Subtypes
-    :class: ada-expect-compile-error
+    :class: ada-run-expect-failure
 
     package Subtypes_With_Discriminants is
 
@@ -1720,7 +1721,7 @@ as expected, we have to perform a
 :ref:`type conversion <Adv_Ada_Type_Conversion>` in the assignments:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types
-    :class: ada-expect-compile-error
+    :class: ada-run-expect-failure
 
     with Derived_With_Discriminants;
     use  Derived_With_Discriminants;
