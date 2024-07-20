@@ -1182,7 +1182,7 @@ don't match, the :ada:`Constraint_Error` exception is raised.
 Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Object_Assignments
-    :class: ada-expect-compile-error
+    :class: ada-run-expect-failure
 
     package Recs is
 
