@@ -103,7 +103,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-685 - Function Call With Incorrect Number of Arguments
+* :cwe:`CWE-685 - Function Call With Incorrect Number of Arguments <685>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

@@ -52,7 +52,7 @@ N/A
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-843 - Access of Resource Using Incompatible Type ('Type Confusion')
+* :cwe:`CWE-843 - Access of Resource Using Incompatible Type ('Type Confusion') <843>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

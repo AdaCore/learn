@@ -65,8 +65,8 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-1074 - Class with Excessively Deep Inheritance
-* CWE-1086 - Class with Excessive Number of Child Classes
+* :cwe:`CWE-1074 - Class with Excessively Deep Inheritance <1074>`
+* :cwe:`CWE-1086 - Class with Excessive Number of Child Classes <1086>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

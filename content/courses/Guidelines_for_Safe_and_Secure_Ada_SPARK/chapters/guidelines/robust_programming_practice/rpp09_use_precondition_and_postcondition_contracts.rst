@@ -70,7 +70,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-754 - Improper Check for Unusual or Exceptional Conditions
+* :cwe:`CWE-754 - Improper Check for Unusual or Exceptional Conditions <754>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

@@ -99,9 +99,9 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-362 - Concurrent Execution using Shared Resource with Improper Synchronization
-* CWE-367 - Time-of-check Time-of-use (TOCTOU) Race Condition
-* CWE-366 - Race Condition within a Thread
+* :cwe:`CWE-362 - Concurrent Execution using Shared Resource with Improper Synchronization <362>`
+* :cwe:`CWE-367 - Time-of-check Time-of-use (TOCTOU) Race Condition <367>`
+* :cwe:`CWE-366 - Race Condition within a Thread <366>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

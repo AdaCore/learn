@@ -43,8 +43,8 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-415 - Double Free
-* CWE-416 - Use After Free
+* :cwe:`CWE-415 - Double Free <415>`
+* :cwe:`CWE-416 - Use After Free <416>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

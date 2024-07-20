@@ -58,7 +58,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-478 - Missing Default Case in Multiple Condition Expression
+* :cwe:`CWE-478 - Missing Default Case in Multiple Condition Expression <478>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

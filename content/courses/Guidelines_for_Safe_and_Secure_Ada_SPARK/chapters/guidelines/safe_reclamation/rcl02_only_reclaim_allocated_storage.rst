@@ -47,7 +47,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-590 - Free of Memory not on the Heap
+* :cwe:`CWE-590 - Free of Memory not on the Heap <590>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

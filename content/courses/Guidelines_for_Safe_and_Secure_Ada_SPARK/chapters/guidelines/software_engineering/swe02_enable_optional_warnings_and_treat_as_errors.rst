@@ -63,7 +63,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-1127 - Compilation with Insufficient Warnings or Errors
+* :cwe:`CWE-1127 - Compilation with Insufficient Warnings or Errors <1127>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

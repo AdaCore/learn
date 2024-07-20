@@ -50,7 +50,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-674 - Uncontrolled Recursion
+* :cwe:`CWE-674 - Uncontrolled Recursion <674>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

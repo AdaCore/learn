@@ -63,10 +63,10 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-401 - Missing Release of Memory after Effective Lifetime
-* CWE-758 - Reliance on Undefined, Unspecified, or Implementation-Defined Behavior
-* CWE-771 - Missing Reference to Active Allocated Resource
-* CWE-1325 - Improperly Controlled Sequential Memory Allocation
+* :cwe:`CWE-401 - Missing Release of Memory after Effective Lifetime <401>`
+* :cwe:`CWE-758 - Reliance on Undefined, Unspecified, or Implementation-Defined Behavior <758>`
+* :cwe:`CWE-771 - Missing Reference to Active Allocated Resource <771>`
+* :cwe:`CWE-1325 - Improperly Controlled Sequential Memory Allocation <1325>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

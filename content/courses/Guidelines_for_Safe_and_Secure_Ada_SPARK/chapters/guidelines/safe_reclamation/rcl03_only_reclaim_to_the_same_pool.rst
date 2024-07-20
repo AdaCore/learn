@@ -51,7 +51,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-401 - Missing Release of Memory after Effective Lifetime
+* :cwe:`CWE-401 - Missing Release of Memory after Effective Lifetime <401>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

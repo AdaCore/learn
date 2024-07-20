@@ -52,7 +52,7 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-457 - Use of Uninitialized Variable
+* :cwe:`CWE-457 - Use of Uninitialized Variable <457>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

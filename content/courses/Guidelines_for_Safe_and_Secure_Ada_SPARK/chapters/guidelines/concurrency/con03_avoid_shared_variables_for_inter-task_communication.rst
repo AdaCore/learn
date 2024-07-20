@@ -46,8 +46,8 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-567 - Unsynchronized Access to Shared Data in a Multithreaded Context
-* CWE-667 - Improper Locking
+* :cwe:`CWE-567 - Unsynchronized Access to Shared Data in a Multithreaded Context <567>`
+* :cwe:`CWE-667 - Improper Locking <667>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

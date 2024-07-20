@@ -54,7 +54,7 @@ N/A
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-397 - Declaration of Throws for Generic Exception
+* :cwe:`CWE-397 - Declaration of Throws for Generic Exception <397>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

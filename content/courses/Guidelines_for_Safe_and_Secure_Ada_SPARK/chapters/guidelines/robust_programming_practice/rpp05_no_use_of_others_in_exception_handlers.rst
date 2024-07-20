@@ -50,7 +50,7 @@ N/A
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-396 - Declaration of Catch for Generic Exception
+* :cwe:`CWE-396 - Declaration of Catch for Generic Exception <396>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

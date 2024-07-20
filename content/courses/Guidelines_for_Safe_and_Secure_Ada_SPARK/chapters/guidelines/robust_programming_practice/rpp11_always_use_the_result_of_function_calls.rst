@@ -59,8 +59,8 @@ Applicable Vulnerability within ISO TR 24772-2
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* CWE-252 - Unchecked Return Value
-* CWE-563 - Assignment to Variable without Use
+* :cwe:`CWE-252 - Unchecked Return Value <252>`
+* :cwe:`CWE-563 - Assignment to Variable without Use <563>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example
