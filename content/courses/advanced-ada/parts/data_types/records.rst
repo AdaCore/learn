@@ -1558,7 +1558,7 @@ example:
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    with Mutability;        use Mutability;
+    with Mutability;  use Mutability;
 
     procedure Show_Storage_Error is
        A : T_Mutable_Array (10);
