@@ -529,6 +529,9 @@ Here, the length of :ada:`Arr_1` is 10, while the length of :ada:`Arr_2` is 9,
 so we cannot assign :ada:`Arr_2` (:ada:`From` parameter) to :ada:`Arr_1`
 (:ada:`To` parameter) in the :ada:`Assign` procedure.
 
+
+.. _Adv_Ada_Overflow_Check:
+
 Overflow Check
 ~~~~~~~~~~~~~~
 
@@ -685,11 +688,14 @@ Again, the check fails in the :ada:`T_Class (A)` conversion and raises a
 :ada:`Program_Error` exception.
 
 
+.. _Adv_Ada_Allocation_Check:
+
 Allocation Check
 ~~~~~~~~~~~~~~~~
 
 The allocation check ensures, when a task is about to be created, that its
-master has not been completed or the finalization has not been started.
+master has not been completed. Also, it ensures that the finalization has not
+started.
 
 This is an example adapted from
 `AI-00280 <http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ais/ai-00280.txt?rev=1.12&raw=N>`_:
@@ -743,8 +749,10 @@ This is an example adapted from
     end Show_Allocation_Check;
 
 Here, in the finalization of the :ada:`X1` object of :ada:`T1` type, we're
-trying to create an object of :ada:`T2` type. This is forbidden and, therefore,
-the allocation check raises a :ada:`Program_Error` exception.
+trying to create an object of :ada:`T2` type while the finalization of the
+master has already started. (Note that :ada:`X1` was declared in the :ada:`P`
+package.) This is forbidden, so the allocation check raises a
+:ada:`Program_Error` exception.
 
 
 Elaboration Check
