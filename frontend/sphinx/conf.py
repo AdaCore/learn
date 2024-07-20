@@ -221,6 +221,8 @@ extlinks = {
                           '[GNATcheck Reference Manual: %s]'),
     'gnat_stack_ug_url': ('http://docs.adacore.com/live/wave/gnatstack/html/gnatstack_ug/%s',
                           '[GNATstack User\'s Guide: %s]'),
+    'cwe': ('https://cwe.mitre.org/data/definitions/%s.html',
+                          '[CWE-%s]'),
     }
 
 extlinks_detect_hardcoded_links = True
