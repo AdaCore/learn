@@ -2104,18 +2104,6 @@ value set for the parent type :ada:`T`.
 
     Instead of using :ada:`<>`, we have to repeat the value explicitly.
 
-.. todo::
-
-   - (MENTION: Per-object expressions)
-   - Known and unknown discriminant parts
-   - (MENTION: Object declaration and assignments)
-   - Private types
-   - Subtypes and access definitions
-   - (MOVE: Indefinite subtypes as discriminants)
-   - Default values
-      - (MENTION: Definite and Indefinite Subtypes)
-   - Derived types / subtypes
-
 
 ..
     TO BE DONE:
