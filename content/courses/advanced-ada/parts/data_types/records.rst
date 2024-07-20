@@ -1534,8 +1534,8 @@ changes the discriminants of :ada:`M_2` from :ada:`(L => 1, M => 2)` to
 
 Note that assignments of mutable variables may not always work at runtime. For
 example, if a discriminant of a mutable subtype is used to constraint a
-component of indefinite subtype, we might see storage errors at runtime. For
-example:
+component of indefinite subtype, we might see the corresponding checks fail at
+runtime. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Mutable_Subtype_Error
 
@@ -1569,13 +1569,13 @@ example:
        Put_Line ("B'Size = "
                  & B'Size'Image);
 
-       A := B;  --  STORAGE ERROR!
+       A := B;  --  ERROR!
     end Show_Mutable_Subtype_Error;
 
-In this case, the assignment :ada:`A := B` raises the :ada:`Storage_Error`
-exception at runtime. Here, the :ref:`storage check <Adv_Ada_Storage_Check>`
-fails because the :ada:`Arr` component of each object has different ranges
-(:ada:`1 .. 10` for object :ada:`A` and :ada:`1 .. 20` for object :ada:`B`).
+In this case, the assignment :ada:`A := B` raises the :ada:`Constraint_Error`
+exception at runtime. Here, the :ada:`Arr` component of each object has a
+different range: :ada:`1 .. 10` for object :ada:`A` and :ada:`1 .. 20` for
+object :ada:`B`.
 To prevent this situation, we should declare :ada:`T_Mutable_Array` as a
 limited type, so that assignments are not permitted.
 
