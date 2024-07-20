@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2024-05
+---------------
+
+- New chapter:
+
+    - :doc:`Limited Types <parts/resource_management/limited_types>`
+
+
 Release 2024-04
 ---------------
 
