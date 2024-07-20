@@ -991,6 +991,9 @@ constant isn't allowed in Ada:
 
        type Rec is record
           C : constant Integer;
+          --  ^^^^^^^^
+          --  ERROR: record components
+          --         cannot be constant.
           V :          Integer;
        end record;
 
@@ -1304,6 +1307,9 @@ the type of a discriminant. For example:
 
        type Priv_Rec (Info : Priv_Info) is
          private;
+       --             ^^^^^^^^^^^^^^^^
+       --  ERROR: cannot use private type
+       --         in discriminant.
 
     private
 
@@ -1340,6 +1346,9 @@ example, the following code won't compile:
          array (Positive range <>) of Integer;
 
        type Simple_Record (Arr : Integer_Array) is
+       --                  ^^^^^^^^^^^^^^^^^^^
+       --  ERROR: cannot use indefinite type
+       --         in discriminant.
        record
           L : Natural := Arr'Length;
        end record;
@@ -1444,6 +1453,10 @@ applies to generic formal type. For example:
 
        type TT (L : Positive := 1;
                 M : Positive := 2) is
+       --       ^^^^^^^^^^^^^^^^^
+       --  ERROR: cannot assign default
+       --         in discriminant of
+       --         nonlimited tagged type.
          tagged private;
 
        type LTT (L : Positive := 1;
