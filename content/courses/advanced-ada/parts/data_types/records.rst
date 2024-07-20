@@ -1836,8 +1836,6 @@ us to convert from a parent type to a derived type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Renamed_Discriminants
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
     with Derived_With_Discriminants;
     use  Derived_With_Discriminants;
 
