@@ -150,6 +150,8 @@ useful operations right before an object gets out of scope.
     it's cheap at run-time compared to controlled types.
 
 
+.. _Adv_Ada_Controlled_Types_Overview_Controlled_Objects:
+
 Controlled objects
 ~~~~~~~~~~~~~~~~~~
 
@@ -198,6 +200,8 @@ In the context of a block statement, the lifetime becomes:
             Processing -> A !! : << finalize >>
         end
     @enduml
+
+.. _Adv_Ada_Controlled_Types_Overview_Simple_Example:
 
 Let's look at a simple example:
 
@@ -610,6 +614,9 @@ situations that we describe later on.
 
     - :arm22:`Assignment and Finalization <7-6>`
 
+
+.. _Adv_Ada_Controlled_Types_Initialization_Subcomponents:
+
 Subcomponents
 ~~~~~~~~~~~~~
 
@@ -664,18 +671,12 @@ In order to see this effect, let's start by implementing two controlled types:
        overriding
        procedure Initialize (E : in out Sub_1);
 
-       overriding
-       procedure Finalize (E : in out Sub_1);
-
        type Sub_2 is new
          Ada.Finalization.Controlled
            with null record;
 
        overriding
        procedure Initialize (E : in out Sub_2);
-
-       overriding
-       procedure Finalize (E : in out Sub_2);
 
     end Subs;
 
@@ -688,20 +689,10 @@ In order to see this effect, let's start by implementing two controlled types:
           Put_Line ("Initialize: Sub_1...");
        end Initialize;
 
-       procedure Finalize (E : in out Sub_1) is
-       begin
-          Put_Line ("Finalize: Sub_1...");
-       end Finalize;
-
        procedure Initialize (E : in out Sub_2) is
        begin
           Put_Line ("Initialize: Sub_2...");
        end Initialize;
-
-       procedure Finalize (E : in out Sub_2) is
-       begin
-          Put_Line ("Finalize: Sub_2...");
-       end Finalize;
 
     end Subs;
 
@@ -736,9 +727,6 @@ initialization. This is how the complete code looks like:
        overriding
        procedure Initialize (E : in out T);
 
-       overriding
-       procedure Finalize (E : in out T);
-
     end Simple_Controlled_Types;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -760,11 +748,6 @@ initialization. This is how the complete code looks like:
        begin
           Put_Line ("Initialize: T...");
        end Initialize;
-
-       procedure Finalize (E : in out T) is
-       begin
-          Put_Line ("Finalize: T...");
-       end Finalize;
 
     end Simple_Controlled_Types;
 
@@ -806,6 +789,8 @@ This diagram shows the initialization sequence:
         Processing -> type_t : Initialize (T)
     @enduml
 
+
+.. _Adv_Ada_Controlled_Types_Initialization_Components_Access_Disciminants:
 
 Components with access discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -850,20 +835,12 @@ types:
        procedure Initialize
          (E : in out Selection_1);
 
-       overriding
-       procedure Finalize
-          (E : in out Selection_1);
-
        type Selection_2 (S : access Selection) is new
          Ada.Finalization.Controlled
            with null record;
 
        overriding
        procedure Initialize
-         (E : in out Selection_2);
-
-       overriding
-       procedure Finalize
          (E : in out Selection_2);
 
     end Selections;
@@ -878,23 +855,11 @@ types:
           Put_Line ("Initialize: Selection_1...");
        end Initialize;
 
-       procedure Finalize
-         (E : in out Selection_1) is
-       begin
-          Put_Line ("Finalize: Selection_1...");
-       end Finalize;
-
        procedure Initialize
          (E : in out Selection_2) is
        begin
           Put_Line ("Initialize: Selection_2...");
        end Initialize;
-
-       procedure Finalize
-         (E : in out Selection_2) is
-       begin
-          Put_Line ("Finalize: Selection_2...");
-       end Finalize;
 
     end Selections;
 
@@ -937,9 +902,6 @@ and add two new components (:ada:`Sel_1` and :ada:`Sel_2`):
        overriding
        procedure Initialize (E : in out T);
 
-       overriding
-       procedure Finalize (E : in out T);
-
     end Simple_Controlled_Types;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -961,11 +923,6 @@ and add two new components (:ada:`Sel_1` and :ada:`Sel_2`):
        begin
           Put_Line ("Initialize: T...");
        end Initialize;
-
-       procedure Finalize (E : in out T) is
-       begin
-          Put_Line ("Finalize: T...");
-       end Finalize;
 
     end Simple_Controlled_Types;
 
@@ -1107,9 +1064,6 @@ type. This is the updated code:
        overriding
        procedure Initialize (E : in out T);
 
-       overriding
-       procedure Finalize (E : in out T);
-
     end Simple_Controlled_Types;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1139,11 +1093,6 @@ type. This is the updated code:
        begin
           Put_Line ("Initialize: T...");
        end Initialize;
-
-       procedure Finalize (E : in out T) is
-       begin
-          Put_Line ("Finalize: T...");
-       end Finalize;
 
     end Simple_Controlled_Types;
 
@@ -1520,27 +1469,454 @@ This diagram shows the adjustment sequence:
 Finalization
 ------------
 
+We mentioned finalization |mdash| and the :ada:`Finalize` procedure |mdash| at
+the
+:ref:`beginning of the chapter <Adv_Ada_Controlled_Types_Overview_Controlled_Objects>`.
+In this section, we discuss the topic in more detail.
+
 .. admonition:: Relevant topics
 
     - :arm22:`Assignment and Finalization <7-6>`
     - :arm22:`Completion and Finalization <7-6-1>`
 
-.. todo::
 
-    Complete section!
+Normal and abnormal completion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When a subprogram has just executed its last statement, normal completion of
+this subprogram has been reached. At this point, finalization starts. In the
+case of controlled objects, this means that the :ada:`Finalize` procedure is
+called for those objects. (As we've already seen
+:ref:`an example of normal completion <Adv_Ada_Controlled_Types_Overview_Simple_Example>`
+at the beginning of the chapter, we won't repeat it here, as we assume you are
+already familiar with the concept.)
+
+When an exception is raised or due to an abort, however, a subprogram has an
+abnormal completion. We discuss more about exception handling and finalization
+:ref:`later on <Adv_Ada_Controlled_Types_Exception_Handling>`.
 
 
-Completion
-----------
+Finalization via unchecked deallocation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. admonition:: Relevant topics
+When performing unchecked deallocation of a controlled type, the
+:ada:`Finalize` procedure is called right before the actual memory for the
+controlled object is deallocated.
 
-    - :arm22:`Completion and Finalization <7-6-1>`
+Let's see a simple example:
 
-.. todo::
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Finalization.Unchecked_Deallocation
 
-    Complete section!
+    with Ada.Finalization;
+    with Ada.Unchecked_Deallocation;
 
+    package Simple_Controlled_Types is
+
+       type T is tagged private;
+
+       procedure Dummy (E : T);
+
+       type T_Access is access T;
+
+       procedure Free (A : in out T_Access);
+
+    private
+
+       type T is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Finalize (E : in out T);
+
+       procedure Free_T_Access is
+         new Ada.Unchecked_Deallocation
+           (Object => T,
+            Name   => T_Access);
+
+       procedure Free (A : in out T_Access)
+         renames Free_T_Access;
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy T...)");
+       end Dummy;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize T...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    procedure Show_Controlled_Types is
+       A : T_Access := new T;
+    begin
+       Dummy (A.all);
+
+       Free (A);
+       --  At this point, Finalize (A.all)
+       --  will be called before the actual
+       --  deallocation.
+
+       Put_Line ("We've just freed A.");
+    end Show_Controlled_Types;
+
+In this example, we see that a call to :ada:`Finalize` (for type :ada:`T`) is
+triggered by the call to :ada:`Free` for the :ada:`A` object |mdash| at this
+point, we haven't reached the end of the main procedure
+(:ada:`Show_Controlled_Types`) yet. After the call to :ada:`Free`, the object
+originally referenced by :ada:`A` has been completely finalized |mdash| and
+deallocated.
+
+When the main procedure completes (after the call to :ada:`Put_Line` in that
+procedure), we would normally see the calls to :ada:`Finalize` for controlled
+objects. However, at this point, we obviously don't have a second call to the
+:ada:`Finalize` procedure for type :ada:`T`, as the object referenced by
+:ada:`A` has already been finalized and freed.
+
+
+Subcomponents
+~~~~~~~~~~~~~
+
+As we've seen in the section about
+:ref:`initialization of subcomponents <Adv_Ada_Controlled_Types_Initialization_Subcomponents>`,
+subcomponents of a controlled type are initialized by a call to their
+corresponding :ada:`Initialize` procedure before the call to :ada:`Initialize`
+for the parent controlled type. In the case of finalization, the reverse order
+is applied: first, finalization of the parent type takes place, and then the
+finalization of the subcomponents.
+
+We can visualize the lifetime as follows:
+
+.. uml::
+   :align: center
+   :width: 300pt
+
+    @startuml
+        actor Processing
+        participant "object A" as A
+
+        Processing -> A : << use >>
+        Processing -> A : << completion >>
+        Processing -> A : Finalize (A)
+        Processing -> A : << finalize subcomponents of object A>>
+        Processing -> A !! : << finalize >>
+    @enduml
+
+.. _Adv_Ada_Controlled_Types_Finalization_Subcomponents_Code_Example:
+
+Let's show a code example by revisiting the previous implementation of the
+controlled types :ada:`Sub_1` and :ada:`Sub_2`, and adapting it:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Finalization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    package Subs is
+
+       type Sub_1 is tagged private;
+
+       type Sub_2 is tagged private;
+
+    private
+
+       type Sub_1 is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Finalize (E : in out Sub_1);
+
+       type Sub_2 is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Finalize (E : in out Sub_2);
+
+    end Subs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Subs is
+
+       procedure Finalize (E : in out Sub_1) is
+       begin
+          Put_Line ("Finalize: Sub_1...");
+       end Finalize;
+
+       procedure Finalize (E : in out Sub_2) is
+       begin
+          Put_Line ("Finalize: Sub_2...");
+       end Finalize;
+
+    end Subs;
+
+Now, let's use those controlled types as components of a type :ada:`T`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Finalization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    with Subs; use Subs;
+
+    package Simple_Controlled_Types is
+
+       type T is tagged private;
+
+       procedure Dummy (E : T);
+
+    private
+
+       type T is new
+         Ada.Finalization.Controlled with
+       record
+          S1 : Sub_1;
+          S2 : Sub_2;
+       end record;
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy: T...)");
+       end Dummy;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize: T...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    procedure Show_Controlled_Types is
+       A : T;
+    begin
+       Dummy (A);
+    end Show_Controlled_Types;
+
+When we run this application, we see that the :ada:`Finalize` procedure is
+called for the type :ada:`T` itself |mdash| as the first step of the
+finalization of type :ada:`T`. Then, the :ada:`Sub_2` and :ada:`Sub_1`
+components are finalized by calls to their respective :ada:`Finalize`
+procedures.
+
+This diagram shows the finalization sequence:
+
+.. uml::
+    :align: center
+    :width: 400pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.S1" as Sub_1
+        participant "T.S2" as Sub_2
+
+        Processing -> type_t : Finalize (T)
+        Processing -> type_t : << finalize subcomponents >>
+        activate type_t
+            type_t -> Sub_2 : Finalize (Sub_2)
+            type_t -> Sub_1 : Finalize (Sub_1)
+        deactivate type_t
+    @enduml
+
+
+Components with access discriminants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We already discussed the
+:ref:`initialization of components with access discriminants constrained by a per-object expression <Adv_Ada_Controlled_Types_Initialization_Components_Access_Disciminants>`.
+In the case of the finalization of such components, they are finalized before
+any components that do not fall into this category |mdash| in the reverse order
+of their component declarations |mdash| but after the finalization of the
+parent type.
+
+Let's revisit a
+:ref:`previous code example <Adv_Ada_Controlled_Types_Initialization_Subcomponents_Access_Discriminant_Code_Example>`
+and adapt it to demonstrate the finalization of components with access
+discriminants. First, we implement another package with controlled types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Finalization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    package Selections is
+
+       type Selection is private;
+
+       type Selection_1 (S : access Selection) is
+         tagged private;
+
+       type Selection_2 (S : access Selection) is
+         tagged private;
+
+    private
+
+       type Selection is null record;
+
+       type Selection_1 (S : access Selection) is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Finalize
+          (E : in out Selection_1);
+
+       type Selection_2 (S : access Selection) is new
+         Ada.Finalization.Controlled
+           with null record;
+
+       overriding
+       procedure Finalize
+         (E : in out Selection_2);
+
+    end Selections;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Selections is
+
+       procedure Finalize
+         (E : in out Selection_1) is
+       begin
+          Put_Line ("Finalize: Selection_1...");
+       end Finalize;
+
+       procedure Finalize
+         (E : in out Selection_2) is
+       begin
+          Put_Line ("Finalize: Selection_2...");
+       end Finalize;
+
+    end Selections;
+
+In this example, we see the declaration of the :ada:`Selection_1` and
+:ada:`Selection_2` types, which are controlled types with an access
+discriminant of :ada:`Selection` type. Now, let's use these types in the
+declaration of a type :ada:`T` and add two new components |mdash| :ada:`Sel_1`
+and :ada:`Sel_2`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Finalization.Controlled_Initialization
+
+    with Ada.Finalization;
+
+    with Subs;       use Subs;
+    with Selections; use Selections;
+
+    package Simple_Controlled_Types is
+
+       type T (S1 : access Selection;
+               S2 : access Selection) is
+         tagged private;
+
+       procedure Dummy (E : T);
+
+    private
+
+       type T (S1 : access Selection;
+               S2 : access Selection) is new
+         Ada.Finalization.Controlled with
+       record
+          Sel_1 : Selection_1 (S1);
+          Sel_2 : Selection_2 (S2);
+          S_1   : Sub_1;
+       end record;
+
+       overriding
+       procedure Finalize (E : in out T);
+
+    end Simple_Controlled_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Simple_Controlled_Types is
+
+       procedure Dummy (E : T) is
+       begin
+          Put_Line ("(Dummy: T...)");
+       end Dummy;
+
+       procedure Finalize (E : in out T) is
+       begin
+          Put_Line ("Finalize: T...");
+       end Finalize;
+
+    end Simple_Controlled_Types;
+
+    with Simple_Controlled_Types;
+    use  Simple_Controlled_Types;
+
+    with Selections;
+    use  Selections;
+
+    procedure Show_Controlled_Types is
+       S1, S2 : aliased Selection;
+       A : T (S1'Access, S2'Access);
+    begin
+       Dummy (A);
+    end Show_Controlled_Types;
+
+When we run this example, we see that the :ada:`Finalize` procedure of type
+:ada:`T` is called as the first step. Then, the :ada:`Finalize` procedure is
+called for the components with an access discriminant constrained by a
+:ref:`per-object expression <Adv_Ada_Per_Object_Expressions>` |mdash| in this
+case, :ada:`Sel_2` and :ada:`Sel_1` (of :ada:`Selection_2` and
+:ada:`Selection_1` types, respectively). Finally, the :ada:`Sub_1` component
+is finalized.
+
+This diagram shows the finalization sequence:
+
+.. uml::
+    :align: center
+    :width: 500pt
+
+    @startuml
+        actor Processing
+        participant "T" as type_t
+        participant "T.Sel_1" as Selection_1
+        participant "T.Sel_2" as Selection_2
+        participant "T.S_1" as Sub_1
+
+        Processing -> type_t : Finalize (T)
+
+        Processing -> type_t : << finalize subcomponents \nwith access discriminant / per-object expression >>
+        activate type_t
+            type_t -> Selection_2 : Finalize (Selection_2)
+            type_t -> Selection_1 : Finalize (Selection_1)
+        deactivate type_t
+
+        Processing -> type_t : << finalize standard subcomponents >>
+        activate type_t
+            type_t -> Sub_1 : Finalize (Sub_1)
+        deactivate type_t
+
+    @enduml
+
+
+.. _Adv_Ada_Controlled_Types_Exception_Handling:
 
 Controlled Types and Exception Handling
 ---------------------------------------
