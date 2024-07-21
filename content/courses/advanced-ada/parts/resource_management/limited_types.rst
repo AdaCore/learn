@@ -1650,7 +1650,7 @@ discriminant of an
 :ref:`immutably limited type <Adv_Ada_Immutably_Limited_Types>`.
 
 
-.. _Adv_Ada_Tagged_Limited_Types_Discriminants_Default_Expressions:
+.. _Adv_Ada_Non_Tagged_Limited_Types_Discriminants_Default_Expressions:
 
 Discriminants of nontagged limited types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
