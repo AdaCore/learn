@@ -929,6 +929,8 @@ access to the :ada:`S` string.
     - :arm22:`3.10.2 Operations of Access Types <3-10-2>`
 
 
+.. _Adv_Ada_Anonymous_Access_Discriminants_Default_Value:
+
 Default Value of Access Discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
