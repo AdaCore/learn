@@ -1506,10 +1506,354 @@ can be nonlimited, so it's not immutably limited.
 Limited Types with Discriminants
 --------------------------------
 
+In this section, we look into the implications of using discriminants with
+limited types. Actually, most of the topics mentioned here have already been
+covered in different sections of previous chapters, as well as in this chapter.
+Therefore, this section is in most parts just a review of what we've already
+discussed.
+
+Let's start with a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Simple_Example
+    :class: ada-expect-compile-error
+
+    package Simple_Recs is
+
+       type Rec (L : Positive)
+         is limited null record;
+
+    end Simple_Recs;
+
+    with Simple_Recs; use Simple_Recs;
+
+    procedure Test_Limitedness is
+       Dummy_1 : Rec (2);
+       Dummy_2 : Rec (3);
+    begin
+       Dummy_2 := Dummy_1;
+       --  ^^^^^^^^^^^^^^
+       --  ERRORS:
+       --    1. Cannot assign objects of
+       --       limited types.
+       --    2. Cannot assign objects with
+       --       different discriminants.
+    end Test_Limitedness;
+
+In this example, we see the declaration of the limited type :ada:`Rec`, which
+has the discriminant :ada:`L`. For objects of type :ada:`Rec`, we not only have
+the typical restrictions that
+:ref:`equality and assignment aren't available <Adv_Ada_Limited_Types_Assignments>`,
+but we also have the restriction that we wouldn't be able to assign objects
+with different discriminants.
+
+.. todo::
+
+     - Add link to subsection about assignment of objects with different
+       discriminants (main section: Adv_Ada_Record_Discriminants), once it's
+       available
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm:`3.7 Discriminants <3-7>`
 
+
+.. _Adv_Ada_Limited_Types_With_Discriminants_Default_Expressions:
+
+Default Expressions
+~~~~~~~~~~~~~~~~~~~
+
+On the other hand, there are restrictions that apply to nonlimited types with
+discriminants, but not to limited types with discriminants. This concerns
+mostly default expressions, which are generally allowed for discriminants of
+limited types.
+
+.. todo::
+
+     - Add link to subsection about default expressions
+       (main section: Adv_Ada_Record_Discriminants), once it's available.
+
+
+.. _Adv_Ada_Tagged_Limited_Types_Discriminants_Default_Expressions:
+
+Discriminants of tagged limited types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As we've discussed previously, we can use default expressions for discriminants
+of tagged limited types. Let's see an example:
+
+.. todo::
+
+     - Add link to subsection about default expressions for tagged limited
+       types (main section: Adv_Ada_Record_Discriminants), once it's available.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Discriminant_Default_Value_Tagged_TYpe
+
+    package Recs is
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         tagged limited null record;
+
+    end Recs;
+
+Obviously, the same applies to
+:ref:`tagged limited private types <Adv_Ada_Tagged_Limited_Private_Types>`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Discriminant_Default_Value_Tagged_TYpe
+
+    package Recs is
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         tagged limited private;
+
+    private
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         tagged limited null record;
+
+    end Recs;
+
+In the case of tagged, nonlimited types, using default expressions in this
+context isn't allowed.
+
+
+.. _Adv_Ada_Limited_Types_Access_Discriminant_Default_Expression:
+
+Access discriminant
+^^^^^^^^^^^^^^^^^^^
+
+Similarly, when using limited types, we can specify default expressions for
+:ref:`access discriminants <Adv_Ada_Anonymous_Access_Discriminants>`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Access_Discriminant_Default_Expression
+
+    package Custom_Recs is
+
+       --  Specifying a default expression for
+       --  an access discriminant:
+       type Rec (IA : access Integer :=
+                        new Integer'(0)) is limited
+       record
+          I : Integer := IA.all;
+       end record;
+
+    end Custom_Recs;
+
+In fact,
+:ref:`as we've discussed before <Adv_Ada_Anonymous_Access_Discriminants_Default_Value>`,
+this isn't possible for nonlimited types.
+
+Note, however, that we can only assign a default expression to an access
+discriminant of an
+:ref:`immutably limited type <Adv_Ada_Immutably_Limited_Types>`.
+
+
+.. _Adv_Ada_Tagged_Limited_Types_Discriminants_Default_Expressions:
+
+Discriminants of nontagged limited types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In addition to tagged limited types, we can use default expressions for
+discriminants of nontagged limited types. Let's see an example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Discriminant_Default_Value_Tagged_TYpe
+
+    package Recs is
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         limited null record;
+
+    end Recs;
+
+Obviously, the same applies to
+:ref:`limited private types <Adv_Ada_Limited_Private_Types>`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Discriminant_Default_Value_Tagged_TYpe
+
+    package Recs is
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         limited private;
+
+    private
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         limited null record;
+
+    end Recs;
+
+Note that using default expressions for discriminants of nonlimited, nontagged
+types is OK as well.
+
+
+Mutable subtypes and Limitedness
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As we've mentioned before, an unconstrained discriminated subtype with defaults
+is called a mutable subtype. An important feature of mutable subtypes is that
+it allows for changing the discriminants of an object, e.g. via assignments.
+However, as we know, we cannot assign to objects of limited types. Therefore,
+in essence, a type should be nonlimited to be considered a mutable subtype.
+
+.. todo::
+
+     - Add link to subsection about mutable subtypes (Adv_Ada_Mutable_Subtypes)
+       (main section: Adv_Ada_Record_Discriminants), once it's available.
+
+Let's look at a code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Discriminant_Default_Value_Tagged_TYpe
+    :class: ada-expect-compile-error
+
+    package Recs is
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         limited null record;
+
+       function Init (L : Positive;
+                      M : Positive)
+                      return LTT is
+         ((L => L, M => M));
+
+       procedure Copy (From :        LTT;
+                       To   : in out LTT);
+
+    end Recs;
+
+    package body Recs is
+
+       procedure Copy (From :        LTT;
+                       To   : in out LTT) is
+       begin
+          To := Init (L => From.L,
+                      M => From.M);
+          --  ERROR: cannot assign to object of
+          --         limited type
+
+          To.L := From.L;
+          To.M := From.M;
+          --  ERROR: cannot change discriminants
+       end Copy;
+
+    end Recs;
+
+    with Recs; use Recs;
+
+    procedure Show is
+       A : LTT;
+       B : LTT := Init (10, 12);
+    begin
+       Copy (From => B, To => A);
+    end Show;
+
+As we can see in the :ada:`Copy` procedure, it's not possible to properly
+assign to the target object. Using :ada:`Init` is forbidden because the
+assignment is not initializing the target object |mdash| as we're not declaring
+:ada:`To` at this point. Also, changing the individual discriminants is
+forbidden as well. Therefore, we don't have any means to change the
+discriminants of the target object. (In contrast, if :ada:`LTT` was a
+nonlimited type, we would be able to implement :ada:`Copy` by using the call to
+the :ada:`Init` function.)
+
+.. todo::
+
+     - Add link to subsection about discriminant as constant property
+       (main section: Adv_Ada_Record_Discriminants), once it's available.
+
+
+.. _Adv_Ada_Limited_Types_Unknown_Discriminants:
+
+Limited private type with unknown discriminants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can declare limited private type with unknown discriminants. Because the
+discriminants are unknown, this is an
+:ref:`indefinite type <Adv_Ada_Definite_Indefinite_Subtypes>`. Let's see an
+example:
+
+.. todo::
+
+     - Add link to section about unknown indiscriminants, once it's available.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Limited_Private_Unknown_Discriminants
+
+    package Limited_Private_Unknown_Discriminants is
+
+       type Rec (<>) is limited private;
+
+    private
+
+       type Rec is limited
+       record
+          I : Integer;
+       end record;
+
+    end Limited_Private_Unknown_Discriminants;
+
+In this example, we declare type :ada:`Rec`, which has unknown discriminants.
+
+Using a limited private type with unknown discriminants is an important Ada
+idiom, as we gain extra control over its initialization. This is explained in
+the :aarm22:`Annotated Ada Reference Manual (3.7, 26.b/2) <3-7>`
+
+    "A subtype with unknown discriminants is indefinite, and hence an object of
+    such a subtype needs explicit initialization. A limited private type with
+    unknown discriminants is 'extremely' limited; objects of such a type can be
+    initialized only by subprograms (either procedures with a parameter of the
+    type, or a function returning the type) declared in the package.
+    Subprograms declared elsewhere can operate on and even return the type, but
+    they can only initialize the object by calling (ultimately) a subprogram in
+    the package declaring the type. Such a type is useful for keeping complete
+    control over object creation within the package declaring the type."
+
+Therefore, in order to have useful applications for type :ada:`Rec` from the
+previous code example, we have to introduce a subprogram that initializes the
+type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Limited_Private_Unknown_Discriminants
+
+    package Limited_Private_Unknown_Discriminants is
+
+       type Rec (<>) is limited private;
+
+       function Init return Rec;
+
+    private
+
+       type Rec is limited
+       record
+          I : Integer;
+       end record;
+
+       function Init return Rec is
+         ((I => 0));
+
+    end Limited_Private_Unknown_Discriminants;
+
+    with Limited_Private_Unknown_Discriminants;
+    use  Limited_Private_Unknown_Discriminants;
+
+    procedure Show_Limited_Private_Unknown_Discriminants is
+       R : Rec := Init;
+    begin
+       null;
+    end Show_Limited_Private_Unknown_Discriminants;
+
+In the :ada:`Show_Limited_Private_Unknown_Discriminants` procedure from this
+example, we call the :ada:`Init` function to initialize the :ada:`R` object in
+its declaration (of :ada:`Rec` type). Note that for this specific type, this is
+the only possible way to declare the :ada:`R` object. In fact, compilation
+fails if we write :ada:`R : Rec;`.
+
+A function such as :ada:`Init` is called a
+:ref:`constructor function for limited types <Adv_Ada_Constructor_Functions_Limited_Types>`.
+We discuss this topic in more detail later on.
 
 
 Record components of limited type
