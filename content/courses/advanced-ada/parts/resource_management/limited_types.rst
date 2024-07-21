@@ -2237,7 +2237,8 @@ all directly in :ada:`Rumplestiltskin_Is_My_Name`.
     Ada 2005, it was impossible to create a constant limited object, because
     there was no way to initialize it.
 
-The :ada:`(<>)` on type :ada:`T` means that it has *unknown
+:ref:`As we discussed before <Adv_Ada_Limited_Types_Unknown_Discriminants>`,
+the :ada:`(<>)` on type :ada:`T` means that it has *unknown
 discriminants* from the point of view of the client. This is a trick that
 prevents clients from creating default-initialized objects (that is,
 :ada:`X : T;` is illegal). Thus clients must call :ada:`Make_T` whenever
