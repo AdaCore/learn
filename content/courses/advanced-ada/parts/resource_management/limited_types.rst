@@ -1481,6 +1481,8 @@ each type.)
     - :arm22:`7.5 Limited Types <7-5>`
 
 
+.. _Adv_Ada_Non_Immutably_Limited_Types:
+
 Non immutably limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
