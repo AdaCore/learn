@@ -1839,13 +1839,13 @@ type. For example:
     with Limited_Private_Unknown_Discriminants;
     use  Limited_Private_Unknown_Discriminants;
 
-    procedure Show_Limited_Private_Unknown_Discriminants is
+    procedure Show_Constructor_Function is
        R : Rec := Init;
     begin
        null;
-    end Show_Limited_Private_Unknown_Discriminants;
+    end Show_Constructor_Function;
 
-In the :ada:`Show_Limited_Private_Unknown_Discriminants` procedure from this
+In the :ada:`Show_Constructor_Function` procedure from this
 example, we call the :ada:`Init` function to initialize the :ada:`R` object in
 its declaration (of :ada:`Rec` type). Note that for this specific type, this is
 the only possible way to declare the :ada:`R` object. In fact, compilation
