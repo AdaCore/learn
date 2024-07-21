@@ -13,6 +13,8 @@ descriptor, should not be copied. In this chapter, we'll see example of
 unwanted side-effects that arise if we don't use limited types for these cases.
 
 
+.. _Adv_Ada_Limited_Types_Assignment_Equality:
+
 Assignment and equality
 -----------------------
 
