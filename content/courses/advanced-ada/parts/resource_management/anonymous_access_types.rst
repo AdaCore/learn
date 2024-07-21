@@ -831,7 +831,7 @@ interesting in terms of software design, as we'll discuss later.
 
 Let's start with an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Simple_Example
 
     package Custom_Recs is
 
@@ -935,7 +935,7 @@ Default Value of Access Discriminants
 In contrast to named access types, we cannot use a default value for the
 access discriminant of a non-limited type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Default_Expression_Non_Limited_Type
     :class: ada-expect-compile-error
 
     package Custom_Recs is
@@ -948,14 +948,12 @@ access discriminant of a non-limited type:
           I : Integer := IA.all;
        end record;
 
-       procedure Show (R : Rec);
-
     end Custom_Recs;
 
 However, if we change the type declaration to be a limited type, having a
 default value for the access discriminant is OK:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Default_Expression_Limited_Type
 
     package Custom_Recs is
 
@@ -971,11 +969,25 @@ default value for the access discriminant is OK:
 
     end Custom_Recs;
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Custom_Recs is
+
+       procedure Show (R : Rec) is
+       begin
+          Put_Line ("R.IA = "
+                    & Integer'Image (R.IA.all));
+          Put_Line ("R.I  = "
+                    & Integer'Image (R.I));
+       end Show;
+
+    end Custom_Recs;
+
 Note that, if we don't provide a value for the access discriminant when
 declaring an object :ada:`R`, the default value is allocated (via :ada:`new`)
 during :ada:`R`\'s creation.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Custom_Recs
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Access_Discriminants.Default_Expression_Limited_Type
 
     with Custom_Recs; use Custom_Recs;
 
