@@ -1779,6 +1779,8 @@ you can't copy them.
     As always, one must be careful about uninitialized scalar objects.
 
 
+.. _Adv_Ada_Constructor_Functions_Limited_Types:
+
 Constructor functions for limited types
 ---------------------------------------
 
