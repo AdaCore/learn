@@ -1341,7 +1341,8 @@ explicitly limited.
 Immutably Limited Types
 -----------------------
 
-According to the Annotated Ada Reference Manual, "an immutably limited type is
+According to the :aarm22:`Annotated Ada Reference Manual (7.5, 8.b/3) <7-5>`,
+"an immutably limited type is
 a type that cannot become nonlimited subsequently in a private part or in a
 child unit." In fact, while we were talking about
 :ref:`partial and full view of limited types <Adv_Ada_Partial_Full_View_Limited>`,
