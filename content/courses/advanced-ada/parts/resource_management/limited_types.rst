@@ -1340,6 +1340,8 @@ Now, compilation of :ada:`Test_Limitedness` fails because :ada:`Rec_Derived` is
 explicitly limited.
 
 
+.. _Adv_Ada_Immutably_Limited_Types:
+
 Immutably Limited Types
 -----------------------
 
