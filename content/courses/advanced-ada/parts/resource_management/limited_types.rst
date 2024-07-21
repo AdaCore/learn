@@ -1341,7 +1341,8 @@ explicitly limited.
 Immutably Limited Types
 -----------------------
 
-According to the Annotated Ada Reference Manual, "an immutably limited type is
+According to the :aarm22:`Annotated Ada Reference Manual (7.5, 8.b/3) <7-5>`,
+"an immutably limited type is
 a type that cannot become nonlimited subsequently in a private part or in a
 child unit." In fact, while we were talking about
 :ref:`partial and full view of limited types <Adv_Ada_Partial_Full_View_Limited>`,
@@ -1356,15 +1357,11 @@ designate other limited objects." We'll see examples of this later on.
 
 Immutably limited types include:
 
-- explicitly limited types
+- :ref:`explicitly limited types <Adv_Ada_Explicitly_Limited_Types>`
 
-.. todo::
+- tagged limited types (i.e. with the keywords :ada:`tagged limited`);
 
-    Add link to new subsection on explicitly limited types.
-
-- tagged limited types (i.e. with the keyword :ada:`limited`);
-
-- tagged limited private type;
+- :ref:`tagged limited private types <Adv_Ada_Tagged_Limited_Private_Types>`;
 
 - limited private type that have at least one
   :ref:`access discriminant <Adv_Ada_Anonymous_Access_Discriminants>` with a
@@ -1484,7 +1481,9 @@ Non immutably limited types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Not every limited type is immutably limited. We already mentioned untagged
-private limited types, which can become nonlimited in their full view. In
+private limited types, which can
+:ref:`become nonlimited in their full view <Adv_Ada_Partial_Full_View_Limited>`.
+In
 addition, we have nonsynchronized limited interface types. As mentioned earlier
 in this chapter, a
 :ref:`type derived from a nonsynchronized limited interface <Adv_Ada_Deriving_Limited_Interfaces>`,
