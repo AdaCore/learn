@@ -1501,6 +1501,7 @@ can be nonlimited, so it's not immutably limited.
     - :arm22:`7.5 Limited Types <7-5>`
 
 
+.. _Adv_Ada_Limited_Types_With_Discriminants:
 
 Limited Types with Discriminants
 --------------------------------
