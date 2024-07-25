@@ -60,8 +60,8 @@ N/A
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* :cwe:`CWE-1061 - Insufficient Encapsulation <1061>`
 * :cwe:`CWE-496 - Public Data Assigned to Private Array-Typed Field <496>`
+* :cwe:`CWE-1061 - Insufficient Encapsulation <1061>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example

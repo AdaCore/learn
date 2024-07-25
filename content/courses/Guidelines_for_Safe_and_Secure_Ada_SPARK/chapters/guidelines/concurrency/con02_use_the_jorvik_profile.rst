@@ -100,8 +100,8 @@ Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
 * :cwe:`CWE-362 - Concurrent Execution using Shared Resource with Improper Synchronization <362>`
-* :cwe:`CWE-367 - Time-of-check Time-of-use (TOCTOU) Race Condition <367>`
 * :cwe:`CWE-366 - Race Condition within a Thread <366>`
+* :cwe:`CWE-367 - Time-of-check Time-of-use (TOCTOU) Race Condition <367>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example
