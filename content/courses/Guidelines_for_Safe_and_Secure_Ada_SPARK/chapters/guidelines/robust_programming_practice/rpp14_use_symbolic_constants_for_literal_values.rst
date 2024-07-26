@@ -60,8 +60,8 @@ N/A
 Applicable Common Weakness Enumeration
 ++++++++++++++++++++++++++++++++++++++++
 
-* :cwe:`CWE-1106 - Insufficient Use of Symbolic Constants <1106>`
 * :cwe:`CWE-547 - Use of Hard-coded, Security-relevant Constants <547>`
+* :cwe:`CWE-1106 - Insufficient Use of Symbolic Constants <1106>`
 
 +++++++++++++++++++++++++++
 Noncompliant Code Example
