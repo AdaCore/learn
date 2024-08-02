@@ -4283,6 +4283,8 @@ the possibility of dangling references, as each reference is encapsulated in
 an object of :ada:`Info` type.
 
 
+.. _Adv_Ada_Controlled_Type_For_Access_Types:
+
 Controlled type for access types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
