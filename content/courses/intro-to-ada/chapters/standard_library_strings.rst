@@ -17,7 +17,8 @@ text processing. Ada offers alternative approaches for these cases:
 
 - *Unbounded strings*: similar to bounded strings, unbounded strings can
   contain strings of varied length. However, in addition to that, they don't
-  have a maximum length. In this sense, they are very flexible.
+  require a maximum length to be specified at the declaration of a string. In
+  this sense, they are very flexible.
 
 The following sections present an overview of the different string types and
 common operations for string types.
