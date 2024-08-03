@@ -20,6 +20,25 @@ text processing. Ada offers alternative approaches for these cases:
   require a maximum length to be specified at the declaration of a string. In
   this sense, they are very flexible.
 
+.. admonition:: For further reading...
+
+    Although we don't specify a maximum length for unbounded string, the
+    limit is :arm:`defined by the Reference Manual <A-4-5>`:
+
+        An object of type :ada:`Unbounded_String` represents a :ada:`String`
+        whose low bound is 1 and whose length can vary conceptually between 0
+        and :ada:`Natural'Last`.
+
+    Therefore, the implicit maximum length is :ada:`Natural'Last`. In
+    contrast, bounded strings have an explicit maximum length that is specified
+    when the :ada:`Generic_Bounded_Length` package is instantiated (as we'll
+    see :ref:`later on <Intro_Ada_Bounded_Strings>`).
+
+    Another difference between bounded and unbounded strings is the strategy
+    that is used by the compiler to allocate memory for those strings. When
+    using GNAT, bounded strings are allocated on the stack, while unbounded
+    strings are allocated on the heap.
+
 The following sections present an overview of the different string types and
 common operations for string types.
 
