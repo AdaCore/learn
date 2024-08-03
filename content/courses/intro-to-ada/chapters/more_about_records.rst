@@ -48,6 +48,9 @@ known at compile time. This is illustrated in the example below:
 It is completely fine to determine the size of your records at run time, but
 note that all objects of this type will have the same size.
 
+
+.. _Intro_Ada_Record_Discriminants:
+
 Records with discriminant
 -------------------------
 
