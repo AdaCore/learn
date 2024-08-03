@@ -22,7 +22,7 @@ text processing. Ada offers alternative approaches for these cases:
 
 .. admonition:: For further reading...
 
-    Although we don't specify a maximum length for unbounded string, the
+    Although we don't specify a maximum length for unbounded strings, the
     limit is :arm:`defined by the Reference Manual <A-4-5>`:
 
         An object of type :ada:`Unbounded_String` represents a :ada:`String`
