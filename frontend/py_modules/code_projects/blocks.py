@@ -17,6 +17,9 @@ class Block(object):
         classes_re = re.compile("\s*:class:\s*(.+)")
         switches_re = re.compile("\s*.. code::.*switches=(\S+)?")
         compiler_switches_re = re.compile("Compiler[(](\S+)?[)]")
+        gnat_version_re=re.compile("\s*.. code::.*gnat=(\S+)?")
+        gnatprove_version_re=re.compile("\s*.. code::.*gnatprove=(\S+)?")
+        gprbuild_version_re=re.compile("\s*.. code::.*gprbuild=(\S+)?")
 
         blocks = []
         lines = input_text.splitlines()
@@ -38,6 +41,9 @@ class Block(object):
         project = None
         main_file = None
         manual_chop = None
+        gnat_version = "default"
+        gnatprove_version = "default"
+        gprbuild_version = "default"
         last_line_number = -1
 
         def is_empty(line):
@@ -61,6 +67,9 @@ class Block(object):
                     lang,
                     project,
                     main_file,
+                    gnat_version,
+                    gnatprove_version,
+                    gprbuild_version,
                     compiler_switches,
                     classes,
                     manual_chop,
@@ -77,7 +86,8 @@ class Block(object):
 
         def start_code_block(i, line, indent):
             nonlocal cb_start, lang, project, main_file, manual_chop, \
-                     buttons, compiler_switches
+                     buttons, compiler_switches, \
+                     gnat_version, gnatprove_version, gprbuild_version
 
             cb_start, lang = (
                 i + 1,
@@ -96,6 +106,17 @@ class Block(object):
             else:
                 manual_chop = (manual_chop_re.match(line) is not None)
             buttons = button_re.findall(line)
+
+            project_gnat_version = gnat_version_re.match(line)
+            project_gnatprove_version = gnatprove_version_re.match(line)
+            project_gprbuild_version = gprbuild_version_re.match(line)
+
+            if project_gnat_version is not None:
+                gnat_version = project_gnat_version.groups()[0]
+            if project_gnatprove_version is not None:
+                gnatprove_version = project_gnatprove_version.groups()[0]
+            if project_gprbuild_version is not None:
+                gprbuild_version = project_gprbuild_version.groups()[0]
 
             all_switches = switches_re.match(line)
 
@@ -176,7 +197,9 @@ class CodeBlock(Block):
         return None
 
     def __init__(self, rst_file, line_start, line_end, text, language, project,
-                 main_file, compiler_switches, classes, manual_chop, buttons,
+                 main_file,
+                 gnat_version,gnatprove_version,gprbuild_version,
+                 compiler_switches, classes, manual_chop, buttons,
                  active=None,no_check=None,syntax_only=None,run_it=None,
                  compile_it=None,prove_it=None,
                  source_files=None,
@@ -190,6 +213,9 @@ class CodeBlock(Block):
         self.language = language
         self.project = project
         self.main_file = main_file
+        self.gnat_version = gnat_version
+        self.gnatprove_version = gnatprove_version
+        self.gprbuild_version = gprbuild_version
         self.compiler_switches = compiler_switches
         self.classes = classes
         self.manual_chop = manual_chop
