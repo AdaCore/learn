@@ -1,5 +1,5 @@
 $frontend = <<-SHELL
-  #!/bin/sh -eux
+  #!/bin/bash -eux
 
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_20.x | bash -
@@ -45,7 +45,7 @@ $frontend = <<-SHELL
 SHELL
 
 $epub = <<-SHELL
-  #!/bin/sh -eux
+  #!/bin/bash -eux
 
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_20.x | bash -
