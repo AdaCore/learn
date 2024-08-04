@@ -82,36 +82,46 @@ $epub = <<-SHELL
       libc6-dev
 
   # Install FSF GNAT
-  mkdir -p /opt/ada
+  mkdir -p /opt/ada/default
+  mkdir -p /opt/ada/selected
 
-  gnat_version=("12.2.0-1")
+  gnat_version=("12.2.0-1" "14.1.0-3")
+  mkdir /opt/ada/gnat
   for tool_version in ${gnat_version[@]}; do
     echo Installing GNAT $tool_version
     wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gnat.tar.gz && \
-    mv gnat-* /opt/ada/gnat && \
+    mv gnat-* /opt/ada/gnat/${tool_version} && \
     rm *.tar.gz
   done
 
-  gnat_prove_version=("12.1.0-1")
+  gnat_prove_version=("12.1.0-1" "14.1.0-1")
+  mkdir /opt/ada/gnatprove
   for tool_version in ${gnat_prove_version[@]}; do
     echo Installing GNATprove $v
     wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-${tool_version}/gnatprove-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gnatprove.tar.gz && \
-    mv gnatprove-* /opt/ada/gnatprove && \
+    mv gnatprove-* /opt/ada/gnatprove/${tool_version} && \
     rm *.tar.gz
   done
 
-  gprbuild_version=("22.0.0-1")
+  gprbuild_version=("22.0.0-1" "24.0.0-1")
+  mkdir /opt/ada/gprbuild
   for tool_version in ${gprbuild_version[@]}; do
     echo Installing GPRbuild $v
     wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-${tool_version}/gprbuild-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gprbuild.tar.gz && \
-    mv gprbuild-* /opt/ada/gprbuild && \
+    mv gprbuild-* /opt/ada/gprbuild/${tool_version} && \
     rm *.tar.gz
   done
 
-  echo 'export PATH="/opt/ada/gnat/bin:/opt/ada/gprbuild/bin:/opt/ada/gnatprove/bin:${PATH}"' >> /home/vagrant/.bashrc
+  ln -sf /opt/ada/gnat/12.2.0-1       /opt/ada/default/gnat
+  ln -sf /opt/ada/gnatprove/12.1.0-1  /opt/ada/default/gnatprove
+  ln -sf /opt/ada/gprbuild/22.0.0-1   /opt/ada/default/gnatprove
+
+  chown -R vagrant:vagrant /opt/ada
+
+  echo 'export PATH="/opt/ada/selected/gnat/bin:/opt/ada/selected/gprbuild/bin:/opt/ada/selected/gnatprove/bin:/opt/ada/default/gnat/bin:/opt/ada/default/gprbuild/bin:/opt/ada/default/gnatprove/bin:${PATH}"' >> /home/vagrant/.bashrc
   source /home/vagrant/.bashrc
 
   # Install learn deps

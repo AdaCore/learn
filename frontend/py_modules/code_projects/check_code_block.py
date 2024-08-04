@@ -21,6 +21,7 @@ import re
 import blocks
 import checks
 import fmt_utils
+import toolchain_setup
 
 LOOK_FOR_PREVIOUS_CHECKS = True
 
@@ -124,6 +125,8 @@ def check_block(block : blocks.CodeBlock,
                 print_error(loc, "Failed to clean-up example")
                 print(e.output)
                 has_error = True
+
+    toolchain_setup.set_toolchain(block)
 
     project_block_dir = os.path.dirname(json_file)
     os.chdir(project_block_dir)
@@ -465,6 +468,8 @@ def check_block(block : blocks.CodeBlock,
 
     block_check.status_ok = not has_error
     block_check.to_json_file()
+
+    toolchain_setup.reset_toolchain()
 
     return has_error
 

@@ -15,6 +15,7 @@ from widget.chop import manual_chop, real_gnatchop
 
 import blocks
 import fmt_utils
+import toolchain_setup
 
 
 current_config = blocks.ConfigBlock(
@@ -241,7 +242,10 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
         for i, block in projects[project]:
             if isinstance(block, blocks.ConfigBlock):
                 current_config.update(block)
+                toolchain_setup.reset_toolchain()
                 continue
+
+            toolchain_setup.set_toolchain(block)
 
             os.chdir(work_dir)  # change to work directory using absolute path
 
@@ -321,6 +325,7 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
                 print(e.message)
                 print("Error while updating code for the block, continuing with next one!")
                 block.to_json_file()
+                toolchain_setup.reset_toolchain()
                 continue
 
             project_block_dir, ref_block = prepare_project_block_dir(latest_project_dir)
@@ -330,10 +335,12 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
                 if verbose:
                     print("Skipping code block {}".format(loc))
                 block.to_json_file()
+                toolchain_setup.reset_toolchain()
                 continue
 
             if block.syntax_only:
                 block.to_json_file()
+                toolchain_setup.reset_toolchain()
                 continue
 
             compile_error = False
@@ -372,6 +379,8 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
                 has_error = True
 
             block.to_json_file()
+
+            toolchain_setup.reset_toolchain()
 
         os.chdir(work_dir)
 
