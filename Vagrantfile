@@ -82,18 +82,36 @@ $epub = <<-SHELL
       libc6-dev
 
   # Install FSF GNAT
-  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-x86_64-linux-12.2.0-1.tar.gz && \
-  wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-12.1.0-1/gnatprove-x86_64-linux-12.1.0-1.tar.gz && \
-  wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-22.0.0-1/gprbuild-x86_64-linux-22.0.0-1.tar.gz && \
-  tar xzf gnat.tar.gz && \
-  mv gnat-* /usr/local/gnat && \
-  tar xzf gnatprove.tar.gz && \
-  mv gnatprove-* /usr/local/gnatprove && \
-  tar xzf gprbuild.tar.gz && \
-  mv gprbuild-* /usr/local/gprbuild && \
-  rm *.tar.gz
+  mkdir -p /opt/ada
 
-  echo 'export PATH="/usr/local/gnat/bin:/usr/local/gprbuild/bin:/usr/local/gnatprove/bin:${PATH}"' >> /home/vagrant/.bashrc
+  gnat_version=("12.2.0-1")
+  for tool_version in ${gnat_version[@]}; do
+    echo Installing GNAT $tool_version
+    wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
+    tar xzf gnat.tar.gz && \
+    mv gnat-* /opt/ada/gnat && \
+    rm *.tar.gz
+  done
+
+  gnat_prove_version=("12.1.0-1")
+  for tool_version in ${gnat_prove_version[@]}; do
+    echo Installing GNATprove $v
+    wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-${tool_version}/gnatprove-x86_64-linux-${tool_version}.tar.gz && \
+    tar xzf gnatprove.tar.gz && \
+    mv gnatprove-* /opt/ada/gnatprove && \
+    rm *.tar.gz
+  done
+
+  gprbuild_version=("22.0.0-1")
+  for tool_version in ${gprbuild_version[@]}; do
+    echo Installing GPRbuild $v
+    wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-${tool_version}/gprbuild-x86_64-linux-${tool_version}.tar.gz && \
+    tar xzf gprbuild.tar.gz && \
+    mv gprbuild-* /opt/ada/gprbuild && \
+    rm *.tar.gz
+  done
+
+  echo 'export PATH="/opt/ada/gnat/bin:/opt/ada/gprbuild/bin:/opt/ada/gnatprove/bin:${PATH}"' >> /home/vagrant/.bashrc
   source /home/vagrant/.bashrc
 
   # Install learn deps
