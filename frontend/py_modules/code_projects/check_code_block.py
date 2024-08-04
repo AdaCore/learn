@@ -68,9 +68,10 @@ def check_block(block : blocks.CodeBlock,
             gcc_version = run("gcc", "--version").partition('\n')[0]
             gnat_version = run("gnat", "--version").partition('\n')[0]
             gnat_prove_version = run("gnatprove", "--version").partition('\n')[0]
+            gprbuild_version = run("gprbuild", "--version").partition('\n')[0]
         except:
             pass
-        return gcc_version, gnat_version, gnat_prove_version
+        return gcc_version, gnat_version, gnat_prove_version, gprbuild_version
 
     def extract_diagnostics(lines):
         diags = []
@@ -159,7 +160,7 @@ def check_block(block : blocks.CodeBlock,
     if verbose:
         print(fmt_utils.header("Checking code block {}".format(loc)))
 
-    gcc_version, gnat_version, gnat_prove_version = set_versions()
+    gcc_version, gnat_version, gnat_prove_version, gprbuild_version = set_versions()
 
     block_check = checks.BlockCheck(text_hash=block.text_hash, text_hash_short=block.text_hash_short)
     block_check.status_ok = True
