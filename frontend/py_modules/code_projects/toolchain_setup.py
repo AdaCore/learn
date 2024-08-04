@@ -24,17 +24,24 @@ def set_toolchain(block : blocks.CodeBlock):
                 mode=0o777,
                 exist_ok=True)
 
-    gnat_version = DEFAULT_VERSION['gnat']
-    os.symlink(TOOLCHAIN_PATH + '/gnat/' + gnat_version,
-               TOOLCHAIN_PATH + '/selected/gnat')
+    if block.gnat_version != "default":
+        ver = block.gnat_version
 
-    gnatprove_version = DEFAULT_VERSION['gnatprove']
-    os.symlink(TOOLCHAIN_PATH + '/gnatprove/' + gnatprove_version,
-               TOOLCHAIN_PATH + '/selected/gnatprove')
+        os.symlink(TOOLCHAIN_PATH + '/gnat/' + ver,
+                TOOLCHAIN_PATH + '/selected/gnat')
 
-    gprbuild_version = DEFAULT_VERSION['gprbuild']
-    os.symlink(TOOLCHAIN_PATH + '/gprbuild/' + gprbuild_version,
-               TOOLCHAIN_PATH + '/selected/gprbuild')
+
+    if block.gnatprove_version != "default":
+        ver = block.gnatprove_version
+
+        os.symlink(TOOLCHAIN_PATH + '/gnatprove/' + ver,
+                TOOLCHAIN_PATH + '/selected/gnatprove')
+
+    if block.gprbuild_version != "default":
+        ver = block.gprbuild_version
+
+        os.symlink(TOOLCHAIN_PATH + '/gprbuild/' + ver,
+                TOOLCHAIN_PATH + '/selected/gprbuild')
 
 
 def reset_toolchain():
