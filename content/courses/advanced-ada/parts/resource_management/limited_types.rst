@@ -896,7 +896,7 @@ so it's considered explicitly limited.
 However, :ref:`as we've learned before <Adv_Ada_Partial_Full_View_Limited>`,
 we may actually declare a type as :ada:`limited private` in the
 public part of a package, while its full view is nonlimited. In this case, the
-limited type is not consider explicitly limited anymore.
+limited type is not considered explicitly limited anymore.
 
 For example, if we make the full view of the :ada:`Rec` nonlimited (by
 removing the :ada:`limited` keyword in the private part), then the :ada:`Rec`
