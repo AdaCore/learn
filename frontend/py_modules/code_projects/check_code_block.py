@@ -64,13 +64,19 @@ def check_block(block : blocks.CodeBlock,
     def set_versions():
         gcc_version = None
         gnat_version = None
+        gnat_prove_version = None
+        gprbuild_version = None
         try:
             gcc_version = run("gcc", "--version").partition('\n')[0]
             gnat_version = run("gnat", "--version").partition('\n')[0]
             gnat_prove_version = run("gnatprove", "--version").partition('\n')[0]
             gprbuild_version = run("gprbuild", "--version").partition('\n')[0]
         except:
-            pass
+            gcc_version = "<unknown>" if gcc_version is None else gcc_version
+            gnat_version = "<unknown>" if gnat_version is None else gnat_version
+            gnat_prove_version = "<unknown>" if gnat_prove_version is None else gnat_prove_version
+            gprbuild_version = "<unknown>" if gprbuild_version is None else gprbuild_version
+
         return gcc_version, gnat_version, gnat_prove_version, gprbuild_version
 
     def extract_diagnostics(lines):
