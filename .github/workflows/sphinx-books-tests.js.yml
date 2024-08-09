@@ -86,7 +86,7 @@ jobs:
         sudo echo "/opt/ada/selected/gprbuild/bin" >> $GITHUB_PATH
         sudo ln -sf /opt/ada/gnat/12.2.0-1      /opt/ada/default/gnat
         sudo ln -sf /opt/ada/gnatprove/12.1.0-1 /opt/ada/default/gnatprove
-        sudo ln -sf /opt/ada/gprbuild/22.0.0-1  /opt/ada/default/gnatprove
+        sudo ln -sf /opt/ada/gprbuild/22.0.0-1  /opt/ada/default/gprbuild
         sudo chmod -R ugo+w /opt/ada/selected
     - name: Increase max user watches
       run: |

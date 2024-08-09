@@ -117,7 +117,7 @@ $epub = <<-SHELL
 
   ln -sf /opt/ada/gnat/12.2.0-1       /opt/ada/default/gnat
   ln -sf /opt/ada/gnatprove/12.1.0-1  /opt/ada/default/gnatprove
-  ln -sf /opt/ada/gprbuild/22.0.0-1   /opt/ada/default/gnatprove
+  ln -sf /opt/ada/gprbuild/22.0.0-1   /opt/ada/default/gprbuild
 
   chown -R vagrant:vagrant /opt/ada
 
