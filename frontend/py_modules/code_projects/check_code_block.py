@@ -385,11 +385,14 @@ def check_block(block : blocks.CodeBlock,
                         for c in block.classes)
             extra_args = []
 
-            if 'prove_flow' in block.buttons:
+            if 'prove_flow' in block.buttons \
+                or 'ada-prove-flow' in block.classes:
                 extra_args = ["--mode=flow"]
-            elif 'prove_flow_report_all' in block.buttons:
+            elif 'prove_flow_report_all' in block.buttons \
+                or 'ada-prove-flow-report-all' in block.classes:
                 extra_args = ["--mode=flow", "--report=all"]
-            elif 'prove_report_all' in block.buttons:
+            elif 'prove_report_all' in block.buttons \
+                or 'ada-report-all' in block.classes:
                 extra_args = ["--report=all"]
 
             line = ["gnatprove", "-P", block.spark_project_filename,

@@ -235,13 +235,18 @@ class CodeBlock(Block):
               or 'run' in self.buttons)
               and not 'ada-norun' in self.classes)
         self.compile_it = compile_it if compile_it is not None else \
-            self.run_it or ('compile' in self.buttons)
+            self.run_it or \
+            ('ada-compile' in self.classes
+             or 'compile' in self.buttons)
 
         prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
                          "prove_report_all"]
+        prove_classes = ["ada-prove", "ada-prove-flow", "ada-prove-flow-report-all",
+                         "ada-prove-report-all"]
 
         self.prove_it = prove_it if prove_it is not None else \
-            any(b in prove_buttons for b in self.buttons)
+            (any(b in prove_classes for b in self.classes)
+             or any(b in prove_buttons for b in self.buttons))
 
         self.source_files = source_files if source_files is not None else \
             list()
