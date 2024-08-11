@@ -21,21 +21,20 @@ def set_toolchain(block : blocks.CodeBlock):
                 mode=0o777,
                 exist_ok=True)
 
-    if block.gnat_version != "default":
-        ver = block.gnat_version
+    if block.gnat_version[0] != "default":
+        ver = block.gnat_version[1]
 
         os.symlink(info.TOOLCHAIN_PATH['root']     + '/gnat/' + ver,
                    info.TOOLCHAIN_PATH['selected'] + '/gnat')
 
-
-    if block.gnatprove_version != "default":
-        ver = block.gnatprove_version
+    if block.gnatprove_version[0] != "default":
+        ver = block.gnatprove_version[1]
 
         os.symlink(info.TOOLCHAIN_PATH['root']     + '/gnatprove/' + ver,
                    info.TOOLCHAIN_PATH['selected'] + '/gnatprove')
 
-    if block.gprbuild_version != "default":
-        ver = block.gprbuild_version
+    if block.gprbuild_version[0] != "default":
+        ver = block.gprbuild_version[1]
 
         os.symlink(info.TOOLCHAIN_PATH['root']     + '/gprbuild/' + ver,
                    info.TOOLCHAIN_PATH['selected'] + '/gprbuild')

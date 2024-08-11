@@ -4,6 +4,7 @@ import hashlib
 import json
 
 import colors as C
+import toolchain_info
 
 class Block(object):
     @staticmethod
@@ -41,9 +42,9 @@ class Block(object):
         project = None
         main_file = None
         manual_chop = None
-        gnat_version = "default"
-        gnatprove_version = "default"
-        gprbuild_version = "default"
+        gnat_version = ["default", toolchain_info.get_toolchain_default_version('gnat')]
+        gnatprove_version = ["default", toolchain_info.get_toolchain_default_version('gnatprove')]
+        gprbuild_version = ["default", toolchain_info.get_toolchain_default_version('gprbuild')]
         last_line_number = -1
 
         def is_empty(line):
@@ -112,11 +113,11 @@ class Block(object):
             project_gprbuild_version = gprbuild_version_re.match(line)
 
             if project_gnat_version is not None:
-                gnat_version = project_gnat_version.groups()[0]
+                gnat_version = ["selected", project_gnat_version.groups()[0]]
             if project_gnatprove_version is not None:
-                gnatprove_version = project_gnatprove_version.groups()[0]
+                gnatprove_version = ["selected", project_gnatprove_version.groups()[0]]
             if project_gprbuild_version is not None:
-                gprbuild_version = project_gprbuild_version.groups()[0]
+                gprbuild_version = ["selected", project_gprbuild_version.groups()[0]]
 
             all_switches = switches_re.match(line)
 
