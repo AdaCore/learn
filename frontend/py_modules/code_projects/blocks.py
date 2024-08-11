@@ -50,6 +50,12 @@ class Block(object):
         def is_empty(line):
             return (not line) or line.isspace()
 
+        def reset_block_info():
+            # Reset information for next block
+            nonlocal classes, cb_start, cb_indent, lang
+
+            classes, cb_start, cb_indent, lang = [], -1, -1, ""
+
         def process_block(i, line, indent):
             nonlocal classes, cb_start, cb_indent, lang
 
@@ -77,7 +83,7 @@ class Block(object):
                     buttons
                 ))
 
-                classes, cb_start, cb_indent, lang = [], -1, -1, ""
+                reset_block_info()
 
             m = classes_re.match(line)
 
@@ -156,6 +162,8 @@ class Block(object):
                     for kv in code_config_re.findall(line)[0].split(";"))
             ))
 
+
+        reset_block_info()
 
         for i, (line, indent) in enumerate(zip(lines, indents)):
             last_line_number = i
