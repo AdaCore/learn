@@ -7,6 +7,7 @@ $frontend = <<-SHELL
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      crudini \
       python3 \
       python3-pip \
       python3-venv \
@@ -19,12 +20,13 @@ $frontend = <<-SHELL
 
   # Install FSF GNAT
   # (Required tool: gnatchop)
-  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-x86_64-linux-12.2.0-1.tar.gz && \
+  path_ada_toolchain_selected=$(crudini --get /home/vagrant/toolchain.ini toolchain_path selected)
+  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${default_version_gnat}/gnat-x86_64-linux-${default_version_gnat}.tar.gz && \
   tar xzf gnat.tar.gz && \
   mv gnat-* /usr/local/gnat && \
   rm *.tar.gz
 
-  echo 'export PATH="/usr/local/gnat/bin:${PATH}"' >> /home/vagrant/.bashrc
+  echo "export PATH=\\"${path_ada_toolchain_selected}/gnat/bin:${path_ada_toolchain_default}/gnat/bin:${PATH}\\"" >> /home/vagrant/.bashrc
   source /home/vagrant/.bashrc
 
   # Install learn deps
@@ -53,6 +55,7 @@ $epub = <<-SHELL
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      crudini \
       python3 \
       python3-pip \
       python3-venv \
@@ -81,47 +84,70 @@ $epub = <<-SHELL
       wget \
       libc6-dev
 
-  # Install FSF GNAT
-  mkdir -p /opt/ada/default
-  mkdir -p /opt/ada/selected
+  # Get relevant information from configuration file
+  toolchain_config=home/vagrant/toolchain.ini
+  path_ada_toolchain_root=$(crudini --get $toolchain_config toolchain_path root)
+  path_ada_toolchain_selected=$(crudini --get $toolchain_config toolchain_path selected)
+  path_ada_toolchain_default=$(crudini --get $toolchain_config toolchain_path default)
+  default_version_gnat=$(crudini --get $toolchain_config default_version gnat)
+  default_version_gnatprove=$(crudini --get $toolchain_config default_version gnatprove)
+  default_version_gprbuild=$(crudini --get $toolchain_config default_version gprbuild)
+  toolchain_versions_gnat=$(crudini --get $toolchain_config toolchains gnat)
+  toolchain_versions_gnatprove=$(crudini --get $toolchain_config toolchains gnatprove)
+  toolchain_versions_gprbuild=$(crudini --get $toolchain_config toolchains gprbuild)
 
-  gnat_version=("12.2.0-1" "14.1.0-3")
-  mkdir /opt/ada/gnat
+  echo path_ada_toolchain_root:      $path_ada_toolchain_root
+  echo path_ada_toolchain_selected:  $path_ada_toolchain_selected
+  echo path_ada_toolchain_default:   $path_ada_toolchain_default
+  echo default_version_gnat:         $default_version_gnat
+  echo default_version_gnatprove:    $default_version_gnatprove
+  echo default_version_gprbuild:     $default_version_gprbuild
+  echo toolchain_versions_gnat:      $toolchain_versions_gnat
+  echo toolchain_versions_gnatprove  $toolchain_versions_gnatprove
+  echo toolchain_versions_gprbuild   $toolchain_versions_gprbuild
+
+  # Install FSF GNAT
+  mkdir -p ${path_ada_toolchain_root}
+  mkdir -p ${path_ada_toolchain_default}
+  mkdir -p ${path_ada_toolchain_selected}
+
+  gnat_version=(${toolchain_versions_gnat})
+  mkdir ${path_ada_toolchain_root}/gnat
   for tool_version in ${gnat_version[@]}; do
     echo Installing GNAT $tool_version
     wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gnat.tar.gz && \
-    mv gnat-* /opt/ada/gnat/${tool_version} && \
+    mv gnat-* ${path_ada_toolchain_root}/gnat/${tool_version} && \
     rm *.tar.gz
   done
 
-  gnat_prove_version=("12.1.0-1" "14.1.0-1")
-  mkdir /opt/ada/gnatprove
+  gnat_prove_version=(${toolchain_versions_gnatprove})
+  mkdir ${path_ada_toolchain_root}/gnatprove
   for tool_version in ${gnat_prove_version[@]}; do
     echo Installing GNATprove $v
     wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-${tool_version}/gnatprove-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gnatprove.tar.gz && \
-    mv gnatprove-* /opt/ada/gnatprove/${tool_version} && \
+    mv gnatprove-* ${path_ada_toolchain_root}/gnatprove/${tool_version} && \
     rm *.tar.gz
   done
 
-  gprbuild_version=("22.0.0-1" "24.0.0-1")
-  mkdir /opt/ada/gprbuild
+  gprbuild_version=(${toolchain_versions_gprbuild})
+  mkdir ${path_ada_toolchain_root}/gprbuild
   for tool_version in ${gprbuild_version[@]}; do
     echo Installing GPRbuild $v
     wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-${tool_version}/gprbuild-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gprbuild.tar.gz && \
-    mv gprbuild-* /opt/ada/gprbuild/${tool_version} && \
+    mv gprbuild-* ${path_ada_toolchain_root}/gprbuild/${tool_version} && \
     rm *.tar.gz
   done
 
-  ln -sf /opt/ada/gnat/12.2.0-1       /opt/ada/default/gnat
-  ln -sf /opt/ada/gnatprove/12.1.0-1  /opt/ada/default/gnatprove
-  ln -sf /opt/ada/gprbuild/22.0.0-1   /opt/ada/default/gprbuild
+  ln -sf ${path_ada_toolchain_root}/gnat/${default_version_gnat}            ${path_ada_toolchain_default}/gnat
+  ln -sf ${path_ada_toolchain_root}/gnatprove/${default_version_gnatprove}  ${path_ada_toolchain_default}/gnatprove
+  ln -sf ${path_ada_toolchain_root}/gprbuild/${default_version_gprbuild}    ${path_ada_toolchain_default}/gprbuild
 
-  chown -R vagrant:vagrant /opt/ada
+  chown -R vagrant:vagrant ${path_ada_toolchain_root}
 
-  echo 'export PATH="/opt/ada/selected/gnat/bin:/opt/ada/selected/gprbuild/bin:/opt/ada/selected/gnatprove/bin:/opt/ada/default/gnat/bin:/opt/ada/default/gprbuild/bin:/opt/ada/default/gnatprove/bin:${PATH}"' >> /home/vagrant/.bashrc
+  echo "export PATH=\\"${path_ada_toolchain_selected}/gnat/bin:${path_ada_toolchain_selected}/gprbuild/bin:${path_ada_toolchain_selected}/gnatprove/bin:${path_ada_toolchain_default}/gnat/bin:${path_ada_toolchain_default}/gprbuild/bin:${path_ada_toolchain_default}/gnatprove/bin:${PATH}\\"" >> /home/vagrant/.bashrc
   source /home/vagrant/.bashrc
 
   # Install learn deps
@@ -157,6 +183,7 @@ Vagrant.configure("2") do |config|
     web.vm.synced_folder './frontend', '/vagrant/frontend'
     web.vm.synced_folder './content', '/vagrant/content'
 
+    web.vm.provision "file", source: "./frontend/py_modules/code_projects/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     web.vm.provision :shell, inline: $frontend
   end
 
@@ -167,6 +194,7 @@ Vagrant.configure("2") do |config|
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'
 
+    epub.vm.provision "file", source: "./frontend/py_modules/code_projects/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     epub.vm.provision :shell, inline: $epub
   end
 
