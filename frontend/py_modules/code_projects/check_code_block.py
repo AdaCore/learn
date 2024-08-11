@@ -170,6 +170,7 @@ def check_block(block : blocks.CodeBlock,
 
     if verbose:
         import shutil
+
         print("GCC version {}".format(gcc_version))
         print("GNAT version {}".format(gnat_version))
         print("GNATprove version {}".format(gnat_prove_version))
@@ -179,6 +180,10 @@ def check_block(block : blocks.CodeBlock,
         print("GNAT: {}".format(shutil.which("gnat")))
         print("GNATprove: {}".format(shutil.which("gnatprove")))
         print("GPRbuild: {}".format(shutil.which("gprbuild")))
+
+        print("Specified GNAT version {}".format(block.gnat_version))
+        print("Specified GNATprove version {}".format(block.gnatprove_version))
+        print("Specified GPRbuild version {}".format(block.gprbuild_version))
 
     block_check = checks.BlockCheck(text_hash=block.text_hash, text_hash_short=block.text_hash_short)
     block_check.status_ok = True
