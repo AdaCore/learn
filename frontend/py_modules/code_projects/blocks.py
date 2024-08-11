@@ -4,6 +4,7 @@ import hashlib
 import json
 
 import colors as C
+import toolchain_info
 
 class Block(object):
     @staticmethod
@@ -17,6 +18,9 @@ class Block(object):
         classes_re = re.compile("\s*:class:\s*(.+)")
         switches_re = re.compile("\s*.. code::.*switches=(\S+)?")
         compiler_switches_re = re.compile("Compiler[(](\S+)?[)]")
+        gnat_version_re=re.compile("\s*.. code::.*gnat=(\S+)?")
+        gnatprove_version_re=re.compile("\s*.. code::.*gnatprove=(\S+)?")
+        gprbuild_version_re=re.compile("\s*.. code::.*gprbuild=(\S+)?")
 
         blocks = []
         lines = input_text.splitlines()
@@ -38,10 +42,19 @@ class Block(object):
         project = None
         main_file = None
         manual_chop = None
+        gnat_version = None
+        gnatprove_version = None
+        gprbuild_version = None
         last_line_number = -1
 
         def is_empty(line):
             return (not line) or line.isspace()
+
+        def reset_block_info():
+            # Reset information for next block
+            nonlocal classes, cb_start, cb_indent, lang
+
+            classes, cb_start, cb_indent, lang = [], -1, -1, ""
 
         def process_block(i, line, indent):
             nonlocal classes, cb_start, cb_indent, lang
@@ -61,13 +74,16 @@ class Block(object):
                     lang,
                     project,
                     main_file,
+                    gnat_version,
+                    gnatprove_version,
+                    gprbuild_version,
                     compiler_switches,
                     classes,
                     manual_chop,
                     buttons
                 ))
 
-                classes, cb_start, cb_indent, lang = [], -1, -1, ""
+                reset_block_info()
 
             m = classes_re.match(line)
 
@@ -77,7 +93,8 @@ class Block(object):
 
         def start_code_block(i, line, indent):
             nonlocal cb_start, lang, project, main_file, manual_chop, \
-                     buttons, compiler_switches
+                     buttons, compiler_switches, \
+                     gnat_version, gnatprove_version, gprbuild_version
 
             cb_start, lang = (
                 i + 1,
@@ -96,6 +113,23 @@ class Block(object):
             else:
                 manual_chop = (manual_chop_re.match(line) is not None)
             buttons = button_re.findall(line)
+
+            project_gnat_version = gnat_version_re.match(line)
+            project_gnatprove_version = gnatprove_version_re.match(line)
+            project_gprbuild_version = gprbuild_version_re.match(line)
+
+            if project_gnat_version is not None:
+                gnat_version = ["selected", project_gnat_version.groups()[0]]
+            else:
+                gnat_version = ["default", toolchain_info.get_toolchain_default_version('gnat')]
+            if project_gnatprove_version is not None:
+                gnatprove_version = ["selected", project_gnatprove_version.groups()[0]]
+            else:
+                gnatprove_version = ["default", toolchain_info.get_toolchain_default_version('gnatprove')]
+            if project_gprbuild_version is not None:
+                gprbuild_version = ["selected", project_gprbuild_version.groups()[0]]
+            else:
+                gprbuild_version = ["default", toolchain_info.get_toolchain_default_version('gprbuild')]
 
             all_switches = switches_re.match(line)
 
@@ -128,6 +162,8 @@ class Block(object):
                     for kv in code_config_re.findall(line)[0].split(";"))
             ))
 
+
+        reset_block_info()
 
         for i, (line, indent) in enumerate(zip(lines, indents)):
             last_line_number = i
@@ -176,7 +212,9 @@ class CodeBlock(Block):
         return None
 
     def __init__(self, rst_file, line_start, line_end, text, language, project,
-                 main_file, compiler_switches, classes, manual_chop, buttons,
+                 main_file,
+                 gnat_version,gnatprove_version,gprbuild_version,
+                 compiler_switches, classes, manual_chop, buttons,
                  active=None,no_check=None,syntax_only=None,run_it=None,
                  compile_it=None,prove_it=None,
                  source_files=None,
@@ -190,6 +228,9 @@ class CodeBlock(Block):
         self.language = language
         self.project = project
         self.main_file = main_file
+        self.gnat_version = gnat_version
+        self.gnatprove_version = gnatprove_version
+        self.gprbuild_version = gprbuild_version
         self.compiler_switches = compiler_switches
         self.classes = classes
         self.manual_chop = manual_chop
@@ -209,13 +250,18 @@ class CodeBlock(Block):
               or 'run' in self.buttons)
               and not 'ada-norun' in self.classes)
         self.compile_it = compile_it if compile_it is not None else \
-            self.run_it or ('compile' in self.buttons)
+            self.run_it or \
+            ('ada-compile' in self.classes
+             or 'compile' in self.buttons)
 
         prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
                          "prove_report_all"]
+        prove_classes = ["ada-prove", "ada-prove-flow", "ada-prove-flow-report-all",
+                         "ada-prove-report-all"]
 
         self.prove_it = prove_it if prove_it is not None else \
-            any(b in prove_buttons for b in self.buttons)
+            (any(b in prove_classes for b in self.classes)
+             or any(b in prove_buttons for b in self.buttons))
 
         self.source_files = source_files if source_files is not None else \
             list()

@@ -21,6 +21,7 @@ import re
 import blocks
 import checks
 import fmt_utils
+import toolchain_setup
 
 LOOK_FOR_PREVIOUS_CHECKS = True
 
@@ -63,13 +64,20 @@ def check_block(block : blocks.CodeBlock,
     def set_versions():
         gcc_version = None
         gnat_version = None
+        gnat_prove_version = None
+        gprbuild_version = None
         try:
             gcc_version = run("gcc", "--version").partition('\n')[0]
             gnat_version = run("gnat", "--version").partition('\n')[0]
             gnat_prove_version = run("gnatprove", "--version").partition('\n')[0]
+            gprbuild_version = run("gprbuild", "--version").partition('\n')[0]
         except:
-            pass
-        return gcc_version, gnat_version, gnat_prove_version
+            gcc_version = "<unknown>" if gcc_version is None else gcc_version
+            gnat_version = "<unknown>" if gnat_version is None else gnat_version
+            gnat_prove_version = "<unknown>" if gnat_prove_version is None else gnat_prove_version
+            gprbuild_version = "<unknown>" if gprbuild_version is None else gprbuild_version
+
+        return gcc_version, gnat_version, gnat_prove_version, gprbuild_version
 
     def extract_diagnostics(lines):
         diags = []
@@ -125,6 +133,8 @@ def check_block(block : blocks.CodeBlock,
                 print(e.output)
                 has_error = True
 
+    toolchain_setup.set_toolchain(block)
+
     project_block_dir = os.path.dirname(json_file)
     os.chdir(project_block_dir)
 
@@ -156,7 +166,24 @@ def check_block(block : blocks.CodeBlock,
     if verbose:
         print(fmt_utils.header("Checking code block {}".format(loc)))
 
-    gcc_version, gnat_version, gnat_prove_version = set_versions()
+    gcc_version, gnat_version, gnat_prove_version, gprbuild_version = set_versions()
+
+    if verbose:
+        import shutil
+
+        print("GCC version {}".format(gcc_version))
+        print("GNAT version {}".format(gnat_version))
+        print("GNATprove version {}".format(gnat_prove_version))
+        print("GPRbuild version {}".format(gprbuild_version))
+
+        print("GCC: {}".format(shutil.which("gcc")))
+        print("GNAT: {}".format(shutil.which("gnat")))
+        print("GNATprove: {}".format(shutil.which("gnatprove")))
+        print("GPRbuild: {}".format(shutil.which("gprbuild")))
+
+        print("Specified GNAT version {}".format(block.gnat_version))
+        print("Specified GNATprove version {}".format(block.gnatprove_version))
+        print("Specified GPRbuild version {}".format(block.gprbuild_version))
 
     block_check = checks.BlockCheck(text_hash=block.text_hash, text_hash_short=block.text_hash_short)
     block_check.status_ok = True
@@ -369,11 +396,14 @@ def check_block(block : blocks.CodeBlock,
                         for c in block.classes)
             extra_args = []
 
-            if 'prove_flow' in block.buttons:
+            if 'prove_flow' in block.buttons \
+                or 'ada-prove-flow' in block.classes:
                 extra_args = ["--mode=flow"]
-            elif 'prove_flow_report_all' in block.buttons:
+            elif 'prove_flow_report_all' in block.buttons \
+                or 'ada-prove-flow-report-all' in block.classes:
                 extra_args = ["--mode=flow", "--report=all"]
-            elif 'prove_report_all' in block.buttons:
+            elif 'prove_report_all' in block.buttons \
+                or 'ada-report-all' in block.classes:
                 extra_args = ["--report=all"]
 
             line = ["gnatprove", "-P", block.spark_project_filename,
@@ -422,6 +452,13 @@ def check_block(block : blocks.CodeBlock,
             print_error(loc, "Expected at least 'no_button' indicator, got none!")
             check_error = True
 
+        if ((block.gnat_version[0] == 'selected' or
+             block.gnatprove_version[0] == 'selected' or
+             block.gprbuild_version[0] == 'selected') and
+            block.buttons != ['no']):
+            print_error(loc, "Only 'no_button' is allowed when selecting a specific toolchain!")
+            check_error = True
+
         if 'ada-expect-compile-error' in block.classes:
             if not any(b in ['compile', 'run'] for b in block.buttons):
                 print_error(loc, "Expected compile or run button, got none!")
@@ -465,6 +502,8 @@ def check_block(block : blocks.CodeBlock,
 
     block_check.status_ok = not has_error
     block_check.to_json_file()
+
+    toolchain_setup.reset_toolchain()
 
     return has_error
 
