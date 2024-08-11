@@ -39,33 +39,7 @@ jobs:
         plantuml
     - name: Install GNAT FSF
       run: |
-        toolchain_config=${GITHUB_WORKSPACE}/frontend/py_modules/code_projects/toolchain.ini
-        path_ada_toolchain_root=$(crudini --get $toolchain_config toolchain_path root)
-        path_ada_toolchain_default=$(crudini --get $toolchain_config toolchain_path default)
-        path_ada_toolchain_selected=$(crudini --get $toolchain_config toolchain_path selected)
-        default_version_gnat=$(crudini --get $toolchain_config default_version gnat)
-        toolchain_versions_gnat=$(crudini --get $toolchain_config toolchains gnat)
-        echo path_ada_toolchain_root:      $path_ada_toolchain_root
-        echo path_ada_toolchain_default:   $path_ada_toolchain_default
-        echo path_ada_toolchain_selected:  $path_ada_toolchain_selected
-        echo default_version_gnat:         $default_version_gnat
-        echo toolchain_versions_gnat:      $toolchain_versions_gnat
-        sudo mkdir -p ${path_ada_toolchain_root}
-        sudo mkdir -p ${path_ada_toolchain_default}
-        sudo mkdir -p ${path_ada_toolchain_selected}
-        gnat_version=(${toolchain_versions_gnat})
-        sudo mkdir ${path_ada_toolchain_root}/gnat
-        for tool_version in ${gnat_version[@]}; do
-            echo Installing GNAT $tool_version
-            sudo wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
-            sudo tar xzf gnat.tar.gz && \
-            sudo mv gnat-* ${path_ada_toolchain_root}/gnat/${tool_version} && \
-            sudo rm *.tar.gz
-        done
-        sudo echo "${path_ada_toolchain_default}/gnat/bin" >> $GITHUB_PATH
-        sudo echo "${path_ada_toolchain_selected}/gnat/bin" >> $GITHUB_PATH
-        sudo ln -sf ${path_ada_toolchain_root}/gnat/${default_version_gnat}           ${path_ada_toolchain_default}/gnat
-        sudo chmod -R ugo+w ${path_ada_toolchain_selected}
+        ${GITHUB_WORKSPACE}/.github/workflows/install_toolchain.sh --gnat
     - name: Increase max user watches
       run: |
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && \
