@@ -37,6 +37,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
+    - name: Install OS Deps
+      run: |
+        sudo apt-get update && \
+        sudo apt-get install -y \
+        crudini
     - name: Install GNAT FSF
       run: |
         toolchain_config=${GITHUB_WORKSPACE}/frontend/py_modules/code_projects/toolchain.ini

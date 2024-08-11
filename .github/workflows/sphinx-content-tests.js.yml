@@ -34,10 +34,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y \
+        crudini \
         graphviz \
         plantuml
     - name: Install GNAT FSF
-    run: |
+      run: |
         toolchain_config=${GITHUB_WORKSPACE}/frontend/py_modules/code_projects/toolchain.ini
         path_ada_toolchain_root=$(crudini --get $toolchain_config toolchain_path root)
         path_ada_toolchain_default=$(crudini --get $toolchain_config toolchain_path default)

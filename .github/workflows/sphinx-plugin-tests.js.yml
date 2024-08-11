@@ -28,6 +28,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install OS Deps
+      run: |
+        sudo apt-get update && \
+        sudo apt-get install -y \
+        crudini
     - name: Install GNAT FSF
       run: |
         toolchain_config=${GITHUB_WORKSPACE}/frontend/py_modules/code_projects/toolchain.ini
