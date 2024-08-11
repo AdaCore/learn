@@ -447,6 +447,13 @@ def check_block(block : blocks.CodeBlock,
             print_error(loc, "Expected at least 'no_button' indicator, got none!")
             check_error = True
 
+        if ((block.gnat_version[0] == 'selected' or
+             block.gnatprove_version[0] == 'selected' or
+             block.gprbuild_version[0] == 'selected') and
+            block.buttons != ['no_button']):
+            print_error(loc, "Button should be set to 'no_button' when selecting a specific toolchain!")
+            check_error = True
+
         if 'ada-expect-compile-error' in block.classes:
             if not any(b in ['compile', 'run'] for b in block.buttons):
                 print_error(loc, "Expected compile or run button, got none!")
