@@ -42,9 +42,9 @@ class Block(object):
         project = None
         main_file = None
         manual_chop = None
-        gnat_version = ["default", toolchain_info.get_toolchain_default_version('gnat')]
-        gnatprove_version = ["default", toolchain_info.get_toolchain_default_version('gnatprove')]
-        gprbuild_version = ["default", toolchain_info.get_toolchain_default_version('gprbuild')]
+        gnat_version = None
+        gnatprove_version = None
+        gprbuild_version = None
         last_line_number = -1
 
         def is_empty(line):
@@ -114,10 +114,16 @@ class Block(object):
 
             if project_gnat_version is not None:
                 gnat_version = ["selected", project_gnat_version.groups()[0]]
+            else:
+                gnat_version = ["default", toolchain_info.get_toolchain_default_version('gnat')]
             if project_gnatprove_version is not None:
                 gnatprove_version = ["selected", project_gnatprove_version.groups()[0]]
+            else:
+                gnatprove_version = ["default", toolchain_info.get_toolchain_default_version('gnatprove')]
             if project_gprbuild_version is not None:
                 gprbuild_version = ["selected", project_gprbuild_version.groups()[0]]
+            else:
+                gprbuild_version = ["default", toolchain_info.get_toolchain_default_version('gprbuild')]
 
             all_switches = switches_re.match(line)
 
