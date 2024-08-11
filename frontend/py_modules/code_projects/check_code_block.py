@@ -460,8 +460,9 @@ def check_block(block : blocks.CodeBlock,
             check_error = True
 
         if 'ada-expect-compile-error' in block.classes:
-            if not any(b in ['compile', 'run'] for b in block.buttons):
-                print_error(loc, "Expected compile or run button, got none!")
+            if (not (any(b in ['compile', 'run'] for b in block.buttons) or
+                     any(c in ['ada-compile', 'ada-run'] for c in block.classes))):
+                print_error(loc, "Expected compile or run button/class, got none!")
                 check_error = True
             if not compile_error:
                 print_error(loc, "Expected compile error, got none!")
@@ -479,7 +480,8 @@ def check_block(block : blocks.CodeBlock,
 
         if (any (c in ['ada-run-expect-failure','ada-norun'] for
                     c in block.classes)
-            and not 'run' in block.buttons):
+            and not ('run' in block.buttons or
+                     'ada-run' in block.classes)):
             print_error(loc, "Expected run button, got none!")
             check_error = True
 
