@@ -1262,6 +1262,7 @@ We can assign multidimensional aggregates to a matrix :ada:`M` using
 positional or named component association:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Matrix_Aggregates
+    :class: nosyntax-check
 
     pragma Ada_2022;
 
@@ -1356,6 +1357,7 @@ Then, when assigning to an object :ada:`SL` of :ada:`String_List` type, we can
 use strings in the aggregates:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.String_Aggregates
+    :class: nosyntax-check
 
     pragma Ada_2022;
 
@@ -1464,6 +1466,7 @@ Consider this package, for example:
 Then, let's use :ada:`<>` for the array components:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Array_Aggregates.Rec_Array_Aggregates
+    :class: nosyntax-check
 
     pragma Ada_2022;
 
