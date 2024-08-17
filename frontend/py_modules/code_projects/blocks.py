@@ -251,7 +251,8 @@ class CodeBlock(Block):
               and not 'ada-norun' in self.classes)
         self.compile_it = compile_it if compile_it is not None else \
             self.run_it or \
-            ('ada-compile' in self.classes
+            (('ada-compile' in self.classes and self.language == 'ada')
+             or ('c-compile' in self.classes and self.language == 'c')
              or 'compile' in self.buttons)
 
         prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",

@@ -55,6 +55,9 @@ class Widget:
         self.__no_button: bool = False
         self.__chop_strategy: ChopStrategy = None
         self.__main = None
+        self.__gnat_version = None
+        self.__gnatprove_version = None
+        self.__gprbuild_version = None
         self.allowed_switches: Dict[str, List[str]] = {
             "Builder": ["-g"],
             "Compiler": [
@@ -306,6 +309,12 @@ class Widget:
                 self.__parseSwitches(arg)
             elif arg.startswith('main='):
                 self.__main = arg.split('=')[1]
+            elif arg.startswith('gnat='):
+                self.__gnat_version = arg.split('=')[1]
+            elif arg.startswith('gnatprove='):
+                self.__gnatprove_version = arg.split('=')[1]
+            elif arg.startswith('gprbuild='):
+                self.__gprbuild_version = arg.split('=')[1]
             elif arg == 'cli_input':
                 # TODO: implement this feature
                 pass
@@ -337,6 +346,9 @@ class Widget:
                 elif opt == 'ada-expect-prove-error':
                     # this is for testing, nothing to do here
                     continue
+                elif opt in ['ada-compile', 'c-compile']:
+                    # this is for testing, nothing to do here
+                    continue
                 elif opt in ['ada-run', 'c-run']:
                     # this is for testing, nothing to do here
                     continue
@@ -345,6 +357,11 @@ class Widget:
                     continue
                 elif opt in ['ada-run-expect-failure',
                              'c-run-expect-failure']:
+                    # this is for testing, nothing to do here
+                    continue
+                elif opt in ['ada-prove', 'ada-prove-flow',
+                             'ada-prove-flow-report-all',
+                             'ada-prove-report-all']:
                     # this is for testing, nothing to do here
                     continue
                 else:
