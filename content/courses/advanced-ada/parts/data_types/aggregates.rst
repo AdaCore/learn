@@ -2041,7 +2041,7 @@ We can use class-wide types with delta aggregates. Consider this example:
          ((P_2D with delta X | Y => 0.0));
 
     begin
-       P_3D := [X => 0.1, Y => 0.2, Z => 0.3];
+       P_3D := (X => 0.1, Y => 0.2, Z => 0.3);
        Display (P_3D);
 
        P_3D := Point_3D (Reset (P_3D));
