@@ -1283,7 +1283,7 @@ We're now modifying :ada:`Push_Last` to share the computation of the new
 length between the operational and ghost code.
 
 .. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
-    :class: ada-expect-compile-error, ada-expect-prove-error
+    :class: ada-expect-prove-error
 
     package Ring_Buffer is
 

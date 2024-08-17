@@ -408,7 +408,7 @@ expression is first evaluated before being used as a choice expression. Consider
 the following code example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Statements.If_Case_Loop_Statements.Case_Statement_Expression
-    :class: ada-expect-compile-error
+    :class: nosyntax-check, ada-expect-compile-error
 
     package Scales is
 

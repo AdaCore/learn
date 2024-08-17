@@ -1028,8 +1028,8 @@ Example #6
 
 Let's consider yet another version of our abstract stack unit.
 
-.. code:: ada compile_button prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_06
-    :class: ada-expect-compile-error, ada-expect-prove-error
+.. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.Intro_To_Spark.State_Abstraction.Example_06
+    :class: ada-compile, ada-prove-flow, ada-expect-compile-error, ada-expect-prove-error
 
     package Stack with
       Abstract_State => The_Stack

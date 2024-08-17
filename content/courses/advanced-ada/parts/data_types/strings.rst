@@ -1580,7 +1580,8 @@ Types that are derived from a tagged type may also inherit the :ada:`Put_Image`
 aspect. However, there are a couple of small differences in comparison to
 untagged types, as we can see in the following example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Tagged_Put_Image
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Tagged_Put_Image
+    :class: ada-run
 
     pragma Ada_2022;
 

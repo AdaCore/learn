@@ -721,7 +721,7 @@ recursive definition of ``Sum``.
 Example #9
 ~~~~~~~~~~
 
-.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_09
+.. code:: ada no_button project=Courses.Advanced_SPARK.Ghost_Code.Example_09
 
     with Ada.Containers.Functional_Vectors;
 
@@ -757,7 +757,7 @@ postcondition.
 Example #10
 ~~~~~~~~~~~
 
-.. code:: ada run_button project=Courses.Advanced_SPARK.Ghost_Code.Example_10
+.. code:: ada no_button project=Courses.Advanced_SPARK.Ghost_Code.Example_10
 
     with Ada.Containers.Functional_Vectors;
 

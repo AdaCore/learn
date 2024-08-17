@@ -2358,6 +2358,7 @@ example:
 
     begin
        V1.A := 0;
+       V1.B := 0;
        V2 := V1;
        V2.A := 1;
 
@@ -2386,6 +2387,7 @@ example:
     {
         struct R V1, V2;
         V1.A = 0;
+        V1.B = 0;
         V2 = V1;
         V2.A = 1;
 
