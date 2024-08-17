@@ -243,7 +243,8 @@ blocks of statements have explicit :ada:`begin` and :ada:`end` markers, which
 prevents mistakes that are possible in C. The SPARK (also Ada) version of the
 above C code is as follows:
 
-.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
+.. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
+    :class: ada-compile, ada-prove-flow-report-all
 
     function Func return Integer;
 
