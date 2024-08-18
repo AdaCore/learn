@@ -85,7 +85,7 @@ $epub = <<-SHELL
       libc6-dev
 
   # Get relevant information from configuration file
-  toolchain_config=home/vagrant/toolchain.ini
+  toolchain_config=/home/vagrant/toolchain.ini
   path_ada_toolchain_root=$(crudini --get $toolchain_config toolchain_path root)
   path_ada_toolchain_selected=$(crudini --get $toolchain_config toolchain_path selected)
   path_ada_toolchain_default=$(crudini --get $toolchain_config toolchain_path default)
