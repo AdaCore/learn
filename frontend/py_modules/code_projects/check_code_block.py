@@ -117,7 +117,12 @@ def check_block(block : blocks.CodeBlock,
 
             try:
                 run("gprclean", "-P", project_filename)
+            except S.CalledProcessError as e:
+                out = str(e.output.decode("utf-8"))
+                print_error(loc, "Failed to clean-up example")
+                print(out)
 
+            try:
                 run("gnatprove", "-P", project_filename, "--clean")
             except S.CalledProcessError as e:
                 out = str(e.output.decode("utf-8"))
@@ -235,10 +240,20 @@ def check_block(block : blocks.CodeBlock,
         check_error = False
 
         if block.language == "ada":
-            cmdline = ["gprclean", "-P", block.project_filename]
+            cmdline = None
+
             try:
+                cmdline = ["gprclean", "-P", block.project_filename]
                 run(*cmdline)
-                out = run("gprbuild", "-q", "-P", block.project_filename)
+            except S.CalledProcessError as e:
+                out = str(e.output.decode("utf-8"))
+                print_error(loc, "Failed to clean-up example")
+                print(out)
+
+            try:
+                cmdline = ["gprbuild", "-q", "-P", block.project_filename]
+                out = run(*cmdline)
+
             except S.CalledProcessError as e:
                 if 'ada-expect-compile-error' in block.classes:
                     compile_error = True
