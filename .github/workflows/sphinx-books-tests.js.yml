@@ -30,6 +30,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
+        cache-dependency-path: 'frontend'
     - name: Install OS Deps
       run: |
         sudo apt-get update && \
