@@ -2355,7 +2355,7 @@ Encapsulating access type handling
 
 Previously, when discussing
 :ref:`design strategies for access types <Adv_Ada_Design_Strategies_Access_Types>`,
-we've seen an example on using
+we saw an example on using
 :ref:`limited controlled types to encapsulate access types <Adv_Ada_Controlled_Type_For_Access_Types>`.
 
 A more generalized example is the one of an unbounded stack. Because it's
@@ -2739,7 +2739,7 @@ Also, we can pass the logger to other subprograms and use it there. In this
 example, we pass the logger to the :ada:`Some_Processing` procedure and there,
 we the call :ada:`Put_Line` using the logger object.
 
-Finally, as soon as the logger gets out of scope, the log is automatically
+Finally, as soon as the logger goes out of scope, the log is automatically
 closed via the call to :ada:`Finalize`.
 
 .. admonition:: For further reading...
