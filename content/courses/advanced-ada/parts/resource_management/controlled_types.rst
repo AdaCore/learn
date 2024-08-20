@@ -2437,7 +2437,7 @@ implement this kind of stack by using access types. Let's look at a simple
        function Is_Full (S : Unbounded_Stack)
                          return Boolean is
        begin
-          return S.Top + 1 > S.Data'Last;
+          return S.Top = S.Data'Last;
        end Is_Full;
 
        procedure Reallocate_Data
