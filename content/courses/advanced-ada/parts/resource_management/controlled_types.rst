@@ -2565,7 +2565,9 @@ implement this kind of stack by using access types. Let's look at a simple
                     & "(1 .. "
                     & Last'Image
                     & ")");
-          Free (S.Data);
+          if S.Data /= null then
+            Free (S.Data);
+          end if;
        end Finalize;
 
     end Unbounded_Stacks;
@@ -2709,7 +2711,9 @@ logfile by simple calls to :ada:`Put_Line`:
          (L : in out Logger) is
        begin
           Put_Line ("Finalizing Logger...");
-          Close (L.Logfile);
+          if Is_Open (L.Logfile) then
+             Close (L.Logfile);
+          end if;
        end Finalize;
 
     end Loggers;
@@ -2823,7 +2827,9 @@ closed via the call to :ada:`Finalize`.
              (L : in out Logger) is
            begin
               Put_Line ("Finalizing Logger...");
-              Close (L.Logfile);
+              if Is_Open (L.Logfile) then
+                 Close (L.Logfile);
+              end if;
            end Finalize;
 
         end Loggers;
