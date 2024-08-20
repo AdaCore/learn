@@ -2526,7 +2526,8 @@ implement this kind of stack by using access types. Let's look at a simple
                     & "(1 .. "
                     & Last'Image
                     & ")");
-          S.Data := new Element_Array (1 .. S.Chunk_Size);
+          S.Data := new Element_Array
+                          (1 .. S.Chunk_Size);
        end Initialize;
 
        procedure Allocate_Duplicate_Data
