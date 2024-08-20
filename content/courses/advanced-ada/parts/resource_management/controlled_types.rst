@@ -2374,7 +2374,7 @@ implement this kind of stack by using access types. Let's look at a simple
 
     generic
        Default_Chunk_Size : Positive := 5;
-       type T is private;
+       type Element is private;
     package Unbounded_Stacks is
 
        Stack_Underflow : exception;
@@ -2382,27 +2382,29 @@ implement this kind of stack by using access types. Let's look at a simple
        type Unbounded_Stack is private;
 
        procedure Push (S : in out Unbounded_Stack;
-                       E :        T);
+                       E :        Element);
 
        function Pop (S : in out Unbounded_Stack)
-                     return T;
+                     return Element;
 
        function Is_Empty (S : Unbounded_Stack)
                           return Boolean;
 
     private
 
-       type T_Array is
-         array (Positive range <>) of T;
+       type Element_Array is
+         array (Positive range <>) of
+           Element;
 
-       type T_Array_Access is access T_Array;
+       type Element_Array_Access is
+         access Element_Array;
 
        type Unbounded_Stack is new
          Ada.Finalization.Controlled with
           record
              Chunk_Size : Positive
                := Default_Chunk_Size;
-             Data       : T_Array_Access;
+             Data       : Element_Array_Access;
              Top        : Natural := 0;
           end record;
 
@@ -2429,8 +2431,8 @@ implement this kind of stack by using access types. Let's look at a simple
 
        procedure Free is
          new Ada.Unchecked_Deallocation
-           (Object => T_Array,
-            Name   => T_Array_Access);
+           (Object => Element_Array,
+            Name   => Element_Array_Access);
 
        function Is_Full (S : Unbounded_Stack)
                          return Boolean is
@@ -2439,12 +2441,12 @@ implement this kind of stack by using access types. Let's look at a simple
        end Is_Full;
 
        procedure Reallocate_Data
-         (To         : in out T_Array_Access;
-          From       :        T_Array_Access;
+         (To         : in out Element_Array_Access;
+          From       :        Element_Array_Access;
           Max_Last   :        Positive;
           Valid_Last :        Positive) is
        begin
-          To := new T_Array (1 .. Max_Last);
+          To := new Element_Array (1 .. Max_Last);
 
           for I in 1 .. Valid_Last loop
              To (I) := From (I);
@@ -2454,7 +2456,7 @@ implement this kind of stack by using access types. Let's look at a simple
        procedure Increase_Size
          (S : in out Unbounded_Stack)
        is
-          Old_Data : T_Array_Access := S.Data;
+          Old_Data : Element_Array_Access := S.Data;
           Old_Last : constant Positive
                      := Old_Data'Last;
           New_Last : constant Positive
@@ -2481,7 +2483,7 @@ implement this kind of stack by using access types. Let's look at a simple
        --
 
        procedure Push (S : in out Unbounded_Stack;
-                       E :        T) is
+                       E :        Element) is
        begin
           if Is_Full (S) then
              Increase_Size (S);
@@ -2492,9 +2494,9 @@ implement this kind of stack by using access types. Let's look at a simple
        end Push;
 
        function Pop (S : in out Unbounded_Stack)
-                     return T is
+                     return Element is
        begin
-          return E : T do
+          return E : Element do
              if Is_Empty (S) then
                 raise Stack_Underflow;
              end if;
@@ -2524,7 +2526,7 @@ implement this kind of stack by using access types. Let's look at a simple
                     & "(1 .. "
                     & Last'Image
                     & ")");
-          S.Data := new T_Array (1 .. S.Chunk_Size);
+          S.Data := new Element_Array (1 .. S.Chunk_Size);
        end Initialize;
 
        procedure Allocate_Duplicate_Data
@@ -2575,7 +2577,7 @@ implement this kind of stack by using access types. Let's look at a simple
     procedure Show_Unbounded_Stack is
 
        package Unbounded_Integer_Stacks is new
-         Unbounded_Stacks (T => Integer);
+         Unbounded_Stacks (Element => Integer);
        use Unbounded_Integer_Stacks;
 
        procedure Print_Pop_Stack
