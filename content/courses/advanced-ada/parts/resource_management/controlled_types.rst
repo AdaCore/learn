@@ -2349,6 +2349,11 @@ which can become non-negligible depending in which context the controlled
 objects are used. However, there are applications where utilizing controlled
 types is the best approach.
 
+(Note that this overhead we've just mentioned is not specific to Ada. In fact,
+types similar to controlled types will be relatively expensive in any
+programming language. As an example, destructors in C++ may require a similar
+maintenance of state at run-time.)
+
 
 Encapsulating access type handling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
