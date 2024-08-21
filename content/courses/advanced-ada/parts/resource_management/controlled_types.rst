@@ -2343,6 +2343,513 @@ is allocated in the :ada:`Initialize` procedure.
 Applications of Controlled Types
 --------------------------------
 
-.. todo::
+In this section, we discuss applications of controlled types. In this context,
+it's important to remember that controlled types have an associated overhead,
+which can become non-negligible depending in which context the controlled
+objects are used. However, there are applications where utilizing controlled
+types is the best approach.
 
-    Complete section!
+(Note that this overhead we've just mentioned is not specific to Ada. In fact,
+types similar to controlled types will be relatively expensive in any
+programming language. As an example, destructors in C++ may require a similar
+maintenance of state at run-time.)
+
+
+Encapsulating access type handling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Previously, when discussing
+:ref:`design strategies for access types <Adv_Ada_Design_Strategies_Access_Types>`,
+we saw an example on using
+:ref:`limited controlled types to encapsulate access types <Adv_Ada_Controlled_Type_For_Access_Types>`.
+
+A more generalized example is the one of an unbounded stack. Because it's
+unbounded, it allows for increasing the stack's size *on demand*. We can
+implement this kind of stack by using access types. Let's look at a simple
+(unoptimized) implementation:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Applications.Unbounded_Stacks
+
+    with Ada.Finalization;
+
+    generic
+       Default_Chunk_Size : Positive := 5;
+       type Element is private;
+    package Unbounded_Stacks is
+
+       Stack_Underflow : exception;
+
+       type Unbounded_Stack is private;
+
+       procedure Push (S : in out Unbounded_Stack;
+                       E :        Element);
+
+       function Pop (S : in out Unbounded_Stack)
+                     return Element;
+
+       function Is_Empty (S : Unbounded_Stack)
+                          return Boolean;
+
+    private
+
+       type Element_Array is
+         array (Positive range <>) of
+           Element;
+
+       type Element_Array_Access is
+         access Element_Array;
+
+       type Unbounded_Stack is new
+         Ada.Finalization.Controlled with
+          record
+             Chunk_Size : Positive
+               := Default_Chunk_Size;
+             Data       : Element_Array_Access;
+             Top        : Natural := 0;
+          end record;
+
+       procedure Initialize
+         (S : in out Unbounded_Stack);
+
+       procedure Adjust
+         (S : in out Unbounded_Stack);
+
+       procedure Finalize
+         (S : in out Unbounded_Stack);
+
+    end Unbounded_Stacks;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Unchecked_Deallocation;
+
+    package body Unbounded_Stacks is
+
+       --
+       --  LOCAL SUBPROGRAMS
+       --
+
+       procedure Free is
+         new Ada.Unchecked_Deallocation
+           (Object => Element_Array,
+            Name   => Element_Array_Access);
+
+       function Is_Full (S : Unbounded_Stack)
+                         return Boolean is
+       begin
+          return S.Top = S.Data'Last;
+       end Is_Full;
+
+       procedure Reallocate_Data
+         (To         : in out Element_Array_Access;
+          From       :        Element_Array_Access;
+          Max_Last   :        Positive;
+          Valid_Last :        Positive) is
+       begin
+          To := new Element_Array (1 .. Max_Last);
+
+          for I in 1 .. Valid_Last loop
+             To (I) := From (I);
+          end loop;
+       end Reallocate_Data;
+
+       procedure Increase_Size
+         (S : in out Unbounded_Stack)
+       is
+          Old_Data : Element_Array_Access := S.Data;
+          Old_Last : constant Positive
+                     := Old_Data'Last;
+          New_Last : constant Positive
+                     := Old_Data'Last + S.Chunk_Size;
+       begin
+          Put_Line ("Increasing Unbounded_Stack "
+                    & "(1 .. "
+                    & Old_Last'Image
+                    & ") to (1 .. "
+                    & New_Last'Image
+                    & ")");
+
+          Reallocate_Data
+            (To         => S.Data,
+             From       => Old_Data,
+             Max_Last   => New_Last,
+             Valid_Last => S.Top);
+
+          Free (Old_Data);
+       end Increase_Size;
+
+       --
+       --  SUBPROGRAMS
+       --
+
+       procedure Push (S : in out Unbounded_Stack;
+                       E :        Element) is
+       begin
+          if Is_Full (S) then
+             Increase_Size (S);
+          end if;
+
+          S.Top := S.Top + 1;
+          S.Data (S.Top) := E;
+       end Push;
+
+       function Pop (S : in out Unbounded_Stack)
+                     return Element is
+       begin
+          return E : Element do
+             if Is_Empty (S) then
+                raise Stack_Underflow;
+             end if;
+
+             E := S.Data (S.Top);
+             S.Top := S.Top - 1;
+          end return;
+       end Pop;
+
+       function Is_Empty (S : Unbounded_Stack)
+                          return Boolean is
+       begin
+          return S.Top = 0;
+       end Is_Empty;
+
+       --
+       --  PRIVATE SUBPROGRAMS
+       --
+
+       procedure Initialize
+         (S : in out Unbounded_Stack)
+       is
+          Last : constant Positive
+                 := S.Chunk_Size;
+       begin
+          Put_Line ("Initializing Unbounded_Stack "
+                    & "(1 .. "
+                    & Last'Image
+                    & ")");
+          S.Data := new Element_Array
+                          (1 .. S.Chunk_Size);
+       end Initialize;
+
+       procedure Allocate_Duplicate_Data
+         (S : in out Unbounded_Stack)
+       is
+          Last : constant Positive
+                 := S.Data'Last;
+       begin
+          Put_Line ("Duplicating data for new "
+                    & "Unbounded_Stack (1 .. "
+                    & Last'Image
+                    & ")");
+
+          Reallocate_Data
+            (To         => S.Data,
+             From       => S.Data,
+             Max_Last   => Last,
+             Valid_Last => S.Top);
+       end Allocate_Duplicate_Data;
+
+       procedure Adjust
+         (S : in out Unbounded_Stack)
+       is
+       begin
+          Put_Line ("Adjusting Unbounded_Stack...");
+          Allocate_Duplicate_Data (S);
+       end Adjust;
+
+       procedure Finalize
+         (S : in out Unbounded_Stack)
+       is
+          Last : constant Positive
+                 := S.Data'Last;
+       begin
+          Put_Line ("Finalizing Unbounded_Stack "
+                    & "(1 .. "
+                    & Last'Image
+                    & ")");
+          if S.Data /= null then
+            Free (S.Data);
+          end if;
+       end Finalize;
+
+    end Unbounded_Stacks;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Unbounded_Stacks;
+
+    procedure Show_Unbounded_Stack is
+
+       package Unbounded_Integer_Stacks is new
+         Unbounded_Stacks (Element => Integer);
+       use Unbounded_Integer_Stacks;
+
+       procedure Print_Pop_Stack
+          (S    : in out Unbounded_Stack;
+           Name :        String)
+       is
+          V : Integer;
+       begin
+          Put_Line ("STACK: " & Name);
+          Put ("= ");
+          while not Is_Empty (S) loop
+             V := Pop (S);
+             Put (V'Image & " ");
+          end loop;
+          New_Line;
+       end Print_Pop_Stack;
+
+       Stack   : Unbounded_Stack;
+       Stack_2 : Unbounded_Stack;
+    begin
+       for I in 1 .. 10 loop
+          Push (Stack, I);
+       end loop;
+
+       Stack_2 := Stack;
+
+       for I in 11 .. 20 loop
+          Push (Stack, I);
+       end loop;
+
+       Print_Pop_Stack (Stack, "Stack");
+       Print_Pop_Stack (Stack_2, "Stack_2");
+
+    end Show_Unbounded_Stack;
+
+Let's first focus on the :ada:`Unbounded_Stack` type from the
+:ada:`Unbounded_Stacks` package. The actual stack is implemented via the array
+that we allocate for the :ada:`Data` component. The initial allocation takes
+place in the :ada:`Initialize` procedure, which is called when an object of
+:ada:`Unbounded_Stack` type is created. The corresponding deallocation of the
+stack happens in the :ada:`Finalize` procedure.
+
+In the :ada:`Push` procedure, we check whether the stack is full or not before
+storing a new element into the stack. If the stack is full, we call the
+:ada:`Increase_Size` procedure to *increase* the size of the array. This is
+actually done by calling the :ada:`Reallocate_Data` procedure, which allocates
+a new array for the stack and copies the original data to the new array.
+
+Also, when copying an unbounded stack object to another object of this type, a
+call to the :ada:`Adjust` procedure is triggered |mdash| we do this by the
+assignment :ada:`Stack_2 := Stack` in the :ada:`Show_Unbounded_Stack`
+procedure. In the :ada:`Adjust` procedure, we call the
+:ada:`Allocate_Duplicate_Data` procedure to allocate a new array for the stack
+data and copy the data from the original stack. (Internally, the
+:ada:`Allocate_Duplicate_Data` procedure calls the :ada:`Reallocate_Data`
+procedure, which we already mentioned.)
+
+By encapsulating the access type handling in controlled types, we can ensure
+that the access objects are handled correctly: no incorrect pointer usage or
+memory leak can happen when we use this strategy.
+
+
+Encapsulating file handling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Controlled types can be used to encapsulate file handling, so that files are
+automatically created and closed. A common use-case is when a new file is
+expected to be created or opened when we declare the controlled object, and
+closed when the controlled object gets out of scope.
+
+A simple example is the one of a logger, which we can use to write to a
+logfile by simple calls to :ada:`Put_Line`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Applications.Logger main=show_logger.adb
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Finalization;
+
+    package Loggers is
+
+       type Logger (<>) is
+         limited private;
+
+       function Init (Filename : String)
+                      return Logger;
+
+       procedure Put_Line (L : Logger;
+                           S : String);
+
+    private
+
+       type Logger is new
+         Ada.Finalization.Limited_Controlled with
+          record
+             Logfile : File_Type;
+          end record;
+
+       procedure Finalize
+         (L : in out Logger);
+
+    end Loggers;
+
+    package body Loggers is
+
+       --
+       --  SUBPROGRAMS
+       --
+
+       function Init (Filename : String)
+                      return Logger is
+       begin
+          return L : Logger do
+             Create (L.Logfile, Out_File, Filename);
+          end return;
+       end Init;
+
+       procedure Put_Line (L : Logger;
+                           S : String) is
+       begin
+          Put_Line ("Logger: Put_Line");
+          Put_Line (L.Logfile, S);
+       end Put_Line;
+
+       --
+       --  PRIVATE SUBPROGRAMS
+       --
+
+       procedure Finalize
+         (L : in out Logger) is
+       begin
+          Put_Line ("Finalizing Logger...");
+          if Is_Open (L.Logfile) then
+             Close (L.Logfile);
+          end if;
+       end Finalize;
+
+    end Loggers;
+
+    with Loggers; use Loggers;
+
+    procedure Some_Processing (Log : Logger) is
+    begin
+       Put_Line (Log, "Some processing...");
+    end Some_Processing;
+
+    with Loggers;         use Loggers;
+    with Some_Processing;
+
+    procedure Show_Logger is
+       Log : constant Logger := Init ("report.log");
+    begin
+       Put_Line (Log, "Some info...");
+       Some_Processing (Log);
+    end Show_Logger;
+
+The :ada:`Logger` type from the :ada:`Loggers` package has two subprograms:
+
+- :ada:`Init`, which creates a logger object and creates a logfile
+  *in the background*, and
+
+- :ada:`Put_Line`, which writes a message to the logfile.
+
+Note that we use the :ada:`(<>)` in the declaration of the :ada:`Logger` type
+to ensure that clients call the :ada:`Init` function. This allows us to specify
+the location of the logfile (as the :ada:`Filename` parameter).
+
+Also, we can pass the logger to other subprograms and use it there. In this
+example, we pass the logger to the :ada:`Some_Processing` procedure and there,
+we the call :ada:`Put_Line` using the logger object.
+
+Finally, as soon as the logger goes out of scope, the log is automatically
+closed via the call to :ada:`Finalize`.
+
+.. admonition:: For further reading...
+
+    Instead of enforcing a call to :ada:`Init`, we could have overridden the
+    :ada:`Initialize` procedure and opened the logfile there. This approach,
+    however, would have prevented the client from specifying the location of
+    the logfile in a simple way. Specifying the filename as a type discriminant
+    wouldn't work because we cannot use a string as a discriminant |mdash| as
+    we mentioned
+    :ref:`in a previous chapter <Adv_Ada_Indefinite_Subtype_Discriminant>`,
+    we cannot use indefinite subtypes as discriminants.
+
+    If we had preferred this approach, we could generate a random name for the
+    file in the :ada:`Initialize` procedure and store the file itself in a
+    temporary directory indicated by the operating system. Alternatively, we
+    could use the access to a string as a discriminant:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Applications.Logger main=show_logger.adb
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with Ada.Finalization;
+
+        package Loggers is
+
+           type Logger (Filename : access String) is
+             limited private;
+
+           procedure Put_Line (L : Logger;
+                               S : String);
+
+        private
+
+           type Logger (Filename : access String) is new
+             Ada.Finalization.Limited_Controlled with
+              record
+                 Logfile : File_Type;
+              end record;
+
+           procedure Initialize
+             (L : in out Logger);
+
+           procedure Finalize
+             (L : in out Logger);
+
+        end Loggers;
+
+        package body Loggers is
+
+           --
+           --  SUBPROGRAMS
+           --
+
+           procedure Put_Line (L : Logger;
+                               S : String) is
+           begin
+              Put_Line ("Logger: Put_Line");
+              Put_Line (L.Logfile, S);
+           end Put_Line;
+
+           --
+           --  PRIVATE SUBPROGRAMS
+           --
+
+           procedure Initialize
+             (L : in out Logger) is
+           begin
+              Create (L.Logfile,
+                      Out_File,
+                      L.Filename.all);
+           end Initialize;
+
+           procedure Finalize
+             (L : in out Logger) is
+           begin
+              Put_Line ("Finalizing Logger...");
+              if Is_Open (L.Logfile) then
+                 Close (L.Logfile);
+              end if;
+           end Finalize;
+
+        end Loggers;
+
+        with Loggers;         use Loggers;
+        with Some_Processing;
+
+        procedure Show_Logger is
+           Name : aliased String := "report.log";
+           Log : Logger (Name'Access);
+        begin
+           Put_Line (Log, "Some info...");
+           Some_Processing (Log);
+        end Show_Logger;
+
+    This approach works, but requires us to declare an aliased string
+    (:ada:`Name`), which we can give access to in the declaration of the
+    :ada:`Log` object.
+
+By encapsulating the file handling in controlled types, we ensure that files
+are properly opened when we want to use them, and that the files are closed
+when they're not going to be used anymore.
