@@ -10,7 +10,10 @@
 
 @mixin menu_vertical_current_dark_mode_colors {
     @include menu_vertical_current_hover_dark_mode_colors;
-    color: $color-darktheme-menu-font;
+    & {
+        color: $color-darktheme-menu-font;
+    }
+
 
     &:visited {
         color: $color-darktheme-menu-font;
@@ -107,7 +110,10 @@
             }
             a {
                 @include menu_vertical_alt_current_hover_dark_mode_colors;
-                background-color: $color-darktheme-menu-bg-l1;
+
+                & {
+                    background-color: $color-darktheme-menu-bg-l1;
+                }
 
                 &:hover {
                     background-color: $color-darktheme-menu-bg-hover;
@@ -115,7 +121,10 @@
 
                 &:visited {
                     @include menu_vertical_alt_current_hover_dark_mode_colors;
-                    background-color: $color-darktheme-menu-bg-l1;
+
+                    & {
+                        background-color: $color-darktheme-menu-bg-l1;
+                    }
 
                     &:hover {
                         background-color: $color-darktheme-menu-bg-hover;
@@ -128,10 +137,14 @@
                 }
             }
             &.current {
-                background-color: $color-darktheme-menu-bg-l1;
+                & {
+                    background-color: $color-darktheme-menu-bg-l1;
+                }
 
                 a {
-                    background-color: $color-darktheme-menu-bg-l1;
+                    & {
+                        background-color: $color-darktheme-menu-bg-l1;
+                    }
                     @include menu_vertical_current_dark_mode_colors;
 
                     &:hover {
@@ -150,7 +163,9 @@
                     li.toctree-l3>a {
                         @include menu_vertical_current_dark_mode_colors;
 
-                        background-color: $color-darktheme-menu-bg-l2;
+                        & {
+                            background-color: $color-darktheme-menu-bg-l2;
+                        }
                         &:hover {
                             background-color: $color-darktheme-menu-bg-hover;
                         }
@@ -166,7 +181,9 @@
                     li.toctree-l4>a {
                         @include menu_vertical_current_dark_mode_colors;
 
-                        background-color: $color-darktheme-menu-bg-l3;
+                        & {
+                            background-color: $color-darktheme-menu-bg-l3;
+                        }
                         &:hover {
                             background-color: $color-darktheme-menu-bg-hover;
                         }
