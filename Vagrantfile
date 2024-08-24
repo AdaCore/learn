@@ -18,13 +18,39 @@ $frontend = <<-SHELL
       libjpeg-dev \
       make
 
+  # Get relevant information from configuration file
+  toolchain_config=/home/vagrant/toolchain.ini
+  path_ada_toolchain_root=$(crudini --get $toolchain_config toolchain_path root)
+  path_ada_toolchain_selected=$(crudini --get $toolchain_config toolchain_path selected)
+  path_ada_toolchain_default=$(crudini --get $toolchain_config toolchain_path default)
+  default_version_gnat=$(crudini --get $toolchain_config default_version gnat)
+  toolchain_versions_gnat=$(crudini --get $toolchain_config toolchains gnat)
+
+  echo path_ada_toolchain_root:      $path_ada_toolchain_root
+  echo path_ada_toolchain_selected:  $path_ada_toolchain_selected
+  echo path_ada_toolchain_default:   $path_ada_toolchain_default
+  echo default_version_gnat:         $default_version_gnat
+  echo toolchain_versions_gnat:      $toolchain_versions_gnat
+
   # Install FSF GNAT
   # (Required tool: gnatchop)
-  path_ada_toolchain_selected=$(crudini --get /home/vagrant/toolchain.ini toolchain_path selected)
-  wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${default_version_gnat}/gnat-x86_64-linux-${default_version_gnat}.tar.gz && \
-  tar xzf gnat.tar.gz && \
-  mv gnat-* /usr/local/gnat && \
-  rm *.tar.gz
+  mkdir -p ${path_ada_toolchain_root}
+  mkdir -p ${path_ada_toolchain_default}
+  mkdir -p ${path_ada_toolchain_selected}
+
+  gnat_version=(${toolchain_versions_gnat})
+  mkdir ${path_ada_toolchain_root}/gnat
+  for tool_version in ${gnat_version[@]}; do
+    echo Installing GNAT $tool_version
+    wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
+    tar xzf gnat.tar.gz && \
+    mv gnat-* ${path_ada_toolchain_root}/gnat/${tool_version} && \
+    rm *.tar.gz
+  done
+
+  ln -sf ${path_ada_toolchain_root}/gnat/${default_version_gnat}            ${path_ada_toolchain_default}/gnat
+
+  chown -R vagrant:vagrant ${path_ada_toolchain_root}
 
   echo "export PATH=\\"${path_ada_toolchain_selected}/gnat/bin:${path_ada_toolchain_default}/gnat/bin:${PATH}\\"" >> /home/vagrant/.bashrc
   source /home/vagrant/.bashrc
