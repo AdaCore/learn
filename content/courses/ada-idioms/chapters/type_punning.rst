@@ -451,6 +451,8 @@ values. The generic is convenient: it provides the access type as well as
 functions for converting in both directions. But it will require an
 instantiation for each designated type, so it offers no reduction in the number
 of instantiations required over that of :ada:`Ada.Unchecked_Conversion`.
+(For more details on this generic package, please refer to the section on
+:ref:`access and address <Adv_Ada_Access_Address>`.)
 
 Because the package is defined by the language, the naïve user might think it
 will work for all types. It might not. Unconstrained array types remain a
