@@ -115,4 +115,5 @@ Ada Idioms
     Providing Component Access to Enclosing Record Objects <chapters/component_access_to_rec_objs>
     Controlling Object Initialization and Creation <chapters/controlling_obj_initialization_creation>
     Interrupt Handling <chapters/interrupt_handling>
+    Type Punning <chapters/type_punning>
     Appendices <chapters/appendices>
