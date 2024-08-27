@@ -13,8 +13,8 @@ that meets the operational requirements. Sometimes, however, the chosen type is
 not sufficient for clients of that object. Normally that situation would
 indicate a design error, but not necessarily.
 
-For example, a device driver that receives external data, such as a network or
-serial I/O driver, typically presents incoming data to clients as arrays of raw
+Consider a device driver that receives external data, such as a network or
+serial I/O driver. Typically the driver presents incoming data to clients as arrays of raw
 bytes. That's how the data enter the receiving machine, so that's the most
 natural representation at the lowest level of the device driver code. However,
 that representation is not likely sufficient for the higher-level clients.
@@ -62,7 +62,7 @@ standard ways to circumvent these and other checks. To maintain the integrity
 of the type model not many escape hatches exist. The most commonly used of
 these, *unchecked conversion*, allows type conversion between arbitrary types.
 Unchecked conversions remain explicit, but the compiler does not limit them to
-types defined as reasonable by the language.
+the types defined as reasonable by the language.
 
 
 Solution
@@ -209,18 +209,18 @@ signed type, to achieve that effect. There are certainly other ways to do this,
 but we're starting with something simple for the sake of illustrating this
 idiom.
 
-In the following fragment, type :ada:`Axis_Acceleration` is a signed 16-bit
+In the following fragment, type :ada:`Acceleration` is a signed 16-bit
 integer type already declared elsewhere:
 
 .. code-block:: ada
 
-      type Axis_Acceleration_Pointer is access all Axis_Acceleration
+      type Acceleration_Pointer is access all Acceleration
         with Storage_Size => 0;
 
-      function As_Axis_Acceleration_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Axis_Acceleration_Pointer);
+      function As_Acceleration_Pointer is new Ada.Unchecked_Conversion
+        (Source => System.Address, Target => Acceleration_Pointer);
 
-The access type is not pool-specific, but that is optional. We tell the
+The access type is general, not pool-specific, but that is optional. We tell the
 compiler to reserve no storage for the access type because an allocation would
 be an error that we want the compiler to catch. Whether or not the compiler
 actually reserves storage for an individual access type is
@@ -230,7 +230,7 @@ compiler will reject any allocations.
 Given this access type declaration we can then instantiate
 :ada:`Ada.Unchecked_Conversion`. The resulting function name is a matter of
 style but is appropriate because the function allows us to treat an address as
-a pointer to an :ada:`Axis_Acceleration` value.
+a pointer to an :ada:`Acceleration` value.
 
 The following is the device driver routine for getting the scaled accelerations
 from the device. The type :ada:`Three_Axis_Accelerometer` is the device driver
@@ -249,11 +249,11 @@ sensitivity, returning all three in the mode-out record parameter.
       Buffer : array (0 .. 5) of UInt8 with Alignment => 2, Size => 48;
       Scaled : Float;
 
-      type Axis_Acceleration_Pointer is access all Axis_Acceleration
+      type Acceleration_Pointer is access all Acceleration
         with Storage_Size => 0;
 
-      function As_Axis_Acceleration_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Axis_Acceleration_Pointer);
+      function As_Acceleration_Pointer is new Ada.Unchecked_Conversion
+        (Source => System.Address, Target => Acceleration_Pointer);
 
    begin
       This.Loc_IO_Read (Buffer (0), OUT_X_L);
@@ -264,24 +264,24 @@ sensitivity, returning all three in the mode-out record parameter.
       This.Loc_IO_Read (Buffer (5), OUT_Z_H);
 
       Get_X : declare
-         Raw : Axis_Acceleration renames As_Axis_Acceleration_Pointer (Buffer (0)'Address).all;
+         Raw : Acceleration renames As_Acceleration_Pointer (Buffer (0)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
-         Axes.X := Axis_Acceleration (Scaled);
+         Axes.X := Acceleration (Scaled);
       end Get_X;
 
       Get_Y : declare
-         Raw : Axis_Acceleration renames As_Axis_Acceleration_Pointer (Buffer (2)'Address).all;
+         Raw : Acceleration renames As_Acceleration_Pointer (Buffer (2)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
-         Axes.Y := Axis_Acceleration (Scaled);
+         Axes.Y := Acceleration (Scaled);
       end Get_Y;
 
       Get_Z : declare
-         Raw : Axis_Acceleration renames As_Axis_Acceleration_Pointer (Buffer (4)'Address).all;
+         Raw : Acceleration renames As_Acceleration_Pointer (Buffer (4)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
-         Axes.Z := Axis_Acceleration (Scaled);
+         Axes.Z := Acceleration (Scaled);
       end Get_Z;
    end Get_Accelerations;
 
@@ -293,11 +293,13 @@ requested for the given *n* axis. Then the declare blocks do the actual scaling
 and that's where the type punning is applied to the :ada:`Buffer` content.
 
 In each block, the address of one of the bytes in the array is converted into
-an access value designating a two-byte :ada:`Axis_Acceleration` value.
+an access value designating a two-byte :ada:`Acceleration` value.
 The :ada:`X` acceleration is first in the buffer, so the address of
 :ada:`Buffer (0)` is converted. Likewise, the address of :ada:`Buffer (2)` is
 converted for the :ada:`Y` axis value, and for the :ada:`Z` value,
-:ada:`Buffer (4)` is converted.
+:ada:`Buffer (4)` is converted. (We could have said :ada:`Buffer'Address` instead of
+:ada:`Buffer (0)`, they mean the same thing, but an explicit index seemed more
+clear, given the need for the other indexes.)
 
 But we want the designated axis acceleration value, not the access value, so
 we also dereference the converted access value via :ada:`.all`, and rename the
@@ -320,11 +322,11 @@ appropriate approach.
 For that matter we could use type punning but have the record type be the
 designated type returned from the address conversion, rather than a single axis
 value. Then we'd just convert :ada:`Buffer'Address` and not need to specify
-array indexes as all (:ada:`Buffer (Buffer'First)'Address` is guaranteed to be
-the same value as :ada:`Buffer'Address`).
+array indexes as all. This would be the same as converting the array to the record
+type, but with a level of indirection added.
 
 For the network packet example, we want to apply record type views to arbitrary
-sequences within an array of raw bytes, so indexing will be required as above.
+sequences within an array of raw bytes, so indexing will be required.
 Just as we indexed into the accelerometer :ada:`Buffer` for the addresses of
 the individual 16-bit acceleration values, we can index into the network packet
 array to get the starting addresses of the individual headers. Regular record
@@ -433,7 +435,7 @@ the address of the object would point to the first element.
 In either approach, the developer is responsible for the correctness of the
 address values applied, either for the second object's declaration or for the
 pointer conversion. For example, this includes the alternative type's
-alignment. Otherwise, "There be dragons" as the ancient maps would say.
+alignment. Otherwise, all bets are off.
 
 
 Relationship With Other Idioms
