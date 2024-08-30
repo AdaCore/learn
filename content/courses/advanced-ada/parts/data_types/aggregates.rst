@@ -270,6 +270,8 @@ Here, we assign 5 to both :ada:`X` and :ada:`Y`.
     - :arm22:`4.3.1 Record Aggregates <4-3-1>`
 
 
+.. _Adv_Ada_Aggregates_Box_Notation:
+
 :ada:`<>`
 ~~~~~~~~~
 

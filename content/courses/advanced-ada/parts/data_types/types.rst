@@ -975,58 +975,6 @@ Let's see some examples of indefinite types:
 In this example, both :ada:`Integer_Array` and :ada:`Simple_Record` are
 indefinite types.
 
-.. _Adv_Ada_Indefinite_Subtype_Discriminant:
-
-.. admonition:: Important
-
-    Note that we cannot use indefinite subtypes as discriminants. For example,
-    the following code won't compile:
-
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types_Error
-        :class: ada-expect-compile-error
-
-        package Unconstrained_Types is
-
-           type Integer_Array is
-             array (Positive range <>) of Integer;
-
-           type Simple_Record (Arr : Integer_Array) is
-           record
-              L : Natural := Arr'Length;
-           end record;
-
-        end Unconstrained_Types;
-
-    :ada:`Integer_Array` is a correct type declaration |mdash| although
-    the type itself is indefinite after the declaration. However, we cannot
-    use it as the discriminant in the declaration of :ada:`Simple_Record`.
-    We could, however, have a correct declaration by using discriminants as
-    access values:
-
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types_Error
-
-        package Unconstrained_Types is
-
-           type Integer_Array is
-             array (Positive range <>) of Integer;
-
-           type Integer_Array_Access is
-             access Integer_Array;
-
-           type Simple_Record
-             (Arr : Integer_Array_Access) is
-           record
-              L : Natural := Arr'Length;
-           end record;
-
-        end Unconstrained_Types;
-
-    By adding the :ada:`Integer_Array_Access` type and using it in
-    :ada:`Simple_Record`\'s type declaration, we can indirectly use an
-    indefinite type in the declaration of another indefinite type. We discuss
-    this topic later
-    :ref:`in another chapter <Adv_Ada_Discriminants_As_Access_Values>`.
-
 As we've just mentioned, we cannot declare variable of indefinite types:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
@@ -1838,6 +1786,8 @@ The bounds for the object's declaration come from the required initial value
 when an object is declared. In this case, we initialize the object with a call
 to the :ada:`Init` function.
 
+
+.. _Adv_Ada_Type_Conversion:
 
 Type conversion
 ---------------

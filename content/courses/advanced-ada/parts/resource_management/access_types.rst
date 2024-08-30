@@ -4860,6 +4860,8 @@ access-to-subprogram we want to use. We can call the subprogram by simply
 accessing the :ada:`AP` component, i.e.: :ada:`RA.AP`.
 
 
+.. _Adv_Ada_Access_To_Subprograms_As_Discriminant_Type:
+
 Access-to-subprogram as discriminant types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

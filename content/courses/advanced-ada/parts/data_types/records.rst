@@ -876,27 +876,1236 @@ consider using interfaces instead of null records. We'll discuss this topic
 :ref:`later on in the course <Adv_Ada_Null_Records_Vs_Interfaces>`.
 
 
-..
-    TO BE DONE:
+.. _Adv_Ada_Record_Discriminants:
 
-    Record discriminants
-    --------------------
+Record discriminants
+--------------------
 
-    .. admonition:: In the Ada Reference Manual
+We introduced the topic of record discriminants in the
+:ref:`Introduction to Ada course <Intro_Ada_Record_Discriminants>`. Also,
+in a previous chapter, we mentioned that record types with unconstrained
+discriminants without defaults are
+:ref:`indefinite types <Adv_Ada_Definite_Indefinite_Subtypes>`.
 
-        - :arm:`3.7 Discriminants <3-7>`
+In this section, we discuss a couple of details about record discriminants that
+we haven't covered yet. Although the discussion will be restricted to
+record discriminants, keep in mind that tasks and protected types can also have
+discriminants. We'll focus on discriminants for tasks and protected types in
+separate chapters.
 
-    .. todo::
+.. todo::
 
-        - (MENTION: Per-object expressions)
-        - Known and unknown discriminant parts
-        - (MENTION: Object declaration and assignments)
-        - Private types
-        - Subtypes and access definitions
-        - (MOVE: Indefinite subtypes as discriminants)
-        - Default values
-            - (MENTION: Definite and Indefinite Subtypes)
-        - Derived types / subtypes
+    Add link to section on task discriminants once it's available.
+
+In addition, discriminants can be used to write
+:ref:`per-object expressions <Adv_Ada_Per_Object_Expressions>`. We discuss this
+topic later in this chapter.
+
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`3.7 Discriminants <3-7>`
+
+
+Known and unknown discriminant parts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When it comes to discriminants, a type declaration falls into one of the
+following three categories: it has either no discriminants at all, known
+discriminants or unknown discriminants.
+
+In order to have no discriminants, a type simply doesn't have a discriminant
+part in its declaration. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.No_Discriminant_Part
+
+    package Show_Discriminants is
+
+       type T_No_Discr is private;
+       --            ^^^
+       --   no discriminant part
+
+    private
+
+       type T_No_Discr is null record;
+
+    end Show_Discriminants;
+
+By using parentheses after the type name, we're defining a discriminant part.
+In this case, the type can either have unknown or known discriminants. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Discriminant_Parts
+
+    package Show_Discriminants is
+
+       type T_Unknown_Discr (<>) is
+       --                    ^^
+       --   Unknown discriminant
+         private;
+
+       type T_Known_Discr (D : Integer) is
+       --                  ^^^^^^^^^^^
+       --   Known discriminant
+         private;
+
+    private
+
+       type T_Unknown_Discr is
+         null record;
+
+       type T_Known_Discr (D : Integer) is
+         null record;
+
+    end Show_Discriminants;
+
+An unknown discriminant part is represented by :ada:`(<>)` in the partial view
+|mdash| this is basically the so-called *box notation* :ada:`<>` (also known as
+*box compound delimiter*) in parentheses. We discuss unknown discriminant parts
+and their peculiarities later on in this chapter. In this section, we mainly
+focus on known discriminants.
+
+.. todo::
+
+    Add link to section on unknown discriminant parts once it's available.
+
+
+We've already seen examples of known discriminants in previous chapters. In
+simple terms, known discriminants are composed by one or more discriminant
+specifications, which are similar to subprogram parameters, but without
+parameter modes. In fact, we can think of discriminants as parameters for a
+type :ada:`T`, but with the goal of defining specific characteristics or
+constraints when declaring objects of type :ada:`T`.
+
+
+Discriminant as constant property
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can think of discriminants as constant properties of a type. In fact, if you
+want to specify a record component :ada:`C` that shouldn't change, declaring it
+constant isn't allowed in Ada:
+
+.. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Constant_Properties
+    :class: ada-expect-compile-error, nosyntax-check
+
+    !constant_properties.ads
+    package Constant_Properties is
+
+       type Rec is record
+          C : constant Integer;
+          --  ^^^^^^^^
+          --  ERROR: record components
+          --         cannot be constant.
+          V :          Integer;
+       end record;
+
+    end Constant_Properties;
+
+A simple solution is to use a record discriminant:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Constant_Properties
+
+    package Constant_Properties is
+
+       type Rec (C : Integer) is
+       record
+          V :          Integer;
+       end record;
+
+    end Constant_Properties;
+
+A record discriminant can be accessed as a normal component, but it is
+read-only, so we cannot change it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Constant_Properties
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Constant_Properties;
+    use  Constant_Properties;
+
+    procedure Show_Constant_Property is
+       R : Rec (10);
+    begin
+       Put_Line ("R.C = "
+                 & R.C'Image);
+
+       R.C := R.C + 1;
+       --  ERROR: cannot change
+       --         record discriminant
+    end Show_Constant_Property;
+
+In this code example, the compilation fails because we cannot change the
+:ada:`C` discriminant. In this sense, :ada:`C` is a basically a constant
+component of the :ada:`R` object.
+
+
+.. _Adv_Ada_Record_Discriminants_Private_Types:
+
+Private types
+~~~~~~~~~~~~~
+
+As we've seen in previous chapters, private types can have discriminants. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Private_With_Discriminants
+
+    package Private_With_Discriminants is
+
+       type T (L : Positive) is private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type T (L : Positive) is
+       record
+          Arr : Integer_Array (1 .. L);
+       end record;
+
+    end Private_With_Discriminants;
+
+Here, discriminant :ada:`L` is used to specify the constraints of the array
+component :ada:`Arr`. Note that the same discriminant part must appear in both
+:ref:`the partial and the full view <Adv_Ada_Type_View>` of type :ada:`T`.
+
+
+Object declaration
+~~~~~~~~~~~~~~~~~~
+
+As we've already seen, we declare objects of a type :ada:`T` with a
+discriminant :ada:`D` by specifying the actual value of discriminant :ada:`D`.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Objects_Discriminants
+
+    package Recs is
+
+       type T (L : Positive;
+               M : Positive) is
+         null record;
+
+    end Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       A : T (L => 5, M => 6);
+       B : T (7, 8);
+    begin
+       Put_Line ("A.L = "
+                 & A.L'Image);
+       Put_Line ("A.M = "
+                 & A.M'Image);
+       Put_Line ("B.L = "
+                 & B.L'Image);
+       Put_Line ("B.M = "
+                 & B.M'Image);
+    end Show_Object_Declaration;
+
+As we can see in the declaration of objects :ada:`A` and :ada:`B`, for the
+discriminant values, we can use a positional (:ada:`(7, 8)`) or named
+association (:ada:`(L => 5, M => 6)`).
+
+
+Object size
+^^^^^^^^^^^
+
+Discriminants can have an impact on the object size because we can set the
+discriminant to constraint a component of an
+:ref:`indefinite subtype <Adv_Ada_Definite_Indefinite_Subtypes>`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Objects_Discriminants_Size
+
+    package Recs is
+
+       type Null_Rec (L : Positive;
+                      M : Positive) is
+         private;
+
+       type Rec_Array (L : Positive) is
+         private;
+
+    private
+
+       type Null_Rec (L : Positive;
+                      M : Positive) is
+         null record;
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Rec_Array (L : Positive) is
+       record
+          Arr : Integer_Array (1 .. L);
+       end record;
+
+    end Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Sizes is
+       Null_Rec_A  : Null_Rec (1, 2);
+       Null_Rec_B  : Null_Rec (5, 6);
+       Rec_Array_A : Rec_Array (10);
+       Rec_Array_B : Rec_Array (20);
+    begin
+       Put_Line ("Null_Rec_A'Size = "
+                 & Null_Rec_A'Size'Image);
+       Put_Line ("Null_Rec_B'Size = "
+                 & Null_Rec_B'Size'Image);
+       Put_Line ("Rec_Array_A'Size = "
+                 & Rec_Array_A'Size'Image);
+       Put_Line ("Rec_Array_B'Size = "
+                 & Rec_Array_B'Size'Image);
+    end Show_Object_Sizes;
+
+In this example, :ada:`Null_Rec_A` and :ada:`Null_Rec_B` have the same size
+because the type is a null record. However, :ada:`Rec_Array_A` and
+:ada:`Rec_Array_B` have different sizes because we're setting the :ada:`L`
+discriminant |mdash| which we use to constraint the :ada:`Arr` array component
+of the :ada:`Rec_Array` type |mdash| to 10 and 20, respectively.
+
+
+.. _Adv_Ada_Record_Discriminants_Object_Assignments:
+
+Object assignments
+~~~~~~~~~~~~~~~~~~
+
+As we've just seen, when we set the values for the discriminants of a type in
+the object declaration, we're constraining the objects. Those constraints are
+checked at runtime by the
+:ref:`discriminant check <Adv_Ada_Discriminant_Check>`. If the discriminants
+don't match, the :ada:`Constraint_Error` exception is raised.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Object_Assignments
+    :class: ada-run-expect-failure
+
+    package Recs is
+
+       type T (L : Positive;
+               M : Positive) is
+         null record;
+
+    end Recs;
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Assignments is
+       A1, A2 : T (5, 6);
+       B      : T (7, 8);
+    begin
+       A1 := A2;    --  OK
+       B  := A1;    --  ERROR!
+    end Show_Object_Assignments;
+
+In this example, the :ada:`A1 := A2` assignment is accepted because both
+:ada:`A1` and :ada:`A2` have the same constraints (:ada:`(5, 6)`). However, the
+:ada:`B := A1` assignment is not accepted because the discriminant check fails
+at runtime.
+
+Note that the discriminant check is not performed when we use
+:ref:`mutable subtypes <Adv_Ada_Mutable_Subtypes>` |mdash| we discuss this
+specific kind of subtypes later on.
+
+
+Discriminant type
+~~~~~~~~~~~~~~~~~
+
+In a discriminant specification, the type of the discriminant can only be a
+discrete subtype or an
+:ref:`access type <Adv_Ada_Discriminants_As_Access_Values>`. Other kinds of
+types |mdash| e.g. composite types such as record types |mdash| are illegal for
+discriminants. However, we can always use them indirectly by using access
+types. (We'll see an example later.)
+
+In addition to that, we can also use a different kind of access types, namely
+:ref:`anonymous access-to-object subtypes <Adv_Ada_Anonymous_Access_To_Object_Types>`.
+This specific kind of discriminant is called
+:ref:`access discriminant <Adv_Ada_Anonymous_Access_Discriminants>`. We discuss
+this topic in more details in another chapter.
+
+Let's see a code example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Discriminants_Subtype
+
+    package Recs is
+
+       type Usage_Mode is (Off,
+                           Simple_Usage,
+                           Advanced_Usage);
+
+       type Priv_Info is private;
+
+       type Priv_Info_Access is access Priv_Info;
+
+       type Proc_Access is
+         access procedure (P : in out Priv_Info);
+
+       type Priv_Rec (Last  : Positive;
+                      Usage : Usage_Mode;
+                      Info  : Priv_Info_Access;
+                      Proc  : Proc_Access) is
+         private;
+
+    private
+
+       type Priv_Info is record
+         A : Positive;
+         B : Positive;
+       end record;
+
+       type Priv_Rec (Last  : Positive;
+                      Usage : Usage_Mode;
+                      Info  : Priv_Info_Access;
+                      Proc  : Proc_Access) is
+         null record;
+
+    end Recs;
+
+In this example, we're declaring the :ada:`Priv_Rec` type with the following
+discriminants:
+
+- The :ada:`Last` discriminant of the scalar (i.e. discrete) type
+  :ada:`Positive`;
+
+- The :ada:`Usage` discriminant of the enumeration (i.e. discrete) type
+  :ada:`Usage_Mode`;
+
+- The :ada:`Info` discriminant of the
+  :ref:`access-to-object type <Adv_Ada_Access_Types_Terminology>`
+  :ada:`Priv_Info_Access`;
+
+    - We discuss
+      :ref:`access-to-object types as discriminant type <Adv_Ada_Discriminants_As_Access_Values>`
+      in another chapter.
+
+- The :ada:`Proc` discriminant of the
+  :ref:`access-to-subprogram type <Adv_Ada_Access_To_Subprograms>`
+  :ada:`Proc_Access`;
+
+    - We discuss
+      :ref:`access-to-subprogram types as discriminant type <Adv_Ada_Access_To_Subprograms_As_Discriminant_Type>`
+      in another chapter.
+
+As indicated previously, it's illegal to use a private type or a record type as
+the type of a discriminant. For example:
+
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Discriminants_Subtype_Error
+    :class: ada-expect-compile-error
+
+    package Recs is
+
+       type Priv_Info is private;
+
+       type Priv_Rec (Info : Priv_Info) is
+         private;
+       --             ^^^^^^^^^^^^^^^^
+       --  ERROR: cannot use private type
+       --         in discriminant.
+
+    private
+
+       type Priv_Info is record
+         A : Positive;
+         B : Positive;
+       end record;
+
+       type Priv_Rec (Info  : Priv_Info) is
+         null record;
+
+    end Recs;
+
+We cannot use the :ada:`Priv_Info` directly as a discriminant type because it's
+a private type. However, as we've just seen in the previous code example, we
+use it indirectly by using an access type to this private type (see
+:ada:`Priv_Info_Access` in the code example).
+
+
+.. _Adv_Ada_Indefinite_Subtype_Discriminant:
+
+Indefinite subtypes as discriminants
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As we already implied, we cannot use indefinite subtypes as discriminants. For
+example, the following code won't compile:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types_Error
+    :class: ada-expect-compile-error
+
+    package Unconstrained_Types is
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Simple_Record (Arr : Integer_Array) is
+       --                  ^^^^^^^^^^^^^^^^^^^
+       --  ERROR: cannot use indefinite type
+       --         in discriminant.
+       record
+          L : Natural := Arr'Length;
+       end record;
+
+    end Unconstrained_Types;
+
+:ada:`Integer_Array` is a correct type declaration |mdash| although
+the type itself is indefinite after the declaration. However, we cannot
+use it as the discriminant in the declaration of :ada:`Simple_Record`.
+We could, however, have a correct declaration by using discriminants as
+access values:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types_Error
+
+    package Unconstrained_Types is
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type Integer_Array_Access is
+         access Integer_Array;
+
+       type Simple_Record
+         (Arr : Integer_Array_Access) is
+       record
+          L : Natural := Arr'Length;
+       end record;
+
+    end Unconstrained_Types;
+
+By adding the :ada:`Integer_Array_Access` type and using it in
+:ada:`Simple_Record`\'s type declaration, we can indirectly use an
+indefinite type in the declaration of another indefinite type. We discuss
+this topic later
+:ref:`in another chapter <Adv_Ada_Discriminants_As_Access_Values>`.
+
+
+.. _Adv_Ada_Record_Discriminants_Default_Values:
+
+Default values
+~~~~~~~~~~~~~~
+
+We can specify default values for discriminants. Note, however, that we must
+either specify default values for **all** discriminants of the discriminant
+part or for none of them. This contrasts with default values for subprogram
+parameters, where we can
+:ref:`specify default values for just a subset of all parameters of a specific subprogram <Adv_Ada_Parameter_Order_And_Association>`.
+
+As expected, we can override the default values by specifying the values of
+each discriminant when declaring an object. Let's see a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Discriminant_Default_Value
+
+    package Recs is
+
+       type T (L : Positive := 1;
+               M : Positive := 2) is
+         private;
+
+    private
+
+       type T (L : Positive := 1;
+               M : Positive := 2) is
+         null record;
+
+    end Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       A : T;
+       B : T (7, 8);
+    begin
+       Put_Line ("A.L = "
+                 & A.L'Image);
+       Put_Line ("A.M = "
+                 & A.M'Image);
+       Put_Line ("B.L = "
+                 & B.L'Image);
+       Put_Line ("B.M = "
+                 & B.M'Image);
+    end Show_Object_Declaration;
+
+In this example, object :ada:`A` makes use of the default values for the
+discriminants of type :ada:`T`, so it has the discriminants
+:ada:`(L => 1, M => 2)`. In the case of object :ada:`B`, we're specifying the
+values :ada:`(L => 7, M => 8)`, which are used instead of the default values.
+
+Note that we cannot set default values for nonlimited tagged types. The same
+applies to generic formal types. For example:
+
+.. todo::
+
+    Add link to section on generic formal types once it's available.
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Discriminant_Default_Value_Tagged_TYpe
+    :class: ada-expect-compile-error
+
+    package Recs is
+
+       type TT (L : Positive := 1;
+                M : Positive := 2) is
+       --       ^^^^^^^^^^^^^^^^^
+       --  ERROR: cannot assign default
+       --         in discriminant of
+       --         nonlimited tagged type.
+         tagged private;
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         tagged limited private;
+
+    private
+
+       type TT (L : Positive := 1;
+                M : Positive := 2) is
+         tagged null record;
+
+       type LTT (L : Positive := 1;
+                 M : Positive := 2) is
+         tagged limited null record;
+
+    end Recs;
+
+As we can see, compilation fails because of the default values for the
+discriminants of the nonlimited tagged type :ada:`TT`. In the case of the
+limited tagged type :ada:`LTT`, the default values for the discriminants are
+legal.
+
+
+.. _Adv_Ada_Mutable_Subtypes:
+
+Mutable subtypes
+^^^^^^^^^^^^^^^^
+
+An unconstrained discriminated subtype with defaults is called a mutable
+subtype, and a variable of such a subtype is called a mutable variable because
+the discriminants of such a variable can be changed. An important feature of
+mutable subtypes is that it allows for changing the discriminants of an object
+via assignments |mdash| in this case, no
+:ref:`discriminant check <Adv_Ada_Discriminant_Check>` is performed.
+
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Mutable_Subtype
+    :class: ada-run-expect-failure
+
+    package Mutability is
+
+       type T_Non_Mutable
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       type T_Mutable
+         (L : Positive := 1;
+          M : Positive := 2) is
+         null record;
+
+    end Mutability;
+
+    with Mutability; use Mutability;
+
+    procedure Show_Mutable_Subtype_Assignment is
+       NM_1 : T_Non_Mutable (5, 6);
+       NM_2 : T_Non_Mutable (7, 8);
+
+       M_1  : T_Mutable (7, 8);
+       M_2  : T_Mutable;
+    begin
+       NM_2 := NM_1;  --  ERROR!
+       M_2  := M_1;   --  OK
+    end Show_Mutable_Subtype_Assignment;
+
+In this example, the :ada:`NM_2 := NM_1` assignment fails because both objects
+are of a non-mutable subtype with different discriminants, so that the
+discriminant check fails at runtime. However, the :ada:`M_2 := M_1` assignment
+is OK because both objects are mutable variables. In this case, this assignment
+changes the discriminants of :ada:`M_2` from :ada:`(L => 1, M => 2)` to
+:ada:`(L => 7, M => 8)`.
+
+Note that assignments of mutable variables may not always work at runtime. For
+example, if a discriminant of a mutable subtype is used to constraint a
+component of indefinite subtype, we might see the corresponding checks fail at
+runtime. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Mutable_Subtype_Error
+    :class: ada-run-expect-failure
+
+    package Mutability is
+
+       type T_Mutable_Array (L : Positive := 10) is
+         private;
+
+    private
+
+       type Integer_Array is
+         array (Positive range <>) of Integer;
+
+       type T_Mutable_Array (L : Positive := 10) is
+       record
+          Arr : Integer_Array (1 .. L);
+       end record;
+
+    end Mutability;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Mutability;  use Mutability;
+
+    procedure Show_Mutable_Subtype_Error is
+       A : T_Mutable_Array (10);
+       B : T_Mutable_Array (20);
+    begin
+       Put_Line ("A'Size = "
+                 & A'Size'Image);
+       Put_Line ("B'Size = "
+                 & B'Size'Image);
+
+       A := B;  --  ERROR!
+    end Show_Mutable_Subtype_Error;
+
+In this case, the assignment :ada:`A := B` raises the :ada:`Constraint_Error`
+exception at runtime. Here, the :ada:`Arr` component of each object has a
+different range: :ada:`1 .. 10` for object :ada:`A` and :ada:`1 .. 20` for
+object :ada:`B`.
+To prevent this situation, we should declare :ada:`T_Mutable_Array` as a
+limited type, so that assignments are not permitted.
+
+
+Derived types and subtypes
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As expected, we may derive types with discriminants or declare subtypes of it.
+
+Subtypes
+^^^^^^^^
+
+When declaring a subtype of a type with discriminants, we have the choice to
+specify the value of the discriminants for the parent type, or specify no
+discriminants at all:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Subtypes
+
+    package Subtypes_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       subtype Sub_T is T;
+       --  Discriminants are not specified:
+       --  taking the ones from T.
+
+       subtype Sub_T_2 is T
+        (L => 3, M => 4);
+       --  Discriminants are specified:
+       --  taking the ones from Sub_T_2
+
+    end Subtypes_With_Discriminants;
+
+For the :ada:`Sub_T` subtype declaration in this example, we don't specify
+values for the parent type's discriminants. For :ada:`Sub_T_2`, in contrast, we
+set the discriminants to :ada:`(L => 3, M => 4)`.
+
+When declaring objects of these subtypes, we need to take the constraints into
+account:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Subtypes
+    :class: ada-run-expect-failure
+
+    package Subtypes_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       subtype Sub_T is T;
+       --  Discriminants are not specified:
+       --  taking the ones from T.
+
+       subtype Sub_T_2 is T
+        (L => 3, M => 4);
+       --  Discriminants are specified:
+       --  taking the ones from Sub_T_2
+
+    end Subtypes_With_Discriminants;
+
+    with Subtypes_With_Discriminants;
+    use  Subtypes_With_Discriminants;
+
+    procedure Show_Subtypes_With_Discriminants is
+       A1 : T (1, 2);
+       A2 : T (3, 4);
+       B1 : Sub_T (1, 2);
+       B2 : Sub_T (3, 4);
+       C2 : Sub_T_2;
+
+       --  C1 : Sub_T_2 (1, 2);
+       --                ^^^^
+       --  ERROR: discriminants already
+       --         constrained
+    begin
+       B1 := A1;
+       --  OK: discriminants match
+
+       B2 := A1;
+       --  CONSTRAINT_ERROR!
+
+       B2 := A2;
+       --  OK: discriminants match
+
+       C2 := A1;
+       --  CONSTRAINT_ERROR!
+
+       C2 := A2;
+       --  OK: discriminants match
+    end Show_Subtypes_With_Discriminants;
+
+For objects of :ada:`Sub_T` subtype, we *have to* specify the value of each
+discriminant. On the other hand, for objects of :ada:`Sub_T_2` type, we
+*cannot* specify the constraints because they have already been defined in the
+subtype's declaration |mdash| in this case, they're always set to
+:ada:`(3, 4)`.
+
+When assigning objects of different subtypes, the discriminant check will be
+performed |mdash| as we
+:ref:`mentioned before <Adv_Ada_Record_Discriminants_Object_Assignments>`. In
+this example, the assignments :ada:`B2 := A1` and :ada:`C2 := A1` fail because
+the objects have different constraints.
+
+
+Derived types
+^^^^^^^^^^^^^
+
+The behavior for derived types is very similar to the one we've just described
+for subtypes. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       type T_Derived is new T;
+       --  Discriminants are not specified:
+       --  taking the ones from T.
+
+       type T_Derived_2 is new T
+         (L => 3, M => 4);
+       --  Discriminants are specified:
+       --  taking the ones from T_Derived_2
+
+    end Derived_With_Discriminants;
+
+For the :ada:`T_Derived` type, we reuse the discriminants of the parent type
+:ada:`T`. For the :ada:`T_Derived_2` type, we specify a value for each
+discriminant of :ada:`T`.
+
+As you probably notice, this code looks very similar to the code using
+subtypes. The main difference between using subtypes and derived types is that,
+as expected, we have to perform a
+:ref:`type conversion <Adv_Ada_Type_Conversion>` in the assignments:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types
+    :class: ada-run-expect-failure
+
+    with Derived_With_Discriminants;
+    use  Derived_With_Discriminants;
+
+    procedure Show_Derived_With_Discriminants is
+       A1 : T (1, 2);
+       A2 : T (3, 4);
+       B1 : T_Derived (1, 2);
+       B2 : T_Derived (3, 4);
+       C2 : T_Derived_2;
+
+       --  C1 : Sub_T_2 (1, 2);
+       --                ^^^^
+       --  ERROR: discriminants already
+       --         constrained
+    begin
+       B1 := T_Derived (A1);
+       --  OK: discriminants match
+
+       B2 := T_Derived (A1);
+       --  ERROR!
+
+       C2 := T_Derived_2 (A1);
+       --  CONSTRAINT_ERROR!
+
+       C2 := T_Derived_2 (A2);
+       --  OK: discriminants match
+    end Show_Derived_With_Discriminants;
+
+Once again, a discriminant check is performed when assigning objects to ensure
+that the type discriminants match. In this code example, the assignments
+:ada:`B2 := A1` and :ada:`C2 := A1` fail because the objects have different
+constraints.
+
+
+Derived types with renamed discriminants
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We could rewrite a type declaration such as :ada:`type T_Derived is new T` by
+explicitly declaring the discriminants. We can do that for the previous code
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Same_Discriminants
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       --  The declaration:
+       --
+       --     type T_Derived is new T;
+       --
+       --  is the same as:
+       --
+       type T_Derived
+         (L : Positive;
+          M : Positive) is
+         new T (L => L, M => M);
+
+    end Derived_With_Discriminants;
+
+We may, however, rename the discriminants instead. For example, we could rename
+:ada:`L` and :ada:`M` to :ada:`X` and :ada:`Y`. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Renamed_Discriminants
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       type T_Derived
+         (X : Positive;
+          Y : Positive) is
+         new T (L => X, M => Y);
+
+    end Derived_With_Discriminants;
+
+Of course, if we use named association when declaring objects, we have to use
+the correct discriminant names:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Renamed_Discriminants
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Derived_With_Discriminants;
+    use  Derived_With_Discriminants;
+
+    procedure Show_Derived_With_Discriminants is
+       A : T (L => 1, M => 2);
+       B : T_Derived (X => 3, Y => 4);
+       --             ^^^^^^^^^^^^^^
+       --  Using correct discriminant names
+    begin
+       Put_Line ("A.L = "
+                 & A.L'Image);
+       Put_Line ("A.M = "
+                 & A.M'Image);
+       Put_Line ("B.X = "
+                 & B.X'Image);
+       Put_Line ("B.Y = "
+                 & B.Y'Image);
+    end Show_Derived_With_Discriminants;
+
+In essence, the discriminants of both parent and derived types are the same:
+the only difference is that they are accessed by different names. This allows
+us to convert from a parent type to a derived type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Renamed_Discriminants
+
+    with Derived_With_Discriminants;
+    use  Derived_With_Discriminants;
+
+    procedure Show_Derived_With_Discriminants is
+       A : T (L => 1, M => 2);
+       B : T_Derived (X => 1, Y => 2);
+    begin
+       B := T_Derived (A);  --  OK
+    end Show_Derived_With_Discriminants;
+
+Here, even though objects :ada:`A` and :ada:`B` have discriminants with
+different names, the assignment :ada:`B := T_Derived (A)` is valid.
+
+
+Derived types with more constrained discriminants
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When deriving types with discriminants, we may use a more constrained type for
+the discriminants of derived type. For example, if the discriminant :ada:`D` of
+the parent type is of :ada:`Integer` type, the corresponding discriminant of
+the derived type may use a constrained subtype such as :ada:`Natural` or
+:ada:`Positive` |mdash| because both :ada:`Natural` and :ada:`Positive` are
+subtypes of type :ada:`Integer`. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_More_Constrained_Discriminants
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Integer;
+          M : Integer) is
+         null record;
+
+       type T_Derived_2
+         (X : Natural;
+          Y : Positive) is
+         new T (L => X, M => Y);
+
+    end Derived_With_Discriminants;
+
+As expected, the constraints of each discriminant's type are taken into account
+when evaluating the value that is specified for each discriminant:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_More_Constrained_Discriminants
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Derived_With_Discriminants;
+    use  Derived_With_Discriminants;
+
+    procedure Show_Derived_With_Discriminants is
+       A : T (L => -1, M => -2);
+       B : T_Derived_2 (X => 0, Y => 1);
+    begin
+       Put_Line ("A.L = "
+                 & A.L'Image);
+       Put_Line ("A.M = "
+                 & A.M'Image);
+       Put_Line ("B.X = "
+                 & B.X'Image);
+       Put_Line ("B.Y = "
+                 & B.Y'Image);
+    end Show_Derived_With_Discriminants;
+
+Here, we can use :ada:`(L => -1, M => -2)` in the declaration of object
+:ada:`A` because both discriminants are of :ada:`Integer` type. However, in the
+declaration of object :ada:`B`, we can only use values for the discriminants
+that are in the range of the :ada:`Natural` and :ada:`Positive` subtypes,
+respectively. (If you change the code to use negative values instead, a
+:ada:`Constraint_Error` exception is raised at runtime.)
+
+
+Extending the discriminant part
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As we've seen, we can rename discriminants or use more constrained subtypes for
+discriminants in derived types. We might also want to add a new discriminant to
+the derived type |mdash| in addition to the discriminants of the parent's type.
+However, this is considered a type extension, as the new discriminant is part
+of the type definition.
+
+As an example, we may want to add the :ada:`A` discriminant of :ada:`Boolean`
+type to a derived type. For non-tagged types, such a declaration will trigger a
+compilation error as expected:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Extension_Error
+    :class: ada-expect-compile-error
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       type T_Derived
+         (X : Positive;
+          Y : Positive;
+          A : Boolean) is
+       --  ^^^^^^^^^^^
+       --  ERROR: cannot extend type with new
+       --         Boolean discriminant A
+         new T (L => X, M => Y);
+
+    end Derived_With_Discriminants;
+
+To circumvent this issue, we could, of course, declare a component of :ada:`T`
+type instead of deriving from it:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Extension_Error
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         null record;
+
+       type T_2
+         (X : Positive;
+          Y : Positive;
+          A : Boolean) is
+       record
+          A_Comp : T (L => X, M => Y);
+       end record;
+
+    end Derived_With_Discriminants;
+
+In this case, :ada:`A_Comp` is a component of type :ada:`T`, and we're using
+the discriminant :ada:`X` and :ada:`Y` as the constraints of this component.
+
+Naturally, using tagged types is another alternative:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Tagged_Types
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive;
+          M : Positive) is
+         tagged null record;
+
+       type T_Derived_Extended
+         (X : Positive;
+          Y : Positive;
+          A : Boolean) is  --  New discriminant
+         new T (L => X, M => Y)
+           with null record;
+
+       type T_Derived_Extended_2
+         (A : Boolean;     --  New discriminant
+          X : Positive;
+          Y : Positive) is
+         new T (L => X, M => Y)
+           with null record;
+
+       type T_Derived_Extended_3
+         (A : Boolean) is  --  New discriminant
+         new T (L => 1, M => 2)
+           with null record;
+
+       type T_Derived_Extended_4
+         (A : Boolean;     --  New discriminant
+          X : Positive) is
+         new T (L => X, M => X)
+           with null record;
+
+    end Derived_With_Discriminants;
+
+In this code example, we're adding the :ada:`A` discriminant when declaring
+:ada:`T_Derived_Extended`. Because :ada:`T` is a tagged type, such a new
+discriminant is fine.
+
+Note that the order of the discriminants can be rearranged: when deriving a new
+type, we don't need to specify the discriminants of the parent type before any
+new discriminants. In fact, in the declaration of :ada:`T_Derived_Extended_2`,
+the additional discriminant :ada:`A` is declared before the discriminants that
+match the parent type's discriminants.
+
+In addition, we may even use literals to specify the constraints for the parent
+type |mdash| as we're doing in the declaration of :ada:`T_Derived_Extended_3`.
+Also, we can use the same discriminant from the derived type for the
+constraints of the parent type |mdash| in the declaration of
+:ada:`T_Derived_Extended_4`, we use the :ada:`X` discriminant for both :ada:`L`
+and :ada:`M` discriminants of type :ada:`T`.
+
+
+Deriving with defaults
+^^^^^^^^^^^^^^^^^^^^^^
+
+If the discriminants of the parent type have default values, those default
+values are inherited by the derived type. Alternatively, we can set different
+default values.
+
+Let's see a code example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Defaults
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive := 1;
+          M : Positive := 2) is
+         null record;
+
+       type T_Derived is new T;
+
+       type T_Derived_2
+         (L : Positive := 1;
+          M : Positive := 3) is
+         new T (L => L, M => M);
+
+    end Derived_With_Discriminants;
+
+In this example, the derived type :ada:`T_Derived` has the same default values
+as the parent type :ada:`T`, namely :ada:`(L => 1, M => 2)`. For the derived
+type :ada:`T_Derived_2`, we're changing the value of :ada:`M` to 3 and keeping
+the same value for :ada:`L`.
+
+As we've seen before, instead of setting default values, we can set the
+constraints of the parent type in the declaration of the derived type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Defaults_Constraints
+
+    package Derived_With_Discriminants is
+
+       type T
+         (L : Positive := 1;
+          M : Positive := 2) is
+         null record;
+
+       type T_Derived_Constrainted is new T
+         (L => 1, M => 3);
+
+    end Derived_With_Discriminants;
+
+In this case, we're constraining the discriminants of the parent type to
+:ada:`(L => 1, M => 3)`. Note that :ada:`L` has the same value as the default
+value set for the parent type :ada:`T`.
+
+.. admonition:: For further reading...
+
+    In other contexts (such as
+    :ref:`record aggregates <Adv_Ada_Record_Aggregates>`, which we discuss in
+    another chapter), we could use the so-called
+    :ref:`box notation <Adv_Ada_Aggregates_Box_Notation>` to specify that we
+    want to use the default value. This, however, isn't possible with type
+    discriminants:
+
+    .. code:: ada compile_button manual_chop project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Defaults_Constraints_Box_Notation
+        :class: ada-expect-compile-error, nosyntax-check
+
+        !derived_with_discriminants.ads
+        package Derived_With_Discriminants is
+
+           type T
+             (L : Positive := 1;
+              M : Positive := 2) is
+             null record;
+
+           type T_Derived_Constraint is new T
+             (L => <>, M => 3);
+           --   ^^^^^^^
+           --  ERROR: cannot use default values
+           --         via box notation
+        end Derived_With_Discriminants;
+
+    Instead of using :ada:`<>`, we have to repeat the value explicitly.
 
 
 ..
@@ -1089,7 +2298,7 @@ so-called *current instance*.
     - Add link to Adv_Ada_Reference_Current_Instance section ("Access Types:
       Reference to current instance") once it's available.
 
-.. admonition:: Relevant topics
+.. admonition:: In the Ada Reference Manual
 
    - :arm22:`3.8 Record Types <3-8>`
 
