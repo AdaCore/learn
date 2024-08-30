@@ -163,7 +163,7 @@ Here is a simple main program that illustrates the approach.
    end Main;
 
 Object :ada:`Y` starts at the same address as :ada:`X` and has the same size,
-so all references to :ada:`X` and :ada:`Y` refer the same storage. The source
+so all references to :ada:`X` and :ada:`Y` refer to the same storage. The source
 code can manipulate that memory as either a signed integer or as an array of
 bits, including individual bit access, using the two object names. The compiler
 will ensure that every reference via :ada:`X` is compatible with the integer
@@ -230,7 +230,9 @@ compiler will reject any allocations.
 Given this access type declaration we can then instantiate
 :ada:`Ada.Unchecked_Conversion`. The resulting function name is a matter of
 style but is appropriate because the function allows us to treat an address as
-a pointer to an :ada:`Acceleration` value.
+a pointer to an :ada:`Acceleration` value. We aren't changing the address value,
+we're only providing another view of that value, which is why the function name
+is not :ada:`To_Acceleration_Pointer`.
 
 The following is the device driver routine for getting the scaled accelerations
 from the device. The type :ada:`Three_Axis_Accelerometer` is the device driver
@@ -380,7 +382,7 @@ using the header's record type and an access type designating that record type:
 
 Note that :ada:`pragma No_Strict_Aliasing` stops the compiler from doing some
 optimizations, based on the assumption of a lack of aliasing, that could cause
-unexpected results.
+unexpected results in this approach.
 
 .. code-block:: ada
 
@@ -456,7 +458,7 @@ of instantiations required over that of :ada:`Ada.Unchecked_Conversion`.
 (For more details on this generic package, please refer to the section on
 :ref:`access and address <Adv_Ada_Access_Address>`.)
 
-Because the package is defined by the language, the naïve user might think it
+Moreover, because that generic package is defined by the language, the naïve user might think it
 will work for all types. It might not. Unconstrained array types remain a
 potential problem. For that reason, the GNAT implementation issues a warning in
 such cases.
