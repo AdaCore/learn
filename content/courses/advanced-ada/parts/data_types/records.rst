@@ -1113,7 +1113,7 @@ association (:ada:`(L => 5, M => 6)`).
 Object size
 ^^^^^^^^^^^
 
-Discriminants can have an impact on the object size because we can set
+Discriminants can have an impact on the object size because we can set the
 discriminant to constraint a component of an
 :ref:`indefinite subtype <Adv_Ada_Definite_Indefinite_Subtypes>`. For example:
 
@@ -1225,7 +1225,7 @@ types |mdash| e.g. composite types such as record types |mdash| are illegal for
 discriminants. However, we can always use them indirectly by using access
 types. (We'll see an example later.)
 
-In addition to that, we can also a different kind of access types, namely
+In addition to that, we can also use a different kind of access types, namely
 :ref:`anonymous access-to-object subtypes <Adv_Ada_Anonymous_Access_To_Object_Types>`.
 This specific kind of discriminant is called
 :ref:`access discriminant <Adv_Ada_Anonymous_Access_Discriminants>`. We discuss
@@ -1391,7 +1391,7 @@ this topic later
 Default values
 ~~~~~~~~~~~~~~
 
-We can specify default values for discriminants. Note, however, that we can
+We can specify default values for discriminants. Note, however, that we must
 either specify default values for **all** discriminants of the discriminant
 part or for none of them. This contrasts with default values for subprogram
 parameters, where we can
@@ -1440,7 +1440,7 @@ discriminants of type :ada:`T`, so it has the discriminants
 values :ada:`(L => 7, M => 8)`, which are used instead of the default values.
 
 Note that we cannot set default values for nonlimited tagged types. The same
-applies to generic formal type. For example:
+applies to generic formal types. For example:
 
 .. todo::
 
@@ -1488,7 +1488,7 @@ Mutable subtypes
 
 An unconstrained discriminated subtype with defaults is called a mutable
 subtype, and a variable of such a subtype is called a mutable variable because
-the discriminants of such a variable can change. An important feature of
+the discriminants of such a variable can be changed. An important feature of
 mutable subtypes is that it allows for changing the discriminants of an object
 via assignments |mdash| in this case, no
 :ref:`discriminant check <Adv_Ada_Discriminant_Check>` is performed.
@@ -1526,7 +1526,7 @@ Let's see an example:
     end Show_Mutable_Subtype_Assignment;
 
 In this example, the :ada:`NM_2 := NM_1` assignment fails because both objects
-are of non-mutable subtype with different discriminants, so that the
+are of a non-mutable subtype with different discriminants, so that the
 discriminant check fails at runtime. However, the :ada:`M_2 := M_1` assignment
 is OK because both objects are mutable variables. In this case, this assignment
 changes the discriminants of :ada:`M_2` from :ada:`(L => 1, M => 2)` to
@@ -1805,7 +1805,7 @@ We may, however, rename the discriminants instead. For example, we could rename
 
     end Derived_With_Discriminants;
 
-Of course, if we use name association when declaring objects, we have to use
+Of course, if we use named association when declaring objects, we have to use
 the correct discriminant names:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_Renamed_Discriminants
