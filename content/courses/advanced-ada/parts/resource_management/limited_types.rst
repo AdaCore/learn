@@ -1543,7 +1543,7 @@ In this example, we see the declaration of the limited type :ada:`Rec`, which
 has the discriminant :ada:`L`. For objects of type :ada:`Rec`, we not only have
 the typical restrictions that
 :ref:`equality and assignment aren't available <Adv_Ada_Limited_Types_Assignments>`,
-but we also have the restriction that we wouldn't be able to assign objects
+but we also have the restriction that we won't be able to assign objects
 with different discriminants.
 
 .. todo::
@@ -1696,7 +1696,7 @@ Mutable subtypes and Limitedness
 
 As we've mentioned before, an unconstrained discriminated subtype with defaults
 is called a mutable subtype. An important feature of mutable subtypes is that
-it allows for changing the discriminants of an object, e.g. via assignments.
+it allows changing the discriminants of an object, e.g. via assignments.
 However, as we know, we cannot assign to objects of limited types. Therefore,
 in essence, a type should be nonlimited to be considered a mutable subtype.
 
