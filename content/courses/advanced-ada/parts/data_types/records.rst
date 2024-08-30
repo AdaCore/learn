@@ -889,8 +889,9 @@ discriminants without defaults are
 
 In this section, we discuss a couple of details about record discriminants that
 we haven't covered yet. Although the discussion will be restricted to
-record discriminants, keep in mind that tasks can also have discriminants.
-We'll focus on task discriminants in another chapter.
+record discriminants, keep in mind that tasks and protected types can also have
+discriminants. We'll focus on discriminants for tasks and protected types in
+separate chapters.
 
 .. todo::
 
@@ -1858,7 +1859,8 @@ When deriving types with discriminants, we may use a more constrained type for
 the discriminants of derived type. For example, if the discriminant :ada:`D` of
 the parent type is of :ada:`Integer` type, the corresponding discriminant of
 the derived type may use a constrained subtype such as :ada:`Natural` or
-:ada:`Positive`. For example:
+:ada:`Positive` |mdash| because both :ada:`Natural` and :ada:`Positive` are
+subtypes of type :ada:`Integer`. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Derived_Types_More_Constrained_Discriminants
 
