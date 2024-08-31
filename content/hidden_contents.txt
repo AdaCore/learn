@@ -1,5 +1,4 @@
 courses/advanced-ada/parts/resource_management/containers.rst
-courses/advanced-ada/parts/resource_management/controlled_types.rst
 courses/advanced-ada/parts/resource_management/memory_management.rst
 courses/advanced-ada/parts/resource_management/restrictions.rst
 courses/advanced-ada/parts/resource_management/standard_containers.rst
