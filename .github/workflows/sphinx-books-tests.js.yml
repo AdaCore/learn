@@ -76,6 +76,7 @@ jobs:
           frontend/dist/pdf_books
         if-no-files-found: error
         retention-days: 1
+        compression-level: 9
     - name: Build EPUB books including build/runtime output
       run: make HIDDEN_BOOKS="" HIDDEN_CONTENTS="" epub_books
     - name: Archive EPUB books in artifact
@@ -86,3 +87,4 @@ jobs:
           frontend/dist/epub_books
         if-no-files-found: error
         retention-days: 1
+        compression-level: 9
