@@ -134,7 +134,7 @@ In the above, we use :ada:`X'Address` to query the starting address of object
 
 We marked :ada:`X` as explicitly :ada:`aliased` because :ada:`Integer` is not
 a by-reference type. The :ada:`Address` attribute is not required to provide a
-useful result otherwise. (Maybe the compiler put :ada:`X` into a register, for
+useful result otherwise. (Maybe the compiler would have put :ada:`X` into a register, for
 example.) The compiler, seeing :ada:`'Address` applied, would probably do the
 right thing anyway, but this makes it certain.
 
@@ -168,6 +168,10 @@ code can manipulate that memory as either a signed integer or as an array of
 bits, including individual bit access, using the two object names. The compiler
 will ensure that every reference via :ada:`X` is compatible with the integer
 view, and every reference via :ada:`Y` is compatible with the array view.
+
+In the above example, we've ignored the endianess issue. If you wanted to change the
+sign bit, for example, or display the bits in the "correct" order, you'd need to
+know that detail.
 
 This expression of type-punning does not use an escape hatch but does achieve
 the effect.
@@ -288,9 +292,9 @@ sensitivity, returning all three in the mode-out record parameter.
    end Get_Accelerations;
 
 This procedure first reads the six bytes representing all three acceleration
-values into the array :ada:`Buffer`. (Procedure :ada:`Loc_IO_Read` is defined
-by the :ref:`ADT <Ada_Idioms_Abstract_Data_Types>`.) The constants
-:ada:`OUT_n_L` and :ada:`OUT_n_H` specify the low-order and high-order bytes
+values into the array :ada:`Buffer`. Procedure :ada:`Loc_IO_Read` is defined
+by the driver :ref:`ADT <Ada_Idioms_Abstract_Data_Types>`. The constants
+:ada:`OUT_n_L` and :ada:`OUT_n_H`, also defined by the driver, specify the low-order and high-order bytes
 requested for the given *n* axis. Then the declare blocks do the actual scaling
 and that's where the type punning is applied to the :ada:`Buffer` content.
 
@@ -300,7 +304,7 @@ The :ada:`X` acceleration is first in the buffer, so the address of
 :ada:`Buffer (0)` is converted. Likewise, the address of :ada:`Buffer (2)` is
 converted for the :ada:`Y` axis value, and for the :ada:`Z` value,
 :ada:`Buffer (4)` is converted. (We could have said :ada:`Buffer'Address` instead of
-:ada:`Buffer (0)`, they mean the same thing, but an explicit index seemed more
+:ada:`Buffer (0)'Address`, they mean the same thing, but an explicit index seemed more
 clear, given the need for the other indexes.)
 
 But we want the designated axis acceleration value, not the access value, so
