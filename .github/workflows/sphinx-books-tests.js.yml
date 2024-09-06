@@ -69,18 +69,22 @@ jobs:
     - name: Build PDF books including build/runtime output
       run: make HIDDEN_BOOKS="" HIDDEN_CONTENTS="" pdf_books
     - name: Archive PDF books in artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: learn-pdf-books
         path: |
           frontend/dist/pdf_books
+        if-no-files-found: error
         retention-days: 1
+        compression-level: 9
     - name: Build EPUB books including build/runtime output
       run: make HIDDEN_BOOKS="" HIDDEN_CONTENTS="" epub_books
     - name: Archive EPUB books in artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: learn-epub-books
         path: |
           frontend/dist/epub_books
+        if-no-files-found: error
         retention-days: 1
+        compression-level: 9
