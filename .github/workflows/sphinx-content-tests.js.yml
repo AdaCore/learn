@@ -56,7 +56,7 @@ jobs:
     - name: Build HTML content
       run: make HIDDEN_BOOKS="" HIDDEN_CONTENTS="" cleanall webpack-production sphinx-production
     - name: Archive HTML content in artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: learn-html
         path: |
