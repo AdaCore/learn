@@ -4,6 +4,9 @@ $frontend = <<-SHELL
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_20.x | bash -
 
+  # Generate list of installed packages
+  dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
+
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -23,7 +26,6 @@ $frontend = <<-SHELL
     --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
 
   # Force packages to be set as automatically installed
-  dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
   apt-mark auto $(cat /vagrant/vm_apt_installed.txt)
 
   # Get relevant information from configuration file
@@ -86,6 +88,9 @@ $epub = <<-SHELL
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_20.x | bash -
 
+  # Generate list of installed packages
+  dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
+
   # Install system deps
   DEBIAN_FRONTEND=noninteractive apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -123,7 +128,6 @@ $epub = <<-SHELL
     --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
 
   # Force packages to be set as automatically installed
-  dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
   apt-mark auto $(cat /vagrant/vm_apt_installed.txt)
 
   # Get relevant information from configuration file
