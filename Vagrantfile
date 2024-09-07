@@ -18,6 +18,14 @@ $frontend = <<-SHELL
       libjpeg-dev \
       make
 
+  # Install/check packages from list for reproducibility
+  DEBIAN_FRONTEND=noninteractive apt-get install \
+    --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+
+  # Force packages to be set as automatically installed
+  dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
+  apt-mark auto $(cat /vagrant/vm_apt_installed.txt)
+
   # Get relevant information from configuration file
   toolchain_config=/home/vagrant/toolchain.ini
   path_ada_toolchain_root=$(crudini --get $toolchain_config toolchain_path root)
@@ -109,6 +117,14 @@ $epub = <<-SHELL
       libx11-xcb-dev \
       wget \
       libc6-dev
+
+  # Install/check packages from list for reproducibility
+  DEBIAN_FRONTEND=noninteractive apt-get install \
+    --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+
+  # Force packages to be set as automatically installed
+  dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
+  apt-mark auto $(cat /vagrant/vm_apt_installed.txt)
 
   # Get relevant information from configuration file
   toolchain_config=/home/vagrant/toolchain.ini
@@ -210,6 +226,7 @@ Vagrant.configure("2") do |config|
     web.vm.synced_folder './content', '/vagrant/content'
 
     web.vm.provision "file", source: "./frontend/py_modules/code_projects/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
+    web.vm.provision "file", source: "./frontend/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
     web.vm.provision :shell, inline: $frontend
   end
 
@@ -221,6 +238,7 @@ Vagrant.configure("2") do |config|
     epub.vm.synced_folder './content', '/vagrant/content'
 
     epub.vm.provision "file", source: "./frontend/py_modules/code_projects/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
+    epub.vm.provision "file", source: "./frontend/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
     epub.vm.provision :shell, inline: $epub
   end
 
