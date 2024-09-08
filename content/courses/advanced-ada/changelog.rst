@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2024-08
+---------------
+
+- New chapter:
+
+    - :doc:`Controlled Types <parts/resource_management/controlled_types>`
+
+
 Release 2024-05
 ---------------
 
