@@ -300,7 +300,8 @@ do not offer an :ada:`Adjust` procedure.)
 
 The :wikipedia:`deep copy <Object_copying#Deep_copy>` of objects is a typical
 example where adjustments are necessary. When we assign an object :ada:`B` to
-an object :ada:`A`, we're essentially doing a shallow copy. If we have
+an object :ada:`A`, we're essentially doing a
+:wikipedia:`shallow copy <Object_copying#Shallow_copy>`. If we have
 references to other objects in the source object :ada:`B`, those references
 will be copied as well, so both target :ada:`A` and source :ada:`B` will be
 referring to the same objects. When performing a deep copy, however, we want
