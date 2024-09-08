@@ -151,16 +151,23 @@ class Widget {
     this.setTabbedView(tabbedView);
 
     tabSetting.addEventListener('change', () => {
-      let tabbedView = 'true';
-      if (!tabSetting.checked) {
-        tabbedView = 'false';
-      }
-      cookies.set('tabbed_view', tabbedView, {expires: 3650});
-      this.setTabbedView(tabSetting.checked);
+      if (window.confirm(Strings.RELOAD_CONFIRM_MSG)) {
+        let tabbedView = 'true';
+        if (!tabSetting.checked) {
+          tabbedView = 'false';
+        }
+        cookies.set('tabbed_view', tabbedView, {expires: 3650});
+        this.setTabbedView(tabSetting.checked);
 
-      // Current approach: just reload the page to
-      // set the correct theme for all widgets.
-      location.reload();
+        // Current approach: just reload the page to
+        // set the correct theme for all widgets.
+        location.reload();
+      }
+      else
+      {
+        // Revert if user chooses "no change"
+        tabSetting.checked = !tabSetting.checked;
+      }
     });
 
     this.initCompilerSwitches();
@@ -175,16 +182,23 @@ class Widget {
     this.setTheme(cookieTheme);
 
     themeSetting.addEventListener('change', () => {
-      let theme = 'light';
-      if (themeSetting.checked) {
-        theme = 'dark';
-      }
-      cookies.set('theme', theme, {expires: 3650});
-      this.setTheme(theme);
+      if (window.confirm(Strings.RELOAD_CONFIRM_MSG)) {
+        let theme = 'light';
+        if (themeSetting.checked) {
+          theme = 'dark';
+        }
+        cookies.set('theme', theme, {expires: 3650});
+        this.setTheme(theme);
 
-      // Current approach: just reload the page to
-      // set the correct theme for all widgets.
-      location.reload();
+        // Current approach: just reload the page to
+        // set the correct theme for all widgets.
+        location.reload();
+      }
+      else
+      {
+        // Revert if user chooses "no change"
+        themeSetting.checked = !themeSetting.checked;
+      }
     });
 
     const resetButton =

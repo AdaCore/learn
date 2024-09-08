@@ -5,6 +5,11 @@ export const RESET_CONFIRM_MSG =
 'Your changes will be lost after reset. ' +
 'Are you sure you want to reset the editor and the compiler options?';
 
+export const RELOAD_CONFIRM_MSG =
+'Changing this setting requires reloading the page: ' +
+'your changes will be lost. ' +
+'Are you sure you want to proceed?';
+
 export const DOWNLOAD_TOOLTIP = 'Download source files';
 export const DOWNLOAD_MAINTENANCE =
 'The download functionilty is currently undergoing maintenance';
