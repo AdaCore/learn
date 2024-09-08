@@ -1255,7 +1255,7 @@ assignment and not do anything.
 For more details about possible optimizations and compiler behavior, please
 refer to the :arm22:`Ada Reference Manual <7-6>` .
 
-In general, the advice is simply: use :ada:`Adjust` and :ada:`Finalize` solely
+In general, the advice is simple: use :ada:`Adjust` and :ada:`Finalize` solely
 for their intended purposes. In other words, don't implement extraneous
 side-effects into those procedures, as they might not be called at run-time.
 
