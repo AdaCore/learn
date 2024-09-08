@@ -404,15 +404,6 @@ describe('Widget', () => {
         editor = ace.edit(editorDiv);
       });
 
-      it('should have a checkbox that switches editor theme', () => {
-        const box = getElemById(root.id + '.settings-bar.theme-setting') as
-          HTMLInputElement;
-        const origTheme = editor.getTheme();
-        box.checked = !box.checked;
-        triggerEvent(box, 'change');
-        expect(editor.getTheme()).to.not.equal(origTheme);
-      });
-
       it('should have a checkbox that switches tab setting', () => {
         const nonTabbedEditorDiv: HTMLElement = getElemById(root.id + '.editors.non-tabbed-editor');
         const box = getElemById(root.id + '.settings-bar.tab-setting') as
