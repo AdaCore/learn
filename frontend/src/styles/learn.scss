@@ -160,6 +160,8 @@ pre.widget {
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    margin-bottom: 10px;
+
     button {
         background-color: inherit;
         float: left;
@@ -196,7 +198,6 @@ pre.widget {
     padding-left: 13px;
     display: block;
     margin-top: 0px;
-    margin-bottom: 10px;
 
     button {
         background-color: transparent;

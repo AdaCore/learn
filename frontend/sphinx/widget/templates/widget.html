@@ -11,19 +11,6 @@
     {% for f in w.files %}
         <div class="file" data-basename="{{ f.basename }}">{{ f.content }}</div>
     {% endfor %}
-    <div id="{{ w.id }}.tab" class="tab">
-        {% for t in w.files %}
-            <button id="{{ w.id }}.tab.{{ t.basename }}" class="tab-links">{{ t.basename }}</button>
-        {% endfor %}
-    </div>
-    <div id="{{ w.id }}.editors">
-        <div id="{{ w.id }}.editors.editor" class="editor-container"></div>
-        <div id="{{ w.id }}.editors.non-tabbed-editor" class="non-tabbed-editor-container" hidden>
-            {% for t in w.files %}
-                <div id="{{ w.id }}.editors.non-tabbed-editor.{{ t.basename }}" class="non-tabbed-links"></div>
-            {% endfor %}
-        </div>
-    </div>
     <div id="{{ w.id }}.settings-bar" class="settings-bar">
         <div class="dropdown-container settingsbar-item">
             <button class="dropdown-btn">
@@ -77,6 +64,19 @@
             <span class="fa fa-download"></span>
             Download
         </button>
+    </div>
+    <div id="{{ w.id }}.editors">
+        <div id="{{ w.id }}.editors.editor" class="editor-container"></div>
+        <div id="{{ w.id }}.editors.non-tabbed-editor" class="non-tabbed-editor-container" hidden>
+            {% for t in w.files %}
+                <div id="{{ w.id }}.editors.non-tabbed-editor.{{ t.basename }}" class="non-tabbed-links"></div>
+            {% endfor %}
+        </div>
+    </div>
+    <div id="{{ w.id }}.tab" class="tab">
+        {% for t in w.files %}
+            <button id="{{ w.id }}.tab.{{ t.basename }}" class="tab-links">{{ t.basename }}</button>
+        {% endfor %}
     </div>
     <div class="row output-row">
         <div id="{{ w.id }}.button-group" class="col-md-3 button-group">
