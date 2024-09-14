@@ -174,7 +174,7 @@ $epub = <<-SHELL
   gnat_prove_version=(${toolchain_versions_gnatprove})
   mkdir ${path_ada_toolchain_root}/gnatprove
   for tool_version in ${gnat_prove_version[@]}; do
-    echo Installing GNATprove $v
+    echo Installing GNATprove $tool_version
     wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-${tool_version}/gnatprove-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gnatprove.tar.gz && \
     mv gnatprove-* ${path_ada_toolchain_root}/gnatprove/${tool_version} && \
@@ -184,7 +184,7 @@ $epub = <<-SHELL
   gprbuild_version=(${toolchain_versions_gprbuild})
   mkdir ${path_ada_toolchain_root}/gprbuild
   for tool_version in ${gprbuild_version[@]}; do
-    echo Installing GPRbuild $v
+    echo Installing GPRbuild $tool_version
     wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-${tool_version}/gprbuild-x86_64-linux-${tool_version}.tar.gz && \
     tar xzf gprbuild.tar.gz && \
     mv gprbuild-* ${path_ada_toolchain_root}/gprbuild/${tool_version} && \
