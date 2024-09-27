@@ -61,7 +61,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements_frozen.txt
     - name: Run Webpack production
       run: make cleanall webpack-production
     - name: Run SPHINX content tests
