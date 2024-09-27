@@ -276,6 +276,7 @@
         button {
             color: $color-darktheme-tab-font;
             &:hover {
+                background-color: lighten($color-darktheme-theme-bg-dark, 30%);
                 color: $color-darktheme-tab-hover-font;
             }
             &.active {

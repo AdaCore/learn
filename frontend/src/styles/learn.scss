@@ -175,6 +175,7 @@ pre.widget {
         font-family: $mono-font;
         font-size: 13px;
         &:hover {
+            background-color: lighten($color-theme-bg-dark, 30%);
             color: $color-tab-hover-font;
             cursor: pointer;
         }
