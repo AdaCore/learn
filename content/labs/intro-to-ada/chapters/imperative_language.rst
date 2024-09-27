@@ -20,6 +20,11 @@ Hello World
 
     #. The application must display the message "Hello World!".
 
+**Remarks**:
+
+    #. The part that you have to modify is indicated by the
+       :ada:`--  Implement the application here!` comment in the source code.
+
 .. code:: ada lab=Imperative_Language.Hello_World
 
     --  START LAB IO BLOCK
@@ -55,6 +60,9 @@ Greetings
 **Remarks**:
 
     #. You can use the concatenation operator (:ada:`&`).
+
+    #. The part that you have to modify is indicated by the
+       :ada:`--  Implement the application here!` comment in the source code.
 
 .. code:: ada lab=Imperative_Language.Greetings
 
@@ -106,6 +114,35 @@ Positive Or Negative
         #. If ``X < 0``, it displays ``Negative``.
 
         #. If ``X = 0``, it displays ``Zero``.
+
+.. only:: builder_html
+
+    **Remarks**:
+
+        #. If you're using the tabbed editor view, you see the following
+           source-code tabs:
+
+            - :file:`classify_number.ads`: this tab has the specification of
+              the :ada:`Classify_Number` procedure;
+
+            - :file:`classify_number.adb`: this tab has the implementation
+              (body) of the :ada:`Classify_Number` procedure;
+
+            - :file:`main.adb`: this tab has the implementation (body) of the
+              :ada:`Main` test procedure.
+
+        #. You're supposed to edit the body of the :ada:`Classify_Number`
+           procedure.
+
+            - In the tabbed editor view, you should select the
+              :file:`classify_number.adb` tab by clicking on it.
+
+            - In the non-tabbed editor view, you should click on the body of
+              the :ada:`Classify_Number` procedure (which is the second entry).
+
+        #. The part that you have to modify is indicated by the
+           :ada:`--  Implement the application here!` comment in the source
+           code.
 
 .. code:: ada lab=Imperative_Language.Positive_Or_Negative
 
@@ -165,6 +202,23 @@ Numbers
 
     #. Given two integer numbers, :ada:`Display_Numbers` displays all numbers
        in the range starting with the smallest number.
+
+.. only:: builder_html
+
+    **Remarks**:
+
+        #. You're supposed to edit the body of the :ada:`Display_Numbers`
+           procedure.
+
+            - In the tabbed editor view, select the :file:`display_numbers.adb`
+              tab.
+
+            - In the non-tabbed editor view, click on the body of the
+              :ada:`Display_Numbers` procedure.
+
+        #. The part that you have to modify is indicated by the
+           :ada:`--  Implement the application here!` comment in the source
+           code.
 
 .. code:: ada lab=Imperative_Language.Numbers
 
