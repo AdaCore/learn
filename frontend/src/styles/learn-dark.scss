@@ -275,14 +275,18 @@
     .tab {
         button {
             color: $color-darktheme-tab-font;
+            border-left: 1px dotted $color-darktheme-widget-border;
+            border-right: 1px dotted $color-darktheme-widget-border;
+            border-bottom: 1px dotted $color-darktheme-widget-border;
             &:hover {
+                background-color: lighten($color-darktheme-theme-bg-dark, 30%);
                 color: $color-darktheme-tab-hover-font;
             }
             &.active {
                 color: $color-darktheme-tab-active-font;
-                border-top: 2px solid $color-darktheme-theme-bg-dark;
                 border-left: 1px solid $color-darktheme-widget-border;
                 border-right: 1px solid $color-darktheme-widget-border;
+                border-bottom: 3px solid $color-darktheme-theme-bg-dark;
             }
         }
     }

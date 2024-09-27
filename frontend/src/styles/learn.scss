@@ -174,15 +174,19 @@ pre.widget {
         color: $color-tab-font;
         font-family: $mono-font;
         font-size: 13px;
+        border-left: 1px dotted $color-widget-border;
+        border-right: 1px dotted $color-widget-border;
+        border-bottom: 1px dotted $color-widget-border;
         &:hover {
+            background-color: lighten($color-theme-bg-dark, 30%);
             color: $color-tab-hover-font;
             cursor: pointer;
         }
         &.active {
             color: $color-tab-active-font;
-            border-top: 2px solid $color-theme-bg-dark;
             border-left: 1px solid $color-widget-border;
             border-right: 1px solid $color-widget-border;
+            border-bottom: 3px solid $color-theme-bg-dark;
         }
     }
 }
