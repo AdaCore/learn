@@ -70,7 +70,7 @@ $frontend = <<-SHELL
   # Install learn deps
   python3 -m venv /vagrant/venv
   source /vagrant/venv/bin/activate
-  pip3 install -r /vagrant/frontend/requirements.txt
+  pip3 install -r /vagrant/frontend/requirements_frozen.txt
 
   # File system: increase number of user watches
   # Needed for npm
@@ -203,7 +203,7 @@ $epub = <<-SHELL
   # Install learn deps
   python3 -m venv /vagrant/venv
   source /vagrant/venv/bin/activate
-  pip3 install -r /vagrant/frontend/requirements.txt
+  pip3 install -r /vagrant/frontend/requirements_frozen.txt
 
   # File system: increase number of user watches
   # Needed for npm
