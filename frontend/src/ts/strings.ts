@@ -34,7 +34,8 @@ export const LAB_TEST_ACTUAL_LABEL = 'Received Output';
 export const LAB_TEST_STATUS_LABEL = 'Status';
 
 export const LAB_COMPLETE_LABEL = 'Lab completed successfully.';
-export const LAB_FAILED_LABEL = 'Lab failed.';
+export const LAB_FAILED_LABEL =
+'Lab failed. Click on the test cases below to see details.';
 
 export const EXIT_STATUS_LABEL = 'exit status';
 
