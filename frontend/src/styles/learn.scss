@@ -678,9 +678,9 @@ button {
         font-family: $icon-font;
         font-style: normal;
         font-weight: $icon-weight;
-        content: $plus-icon;
+        content: $triangle-right-icon;
         font-size: 16px;
-        color: $color-font-grey;
+        color: darkblue;
         float: right;
         margin-left: 5px;
     }
@@ -688,7 +688,7 @@ button {
         font-family: $icon-font;
         font-style: normal;
         font-weight: $icon-weight;
-        content: $minus-icon;
+        content: $triangle-down-icon;
         font-size: 16px;
         color: $color-font-grey;
         float: right;
