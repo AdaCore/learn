@@ -497,11 +497,24 @@ States #4
     #. Procedure :ada:`Set_Next` updates the machine's state with the next one
        in a *circular* manner:
 
-        - In most cases, the next state of :ada:`N` is simply the next number
-          (:ada:`N + 1`).
+        - In general, after a call to :ada:`Set_Next` for an integer variable
+          :ada:`N` (:ada:`Set_Next (N)`), the new value of :ada:`N` must be
+          the next number for that variable :ada:`N` (i.e.,
+          :ada:`N := N'Old + 1`).
 
-        - However, if the state is the last one (which is 2 for our machine),
-          the next state must be the first one (in our case: 0).
+            - In other words, a call to :ada:`Set_Next (N)` has the same effect
+              as :ada:`N := N + 1`.
+
+            - For example, after the statements :ada:`N := 1; Set_Next (N);`,
+              we have that :ada:`N = 2`.
+
+        - However, if the state is the last valid one for the machine (which,
+          for this exercise, it's 2), the next state must be the first valid
+          one (in this case: 0).
+
+            - In other words, for :ada:`N := 2; Set_Next (N);`, we have that
+              :ada:`N = 0`.
+
 
 **Remarks**:
 
