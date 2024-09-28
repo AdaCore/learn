@@ -1,17 +1,3 @@
-:orphan:
-
-Solutions
-=========
-
-.. role:: ada(code)
-   :language: ada
-
-.. role:: c(code)
-   :language: c
-
-.. role:: cpp(code)
-   :language: c++
-
 Object-oriented programming
 ---------------------------
 
@@ -284,4 +270,3 @@ Online Store
 
        Check (Test_Case_Index'Value (Argument (1)));
     end Main;
-
