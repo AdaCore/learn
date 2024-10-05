@@ -2133,7 +2133,7 @@ the :ada:`Simple_Record` type from previous examples. In this version of the
 :ada:`Unconstrained_Types` package, we're adding a :ada:`Reset` procedure for
 the discriminated record type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Constrained_Attribute
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Constrained_Attribute
 
     package Unconstrained_Types is
 
@@ -2203,7 +2203,7 @@ specify any constraints, so that it takes the default value
 (:ada:`Extended => False`).  In the declaration of :ada:`R2`, however, we
 explicitly set :ada:`Extended` to :ada:`False`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Constrained_Attribute
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Constrained_Attribute
 
     with Ada.Text_IO;         use Ada.Text_IO;
 
