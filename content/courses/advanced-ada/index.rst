@@ -5,6 +5,8 @@
 :prev_state: False
 :next_state: False
 
+.. _Advanced_Ada_Course_Index:
+
 Advanced Journey With Ada: A Flight In Progress
 ===============================================
 
