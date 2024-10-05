@@ -1071,11 +1071,15 @@ component :ada:`Arr`. Note that the same discriminant part must appear in both
 :ref:`the partial and the full view <Adv_Ada_Type_View>` of type :ada:`T`.
 
 
+.. _Adv_Ada_Record_Discriminants_Object_Declaration:
+
 Object declaration
 ~~~~~~~~~~~~~~~~~~
 
 As we've already seen, we declare objects of a type :ada:`T` with a
 discriminant :ada:`D` by specifying the actual value of discriminant :ada:`D`.
+This is called a
+:ref:`discriminant constraint <Adv_Ada_Record_Discriminant_Constraints>`.
 For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Objects_Discriminants
@@ -2122,6 +2126,94 @@ operations related to discriminants |mdash| more specifically, the
    - :arm:`3.7.1 Discriminant Constraints <3-7-1>`
 
 
+.. _Adv_Ada_Record_Discriminant_Constraints:
+
+Discriminant constraints
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we discussed before, when
+:ref:`declaring an object with a discriminant <Adv_Ada_Record_Discriminants_Object_Declaration>`,
+we have to specify the values of the all discriminants |mdash| unless, of
+course, those discriminants have a
+:ref:`default value <Adv_Ada_Record_Discriminants_Default_Values>`. The values
+we specify for the discriminants are called discriminant constraints.
+
+Let's revisit the code example we've seen earlier on:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Discriminant_Constraint
+
+    package Recs is
+
+       type T (L : Positive;
+               M : Positive) is
+         null record;
+
+    end Recs;
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       A : T (L => 5, M => 6);
+       B : T (7, 8);
+       C : T (7, M => 8);
+    begin
+       null;
+    end Show_Object_Declaration;
+
+Here, :ada:`L => 5, M => 6` (for object :ada:`A`) are named constraints, while
+:ada:`7, 8` (for object :ada:`B`) are positional constraints.
+
+It's possible to use both positional and named constraints, as we do for object
+:ada:`C`: :ada:`7, M => 8`. In this case, the positional associations must
+precede the named associations.
+
+In the case of named constraints, we can use multiple selector names:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Discriminant_Constraint
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       A : T (L | M => 5);
+       --     ^^^^^
+       --  multiple selector names
+    begin
+       null;
+    end Show_Object_Declaration;
+
+This is only possible, however, if those named discriminants are all of the
+same type. (In this case, :ada:`L` and :ada:`M` are both of :ada:`Positive`
+subtype.)
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.7.1 Discriminant Constraints <3-7-1>`
+
+
+Discriminant constraint in subtypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can use discriminant constraints in the declaration of subtypes. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Discriminant_Constraint
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       subtype T_5_6 is T (L => 5, M => 6);
+       --                  ^^^^^^^^^^^^^^
+       --  discriminant constraints for subtype
+
+       A : T_5_6;
+    begin
+       null;
+    end Show_Object_Declaration;
+
+In this example, we use the named discriminant constraints
+:ada:`L => 5, M => 6` in the declaration of the subtype :ada:`T_5_6`.
+
+
 .. _Adv_Ada_Constrained_Attribute:
 
 Constrained Attribute
@@ -2320,6 +2412,7 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.7.2 Operations of Discriminated Types <3-7-2>`
+
 
 
 ..
