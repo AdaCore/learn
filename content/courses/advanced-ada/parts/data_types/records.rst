@@ -2122,6 +2122,8 @@ operations related to discriminants |mdash| more specifically, the
    - :arm:`3.7.1 Discriminant Constraints <3-7-1>`
 
 
+.. _Adv_Ada_Constrained_Attribute:
+
 Constrained Attribute
 ~~~~~~~~~~~~~~~~~~~~~
 
