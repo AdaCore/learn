@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2024-09
+---------------
+
+- New section:
+
+    - :ref:`Record Discriminants <Adv_Ada_Record_Discriminants>`
+
+
 Release 2024-08
 ---------------
 
