@@ -2108,20 +2108,15 @@ value set for the parent type :ada:`T`.
     Instead of using :ada:`<>`, we have to repeat the value explicitly.
 
 
-..
-    TO BE DONE:
+Discriminant constraints and operations
+---------------------------------------
 
-    Discriminant constraints and operations
-    ---------------------------------------
 
-    .. admonition:: In the Ada Reference Manual
+.. admonition:: In the Ada Reference Manual
 
-        - :arm:`3.7.1 Discriminant Constraints <3-7-1>`
+   - :arm:`3.7.1 Discriminant Constraints <3-7-1>`
 
-    .. todo::
 
-        - Discriminant constraint
-        - (MOVE: Constrained Attribute)
 
 
 ..
