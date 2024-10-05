@@ -2108,6 +2108,8 @@ value set for the parent type :ada:`T`.
     Instead of using :ada:`<>`, we have to repeat the value explicitly.
 
 
+.. _Adv_Ada_Record_Discriminant_Constraints_Operations:
+
 Discriminant constraints and operations
 ---------------------------------------
 
