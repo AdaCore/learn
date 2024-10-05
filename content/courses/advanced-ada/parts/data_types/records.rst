@@ -2128,10 +2128,46 @@ Constrained Attribute
 ~~~~~~~~~~~~~~~~~~~~~
 
 We can use the :ada:`Constrained` attribute to verify whether an object of
-discriminated type is constrained or not. Let's start our discussion by reusing
-the :ada:`Simple_Record` type from previous examples. In this version of the
-:ada:`Unconstrained_Types` package, we're adding a :ada:`Reset` procedure for
-the discriminated record type:
+discriminated type is constrained or not. Let's look at a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Simple_Constrained_Attribute
+
+    package Recs is
+
+       type T (L : Positive := 1) is
+         null record;
+
+    end Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Recs;        use Recs;
+
+    procedure Show_Constrained_Attribute is
+       Constr   : T (L => 5);
+       --            ^^^^^^ constrained.
+       Unconstr : T;
+       --         ^ unconstrained;
+       --           using defaults.
+    begin
+       Put_Line ("Constr'Constrained:   "
+                 & Constr'Constrained'Image);
+       Put_Line ("Unconstr'Constrained: "
+                 & Unconstr'Constrained'Image);
+    end Show_Constrained_Attribute;
+
+As the :ada:`Constrained` attribute indicates, the :ada:`Constr` object is
+constrained (by the :ada:`L => 5` discriminant constraint), while the
+:ada:`Unconstr` object is unconstrained. Note that, even though :ada:`Unconstr`
+is using the default value for :ada:`L` |mdash| which would correspond to the
+discriminant constraint :ada:`L => 1` |mdash| the object itself hasn't been
+constraint at its declaration.
+
+Let's continue our discussion with a more complex example by reusing
+the :ada:`Unconstrained_Types` package that we declared in a
+:ref:`previous section <Adv_Ada_Definite_Indefinite_Subtypes>`. In this
+version of the package, we're adding a :ada:`Reset` procedure for the
+discriminated record type :ada:`Simple_Record`:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Constrained_Attribute
 
