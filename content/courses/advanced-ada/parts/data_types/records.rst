@@ -2113,6 +2113,9 @@ value set for the parent type :ada:`T`.
 Discriminant constraints and operations
 ---------------------------------------
 
+In this section, we discuss some details about discriminant constraints and
+operations related to discriminants |mdash| more specifically, the
+:ada:`Constrained` attribute.
 
 .. admonition:: In the Ada Reference Manual
 
