@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2024-09
+---------------
+
+- New section:
+
+    - :ref:`Record Discriminants <Adv_Ada_Record_Discriminants>`
+
+
 Release 2024-08
 ---------------
 
@@ -32,7 +40,7 @@ Release 2024-04
 Release 2024-03
 ---------------
 
-- New chapters:
+- New chapter:
 
     - :doc:`Records <parts/data_types/records>`
 
@@ -71,7 +79,7 @@ Release 2023-12
 Release 2023-07
 ---------------
 
-- New sections:
+- New section:
 
     - :ref:`Addresses <Adv_Ada_Addresses>`
 
