@@ -2124,19 +2124,17 @@ value set for the parent type :ada:`T`.
         - (MOVE: Constrained Attribute)
 
 
-..
-    TO BE DONE:
 
-    Unknown discriminants
-    ---------------------
+Unknown discriminants
+---------------------
 
-    .. admonition:: In the Ada Reference Manual
 
-        - :arm:`3.7 Discriminants <3-7>`
 
-    .. todo::
 
-        - Complete section!
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`3.7 Discriminants <3-7>`
+
 
 
 ..
