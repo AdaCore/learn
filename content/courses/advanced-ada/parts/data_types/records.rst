@@ -1588,6 +1588,8 @@ Derived types and subtypes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As expected, we may derive types with discriminants or declare subtypes of it.
+However, there are a couple of details associated with this, which we discuss
+now.
 
 Subtypes
 ^^^^^^^^
