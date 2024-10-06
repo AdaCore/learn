@@ -2415,19 +2415,17 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 
 
 
-..
-    TO BE DONE:
 
-    Unknown discriminants
-    ---------------------
+Unknown discriminants
+---------------------
 
-    .. admonition:: In the Ada Reference Manual
 
-        - :arm:`3.7 Discriminants <3-7>`
 
-    .. todo::
 
-        - Complete section!
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`3.7 Discriminants <3-7>`
+
 
 
 ..
