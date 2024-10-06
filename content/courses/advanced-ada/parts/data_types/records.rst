@@ -2124,6 +2124,7 @@ value set for the parent type :ada:`T`.
         - (MOVE: Constrained Attribute)
 
 
+.. _Adv_Ada_Unknown_Discriminants:
 
 Unknown discriminants
 ---------------------
