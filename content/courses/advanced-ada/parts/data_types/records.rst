@@ -963,13 +963,9 @@ example:
 An unknown discriminant part is represented by :ada:`(<>)` in the partial view
 |mdash| this is basically the so-called *box notation* :ada:`<>` (also known as
 *box compound delimiter*) in parentheses. We discuss unknown discriminant parts
-and their peculiarities later on in this chapter. In this section, we mainly
-focus on known discriminants.
-
-.. todo::
-
-    Add link to section on unknown discriminant parts once it's available.
-
+and their peculiarities
+:ref:`later on in this chapter <Adv_Ada_Unknown_Discriminants>`. In this
+section, we mainly focus on known discriminants.
 
 We've already seen examples of known discriminants in previous chapters. In
 simple terms, known discriminants are composed by one or more discriminant
