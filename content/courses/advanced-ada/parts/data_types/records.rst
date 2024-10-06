@@ -2515,6 +2515,96 @@ becomes an untagged private type.
    - :arm:`3.7 Discriminants <3-7>`
 
 
+.. _Adv_Ada_Unknown_Discriminants_Object_Declaration:
+
+Object declaration
+~~~~~~~~~~~~~~~~~~
+
+Now, let's talk about objects of types with unknown discriminants. Consider
+the :ada:`Rec` type below:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Object_Declaration
+
+    package Unknown_Discriminants is
+
+       type Rec (<>) is private;
+
+    private
+
+       type Rec is
+       record
+          I : Integer;
+       end record;
+
+    end Unknown_Discriminants;
+
+We cannot declare objects of type :ada:`Rec` *directly*, as this type is
+:ref:`indefinite <Adv_Ada_Definite_Indefinite_Subtypes>`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Object_Declaration
+    :class: ada-expect-compile-error
+
+    with Unknown_Discriminants;
+    use  Unknown_Discriminants;
+
+    procedure Show_Object_Declaration is
+       A : Rec;
+    begin
+       null;
+    end Show_Object_Declaration;
+
+Because the type is indefinite, it requires explicit initialization |mdash| we
+can do this by introducing a subprogram that initializes the type. In our
+code example, we can implement a simple :ada:`Init` function for this type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Object_Declaration
+
+    package Unknown_Discriminants is
+
+       type Rec (<>) is private;
+
+       function Init return Rec;
+
+    private
+
+       type Rec is
+       record
+          I : Integer;
+       end record;
+
+       function Init return Rec is
+         ((I => 0));
+
+    end Unknown_Discriminants;
+
+    with Unknown_Discriminants;
+    use  Unknown_Discriminants;
+
+    procedure Show_Constructor_Function is
+       R : Rec := Init;
+    begin
+       null;
+    end Show_Constructor_Function;
+
+In the :ada:`Show_Constructor_Function` procedure from this
+example, we call the :ada:`Init` function to initialize the :ada:`R` object in
+its declaration (of :ada:`Rec` type). Note that for this specific type, this is
+the only possible way to declare the :ada:`R` object. In fact, compilation
+fails if we write :ada:`R : Rec;`.
+
+Using a private type with unknown discriminants is an important Ada idiom, as
+we gain extra control over its initialization. For example, if we have to
+ensure that certain components of the private record are initialized when an
+object is being declared, we can perform this initialization in the :ada:`Init`
+function |mdash| instead of just hoping that an initialization function is
+called for this object at some point. Also, if further information is needed to
+initialize an object, we can add parameters to the :ada:`Init` function,
+thereby forcing the user to provide this information.
+
+For even more control over objects, we can use
+:ref:`limited types with unknown discriminants <Adv_Ada_Limited_Types_Unknown_Discriminants>`.
+
+
 .. _Adv_Ada_Unknown_Discriminants_Partial_Full_View:
 
 Partial and full view
