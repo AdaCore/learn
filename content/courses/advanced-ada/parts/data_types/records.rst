@@ -2448,7 +2448,7 @@ Note that we can only use an unknown discriminant part in the
 type:
 
 .. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Wrong_Full_View
-    :class: ada-expect-compile-error
+    :class: nosyntax-check, ada-expect-compile-error
 
     !unknown_discriminants.ads
     package Unknown_Discriminants is
