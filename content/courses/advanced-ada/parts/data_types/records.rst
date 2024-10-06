@@ -2415,6 +2415,7 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 
 
 
+.. _Adv_Ada_Unknown_Discriminants:
 
 Unknown discriminants
 ---------------------
