@@ -2835,6 +2835,84 @@ requires explicit initialization, even though its parent type
    - :arm:`3.7 Discriminants <3-7>`
 
 
+.. _Adv_Ada_Unconstrained_Subtypes:
+
+Unconstrained subtypes
+----------------------
+
+A subtype is called an unconstrained subtype if its type has unknown
+discriminants. Consider a simple :ada:`Rec` type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Unconstrained_Subtype
+
+    package Unknown_Discriminants is
+
+       type Rec (<>) is private;
+
+    private
+
+       type Rec is null record;
+
+    end Unknown_Discriminants;
+
+A subtype of :ada:`Rec` type is unconstrained:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Unconstrained_Subtype
+
+    package Unknown_Discriminants.Children is
+
+       subtype Rec_Unconstrained is Rec;
+
+    end Unknown_Discriminants.Children;
+
+In this example, :ada:`Rec_Unconstrained` is an unconstrained subtype because
+it's derived from the :ada:`Rec` type. We can verify this by triggering a
+compilation error:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Type
+    :class: ada-expect-compile-error
+
+    with Unknown_Discriminants.Children;
+    use  Unknown_Discriminants.Children;
+
+    procedure Show_Object_Declaration is
+       A : Rec_Unconstrained;
+    begin
+       null;
+    end Show_Object_Declaration;
+
+In addition, if we declare a subtype based on a type that allows range, index,
+or discriminant constraints, but we don't constraint the subtype, this subtype
+is also considered an unconstrained subtype. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Other_Unconstrained_Subtypes
+
+    package Unconstrained_Subtypes is
+
+       type Arr is
+         array (Positive range <>) of
+           Integer;
+
+       type Rec (L : Positive) is
+         null record;
+
+       subtype Arr_Sub is Arr;
+       --                 ^^^
+       --  no constraints
+
+       subtype Rec_Sub is Rec;
+       --                 ^^^
+       --  no constraints
+
+    end Unconstrained_Subtypes;
+
+In this example, :ada:`Arr_Sub` and :ada:`Rec_Sub` are unconstrained subtypes.
+
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`3.2 Types and Subtypes <3-2>`
+
+
 ..
     TO BE DONE:
 
