@@ -906,6 +906,8 @@ topic later in this chapter.
    - :arm:`3.7 Discriminants <3-7>`
 
 
+.. _Adv_Ada_Known_Unknown_Discriminant_Parts:
+
 Known and unknown discriminant parts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
