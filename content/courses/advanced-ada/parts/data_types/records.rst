@@ -2422,13 +2422,331 @@ the value of the :ada:`Extended` discriminant). Therefore, with the call to
 Unknown discriminants
 ---------------------
 
+As we've seen :ref:`previously <Adv_Ada_Known_Unknown_Discriminant_Parts>`, a
+type with discriminants can have known discriminants or unknown discriminants.
+In this section, we focus on unknown discriminants. Because the discriminants
+are unknown, this is an
+:ref:`indefinite type <Adv_Ada_Definite_Indefinite_Subtypes>`.
+Let's start with a simple example:
 
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Simple_Example
 
+    package Unknown_Discriminants is
+
+       type T_Unknown_Discr (<>) is
+       --                   ^^^^
+       --   Unknown discriminant part
+         private;
+
+    private
+
+       type T_Unknown_Discr is
+         null record;
+
+    end Unknown_Discriminants;
+
+Note that we can only use an unknown discriminant part in the
+:ref:`partial view <Adv_Ada_Type_View>`; we cannot use it in the full view of a
+type:
+
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Wrong_Full_View
+    :class: ada-expect-compile-error
+
+    !unknown_discriminants.ads
+    package Unknown_Discriminants is
+
+       type T_Unknown_Discr (<>) is
+         null record;
+
+    end Unknown_Discriminants;
+
+To be more precise, an unknown discriminant part can only be used in the
+declaration of a private type, a private extension or an
+:ref:`incomplete type <Adv_Ada_Incomplete_Types>`. In addition, as we'll see in
+another chapter, it can also be used in the generic equivalents: generic
+private types, generic private extensions, generic incomplete types, and formal
+derived types.
+
+.. todo::
+
+    Add link to section on unknown discriminant parts for generics once it's
+    available.
+
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Simple_Example
+
+    package Unknown_Discriminants is
+
+       --   Private type
+       type Rec (<>) is
+         private;
+
+       --   Tagged private type
+       type Tagged_Rec (<>) is
+         tagged private;
+
+       --   Incomplete type
+       type T_Incomplete (<>);
+
+       type T_Incomplete (<>) is
+         private;
+
+    private
+
+       type Rec is
+         null record;
+
+       type Tagged_Rec is
+         tagged null record;
+
+       type T_Incomplete is
+         null record;
+
+    end Unknown_Discriminants;
+
+In this example, we have three forms of private types using an unknown
+discriminant part: an untagged private type (:ada:`Rec`), a tagged type
+(:ada:`Tagged_Rec`) and an incomplete type (:ada:`T_Incomplete`) that
+becomes an untagged private type.
 
 .. admonition:: In the Ada Reference Manual
 
    - :arm:`3.7 Discriminants <3-7>`
 
+
+.. _Adv_Ada_Unknown_Discriminants_Partial_Full_View:
+
+Partial and full view
+~~~~~~~~~~~~~~~~~~~~~
+
+As we've just seen, if we declare a type with an unknown discriminant part, we
+can only use it in the partial view. In the full view. we cannot use an unknown
+discriminant part, but have to use either no discriminants or known
+discriminants. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Partial_Full_View
+
+    package Unknown_Discriminants is
+
+       type Rec_No_Discr (<>) is private;
+
+       type Rec_Known_Discr (<>) is private;
+
+    private
+
+       type Rec_No_Discr is null record;
+
+       type Rec_Known_Discr
+         (L : Positive) is null record;
+
+    end Unknown_Discriminants;
+
+In this example, :ada:`Rec_No_Discr` has no discriminants in its full
+view, while :ada:`Rec_Known_Discr` has the discriminant :ada:`L`.
+
+In addition, the full view can be an (unconstrained) array type as well:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Partial_Full_View
+
+    package Unknown_Discriminants is
+
+       type Arr (<>) is private;
+
+    private
+
+       type Arr is
+         array (Positive range <>)
+           of Integer;
+
+    end Unknown_Discriminants;
+
+Here, the full view of :ada:`Arr` is an array type.
+
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`3.7 Discriminants <3-7>`
+
+
+.. _Adv_Ada_Unknown_Discriminants_Derived_Types:
+
+Derived types
+~~~~~~~~~~~~~
+
+As expected, we can derive from types with unknown discriminants. Consider the
+following package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Type
+
+    package Unknown_Discriminants is
+
+       type Rec (<>) is private;
+
+    private
+
+       type Rec is null record;
+
+    end Unknown_Discriminants;
+
+We can then declare the :ada:`Derived_Rec` type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Type
+
+    package Unknown_Discriminants.Children is
+
+       type Derived_Rec is
+         new Rec;
+
+    end Unknown_Discriminants.Children;
+
+Note that :ada:`Derived_Rec` has unknown discriminants, even though we're not
+explicitly using an unknown discriminant part (:ada:`(<>)`) in its declaration.
+(In fact, we're not allowed to use an unknown discriminant part in this case.)
+Therefore, declaring objects of this type directly isn't possible:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Type
+    :class: ada-expect-compile-error
+
+    with Unknown_Discriminants.Children;
+    use  Unknown_Discriminants.Children;
+
+    procedure Show_Object_Declaration is
+       A : Derived_Rec;
+    begin
+       null;
+    end Show_Object_Declaration;
+
+Deriving from tagged types
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can also derive from tagged types with unknown discriminants. Consider the
+following package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Tagged_Type
+
+    package Unknown_Discriminants is
+
+       type Rec (<>) is tagged private;
+
+    private
+
+       type Rec is tagged null record;
+
+    end Unknown_Discriminants;
+
+We can derive from the :ada:`Rec` type. In this case, however, we can use
+an unknown discriminant part, a known discriminant part, or no discriminants:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Tagged_Type
+
+    package Unknown_Discriminants.Children is
+
+       type Derived_Rec_Unknown_Discr (<>) is
+         new Rec with private;
+
+       type Derived_Rec_Known_Discr (L : Positive) is
+         new Rec with private;
+
+       type Derived_Rec_No_Discr is
+         new Rec with private;
+
+    private
+
+       type Derived_Rec_Unknown_Discr is
+         new Rec with null record;
+
+       type Derived_Rec_Known_Discr (L : Positive) is
+         new Rec with null record;
+
+       type Derived_Rec_No_Discr is
+         new Rec with null record;
+
+    end Unknown_Discriminants.Children;
+
+In this example, we declare :ada:`Derived_Rec_Unknown_Discr` with an unknown
+discriminant part, :ada:`Derived_Rec_Known_Discr` with a known discriminant
+part, and :ada:`Derived_Rec_No_Discr` with no discriminants.
+
+As expect, :ada:`Derived_Rec_Unknown_Discr` has unknown discriminants because
+it has an unknown discriminant part. In the case of
+:ada:`Derived_Rec_No_Discr`, which has no discriminants, we're deriving the
+unknown discriminants of :ada:`Rec`, so it also has unknown discriminants.
+In contrast, because :ada:`Derived_Rec_Known_Discr` has a known discriminant
+part, those discriminants are overriding the unknown discriminants of the
+parent type :ada:`Rec`. Therefore, we can declare objects of
+:ada:`Derived_Rec_Known_Discr` type without explicit initialization:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Tagged_Type
+    :class: ada-expect-compile-error
+
+    with Unknown_Discriminants.Children;
+    use  Unknown_Discriminants.Children;
+
+    procedure Show_Object_Declaration is
+       A : Derived_Rec_Unknown_Discr;
+       --  ERROR: unknown discriminants
+       --         because of the type's
+       --         unknown discriminant part
+
+       B : Derived_Rec_Known_Discr (1);
+       --  OK: known discriminants
+
+       C : Derived_Rec_No_Discr;
+       --  ERROR: unknown discriminants
+       --         because of parent type's
+       --         unknown discriminant part
+    begin
+       null;
+    end Show_Object_Declaration;
+
+As we can see, we can only directly declare objects of type
+:ada:`Derived_Rec_Known_Discr` because it has known discriminants, while the
+other two derived types have unknown discriminants |mdash| which are explicitly
+specified (:ada:`Derived_Rec_Unknown_Discr`) or implicitly derived from the
+parent (:ada:`Derived_Rec_No_Discr`).
+
+Note that the parent type :ada:`Rec` had a requirement for explicit
+initialization. By using known discriminants in the declaration of
+:ada:`Derived_Rec_Known_Discr`, we're removing this requirement for the derived
+type.
+
+The contrary is also true: we can derive a type with known discriminants and
+use an unknown discriminant part:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Tagged_Type
+    :class: ada-expect-compile-error
+
+    package Unknown_Discriminants.Children.Grand is
+
+       type Grand_Rec_Unknown_Discr (<>) is
+         new Derived_Rec_Known_Discr (1) with private;
+
+    private
+
+       type Grand_Rec_Unknown_Discr is
+         new Derived_Rec_Known_Discr (1) with null record;
+
+    end Unknown_Discriminants.Children.Grand;
+
+    with Unknown_Discriminants.Children.Grand;
+    use  Unknown_Discriminants.Children.Grand;
+
+    procedure Show_Object_Declaration is
+       A : Grand_Rec_Unknown_Discr;
+       --  ERROR: unknown discriminants
+       --         because of the type's
+       --         unknown discriminant part
+    begin
+       null;
+    end Show_Object_Declaration;
+
+In this example, :ada:`Grand_Rec_Unknown_Discr` has unknown discriminants and
+requires explicit initialization, even though its parent type
+:ada:`Derived_Rec_Known_Discr` has known discriminants.
+
+.. admonition:: In the Ada Reference Manual
+
+   - :arm:`3.7 Discriminants <3-7>`
 
 
 ..
