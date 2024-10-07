@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` High
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`uses_profile:jorvik`
+:rule:`uses_profile:jorvik` (supplied with document)
 
 **Mutually Exclusive** :math:`\rightarrow` CON01
 

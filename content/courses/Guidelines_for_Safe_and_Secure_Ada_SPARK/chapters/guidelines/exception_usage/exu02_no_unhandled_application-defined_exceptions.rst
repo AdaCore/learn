@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Unhandled_Exceptions`
+:rule:`Unhandled_Exceptions` (supplied with document)
 
 +++++++++++
 Reference

@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` High, as retrofit can be extensive
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Visible_Components`
+:rule:`Visible_Components` (builtin rule)
 
 +++++++++++
 Reference
