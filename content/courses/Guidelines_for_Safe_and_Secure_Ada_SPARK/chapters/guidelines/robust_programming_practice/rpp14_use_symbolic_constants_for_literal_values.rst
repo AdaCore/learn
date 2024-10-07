@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Numeric_Literals`
+:rule:`Numeric_Literals` (builtin rule)
 
 +++++++++++
 Reference

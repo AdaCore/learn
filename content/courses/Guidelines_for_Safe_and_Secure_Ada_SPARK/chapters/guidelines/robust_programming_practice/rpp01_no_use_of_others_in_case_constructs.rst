@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`OTHERS_In_CASE_Statements`
+:rule:`OTHERS_In_CASE_Statements` (builtin rule)
 
 +++++++++++
 Reference

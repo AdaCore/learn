@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`OTHERS_In_Exception_Handlers`
+:rule:`OTHERS_In_Exception_Handlers` (builtin rule)
 
 +++++++++++
 Reference
