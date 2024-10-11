@@ -2392,7 +2392,7 @@ Running the code now generates a runtime exception:
 
     raised CONSTRAINT_ERROR : unconstrained_types.adb:12 discriminant check failed
 
-This exception is raised during the call to :ada:`Reset (R2)`. As see in the
+This exception is raised during the call to :ada:`Reset (R2)`. As we see in the
 code, :ada:`R2` is constrained. Also, its :ada:`Extended` discriminant is set
 to :ada:`False`, which means that it doesn't have the :ada:`V_Float`
 component. Therefore, :ada:`R2` is not compatible with the constant
