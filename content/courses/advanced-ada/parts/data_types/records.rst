@@ -1071,11 +1071,15 @@ component :ada:`Arr`. Note that the same discriminant part must appear in both
 :ref:`the partial and the full view <Adv_Ada_Type_View>` of type :ada:`T`.
 
 
+.. _Adv_Ada_Record_Discriminants_Object_Declaration:
+
 Object declaration
 ~~~~~~~~~~~~~~~~~~
 
 As we've already seen, we declare objects of a type :ada:`T` with a
 discriminant :ada:`D` by specifying the actual value of discriminant :ada:`D`.
+This is called a
+:ref:`discriminant constraint <Adv_Ada_Record_Discriminant_Constraints>`.
 For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants.Objects_Discriminants
@@ -2108,20 +2112,307 @@ value set for the parent type :ada:`T`.
     Instead of using :ada:`<>`, we have to repeat the value explicitly.
 
 
-..
-    TO BE DONE:
+.. _Adv_Ada_Record_Discriminant_Constraints_Operations:
 
-    Discriminant constraints and operations
-    ---------------------------------------
+Discriminant constraints and operations
+---------------------------------------
 
-    .. admonition:: In the Ada Reference Manual
+In this section, we discuss some details about discriminant constraints and
+operations related to discriminants |mdash| more specifically, the
+:ada:`Constrained` attribute.
 
-        - :arm:`3.7.1 Discriminant Constraints <3-7-1>`
+.. admonition:: In the Ada Reference Manual
 
-    .. todo::
+   - :arm:`3.7.1 Discriminant Constraints <3-7-1>`
 
-        - Discriminant constraint
-        - (MOVE: Constrained Attribute)
+
+.. _Adv_Ada_Record_Discriminant_Constraints:
+
+Discriminant constraints
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we discussed before, when
+:ref:`declaring an object with a discriminant <Adv_Ada_Record_Discriminants_Object_Declaration>`,
+we have to specify the values of the all discriminants |mdash| unless, of
+course, those discriminants have a
+:ref:`default value <Adv_Ada_Record_Discriminants_Default_Values>`. The values
+we specify for the discriminants are called discriminant constraints.
+
+Let's revisit the code example we've seen earlier on:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Discriminant_Constraint
+
+    package Recs is
+
+       type T (L : Positive;
+               M : Positive) is
+         null record;
+
+    end Recs;
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       A : T (L => 5, M => 6);
+       B : T (7, 8);
+       C : T (7, M => 8);
+    begin
+       null;
+    end Show_Object_Declaration;
+
+Here, :ada:`L => 5, M => 6` (for object :ada:`A`) are named constraints, while
+:ada:`7, 8` (for object :ada:`B`) are positional constraints.
+
+It's possible to use both positional and named constraints, as we do for object
+:ada:`C`: :ada:`7, M => 8`. In this case, the positional associations must
+precede the named associations.
+
+In the case of named constraints, we can use multiple selector names:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Discriminant_Constraint
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       A : T (L | M => 5);
+       --     ^^^^^
+       --  multiple selector names
+    begin
+       null;
+    end Show_Object_Declaration;
+
+This is only possible, however, if those named discriminants are all of the
+same type. (In this case, :ada:`L` and :ada:`M` are both of :ada:`Positive`
+subtype.)
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.7.1 Discriminant Constraints <3-7-1>`
+
+
+Discriminant constraint in subtypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can use discriminant constraints in the declaration of subtypes. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Discriminant_Constraint
+
+    with Recs;        use Recs;
+
+    procedure Show_Object_Declaration is
+       subtype T_5_6 is T (L => 5, M => 6);
+       --                  ^^^^^^^^^^^^^^
+       --  discriminant constraints for subtype
+
+       A : T_5_6;
+    begin
+       null;
+    end Show_Object_Declaration;
+
+In this example, we use the named discriminant constraints
+:ada:`L => 5, M => 6` in the declaration of the subtype :ada:`T_5_6`.
+
+
+.. _Adv_Ada_Constrained_Attribute:
+
+Constrained Attribute
+~~~~~~~~~~~~~~~~~~~~~
+
+We can use the :ada:`Constrained` attribute to verify whether an object of
+discriminated type is constrained or not. Let's look at a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Simple_Constrained_Attribute
+
+    package Recs is
+
+       type T (L : Positive := 1) is
+         null record;
+
+    end Recs;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Recs;        use Recs;
+
+    procedure Show_Constrained_Attribute is
+       Constr   : T (L => 5);
+       --            ^^^^^^ constrained.
+       Unconstr : T;
+       --         ^ unconstrained;
+       --           using defaults.
+    begin
+       Put_Line ("Constr'Constrained:   "
+                 & Constr'Constrained'Image);
+       Put_Line ("Unconstr'Constrained: "
+                 & Unconstr'Constrained'Image);
+    end Show_Constrained_Attribute;
+
+As the :ada:`Constrained` attribute indicates, the :ada:`Constr` object is
+constrained (by the :ada:`L => 5` discriminant constraint), while the
+:ada:`Unconstr` object is unconstrained. Note that, even though :ada:`Unconstr`
+is using the default value for :ada:`L` |mdash| which would correspond to the
+discriminant constraint :ada:`L => 1` |mdash| the object itself hasn't been
+constraint at its declaration.
+
+Let's continue our discussion with a more complex example by reusing
+the :ada:`Unconstrained_Types` package that we declared in a
+:ref:`previous section <Adv_Ada_Definite_Indefinite_Subtypes>`. In this
+version of the package, we're adding a :ada:`Reset` procedure for the
+discriminated record type :ada:`Simple_Record`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Constrained_Attribute
+
+    package Unconstrained_Types is
+
+       type Simple_Record
+         (Extended : Boolean := False) is
+       record
+          V : Integer;
+          case Extended is
+             when False =>
+                null;
+             when True  =>
+                V_Float : Float;
+          end case;
+       end record;
+
+       procedure Reset (R : in out Simple_Record);
+
+    end Unconstrained_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Unconstrained_Types is
+
+       procedure Reset (R : in out Simple_Record) is
+          Zero_Not_Extended : constant
+            Simple_Record := (Extended => False,
+                              V        => 0);
+
+          Zero_Extended : constant
+            Simple_Record := (Extended => True,
+                              V        => 0,
+                              V_Float  => 0.0);
+       begin
+          Put_Line ("---- Reset: R'Constrained => "
+                    & R'Constrained'Image);
+
+          if not R'Constrained then
+             R := Zero_Extended;
+          else
+             if R.Extended then
+                R := Zero_Extended;
+             else
+                R := Zero_Not_Extended;
+             end if;
+          end if;
+       end Reset;
+
+    end Unconstrained_Types;
+
+As the name indicates, the :ada:`Reset` procedure initializes all record
+components with zero. Note that we use the :ada:`Constrained` attribute to
+verify whether objects are constrained before assigning to them. For objects
+that are not constrained, we can simply assign another object to it |mdash| as
+we do with the :ada:`R := Zero_Extended` statement. When an object is
+constrained, however, the discriminants must match. If we assign an object to
+:ada:`R`, the discriminant of that object must match the discriminant of
+:ada:`R`. This is the kind of verification that we do in the :ada:`else` part
+of that procedure: we check the state of the :ada:`Extended` discriminant
+before assigning an object to the :ada:`R` parameter.
+
+The :ada:`Using_Constrained_Attribute` procedure below declares two objects of
+:ada:`Simple_Record` type: :ada:`R1` and :ada:`R2`. Because the
+:ada:`Simple_Record` type has a default value for its discriminant, we can
+declare objects of this type without specifying a value for the discriminant.
+This is exactly what we do in the declaration of :ada:`R1`. Here, we don't
+specify any constraints, so that it takes the default value
+(:ada:`Extended => False`).  In the declaration of :ada:`R2`, however, we
+explicitly set :ada:`Extended` to :ada:`False`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Discriminants_Constraints_Operations.Constrained_Attribute
+
+    with Ada.Text_IO;         use Ada.Text_IO;
+
+    with Unconstrained_Types; use Unconstrained_Types;
+
+    procedure Using_Constrained_Attribute is
+       R1 : Simple_Record;
+       R2 : Simple_Record (Extended => False);
+
+       procedure Show_Rs is
+       begin
+          Put_Line ("R1'Constrained => "
+                    & R1'Constrained'Image);
+          Put_Line ("R1.Extended => "
+                    & R1.Extended'Image);
+          Put_Line ("--");
+          Put_Line ("R2'Constrained => "
+                    & R2'Constrained'Image);
+          Put_Line ("R2.Extended => "
+                    & R2.Extended'Image);
+          Put_Line ("----------------");
+       end Show_Rs;
+    begin
+       Show_Rs;
+
+       Reset (R1);
+       Reset (R2);
+       Put_Line ("----------------");
+
+       Show_Rs;
+    end Using_Constrained_Attribute;
+
+When we run this code, the user messages from :ada:`Show_Rs` indicate to us
+that :ada:`R1` is not constrained, while :ada:`R2` is constrained.
+Because we declare :ada:`R1` without specifying a value for the :ada:`Extended`
+discriminant, :ada:`R1` is not constrained. In the declaration of
+:ada:`R2`, on the other hand, the explicit value for the :ada:`Extended`
+discriminant makes this object constrained. Note that, for both :ada:`R1` and
+:ada:`R2`, the value of :ada:`Extended` is :ada:`False` in the declarations.
+
+As we were just discussing, the :ada:`Reset` procedure includes checks to avoid
+mismatches in discriminants. When we don't have those checks, we might get
+exceptions at runtime. We can force this situation by replacing the
+implementation of the :ada:`Reset` procedure with the following lines:
+
+.. code-block:: ada
+
+    --  [...]
+    begin
+       Put_Line ("---- Reset: R'Constrained => "
+                 & R'Constrained'Image);
+       R := Zero_Extended;
+    end Reset;
+
+Running the code now generates a runtime exception:
+
+::
+
+    raised CONSTRAINT_ERROR : unconstrained_types.adb:12 discriminant check failed
+
+This exception is raised during the call to :ada:`Reset (R2)`. As we see in the
+code, :ada:`R2` is constrained. Also, its :ada:`Extended` discriminant is set
+to :ada:`False`, which means that it doesn't have the :ada:`V_Float`
+component. Therefore, :ada:`R2` is not compatible with the constant
+:ada:`Zero_Extended` object, so we cannot assign :ada:`Zero_Extended` to
+:ada:`R2`. Also, because :ada:`R2` is constrained, its :ada:`Extended`
+discriminant cannot be modified.
+
+The behavior is different for the call to :ada:`Reset (R1)`, which works fine.
+Here, when we pass :ada:`R1` as an argument to the :ada:`Reset` procedure, its
+:ada:`Extended` discriminant is :ada:`False` by default. Thus, :ada:`R1` is
+also not compatible with the :ada:`Zero_Extended` object. However, because
+:ada:`R1` is not constrained, the assignment modifies :ada:`R1` (by changing
+the value of the :ada:`Extended` discriminant). Therefore, with the call to
+:ada:`Reset`, the :ada:`Extended` discriminant of :ada:`R1` changes from
+:ada:`False` to :ada:`True`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.7.2 Operations of Discriminated Types <3-7-2>`
+
 
 
 ..
