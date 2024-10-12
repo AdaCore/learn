@@ -2755,7 +2755,7 @@ In this example, we declare :ada:`Derived_Rec_Unknown_Discr` with an unknown
 discriminant part, :ada:`Derived_Rec_Known_Discr` with a known discriminant
 part, and :ada:`Derived_Rec_No_Discr` with no discriminants.
 
-As expect, :ada:`Derived_Rec_Unknown_Discr` has unknown discriminants because
+As expected, :ada:`Derived_Rec_Unknown_Discr` has unknown discriminants because
 it has an unknown discriminant part. In the case of
 :ada:`Derived_Rec_No_Discr`, which has no discriminants, we're deriving the
 unknown discriminants of :ada:`Rec`, so it also has unknown discriminants.

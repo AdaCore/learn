@@ -1772,7 +1772,7 @@ the :ada:`Init` function.)
 Limited private type with unknown discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can declare limited private type with
+We can declare limited private types with
 :ref:`unknown discriminants <Adv_Ada_Unknown_Discriminants>`. Let's see an
 example:
 
