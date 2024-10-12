@@ -2690,7 +2690,8 @@ We can then declare the :ada:`Derived_Rec` type:
 Note that :ada:`Derived_Rec` has unknown discriminants, even though we're not
 explicitly using an unknown discriminant part (:ada:`(<>)`) in its declaration.
 (In fact, we're not allowed to use an unknown discriminant part in this case.)
-Therefore, declaring objects of this type directly isn't possible:
+Therefore, declaring objects of this type directly isn't possible, just like
+the parent type :ada:`Rec`:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Derived_Type
     :class: ada-expect-compile-error
