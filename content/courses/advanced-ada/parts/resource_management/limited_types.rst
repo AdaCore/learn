@@ -1772,14 +1772,9 @@ the :ada:`Init` function.)
 Limited private type with unknown discriminants
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can declare limited private type with unknown discriminants. Because the
-discriminants are unknown, this is an
-:ref:`indefinite type <Adv_Ada_Definite_Indefinite_Subtypes>`. Let's see an
+We can declare limited private types with
+:ref:`unknown discriminants <Adv_Ada_Unknown_Discriminants>`. Let's see an
 example:
-
-.. todo::
-
-     - Add link to section about unknown indiscriminants, once it's available.
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Limited_Private_Unknown_Discriminants
 
@@ -1798,9 +1793,10 @@ example:
 
 In this example, we declare type :ada:`Rec`, which has unknown discriminants.
 
-Using a limited private type with unknown discriminants is an important Ada
-idiom, as we gain extra control over its initialization. This is explained in
-the :aarm22:`Annotated Ada Reference Manual (3.7, 26.b/2) <3-7>`
+As we mentioned earlier, when we use a private type with unknown discriminants,
+we gain extra control over its initialization. In addition, if we declare those
+types as limited, we gain even more control. In fact, this is what the
+:aarm22:`Annotated Ada Reference Manual (3.7, 26.b/2) <3-7>` says:
 
     "A subtype with unknown discriminants is indefinite, and hence an object of
     such a subtype needs explicit initialization. A limited private type with
@@ -1812,9 +1808,9 @@ the :aarm22:`Annotated Ada Reference Manual (3.7, 26.b/2) <3-7>`
     the package declaring the type. Such a type is useful for keeping complete
     control over object creation within the package declaring the type."
 
-Therefore, in order to have useful applications for type :ada:`Rec` from the
-previous code example, we have to introduce a subprogram that initializes the
-type. For example:
+Let's reuse a code example from the
+:ref:`previous section on unknown discriminants <Adv_Ada_Unknown_Discriminants_Object_Declaration>`
+and use limited types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Discriminants.Limited_Private_Unknown_Discriminants
 
@@ -1844,12 +1840,6 @@ type. For example:
     begin
        null;
     end Show_Constructor_Function;
-
-In the :ada:`Show_Constructor_Function` procedure from this
-example, we call the :ada:`Init` function to initialize the :ada:`R` object in
-its declaration (of :ada:`Rec` type). Note that for this specific type, this is
-the only possible way to declare the :ada:`R` object. In fact, compilation
-fails if we write :ada:`R : Rec;`.
 
 A function such as :ada:`Init` is called a
 :ref:`constructor function for limited types <Adv_Ada_Constructor_Functions_Limited_Types>`.
