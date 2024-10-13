@@ -2951,7 +2951,7 @@ statement. For example:
           V : Float;
        end record;
 
-       type Device (State : Device_State) is
+       type Device (State : Device_State := Off) is
        record
           case State is
              when Off =>
