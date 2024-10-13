@@ -2040,6 +2040,8 @@ We've introduced variant records back in the
 :ref:`Introduction to Ada course <Intro_Ada_Variant_Records>`.
 In simple terms, a variant record is a record with discriminants that allows
 for changing its structure. Basically, it's a record containing a :ada:`case`.
+(We talk again about :ref:`variant records <Adv_Ada_Variant_Records>` in
+another chapter.)
 
 The :ada:`State_Or_Integer` declaration in the :ada:`States` package below is
 an example of a variant record:
