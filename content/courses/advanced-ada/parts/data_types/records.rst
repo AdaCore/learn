@@ -3571,7 +3571,6 @@ Note that the original test application that makes use of the sensor
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Sensors
 
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Sensors;     use Sensors;
