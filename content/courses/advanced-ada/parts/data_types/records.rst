@@ -2322,6 +2322,10 @@ constrained, however, the discriminants must match. If we assign an object to
 of that procedure: we check the state of the :ada:`Extended` discriminant
 before assigning an object to the :ada:`R` parameter.
 
+Note that the :ada:`Simple_Record` type has a
+:ref:`variant part <Adv_Ada_Variant_Records>`. We discuss this topic later on
+in this chapter.
+
 The :ada:`Using_Constrained_Attribute` procedure below declares two objects of
 :ada:`Simple_Record` type: :ada:`R1` and :ada:`R2`. Because the
 :ada:`Simple_Record` type has a default value for its discriminant, we can
