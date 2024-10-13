@@ -2918,19 +2918,15 @@ In this example, :ada:`Arr_Sub` and :ada:`Rec_Sub` are unconstrained subtypes.
    - :arm:`3.2 Types and Subtypes <3-2>`
 
 
-..
-    TO BE DONE:
+Variant parts
+-------------
 
-    Variant parts
-    -------------
+.. admonition:: In the Ada Reference Manual
 
-    .. admonition:: In the Ada Reference Manual
+    - :arm:`3.8.1 Variant Parts and Discrete Choices <3-8-1>`
 
-        - :arm:`3.8.1 Variant Parts and Discrete Choices <3-8-1>`
 
-    .. todo::
 
-        - Complete section!
 
 
 
