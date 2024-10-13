@@ -2971,7 +2971,7 @@ value of the :ada:`State` discriminant, it can be either a null record (when
 Let's look at a test application for the :ada:`Devices` package:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Simple_Device
-    :class: ada-expect-compile-error
+    :class: ada-run-expect-failure
 
     with Devices; use Devices;
 
@@ -3351,7 +3351,7 @@ Let's create a test application called :ada:`Show_Device` that makes use of
 this device by turning it on and off, and by retrieving information from it:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Device
-    :class: ada-expect-compile-error
+    :class: ada-run-expect-failure
 
     with Devices; use Devices;
 
