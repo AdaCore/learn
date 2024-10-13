@@ -2326,6 +2326,12 @@ Note that the :ada:`Simple_Record` type has a
 :ref:`variant part <Adv_Ada_Variant_Records>`. We discuss this topic later on
 in this chapter.
 
+Note as well that, in the initialization of the :ada:`Zero_Not_Extended` and
+:ada:`Zero_Extended` constants, we have to indicate the discriminant as a
+component of the aggregates (e.g.: :ada:`(Extended => False, V => 0)`. We
+discuss this topic in another chapter when we learn more about
+:ref:`aggregates and record discriminants <Adv_Ada_Aggregates_Record_Discriminants>`.
+
 The :ada:`Using_Constrained_Attribute` procedure below declares two objects of
 :ada:`Simple_Record` type: :ada:`R1` and :ada:`R2`. Because the
 :ada:`Simple_Record` type has a default value for its discriminant, we can
