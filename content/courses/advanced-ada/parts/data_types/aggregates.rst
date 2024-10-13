@@ -526,6 +526,8 @@ This code compiles because :ada:`<>` uses the appropriate default value of each
 component.
 
 
+.. _Adv_Ada_Aggregates_Record_Discriminants:
+
 Record discriminants
 ~~~~~~~~~~~~~~~~~~~~
 
