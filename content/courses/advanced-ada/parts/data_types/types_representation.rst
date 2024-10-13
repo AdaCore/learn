@@ -2030,6 +2030,9 @@ when we know that information stored in memory might be corrupted.
 
     - :arm22:`13.9.2 The Valid Attribute <13-9-2>`
 
+
+.. _Adv_Ada_Unchecked_Union:
+
 Unchecked Union
 ---------------
 
