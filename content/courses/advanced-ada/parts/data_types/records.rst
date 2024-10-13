@@ -2918,6 +2918,8 @@ In this example, :ada:`Arr_Sub` and :ada:`Rec_Sub` are unconstrained subtypes.
    - :arm:`3.2 Types and Subtypes <3-2>`
 
 
+.. _Adv_Ada_Variant_Records:
+
 Variant parts
 -------------
 
