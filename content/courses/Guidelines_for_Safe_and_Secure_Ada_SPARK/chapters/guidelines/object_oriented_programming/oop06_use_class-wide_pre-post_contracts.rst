@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Specific_Pre_Post`
+:rule:`Specific_Pre_Post` (builtin rule)
 
 +++++++++++
 Reference

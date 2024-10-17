@@ -19,7 +19,8 @@ Goal
 
 **Remediation** :math:`\rightarrow` Low
 
-**Verification Method** :math:`\rightarrow` GNATcheck rule: :rule:`Style_Checks:O`
+**Verification Method** :math:`\rightarrow` GNATcheck rule:
+:rule:`Style_Checks:O` (builtin rule)
 
 +++++++++++
 Reference

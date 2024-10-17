@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` High
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Volatile_Objects_Without_Address_Clauses`
+:rule:`Volatile_Objects_Without_Address_Clauses` (builtin rule)
 
 +++++++++++
 Reference

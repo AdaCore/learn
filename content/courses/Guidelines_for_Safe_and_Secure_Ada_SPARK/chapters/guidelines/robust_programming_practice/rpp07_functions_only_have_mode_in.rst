@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`function_out_parameters`
+:rule:`function_out_parameters` (supplied with document)
 
 +++++++++++
 Reference

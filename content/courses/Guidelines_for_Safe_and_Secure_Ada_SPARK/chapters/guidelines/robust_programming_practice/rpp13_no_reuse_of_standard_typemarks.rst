@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`overrides_standard_name`
+:rule:`overrides_standard_name` (supplied with document)
 
 +++++++++++
 Reference

@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Recursive_Subprograms`
+:rule:`Recursive_Subprograms` (builtin rule)
 
 +++++++++++
 Reference

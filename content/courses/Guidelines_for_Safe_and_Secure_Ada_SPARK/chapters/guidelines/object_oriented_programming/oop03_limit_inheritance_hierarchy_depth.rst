@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` High
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Deep_Inheritance_Hierarchies:2`
+:rule:`Deep_Inheritance_Hierarchies:2` (builtin rule)
 
 +++++++++++
 Reference

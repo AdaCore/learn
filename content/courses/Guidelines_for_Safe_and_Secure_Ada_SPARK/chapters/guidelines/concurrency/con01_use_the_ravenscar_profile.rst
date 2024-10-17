@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` High
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`uses_profile:ravenscar`
+:rule:`uses_profile:ravenscar` (supplied with document)
 
 **Mutually Exclusive** :math:`\rightarrow` CON02
 
