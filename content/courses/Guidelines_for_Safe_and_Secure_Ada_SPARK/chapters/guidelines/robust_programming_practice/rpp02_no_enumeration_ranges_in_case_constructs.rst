@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Enumeration_Ranges_In_CASE_Statements`
+:rule:`Enumeration_Ranges_In_CASE_Statements` (builtin rule)
 
 +++++++++++
 Reference

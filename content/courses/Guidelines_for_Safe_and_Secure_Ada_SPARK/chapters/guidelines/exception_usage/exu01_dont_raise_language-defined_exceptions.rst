@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Raising_Predefined_Exceptions`
+:rule:`Raising_Predefined_Exceptions` (builtin rule)
 
 +++++++++++
 Reference

@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` High
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Unassigned_OUT_Parameters`
+:rule:`Unassigned_OUT_Parameters` (builtin rule)
 
 +++++++++++
 Reference

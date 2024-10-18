@@ -21,7 +21,7 @@ Goal
 bug)
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Direct_Calls_To_Primitives`
+:rule:`Direct_Calls_To_Primitives` (builtin rule)
 
 +++++++++++
 Reference

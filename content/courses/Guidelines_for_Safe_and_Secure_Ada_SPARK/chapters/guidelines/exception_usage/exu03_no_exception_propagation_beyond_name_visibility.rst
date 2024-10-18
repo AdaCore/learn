@@ -20,7 +20,7 @@ Goal
 **Remediation** :math:`\rightarrow` Low
 
 **Verification Method** :math:`\rightarrow` GNATcheck rule:
-:rule:`Non_Visible_Exceptions`
+:rule:`Non_Visible_Exceptions` (builtin rule)
 
 +++++++++++
 Reference
