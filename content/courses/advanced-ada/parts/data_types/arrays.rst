@@ -588,8 +588,179 @@ we'd like to highlight the following aspects:
 Derived array types and array subtypes
 --------------------------------------
 
+.. _Adv_Ada_Derived_Array_Types:
+
+Derived array types
+~~~~~~~~~~~~~~~~~~~
+
+As expected, we can derive from array types by declaring a new type. Let's see
+a couple of examples based on the :ada:`Measurement_Defs` package from previous
+sections:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Derived_Arrays
+
+    package Measurement_Defs is
+
+       type Measurements is
+         array (Positive range <>) of Float;
+
+       --
+       --  New array type:
+       --
+       type Measurements_Derived is
+         new Measurements;
+
+       --
+       --  New array type with
+       --  default component value:
+       --
+       type Measurements_Def30 is
+         new Measurements
+           with Default_Component_Value => 30.0;
+
+       --
+       --  New array type with constraints:
+       --
+       type Measurements_10 is
+         new Measurements (1 .. 10);
+
+    end Measurement_Defs;
+
+In this example, we're deriving :ada:`Measurements_Derived` from the
+:ada:`Measurements` type. In the case of the :ada:`Measurements_Def30` type,
+we're not only deriving from the :ada:`Measurements` type, but also setting
+the :ref:`default component value <Adv_Ada_Default_Component_Value>` to 30.0.
+Finally, in the case of the :ada:`Measurements_10`, we're deriving from the
+:ada:`Measurements` type and
+:ref:`constraining the array type <Adv_Ada_Constrained_Array_Type>` in the
+range from 1 to 10.
+
+Let's use these types in a test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Derived_Arrays
+
+    with Measurement_Defs; use Measurement_Defs;
+
+    procedure Show_Measurements is
+       M1, M2  : Measurements (1 .. 10)
+                   := (others => 0.0);
+
+       MD      : Measurements_Derived (1 .. 10);
+       MD2     : Measurements_Derived (1 .. 40);
+       MD10    : Measurements_10;
+    begin
+       M1   := M2;
+       --  ^^^^^^
+       --  Assignment of arrays of
+       --  same type.
+
+       MD   := Measurements_Derived (M1);
+       --      ^^^^^^^^^^^^^^^^^^^^^^^^^
+       --  Conversion to derived type for
+       --  the assignment.
+
+       MD10 := Measurements_10 (M1);
+       --      ^^^^^^^^^^^^^^^^^^^^
+       --  Conversion to derived type for
+       --  the assignment.
+
+       MD10 := Measurements_10 (MD);
+       MD10 := Measurements_10 (MD2 (1 .. 10));
+    end Show_Measurements;
+
+As illustrated by this example, we can assign objects of different array types,
+provided that we perform the appropriate type conversions and make sure that
+the bounds match.
 
 
+.. _Adv_Ada_Array_Subtypes:
 
+Array subtypes
+~~~~~~~~~~~~~~
 
+Naturally, we can also declare subtypes of array types. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Array_Subtypes
+
+    package Measurement_Defs is
+
+       type Measurements is
+         array (Positive range <>) of Float;
+
+       --
+       --  Simple subtype declaration:
+       --
+       subtype Measurements_Sub is Measurements;
+
+       --
+       --  Subtype with constraints:
+       --
+       subtype Measurements_10 is
+         Measurements (1 .. 10);
+
+       --
+       --  Subtype with dynamic predicate
+       --  (array can only have 20 components
+       --  at most):
+       --
+       subtype Measurements_Max_20 is Measurements
+           with Dynamic_Predicate =>
+                  Measurements_Max_20'Length <= 20;
+
+       --
+       --  Subtype with constraints and
+       --  dynamic predicate (first element
+       --  must be 2.0).
+       --
+       subtype Measurements_First_Two is
+         Measurements (1 .. 10)
+           with Dynamic_Predicate =>
+                  Measurements_First_Two (1) = 2.0;
+
+    end Measurement_Defs;
+
+Here, we're declaring subtypes of the :ada:`Measurements` type. For example,
+:ada:`Measurements_Sub` is a *simple* subtype of :ada:`Measurements` type. In
+the case of the :ada:`Measurements_10` subtype, we're constraining the type to
+a range from 1 to 10.
+
+For the :ada:`Measurements_Max_20` subtype, we're specifying |mdash| via a
+dynamic predicate |mdash| that arrays of this subtype can only have 20
+components at most. Finally, for the :ada:`Measurements_First_Two` subtype,
+we're constraining the type to a range from 1 to 10 and requiring that the
+first component must have a value of 2.0.
+
+Note that we cannot set the default component value for array subtypes |mdash|
+only type declarations are allowed to use that.
+
+Let's use these subtypes in a test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Array_Subtypes
+    :class: ada-run-expect-failure
+
+    with Measurement_Defs; use Measurement_Defs;
+
+    procedure Show_Measurements is
+       M1, M2  : Measurements (1 .. 10)
+                   := (others => 0.0);
+       MS      : Measurements_Sub (1 .. 10);
+       MD10    : Measurements_10;
+       M_Max20 : Measurements_Max_20 (1 .. 40);
+       M_F2    : Measurements_First_Two;
+    begin
+       MS       := M1;
+       MD10     := M1;
+
+       M_Max20  := (others => 0.0);  --  ERROR!
+
+       MD10 (1) := 4.0;
+       M_F2     := MD10;             --  ERROR!
+    end Show_Measurements;
+
+As expected, assignments to objects with different subtypes |mdash| but with
+the same parent type |mdash| work fine without conversion. The assignment to
+:ada:`M_Max_20` fails because of the predicate failure: the predicate requires
+that the length be 20 at most, and it's 40 in this case. Also, the
+assignment to :ada:`M_F2` fails because the predicate requires that the first
+element must be set to :ada:`2.0`, and :ada:`MD10 (1)` has the value 4.0.
 
