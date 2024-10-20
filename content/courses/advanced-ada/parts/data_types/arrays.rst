@@ -62,7 +62,7 @@ Constrained arrays
 ~~~~~~~~~~~~~~~~~~
 
 The :ref:`Introduction to Ada course <Intro_Ada_Unconstrained_Array_Type_Instance_Bound>`
-also highlights the fact that the bounds are fixed once an object is declared:
+highlights the fact that the bounds are fixed once an object is declared:
 
     Although different instances of the same unconstrained array type can
     have different bounds, a specific instance has the same bounds
