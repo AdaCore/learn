@@ -73,9 +73,13 @@ highlights the fact that the bounds are fixed once an object is declared:
 In the :ada:`Show_Measurements` procedure above, once we declare :ada:`M`, its
 bounds are fixed for the whole lifetime of :ada:`M`. We cannot *add* another
 component to this array. In other words, :ada:`M` will have 10 components for
-its whole lifetime.
+its whole lifetime:
 
+.. code-block:: ada
 
+    M : Measurements (1 .. 10);
+    --                ^^^^^^^
+    --  Bounds cannot be changed!
 
 
 Unconstrained Arrays vs. Vectors
