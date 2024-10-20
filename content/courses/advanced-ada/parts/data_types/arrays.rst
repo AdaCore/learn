@@ -585,16 +585,11 @@ we'd like to highlight the following aspects:
   form: :ada:`(others => (others => 0.0))`.
 
 
-..
-    TO BE DONE:
+Derived array types and array subtypes
+--------------------------------------
 
-    Array Subtypes
-    --------------
 
-    .. admonition:: In the Ada Reference Manual
 
-        - :arm:`3.7 Discriminants <3-7>`
 
-    .. todo::
 
-        - Complete section!
+
