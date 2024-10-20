@@ -3,6 +3,9 @@ Arrays
 
 .. include:: ../../../global.txt
 
+
+.. _Adv_Ada_Array_Constraints:
+
 Array constraints
 -----------------
 
