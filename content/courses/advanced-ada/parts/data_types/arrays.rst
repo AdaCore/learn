@@ -75,9 +75,7 @@ bounds are fixed for the whole lifetime of :ada:`M`. We cannot *add* another
 component to this array. In other words, :ada:`M` will have 10 components for
 its whole lifetime.
 
-.. admonition:: In the Ada Reference Manual
 
-    - :arm22:`3.6 Array Types <3-6>`
 
 
 Unconstrained Arrays vs. Vectors
@@ -348,6 +346,7 @@ to highlight the following aspects:
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.6 Array Types <3-6>`
+    - :arm22:`3.6.2 Operations of Array Types <3-6-2>`
 
 
 Unconstrained Multidimensional Arrays
