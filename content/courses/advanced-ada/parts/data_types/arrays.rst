@@ -82,6 +82,42 @@ its whole lifetime:
     --  Bounds cannot be changed!
 
 
+.. _Adv_Ada_Constrained_Array_Type:
+
+Constrained array types
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that we could declare constrained array types. Let's rework the previous
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Constraints.Constrained_Array_Type
+
+    package Measurement_Defs is
+
+       type Measurements is
+         array (1 .. 10) of Float;
+       --       ^ Bounds are of known and fixed.
+
+    end Measurement_Defs;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Measurement_Defs; use Measurement_Defs;
+
+    procedure Show_Measurements is
+       M : Measurements;
+       --              ^ We cannot change the
+       --                bounds here!
+    begin
+       Put_Line ("First index: " & M'First'Image);
+       Put_Line ("Last index:  " & M'Last'Image);
+    end Show_Measurements;
+
+In this case, the bounds of the :ada:`Measurements` type are fixed. Now, we
+cannot specify the bounds (or change them) in the declaration of the :ada:`M`
+array, as they have already been defined in the type declaration.
+
+
 Unconstrained Arrays vs. Vectors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
