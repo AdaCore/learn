@@ -3,8 +3,12 @@ Arrays
 
 .. include:: ../../../global.txt
 
-Unconstrained Arrays
---------------------
+Array constraints
+-----------------
+
+
+Unconstrained array types
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the
 :ref:`Introduction to Ada course <Intro_Ada_Unconstrained_Array_Types>`,
@@ -40,6 +44,10 @@ In this example, the :ada:`Measurements` array type from the
 :ada:`Show_Measurements` procedure, we declare a constrained object (:ada:`M`)
 of this type.
 
+
+Constrained arrays
+~~~~~~~~~~~~~~~~~~
+
 The :ref:`Introduction to Ada course <Intro_Ada_Unconstrained_Array_Type_Instance_Bound>`
 also highlights the fact that the bounds are fixed once an object is declared:
 
@@ -60,7 +68,7 @@ its whole lifetime.
 
 
 Unconstrained Arrays vs. Vectors
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you need, however, the flexibility of increasing the length of an array, you
 could use vectors instead. This is how we could rewrite the previous example
