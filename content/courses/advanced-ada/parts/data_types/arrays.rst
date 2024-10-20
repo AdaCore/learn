@@ -19,7 +19,7 @@ we've seen that we can declare array types whose bounds are not fixed: in that
 case, the bounds are provided when creating objects of those types. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Arrays.Unconstrained_Array_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Constraints.Unconstrained_Array_Type
 
     package Measurement_Defs is
 
@@ -77,7 +77,7 @@ If you need, however, the flexibility of increasing the length of an array, you
 could use vectors instead. This is how we could rewrite the previous example
 using vectors:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Arrays.Unconstrained_Array_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Constraints.Unconstrained_Array_Type_Vs_Vector
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
