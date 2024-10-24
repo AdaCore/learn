@@ -122,8 +122,8 @@ Unconstrained Arrays vs. Vectors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you need, however, the flexibility of increasing the length of an array, you
-could use vectors instead. This is how we could rewrite the previous example
-using vectors:
+could use the language-defined :ada:`Vector` type instead. This is how we could
+rewrite the previous example using vectors:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Constraints.Unconstrained_Array_Type_Vs_Vector
 
