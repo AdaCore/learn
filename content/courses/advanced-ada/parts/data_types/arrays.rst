@@ -731,7 +731,7 @@ we're constraining the type to a range from 1 to 10 and requiring that the
 first component must have a value of 2.0.
 
 Note that we cannot set the default component value for array subtypes |mdash|
-only type declarations are allowed to use that.
+only type declarations are allowed to use that facility.
 
 Let's use these subtypes in a test application:
 
