@@ -3,8 +3,25 @@ Arrays
 
 .. include:: ../../../global.txt
 
-Unconstrained Arrays
---------------------
+
+.. _Adv_Ada_Array_Constraints:
+
+Array constraints
+-----------------
+
+Array constraints are important in the declaration of an array because they
+define the total size of the array. In fact, arrays must always be constrained.
+In this section, we start our discussion with unconstrained array types, and
+then continue with constrained arrays and arrays types. Finally, we discuss
+the differences between unconstrained arrays and vectors.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.6 Array Types <3-6>`
+
+
+Unconstrained array types
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the
 :ref:`Introduction to Ada course <Intro_Ada_Unconstrained_Array_Types>`,
@@ -12,7 +29,7 @@ we've seen that we can declare array types whose bounds are not fixed: in that
 case, the bounds are provided when creating objects of those types. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Arrays.Unconstrained_Array_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Constraints.Unconstrained_Array_Type
 
     package Measurement_Defs is
 
@@ -40,8 +57,12 @@ In this example, the :ada:`Measurements` array type from the
 :ada:`Show_Measurements` procedure, we declare a constrained object (:ada:`M`)
 of this type.
 
+
+Constrained arrays
+~~~~~~~~~~~~~~~~~~
+
 The :ref:`Introduction to Ada course <Intro_Ada_Unconstrained_Array_Type_Instance_Bound>`
-also highlights the fact that the bounds are fixed once an object is declared:
+highlights the fact that the bounds are fixed once an object is declared:
 
     Although different instances of the same unconstrained array type can
     have different bounds, a specific instance has the same bounds
@@ -52,21 +73,59 @@ also highlights the fact that the bounds are fixed once an object is declared:
 In the :ada:`Show_Measurements` procedure above, once we declare :ada:`M`, its
 bounds are fixed for the whole lifetime of :ada:`M`. We cannot *add* another
 component to this array. In other words, :ada:`M` will have 10 components for
-its whole lifetime.
+its whole lifetime:
 
-.. admonition:: In the Ada Reference Manual
+.. code-block:: ada
 
-    - :arm22:`3.6 Array Types <3-6>`
+    M : Measurements (1 .. 10);
+    --                ^^^^^^^
+    --  Bounds cannot be changed!
+
+
+.. _Adv_Ada_Constrained_Array_Type:
+
+Constrained array types
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that we could declare constrained array types. Let's rework the previous
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Constraints.Constrained_Array_Type
+
+    package Measurement_Defs is
+
+       type Measurements is
+         array (1 .. 10) of Float;
+       --       ^ Bounds are of known and fixed.
+
+    end Measurement_Defs;
+
+    with Ada.Text_IO;      use Ada.Text_IO;
+
+    with Measurement_Defs; use Measurement_Defs;
+
+    procedure Show_Measurements is
+       M : Measurements;
+       --              ^ We cannot change the
+       --                bounds here!
+    begin
+       Put_Line ("First index: " & M'First'Image);
+       Put_Line ("Last index:  " & M'Last'Image);
+    end Show_Measurements;
+
+In this case, the bounds of the :ada:`Measurements` type are fixed. Now, we
+cannot specify the bounds (or change them) in the declaration of the :ada:`M`
+array, as they have already been defined in the type declaration.
 
 
 Unconstrained Arrays vs. Vectors
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you need, however, the flexibility of increasing the length of an array, you
-could use vectors instead. This is how we could rewrite the previous example
-using vectors:
+could use the language-defined :ada:`Vector` type instead. This is how we could
+rewrite the previous example using vectors:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Unconstrained_Arrays.Unconstrained_Array_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Array_Constraints.Unconstrained_Array_Type_Vs_Vector
 
     with Ada.Containers; use Ada.Containers;
     with Ada.Containers.Vectors;
@@ -327,6 +386,7 @@ to highlight the following aspects:
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.6 Array Types <3-6>`
+    - :arm22:`3.6.2 Operations of Array Types <3-6-2>`
 
 
 Unconstrained Multidimensional Arrays
@@ -525,16 +585,182 @@ we'd like to highlight the following aspects:
   form: :ada:`(others => (others => 0.0))`.
 
 
-..
-    TO BE DONE:
+Derived array types and array subtypes
+--------------------------------------
 
-    Array Subtypes
-    --------------
+.. _Adv_Ada_Derived_Array_Types:
 
-    .. admonition:: In the Ada Reference Manual
+Derived array types
+~~~~~~~~~~~~~~~~~~~
 
-        - :arm:`3.7 Discriminants <3-7>`
+As expected, we can derive from array types by declaring a new type. Let's see
+a couple of examples based on the :ada:`Measurement_Defs` package from previous
+sections:
 
-    .. todo::
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Derived_Arrays
 
-        - Complete section!
+    package Measurement_Defs is
+
+       type Measurements is
+         array (Positive range <>) of Float;
+
+       --
+       --  New array type:
+       --
+       type Measurements_Derived is
+         new Measurements;
+
+       --
+       --  New array type with
+       --  default component value:
+       --
+       type Measurements_Def30 is
+         new Measurements
+           with Default_Component_Value => 30.0;
+
+       --
+       --  New array type with constraints:
+       --
+       type Measurements_10 is
+         new Measurements (1 .. 10);
+
+    end Measurement_Defs;
+
+In this example, we're deriving :ada:`Measurements_Derived` from the
+:ada:`Measurements` type. In the case of the :ada:`Measurements_Def30` type,
+we're not only deriving from the :ada:`Measurements` type, but also setting
+the :ref:`default component value <Adv_Ada_Default_Component_Value>` to 30.0.
+Finally, in the case of the :ada:`Measurements_10`, we're deriving from the
+:ada:`Measurements` type and
+:ref:`constraining the array type <Adv_Ada_Constrained_Array_Type>` in the
+range from 1 to 10.
+
+Let's use these types in a test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Derived_Arrays
+
+    with Measurement_Defs; use Measurement_Defs;
+
+    procedure Show_Measurements is
+       M1, M2  : Measurements (1 .. 10)
+                   := (others => 0.0);
+
+       MD      : Measurements_Derived (1 .. 10);
+       MD2     : Measurements_Derived (1 .. 40);
+       MD10    : Measurements_10;
+    begin
+       M1   := M2;
+       --  ^^^^^^
+       --  Assignment of arrays of
+       --  same type.
+
+       MD   := Measurements_Derived (M1);
+       --      ^^^^^^^^^^^^^^^^^^^^^^^^^
+       --  Conversion to derived type for
+       --  the assignment.
+
+       MD10 := Measurements_10 (M1);
+       --      ^^^^^^^^^^^^^^^^^^^^
+       --  Conversion to derived type for
+       --  the assignment.
+
+       MD10 := Measurements_10 (MD);
+       MD10 := Measurements_10 (MD2 (1 .. 10));
+    end Show_Measurements;
+
+As illustrated by this example, we can assign objects of different array types,
+provided that we perform the appropriate type conversions and make sure that
+the bounds match.
+
+
+.. _Adv_Ada_Array_Subtypes:
+
+Array subtypes
+~~~~~~~~~~~~~~
+
+Naturally, we can also declare subtypes of array types. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Array_Subtypes
+
+    package Measurement_Defs is
+
+       type Measurements is
+         array (Positive range <>) of Float;
+
+       --
+       --  Simple subtype declaration:
+       --
+       subtype Measurements_Sub is Measurements;
+
+       --
+       --  Subtype with constraints:
+       --
+       subtype Measurements_10 is
+         Measurements (1 .. 10);
+
+       --
+       --  Subtype with dynamic predicate
+       --  (array can only have 20 components
+       --  at most):
+       --
+       subtype Measurements_Max_20 is Measurements
+           with Dynamic_Predicate =>
+                  Measurements_Max_20'Length <= 20;
+
+       --
+       --  Subtype with constraints and
+       --  dynamic predicate (first element
+       --  must be 2.0).
+       --
+       subtype Measurements_First_Two is
+         Measurements (1 .. 10)
+           with Dynamic_Predicate =>
+                  Measurements_First_Two (1) = 2.0;
+
+    end Measurement_Defs;
+
+Here, we're declaring subtypes of the :ada:`Measurements` type. For example,
+:ada:`Measurements_Sub` is a *simple* subtype of :ada:`Measurements` type. In
+the case of the :ada:`Measurements_10` subtype, we're constraining the type to
+a range from 1 to 10.
+
+For the :ada:`Measurements_Max_20` subtype, we're specifying |mdash| via a
+dynamic predicate |mdash| that arrays of this subtype can only have 20
+components at most. Finally, for the :ada:`Measurements_First_Two` subtype,
+we're constraining the type to a range from 1 to 10 and requiring that the
+first component must have a value of 2.0.
+
+Note that we cannot set the default component value for array subtypes |mdash|
+only type declarations are allowed to use that facility.
+
+Let's use these subtypes in a test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Arrays.Derived_Arrays_And_Subtypes.Array_Subtypes
+    :class: ada-run-expect-failure
+
+    with Measurement_Defs; use Measurement_Defs;
+
+    procedure Show_Measurements is
+       M1, M2  : Measurements (1 .. 10)
+                   := (others => 0.0);
+       MS      : Measurements_Sub (1 .. 10);
+       MD10    : Measurements_10;
+       M_Max20 : Measurements_Max_20 (1 .. 40);
+       M_F2    : Measurements_First_Two;
+    begin
+       MS       := M1;
+       MD10     := M1;
+
+       M_Max20  := (others => 0.0);  --  ERROR!
+
+       MD10 (1) := 4.0;
+       M_F2     := MD10;             --  ERROR!
+    end Show_Measurements;
+
+As expected, assignments to objects with different subtypes |mdash| but with
+the same parent type |mdash| work fine without conversion. The assignment to
+:ada:`M_Max_20` fails because of the predicate failure: the predicate requires
+that the length be 20 at most, and it's 40 in this case. Also, the
+assignment to :ada:`M_F2` fails because the predicate requires that the first
+element must be set to :ada:`2.0`, and :ada:`MD10 (1)` has the value 4.0.
+
