@@ -156,6 +156,9 @@ operations. But we can convert the :ada:`Child` object to a value of the
 components and operations defined for the :ada:`Parent` type. The compiler
 enforces this temporary view.
 
+For further details about view conversions, please refer to that
+:ref:`specific section of the Advanced Ada course <Adv_Ada_View_Conversion>`.
+
 Views are a fundamental concept in Ada. Understanding them will greatly
 facilitate understanding the rules of the language in general.
 
@@ -215,6 +218,9 @@ a major abstraction as a private type should be suspect, just as using a
 :c:`struct` rather than a :c:`class` in C++ should be suspect in that case. (In
 C++ anything a :c:`struct` contains is compile-time visible to clients by
 default.)
+
+For further details about type views, please refer to that
+:ref:`specific section of the Advanced Ada course <Adv_Ada_Type_View>`.
 
 
 Bibliography
