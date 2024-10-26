@@ -252,7 +252,8 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 #
 html_theme_options = {
     'logo_only': True,
-    'display_version': False,
+    'flyout_display': 'hidden',
+    'version_selector': False,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',
