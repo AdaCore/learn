@@ -221,8 +221,6 @@ extlinks = {
                           '[GNATcheck Reference Manual: %s]'),
     'gnat_stack_ug_url': ('http://docs.adacore.com/live/wave/gnatstack/html/gnatstack_ug/%s',
                           '[GNATstack User\'s Guide: %s]'),
-    'cwe': ('https://cwe.mitre.org/data/definitions/%s.html',
-                          '[CWE-%s]'),
     }
 
 extlinks_detect_hardcoded_links = True
@@ -252,9 +250,8 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 #
 html_theme_options = {
     'logo_only': True,
-#    'analytics_id': '',
-#    'analytics_anonymize_ip': False,
-    'display_version': False,
+    'flyout_display': 'hidden',
+    'version_selector': False,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',
@@ -487,8 +484,10 @@ redirects = { }
 
 def setup(app):
 
+    outdir = str(app.outdir)
+
     # TODO: find a better way to retrieve the current target (html/latex/epub)
-    if 'html' in app.outdir:
+    if 'html' in outdir:
         templates_path.append('_templates')
 
         redirects.update({
@@ -517,10 +516,10 @@ def setup(app):
 
                 if not os.getenv('SPHINX_LOCAL_BUILD'):
                     raise e
-    elif 'epub' in app.outdir:
+    elif 'epub' in outdir:
         if config.has_option('', 'cover_page'):
             pdf_cover_page = get_file_from_conf_ini(config['DEFAULT']['cover_page'])
-            png_cover_page = app.outdir + "/" + '_static/cover.jpeg'
+            png_cover_page = outdir + "/" + '_static/cover.jpeg'
 
             pages = convert_from_path(pdf_path=pdf_cover_page,
                                       dpi=72,
