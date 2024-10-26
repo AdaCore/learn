@@ -260,8 +260,7 @@ class WidgetCodeDirective(Directive):
             widget.parseContent(self.content)
 
             # Attemping to detect HTML or Latex output by checking for 'html' in tags
-            if ('builder_html' in self.state.state_machine.document.settings.env.app.tags.tags
-                and self.state.state_machine.document.settings.env.app.tags.tags['builder_html']):
+            if (self.state.state_machine.document.settings.env.app.tags.eval_condition('builder_html')):
 
                 jinja_env = Environment(
                     loader=PackageLoader('widget'),
