@@ -486,8 +486,10 @@ redirects = { }
 
 def setup(app):
 
+    outdir = str(app.outdir)
+
     # TODO: find a better way to retrieve the current target (html/latex/epub)
-    if 'html' in app.outdir:
+    if 'html' in outdir:
         templates_path.append('_templates')
 
         redirects.update({
@@ -516,10 +518,10 @@ def setup(app):
 
                 if not os.getenv('SPHINX_LOCAL_BUILD'):
                     raise e
-    elif 'epub' in app.outdir:
+    elif 'epub' in outdir:
         if config.has_option('', 'cover_page'):
             pdf_cover_page = get_file_from_conf_ini(config['DEFAULT']['cover_page'])
-            png_cover_page = app.outdir + "/" + '_static/cover.jpeg'
+            png_cover_page = outdir + "/" + '_static/cover.jpeg'
 
             pages = convert_from_path(pdf_path=pdf_cover_page,
                                       dpi=72,
