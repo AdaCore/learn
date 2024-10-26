@@ -113,6 +113,7 @@ $epub = <<-SHELL
       texlive-fonts-extra \
       latexmk \
       texlive-xetex \
+      xindy \
       fonts-lmodern \
       fonts-open-sans \
       fonts-dejavu \
