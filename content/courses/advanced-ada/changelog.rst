@@ -5,6 +5,18 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2024-10
+---------------
+
+- New sections:
+
+    - :ref:`Discriminant constraints and operations <Adv_Ada_Record_Discriminant_Constraints_Operations>`
+
+    - :ref:`Unknown discriminants <Adv_Ada_Unknown_Discriminants>`
+
+    - :ref:`Derived array types and array subtypes <Adv_Ada_Derived_Array_Types_Array_Subtypes>`
+
+
 Release 2024-09
 ---------------
 
