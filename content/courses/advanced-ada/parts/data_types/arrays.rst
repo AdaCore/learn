@@ -585,6 +585,8 @@ we'd like to highlight the following aspects:
   form: :ada:`(others => (others => 0.0))`.
 
 
+.. _Adv_Ada_Derived_Array_Types_Array_Subtypes:
+
 Derived array types and array subtypes
 --------------------------------------
 
