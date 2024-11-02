@@ -147,20 +147,5 @@
       "src/index.ts"
     ]
   },
-  "mocha": {
-    "diff": true,
-    "extension": [
-      "ts"
-    ],
-    "reporter": "spec",
-    "slow": 75,
-    "timeout": 200000,
-    "ui": "bdd",
-    "require": [
-      "ts-node/register",
-      "jsdom-global/register"
-    ],
-    "spec": "tests/**/*.spec.ts"
-  },
   "packageManager": "yarn@4.4.0"
 }
