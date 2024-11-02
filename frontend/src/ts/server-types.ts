@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import {ResourceList} from './resource';
+import {ResourceList} from './resource.ts';
 
 // FS - From Server
 // TS - To Server

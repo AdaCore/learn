@@ -5,9 +5,9 @@ chai.use(chaiDom);
 
 // Import package under test
 import {Area, OutputArea, LabArea, makeLabArea, LabContainer}
-  from '../../src/ts/areas';
-import * as Strings from '../../src/ts/strings';
-import {CheckOutput} from '../../src/ts/server-types';
+  from '../../src/ts/areas.ts';
+import * as Strings from '../../src/ts/strings.ts';
+import {CheckOutput} from '../../src/ts/server-types.ts';
 
 describe('Area', () => {
   let parent: HTMLDivElement;

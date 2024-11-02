@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
+        "allowImportingTsExtensions": true,
         "sourceMap": true,
         "allowJs": true,
         "target": "es2022",

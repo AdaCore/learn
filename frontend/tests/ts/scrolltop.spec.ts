@@ -4,7 +4,7 @@ import chaiDom from 'chai-dom';
 
 chai.use(chaiDom);
 
-import {scrollTop} from '../../src/ts/scrolltop';
+import {scrollTop} from '../../src/ts/scrolltop.ts';
 
 /**
  * Helper function to trigger window event

@@ -5,8 +5,8 @@ chai.use(chaiAsPromised);
 
 import {Server, WebSocket} from 'mock-socket';
 
-import {ServerWorker} from '../../src/ts/server';
-import {CheckOutput, RunProgram} from '../../src/ts/server-types';
+import {ServerWorker} from '../../src/ts/server.ts';
+import {CheckOutput, RunProgram} from '../../src/ts/server-types.ts';
 
 global.WebSocket = WebSocket;
 

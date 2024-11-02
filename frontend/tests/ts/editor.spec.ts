@@ -6,8 +6,8 @@ chai.use(chaiDom);
 
 import ace from 'brace';
 
-import {Editor, EditorTheme} from '../../src/ts/editor';
-import {Resource} from '../../src/ts/resource';
+import {Editor, EditorTheme} from '../../src/ts/editor.ts';
+import {Resource} from '../../src/ts/resource.ts';
 
 describe('Editor', () => {
   let inTest: Editor;
