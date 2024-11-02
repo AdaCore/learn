@@ -1,7 +1,8 @@
 // Import testing libs
-import chai, {expect} from 'chai';
+import { expect, use } from 'chai';
 import chaiDom from 'chai-dom';
-chai.use(chaiDom);
+
+const chai = use(chaiDom);
 
 // Import package under test
 import {Area, OutputArea, LabArea, makeLabArea, LabContainer}
