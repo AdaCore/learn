@@ -12,5 +12,10 @@
       "ts-node/register",
       "jsdom-global/register"
     ],
+    "node-option": [
+      "disable-warning=ExperimentalWarning",
+      "experimental-specifier-resolution=node",
+      "loader=ts-node/esm"
+    ],
     "spec": "tests/**/*.spec.ts"
 }
