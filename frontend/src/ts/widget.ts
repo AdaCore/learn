@@ -1,4 +1,4 @@
-import cookies from 'typescript-cookies';
+import {Cookies} from 'typescript-cookies'
 
 import {Area, OutputArea, LabContainer} from './areas.ts';
 import {Editor, EditorTheme} from './editor.ts';
@@ -17,6 +17,12 @@ interface EditorView {
 }
 
 type EditorMap = Map<string, EditorView>;
+
+const cookies = new Cookies({
+  path: '/',
+  secure: true,
+  samesite: 'none',
+})
 
 /**
  * Defines the widget behavior
