@@ -1,10 +1,11 @@
 // Import testing libs
-import chai, {expect} from 'chai';
+import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import chaiDom from 'chai-dom';
 import {Client, Server, WebSocket} from 'mock-socket';
-chai.use(chaiDom);
-chai.use(chaiAsPromised);
+
+// const chai = use(chaiDom);
+const chai = use(chaiAsPromised);
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
@@ -21,6 +22,12 @@ import {getElemsByTag, getElemById, getElemsByClass}
   from '../../src/ts/dom-utils';
 
 global.WebSocket = WebSocket;
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Helper function to fill DOM from a file

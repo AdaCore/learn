@@ -1,6 +1,8 @@
-import chai, {expect} from 'chai';
+import { expect, use } from 'chai';
+import chaiDom from 'chai-dom';
 import chaiAsPromised from 'chai-as-promised';
-chai.use(chaiAsPromised);
+
+const chai = use(chaiDom);
 
 import {
   getLanguages,

@@ -1,0 +1,21 @@
+{
+    "diff": true,
+    "extension": [
+      "ts"
+    ],
+    "reporter": "spec",
+    "slow": 75,
+    "timeout": 200000,
+    "ui": "bdd",
+    "require": [
+      "mocha.env",
+      "ts-node/register",
+      "jsdom-global/register"
+    ],
+    "node-option": [
+      "disable-warning=ExperimentalWarning",
+      "experimental-specifier-resolution=node",
+      "loader=ts-node/esm"
+    ],
+    "spec": "tests/**/*.spec.ts"
+}

@@ -3,7 +3,7 @@ const { merge } = require('webpack-merge');
 const exec = require('child_process').exec;
 const WatchPlugin = require('webpack-watch-files-plugin').default;
 const ShellPlugin = require('webpack-shell-plugin-next');
-const common = require('./webpack.common.js');
+const common = require('./webpack.common.cjs');
 
 module.exports = function(env) {
   const common_config = common(env);

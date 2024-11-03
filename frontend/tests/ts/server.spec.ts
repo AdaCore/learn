@@ -1,7 +1,8 @@
 // Import testing libs
-import chai, {expect} from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-chai.use(chaiAsPromised);
+import { expect, use } from 'chai';
+import chaiDom from 'chai-dom';
+
+const chai = use(chaiDom);
 
 import {Server, WebSocket} from 'mock-socket';
 
