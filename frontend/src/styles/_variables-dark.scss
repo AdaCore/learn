@@ -1,38 +1,38 @@
 // colors
-$color-darktheme-theme-bg-dark:         #C34C01;    // dark orange
+$color-theme-bg-dark:                   #C34C01;    // dark orange
 
-$color-darktheme-theme-bg-light:        rgb(252, 252, 252);
+$color-theme-bg-light:                  rgb(252, 252, 252);
 
-$color-darktheme-theme-alt-bg:          #222222;
+$color-theme-alt-bg:                    #222222;
 
-$color-darktheme-bg-dark:               #111111;
+$color-bg-dark:                         #111111;
 
-$color-darktheme-content-bg:            black;
-$color-darktheme-content-font:          #edc;
+$color-content-bg:                      black;
+$color-content-font:                    #edc;
 
-$color-darktheme-border:                #444;
+$color-border:                          #444;
 
-$color-darktheme-code-font:             #DE935F;
-$color-darktheme-code-bg:               $color-darktheme-bg-dark;
-$color-darktheme-code-border:           darken($color-darktheme-border, 50%);
+$color-code-font:                       #DE935F;
+$color-code-bg:                         $color-bg-dark;
+$color-code-border:                     darken($color-border, 50%);
 
-$color-darktheme-menu-bg-l1:            #222222;
-$color-darktheme-menu-bg-l2:            lighten($color-darktheme-menu-bg-l1, 5%);
-$color-darktheme-menu-bg-l3:            lighten($color-darktheme-menu-bg-l1, 10%);
-$color-darktheme-menu-bg-hover:         darken($color-darktheme-menu-bg-l1,  20%);
+$color-menu-bg-l1:                      #222222;
+$color-menu-bg-l2:                      lighten($color-menu-bg-l1, 5%);
+$color-menu-bg-l3:                      lighten($color-menu-bg-l1, 10%);
+$color-menu-bg-hover:                   darken($color-menu-bg-l1,  20%);
 
-$color-darktheme-menu-font:             #f0f0f0;
-$color-darktheme-menu-alt-font:         #e8e8e8;
-$color-darktheme-menu-alt-font-hover:   lighten($color-darktheme-menu-alt-font, 20%);
+$color-menu-font:                       #f0f0f0;
+$color-menu-alt-font:                   #e8e8e8;
+$color-menu-alt-font-hover:             lighten($color-menu-alt-font, 20%);
 
-$color-darktheme-tab-active-font:       rgb(200, 200, 200);
-$color-darktheme-tab-hover-font:        lighten($color-darktheme-tab-active-font, 20%);
-$color-darktheme-tab-font:              darken($color-darktheme-tab-active-font, 30%);
+$color-tab-active-font:                 rgb(200, 200, 200);
+$color-tab-hover-font:                  lighten($color-tab-active-font, 20%);
+$color-tab-font:                        darken($color-tab-active-font, 30%);
 
-$color-darktheme-widget-border:         $color-darktheme-border;
+$color-widget-border:                   $color-border;
 
-$color-darktheme-widget-output-area:    rgb(23, 23, 23);
+$color-widget-output-area:              rgb(23, 23, 23);
 
-$color-darktheme-widget-info:           rgb(234, 234, 234);
+$color-widget-info:                     rgb(234, 234, 234);
 
-$color-darktheme-settingsbar-bg:        rgb(50, 50, 50);
+$color-settingsbar-bg:                  rgb(50, 50, 50);
