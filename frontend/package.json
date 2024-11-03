@@ -90,11 +90,11 @@
     "whatwg-url": "^14"
   },
   "scripts": {
-    "dev": "webpack serve --open --config webpack.dev.js",
+    "dev": "webpack serve --open --config webpack.dev.cjs",
     "tsc": "tsc --noEmit",
     "eslint": "eslint --ext .ts src/ tests/",
-    "sandbox": "webpack --env sandbox --config webpack.prod.js",
-    "production": "webpack --config webpack.prod.js",
+    "sandbox": "webpack --env sandbox --config webpack.prod.cjs",
+    "production": "webpack --config webpack.prod.cjs",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"strict\":false}' mocha --exit",
     "cover": "nyc yarn run test",
     "doc": "typedoc src --out docs"
