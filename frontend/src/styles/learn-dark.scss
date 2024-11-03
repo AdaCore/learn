@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'variables-dark';
+@use 'variables' as v;
+@use 'variables-dark' as v_darktheme;
 
 @mixin menu_vertical_current_hover_dark_mode_colors {
     &:hover {
@@ -11,30 +11,30 @@
 @mixin menu_vertical_current_dark_mode_colors {
     @include menu_vertical_current_hover_dark_mode_colors;
     & {
-        color: $color-darktheme-menu-font;
+        color: v_darktheme.$color-menu-font;
     }
 
 
     &:visited {
-        color: $color-darktheme-menu-font;
+        color: v_darktheme.$color-menu-font;
         @include menu_vertical_current_hover_dark_mode_colors;
     }
 }
 
 @mixin menu_vertical_alt_current_hover_dark_mode_colors {
-    color: $color-darktheme-menu-alt-font;
+    color: v_darktheme.$color-menu-alt-font;
     &:hover {
-        color: $color-darktheme-menu-alt-font-hover;
+        color: v_darktheme.$color-menu-alt-font-hover;
     }
 }
 
 @media (prefers-color-scheme: dark) {
 
     html {
-        background-color: $color-darktheme-bg-dark !important;
+        background-color: v_darktheme.$color-bg-dark !important;
     }
     body {
-        background-color: $color-darktheme-bg-dark !important;
+        background-color: v_darktheme.$color-bg-dark !important;
     }
     img {
         &.dark-mode-invert-image {
@@ -51,21 +51,21 @@
     .rst-content code,
     .rst-content tt,
     code {
-        color: $color-darktheme-code-font;
-        background-color: $color-darktheme-code-bg !important;
-        border: 1px solid $color-darktheme-code-border;
+        color: v_darktheme.$color-code-font;
+        background-color: v_darktheme.$color-code-bg !important;
+        border: 1px solid v_darktheme.$color-code-border;
     }
     pre {
-        color: $color-darktheme-code-font;
-        background-color: $color-darktheme-code-bg !important;
-        border: 1px solid $color-darktheme-code-border;
+        color: v_darktheme.$color-code-font;
+        background-color: v_darktheme.$color-code-bg !important;
+        border: 1px solid v_darktheme.$color-code-border;
     }
     .btn {
-        background-color: $color-darktheme-theme-bg-dark;
+        background-color: v_darktheme.$color-theme-bg-dark;
         color: #fff;
 
         &:hover {
-            background-color: lighten($color-darktheme-theme-bg-dark, 10%);
+            background-color: lighten(v_darktheme.$color-theme-bg-dark, 10%);
         }
     }
 
@@ -75,11 +75,11 @@
     }
 
     .wy-nav-content-wrap {
-        background: $color-darktheme-bg-dark !important;
+        background: v_darktheme.$color-bg-dark !important;
     }
     .wy-nav-content {
-        background: $color-darktheme-content-bg !important;
-        color: $color-darktheme-content-font;
+        background: v_darktheme.$color-content-bg !important;
+        color: v_darktheme.$color-content-font;
         ::selection {
             // color: #333333;
             // background: lightyellow;
@@ -90,11 +90,11 @@
     }
 
     .wy-side-nav-search {
-        background-color: $color-darktheme-theme-bg-dark;
+        background-color: v_darktheme.$color-theme-bg-dark;
     }
 
     .wy-nav-side {
-        background-color: darken($color-darktheme-menu-bg-l1, 10%);
+        background-color: darken(v_darktheme.$color-menu-bg-l1, 10%);
     }
 
     .wy-menu-vertical {
@@ -106,73 +106,73 @@
                 color: lightgrey;
             }
             ul {
-                background-color: $color-darktheme-menu-bg-l1;
+                background-color: v_darktheme.$color-menu-bg-l1;
             }
             a {
                 @include menu_vertical_alt_current_hover_dark_mode_colors;
 
                 & {
-                    background-color: $color-darktheme-menu-bg-l1;
+                    background-color: v_darktheme.$color-menu-bg-l1;
                 }
 
                 &:hover {
-                    background-color: $color-darktheme-menu-bg-hover;
+                    background-color: v_darktheme.$color-menu-bg-hover;
                 }
 
                 &:visited {
                     @include menu_vertical_alt_current_hover_dark_mode_colors;
 
                     & {
-                        background-color: $color-darktheme-menu-bg-l1;
+                        background-color: v_darktheme.$color-menu-bg-l1;
                     }
 
                     &:hover {
-                        background-color: $color-darktheme-menu-bg-hover;
+                        background-color: v_darktheme.$color-menu-bg-hover;
                     }
                 }
             }
             &.toctree-l2 {
                 &.current>a {
-                    background-color: $color-darktheme-menu-bg-l1;
+                    background-color: v_darktheme.$color-menu-bg-l1;
                 }
             }
             &.current {
                 & {
-                    background-color: $color-darktheme-menu-bg-l1;
+                    background-color: v_darktheme.$color-menu-bg-l1;
                 }
 
                 a {
                     & {
-                        background-color: $color-darktheme-menu-bg-l1;
+                        background-color: v_darktheme.$color-menu-bg-l1;
                     }
                     @include menu_vertical_current_dark_mode_colors;
 
                     &:hover {
-                        background-color: $color-darktheme-menu-bg-hover;
+                        background-color: v_darktheme.$color-menu-bg-hover;
                     }
                     &:visited {
-                        background-color: $color-darktheme-menu-bg-l1;
+                        background-color: v_darktheme.$color-menu-bg-l1;
                         &:hover {
-                            background-color: $color-darktheme-menu-bg-hover;
+                            background-color: v_darktheme.$color-menu-bg-hover;
                         }
                     }
                 }
                 &.toctree-l2 {
-                    background-color: $color-darktheme-menu-bg-l1;
+                    background-color: v_darktheme.$color-menu-bg-l1;
 
                     li.toctree-l3>a {
                         @include menu_vertical_current_dark_mode_colors;
 
                         & {
-                            background-color: $color-darktheme-menu-bg-l2;
+                            background-color: v_darktheme.$color-menu-bg-l2;
                         }
                         &:hover {
-                            background-color: $color-darktheme-menu-bg-hover;
+                            background-color: v_darktheme.$color-menu-bg-hover;
                         }
                         &:visited {
-                            background-color: $color-darktheme-menu-bg-l2;
+                            background-color: v_darktheme.$color-menu-bg-l2;
                             &:hover {
-                                background-color: $color-darktheme-menu-bg-hover;
+                                background-color: v_darktheme.$color-menu-bg-hover;
                             }
                         }
                     }
@@ -182,15 +182,15 @@
                         @include menu_vertical_current_dark_mode_colors;
 
                         & {
-                            background-color: $color-darktheme-menu-bg-l3;
+                            background-color: v_darktheme.$color-menu-bg-l3;
                         }
                         &:hover {
-                            background-color: $color-darktheme-menu-bg-hover;
+                            background-color: v_darktheme.$color-menu-bg-hover;
                         }
                         &:visited {
-                            background-color: $color-darktheme-menu-bg-l3;
+                            background-color: v_darktheme.$color-menu-bg-l3;
                             &:hover {
-                                background-color: $color-darktheme-menu-bg-hover;
+                                background-color: v_darktheme.$color-menu-bg-hover;
                             }
                         }
                     }
@@ -200,11 +200,11 @@
     }
 
     .admonition-in-other-languages {
-        background: $color-darktheme-theme-alt-bg;
+        background: v_darktheme.$color-theme-alt-bg;
     }
     .rst-content {
         .highlight {
-            background: $color-darktheme-theme-alt-bg;
+            background: v_darktheme.$color-theme-alt-bg;
         }
     }
     .rst-content .admonition,
@@ -220,7 +220,7 @@
     .rst-content .tip,
     .rst-content .warning,
     .wy-alert {
-        background: $color-darktheme-theme-alt-bg;
+        background: v_darktheme.$color-theme-alt-bg;
     }
     .rst-content .admonition-title, .wy-alert-title {
         // background: #6ab0de;
@@ -228,12 +228,12 @@
     }
     .rst-content div[class^=highlight],
     .rst-content pre.literal-block {
-        border: 1px solid $color-darktheme-code-border;
-        color: $color-darktheme-code-font;
+        border: 1px solid v_darktheme.$color-code-border;
+        color: v_darktheme.$color-code-font;
     }
     .rst-content code.literal,
     .rst-content tt.literal {
-        color: $color-darktheme-code-font;
+        color: v_darktheme.$color-code-font;
     }
     .rst-content table.docutils thead,
     .rst-content table.field-list thead,
@@ -243,29 +243,29 @@
     }
     .rst-content table.docutils,
     .wy-table-bordered-all {
-        border: 1px solid $color-darktheme-border;
+        border: 1px solid v_darktheme.$color-border;
     }
     .rst-content table.docutils td,
     .wy-table-bordered-all td {
-        border-bottom: 1px solid $color-darktheme-border;
-        border-left: 1px solid $color-darktheme-border;
+        border-bottom: 1px solid v_darktheme.$color-border;
+        border-left: 1px solid v_darktheme.$color-border;
     }
     .wy-table-bordered {
-        border: 1px solid $color-darktheme-border;
+        border: 1px solid v_darktheme.$color-border;
     }
     .wy-table-bordered-rows td {
-        border-bottom: 1px solid $color-darktheme-border;
+        border-bottom: 1px solid v_darktheme.$color-border;
     }
     .wy-table-horizontal td,
     .wy-table-horizontal th {
-        border-bottom: 1px solid $color-darktheme-border;
+        border-bottom: 1px solid v_darktheme.$color-border;
     }
 
     .rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td,
     .wy-table-backed,
     .wy-table-odd td,
     .wy-table-striped tr:nth-child(2n-1) td {
-        background-color: $color-darktheme-theme-alt-bg;
+        background-color: v_darktheme.$color-theme-alt-bg;
     }
 
     //
@@ -274,25 +274,25 @@
 
     .tab {
         button {
-            color: $color-darktheme-tab-font;
-            border-left: 1px dotted $color-darktheme-widget-border;
-            border-right: 1px dotted $color-darktheme-widget-border;
-            border-bottom: 1px dotted $color-darktheme-widget-border;
+            color: v_darktheme.$color-tab-font;
+            border-left: 1px dotted v_darktheme.$color-widget-border;
+            border-right: 1px dotted v_darktheme.$color-widget-border;
+            border-bottom: 1px dotted v_darktheme.$color-widget-border;
             &:hover {
-                background-color: lighten($color-darktheme-theme-bg-dark, 30%);
-                color: $color-darktheme-tab-hover-font;
+                background-color: lighten(v_darktheme.$color-theme-bg-dark, 30%);
+                color: v_darktheme.$color-tab-hover-font;
             }
             &.active {
-                color: $color-darktheme-tab-active-font;
-                border-left: 1px solid $color-darktheme-widget-border;
-                border-right: 1px solid $color-darktheme-widget-border;
-                border-bottom: 3px solid $color-darktheme-theme-bg-dark;
+                color: v_darktheme.$color-tab-active-font;
+                border-left: 1px solid v_darktheme.$color-widget-border;
+                border-right: 1px solid v_darktheme.$color-widget-border;
+                border-bottom: 3px solid v_darktheme.$color-theme-bg-dark;
             }
         }
     }
 
     .settings-bar {
-        background-color: $color-darktheme-settingsbar-bg;
+        background-color: v_darktheme.$color-settingsbar-bg;
         color: white;
 
         button {
@@ -302,7 +302,7 @@
 
         .dropdown-container {
             .dropdown-content {
-                background-color: $color-darktheme-bg-dark;
+                background-color: v_darktheme.$color-bg-dark;
 
                 a {
                     color: white;
@@ -316,67 +316,67 @@
     }
 
     .compiler-switch-help-info {
-        background-color: $color-darktheme-settingsbar-bg;
+        background-color: v_darktheme.$color-settingsbar-bg;
     }
 
     .compiler-switch-help-info-click-remove {
-        background-color: $color-darktheme-settingsbar-bg;
+        background-color: v_darktheme.$color-settingsbar-bg;
     }
 
     div {
         &.editor-container {
-            border: 1px solid $color-darktheme-widget-border;
+            border: 1px solid v_darktheme.$color-widget-border;
         }
         &.editor_label {
-            border: 1px solid $color-darktheme-widget-border;
-            color: $color-font-grey;
+            border: 1px solid v_darktheme.$color-widget-border;
+            color: v.$color-font-grey;
         }
         &.non-tabbed-links {
-            border: 1px solid $color-darktheme-widget-border;
+            border: 1px solid v_darktheme.$color-widget-border;
         }
         &.code_block_info {
-            background: $color-darktheme-widget-output-area;
+            background: v_darktheme.$color-widget-output-area;
         }
         &.code_block_info_contents {
-            color: $color-font-grey;
+            color: v.$color-font-grey;
         }
         &.output_line {
-            color: $color-font-grey;
+            color: v.$color-font-grey;
         }
         &.output_msg {
-            color: $color-widget-msg;
+            color: v.$color-widget-msg;
             &:hover {
                 background-color: #fdd;
             }
         }
         &.output_msg_info {
-            color: $color-darktheme-widget-info;
+            color: v_darktheme.$color-widget-info;
             &:hover {
-                background-color: $color-widget-msg-info-bg-hover;
+                background-color: v.$color-widget-msg-info-bg-hover;
             }
         }
         &.output_info {
-            color: $color-darktheme-widget-info;
+            color: v_darktheme.$color-widget-info;
         }
         &.output_error {
-            color: $color-widget-error;
+            color: v.$color-widget-error;
         }
         &.output_success {
-            color: $color-widget-success;
+            color: v.$color-widget-success;
         }
         &.output-area {
-            background: $color-darktheme-widget-output-area;
+            background: v_darktheme.$color-widget-output-area;
         }
     }
 
     .read-only {
-        background-color: $color-widget-readonly;
+        background-color: v.$color-widget-readonly;
         opacity: 0.2;
         position: absolute;
     }
 
     a.ebook-download-button {
-        background-color: $color-darktheme-theme-bg-dark;
+        background-color: v_darktheme.$color-theme-bg-dark;
     }
 
     //

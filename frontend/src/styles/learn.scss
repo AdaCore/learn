@@ -1,12 +1,12 @@
-@import 'variables';
+@use 'variables' as v;
 
 // theme overrides
 .btn {
-    background-color: $color-theme-bg-dark;
+    background-color: v.$color-theme-bg-dark;
     color: #fff;
 
     &:hover {
-        background-color: lighten($color-theme-bg-dark, 10%);
+        background-color: lighten(v.$color-theme-bg-dark, 10%);
     }
 }
 
@@ -31,7 +31,7 @@ a {
 }
 
 .wy-side-nav-search {
-    background-color: $color-theme-bg-dark;
+    background-color: v.$color-theme-bg-dark;
     a {
         text-align: right !important;
         float: right;
@@ -95,7 +95,7 @@ a {
 }
 
 .wy-nav-top {
-    background-color: $color-theme-bg-dark;
+    background-color: v.$color-theme-bg-dark;
     img {
         border-radius: 0 !important;
         background-color: transparent !important;
@@ -136,7 +136,7 @@ a {
 }
 
 .admonition-in-other-languages {
-    background: $color-theme-alt-bg;
+    background: v.$color-theme-alt-bg;
     padding: 12px;
     margin-bottom: 24px;
 }
@@ -171,22 +171,22 @@ pre.widget {
         transition: 0.3s;
         flex: 0 0 auto;
         border: 1px solid transparent;
-        color: $color-tab-font;
-        font-family: $mono-font;
+        color: v.$color-tab-font;
+        font-family: v.$mono-font;
         font-size: 13px;
-        border-left: 1px dotted $color-widget-border;
-        border-right: 1px dotted $color-widget-border;
-        border-bottom: 1px dotted $color-widget-border;
+        border-left: 1px dotted v.$color-widget-border;
+        border-right: 1px dotted v.$color-widget-border;
+        border-bottom: 1px dotted v.$color-widget-border;
         &:hover {
-            background-color: lighten($color-theme-bg-dark, 30%);
-            color: $color-tab-hover-font;
+            background-color: lighten(v.$color-theme-bg-dark, 30%);
+            color: v.$color-tab-hover-font;
             cursor: pointer;
         }
         &.active {
-            color: $color-tab-active-font;
-            border-left: 1px solid $color-widget-border;
-            border-right: 1px solid $color-widget-border;
-            border-bottom: 3px solid $color-theme-bg-dark;
+            color: v.$color-tab-active-font;
+            border-left: 1px solid v.$color-widget-border;
+            border-right: 1px solid v.$color-widget-border;
+            border-bottom: 3px solid v.$color-theme-bg-dark;
         }
     }
 }
@@ -197,15 +197,15 @@ pre.widget {
 }
 
 .settings-bar {
-    background-color: $color-settingsbar-bg;
-    font-family: $lato-sans-serif-font;
+    background-color: v.$color-settingsbar-bg;
+    font-family: v.$lato-sans-serif-font;
     padding-left: 13px;
     display: block;
     margin-top: 0px;
 
     button {
         background-color: transparent;
-        color: $color-font-grey;
+        color: v.$color-font-grey;
         opacity: 0.5;
         padding: 5px;
         margin-left: 5px;
@@ -225,7 +225,7 @@ pre.widget {
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: $color-theme-bg-light;
+            background-color: v.$color-theme-bg-light;
             min-width: 300px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 10;
@@ -279,12 +279,12 @@ div {
 }
 
 .compiler-switch-help-info {
-    background-color: $color-settingsbar-bg;
+    background-color: v.$color-settingsbar-bg;
     font-size: 0.85em;
 }
 
 .compiler-switch-help-info-click-remove {
-    background-color: $color-settingsbar-bg;
+    background-color: v.$color-settingsbar-bg;
     font-size: 0.70em;
 }
 
@@ -294,32 +294,32 @@ div {
     }
     &.editor-container {
         height: 30em;
-        border: 1px solid $color-widget-border;
+        border: 1px solid v.$color-widget-border;
         margin: 0px;
         &.inline {
             height: 20em;
-            border: 1px solid $color-widget-border;
+            border: 1px solid v.$color-widget-border;
             margin: .5em 0;
         }
     }
     &.editor_label {
-        font-family: $mono-font;
-        border: 1px solid $color-widget-border;
+        font-family: v.$mono-font;
+        border: 1px solid v.$color-widget-border;
         border-bottom: 0px;
         display: inline-block;
         padding: 3px 5px;
         font-size: 0.75em;
-        color: $color-font-grey;
+        color: v.$color-font-grey;
     }
     &.non-tabbed-links {
         display: flex;
-        border: 1px solid $color-widget-border;
+        border: 1px solid v.$color-widget-border;
     }
     &.code_block_info {
-        font-family: $mono-font;
+        font-family: v.$mono-font;
         font-size: 12px;
         font-style: normal;
-        background: $color-widget-output-area;
+        background: v.$color-widget-output-area;
         margin-top: 8px;
         max-height: 250px;
         overflow-y: auto;
@@ -332,19 +332,19 @@ div {
         padding-right: 3px;
     }
     &.code_block_info_contents {
-        color: $color-font-grey;
+        color: v.$color-font-grey;
         padding-left: 15px;
         padding-right: 3px;
         white-space: pre-wrap;
     }
     &.output_line {
-        color: $color-font-grey;
+        color: v.$color-font-grey;
         padding-left: 15px;
         padding-right: 3px;
         white-space: pre-wrap;
     }
     &.output_msg {
-        color: $color-widget-msg;
+        color: v.$color-widget-msg;
         padding-left: 15px;
         padding-right: 3px;
         white-space: pre-wrap;
@@ -353,37 +353,37 @@ div {
         }
     }
     &.output_msg_info {
-        color: $color-widget-info;
+        color: v.$color-widget-info;
         padding-left: 15px;
         padding-right: 3px;
         white-space: pre-wrap;
         &:hover {
-            background-color: $color-widget-msg-info-bg-hover;
+            background-color: v.$color-widget-msg-info-bg-hover;
         }
     }
     &.output_info {
-        color: $color-widget-info;
+        color: v.$color-widget-info;
         padding-left: 3px;
         padding-right: 3px;
         white-space: pre-wrap;
     }
     &.output_error {
-        color: $color-widget-error;
+        color: v.$color-widget-error;
         padding-left: 3px;
         padding-right: 3px;
         white-space: pre-wrap;
     }
     &.output_success {
-        color: $color-widget-success;
+        color: v.$color-widget-success;
         padding-left: 3px;
         padding-right: 3px;
-        font-weight: $fontweight-bold;
+        font-weight: v.$fontweight-bold;
     }
     &.output-area {
-        font-family: $mono-font;
+        font-family: v.$mono-font;
         font-size: 12px;
         font-style: normal;
-        background: $color-widget-output-area;
+        background: v.$color-widget-output-area;
         margin-top: 8px;
         max-height: 250px;
         overflow-y: auto;
@@ -400,7 +400,7 @@ div {
 }
 
 .read-only {
-    background-color: $color-widget-readonly;
+    background-color: v.$color-widget-readonly;
     opacity: 0.2;
     position: absolute;
 }
@@ -420,11 +420,11 @@ div#learn-adacore-com>h1 {
 
 .legal {
     padding: 20px;
-    color: $color-font-grey;
+    color: v.$color-font-grey;
     font-size: 12px;
     text-align: center;
     a {
-        color: $color-font-grey;
+        color: v.$color-font-grey;
     }
 }
 
@@ -436,15 +436,15 @@ div#learn-adacore-com>h1 {
     z-index: 99;
     border: none;
     outline: none;
-    background-color: $color-scroll-button-bg;
-    color: $color-scroll-button-fg;
+    background-color: v.$color-scroll-button-bg;
+    color: v.$color-scroll-button-fg;
     cursor: pointer;
     padding: 15px;
     border-radius: 10px;
     font-size: 18px;
     transition: opacity 600ms;
     &:hover {
-        background-color: $color-scroll-button-hover;
+        background-color: v.$color-scroll-button-hover;
     }
     &.show {
         opacity: 1;
@@ -506,7 +506,7 @@ div {
 }
 
 a.ebook-download-button {
-    background-color: $color-theme-bg-dark;
+    background-color: v.$color-theme-bg-dark;
     display: block;
     padding-top: 2px;
     padding-left: 1em;
@@ -519,10 +519,10 @@ a.ebook-download-button {
     margin-top: 2px;
 
     &:before {
-        font-family: $icon-font;
+        font-family: v.$icon-font;
         font-style: normal;
-        font-weight: $icon-weight;
-        content: $download-icon;
+        font-weight: v.$icon-weight;
+        content: v.$download-icon;
         margin-right: 3px;
     }
 }
@@ -576,10 +576,10 @@ div.mwac-banner.docutils.container {
 // lab stuff
 div {
     &.lab-area {
-        font-family: $mono-font;
+        font-family: v.$mono-font;
         font-size: 12px;
-        font-weight: $fontweight-normal;
-        background: $color-labarea-bg;
+        font-weight: v.$fontweight-normal;
+        background: v.$color-labarea-bg;
     }
     &.lab_test_case {
         padding-left: 3px;
@@ -589,7 +589,7 @@ div {
         margin-bottom: 5px;
     }
     &.lab_test_msg {
-        color: $color-labarea-fg;
+        color: v.$color-labarea-fg;
         padding-left: 20px;
         padding-right: 3px;
         code {
@@ -597,21 +597,21 @@ div {
         }
     }
     &.lab_test_success {
-        background: $color-success-green-bg;
+        background: v.$color-success-green-bg;
     }
     &.lab_test_failed {
-        background: $color-fail-red-bg;
+        background: v.$color-fail-red-bg;
     }
 }
 
 span.lab_test_msg_title {
-    font-weight: $fontweight-bold;
+    font-weight: v.$fontweight-bold;
     padding-right: 5px;
 }
 
 div {
     &.lab_status {
-        font-weight: $fontweight-bold;
+        font-weight: v.$fontweight-bold;
         padding-left: 15px;
         padding-right: 3px;
     }
@@ -623,44 +623,44 @@ div {
 
 button {
     &.lab_test_success {
-        background: $color-success-green-light-bg;
+        background: v.$color-success-green-light-bg;
         span:after {
             content: "Pass";
         }
         &:hover {
-            background-color: $color-success-green-bg;
+            background-color: v.$color-success-green-bg;
         }
     }
     &.accordion span:after {
-        font-family: $mono-font;
+        font-family: v.$mono-font;
         font-size: 10px;
         font-style: italic;
-        font-weight: $fontweight-semibold;
-        color: $color-font-grey;
+        font-weight: v.$fontweight-semibold;
+        color: v.$color-font-grey;
         margin-left: 8px;
     }
     &.lab_test_failed {
-        background: $color-fail-red-light-bg;
+        background: v.$color-fail-red-light-bg;
         span:after {
             content: "Fail";
         }
         &:hover {
-            background-color: $color-fail-red-bg;
+            background-color: v.$color-fail-red-bg;
         }
     }
     &.active {
         &.lab_test_success {
-            background: $color-success-green-bg;
+            background: v.$color-success-green-bg;
         }
         &.lab_test_failed {
-            background: $color-fail-red-bg;
+            background: v.$color-fail-red-bg;
         }
     }
 }
 
 .accordion {
-    background-color: $color-theme-bg-light;
-    color: $color-theme-fg-dark;
+    background-color: v.$color-theme-bg-light;
+    color: v.$color-theme-fg-dark;
     cursor: pointer;
     padding: 10px;
     width: 100%;
@@ -668,29 +668,29 @@ button {
     border: none;
     outline: none;
     transition: 0.4s;
-    font-weight: $fontweight-bold;
+    font-weight: v.$fontweight-bold;
     border-radius: 7px;
     &.active {
         border-bottom-right-radius: 0px;
         border-bottom-left-radius: 0px;
     }
     &:after {
-        font-family: $icon-font;
+        font-family: v.$icon-font;
         font-style: normal;
-        font-weight: $icon-weight;
-        content: $triangle-right-icon;
+        font-weight: v.$icon-weight;
+        content: v.$triangle-right-icon;
         font-size: 16px;
         color: darkblue;
         float: right;
         margin-left: 5px;
     }
     &.active:after {
-        font-family: $icon-font;
+        font-family: v.$icon-font;
         font-style: normal;
-        font-weight: $icon-weight;
-        content: $triangle-down-icon;
+        font-weight: v.$icon-weight;
+        content: v.$triangle-down-icon;
         font-size: 16px;
-        color: $color-font-grey;
+        color: v.$color-font-grey;
         float: right;
         margin-left: 5px;
     }
@@ -723,7 +723,7 @@ label.custom_check,
     >div {
         width: 7px;
         height: 7px;
-        background-color: $color-spinner-fg;
+        background-color: v.$color-spinner-fg;
         border-radius: 100%;
         display: inline-block;
         -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
