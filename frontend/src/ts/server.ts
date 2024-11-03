@@ -1,4 +1,4 @@
-import {RunProgram, CheckOutput} from './server-types.ts';
+import {RunProgram, CheckOutput} from './server-types';
 
 /**
  * Worker class for server REST sequence

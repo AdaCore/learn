@@ -12,14 +12,14 @@ import {resolve} from 'path';
 
 import ace from 'brace';
 
-import {OutputArea} from '../../src/ts/areas.ts';
-import * as Strings from '../../src/ts/strings.ts';
+import {OutputArea} from '../../src/ts/areas';
+import * as Strings from '../../src/ts/strings';
 
-import {widgetFactory} from '../../src/ts/widget.ts';
-import {ServerWorker} from '../../src/ts/server.ts';
-import {CheckOutput, RunProgram} from '../../src/ts/server-types.ts';
+import {widgetFactory} from '../../src/ts/widget';
+import {ServerWorker} from '../../src/ts/server';
+import {CheckOutput, RunProgram} from '../../src/ts/server-types';
 import {getElemsByTag, getElemById, getElemsByClass}
-  from '../../src/ts/dom-utils.ts';
+  from '../../src/ts/dom-utils';
 
 global.WebSocket = WebSocket;
 

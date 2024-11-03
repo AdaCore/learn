@@ -1,5 +1,5 @@
-import * as Strings from './strings.ts';
-import {CheckOutput} from './server-types.ts';
+import * as Strings from './strings';
+import {CheckOutput} from './server-types';
 
 /** Class representing an Area */
 export class Area {

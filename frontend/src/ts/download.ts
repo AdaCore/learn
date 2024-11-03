@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
-import {ResourceList} from './resource.ts';
+import {ResourceList} from './resource';
 
 const COMMON_ADC = `pragma Restrictions (No_Specification_of_Aspect => Import);
 pragma Restrictions (No_Use_Of_Pragma => Import);

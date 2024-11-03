@@ -10,8 +10,8 @@ import {
   findMains,
   getMain,
   getGprContents,
-} from '../../src/ts/download.ts';
-import {ResourceList} from '../../src/ts/resource.ts';
+} from '../../src/ts/download';
+import {ResourceList} from '../../src/ts/resource';
 
 describe('Download', () => {
   describe('#getLanguages()', () => {

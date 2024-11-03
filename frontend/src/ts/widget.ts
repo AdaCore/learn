@@ -1,15 +1,15 @@
 import {Cookies} from 'typescript-cookies'
 
-import {Area, OutputArea, LabContainer} from './areas.ts';
-import {Editor, EditorTheme} from './editor.ts';
+import {Area, OutputArea, LabContainer} from './areas';
+import {Editor, EditorTheme} from './editor';
 import {getElemsByClass, getElemById, getElemsByTag}
-  from './dom-utils.ts';
+  from './dom-utils';
 import {downloadProject, UnparsedSwitches,
-  getUnparsedSwitches} from './download.ts';
-import {Resource, ResourceList} from './resource.ts';
-import {ServerWorker} from './server.ts';
-import {RunProgram, CheckOutput} from './server-types.ts';
-import * as Strings from './strings.ts';
+  getUnparsedSwitches} from './download';
+import {Resource, ResourceList} from './resource';
+import {ServerWorker} from './server';
+import {RunProgram, CheckOutput} from './server-types';
+import * as Strings from './strings';
 
 interface EditorView {
   readonly header: HTMLButtonElement;

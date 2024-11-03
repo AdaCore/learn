@@ -4,7 +4,7 @@ import chaiDom from 'chai-dom';
 const chai = use(chaiDom);
 
 import {getElemById, getElemsByClass, getElemsByTag}
-  from '../../src/ts/dom-utils.ts';
+  from '../../src/ts/dom-utils';
 
 describe('getElemById()', () => {
   const id = 'test-div';
