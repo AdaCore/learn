@@ -2080,6 +2080,8 @@ types. However, we can still convert between them in the same way as we did in
 the previous code examples.
 
 
+.. _Adv_Ada_View_Conversion:
+
 View conversion
 ~~~~~~~~~~~~~~~
 
