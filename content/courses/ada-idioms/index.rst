@@ -110,10 +110,10 @@ Ada Idioms
     Abstract Data Machines <chapters/abstract_data_machines>
     Programming by Extension <chapters/programming_by_extension.rst>
     Constructor Functions For Abstract Data Types <chapters/constructor_functions_for_abstract_data_types>
-    Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
+    Controlling Object Initialization and Creation <chapters/controlling_obj_initialization_creation>
+    Type Punning <chapters/type_punning>
     Expressing Inheritance Idioms <chapters/inheritance_idioms>
     Providing Component Access to Enclosing Record Objects <chapters/component_access_to_rec_objs>
-    Controlling Object Initialization and Creation <chapters/controlling_obj_initialization_creation>
     Interrupt Handling <chapters/interrupt_handling>
-    Type Punning <chapters/type_punning>
+    Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
     Appendices <chapters/appendices>
