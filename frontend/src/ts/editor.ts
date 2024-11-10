@@ -193,7 +193,7 @@ export class Editor {
     for (const s of this.sessions.values()) {
       s.session.setValue(s.initialContents);
     }
-    this.editor.gotoLine(1, 1, false);
+    this.editor.gotoLine(0, 0, false);
 
     this.clearGutterAnnotation();
   }
