@@ -5,51 +5,67 @@ Introduction
 
 .. include:: ../../global.txt
 
-This course describes how to implement selected programming idioms in the Ada
-language.
+This course describes how to implement selected programming idioms in
+the Ada language.
 
 What is an idiom? Some would say that an idiom is a workaround for an
 expressive deficiency in a programming language. That is not what we mean.
 
-For example, we have in mind solution techniques and designs that are widely
-recognized as most appropriate for certain programming situations, across
-multiple programming languages. For instance, *reference counting* is a
-well-known approach to tracking and managing the storage for objects and is
-conceptually independent of the programming language. The implementation varies
-with the language, of course, but the concept is the same. Other examples might
-include
-:wikipedia:`Resource Acquisition Is Allocation (RAII) <Resource_acquisition_is_initialization>`,
-as well as :wikipedia:`type punning <Type_punning>` and inheritance idioms such
-as
-:wikipedia:`interface inheritance <Subtyping>` and
-:wikipedia:`implementation inheritance <Implementation_inheritance>`.
+What we have in mind are answers to the question "In this situation,
+how can one best use the Ada language to express an elegant solution?".
 
-We also have in mind the best way in Ada to express fundamental, commonly known
-concepts such as Abstract Data Types, something the Ada language directly
-supports but using *building blocks* instead of a single construct. These
-concepts are included because they are fundamental to good design and because
-the building blocks require some explanation.
+Design patterns [1]_ are intended to answer that question, and indeed
+some would equate idioms with design patterns. But what we have in mind
+is more general does not focus on design patterns.
 
-In contrast, we also include idioms for programming situations specific to the
-Ada language. These are not deficiency workarounds, but rather,
-*best practices* in situations that arise given the capabilities and semantics
-in the language. For example, Ada directly supports tasks (threads). There is
-an idiom for how best to associate a task with an enclosing object so that the
-task has visibility to the object's other components.
+For example, :wikipedia:`Reference Counting <Reference_counting>` is a
+well-known approach to tracking and managing the storage for objects and
+is conceptually independent of the programming language. However,
+reference counting is not a design pattern.
 
-Some would equate idioms with design patterns. That's not unreasonable but is
-more narrow than we intend. This is not a document dedicated to describing how
-to use Ada to implement various design patterns. But note that we may refer to
-a design pattern to illustrate an idiom's purpose and implementation. For
-example, in the idiom for controlling object creation and initialization, the
-implementation approach happens to be the same as for expressing a
-Singleton [1]_. Some idiom entries might even be dedicated to implementing
-design patterns, but the intent is beyond just that.
+Likewise, :wikipedia:`Resource Acquisition Is Allocation (RAII)
+<Resource_acquisition_is_initialization>`, :wikipedia:`type punning
+<Type_punning>`, :wikipedia:`interface inheritance <Subtyping>`, and
+:wikipedia:`implementation inheritance <Implementation_inheritance>` are
+not design patterns.
+
+Those are the kinds of situations and solutions we focus upon.
+
+That said, we may refer to a design pattern to illustrate an idiom's
+purpose and/or implementation. For example, in the idiom for controlling
+object creation and initialization, the implementation approach happens
+to be the same as for expressing a Singleton [1]_.
+
+That's not to say that we could not have a design pattern as an idiom
+solution. But if so, the purpose of the idiom entry would be to
+illustrate some Ada programming technique, rather than the expression of
+the design pattern itself.
+
+In addition to language-independent situations, we also include
+solutions for situations specific to the Ada language. These are not
+deficiency workarounds, but rather, *best practices* in situations that
+arise given the capabilities and semantics in the language.
+
+For example, Ada directly supports tasks (threads) via a dedicated
+construct consisting of local objects and a sequence of statements.
+Tasks can also be defined as types, and then used to define components
+for other composite types. As a result, there is an idiom showing how to
+associate a task type with an enclosing composite type so that the task
+components have visibility to the enclosing object's other components.
+
+In all the idioms we want to apply the fundamental principles of
+software engineering, especially those of abstraction and information
+hiding. Therefore, we include an idiom for expressing abstractions as
+types, with compile-time visibility control over the representation.
+These are the well-known Abstract Data Types, something the Ada language
+directly supports but using *building blocks* instead of a single
+construct. For that same reason we include another idiom for defining
+abstractions that manage global data (Abstract Data Machines). Most of
+the idioms' solutions will be defined using these abstraction techniques
+as their starting point.
 
 Perhaps instead of *idiom* we should have used the term *cookbook,* but
-although descriptive for some entries, that term didn't completely convey the
-intent either.
-
+although appropriate, that term didn't completely convey the intent either.
 
 Assumptions
 -----------
@@ -117,10 +133,15 @@ body, as both parts contain implementation artifacts. In class-oriented
 languages, parts of the class can be marked as *public,* *private*, and
 *protected* (the details depend on the specific language).
 
-The idioms explored in
-:ref:`Fundamental Packages <Ada_Idioms_Essential_Design_Idioms_For_Packages>`
-are largely variations on expressing this control in Ada. More details on the
-topic are provided in those idioms.
+The idioms :ref:`Abstract Data Types <Ada_Idioms_Abstract_Data_Types>`
+and :ref:`Abstract Data Types <Ada_Idioms_Abstract_Data_Machines>` are
+prime examples used throughout the other idioms.
+
+The idioms explored in :ref:`Fundamental Packages
+<Ada_Idioms_Essential_Design_Idioms_For_Packages>` are largely
+variations on expressing this control in Ada.
+
+More details on the topic are provided in those idioms.
 
 Views
 ~~~~~
