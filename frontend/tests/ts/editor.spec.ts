@@ -4,7 +4,7 @@ import chaiDom from 'chai-dom';
 
 const chai = use(chaiDom);
 
-import ace from 'brace';
+import * as Ace from 'ace-builds';
 
 import {Editor, EditorTheme} from '../../src/ts/editor';
 import {Resource} from '../../src/ts/resource';
@@ -12,7 +12,7 @@ import {Resource} from '../../src/ts/resource';
 describe('Editor', () => {
   let inTest: Editor;
   let parent: HTMLDivElement;
-  let editor: ace.Editor;
+  let editor: Ace.Ace.Editor;
 
   const resource: Resource = {
     basename: 'my_file.adb',
@@ -22,7 +22,7 @@ describe('Editor', () => {
   before(() => {
     parent = document.createElement('div');
     inTest = new Editor(parent);
-    editor = ace.edit(parent);
+    editor = Ace.edit(parent);
   });
 
   after(() => {
@@ -74,8 +74,7 @@ describe('Editor', () => {
     it('should modify the initial contents and move the cursor', () => {
       editor.getSession().doc.insert({row: 0, column: 0}, '\n');
       const row = editor.session.getLength() - 1;
-      const column = editor.session.getLine(row).length;
-      editor.gotoLine(row + 1, column);
+      editor.gotoLine(row + 1, 0, false);
 
       expect(editor.getValue()).not.to.equal(resource.contents);
       expect(editor.getCursorPosition()).not.to.deep.equal({row: 0, column: 0});
