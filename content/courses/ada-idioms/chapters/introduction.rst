@@ -18,7 +18,7 @@ Design patterns [1]_ are intended to answer that question, and indeed
 some would equate idioms with design patterns. But what we have in mind
 is more general does not focus on design patterns.
 
-For example, :wikipedia:`Reference Counting`<Reference_counting> is a
+For example, :wikipedia:`Reference Counting <Reference_counting>` is a
 well-known approach to tracking and managing the storage for objects and
 is conceptually independent of the programming language. However,
 reference counting is not a design pattern.
