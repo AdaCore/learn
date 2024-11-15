@@ -1,8 +1,10 @@
-import ace from 'brace';
-import 'brace/mode/ada';
-import 'brace/mode/c_cpp';
-import 'brace/theme/tomorrow';
-import 'brace/theme/tomorrow_night';
+import * as Ace from 'ace-builds';
+
+import 'ace-builds/src-noconflict/mode-ada';
+import 'ace-builds/src-noconflict/mode-c_cpp';
+import 'ace-builds/src-noconflict/theme-tomorrow';
+import 'ace-builds/src-noconflict/theme-tomorrow_night';
+
 
 /* eslint-disable no-unused-vars */
 export enum EditorTheme {
@@ -18,15 +20,15 @@ export enum EditorLanguage {
 
 interface SessionData {
   initialContents: string;
-  session: ace.IEditSession;
+  session: Ace.Ace.EditSession;
 }
 
 type SessionMap = Map<string, SessionData>;
 
 /** Class representing an Editor */
 export class Editor {
-  private readonly editor: ace.Editor;
-  private readonly nontabbedEditors : Array<ace.Editor>;
+  private readonly editor: Ace.Ace.Editor;
+  private readonly nontabbedEditors : Array<Ace.Ace.Editor>;
 
   private sessions: SessionMap = new Map();
   private maxLength = 0;
@@ -36,7 +38,7 @@ export class Editor {
    * @param {HTMLDivElement} elem - The element that will contain the editor
    */
   constructor(elem: HTMLDivElement) {
-    this.editor = ace.edit(elem);
+    this.editor = Ace.edit(elem);
     this.initACEEditor(this.editor);
     this.nontabbedEditors = [];
   }
@@ -50,14 +52,15 @@ export class Editor {
 
   /**
    * Configures the ACE editor
-   * @param {ace.Editor} editor - The ACE editor
+   * @param {Ace.Editor} editor - The ACE editor
    */
-  private initACEEditor(editor: ace.Editor) {
-    editor.$blockScrolling = Infinity;
+  private initACEEditor(editor: Ace.Ace.Editor) {
+    //editor.$blockScrolling = Infinity;
 
     // ... and content options
     editor.setShowPrintMargin(false);
-    editor.gotoLine(1);
+    editor.gotoLine(1, 1, false);
+
 
     editor.setOptions({
       highlightActiveLine: false,
@@ -97,7 +100,7 @@ export class Editor {
   public addSession(basename: string, content: string): void {
     const data: SessionData = {
       initialContents: content,
-      session: new ace.EditSession(content),
+      session: new Ace.EditSession(content),
     };
 
     // Set the mode
@@ -116,7 +119,7 @@ export class Editor {
     }
 
     // clear undo stack to avoid undoing everything we just did
-    data.session.setUndoManager(new ace.UndoManager());
+    data.session.setUndoManager(new Ace.UndoManager());
 
     this.sessions.set(basename, data);
   }
@@ -129,7 +132,7 @@ export class Editor {
   public addNonTabbedEditor(basename: string, elem: HTMLDivElement): void {
     const data = this.getSession(basename);
 
-    const newEditor = ace.edit(elem);
+    const newEditor = Ace.edit(elem);
     this.initACEEditor(newEditor);
     newEditor.setSession(data.session);
 
@@ -190,7 +193,8 @@ export class Editor {
     for (const s of this.sessions.values()) {
       s.session.setValue(s.initialContents);
     }
-    this.editor.gotoLine(1);
+    this.editor.gotoLine(0, 0, false);
+
     this.clearGutterAnnotation();
   }
 

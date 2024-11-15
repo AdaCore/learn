@@ -10,7 +10,7 @@ const chai = use(chaiAsPromised);
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
-import ace from 'brace';
+import * as Ace from 'ace-builds';
 
 import {OutputArea} from '../../src/ts/areas';
 import * as Strings from '../../src/ts/strings';
@@ -159,7 +159,7 @@ describe('Widget', () => {
       });
 
       describe('Normal Behavior', () => {
-        let editor: ace.Editor;
+        let editor: Ace.Ace.Editor;
         const consoleMsg = 'This is a console message';
         const clickableInfoMsg = 'test.adb:1:2: info: This is an info message';
         const clickableStdoutMsg = 'test.adb:2:3: Clickable stdout message';
@@ -195,7 +195,7 @@ describe('Widget', () => {
 
         before(async () => {
           const editorDiv = getElemById(root.id + '.editors.editor');
-          editor = ace.edit(editorDiv);
+          editor = Ace.edit(editorDiv);
 
           server.on('connection', (socket) => {
             socket.on('message', (event) => {
@@ -404,11 +404,11 @@ describe('Widget', () => {
 
     describe('Settings Bar', () => {
       let editorDiv: HTMLElement;
-      let editor: ace.Editor;
+      let editor: Ace.Ace.Editor;
 
       before(() => {
         editorDiv = getElemById(root.id + '.editors.editor');
-        editor = ace.edit(editorDiv);
+        editor = Ace.edit(editorDiv);
       });
 
       it('should have a button that resets the editor', () => {

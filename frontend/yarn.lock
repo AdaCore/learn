@@ -3059,6 +3059,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ace-builds@npm:^1.36.4":
+  version: 1.36.4
+  resolution: "ace-builds@npm:1.36.4"
+  checksum: 10c0/f36dacc2099559a1c3ba4622bfca627072b030c04776c96bcc482e4bccb32550d9631c225b174c4df127e1086c2e534669f8aad3bbe2fb1c48a10b9395f9f205
+  languageName: node
+  linkType: hard
+
 "acorn-jsx@npm:^3.0.0":
   version: 3.0.1
   resolution: "acorn-jsx@npm:3.0.1"
@@ -3752,13 +3759,6 @@ __metadata:
   dependencies:
     balanced-match: "npm:^1.0.0"
   checksum: 10c0/b358f2fe060e2d7a87aa015979ecea07f3c37d4018f8d6deb5bd4c229ad3a0384fe6029bb76cd8be63c81e516ee52d1a0673edbe2023d53a5191732ae3c3e49f
-  languageName: node
-  linkType: hard
-
-"brace@npm:^0.11.1":
-  version: 0.11.1
-  resolution: "brace@npm:0.11.1"
-  checksum: 10c0/c29e09016edb9da0ddba21c6a956b62a5de06a6ac243bcfe25fbbea5b16304933f2105904aa823932e0595f87449b3b935761fb454a822175f1e5e1582a9544d
   languageName: node
   linkType: hard
 
@@ -8602,11 +8602,11 @@ __metadata:
     "@types/node": "npm:^20.17.5"
     "@typescript-eslint/eslint-plugin": "npm:^8.12.2"
     "@typescript-eslint/parser": "npm:^8.12.2"
+    ace-builds: "npm:^1.36.4"
     acorn: "npm:^8.14.0"
     amd-loader: "npm:^0.0.8"
     autoprefixer: "npm:^10.4.20"
     babel-loader: "npm:^9.2.1"
-    brace: "npm:^0.11.1"
     chai: "npm:^5.1.2"
     chai-as-promised: "npm:^8.0.0"
     chai-dom: "npm:^1.12.0"
