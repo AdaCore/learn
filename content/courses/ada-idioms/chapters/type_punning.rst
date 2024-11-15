@@ -52,8 +52,8 @@ static named typing with rigorous enforcement by the compiler.
 Specifically, the Ada compiler checks that the operations and values applied to
 an object are consistent with the one type specified when the object is
 declared. Any usage not consistent with that type is rejected by the compiler.
-Similarly, the Ada compiler also checks that any type conversions, which must
-be explicit, involve only those types that the language defines as meaningfully
+Similarly, the Ada compiler also checks that any type conversions
+involve only those types that the language defines as meaningfully
 convertible.
 
 By design, this strong typing model does not lend itself to circumvention
@@ -146,7 +146,7 @@ Here is a simple main program that illustrates the approach.
 
    procedure Main is
 
-      X : aliased Integer := 0;
+      X : aliased Integer := 42;
 
       type Bits32 is array (0 .. 31) of Boolean
         with Component_Size => 1;
@@ -171,10 +171,13 @@ view, and every reference via :ada:`Y` is compatible with the array view.
 
 In the above example, we've ignored the endianess issue. If you wanted to change the
 sign bit, for example, or display the bits in the "correct" order, you'd need to
-know that detail.
+handle that detail.
 
 This expression of type-punning does not use an escape hatch but does achieve
-the effect.
+the effect. (We don't include address clauses as an escape hatch because address
+clauses aren't dedicated to overlaying multiple objects of different types. On
+the other hand, even one Ada object with an address specified overlays that object's view
+with the machine storage view of that address...)
 
 
 Second Solution: Unchecked Conversions on Address Values
@@ -196,7 +199,7 @@ values. We need the escape hatch.
 Unchecked conversion requires instantiation of the generic function
 :ada:`Ada.Unchecked_Conversion`, including a context clause for that unit,
 making it a relatively heavy mechanism. This heaviness is intentional, and the
-with-clause at the top of the client unit makes it noticeable. Although
+with_clause at the top of the client unit makes it noticeable. Although
 ubiquitous use strongly suggests abuse of the type model, in this case
 unchecked conversion is necessary. Nevertheless, we'd hide its use within the
 body of some visible unit.

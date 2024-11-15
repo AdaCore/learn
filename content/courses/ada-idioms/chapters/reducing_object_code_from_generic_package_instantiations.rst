@@ -116,7 +116,7 @@ Instead, we can simply instantiate the generic at the library level:
     package Real_IO is new Ada.Text_IO.Float_IO (Common.Real);
 
 Because the instantiation occurred at the library level, the resulting instance
-is declared at the library level, and can therefore be named in a "with-clause"
+is declared at the library level, and can therefore be named in a "with_clause"
 like any other library package.
 
 .. code-block:: ada
@@ -126,7 +126,7 @@ like any other library package.
         --  ...
     end User1;
 
-Each client package can use the same instance via the with-clause, and there’s
+Each client package can use the same instance via the with_clause, and there’s
 only one instance so there’s only one copy of the object code.
 
 
@@ -142,7 +142,7 @@ Cons
 
 What would otherwise be an implementation detail hidden from clients can now
 become visible to them because a (public) library unit can be named in
-with-clause by any other unit. As a result, this approach should not be used in
+with_clause by any other unit. As a result, this approach should not be used in
 all cases, not even as a default design approach. Restricting the visibility of
 the instance may be more important than the amount of object code it
 contributes. Hiding implementation artifacts allows more freedom to change the

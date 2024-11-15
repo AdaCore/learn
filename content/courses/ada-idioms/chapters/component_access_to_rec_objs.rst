@@ -201,6 +201,15 @@ and again in the type completion in the package private part:
 
     type Enclosing is tagged limited record ... end record;
 
+We declare Enclosing as a limited type because we want to preclude 
+assignment statements for client objects of the type. Assignment of the 
+enclosing record object would leave the PO Instance discriminant 
+designating the prior (right-hand side) enclosing object. If the PO is 
+written with the assumption that the enclosing object is always the one 
+identified during creation of the PO, that assumption will no longer 
+hold. We didn't state it up-front, but that is the assumption underlying
+the idiom as described. 
+
 The type need not be tagged for this idiom solution, but if you do make it
 tagged, the partial and full views must always match. That is, a tagged type
 must be limited in both views if it is limited in either view.

@@ -111,7 +111,7 @@ The ADT may also be abstract in the sense of object-oriented programming but
 that is an unrelated issue.
 
 In Ada we use *private types* to define abstract data types because private
-types make the type's name visible to clients, but not the representation.
+types make the type's name, but not the representation, visible to clients.
 These types are composed using syntactical building blocks: a package
 declaration, separated into two parts, containing a type declared in two parts,
 and containing declarations for subprograms to manipulate objects of the type
@@ -194,8 +194,8 @@ Client code can use the type name to declare objects because the name is
 visible. Likewise, clients can declare their own subprograms with parameters
 of type :ada:`Stack`, or use type :ada:`Stack` as the component type in a
 composite type declaration. Clients can use a private type in any way
-consistent with the rest of the visible type declaration, except for anything
-representation-dependent.
+consistent with the visible type declaration. They just cannot reference the
+type's representation details.
 
 The full type definition occurs in the package private part. Therefore, for
 any given object of the type, the representation details |mdash| the two

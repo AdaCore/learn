@@ -142,7 +142,7 @@ In this code, :ada:`Vector` and :ada:`Matrix` are the types under
 consideration. The type :ada:`Real` might be declared here too, but it might be
 better declared in a
 :ref:`Named Collection of Declarations <Ada_Idioms_Named_Collection_Of_Declarations>`
-package referenced in a with-clause. In any case this package declares types
+package referenced in a with_clause. In any case this package declares types
 and subprograms that manipulate values of the types via parameters.
 
 Variables might also be declared in the package, but not as the central purpose
@@ -203,12 +203,8 @@ expensive.
 
 However, compile-time visibility to the type representations may be necessary
 to meet client expectations. For example, engineers expect to use indexing
-with vectors and matrices. Ada |mdash| by design |mdash| does not allow
-developers to redefine extremely low-level operations such as array indexing.
-Consequently, those types must be compile-time visible to clients as array
-types. We could define functions as alternatives to indexing and aggregates,
-but would clients accept that relatively heavy approach?
-
+with vectors and matrices. As of Ada 2012, developers can specify the meaning
+of array indexing but the approach is fairly heavy.
 
 Notes
 -----
