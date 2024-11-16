@@ -144,7 +144,7 @@ types in the same package.
 Any form of private type is allowed with this idiom: basic private types,
 tagged/abstract/limited private types, private type extensions, and so forth.
 What's important is that the representation occurs in the private part so that
-is it not compile-time visible to clients.
+it is not compile-time visible to clients.
 
 The abstraction's operations will consist of subprograms that each have a
 formal parameter of the type. Clients will declare objects of the type and pass
