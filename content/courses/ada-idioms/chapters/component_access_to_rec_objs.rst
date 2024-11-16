@@ -201,7 +201,7 @@ and again in the type completion in the package private part:
 
     type Enclosing is tagged limited record ... end record;
 
-We declare Enclosing as a limited type because we want to preclude 
+We declare :ada:`Enclosing` as a limited type because we want to preclude 
 assignment statements for client objects of the type. Assignment of the 
 enclosing record object would leave the PO Instance discriminant 
 designating the prior (right-hand side) enclosing object. If the PO is 
