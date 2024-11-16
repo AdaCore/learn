@@ -295,8 +295,8 @@ in a derivation:
 
        procedure Open
          (This            : in out Basic_Account;
-          Name            : in String;
-          Initial_Deposit : in Currency)
+          Name            : String;
+          Initial_Deposit : Currency)
        with Pre'Class => not Open (This),
             Post'Class => Open (This);
 
@@ -339,8 +339,8 @@ Inheritance:
        overriding
        procedure Open
          (This            : in out Account;
-          Name            : in String;
-          Initial_Deposit : in Currency)
+          Name            : String;
+          Initial_Deposit : Currency)
        with Pre => Initial_Deposit >= Minimum_Balance (This);
 
        overriding
@@ -481,7 +481,7 @@ when objects of the :ada:`Queue` type cease to exist:
 
        type Queue is tagged limited private;
 
-       procedure Insert (Into : in out Queue;  Item : in Element) with
+       procedure Insert (Into : in out Queue;  Item : Element) with
          Post => not Empty (Into) and
                  Extent (Into) = Extent (Into)'Old + 1;
          --  may propagate Storage_Error
@@ -537,8 +537,8 @@ API. :ada:`Reset` does exactly what we want :ada:`Finalize` to do, so we
 implement the overridden :ada:`Finalize` by saying that it is just another name
 for :ada:`Reset`. No completion body for :ada:`Finalize` is then required or
 allowed. This approach has the same semantics as if we did explicitly write a
-body for :ada:`Finalize` that simply called :ada:`Reset`, but it avoids the code
-and the extra layer of subprogram call. Clients can call :ada:`Reset` whenever
+body for :ada:`Finalize` that simply called :ada:`Reset`, but this is more succinct.
+Clients can call :ada:`Reset` whenever
 they want, but the procedure will also be called automatically, via
 :ada:`Finalize`, when any :ada:`Queue` object ceases to exist.
 

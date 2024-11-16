@@ -23,9 +23,8 @@ programming language. Furthermore, like the ADT, operations are provided to
 manipulate the abstraction data, state that is not otherwise compile-time
 visible to client code. These operations are thus enforced as the only
 manipulation possible, as per the designer's intent.  (The Abstract Data
-Machine was introduced by Booch as the Abstract State Machine, but that name
-can be confused with another concept that, though somewhat related, is not the
-same thing.)
+Machine was introduced by Grady Booch [1]_ as the Abstract State Machine, but that
+name, though appropriate, encompasses more in computer science than we intend.)
 
 Unlike the ADT, however, the ADM does not define the abstraction as a type. To
 understand this point, recall that type declarations are descriptions for
@@ -283,3 +282,9 @@ But if one can know with certainty that only one thing is ever going to be
 represented, as in the hardware switch example, the ADM limitations are
 irrelevant. That said, certainty is usually not available |mdash| even the
 hardware changes.
+
+Bibliography
+------------
+
+.. [1] Booch, G. (1983). Software Engineering with Ada, Benjamin/Cummings
+       Publishing Company.

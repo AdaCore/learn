@@ -16,7 +16,7 @@ how can one best use the Ada language to express an elegant solution?".
 
 Design patterns [1]_ are intended to answer that question, and indeed
 some would equate idioms with design patterns. But what we have in mind
-is more general and does not focus on design patterns.
+is more general in scope.
 
 For example, :wikipedia:`Reference Counting <Reference_counting>` is a
 well-known approach to tracking and managing the storage for objects and
@@ -42,8 +42,8 @@ illustrate some Ada programming technique, rather than the expression of
 the design pattern itself.
 
 In addition to language-independent situations, we also include
-solutions for situations specific to the Ada language. These are not
-deficiency workarounds, but rather, *best practices* in situations that
+solutions for situations specific to the Ada language. These idioms are
+*best practices* in situations that
 arise given the capabilities and semantics in the language.
 
 For example, Ada directly supports tasks (threads) via a dedicated
@@ -134,7 +134,7 @@ languages, parts of the class can be marked as *public,* *private*, and
 *protected* (the details depend on the specific language).
 
 The idioms :ref:`Abstract Data Types <Ada_Idioms_Abstract_Data_Types>`
-and :ref:`Abstract Data Types <Ada_Idioms_Abstract_Data_Machines>` are
+and :ref:`Abstract Data Machines <Ada_Idioms_Abstract_Data_Machines>` are
 prime examples used throughout the other idioms.
 
 The idioms explored in :ref:`Fundamental Packages
@@ -164,7 +164,7 @@ that formal parameter is a mode-in parameter, within that procedure body the
 view of the actual parameter is as if it is a constant rather than a variable.
 No assignments via the formal parameter name are allowed because the view at
 that point in the text |mdash| within that procedure body |mdash| doesn't allow
-them, unlike the view outside the body.
+them, unlike the view available at the point of the call.
 
 As another example, consider a tagged type named :ada:`Parent`, and a type
 derived from it via type extension, named :ada:`Child`. It is common for a
@@ -203,7 +203,7 @@ Private type declarations must occur in the *public part* of a package
 declaration. Anything declared there is compile-time visible to clients of the
 package so the type's name is visible, and potentially some other properties as
 well. Clients can therefore declare objects of the type name, for example, but
-must adhere to their partial view's affect on what is compile-time visible.
+must adhere to their partial view's effect on what is compile-time visible.
 
 The private type's full representation must be specified within the
 *private part* of that same package declaration. For example:
