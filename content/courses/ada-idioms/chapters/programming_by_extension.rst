@@ -42,10 +42,11 @@ required for the completion of the private type. That was the case with the
        end record;
     end Integer_Stacks;
 
-The array type :ada:`Content` is required for the :ada:`Stack` record component
-because anonymously-typed array components are illegal. Clients have no
-business using the type :ada:`Content` directly so although it would be legal
-to declare it in the public part, declaration in the private part is proper.
+The array type :ada:`Content` is required for the :ada:`Stack` record
+component because anonymously-typed array components are illegal. Clients
+have no business using the type :ada:`Content` directly so although it
+would be legal to declare it in the public part, declaration in the private
+part is more appropriate.
 
 Likewise, a function called to provide the default initial value for a private
 type's component must be declared prior to the reference. If the function is
@@ -83,23 +84,23 @@ with the stack state declared in the package body:
        function Empty return Boolean is ...
     end Integer_Stack;
 
-We could add the package private part to the package declaration and move the
-state of the
-:ref:`ADM <Ada_Idioms_Abstract_Data_Machines>` |mdash| the two variables in
-this case |mdash| up there without any other changes. The subprogram bodies
-have the same visibility to the two variables either way. (There is no
-requirement for the :ada:`Content` type because :ada:`Values` is not a record
-component. Anonymously-typed array objects are legal.) From the viewpoint of
-the language and the abstraction the location is purely up to the developer.
+We could add the private part to the package declaration and move the state
+of the :ref:`ADM <Ada_Idioms_Abstract_Data_Machines>` |mdash| the two
+variables in this case |mdash| up there without any other changes. The
+subprogram bodies have the same visibility to the two variables either
+way. (There is no requirement for the :ada:`Content` type because
+:ada:`Values` is not a record component; anonymously-typed array objects
+are legal.) From the viewpoint of the language and the abstraction, the
+location is purely up to the developer.
 
 Solution
 --------
 
-When you have a choice, placement in either the package private part or the
-package body is reasonable, but only one of the two locations is amenable to
-future requirements.
+When you have a choice of placement, putting the state in either the package
+private part or the package body is reasonable, but only one of the two is
+amenable to future requirements.
 
-Specifically, placement in the private part of the package will allow
+Specifically, placement in the private part of the package allows
 *programming by extension* [1]_ via hierarchical *child* packages. Child
 packages can be written immediately after the *parent* package but can also be
 written years later, thus accommodating changes due to new requirements.
@@ -107,7 +108,7 @@ written years later, thus accommodating changes due to new requirements.
 Programming by extension allows us to extend an existing package's facilities
 without having to change the existing package at all. Avoiding source code
 changes to the existing package is important because doing so might be very
-expensive. In certified systems the changed package would require
+expensive. In certified systems, the changed package would require
 re-certification, for example. Changes to the parent package are avoidable
 because child packages have compile-time visibility to the private part of the
 ancestor package (actually the entire ancestor package hierarchy, any of which

@@ -41,10 +41,9 @@ Ada Idioms
 
 .. container:: content-description
 
-    This course will teach you the basics of the Ada programming language and
-    is intended for those who already have a basic understanding of programming
-    techniques. You will learn how to apply those techniques to programming in
-    Ada.
+    This course describes how to implement selected programming idioms in
+    the Ada language. Prior knowledge of Ada is required, although some explanations
+    of the underlying semantics are provided when appropriate.
 
     This document was written by Patrick Rogers.
 
