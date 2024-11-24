@@ -48,11 +48,11 @@ we express that inheritance via derived types representing the categories and
 subcategories. Ada's strong typing ensures they are treated as disjoint
 entities.
 
-Although the derived child type is distinct from the parent type, the
-child is the same *kind* as the parent type. Some authors use *kind of*
-as the name for the relationship between the child and parent. Meyer
-uses the term *is-a* [1]_, a popular term that we will use too. For
-example, a cat *is a* mammal, and also is an animal.
+Although the derived child type is distinct from the parent type, the child is
+the same *kind* as the parent type. Some authors use *kind of* as the name for the
+relationship between the child and parent. Meyer uses the term *is-a* [1]_, a
+popular term that we will use too. For example, a cat *is a* mammal, and also is
+an animal.
 
 The fundamental difference between
 :ref:`Subtype Inheritance <Ada_Idioms_Subtype_Inheritance>` and
@@ -87,11 +87,10 @@ declarations for derived types, providing considerable flexibility and
 expressive power for controlling the client's view of the child and parent
 types.
 
-For example, in Ada, full dynamic OOP capabilities require type
-declarations to be decorated with the reserved word :ada:`tagged`. However,
-from its earliest days, Ada has also supported a static form of
-inheritance, using types that are not tagged. The solution we describe
-below works with both forms of inheritance.
+For example, in Ada, full dynamic OOP capabilities require type declarations to
+be decorated with the reserved word :ada:`tagged`. However, from its earliest days,
+Ada has also supported a static form of inheritance, using types that are not
+tagged. The solution we describe below works with both forms of inheritance.
 
 The developer also has a choice of whether the parent type and/or the child type
 is a private type. Using private types is the default design choice, for the
@@ -208,11 +207,12 @@ then show the two idiom expressions in separate subsections.
 - Whether the child type is visibly derived will vary with the
   :ref:`inheritance idiom <Ada_Idioms_Implementation_Inheritance>` solution.
 
-To avoid unnecessary code duplication, we use the same parent type,
-declared as a simple tagged private type, in the examples for the two idiom
-solutions.  The parent type could itself be derived from some other tagged
-type, but that changes nothing conceptually significant. We declare parent
-type in package :ada:`P` as follows:
+To avoid unnecessary code duplication, we use
+the same parent type, declared as a simple tagged private type, in the examples
+for the two idiom solutions. The parent type
+could itself be derived from some other tagged type, but that changes nothing
+conceptually significant. We declare parent type in package :ada:`P` as
+follows:
 
 .. code-block:: ada
 
@@ -248,12 +248,12 @@ part of the package:
       type Child is new Parent with record ... end record;
     end Q;
 
-The primitive operations from the parent type are implicitly declared
-immediately after the private extension declaration. That means those
+The primitive operations from the parent type are implicitly
+declared immediately after the private extension declaration. That means those
 operations are in the visible part of the package, hence clients can invoke
 them. Any additional operations for the client interface will be explicitly
-declared in the visible part as well, as will any overriding declarations
-for those inherited operations that are to be changed.
+declared in the visible part as well, as will any overriding declarations for
+those inherited operations that are to be changed.
 
 For example, here is a basic bank account
 :ref:`ADT <Ada_Idioms_Abstract_Data_Types>` that we will use as the parent type
@@ -466,9 +466,9 @@ For example, we might use a *controlled type* in the implementation of a
 tagged private type. These types have procedures :ada:`Initialize` and
 :ada:`Finalize` defined as primitive operations. Both are called automatically
 by the compiler. Clients generally don't have any business directly calling
-them so we usually use implementation inheritance with controlled types.
-But if clients did have the need to call them we would use Subtype Inheritance
-instead, to make them visible to clients.
+them so we usually use implementation inheritance with controlled types. But if
+clients did have the need to call them we
+would use Subtype Inheritance instead, to make them visible to clients.
 
 For example, the following is a generic package providing an abstract data type
 for unbounded queues. As such, the :ada:`Queue` type uses dynamic allocation

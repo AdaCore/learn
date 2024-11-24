@@ -65,11 +65,10 @@ functions that return an object of the type.
 Like any function there may be formal parameters specified, but not necessarily.
 
 Functions and procedures that manipulate objects of the private type are
-*primitive operations* for the type if they are declared in the same
-package as the type declaration itself. For procedures, that means they
-have formal parameters of the type. For functions, that means they
-either have formal parameters of the type, or return a value of the
-type, or both.
+*primitive operations* for the type if they are declared in the same package as
+the type declaration itself. For procedures, that means they have formal
+parameters of the type. For functions, that means they either have formal
+parameters of the type, or return a value of the type, or both.
 
 Declaration with the same package as the type itself provides the
 compile-time visibility to the type's representation required to

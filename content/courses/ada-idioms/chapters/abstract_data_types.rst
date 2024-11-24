@@ -84,15 +84,15 @@ fuel injectors, the spark plugs, the steering shaft, the tie rods, and
 everything else |mdash| we'd certainly crash.
 
 We use abstraction in programming for the same reason. In higher-level
-languages, an array is an abstraction for the combination of a base address
-and offset. A file system is composed of a number of layered abstractions,
-including files (at the top), then tracks, then sectors, then blocks, and
-ultimately down to individual bytes. A data structure, such as a stack, a
-queue, or a linked list, is an example of an abstraction, as is a valve, an
-air-lock, and an engine when represented in software. Even procedures and
-functions are abstractions for lower-level operations. Decomposing via abstractions
-allows us to manage complexity because at any given layer we can focus on
-*what* is being done, rather than how.
+languages, an array is an abstraction for the combination of a base address and
+offset. A file system is composed of a number of layered abstractions,
+including files (at the top), then tracks, then sectors, then blocks, and ultimately
+down to individual bytes. A data structure, such as a stack, a queue, or a
+linked list, is an example of an abstraction, as is a valve, an air-lock, and
+an engine when represented in software. Even procedures and functions are
+abstractions for lower-level operations. Decomposing via abstractions allows us
+to manage complexity because at any given layer we can focus on *what* is being
+done, rather than how.
 
 Therefore, an abstract data type is a type that is abstract in the sense that
 [2]_:
@@ -131,26 +131,26 @@ Therefore, an ADT package declaration may contain any of the following:
 
 If possible, you should declare at most one private type per ADT package.
 This keeps things simple and follows the "cohesive" principle.  (Note that
-the *limited-with* construct directly facilitates declaring
-mutually-dependent private types that are each declared in their own
-dedicated packages). However, it's not unreasonable to declare more than
-one private type in the same package, especially if one of the types is
-clearly the primary type and the other private type is related to the
-first. For example, in defining an ADT for a maze, we could declare a
-private type named :ada:`Maze` to be the primary abstraction. But mazes
-have positions within them, and as clients have no business knowing how
-positions are represented, both :ada:`Maze` and :ada:`Position` could
-reasonably be declared as private types in the same package.
+the *limited-with* construct directly
+facilitates declaring mutually-dependent private types that are each declared
+in their own dedicated packages). However, it's not unreasonable to
+declare more than one
+private type in the same package, especially if one of the types is clearly
+the primary type and the other private type is related to the first. For
+example, in defining an ADT for a maze, we could declare a private type named
+:ada:`Maze` to be the primary abstraction. But mazes have positions within
+them, and as clients have no business knowing how positions are represented,
+both :ada:`Maze` and :ada:`Position` could reasonably be declared as private
+types in the same package.
 
 You may use any form of private type with this idiom: basic private types,
-tagged/abstract/limited private types, private type extensions, and so
-forth.  What's important is that the representation occurs in the private
-part so that it's not compile-time visible to clients.
+tagged/abstract/limited private types, private type extensions, and so forth.
+What's important is that the representation occurs in the private part so that
+it's not compile-time visible to clients.
 
-The abstraction's operations consist of subprograms that each have one or
-more formal parameters of the type. Clients will declare objects of the
-type and pass these objects as formal parameters to manipulate those
-objects.
+The abstraction's operations consist of subprograms that each have one or more
+formal parameters of the type. Clients will declare objects of the type and pass
+these objects as formal parameters to manipulate those objects.
 
 The operations are known as *primitive operations* because they have the
 compile-time visibility to the private type's representation necessary to
@@ -193,27 +193,27 @@ introduces the type name and ends with the keyword :ada:`private` to
 indicate that its representation is not provided to clients.
 
 Client code can use the type name to declare objects because the name is
-visible. Likewise, clients can declare their own subprograms with
-parameters of type :ada:`Stack`, or use type :ada:`Stack` as the component
-type in a composite type declaration. Clients can use a private type in any
-way that's consistent with the rest of the visible type declaration, except
-they can't see anything representation-dependent.
+visible. Likewise, clients can declare their own subprograms with parameters
+of type :ada:`Stack`, or use type :ada:`Stack` as the component type in a
+composite type declaration. Clients can use a private type in any way that's
+consistent with the rest of the visible type declaration, except they can't see
+anything representation-dependent.
 
-The full type definition is in the package private part. Therefore, for any
-given object of the type, the representation details |mdash| the two record
-components in this example |mdash| can't be referenced in client code.
-Clients must instead only use the operations defined by the package,
-passing the client objects to the formal parameters. Only the bodies of
-these operations have compile-time visibility to the representation of the
-:ada:`Stack` parameters, so only they can implement the functionality for
-those parameters.
+The full type definition is in the package private part. Therefore, for
+any given object of the type, the representation details |mdash| the two
+record components in this example |mdash| can't be referenced in client code.
+Clients must instead only use the operations defined by the package, passing
+the client objects to the formal parameters. Only the bodies of these operations
+have compile-time visibility to the representation of the :ada:`Stack`
+parameters, so only they can implement the functionality for those parameters.
 
 Because package-defined subprograms are the only code that can access the
-internals of objects of the type, the designer's intended abstract
-operations are strictly enforced. They are the only manipulations that a
-client can perform. As we mentioned, basic operations such as assignment
-are allowed, unless the ADT is *limited* as well as private, but these
-basic operations do not violate the abstraction.
+internals of objects of the type, the designer's intended abstract operations
+are strictly enforced. They are the only manipulations that a client can
+perform. As we
+mentioned, basic operations such as assignment are allowed, unless the ADT is
+*limited* as well as private, but these basic operations do not violate the
+abstraction.
 
 You may, of course, also require other ancillary type declarations in the
 package, either for the implementation or as additional parameters for the
@@ -254,37 +254,36 @@ the following ADT approach:
        end record;
     end Complex_Numbers;
 
-In the above, the function :ada:`Make` is a constructor that replaces the
-use of aggregates for constructing :ada:`Complex_Number` values. Callers
-pass two floating-point values to be assigned to the components of the
-resulting record type. In the :ada:`Stack` ADT, a constructor for
-:ada:`Stack` objects wasn't required because any stack has a known initial
-state, i.e., empty, and the component default initialization is sufficient
-to achieve that state. Complex numbers don't have any predeterminable state
-so the constructor is required.
+In the above, the function :ada:`Make` is a constructor that replaces the use
+of aggregates for constructing :ada:`Complex_Number` values. Callers pass two
+floating-point values to be assigned to the components of the resulting record
+type. In the :ada:`Stack` ADT, a constructor for :ada:`Stack` objects wasn't
+required because any stack has a known initial state, i.e., empty, and the
+component default initialization is sufficient to achieve that state. Complex
+numbers don't have any predeterminable state so the constructor is required.
 
 Likewise, functions :ada:`Real_Part` and :ada:`Imaginary_Part` are
-selector/accessor functions that return the corresponding individual
-component values of an argument of type :ada:`Complex_Number`. They are
+selector/accessor functions that return the corresponding individual component
+values of an argument of type :ada:`Complex_Number`. They are
 needed because the mathematical definition of complex numbers has those two
-parts, so clients can reasonably expect to be able to get such values from
-a given object. (The function names need not be distinct from the component
-names, but can be if desired.)
+parts, so
+clients can reasonably expect to be able to get such values from a given
+object. (The function names need not be distinct from the component names, but
+can be if desired.)
 
 However, by default, selector/accessor functions are not included in the ADT
 idiom, and especially not for every component of the representation. There are
 no *getter* operations if you are familiar with that term.
 
-There may be cases when what looks like an accessor function is provided,
-when in fact the function computes the return value.  Similarly, there may
-be functions that simply return the value of a component but are part of
-the abstraction and happen to be implementable by returning the value of a
+There may be cases when what looks like an accessor function is provided, when
+in fact the function computes the return value.  Similarly, there may be
+functions that simply return the value of a component but are part of the
+abstraction and happen to be implementable by returning the value of a
 component. For example, a real stacks ADT package would include a function
 indicating the extent of the object |mdash| that is, the number of values
-currently contained. In our example implementation the :ada:`Top` component
-happens to indicate that value, in addition to indicating the current top
-of the stack. The body of the :ada:`Extent` function can then be as
-follows:
+currently contained. In our example implementation the :ada:`Top` component happens to
+indicate that value, in addition to indicating the current top of the stack. The body
+of the :ada:`Extent` function can then be as follows:
 
 .. code-block:: ada
 
@@ -297,24 +296,23 @@ as the upper bound, for the function result type.)
 
 You should not include true *getter* functions that do not meet an
 abstraction-defined requirement and exist purely to provide client access
-to the otherwise hidden representation components included. Their usage
-makes the client code dependent on the representation, just as if the
-client had direct access. For the same reason, by default there are no
-*setter* procedures for the representation components.  Both kinds of
-operations should be considered highly suspect.  There's no point in hiding
-the representation if these operations will make it available to clients,
-albeit indirectly.
+to the otherwise hidden representation components included.
+Their usage makes the client code dependent
+on the representation, just as if the client had direct access. For the same
+reason, by default there are no *setter* procedures for the representation
+components.  Both kinds of operations should be considered highly suspect.
+There's no point in hiding the representation if these operations will make it
+available to clients, albeit indirectly.
 
 Pros
 ----
 
 The advantages of an ADT are due to the strong interface presented, with
-guaranteed enforcement by the compiler rather than by reliance on clients'
-good behavior. The ADT designer can rely on client adherence to the
-intended abstraction because client code that violates the designer's
-abstraction by directly manipulating the internals of the type will not
-compile; clients must call the designer's operations to manipulate the
-objects.
+guaranteed enforcement by the compiler rather than by reliance on clients' good
+behavior. The ADT designer can rely on client adherence to the intended
+abstraction because client code that violates the designer's abstraction by
+directly manipulating the internals of the type will not
+compile; clients must call the designer's operations to manipulate the objects.
 
 A package defining a strong interface will exhibit high cohesion, thereby
 aiding comprehension and consequently easing both development and
@@ -338,14 +336,14 @@ change in client usage, such as performance changes, but it will not be a
 matter of the legality of the client code. Illegal client usage of an ADT
 wouldn't have compiled successfully in the first place.
 
-The private type is the fundamental approach to creating abstractions in
-Ada, just as the use of the *public*, *private*, and *protected* parts of
-classes is fundamental to creating abstractions in class-oriented
-languages. Not every type can be private, as illustrated by the client
-expectation for array indexing in Ada prior to Ada 2012. Not every type
-should be private, for example those that are explicitly numeric. But the
-ADT should be the default design idiom when decomposing a problem into a
-solution.
+The private type is the fundamental approach to creating abstractions in Ada,
+just as the use of the *public*, *private*, and *protected* parts of classes is
+fundamental to creating abstractions in class-oriented languages. Not every
+type can be private, as illustrated by the client expectation for array
+indexing in Ada prior to Ada 2012.
+Not every type should be private, for example those that are
+explicitly numeric. But the ADT should be the default design idiom when
+decomposing a problem into a solution.
 
 Cons
 ----
@@ -364,20 +362,22 @@ private types is worth the protections afforded.
 Relationship With Other Idioms
 ------------------------------
 
-The package-oriented idioms described here and :ref:`previously
-<Ada_Idioms_Essential_Design_Idioms_For_Packages>` are the foundational
-program composition idioms because packages are the primary structuring
-unit in Ada. That is especially true of the :ref:`Abstract Data Type
-<Ada_Idioms_Abstract_Data_Types>` idiom, which is the primary type
-specification facility in Ada. We will describe additional package-oriented
-idioms, especially regarding hierarchical packages, but those kinds of
-packages are optional.
+The package-oriented idioms described here and
+:ref:`previously <Ada_Idioms_Essential_Design_Idioms_For_Packages>`
+are the foundational program composition idioms because packages are the
+primary structuring unit in Ada. That is especially true of the
+:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` idiom, which is the
+primary type specification facility in Ada. We will
+describe additional package-oriented idioms,
+especially regarding hierarchical packages, but those kinds
+of packages are optional.
 
-The basic package is not optional in Ada for a program of any significant
-size or complexity. (One could have a program consisting entirely of the
-main program, but either that program is relatively simple and small or it
-is badly structured.) As a consequence, other idioms will exist within
-packages designed using one of these idioms or some other package idiom.
+The basic package is not optional in Ada for a
+program of any significant size or complexity. (One could have a program
+consisting entirely of the main program, but either that program is relatively
+simple and small or it is badly structured.) As a consequence, other idioms
+will exist within packages designed using one of these idioms or some other
+package idiom.
 
 
 Notes

@@ -87,7 +87,7 @@ with the stack state declared in the package body:
 We could add the private part to the package declaration and move the
 state of the
 :ref:`ADM <Ada_Idioms_Abstract_Data_Machines>` |mdash| the two variables in
-this  case |mdash| up there without any other changes. The subprogram bodies
+this case |mdash| up there without any other changes. The subprogram bodies
 have the same visibility to the two variables either way. (There is no
 requirement for the :ada:`Content` type because :ada:`Values` is not a record
 component; anonymously-typed array objects are legal.) From the viewpoint of

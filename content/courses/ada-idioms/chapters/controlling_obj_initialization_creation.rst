@@ -57,8 +57,8 @@ is an access type, the automatic default value :ada:`null` initializes
        ...
     end Binary_Trees;
 
-In both cases, simply declaring an object in the client code is
-sufficient to ensure it is initially empty.
+In both cases, simply declaring an object in the client code is sufficient to
+ensure it is initially empty.
 
 However, not all abstractions have a meaningful default initial state. Default
 initialization will not suffice to fully initialize objects in these cases, so

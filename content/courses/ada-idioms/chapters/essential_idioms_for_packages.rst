@@ -19,11 +19,11 @@ Specifically, packages should exhibit high cohesion and loose coupling
 related to one another, in the context of the problem being solved.
 Unrelated entities should not be declared in the same module.  This allows
 the reader to focus on one primary concept, which should be the subject of
-the package. Coupling is the degree to which a module depends upon other
-modules. Loose coupling enhances comprehension and maintenance because it
-allows readers and future developers to examine and modify the module in
-relative isolation.  Coupling and cohesion are interrelated: higher
-cohesion tends to result in less coupling.
+the package. Coupling is the degree to which a module
+depends upon other modules. Loose coupling enhances comprehension and
+maintenance because it allows readers and future developers to examine and modify the
+module in relative isolation.  Coupling and cohesion are interrelated:
+higher cohesion tends to result in less coupling.
 
 
 Solution
