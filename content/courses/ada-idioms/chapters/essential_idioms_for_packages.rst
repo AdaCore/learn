@@ -215,10 +215,9 @@ of array indexing but the approach is fairly heavy.
 Notes
 -----
 
-    1. The rules for what these idiomatic packages contain are not meant to
-       be iron-clad; hybrids are possible should be considered initially suspect
-       and reviewed accordingly.
-
+    1. The rules for what these idiomatic packages contain are not meant to be
+       iron-clad; hybrids are possible but should be considered initially
+       suspect and reviewed accordingly.
 
 Bibliography
 ------------
