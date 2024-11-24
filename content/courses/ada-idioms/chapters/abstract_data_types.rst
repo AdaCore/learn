@@ -291,7 +291,7 @@ follows:
     function Extent (This : Stack) return Natural is (This.Top);
 
 But a different representation might not have a :ada:`Top` component, in
-which case function would be implemented in some other way. (For example,
+which case the function would be implemented in some other way. (For example,
 we could have declared a subtype of :ada:`Natural`, using :ada:`Capacity`
 as the upper bound, for the function result type.)
 

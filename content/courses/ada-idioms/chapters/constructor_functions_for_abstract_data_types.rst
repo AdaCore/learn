@@ -78,7 +78,7 @@ implement the subprograms.
 Other operations might be declared in the same package too, but if they
 do not manipulate or return values of the type they are not primitive
 operations for the type. (Their location in that package is somewhat
-suspect and should be reviewed explicitly.
+suspect and should be reviewed explicitly.)
 
 Primitive operations, and only primitive operations, are inherited during
 type derivation.
