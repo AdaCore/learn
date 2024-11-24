@@ -93,9 +93,9 @@ from its earliest days, Ada has also supported a static form of
 inheritance, using types that are not tagged. The solution we describe
 below works with both forms of inheritance.
 
-The developeralso has a choice of whether the parent type and/or the child type
-is a private type. Using private types is the default design choice, forthe
-sake ofdesigningintermsofabstract data types, but  is nevertheless optional.
+The developer also has a choice of whether the parent type and/or the child type
+is a private type. Using private types is the default design choice, for the
+sake of designing in terms of abstract data types, but is nevertheless optional.
 
 In addition, a type can be both private and tagged. This possibility raises the
 question of whether the type is *visibly tagged*, i.e., whether the client view
