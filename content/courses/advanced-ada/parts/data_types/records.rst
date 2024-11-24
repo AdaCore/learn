@@ -2322,6 +2322,16 @@ constrained, however, the discriminants must match. If we assign an object to
 of that procedure: we check the state of the :ada:`Extended` discriminant
 before assigning an object to the :ada:`R` parameter.
 
+Note that the :ada:`Simple_Record` type has a
+:ref:`variant part <Adv_Ada_Variant_Records>`. We discuss this topic later on
+in this chapter.
+
+Note as well that, in the initialization of the :ada:`Zero_Not_Extended` and
+:ada:`Zero_Extended` constants, we have to indicate the discriminant as a
+component of the aggregates (e.g.: :ada:`(Extended => False, V => 0)`. We
+discuss this topic in another chapter when we learn more about
+:ref:`aggregates and record discriminants <Adv_Ada_Aggregates_Record_Discriminants>`.
+
 The :ada:`Using_Constrained_Attribute` procedure below declares two objects of
 :ada:`Simple_Record` type: :ada:`R1` and :ada:`R2`. Because the
 :ada:`Simple_Record` type has a default value for its discriminant, we can
@@ -2918,20 +2928,685 @@ In this example, :ada:`Arr_Sub` and :ada:`Rec_Sub` are unconstrained subtypes.
    - :arm:`3.2 Types and Subtypes <3-2>`
 
 
-..
-    TO BE DONE:
+.. _Adv_Ada_Variant_Records:
 
-    Variant parts
-    -------------
+Variant parts
+-------------
 
-    .. admonition:: In the Ada Reference Manual
+We've introduced variant records back in the
+:ref:`Introduction to Ada course <Intro_Ada_Variant_Records>`.
+In simple terms, a variant record is a record with discriminants that allows
+for varying its structure. Basically, it's a record containing a :ada:`case`
+statement that specifies which record components exist for each discriminant
+value. For example:
 
-        - :arm:`3.8.1 Variant Parts and Discrete Choices <3-8-1>`
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Simple_Device
 
-    .. todo::
+    package Devices is
 
-        - Complete section!
+       type Device_State is
+         (Off, On);
 
+       type Device_Info is
+       record
+          V : Float;
+       end record;
+
+       type Device (State : Device_State := Off) is
+       record
+          case State is
+             when Off =>
+                null;
+             when On =>
+                Info : Device_Info;
+          end case;
+       end record;
+
+    end Devices;
+
+The :ada:`Device` type from this example has a variant part. Depending on the
+value of the :ada:`State` discriminant, it can be either a null record (when
+:ada:`State` is :ada:`Off`) or have the :ada:`Info` component (when
+:ada:`State` is :ada:`On`).
+
+Let's look at a test application for the :ada:`Devices` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Simple_Device
+    :class: ada-run-expect-failure
+
+    with Devices; use Devices;
+
+    procedure Show_Device is
+       D     : Device;
+       D_Off : Device (Off);
+       D_On  : Device (On);
+    begin
+       D := D_Off;
+       --  OK!
+
+       D := D_On;
+       --  OK!
+
+       D_Off := D_On;
+       --       ^^^^
+       --  CONSTRAINT_ERROR!
+
+       D_On  := D_Off;
+       --       ^^^^^
+       --  CONSTRAINT_ERROR!
+    end Show_Device;
+
+As we've discussed
+:ref:`previously <Adv_Ada_Record_Discriminants_Object_Assignments>`, when we
+set the values for the discriminants of a type in the object declaration, we're
+constraining the objects. If the discriminants of two objects don't match, the
+:ada:`Constraint_Error` exception is raised at runtime because the
+:ref:`discriminant check <Adv_Ada_Discriminant_Check>` fails. Therefore, in the
+:ada:`Show_Device` procedure, because :ada:`D_Off` and :ada:`D_On` are
+constrained and have different values for the :ada:`State` discriminant, we
+cannot assign them to each other. In contrast, because :ada:`D` wasn't
+constrained at its declaration, we can assign objects with different
+discriminants (such as :ada:`D_Off` and :ada:`D_On`) to it.
+
+Note that the variant part of a record can be more complex. For example, we
+could have an additional discriminant and use it in the variant part:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Device_Boost
+
+    package Devices is
+
+       type Device_State is
+         (Off, On);
+
+       type Device_Info is
+       record
+          V : Float;
+       end record;
+
+       type Device (State : Device_State;
+                    Boost : Boolean) is
+       record
+          case State is
+             when Off =>
+                null;
+             when On =>
+                Info : Device_Info;
+                case Boost is
+                   when False =>
+                      null;
+                   when True =>
+                      Factor : Float;
+                end case;
+          end case;
+       end record;
+
+    end Devices;
+
+In this version of the :ada:`Devices` package, we introduced a *boost button*
+as a discriminant (:ada:`Boost`) and an associated boost factor component
+(:ada:`Factor`) in the variant part.
+
+In the remaining parts of this section, we discuss a couple of details about
+variant records.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`3.8.1 Variant Parts and Discrete Choices <3-8-1>`
+
+
+Discriminant type and value coverage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The subtype of discriminants used in the variant part must be of a discrete
+type |mdash| it cannot be of an access or a floating-point type, for example.
+Also, all possible values of the subtype of each discriminant must be covered
+in the case statement of the variant part. For example, consider the following
+variant record:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Coverage
+    :class: ada-expect-compile-error
+
+    package Subtype_Coverage is
+
+       type Var_Rec (Value : Integer) is
+       record
+          case Value is
+             when 0 .. 100 =>
+                I : Integer;
+
+             --  ERROR: missing values!
+          end case;
+       end record;
+
+    end Subtype_Coverage;
+
+This package cannot be compiled because, in the variant part, we're only
+covering values for the :ada:`Value` discriminant in the range between 0 and
+100. To fix this compilation error, we have to cover all values instead. For
+example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Coverage
+
+    package Subtype_Coverage is
+
+       type Var_Rec (Value : Integer) is
+       record
+          case Value is
+             when Integer'First .. -1 =>
+                null;
+             when 0 .. 100 =>
+                I : Integer;
+             when 101 .. Integer'Last =>
+                null;
+          end case;
+       end record;
+
+    end Subtype_Coverage;
+
+Of course, specifying all possible values can be difficult. As an alternative,
+we could simplify the case statement by just using :ada:`others` as a discrete
+choice that encompasses all values that haven't been specified earlier in the
+case statement:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Coverage
+
+    package Subtype_Coverage is
+
+       type Var_Rec (Value : Integer) is
+       record
+          case Value is
+             when 0 .. 100 =>
+                I : Integer;
+             when others =>
+                null;
+          end case;
+       end record;
+
+    end Subtype_Coverage;
+
+By using :ada:`when others => ...` in this last example, we ensure that all
+values have been covered.
+
+
+Record size
+~~~~~~~~~~~
+
+When declaring an object, the values we select for the discriminants related to
+the variant part have an impact on the overall size of that object |mdash| in
+fact, it may be smaller or bigger depending on this selection. Let's see an
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Size
+
+    package Variant_Records is
+
+       type Simple_Record
+         (Extended : Boolean := False) is
+       record
+          V : Integer;
+          case Extended is
+             when False =>
+                null;
+             when True  =>
+                V_Float : Float;
+          end case;
+       end record;
+
+    end Variant_Records;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with Variant_Records; use Variant_Records;
+
+    procedure Show_Variant_Rec_Size is
+       SR_No_Ext : Simple_Record
+                     (Extended => False);
+       SR_Ext    : Simple_Record
+                     (Extended => True);
+       SR        : Simple_Record;
+    begin
+       Put_Line ("SR_No_Ext'Size : "
+                 & SR_No_Ext'Size'Image
+                 & " bits");
+       Put_Line ("SR_Ext'Size : "
+                 & SR_Ext'Size'Image
+                 & " bits");
+       Put_Line ("SR'Size : "
+                 & SR'Size'Image
+                 & " bits");
+    end Show_Variant_Rec_Size;
+
+As we can confirm when we run this application, the choice for the discriminant
+has an impact on the size of the object. In the case of the :ada:`SR_No_Ext`
+object, setting the :ada:`Extended` discriminant to :ada:`False` excludes the
+:ada:`V_Float` component. For the :ada:`SR_Ext` object, on the other hand, we
+include the :ada:`V_Float` component. Therefore, on a typical PC, the size of
+:ada:`SR_No_Ext` is 8 bytes (4 bytes for the :ada:`Extended` discriminant and
+4 bytes for the :ada:`V` component), while the size of :ada:`SR_Ext` is 12
+bytes (i.e., additional 4 bytes for the :ada:`V_Float` component).
+
+In the case of :ada:`SR`, because the object isn't constrained, the size of the
+object is 12 bytes on a typical PC |mdash| the same size as :ada:`SR_Ext`. This
+is because :ada:`SR` has to account for the case when all components must be
+available, even though the :ada:`Extended` discriminant is set to :ada:`False`
+by default. Remember that an assignment such as :ada:`SR := SR_Ext` is valid,
+so enough memory must be available to ensure that the assignment is performed
+correctly.
+
+This principle applies to more complicated variant records. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Size
+
+    package Variant_Records is
+
+       type Simple_Record
+         (Extended   : Boolean := False;
+          Extended_2 : Boolean := False) is
+       record
+          V : Integer;
+          case Extended is
+             when False =>
+                case Extended_2 is
+                   when False =>
+                      null;
+                   when True  =>
+                      V_Int_2 : Integer;
+                      V_Int_3 : Integer;
+                end case;
+             when True  =>
+                V_Float : Float;
+                case Extended_2 is
+                   when False =>
+                      null;
+                   when True  =>
+                      V_Float_2 : Float;
+                end case;
+          end case;
+       end record;
+
+    end Variant_Records;
+
+    with Ada.Text_IO;     use Ada.Text_IO;
+
+    with Variant_Records; use Variant_Records;
+
+    procedure Show_Variant_Rec_Size is
+       SR : Simple_Record;
+    begin
+       Put_Line ("SR'Size : "
+                 & SR'Size'Image
+                 & " bits");
+    end Show_Variant_Rec_Size;
+
+In this example, the size of :ada:`SR` is 16 bytes on a typical PC. This
+accounts for 4 bytes for the discriminants :ada:`Extended` and
+:ada:`Extended_2`, and 4 bytes for each of the 3 components that are being
+taken into account for the worst case:
+
+- components :ada:`V`, :ada:`V_Int_2` and :ada:`V_Int_3` when we set
+  :ada:`Extended => False, Extended_2 => True`;
+
+- components :ada:`V`, :ada:`V_Float` and :ada:`V_Float_2` when we set
+  :ada:`Extended => True, Extended_2 => True`.
+
+Note that a memory block is shared between the :ada:`V_Int_2` and
+:ada:`V_Int_3` components from the first worst case, and :ada:`V_Float` and the
+:ada:`V_Float_2` components from the second worst case. As we can see, the
+compiler will typically optimize the size of a record as much as possible by
+assessing which components are really needed for the worst case.
+
+Also, as we discussed previously, we can use
+:ref:`unchecked unions <Adv_Ada_Unchecked_Union>` in combination with variant
+records, which has an impact on the object size.
+
+
+Ensuring valid information
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can use variant parts to prevent invalid information from being used. Let's
+look again at the :ada:`Device` type from the previous code example:
+
+.. code-block:: ada
+
+       type Device (State : Device_State) is
+       record
+          case State is
+             when Off =>
+                null;
+             when On =>
+                Info : Device_Info;
+          end case;
+       end record;
+
+For the sake of this example, we could say that a device that is turned off
+doesn't have any valuable information. Therefore, the device information stored
+in the :ada:`Info` component of the :ada:`Device` type is only valid if the
+device is turned on. Thus, if the device is turned off (i.e.,
+:ada:`Device_State = Off`), we should prevent the application from processing
+device information that is probably incorrect. Let's extend the previous code
+example to accommodate this requirement:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Device
+
+    package Devices is
+
+       type Device_State is
+         (Off, On);
+
+       type Device
+         (State : Device_State := Off) is
+           private;
+
+       procedure Turn_Off (D : in out Device);
+
+       procedure Turn_On (D : in out Device);
+
+       type Device_Info is
+       record
+          V : Float;
+       end record;
+
+       function Current_Info (D : Device)
+                              return Device_Info;
+
+    private
+
+       type Device (State : Device_State := Off) is
+       record
+          case State is
+             when Off =>
+                null;
+             when On =>
+                Info : Device_Info;
+          end case;
+       end record;
+
+       Device_Off : constant Device :=
+                      (State => Off);
+
+       Device_On  : constant Device :=
+                      (State => On,
+                       others => <>);
+
+    end Devices;
+
+    package body Devices is
+
+       procedure Turn_Off (D : in out Device) is
+       begin
+          D := Device_Off;
+       end Turn_Off;
+
+       procedure Turn_On (D : in out Device) is
+       begin
+          D := Device_On;
+       end Turn_On;
+
+       function Current_Info (D : Device)
+                              return Device_Info is
+         (D.Info);
+
+    end Devices;
+
+Let's create a test application called :ada:`Show_Device` that makes use of
+this device by turning it on and off, and by retrieving information from it:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Device
+    :class: ada-run-expect-failure
+
+    with Devices; use Devices;
+
+    procedure Show_Device is
+       D : Device;
+       I : Device_Info;
+    begin
+       Turn_On (D);
+       I := Current_Info (D);
+
+       Turn_Off (D);
+
+       --  The following call raises
+       --  an exception at runtime
+       --  because D is turned off.
+       I := Current_Info (D);
+    end Show_Device;
+
+In this example, by using the variant part, we're preventing information
+retrieved by an inappropriate call to the :ada:`Current_Info` function from being used
+elsewhere in the application. In fact, if the device is turned off, a call to
+:ada:`Current_Info` raises the :ada:`Constraint_Error` exception because the
+:ada:`Info` component isn't accessible. We see that effect in the
+:ada:`Show_Device` procedure: the call to :ada:`Current_Info` *fails* (by raising
+an exception) when the device has just been turned off.
+
+To avoid exceptions at runtime, we must check the device's state before
+calling :ada:`Current_Info`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Device
+
+    with Devices; use Devices;
+
+    procedure Show_Device is
+       D : Device;
+       I : Device_Info;
+    begin
+       Turn_On (D);
+
+       if D.State = On then
+          I := Current_Info (D);
+       end if;
+
+       Turn_Off (D);
+
+       if D.State = On then
+          I := Current_Info (D);
+       end if;
+    end Show_Device;
+
+Now, no exception is raised, as we only retrieve information from
+the device when it is turned on |mdash| that is, we only call the
+:ada:`Current_Info` function when the :ada:`State` discriminant of the object is
+set to :ada:`On`.
+
+
+Extending record types
+~~~~~~~~~~~~~~~~~~~~~~
+
+We can use variant parts as a means to extend record types. This can be viewed
+as a static approach to implement type extension |mdash| similar to type
+extension via tagged types, but with clear differences.
+
+Let's say we have a sensor, and we implement a package called :ada:`Sensors`
+that interfaces with that sensor:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Sensors
+
+    package Sensors is
+
+       type Sensor is private;
+
+       type Sensor_Info is
+       record
+          Info_1 : Float := 0.0;
+       end record;
+
+       function Current_Info (S : Sensor)
+                              return Sensor_Info;
+
+       procedure Display (SI : Sensor_Info);
+
+    private
+
+       type Sensor is null record;
+
+    end Sensors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Sensors is
+
+       function Current_Info (S : Sensor)
+                              return Sensor_Info is
+         ((Info_1 => 4.0));
+       --            ^^^^
+       --  NOTE: we're returning dummy
+       --        information!
+
+       procedure Display (SI : Sensor_Info) is
+       begin
+          Put_Line ("Info_1 : "
+                    & SI.Info_1'Image);
+       end Display;
+
+    end Sensors;
+
+The :ada:`Sensor` type from the :ada:`Sensors` package has two subprograms: the
+:ada:`Current_Info` function and the :ada:`Display` procedure. We use those
+subprograms in the :ada:`Show_Sensors` procedure below:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Sensors
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Sensors;     use Sensors;
+
+    procedure Show_Sensors is
+       S1 : Sensor;
+    begin
+       Display (Current_Info (S1));
+    end Show_Sensors;
+
+Now, let's assume that a new model of this sensor is available, and it has
+additional features |mdash| e.g., it provides additional information to the
+user. If we wanted to update the application to be able to handle this new
+model of the sensor without removing support for the original model, we could
+convert the :ada:`Sensor_Info` type to a tagged type and derive a
+:ada:`Sensor_Info_V2` type from it. (We would probably have to implement a
+:ada:`Sensor_V2` type derived from the :ada:`Sensor` type as well.)
+
+Alternatively, we could add a variant part to the :ada:`Sensor_Info` type to
+store the additional information. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Sensors
+
+    package Sensors is
+
+       type Sensor_Model is (Sensor_V1,
+                             Sensor_V2);
+
+       type Sensor
+         (Model : Sensor_Model := Sensor_V1) is
+           private;
+
+       type Sensor_Info
+         (Model : Sensor_Model := Sensor_V1) is
+       record
+          Info_1 : Float := 0.0;
+          case Model is
+             when Sensor_V1 =>
+                null;
+             when Sensor_V2 =>
+                Info_2 : Float := 0.0;
+          end case;
+       end record;
+
+       function Current_Info (S : Sensor)
+                              return Sensor_Info;
+
+       procedure Display (SI : Sensor_Info);
+
+    private
+
+       type Sensor
+         (Model : Sensor_Model := Sensor_V1) is
+           null record;
+
+    end Sensors;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Sensors is
+
+       function Current_Info (S : Sensor)
+                              return Sensor_Info is
+       begin
+          --  Using dummy info for the information
+          --  returned by the function
+          case S.Model is
+             when Sensor_V1 =>
+                return ((Model  => Sensor_V1,
+                         Info_1 => 4.0));
+             when Sensor_V2 =>
+                return ((Model  => Sensor_V2,
+                         Info_1 => 8.0,
+                         Info_2 => 6.0));
+          end case;
+       end Current_Info;
+
+       procedure Display (SI : Sensor_Info) is
+       begin
+          Put_Line ("Model  : "
+                    & SI.Model'Image);
+          Put_Line ("Info_1 : "
+                    & SI.Info_1'Image);
+          if SI.Model = Sensor_V2 then
+             Put_Line ("Info_2 : "
+                       & SI.Info_2'Image);
+          end if;
+       end Display;
+
+    end Sensors;
+
+In this new version of the :ada:`Sensors` package, the :ada:`Model`
+discriminant was added to the :ada:`Sensor_Info` type. If the model is set to
+version 2 for a specific sensor (i.e., :ada:`Model = Sensor_V2`), a new
+component (:ada:`Info_2`) is available.
+
+The :ada:`Current_Info` and :ada:`Display` subprograms have been adapted to
+take this new model into account. In the :ada:`Current_Info` function, we return
+information for the newer model of the sensor. In the :ada:`Display`
+procedure, we display the additional information provided by the newer model.
+
+Note that the original test application that makes use of the sensor
+(:ada:`Show_Sensors`) doesn't require any adaptation:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Sensors
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Sensors;     use Sensors;
+
+    procedure Show_Sensors is
+       S1 : Sensor;
+    begin
+       Display (Current_Info (S1));
+    end Show_Sensors;
+
+Because we have a default value for the discriminant of the :ada:`Sensor` type,
+we're essentially making the type *backwards-compatible*, so that users of this
+type don't have to adapt their code after the update to the :ada:`Sensors`
+package. Of course, we don't have *binary backwards-compatibility* because the
+size of the type (:ada:`Sensor_Info'Size`) increases.
+
+Of course, in our test application, we can also use the new model of that
+sensor:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Sensors
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Sensors;     use Sensors;
+
+    procedure Show_Sensors is
+       S1 : Sensor;
+       S2 : Sensor (Sensor_V2);
+    begin
+       Display (Current_Info (S1));
+       Display (Current_Info (S2));
+    end Show_Sensors;
+
+In the updated version of the :ada:`Show_Sensors` procedure, we're now using
+both old and new versions of the sensor.
 
 
 .. _Adv_Ada_Per_Object_Expressions:
