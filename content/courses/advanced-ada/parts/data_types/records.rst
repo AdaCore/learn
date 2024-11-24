@@ -3306,8 +3306,8 @@ example to accommodate this requirement:
           V : Float;
        end record;
 
-       function Read_Info (D : Device)
-                           return Device_Info;
+       function Current_Info (D : Device)
+                              return Device_Info;
 
     private
 
@@ -3342,8 +3342,8 @@ example to accommodate this requirement:
           D := Device_On;
        end Turn_On;
 
-       function Read_Info (D : Device)
-                           return Device_Info is
+       function Current_Info (D : Device)
+                              return Device_Info is
          (D.Info);
 
     end Devices;
@@ -3361,26 +3361,26 @@ this device by turning it on and off, and by retrieving information from it:
        I : Device_Info;
     begin
        Turn_On (D);
-       I := Read_Info (D);
+       I := Current_Info (D);
 
        Turn_Off (D);
 
        --  The following call raises
        --  an exception at runtime
        --  because D is turned off.
-       I := Read_Info (D);
+       I := Current_Info (D);
     end Show_Device;
 
 In this example, by using the variant part, we're preventing information
-retrieved by an inappropriate call to the :ada:`Read_Info` function from being used
+retrieved by an inappropriate call to the :ada:`Current_Info` function from being used
 elsewhere in the application. In fact, if the device is turned off, a call to
-:ada:`Read_Info` raises the :ada:`Constraint_Error` exception because the
+:ada:`Current_Info` raises the :ada:`Constraint_Error` exception because the
 :ada:`Info` component isn't accessible. We see that effect in the
-:ada:`Show_Device` procedure: the call to :ada:`Read_Info` *fails* (by raising
+:ada:`Show_Device` procedure: the call to :ada:`Current_Info` *fails* (by raising
 an exception) when the device has just been turned off.
 
 To avoid exceptions at runtime, we must check the device's state before
-calling :ada:`Read_Info`:
+calling :ada:`Current_Info`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Device
 
@@ -3393,19 +3393,19 @@ calling :ada:`Read_Info`:
        Turn_On (D);
 
        if D.State = On then
-          I := Read_Info (D);
+          I := Current_Info (D);
        end if;
 
        Turn_Off (D);
 
        if D.State = On then
-          I := Read_Info (D);
+          I := Current_Info (D);
        end if;
     end Show_Device;
 
 Now, no exception is raised, as we only retrieve information from
 the device when it is turned on |mdash| that is, we only call the
-:ada:`Read_Info` function when the :ada:`State` discriminant of the object is
+:ada:`Current_Info` function when the :ada:`State` discriminant of the object is
 set to :ada:`On`.
 
 
@@ -3430,8 +3430,8 @@ that interfaces with that sensor:
           Info_1 : Float := 0.0;
        end record;
 
-       function Read_Info (S : Sensor)
-                           return Sensor_Info;
+       function Current_Info (S : Sensor)
+                              return Sensor_Info;
 
        procedure Display (SI : Sensor_Info);
 
@@ -3445,8 +3445,8 @@ that interfaces with that sensor:
 
     package body Sensors is
 
-       function Read_Info (S : Sensor)
-                           return Sensor_Info is
+       function Current_Info (S : Sensor)
+                              return Sensor_Info is
          ((Info_1 => 4.0));
        --            ^^^^
        --  NOTE: we're returning dummy
@@ -3461,7 +3461,7 @@ that interfaces with that sensor:
     end Sensors;
 
 The :ada:`Sensor` type from the :ada:`Sensors` package has two subprograms: the
-:ada:`Read_Info` function and the :ada:`Display` procedure. We use those
+:ada:`Current_Info` function and the :ada:`Display` procedure. We use those
 subprograms in the :ada:`Show_Sensors` procedure below:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Sensors
@@ -3473,7 +3473,7 @@ subprograms in the :ada:`Show_Sensors` procedure below:
     procedure Show_Sensors is
        S1 : Sensor;
     begin
-       Display (Read_Info (S1));
+       Display (Current_Info (S1));
     end Show_Sensors;
 
 Now, let's assume that a new model of this sensor is available, and it has
@@ -3510,8 +3510,8 @@ store the additional information. For example:
           end case;
        end record;
 
-       function Read_Info (S : Sensor)
-                           return Sensor_Info;
+       function Current_Info (S : Sensor)
+                              return Sensor_Info;
 
        procedure Display (SI : Sensor_Info);
 
@@ -3527,8 +3527,8 @@ store the additional information. For example:
 
     package body Sensors is
 
-       function Read_Info (S : Sensor)
-                           return Sensor_Info is
+       function Current_Info (S : Sensor)
+                              return Sensor_Info is
        begin
           --  Using dummy info for the information
           --  returned by the function
@@ -3541,7 +3541,7 @@ store the additional information. For example:
                          Info_1 => 8.0,
                          Info_2 => 6.0));
           end case;
-       end Read_Info;
+       end Current_Info;
 
        procedure Display (SI : Sensor_Info) is
        begin
@@ -3562,8 +3562,8 @@ discriminant was added to the :ada:`Sensor_Info` type. If the model is set to
 version 2 for a specific sensor (i.e., :ada:`Model = Sensor_V2`), a new
 component (:ada:`Info_2`) is available.
 
-The :ada:`Read_Info` and :ada:`Display` subprograms have been adapted to
-take this new model into account. In the :ada:`Read_Info` function, we return
+The :ada:`Current_Info` and :ada:`Display` subprograms have been adapted to
+take this new model into account. In the :ada:`Current_Info` function, we return
 information for the newer model of the sensor. In the :ada:`Display`
 procedure, we display the additional information provided by the newer model.
 
@@ -3579,7 +3579,7 @@ Note that the original test application that makes use of the sensor
     procedure Show_Sensors is
        S1 : Sensor;
     begin
-       Display (Read_Info (S1));
+       Display (Current_Info (S1));
     end Show_Sensors;
 
 Because we have a default value for the discriminant of the :ada:`Sensor` type,
@@ -3601,8 +3601,8 @@ sensor:
        S1 : Sensor;
        S2 : Sensor (Sensor_V2);
     begin
-       Display (Read_Info (S1));
-       Display (Read_Info (S2));
+       Display (Current_Info (S1));
+       Display (Current_Info (S2));
     end Show_Sensors;
 
 In the updated version of the :ada:`Show_Sensors` procedure, we're now using
