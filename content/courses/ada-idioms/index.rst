@@ -42,8 +42,8 @@ Ada Idioms
 .. container:: content-description
 
     This course describes how to implement selected programming idioms in
-    the Ada language. Prior knowledge of Ada is required, although some explanations
-    of the underlying semantics are provided when appropriate.
+    the Ada language. Prior knowledge of Ada is required, although some
+    explanations of the underlying semantics are provided when appropriate.
 
     This document was written by Patrick Rogers.
 

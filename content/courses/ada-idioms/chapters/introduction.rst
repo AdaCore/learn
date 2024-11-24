@@ -38,8 +38,8 @@ to be the same as for expressing a Singleton [1]_.
 
 In addition to language-independent situations, we also include
 solutions for situations specific to the Ada language. These idioms are
-*best practices* in situations that arise given the extensive capabilities
-of the language.
+*best practices* in situations that
+arise given the extensive capabilities of the language.
 
 For example, Ada directly supports tasks (threads) via a dedicated
 construct consisting of local objects and a sequence of statements.

@@ -143,11 +143,12 @@ For example:
        -- ...
     end Linear_Algebra;
 
-In this example, :ada:`Vector` and :ada:`Matrix` are the types under consideration. The type :ada:`Real` might be declared here too, but it might be
-better declared in a :ref:`Named Collection of Declarations
-<Ada_Idioms_Named_Collection_Of_Declarations>` package referenced in a
-with_clause. In any case, this package declares types and subprograms that
-manipulate values of those types.
+In this example, :ada:`Vector` and :ada:`Matrix` are the types under
+consideration. The type :ada:`Real` might be declared here too, but it might be
+better declared in a
+:ref:`Named Collection of Declarations <Ada_Idioms_Named_Collection_Of_Declarations>`
+package referenced in a with_clause. In any case, this package declares types
+and subprograms that manipulate values of those types.
 
 One might also declare variables in the package, but those should not be
 the central purpose of the package. For example, perhaps we want to have a
