@@ -463,9 +463,9 @@ package private part and the package body, for use with the implementation of
 the explicitly declared primitive operations.
 
 For example, we might use a *controlled type* in the implementation of a
-tagged private type. These types have procedures Initialize and Finalize
-defined as primitive operations. Both are called automatically by the
-compiler. Clients generally don't have any business directly calling
+tagged private type. These types have procedures :ada:`Initialize` and
+:ada:`Finalize` defined as primitive operations. Both are called automatically
+by the compiler. Clients generally don't have any business directly calling
 them so we usually use implementation inheritance with controlled types.
 But if clients did have the need to call them we would use Subtype Inheritance
 instead, to make them visible to clients.
