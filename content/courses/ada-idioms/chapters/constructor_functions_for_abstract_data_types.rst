@@ -70,7 +70,7 @@ the type declaration itself. For procedures, that means they have formal
 parameters of the type. For functions, that means they either have formal
 parameters of the type, or return a value of the type, or both.
 
-Declaration with the same package as the type itself provides the
+Declaration within the same package as the type itself provides the
 compile-time visibility to the type's representation required to
 implement the subprograms.
 
@@ -136,7 +136,7 @@ Therefore, unless the extended child type is itself abstract, the type extension
 will be illegal. The compiler will reject the declaration of the child type,
 thus preventing this inappropriate constructor inheritance.
 
-For an example, both for the code and the Ada rules, consider this simple
+For an example, both to illustrate the code and the Ada rules, consider this simple
 package declaration that presents the tagged private type
 :ada:`Graphics.Shape`:
 
@@ -223,8 +223,7 @@ compile-time visibility that primitive operations have.
 
 Therefore, the specific solution is to declare constructor functions in a
 separate package that is a *child* of the package declaring the tagged type.
-The actual term is a *hierarchical library package* but *child* conveys the
-concept and is less of a mouthful.
+This takes advantage of the *hierarchical library units* capability introduced in Ada 95.
 
 Operations declared in a child package are not primitive operations for the
 type in the parent package, so they are not inherited when that type is
@@ -317,7 +316,8 @@ locating individual entities of interest, any decent IDE will make doing so
 trivial.)
 
 The alternative also loses the distinction between clients that use objects of
-the type and clients that create those objects, because the latter will have
+the type and clients that create those objects, because, with the child package
+approach, the latter will be the only clients that have
 context clauses for the constructor packages.
 
 
