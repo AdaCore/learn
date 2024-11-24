@@ -2775,6 +2775,238 @@ these array declarations are equivalent:
     end Shared_Var_Types;
 
 
+:ada:`Full_Access_Only`
+~~~~~~~~~~~~~~~~~~~~~~~
+
+A full access object is an object that requires that read or write operations
+on this object be performed by reading or writing all bits of the object (i.e.
+the *full object*) at once. Accordingly, a full access type is a type whose
+objects follow this requirement. Note that a full access type must be
+simultaneously a
+:ref:`volatile type <Adv_Ada_Shared_Variable_Control_Volatile>` or an
+:ref:`atomic type <Adv_Ada_Shared_Variable_Control_Atomic>`. (In other words,
+if a type isn't volatile or atomic, it cannot be a full access type.)
+
+Let's see some examples:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Types
+
+    pragma Ada_2022;
+
+    package Show_Full_Access_Only_Types is
+
+       type Nonatomic_Full_Access_Type is
+         new Long_Float
+           with Volatile, Full_Access_Only;
+
+       type Atomic_Full_Access_Type is
+         new Long_Float
+           with Atomic, Full_Access_Only;
+
+    end Show_Full_Access_Only_Types;
+
+Likewise, we can define nonatomic and atomic full-access objects:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Objects
+
+    pragma Ada_2022;
+
+    package Show_Full_Access_Only_Objects is
+
+       Nonatomic_Full_Access_Obj : Long_Float
+         with Volatile, Full_Access_Only;
+
+       Atomic_Full_Access_Obj : Long_Float
+         with Atomic, Full_Access_Only;
+
+    end Show_Full_Access_Only_Objects;
+
+
+.. admonition:: Relevant topics
+
+    - :arm22:`9.10 Shared Variables <9-10>`
+    - :arm22:`C.6 Shared Variable Control <C-6>`
+
+
+Nonatomic full-access
+^^^^^^^^^^^^^^^^^^^^^
+
+As we already know, the value of a volatile object may be constantly changing,
+so the compiler generates code in such a way that the process must read the
+value of the volatile object from memory for each access. (In other words, the
+value cannot be stored in a register for further processing.)
+
+In the case of nonatomic full-access objects, the value of the object must not
+only be read from memory or updated to memory every time, but those operations
+must also be performed for the complete object at once.
+
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Alarms_Nonatomic_Full_Access
+
+    pragma Ada_2022;
+
+    package Alarms is
+
+       type Day is (Mon, Tue, Wed,
+                    Thu, Fri,
+                    Sat, Sun);
+
+       type Enabled is new Boolean
+         with Size => 1;
+
+       type Hours is range 0 .. 23
+         with Size => 5;
+
+       type Minutes is range 0 .. 59
+         with Size => 6;
+
+       type Day_Enabled is
+         array (Day) of Enabled
+           with Pack;
+
+       type Alarm is record
+          Days   : Day_Enabled;
+          Hour   : Hours;
+          Minute : Minutes;
+       end record
+         with
+           Volatile,
+           Size      => 24;
+
+       for Alarm use record
+          Days   at 0 range 0  .. 6;
+          Hour   at 0 range 8  .. 12;
+          Minute at 0 range 16 .. 21;
+       end record;
+
+    end Alarms;
+
+    pragma Ada_2022;
+
+    with Alarms; use Alarms;
+
+    procedure Show_Alarm is
+
+       A : Alarm;
+
+    begin
+       --  Initializing the alarm
+       A := (Days   => (others => False),
+             Hour   => 8,
+             Minute => 0);
+
+       --  Activating alarm on
+       --  Monday and Wednesday
+       A.Days (Mon) := True;
+       A.Days (Wed) := True;
+    end Show_Alarm;
+
+In this example, we have a very simple alarm system specified in the
+:ada:`Alarms` package. We can set the alarm to ring at the same time on
+specific days. In the :ada:`Show_Alarm` procedure, we set the alarm to just
+ring on Mondays and Wednesdays.
+
+The compiler may generate multiple operations for the update of the
+:ada:`A.Days (Mon)` and :ada:`A.Days (Wed)` components. If we use
+:ada:`Full_Access_Only` aspect, we may combine those updates in a single
+operation |mdash| in addition, we have to use a
+:ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
+
+Note that we haven't discuss the topic of delta aggregates yet: we'll do that
+:ref:`later on in this course <Adv_Ada_Delta_Aggregates>`. However, in simple
+terms, we can use them to modify specific components of a record without
+changing the remaining components of the record.
+
+Let's update the previous example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Alarms_Nonatomic_Full_Access
+
+
+    pragma Ada_2022;
+
+    with Alarms; use Alarms;
+
+    procedure Show_Alarm is
+
+       A : Alarm
+             with Full_Access_Only;
+
+    begin
+       --  Initializing the alarm
+       A := (Days   => (others    => False),
+             Hour   => 8,
+             Minute => 0);
+
+       --  Activating alarm on
+       --  Monday and Wednesday
+       A.Days := (A.Days with delta Mon | Wed => True);
+    end Show_Alarm;
+
+Now, by assigning the delta aggregate to a full-access object, we ensure that
+the complete :ada:`A` object is updated at once.
+
+
+Atomic full-access
+^^^^^^^^^^^^^^^^^^^
+
+As we already know,
+:ref:`atomic objects <Adv_Ada_Shared_Variable_Control_Atomic>` only accept
+atomic reads and updates, which |mdash| as a whole |mdash| are indivisible,
+i.e. they must be done in a single instruction, so that no other instruction
+could execute on that same object before the read or update completes.
+
+In the case of atomic full-access objects, the complete object must be read and
+updated at once. Ideally, this operation corresponds to a single atomic
+operation on the target machine, but it can also translate to multiple atomic
+operations.
+
+Let's see a simplified version of the previous example to illustrate this:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Alarms_Atomic_Full_Access
+
+    pragma Ada_2022;
+
+    package Alarms is
+
+       type Day is (Mon, Tue, Wed,
+                    Thu, Fri,
+                    Sat, Sun);
+
+       type Enabled is new Boolean
+         with Size => 1;
+
+       type Day_Enabled is
+         array (Day) of Enabled
+           with Pack;
+
+    end Alarms;
+
+    pragma Ada_2022;
+
+    with Alarms; use Alarms;
+
+    procedure Show_Alarm is
+
+       D : Day_Enabled
+             with Atomic, Full_Access_Only;
+
+    begin
+       --  Initializing the alarm
+       D := (others => False);
+
+       --  Activating alarm on
+       --  Monday and Wednesday
+       D := (D with delta Mon | Wed => True);
+    end Show_Alarm;
+
+In the :ada:`Show_Alarm` procedure, we again activate the alarm to ring on
+Mondays and Wednesdays by assigning a delta aggregate to :ada:`D`. This
+assignment is performed at once because :ada:`D` is an atomic full-access
+object. Note, however, that if multiple atomic operations are needed, those
+will be sequential for this object.
+
+
 ..
     TO BE DONE:
 
