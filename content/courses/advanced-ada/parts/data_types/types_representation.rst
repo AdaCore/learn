@@ -2778,8 +2778,8 @@ these array declarations are equivalent:
 
 .. _Adv_Ada_Shared_Variable_Control_Full_Access_Only:
 
-:ada:`Full_Access_Only`
-~~~~~~~~~~~~~~~~~~~~~~~
+Full access only
+~~~~~~~~~~~~~~~~
 
 A full access object is an object that requires that read or write operations
 on this object be performed by reading or writing all bits of the object (i.e.
