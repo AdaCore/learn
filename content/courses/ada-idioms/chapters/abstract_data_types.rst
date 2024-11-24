@@ -281,7 +281,7 @@ be functions that simply return the value of a component but are part of
 the abstraction and happen to be implementable by returning the value of a
 component. For example, a real stacks ADT package would include a function
 indicating the extent of the object |mdash| that is, the number of values
-currently contained. In our example implementation the Top component
+currently contained. In our example implementation the :ada:`Top` component
 happens to indicate that value, in addition to indicating the current top
 of the stack. The body of the :ada:`Extent` function can then be as
 follows:
