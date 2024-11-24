@@ -2943,7 +2943,9 @@ Let's update the previous example:
 
        --  Activating alarm on
        --  Monday and Wednesday
-       A.Days := (A.Days with delta Mon | Wed => True);
+       A.Days := (A.Days
+                    with delta Mon |
+                               Wed => True);
     end Show_Alarm;
 
 Now, by assigning the delta aggregate to a full-access object, we ensure that
