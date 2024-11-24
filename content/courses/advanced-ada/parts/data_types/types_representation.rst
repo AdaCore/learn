@@ -2312,6 +2312,9 @@ start by discussing volatile objects.
 
     - :arm22:`C.6 Shared Variable Control <C-6>`
 
+
+.. _Adv_Ada_Shared_Variable_Control_Volatile:
+
 Volatile
 ~~~~~~~~
 
@@ -2426,6 +2429,9 @@ Note that, if the :ada:`Volatile` aspect is specified for an object, then the
 makes sense in the context, of course. In the example above, even though
 :ada:`Volatile_Components` isn't specified in the declaration of the :ada:`Arr`
 array , it's automatically set as well.
+
+
+.. _Adv_Ada_Shared_Variable_Control_Independent:
 
 Independent
 ~~~~~~~~~~~
