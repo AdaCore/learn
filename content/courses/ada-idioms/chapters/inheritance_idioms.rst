@@ -19,7 +19,7 @@ from) some existing type. We will informally refer to the existing ancestor type
 as the *parent* type, and the new type as the *child* type.  The term *Subtype*
 in the idiom name refers to the child type.
 
-Subtype Inheritance is the most well-known idiom for inheritance because it is
+Subtype Inheritance is the most well-known idiom for inheritance because it's
 based on the notion of a taxonomy, in which categories and disjoint
 subcategories are identified. For example, we can say that dogs, cats, and
 dolphins are mammals, and that all mammals are animals:
@@ -40,16 +40,16 @@ dolphins are mammals, and that all mammals are animals:
     Mammal <|-- Dolphin
 
 By saying that the subcategories are disjoint we mean that, for example, dogs
-are neither cats nor dolphins and cannot be treated as if they are the same.
+are neither cats nor dolphins and cannot be treated as if they are.
 
 In software, we use various constructs to represent the categories and
-subcategories, and use inheritance to organize them. As mentioned above, in Ada
+subcategories and use inheritance to organize them. As mentioned above, in Ada,
 we express that inheritance via derived types representing the categories and
 subcategories. Ada's strong typing ensures they are treated as disjoint
 entities.
 
 Although the derived child type is distinct from the parent type, the child is
-the same kind as the parent type. Some authors use *kind of* as the name for the
+the same *kind* as the parent type. Some authors use *kind of* as the name for the
 relationship between the child and parent. Meyer uses the term *is-a* [1]_, a
 popular term that we will use too. For example, a cat *is a* mammal, and also is
 an animal.
@@ -58,15 +58,15 @@ The fundamental difference between
 :ref:`Subtype Inheritance <Ada_Idioms_Subtype_Inheritance>` and
 :ref:`Implementation Inheritance <Ada_Idioms_Implementation_Inheritance>` is
 whether clients have compile-time visibility to the *is-a* relationship between
-the parent and child types. The relationship exists in both idioms but is not
-visible to clients in both. In Subtype Inheritance clients do have compile-time
-visibility to the relationship, whereas in Implementation Inheritance clients
-do not have that visibility.
+the parent and child types. The relationship exists in both idioms but is only
+visible to clients in one. In Subtype Inheritance, clients do have compile-time
+visibility to the relationship, while in Implementation Inheritance, clients
+don't have that visibility.
 
 Consequently, with Subtype Inheritance, all of the inherited operations become
 part of the child type's visible interface. In contrast, with Implementation
-Inheritance none of those parent capabilities are part of the visible interface.
-The inherited parent capabilities are only available internally, to implement
+Inheritance, none of those parent capabilities are part of the visible interface:
+the inherited parent capabilities are only available internally, to implement
 the child type's representation and its primitive operations.
 
 
@@ -88,7 +88,7 @@ expressive power for controlling the client's view of the child and parent
 types.
 
 For example, in Ada, full dynamic OOP capabilities require type declarations to
-be decorated with the reserved word :ada:`tagged`. However, from the beginning
+be decorated with the reserved word :ada:`tagged`. However, from its earliest days,
 Ada has also supported a static form of inheritance, using types that are not
 tagged. The solution we describe below works with both forms of inheritance.
 
@@ -183,34 +183,35 @@ Solution
 
 There are two *solutions* in this entry, one for each of the two inheritance
 idioms under discussion. First, we will specify our building block choices,
-then we will show the two idiom expressions in separate subsections.
+then show the two idiom expressions in separate subsections.
 
-- We will use tagged types for the sake of the full OOP capabilities. That is
+- We use tagged types for the sake of providing  full OOP capabilities. That is
   the most common choice when inheritance is involved. The static form of
-  inheritance has cases in which it is useful, however those cases are very
+  inheritance has cases in which it is useful, but those cases are very
   narrow in applicability.
 
-- We will assume that the parent type and the child type are both private
+- We  assume that the parent type and the child type are both private
   types, i.e., abstract data types, because that is the best practice. See the
   :ref:`Abstract Data Type idiom <Ada_Idioms_Abstract_Data_Types>` for
   justification and details.
 
-- For the most general capabilities, we will assume that the parent type is
+- To provide the most general capabilities, we assume the parent type is
   visibly tagged.
 
-- We are going to declare the child type in a distinct, dedicated package,
+- We're going to declare the child type in a distinct, dedicated package,
   following the :ref:`ADT idiom <Ada_Idioms_Abstract_Data_Types>`. This package
-  may or may not be a hierarchical child of the parent package. The solution
+  may or may not be a child of the parent package. This solution's
   approach does not require a child package's special compile-time visibility,
   although a child package is often necessary for the sake of that visibility.
 
 - Whether the child type is visibly derived will vary with the
   :ref:`inheritance idiom <Ada_Idioms_Implementation_Inheritance>` solution.
 
-To avoid unnecessary code duplication, examples for the two idiom solutions use
-the same parent type, declared as a simple tagged private type. The parent type
+To avoid unnecessary code duplication, we use
+the same parent type, declared as a simple tagged private type, in the examples
+for the two idiom solutions. The parent type
 could itself be derived from some other tagged type, but that changes nothing
-conceptually significant. The parent type is declared in package :ada:`P`, as
+conceptually significant. We declare parent type in package :ada:`P` as
 follows:
 
 .. code-block:: ada
@@ -247,11 +248,11 @@ part of the package:
       type Child is new Parent with record ... end record;
     end Q;
 
-The primitive operations from the parent type are implicitly, automatically
+The primitive operations from the parent type are implicitly
 declared immediately after the private extension declaration. That means those
 operations are in the visible part of the package, hence clients can invoke
 them. Any additional operations for the client interface will be explicitly
-declared in the visible part as well, as will be any overriding declarations for
+declared in the visible part as well, as will any overriding declarations for
 those inherited operations that are to be changed.
 
 For example, here is a basic bank account
@@ -368,7 +369,7 @@ added to the client API.
 
 The package private part and the body of package :ada:`Bank.Interest_Bearing`
 have visibility to the private part of package :ada:`Bank` because the new
-package is a hierarchical child of package :ada:`Bank`. That makes the private
+package is a child of package :ada:`Bank`. That makes the private
 function :ada:`Bank.Total` visible in the child package, along with the
 components of the record type :ada:`Basic_Account`.
 
@@ -453,7 +454,7 @@ part:
        --  as the controlling formal parameter
     end Q;
 
-The primitive operations from the parent type are implicitly, automatically
+The primitive operations from the parent type are implicitly
 declared immediately after the type extension, but these declarations are now
 located in the package private part. Therefore, the inherited primitive
 operations are not compile-time visible to clients. Hence clients cannot invoke
@@ -462,10 +463,12 @@ package private part and the package body, for use with the implementation of
 the explicitly declared primitive operations.
 
 For example, we might use a *controlled type* in the implementation of a
-tagged private type. Clients generally don't have any business directly calling
-the operations defined by the two language-defined controlled types so we
-usually use implementation inheritance. But if clients did have the need, we
-would use Subtype Inheritance instead.
+tagged private type. These types have procedures :ada:`Initialize` and
+:ada:`Finalize` defined as primitive operations. Both are called automatically
+by the compiler. Clients generally don't have any business directly calling
+them so we usually use implementation inheritance with controlled types. But if
+clients did have the need to call them we
+would use Subtype Inheritance instead, to make them visible to clients.
 
 For example, the following is a generic package providing an abstract data type
 for unbounded queues. As such, the :ada:`Queue` type uses dynamic allocation
@@ -520,7 +523,7 @@ when objects of the :ada:`Queue` type cease to exist:
     end Unbounded_Sequential_Queues;
 
 The basic operation of assignment usually does not make sense for an abstraction
-represented as a linked list, so we declare the private type as limited, in
+represented as a linked list, so we declare the private type as *limited*, in
 addition to tagged and private, and then use the language-defined limited
 controlled type for the type extension completion in the private part.
 
@@ -529,14 +532,14 @@ the type extension. Both are null procedures that do nothing. We can leave
 :ada:`Initialize` as-is because initialization is already accomplished via the
 default values for the :ada:`Queue` components. On the other hand, we want
 finalization to reclaim all allocated storage so we cannot leave
-:ada:`Finalize` as a null procedure. By overriding the procedure we can change
-the implementation. That change is usually accomplished by writing the
+:ada:`Finalize` as a null procedure. By overriding the procedure, we can change
+the implementation. That change is usually accomplished by placing the
 corresponding procedure body in the package body. However, in this case we have
 an existing procedure named :ada:`Reset` that is part of the visible (client)
 API. :ada:`Reset` does exactly what we want :ada:`Finalize` to do, so we
 implement the overridden :ada:`Finalize` by saying that it is just another name
 for :ada:`Reset`. No completion body for :ada:`Finalize` is then required or
-allowed. This approach has the same semantics as if we did explicitly write a
+allowed. This approach has the same semantics as if we explicitly wrote a
 body for :ada:`Finalize` that simply called :ada:`Reset`, but this is more succinct.
 Clients can call :ada:`Reset` whenever
 they want, but the procedure will also be called automatically, via
@@ -548,14 +551,14 @@ Pros
 
 The two idioms are easily composed simply by controlling where in the enclosing
 package the parent type is mentioned: either in the declaration of the private
-child type in the package visible part, or in the child type's completion in the
+child type in the package visible part or in the child type's completion in the
 package private type.
 
 
 Cons
 ----
 
-Although the inheritance expressions are simple in themselves, the many
+Although the inheritance expressions are simple by themselves, the many
 ancillary design choices can make the design effort seem more complicated than
 it really is.
 

@@ -16,29 +16,31 @@ Motivation
 Solution
 --------
 
-The Abstract Data Machine (ADM) is similar to the
-:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` in that it
-presents an abstraction, something that doesn't already exist in the
+The Abstract Data Machine (ADM) idiom is similar to the
+:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` idiom in that it
+presents an abstraction that doesn't already exist in the
 programming language. Furthermore, like the ADT, operations are provided to
-manipulate the abstraction data, state that is not otherwise compile-time
+manipulate the abstraction state, which is not otherwise compile-time
 visible to client code. These operations are thus enforced as the only
 manipulation possible, as per the designer's intent.  (The Abstract Data
 Machine was introduced by Grady Booch [1]_ as the Abstract State Machine, but that
-name, though appropriate, encompasses more in computer science than we intend.)
+name, though appropriate, encompasses more in computer science than we intend
+to evoke.)
 
 Unlike the ADT, however, the ADM does not define the abstraction as a type. To
 understand this point, recall that type declarations are descriptions for
-objects that will contain data. For example, our earlier :ada:`Stack` type was
+objects that will contain data (the state). For example,
+our earlier :ada:`Stack` type was
 defined as a record containing two components: an array to hold the values
-logically contained by the :ada:`Stack`, and an integer indicating the logical
-top of that array. No data actually exist, i.e., are allocated storage, until
+logically contained by the :ada:`Stack` and an integer indicating the logical
+top of that array. No data actually exists, i.e., is allocated storage, until
 objects are declared. Clients can declare as many objects of type :ada:`Stack`
-as they require, and each object has a distinct, separate copy of those two
+as they require and each object has a distinct, separate copy of those two
 components.
 
 Clients can, of course, choose to declare only one object of a given type, in
 which case only one instance of the data described by the type will exist. But
-in that case, other than convenience there is no functional difference from
+in that case, other than convenience, there is no functional difference from
 declaring objects of the component types directly, rather than indirectly via
 some enclosing type. Instead of using the :ada:`Stack` type to declare a
 single composite object, for example, the developer could have instead declared
@@ -59,17 +61,17 @@ or even this, using an anonymously-typed array:
        Values : array  (1 .. Capacity) of Integer;
        Top    : Integer range 0 .. Capacity := 0;
 
-If there is only one *stack* these two objects will suffice.
+If there is only one *stack*, these two objects will suffice.
 
-That's what the ADM does. The necessary state for a single abstraction instance
-is declared in a package, usually a library package. But as an abstraction,
+That's what the ADM does. The package, usually a library package, declares
+the necessary state for a single abstraction instance. But, as an abstraction,
 those data declarations must not be compile-time visible to clients. Therefore,
 the state is declared in either the package private part or the package body.
-Doing so requires that visible operations be made available to clients, as any
-abstraction would require. Hence the package is the abstraction instance, as
-opposed to one or more objects of a type.
+Doing so requires that visible operations be made available to clients, like any
+other abstraction. Hence the package is the one instance of the abstraction, as
+opposed to defining one or more objects of a type.
 
-Therefore, the package declaration's visible section will contain only the
+Therefore, the package declaration's visible section contains only the
 following:
 
    - Constants (but almost certainly not variables)
@@ -80,9 +82,9 @@ following:
 
    - Operations
 
-The package declaration's private part and the package body may contain all the
-above, but especially one or the other (or both) will contain object
-declarations representing the abstraction's state.
+The package declaration's private part and the package body may contain all
+the above, but one or the other (or both) will contain object declarations
+representing the abstraction's state.
 
 Consider the following ADM version of the package :ada:`Integer_Stacks`, now
 renamed to :ada:`Integer_Stack` for reasons we will discuss shortly. In this
@@ -112,11 +114,11 @@ version we declare the state in the package body.
        function Empty return Boolean is (Top = 0);
     end Integer_Stack;
 
-Now there is no type presenting a :ada:`Stack` abstraction, and the operations
-do not take a stack parameter because the package and its data is the
-abstraction instance. There is only one stack of integers with this idiom. That
-is why the name of the package is changed from :ada:`Integer_Stacks`, i.e.,
-from the plural form.
+Now there is no type presenting a :ada:`Stack` abstraction and the operations
+do not take a stack parameter because the package and its data is the instance
+of the abstraction. When using this idiom, there is only one stack of integers.
+That's why we changed the name of the package from :ada:`Integer_Stacks`, i.e.,
+from the plural form to the singular.
 
 As with the ADT idiom, clients of an ADM can only manipulate the encapsulated
 state indirectly, via the visible operations. The difference is that the state
@@ -138,8 +140,8 @@ type :ada:`Stack` are manipulated:
 
 That call places the value 42 in the array :ada:`Answers.Values`, i.e., within
 the :ada:`Answers` variable. Clients can declare as many :ada:`Stack` objects
-as they require, and each will contain a distinct copy of the state defined by
-the type. In the ADM version there is only one stack and therefore one instance
+as they require, each containing a distinct copy of the state defined by the
+type. In the ADM version, there is only one stack and therefore only one instance
 of the state.
 
 Rather than declare the abstraction state in the package body, we could just as
@@ -157,24 +159,23 @@ easily declare it in the package's private section:
        Top    : Integer range 0 .. Capacity := 0;
     end Integer_Stack;
 
-Doing so doesn't change anything from the client code point of view. Just as
+Doing so doesn't change anything from the client code point of view; just as
 clients have no compile-time visibility to declarations in the package body,
 they have no compile-time visibility to the items in the package private part.
 This placement also doesn't change the fact that there is only one instance of
 the data. We've only changed where the data are declared. (We will discuss the
 effect of child packages separately.)
 
-The private section wasn't required when the data were declared in the package
-body. That's typical when using this idiom but is not a necessary
-characteristic.
+The private section wasn't otherwise required when we chose to declare the data in
+the package body.
 
-The ADM idiom applies information hiding to the internal state, similar to the
-ADT idiom, except that the state is not in objects. As well, like the
+The ADM idiom applies information hiding to the internal state, like the
+ADT idiom, except that the state is not in objects. Also, like the
 :ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>`,
-the implementations of the visible subprograms are hidden by the package body,
+the implementations of the visible subprograms are hidden in the package body,
 along with any non-visible entities required for their implementation.
 
-There will be no constructor functions returning a value of the abstraction
+There are no constructor functions returning a value of the abstraction
 type because there is no such type with the ADM. However, there could be one or
 more initialization procedures, operating directly on the hidden state in the
 package private part or package body. In the :ada:`Stack` ADM there is no need
@@ -188,8 +189,9 @@ idiom by default.
 Pros
 ----
 
-In terms of abstraction and information hiding, the ADM provides the same
-advantages as the ADT idiom: clients have no representation details visible and
+In terms of abstraction and information hiding, the ADM idiom provides the same
+advantages as the ADT idiom: clients have no visibility to
+representation details and
 must use the operations declared in the package to manipulate the state. The
 compiler enforces this abstract view. The ADM also has the ADT benefit of
 knowing where any bugs could possibly be located. If there is a bug in the
@@ -197,10 +199,10 @@ manipulation, it must be in the one package defining the abstraction itself. No
 other code would have the compile-time visibility necessary.
 
 This idiom can be applied to any situation requiring abstraction, including
-hardware. For example, a particular microprocessor had an on-board rotary
-switch for arbitrary use by system designers. The switch value was available to
-the software via an 8-bit integer located at a dedicated memory address, mapped
-like so:
+hardware. For example, consider a microprocessor that has an on-board rotary
+switch for arbitrary use by system designers. The switch value is
+available to the software via an 8-bit integer located at a dedicated
+memory address, mapped like so:
 
 .. code-block:: ada
 

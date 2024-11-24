@@ -12,7 +12,9 @@ Motivation
 In languages supporting object-oriented programming (OOP), including Ada,
 *constructors* are not inherited when one type is derived from another. That's
 appropriate because, in general, they would be unable to fully construct values
-for the new type.
+for the new type. The purpose of this idiom is to explain how Ada defines
+constructors, how the language rules prevent constructor inheritance, and how
+to design the constructor code in light of those rules.
 
 Ada uses tagged types to fully support dynamic OOP. Therefore, in the
 following, a *derived type* refers to a tagged type that is declared as a
@@ -23,9 +25,12 @@ existing parent type.
 
 This discussion assumes these tagged types are declared in packages designed
 using the
-:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` (ADT) idiom. In
-particular, the parent type is a private type, and the derived type is declared
-as a *private extension*. A private extension is a type extension declaration
+:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` (ADT) idiom.
+We strongly recommend the reader be comfortable with that idiom before
+proceeding.
+
+As abstract data types, the parent type is a private type, and the derived type is
+a *private extension*. A private extension is a type extension declaration
 that does not reveal the components added, if any. The parent type could itself
 be an extended type, but the point is that these types will all be private
 types one way or another. Declarations as private types and private extensions
@@ -42,24 +47,53 @@ extension:
 
     type Circle is new Graphics.Shape with private;
 
-Although this declaration will occur in the public part of a package, as a
-private type extension the additional components will not be compile-time
-visible to client code, conforming to ADT requirements. That's what the word
+This declaration will be in the public part of a package, but, as a private
+type extension, the additional components are not compile-time visible to
+client code, conforming to ADT requirements. That's what the reserved word
 :ada:`private` indicates in the type declaration.
+
+Instead of a distinct constructor syntax, Ada uses regular functions to
+construct objects. Specifically, so-called *constructor functions* are
+functions that return an object of the type.
+
+.. code-block:: ada
+
+    type Circle is new Graphics.Shape with private;
+
+    function New_Circle (Radius : Float) return Circle;
+
+Like any function there may be formal parameters specified, but not necessarily.
 
 Functions and procedures that manipulate objects of the private type are
 *primitive operations* for the type if they are declared in the same package as
-the type declaration itself. (That location provides the compile-time visibility
-to the type's representation that is required to implement the subprograms.)
-Only the primitive operations are inherited during type derivation.
+the type declaration itself. For procedures, that means they have formal
+parameters of the type. For functions, that means they either have formal
+parameters of the type, or return a value of the type, or both.
 
-Instead of a distinct constructor syntax, Ada uses regular functions to
-construct objects of types but the issues are the same. By definition, these so-called
-*constructor functions* return an object of the type in question. Other primitive
-functions are not constructors and can be inherited without difficulty.
+Declaration with the same package as the type itself provides the
+compile-time visibility to the type's representation required to
+implement the subprograms.
 
-Therefore, Ada language rules prevent constructor functions from being legally
-inherited, even though they are primitive operations for the type.
+Other operations might be declared in the same package too, but if they
+do not manipulate or return values of the type they are not primitive
+operations for the type. (Their location in that package is somewhat
+suspect and should be reviewed explicitly.)
+
+Primitive operations, and only primitive operations, are inherited during
+type derivation.
+
+If you think in terms of Abstract Data Types all these rules make sense.
+
+Now, here's the rub.
+
+Constructor functions require that same compile-time visibility so the
+intuitive approach will be to declare them in the same package declaration
+as the type. As a result, they will be primitive operations for that type.
+
+However, that means that the constructor functions will be inherited,
+contrary to the expectation for constructors. Therefore, Ada has rules
+specific to primitive constructor functions that have the effect of preventing
+their inheritance.
 
 The explanation and illustration for these rules first requires explanation of
 the word *abstract*. We mentioned above that the package enclosing the
@@ -87,17 +121,20 @@ example:
 
     procedure Do_Something (This : in out Foo) is abstract;
 
-In contrast, *concrete* types have an actual representation and can be used to
-declare objects. Likewise, concrete subprograms are fully implemented, callable
-units. In the following discussion, *abstract* has this OOP sense unless stated
-otherwise.
+Now we can explain how Ada prevents constructor inheritance.
 
-With that definition in place, we can explain how Ada prevents constructor inheritance:
-whenever a tagged type is extended, all inherited constructor functions automatically
-become abstract functions for the extended type. Assuming the extended child
-type is not abstract, the type extension will be illegal because only abstract
-types can have abstract subprograms.  Thus, the compiler prevents this
-inappropriate constructor inheritance.
+Whenever a
+tagged type is extended, all inherited constructor functions
+automatically become abstract functions for the extended type, just as
+if they were explicitly declared abstract.
+
+However, only abstract types can legally have abstract primitive
+operations. Concrete types may not, so that we can never dynamically
+dispatch to a subprogram without an actual implementation.
+
+Therefore, unless the extended child type is itself abstract, the type extension
+will be illegal. The compiler will reject the declaration of the child type,
+thus preventing this inappropriate constructor inheritance.
 
 For an example, both for the code and the Ada rules, consider this simple
 package declaration that presents the tagged private type
@@ -116,9 +153,8 @@ package declaration that presents the tagged private type
        end record;
     end Graphics;
 
-Note in particular the primitive function named :ada:`Make` that constructs a
-value of type :ada:`Shape`. The two formal parameters are assigned to the
-corresponding two components of the object returned by :ada:`Make`.
+Note in particular the primitive constructor function named :ada:`Make`
+that constructs a value of type :ada:`Shape`.
 
 Because type :ada:`Shape` is tagged, other types can extend it:
 

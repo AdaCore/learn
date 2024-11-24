@@ -36,15 +36,10 @@ purpose and/or implementation. For example, in the idiom for controlling
 object creation and initialization, the implementation approach happens
 to be the same as for expressing a Singleton [1]_.
 
-That's not to say that we could not have a design pattern as an idiom
-solution. But if so, the purpose of the idiom entry would be to
-illustrate some Ada programming technique, rather than the expression of
-the design pattern itself.
-
 In addition to language-independent situations, we also include
 solutions for situations specific to the Ada language. These idioms are
 *best practices* in situations that
-arise given the capabilities and semantics in the language.
+arise given the extensive capabilities of the language.
 
 For example, Ada directly supports tasks (threads) via a dedicated
 construct consisting of local objects and a sequence of statements.
@@ -64,8 +59,6 @@ abstractions that manage global data (Abstract Data Machines). Most of
 the idioms' solutions will be defined using these abstraction techniques
 as their starting point.
 
-Perhaps instead of *idiom* we should have used the term *cookbook,* but
-although appropriate, that term didn't completely convey the intent either.
 
 Assumptions
 -----------

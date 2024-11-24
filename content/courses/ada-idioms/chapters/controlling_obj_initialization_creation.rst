@@ -50,24 +50,23 @@ is an access type, the automatic default value :ada:`null` initializes
 
     package Binary_Trees is
        type Tree is limited private;
-       Null_Tree : constant Tree;
        ...
     private
        type Leaf_and_Branch is record ...
        type Tree is access Leaf_and_Branch;
-       Null_Tree : constant Tree := null;
+       ...
     end Binary_Trees;
 
 In both cases, simply declaring an object in the client code is sufficient to
 ensure it is initially empty.
 
 However, not all abstractions have a meaningful default initial state. Default
-initialization will not suffice to fully initialize objects in these cases.
-Explicit initialization is required.
+initialization will not suffice to fully initialize objects in these cases, so
+explicit initialization is required.
 
 An explicit procedure call could be used to set the initial state of an object
 (passed to a mode-out parameter), but there is no guarantee that the call will
-occur and no way to force it.
+occur and no way to force a client to make it.
 
 In contrast, the declaration of the object is guaranteed to occur, and as part
 of the declaration the object can be given an explicit initial value. The
@@ -91,7 +90,7 @@ In the code above, the object
 to the length of the literal. The specific bounds of :ada:`Reply` are
 determined by the function, and need not start at :ada:`Positive'First`.
 
-An object cannot be used before it is declared, and since this explicit initial
+An object cannot be used before it is declared. Since this explicit initial
 value is part of the declaration, the object cannot be read before it is
 initialized. That fact is the key to the solutions.
 
