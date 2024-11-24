@@ -2936,8 +2936,9 @@ Variant parts
 We've introduced variant records back in the
 :ref:`Introduction to Ada course <Intro_Ada_Variant_Records>`.
 In simple terms, a variant record is a record with discriminants that allows
-for changing its structure. Basically, it's a record containing a :ada:`case`
-statement. For example:
+for varying its structure. Basically, it's a record containing a :ada:`case`
+statement that specifies which record components exist for each discriminant
+value. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Simple_Device
 
@@ -3045,8 +3046,8 @@ In this version of the :ada:`Devices` package, we introduced a *boost button*
 as a discriminant (:ada:`Boost`) and an associated boost factor component
 (:ada:`Factor`) in the variant part.
 
-In the remaining of this section, we discuss a couple of details about variant
-records.
+In the remaining parts of this section, we discuss a couple of details about
+variant records.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -3104,7 +3105,7 @@ example:
 
 Of course, specifying all possible values can be difficult. As an alternative,
 we could simplify the case statement by just using :ada:`others` as a discrete
-choice that encompasses all values that haven't been specified elsewhere in the
+choice that encompasses all values that haven't been specified earlier in the
 case statement:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Variant_Parts.Coverage
@@ -3370,8 +3371,8 @@ this device by turning it on and off, and by retrieving information from it:
        I := Read_Info (D);
     end Show_Device;
 
-In this example, by using the variant part, we're preventing that information
-retrieved by an inappropriate call to the :ada:`Read_Info` function is used
+In this example, by using the variant part, we're preventing information
+retrieved by an inappropriate call to the :ada:`Read_Info` function from being used
 elsewhere in the application. In fact, if the device is turned off, a call to
 :ada:`Read_Info` raises the :ada:`Constraint_Error` exception because the
 :ada:`Info` component isn't accessible. We see that effect in the
@@ -3402,7 +3403,7 @@ calling :ada:`Read_Info`:
        end if;
     end Show_Device;
 
-Now, no exception is being raised anymore, as we only retrieve information from
+Now, no exception is raised, as we only retrieve information from
 the device when it is turned on |mdash| that is, we only call the
 :ada:`Read_Info` function when the :ada:`State` discriminant of the object is
 set to :ada:`On`.
