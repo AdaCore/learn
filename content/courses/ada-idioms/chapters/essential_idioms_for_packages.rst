@@ -151,10 +151,10 @@ manipulate values of those types.
 
 One might also declare variables in the package, but those should not be
 the central purpose of the package. For example, perhaps we want to have a
-variable whose value is used as the default for some formal
-parameters. Clients can change the default for subsequent calls by first
-assigning a different value to the variable, unlike a hardcoded literal
-chosen by the developer. It would look like this:
+variable whose value is used as the
+default for some formal parameters. Clients can change the default for
+subsequent calls by first assigning a different value to the variable, unlike a
+hardcoded literal chosen by the developer. It would look like this:
 
 .. code-block:: ada
 

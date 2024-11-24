@@ -63,12 +63,11 @@ visible to clients in one. In Subtype Inheritance, clients do have compile-time
 visibility to the relationship, while in Implementation Inheritance, clients
 don't have that visibility.
 
-Consequently, with Subtype Inheritance, all of the inherited operations
-become part of the child type's visible interface. In contrast, with
-Implementation Inheritance, none of those parent capabilities are part of
-the visible interface: the inherited parent capabilities are only available
-internally, to implement the child type's representation and its primitive
-operations.
+Consequently, with Subtype Inheritance, all of the inherited operations become
+part of the child type's visible interface. In contrast, with Implementation
+Inheritance, none of those parent capabilities are part of the visible interface:
+the inherited parent capabilities are only available internally, to implement
+the child type's representation and its primitive operations.
 
 
 Building Blocks
@@ -201,11 +200,10 @@ then show the two idiom expressions in separate subsections.
   visibly tagged.
 
 - We're going to declare the child type in a distinct, dedicated package,
-  following the :ref:`ADT idiom <Ada_Idioms_Abstract_Data_Types>`. This
-  package may or may not be a child of the parent package. This solution's
-  approach does not require a child package's special compile-time
-  visibility, although a child package is often necessary for the sake of
-  that visibility.
+  following the :ref:`ADT idiom <Ada_Idioms_Abstract_Data_Types>`. This package
+  may or may not be a child of the parent package. This solution's
+  approach does not require a child package's special compile-time visibility,
+  although a child package is often necessary for the sake of that visibility.
 
 - Whether the child type is visibly derived will vary with the
   :ref:`inheritance idiom <Ada_Idioms_Implementation_Inheritance>` solution.
@@ -369,11 +367,11 @@ overridden so that their behavior can be changed. Additional operations
 specific to the new type are also declared in the visible part so they are
 added to the client API.
 
-The package private part and the body of package
-:ada:`Bank.Interest_Bearing` have visibility to the private part of package
-:ada:`Bank` because the new package is a child of package :ada:`Bank`. That
-makes the private function :ada:`Bank.Total` visible in the child package,
-along with the components of the record type :ada:`Basic_Account`.
+The package private part and the body of package :ada:`Bank.Interest_Bearing`
+have visibility to the private part of package :ada:`Bank` because the new
+package is a child of package :ada:`Bank`. That makes the private
+function :ada:`Bank.Total` visible in the child package, along with the
+components of the record type :ada:`Basic_Account`.
 
 Note that there is no language requirement that the actual parent type in the
 private type's completion be the one named in the private extension declaration
@@ -524,11 +522,10 @@ when objects of the :ada:`Queue` type cease to exist:
 
     end Unbounded_Sequential_Queues;
 
-The basic operation of assignment usually does not make sense for an
-abstraction represented as a linked list, so we declare the private type as
-*limited*, in addition to tagged and private, and then use the
-language-defined limited controlled type for the type extension completion
-in the private part.
+The basic operation of assignment usually does not make sense for an abstraction
+represented as a linked list, so we declare the private type as *limited*, in
+addition to tagged and private, and then use the language-defined limited
+controlled type for the type extension completion in the private part.
 
 Procedures :ada:`Initialize` and :ada:`Finalize` are inherited immediately after
 the type extension. Both are null procedures that do nothing. We can leave
