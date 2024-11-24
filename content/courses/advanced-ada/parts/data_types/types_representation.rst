@@ -2775,6 +2775,9 @@ these array declarations are equivalent:
     end Shared_Var_Types;
 
 
+
+.. _Adv_Ada_Full_Access_Only:
+
 :ada:`Full_Access_Only`
 ~~~~~~~~~~~~~~~~~~~~~~~
 
