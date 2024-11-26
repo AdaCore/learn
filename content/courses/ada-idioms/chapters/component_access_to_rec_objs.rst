@@ -23,8 +23,7 @@ We would want a task type or protected type record component when:
        object. The record object and contained task/PO object pair is a
        functional unit, independent of all other such units.
 
-This idiom applies to both enclosed task types and protected types, but for the
-sake of concision let's assume the record component will be of a protected
+This idiom applies to both enclosed task types and protected types, but for simplicity let's assume the record component will be of a protected
 type.
 
 As part of a functional unit, the PO component will almost certainly be
@@ -99,65 +98,65 @@ two parts:
 .. code-block:: ada
 
     package P is
-       type Enclosing is tagged limited private;
+       type Device is tagged limited private;
     private
 
-       protected type Controller (Instance : not null access Enclosing) is
+       protected type Controller (Encloser : not null access Device) is
           -- Part 1
 
           procedure Increment_X;
        end Controller;
 
-       type Enclosing is tagged limited record
+       type Device is tagged limited record
           X : Integer;  -- arbitrary type
 
-          C : Controller (Instance => ...);
+          C : Controller (Encloser => ...);
           -- Part 2, not fully shown yet
        end record;
 
     end P;
 
-The record type named :ada:`Enclosing` contains a component named :ada:`X`,
+The record type named :ada:`Device` contains a component named :ada:`X`,
 arbitrarily of type :ada:`Integer`, and another component :ada:`C` that is of
 protected type :ada:`Controller`.  Part #1 of the solution is the access
 discriminant on the declaration of the protected type :ada:`Controller`:
 
 .. code-block:: ada
 
-    protected type Controller (Instance : not null access Enclosing) is
+    protected type Controller (Encloser : not null access Device) is
 
-Given a value for the discriminant :ada:`Instance`, the code within the spec
-and body of type :ada:`Controller` can then reference some :ada:`Enclosing`
+Given a value for the discriminant :ada:`Encloser`, the code within the spec
+and body of type :ada:`Controller` can then reference some :ada:`Device`
 object via that discriminant.
 
-But not just any object of type :ada:`Enclosing` will suffice. For Part #2, we
-must give the :ada:`Instance` discriminant a value that refers to the current
+But not just any object of type :ada:`Device` will suffice. For Part #2, we
+must give the :ada:`Encloser` discriminant a value that refers to the current
 instance of the record object containing this same PO object. In the package
-declaration above, the value passed to :ada:`Instance` is elided. The following
-is that code again, now showing just the declaration for :ada:`Enclosing`, but
+declaration above, the value passed to :ada:`Encloser` is elided. The following
+is that code again, now showing just the declaration for :ada:`Device`, but
 also including the construct that is actually passed. This is where the
 subtlety comes into play:
 
 .. code-block:: ada
 
-    type Enclosing is tagged limited record
+    type Device is tagged limited record
           ...
-          C : Controller (Instance => Enclosing'Access);
+          C : Controller (Encloser => Device'Access);
     end record;
 
-The subtlety is the expression :ada:`Enclosing'Access`. Within a type
+The subtlety is the expression :ada:`Device'Access`. Within a type
 declaration, usage of the type name denotes the current instance of that type.
 The current instance of a type is the object of the type that is associated
 with the execution that evaluates the type name. For example, during execution,
-when an object of type :ada:`Enclosing` is elaborated, the name
-:ada:`Enclosing` refers to that object.
+when an object of type :ada:`Device` is elaborated, the name
+:ada:`Device` refers to that object.
 
 It isn't compiler-defined magic, the semantics are defined by the Ada standard
 so it is completely portable. (There are other cases for expressing the current
 instance of task types, protected types, and generics.)
 
-Therefore, within the declaration of type :ada:`Enclosing`, the expression
-:ada:`Enclosing'Access` provides an access value designating the current
+Therefore, within the declaration of type :ada:`Device`, the expression
+:ada:`Device'Access` provides an access value designating the current
 instance of that type. This is exactly what we want and is the crux of the
 idiom expression. With that discriminant value, the enclosed PO spec and body
 can reference the other record components of the same object that contains the
@@ -174,7 +173,7 @@ value referenced in the body of procedure :ada:`Increment_X`:
 
           procedure Increment_X is
           begin
-             Instance.X := Instance.X + 1;
+             Encloser.X := Encloser.X + 1;
           end Increment_X;
 
        end Controller;
@@ -182,49 +181,54 @@ value referenced in the body of procedure :ada:`Increment_X`:
     end P;
 
 Specifically, the body of procedure :ada:`Increment_X` can use the access
-discriminant :ada:`Instance` to get to the current instance's :ada:`X`
-component. (We could express it as :ada:`Instance.all.X` but why bother.
+discriminant :ada:`Encloser` to get to the current instance's :ada:`X`
+component. (We could express it as :ada:`Encloser.all.X` but why bother.
 Implicit dereferencing is a wonderful thing.)
 
 That's the solution. Now for some necessary details.
 
-Note that we declared type :ada:`Enclosing` as a limited type, first in the
+Note that we declared type :ada:`Device` as a limited type, first in the
 visible part of the package:
 
 .. code-block:: ada
 
-    type Enclosing is tagged limited private;
+    type Device is tagged limited private;
 
 and again in the type completion in the package private part:
 
 .. code-block:: ada
 
-    type Enclosing is tagged limited record ... end record;
+    type Device is tagged limited record ... end record;
 
-We declare :ada:`Enclosing` as a limited type because we want to preclude 
+We declare :ada:`Device` as a limited type because we want to preclude 
 assignment statements for client objects of the type. Assignment of the 
-enclosing record object would leave the PO Instance discriminant 
+enclosing record object would leave the PO Encloser discriminant 
 designating the prior (right-hand side) enclosing object. If the PO is 
 written with the assumption that the enclosing object is always the one 
 identified during creation of the PO, that assumption will no longer 
 hold. We didn't state it up-front, but that is the assumption underlying
-the idiom as described. 
+the idiom as described, and in fact, only limited types may have
+a component that uses the :ada:`Access` attribute in this way.
+Also note that any type that includes a protected or task object
+is limited, so a type like Device will necessarily be limited in any case.
 
-The type need not be tagged for this idiom solution, but if you do make it
-tagged, the partial and full views must always match. That is, a tagged type
+The type need not be tagged for this idiom solution, but it must be
+limited in both its partial view and its full view. More generally, a tagged type
 must be limited in both views if it is limited in either view.
 
 For the idiom solution to be legal, the type's completion in the private part
-must always be *immutably limited*, meaning that it is always truly limited.
+must not merely be limited, but actually *immutably limited*, meaning that it is always truly limited.
 There are various ways to make that happen (see
 :aarm22:`AARM22 7.5 (8.1/3) <7-5>` ) but the easiest way to is to include the
 reserved word :ada:`limited` in the type definition within the full view, as we
-did above. That is known as making the type *explicitly limited*.
+did above. That is known as making the type *explicitly limited*.  It turns out
+having a task or protected component also makes it immutably limited, so
+this requirement is naturally satisfied in this use case.
 
 Why does the compiler require the type to be immutably limited?
 
 Recall that a (non-tagged) private type need not be limited in both views. It
-can be limited in the partial client view but non-limited in the private full
+can be limited in the partial client view but non-limited in its full
 view:
 
 .. code-block:: ada
@@ -243,15 +247,16 @@ Clients must treat type :ada:`Q.T` as if it is limited, but :ada:`Q.T`
 isn't really limited because the full view defines reality. Clients simply
 have a more restricted view of the type than is really the case.
 
-Types that are explicitly limited really are limited, and always have a view as
-a limited type. That's important because the type given in :ada:`type_name'Access` must be
-aliased for :ada:`'Access` to be meaningful and possible on the corresponding
-objects. But if the type's view could change between limited and not limited,
-it would be aliased in some contexts and not aliased in others. To prevent that
-complexity, the language requires the type's view to be permanently limited so
-that the type will be permanently aliased. An immutably limited type is
-permanently aliased. In practice, we're working with record types and type
-extensions, so just make the type definition explicitly limited and all will be
+Types that are immutably limited are necessarily
+limited in all views.
+That's important because the current instance of the
+type given in :ada:`type_name'Access` must be
+aliased for :ada:`'Access` to be legal. But if the type's view could change between limited and not limited,
+its current instance would be aliased in some contexts and not aliased in others. To prevent that
+complexity, the language requires the type to be immutably limited so
+that the current instance of the type will be aliased in every view.
+In practice, we're working with record types and type
+extensions, so just make the full type definition explicitly limited and all will be
 well:
 
 .. code-block:: ada
