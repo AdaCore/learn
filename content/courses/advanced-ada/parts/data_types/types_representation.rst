@@ -2781,6 +2781,10 @@ these array declarations are equivalent:
 Full access only
 ~~~~~~~~~~~~~~~~
 
+.. note::
+
+   This feature was introduced in Ada 2022.
+
 A full access object is an object that requires that read or write operations
 on this object are performed by reading or writing all bits of the object (i.e.
 the *full object*) at once. Accordingly, a full access type is a type whose
