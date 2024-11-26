@@ -2782,7 +2782,7 @@ Full access only
 ~~~~~~~~~~~~~~~~
 
 A full access object is an object that requires that read or write operations
-on this object be performed by reading or writing all bits of the object (i.e.
+on this object are performed by reading or writing all bits of the object (i.e.
 the *full object*) at once. Accordingly, a full access type is a type whose
 objects follow this requirement. Note that a full access type must be
 simultaneously a
@@ -2916,7 +2916,7 @@ The compiler may generate multiple operations for the update of the
 operation |mdash| in addition, we have to use a
 :ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
 
-Note that we haven't discuss the topic of delta aggregates yet: we'll do that
+Note that we haven't discussed the topic of delta aggregates yet: we'll do that
 :ref:`later on in this course <Adv_Ada_Delta_Aggregates>`. However, in simple
 terms, we can use them to modify specific components of a record without
 changing the remaining components of the record.
