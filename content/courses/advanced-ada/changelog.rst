@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2024-11
+---------------
+
+- New section:
+
+    - :ref:`Variant parts <Adv_Ada_Variant_Records>`
+
+
 Release 2024-10
 ---------------
 
