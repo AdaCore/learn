@@ -24,7 +24,7 @@ most commonly used non-numeric type in the language. Sometimes a given type was
 initialization, e.g., numeric types. That wrapping approach is less common than
 in earlier versions of the language, given the comparatively more recent aspect
 :ada:`Default_Value` for scalar types, and :ada:`Default_Component_Value` for
-scalar components.
+scalar array components.
 
 These facilities are often sufficient to express an abstraction's initial
 state. For example, we can expect that container objects will be initially

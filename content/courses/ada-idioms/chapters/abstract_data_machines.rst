@@ -83,7 +83,7 @@ following:
    - Operations
 
 The package declaration's private part and the package body may contain all
-the above, but one or the other (or both) will contain object declarations
+the above, but one or the other (or both) will contain variable declarations
 representing the abstraction's state.
 
 Consider the following ADM version of the package :ada:`Integer_Stacks`, now
@@ -115,14 +115,14 @@ version we declare the state in the package body.
     end Integer_Stack;
 
 Now there is no type presenting a :ada:`Stack` abstraction and the operations
-do not take a stack parameter because the package and its data is the instance
+do not take a stack parameter because the package and its data together are the instance
 of the abstraction. When using this idiom, there is only one stack of integers.
 That's why we changed the name of the package from :ada:`Integer_Stacks`, i.e.,
 from the plural form to the singular.
 
 As with the ADT idiom, clients of an ADM can only manipulate the encapsulated
 state indirectly, via the visible operations. The difference is that the state
-to be manipulated is no longer a formal parameter. For example:
+to be manipulated is no longer a formal parameter of the operations. For example:
 
 .. code-block:: ada
 
@@ -138,7 +138,7 @@ type :ada:`Stack` are manipulated:
     --  ...
     Push (Answers, 42);
 
-That call places the value 42 in the array :ada:`Answers.Values`, i.e., within
+That call places the value 42 in the (hidden) array :ada:`Answers.Values`, i.e., within
 the :ada:`Answers` variable. Clients can declare as many :ada:`Stack` objects
 as they require, each containing a distinct copy of the state defined by the
 type. In the ADM version, there is only one stack and therefore only one instance
@@ -170,13 +170,13 @@ The private section wasn't otherwise required when we chose to declare the data 
 the package body.
 
 The ADM idiom applies information hiding to the internal state, like the
-ADT idiom, except that the state is not in objects. Also, like the
+ADT idiom, except that the state is not in objects declared in the client. Also, like the
 :ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>`,
 the implementations of the visible subprograms are hidden in the package body,
 along with any non-visible entities required for their implementation.
 
 There are no constructor functions returning a value of the abstraction
-type because there is no such type with the ADM. However, there could be one or
+type because there is no such type within the ADM. However, there could be one or
 more initialization procedures, operating directly on the hidden state in the
 package private part or package body. In the :ada:`Stack` ADM there is no need
 because of the reasonable initial state, as is true with the ADT version.

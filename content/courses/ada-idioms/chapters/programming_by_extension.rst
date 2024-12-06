@@ -227,12 +227,12 @@ Notes
 -----
 
 This guideline will already be used when developing a subsystem (a set of
-related packages in a common hierarchy) as a structuring approach during
+related packages in an overall hierarchy) as a structuring approach during
 initial development. The idiom discussed here is yet another reason to use the
 private part, but in this case for the sake of the future, rather than initial,
 development.
 
-The very first version of Ada (Ada 83) did not have hierarchical packages so,
+The very first version of Ada (Ada 83) did not have hierarchical library units so,
 typically, anything not required in the private part was declared in the
 package body. Declaring them in the private part would only clutter the code
 that had to be there, without any benefit. The author's personal experience and
