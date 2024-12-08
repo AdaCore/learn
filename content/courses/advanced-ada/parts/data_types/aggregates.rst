@@ -1956,6 +1956,8 @@ appropriate view, we're able to initialize an object of ascending type
 descendent type (:ada:`Point_3D`), which contains more components.
 
 
+.. _Adv_Ada_Delta_Aggregates:
+
 Delta Aggregates
 ----------------
 
