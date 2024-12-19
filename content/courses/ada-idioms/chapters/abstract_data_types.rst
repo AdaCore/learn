@@ -8,8 +8,8 @@ Abstract Data Types
 Motivation
 ----------
 
-In the previous idiom (the
-:ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>`),
+In the 
+:ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>` idiom,
 client compile-time visibility to the type's representation is both an
 advantage and a disadvantage. Visibility to the representation makes available
 the expressiveness of low-level syntax, such as array indexing and aggregates,

@@ -563,12 +563,6 @@ record component types. We could use the Hardware Abstraction Layer
 affect the idiom expression itself.
 
 
-Bibliography
------------------
-
-None.
-
-
 .. _Ada_Idioms_Serial_IO_Complete_Example:
 
 
