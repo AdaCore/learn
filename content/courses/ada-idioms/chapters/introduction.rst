@@ -154,7 +154,7 @@ assignment statements. However, if we pass that variable as the argument to a
 procedure call, within that subprogram (for that call) the view specifies a
 different name for the argument, i.e., the formal parameter name. Moreover, if
 that formal parameter is a mode-in parameter, within that procedure body the
-view of the actual parameter is as if it is a constant rather than a variable.
+view of the actual parameter is as if it were a constant rather than a variable.
 No assignments via the formal parameter name are allowed because the view at
 that point in the text |mdash| within that procedure body |mdash| doesn't allow
 them, unlike the view available at the point of the call.

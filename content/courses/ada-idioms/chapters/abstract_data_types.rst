@@ -14,8 +14,9 @@ client compile-time visibility to the type's representation is both an
 advantage and a disadvantage. Visibility to the representation makes available
 the expressiveness of low-level syntax, such as array indexing and aggregates,
 but in so doing allows client source code to be dependent on the
-representation. In the vast majority of cases, the resulting economic and
-engineering disadvantages far outweigh the expressiveness advantages.
+representation. In many cases, the resulting economic and
+engineering disadvantages of visibility on the representation will
+outweigh the expressiveness advantages.
 
 For the sake of illustration, let's create a *stack* type that can contain
 values of type :ada:`Integer`. (We use type :ada:`Integer` purely for the sake
@@ -111,7 +112,7 @@ The ADT may also be abstract in the sense of object-oriented programming but
 that is an unrelated issue.
 
 In Ada we use *private types* to define abstract data types because private
-types make the type's name, but not the representation, visible to clients.
+types make the type's name, but not its representation, visible to clients.
 These types are composed using syntactical building blocks: a package
 declaration, separated into two parts, containing a type declared in two parts,
 and containing declarations for subprograms to manipulate objects of the type
@@ -203,7 +204,7 @@ The full type definition is in the package private part. Therefore, for
 any given object of the type, the representation details |mdash| the two
 record components in this example |mdash| can't be referenced in client code.
 Clients must instead only use the operations defined by the package, passing
-the client objects to the formal parameters. Only the bodies of these operations
+the client objects as the actual parameters. Only the bodies of these operations
 have compile-time visibility to the representation of the :ada:`Stack`
 parameters, so only they can implement the functionality for those parameters.
 
@@ -216,7 +217,7 @@ mentioned, basic operations such as assignment are allowed, unless the ADT is
 abstraction.
 
 You may, of course, also require other ancillary type declarations in the
-package, either for the implementation or as additional parameters for the
+package, either for the implementation or as types for additional parameters for the
 visible operations. The array type :ada:`Content` is an example of the
 former case. When it is strictly an implementation artifact, as in this
 case, it should be in the private part so that it's hidden from clients.
@@ -279,7 +280,7 @@ There may be cases when what looks like an accessor function is provided, when
 in fact the function computes the return value.  Similarly, there may be
 functions that simply return the value of a component but are part of the
 abstraction and happen to be implementable by returning the value of a
-component. For example, a real stacks ADT package would include a function
+component. For example, a real stack's ADT package would include a function
 indicating the extent of the object |mdash| that is, the number of values
 currently contained. In our example implementation the :ada:`Top` component happens to
 indicate that value, in addition to indicating the current top of the stack. The body
