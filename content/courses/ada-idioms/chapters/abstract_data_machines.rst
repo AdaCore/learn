@@ -45,7 +45,7 @@ implementation only creates one such object, so multiple object
 declarations are precluded. 
 
 Singletons can be expressed easily in Ada
-:ref:`Controlling Object Initialization and Creation <Ada_Idioms_Controlling_Object_Initialization_And_Creation:>`
+:ref:`Controlling Object Initialization and Creation <Ada_Idioms_Controlling_Object_Initialization_And_Creation>`
 but there is an alternative in this specific situation.
 
 This idiom entry describes the alternative, known as the Abstract Data
