@@ -271,7 +271,7 @@ mapped like so:
           Address => System.Storage_Elements.To_Address (16#FFC0_0801#);
 
 Reading the value of the memory-mapped :ada:`Switch` variable provides the
-current switch value.
+rotary switch's current value.
 
 However, on this target the memory at that address is read-only, and 
 rightly so because the only way to change the value is to physically 
@@ -280,7 +280,7 @@ Although doing so is a logical error no indication is provided by the
 hardware, which is potentially confusing to developers. It certainly 
 looks like a variable, after all. Declaring it as a constant wouldn't 
 suffice because the user could rotate the switch during 
-execution 
+execution.
 
 Furthermore, although mapped as a byte, the physical switch has only 16 total
 positions, read as the values zero through fifteen. An unsigned byte has no
