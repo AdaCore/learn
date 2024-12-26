@@ -279,48 +279,6 @@ Please refer to the
 of the GNAT User's Guide for a more detailed discussion of
 :program:`gnatmem`.
 
-gnatmetric
-----------
-
-We can use the GNAT metric tool (:program:`gnatmetric`) to compute various
-programming metrics, either for individual files or for our complete
-project.
-
-For example, we can compute the metrics of the body of package :ada:`P`
-above by running :program:`gnatmetric` as follows:
-
-.. code-block:: sh
-
-    gnatmetric p.adb
-
-This produces the following output:
-
-.. code-block:: none
-
-    Line metrics summed over 1 units
-      all lines            : 13
-      code lines           : 11
-      comment lines        : 0
-      end-of-line comments : 0
-      comment percentage   : 0.00
-      blank lines          : 2
-
-    Average lines in body: 4.00
-
-    Element metrics summed over 1 units
-      all statements      : 2
-      all declarations    : 3
-      logical SLOC        : 5
-
-     2 subprogram bodies in 1 units
-
-    Average cyclomatic complexity: 1.00
-
-Please refer to the
-:gnat_ugn_url:`section on gnatmetric <gnat_utility_programs.html#the-gnat-metrics-tool-gnatmetric>`
-of the GNAT User's Guide for the many switches available for
-:program:`gnatmetric`, including the ability to generate reports in XML
-format.
 
 gnatdoc
 -------
