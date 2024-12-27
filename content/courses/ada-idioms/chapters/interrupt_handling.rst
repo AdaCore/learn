@@ -198,18 +198,30 @@ them so that we can focus on the interrupt handler itself.
        procedure DMA_IRQ_Handler is
           use STM32.Board; -- for the audio DMA
        begin
-          if Status (Audio_DMA, Audio_DMA_Out_Stream, DMA.Half_Transfer_Complete_Indicated) then
+          if Status (Audio_DMA,
+                     Audio_DMA_Out_Stream,
+                     DMA.Half_Transfer_Complete_Indicated)
+          then
              --  The middle of the double-buffer array has been reached by the
              --  DMA transfer, therefore the "upper half buffer" is empty.
-             Fill_Logical_Buffer (Outgoing_PCM_Samples, Starting_Index => Upper_Buffer_Start);
-             Clear_Status (Audio_DMA, Audio_DMA_Out_Stream, DMA.Half_Transfer_Complete_Indicated);
+             Fill_Logical_Buffer (Outgoing_PCM_Samples,
+                                  Starting_Index => Upper_Buffer_Start);
+             Clear_Status (Audio_DMA,
+                           Audio_DMA_Out_Stream,
+                           DMA.Half_Transfer_Complete_Indicated);
           end if;
 
-          if Status (Audio_DMA, Audio_DMA_Out_Stream, DMA.Transfer_Complete_Indicated) then
+          if Status (Audio_DMA,
+                     Audio_DMA_Out_Stream,
+                     DMA.Transfer_Complete_Indicated)
+          then
              --  The bottom of the double-buffer array has been reached by the
              --  DMA transfer, therefore the "lower half buffer" is empty.
-             Fill_Logical_Buffer (Outgoing_PCM_Samples, Starting_Index => Lower_Buffer_Start);
-             Clear_Status (Audio_DMA, Audio_DMA_Out_Stream, DMA.Transfer_Complete_Indicated);
+             Fill_Logical_Buffer (Outgoing_PCM_Samples,
+                                  Starting_Index => Lower_Buffer_Start);
+             Clear_Status (Audio_DMA,
+                           Audio_DMA_Out_Stream,
+                           DMA.Transfer_Complete_Indicated);
           end if;
        end DMA_IRQ_Handler;
 
@@ -335,10 +347,12 @@ task notification, here is the full interrupt handler PO type declaration
        type Serial_Port ... is new Serial_IO.Device with private;
 
        overriding
-       procedure Put (This : in out Serial_Port;  Data : HAL.UInt8) with Inline;
+       procedure Put (This : in out Serial_Port;  Data : HAL.UInt8)
+         with Inline;
 
        overriding
-       procedure Get (This : in out Serial_Port;  Data : out HAL.UInt8) with Inline;
+       procedure Get (This : in out Serial_Port;  Data : out HAL.UInt8)
+         with Inline;
 
     private
 
@@ -433,9 +447,11 @@ ready for them, via the entry barriers controlled by the interrupt handler.
             if Port.Transceiver.Status (Read_Data_Register_Not_Empty) and then
                Port.Transceiver.Interrupt_Enabled (Received_Data_Not_Empty)
             then  -- handle reception
-               Get (Serial_IO.Device (Port.all), Incoming);  -- call the Serial_IO.Device version!
+               Get (Serial_IO.Device (Port.all), Incoming);
+               -- call the Serial_IO.Device version!
                Await_Reception_Complete : loop
-                  exit when not Port.Transceiver.Status (Read_Data_Register_Not_Empty);
+                  exit when not
+                    Port.Transceiver.Status (Read_Data_Register_Not_Empty);
                end loop Await_Reception_Complete;
                Port.Transceiver.Disable_Interrupts (Received_Data_Not_Empty);
                Port.Transceiver.Clear_Status (Read_Data_Register_Not_Empty);
@@ -446,7 +462,8 @@ ready for them, via the entry barriers controlled by the interrupt handler.
             if Port.Transceiver.Status (Transmission_Complete_Indicated) and then
                Port.Transceiver.Interrupt_Enabled (Transmission_Complete)
             then  -- handle transmission
-               Put (Serial_IO.Device (Port.all), Outgoing);  -- call the Serial_IO.Device version!
+               Put (Serial_IO.Device (Port.all), Outgoing);
+               -- call the Serial_IO.Device version!
                Port.Transceiver.Disable_Interrupts (Transmission_Complete);
                Port.Transceiver.Clear_Status (Transmission_Complete_Indicated);
                Transmission_Pending := False;
@@ -725,7 +742,8 @@ procedure. The routine for transmitting is similar.
 .. code-block:: ada
 
     procedure Handle_Reception is
-       Received_Char : constant Character := Character'Val (Current_Input (Device.Transceiver.all));
+       Received_Char : constant Character :=
+         Character'Val (Current_Input (Device.Transceiver.all));
     begin
        if Received_Char /= Incoming_Msg.Terminator then
           Incoming_Msg.Append (Received_Char);
@@ -735,9 +753,11 @@ procedure. The routine for transmitting is similar.
        then -- reception complete
           loop
              --  wait for device to clear the status
-             exit when not Status (Device.Transceiver.all, Read_Data_Register_Not_Empty);
+             exit when not Status (Device.Transceiver.all,
+                                   Read_Data_Register_Not_Empty);
           end loop;
-          Disable_Interrupts (Device.Transceiver.all, Source => Received_Data_Not_Empty);
+          Disable_Interrupts (Device.Transceiver.all,
+                              Source => Received_Data_Not_Empty);
           Incoming_Msg.Signal_Reception_Complete;
           Incoming_Msg := null;
        end if;

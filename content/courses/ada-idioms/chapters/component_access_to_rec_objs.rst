@@ -383,10 +383,12 @@ Here is the client view of the ADT for the interrupt-driven implementation:
        --  Serial_IO.Device.
 
        overriding
-       procedure Put (This : in out Serial_Port;  Data : HAL.UInt8) with Inline;
+       procedure Put (This : in out Serial_Port;  Data : HAL.UInt8)
+         with Inline;
 
        overriding
-       procedure Get (This : in out Serial_Port;  Data : out HAL.UInt8) with Inline;
+       procedure Get (This : in out Serial_Port;  Data : out HAL.UInt8)
+         with Inline;
 
     private
        ...
@@ -770,14 +772,16 @@ Next, the interrupt-driven extension.
        --  declared here, as operations inherited from Serial_IO.Device
 
        overriding
-       procedure Put (This : in out Serial_Port;  Data : HAL.UInt8) with Inline;
+       procedure Put (This : in out Serial_Port;  Data : HAL.UInt8)
+         with Inline;
        --  Non-blocking, ie the caller can return before the Data goes out,
        --  but does block until the underlying UART is not doing any other
        --  transmitting. Does no polling. Will not interfere with any other I/O
        --  on the same device.
 
        overriding
-       procedure Get (This : in out Serial_Port;  Data : out HAL.UInt8) with Inline;
+       procedure Get (This : in out Serial_Port;  Data : out HAL.UInt8)
+         with Inline;
        --  Blocks the caller until a character is available! Does no polling.
        --  Will not interfere with any other I/O on the same device.
 
@@ -877,7 +881,8 @@ And the package body:
                 Get (Serial_IO.Device (Port.all), Incoming);
 
                 Await_Reception_Complete : loop
-                   exit when not Port.Transceiver.Status (Read_Data_Register_Not_Empty);
+                   exit when not
+                     Port.Transceiver.Status (Read_Data_Register_Not_Empty);
                 end loop Await_Reception_Complete;
                 Port.Transceiver.Disable_Interrupts (Received_Data_Not_Empty);
                 Port.Transceiver.Clear_Status (Read_Data_Register_Not_Empty);
