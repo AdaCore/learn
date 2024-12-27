@@ -273,21 +273,24 @@ sensitivity, returning all three in the mode-out record parameter.
       This.Loc_IO_Read (Buffer (5), OUT_Z_H);
 
       Get_X : declare
-         Raw : Acceleration renames As_Acceleration_Pointer (Buffer (0)'Address).all;
+         Raw : Acceleration renames
+                 As_Acceleration_Pointer (Buffer (0)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
          Axes.X := Acceleration (Scaled);
       end Get_X;
 
       Get_Y : declare
-         Raw : Acceleration renames As_Acceleration_Pointer (Buffer (2)'Address).all;
+         Raw : Acceleration renames
+                 As_Acceleration_Pointer (Buffer (2)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
          Axes.Y := Acceleration (Scaled);
       end Get_Y;
 
       Get_Z : declare
-         Raw : Acceleration renames As_Acceleration_Pointer (Buffer (4)'Address).all;
+         Raw : Acceleration renames
+                 As_Acceleration_Pointer (Buffer (4)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
          Axes.Z := Acceleration (Scaled);
