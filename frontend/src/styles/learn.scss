@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @use 'variables' as v;
 
 // theme overrides
@@ -6,7 +8,7 @@
     color: #fff;
 
     &:hover {
-        background-color: lighten(v.$color-theme-bg-dark, 10%);
+        background-color: color.scale(v.$color-theme-bg-dark, $lightness: 10%);
     }
 }
 
@@ -178,7 +180,7 @@ pre.widget {
         border-right: 1px dotted v.$color-widget-border;
         border-bottom: 1px dotted v.$color-widget-border;
         &:hover {
-            background-color: lighten(v.$color-theme-bg-dark, 30%);
+            background-color: color.scale(v.$color-theme-bg-dark, $lightness: 30%);
             color: v.$color-tab-hover-font;
             cursor: pointer;
         }

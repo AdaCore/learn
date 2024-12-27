@@ -1,4 +1,6 @@
 // colors
+@use 'sass:color';
+
 $color-theme-bg-dark:           #F56F23;    // orange
 $color-theme-bg-light:          rgb(252, 252, 252);
 
@@ -10,21 +12,21 @@ $color-theme-alt-bg:            rgb(218, 230, 239);
 $color-font-grey:               rgb(135, 135, 135);
 
 $color-slider-course:           #4A90E2;
-$color-slider-course-hover:     darken($color-slider-course, 10%);
+$color-slider-course-hover:     color.scale($color-slider-course, $lightness: -10%);
 
 $color-slider-lab:              #D91E5B;
-$color-slider-lab-hover:        darken($color-slider-lab, 10%);
+$color-slider-lab-hover:        color.scale($color-slider-lab, $lightness: -10%);
 
 $color-slider-book:             $color-theme-bg-dark;
-$color-slider-book-hover:       darken($color-slider-book, 10%);
+$color-slider-book-hover:       color.scale($color-slider-book, $lightness: -10%);
 
 $color-slider-link-bg:          rgb(74, 144, 226);
-$color-slider-link-bg-hover:    darken($color-slider-link-bg, 12%);
+$color-slider-link-bg-hover:    color.scale($color-slider-link-bg, $lightness: -12%);
 $color-slider-link-fg:          white;
 
 $color-tab-active-font:         rgb(51, 51, 51);
-$color-tab-hover-font:          lighten($color-tab-active-font, 10%);
-$color-tab-font:                lighten($color-tab-active-font, 30%);
+$color-tab-hover-font:          color.scale($color-tab-active-font, $lightness: 10%);
+$color-tab-font:                color.scale($color-tab-active-font, $lightness: 30%);
 
 $color-widget-border:           rgb(221, 221, 221);
 
@@ -39,9 +41,9 @@ $color-labarea-bg:              $color-theme-bg-light;
 $color-labarea-fg:              $color-font-grey;
 
 $color-success-green-bg:        rgb(190, 245, 203);
-$color-success-green-light-bg:  lighten($color-success-green-bg, 10%);
+$color-success-green-light-bg:  color.scale($color-success-green-bg, $lightness: 10%);
 $color-fail-red-bg:             rgb(253, 174, 183);
-$color-fail-red-light-bg:       lighten($color-fail-red-bg, 10%);
+$color-fail-red-light-bg:       color.scale($color-fail-red-bg,      $lightness: 10%);
 
 $color-spinner-fg:                  rgb(166, 166, 166);
 

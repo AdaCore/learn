@@ -1,4 +1,6 @@
 // colors
+@use 'sass:color';
+
 $color-theme-bg-dark:                   #C34C01;    // dark orange
 
 $color-theme-bg-light:                  rgb(252, 252, 252);
@@ -14,20 +16,20 @@ $color-border:                          #444;
 
 $color-code-font:                       #DE935F;
 $color-code-bg:                         $color-bg-dark;
-$color-code-border:                     darken($color-border, 50%);
+$color-code-border:                     color.scale($color-border, $lightness: -50%);
 
 $color-menu-bg-l1:                      #222222;
-$color-menu-bg-l2:                      lighten($color-menu-bg-l1, 5%);
-$color-menu-bg-l3:                      lighten($color-menu-bg-l1, 10%);
-$color-menu-bg-hover:                   darken($color-menu-bg-l1,  20%);
+$color-menu-bg-l2:                      color.scale($color-menu-bg-l1, $lightness:   5%);
+$color-menu-bg-l3:                      color.scale($color-menu-bg-l1, $lightness:  10%);
+$color-menu-bg-hover:                   color.scale($color-menu-bg-l1, $lightness: -20%);
 
 $color-menu-font:                       #f0f0f0;
 $color-menu-alt-font:                   #e8e8e8;
-$color-menu-alt-font-hover:             lighten($color-menu-alt-font, 20%);
+$color-menu-alt-font-hover:             color.scale($color-menu-alt-font,   $lightness:  20%);
 
 $color-tab-active-font:                 rgb(200, 200, 200);
-$color-tab-hover-font:                  lighten($color-tab-active-font, 20%);
-$color-tab-font:                        darken($color-tab-active-font, 30%);
+$color-tab-hover-font:                  color.scale($color-tab-active-font, $lightness:  20%);
+$color-tab-font:                        color.scale($color-tab-active-font, $lightness: -30%);
 
 $color-widget-border:                   $color-border;
 
