@@ -6,7 +6,7 @@ $frontend = <<-SHELL
   sed -i -e 's#security.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_20.x | bash -
+  curl -sL https://deb.nodesource.com/setup_22.x | bash -
 
   # Generate list of installed packages
   dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
@@ -96,7 +96,7 @@ $epub = <<-SHELL
   sed -i -e 's#security.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_20.x | bash -
+  curl -sL https://deb.nodesource.com/setup_22.x | bash -
 
   # Generate list of installed packages
   dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt

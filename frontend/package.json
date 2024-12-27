@@ -58,7 +58,6 @@
     "mocha": "^10.8.2",
     "mock-socket": "^9.3.1",
     "node-fetch": "^3.3.2",
-    "node-sass": "^9.0.0",
     "nyc": "^17.1.0",
     "postcss": "^8.4.47",
     "postcss-loader": "^8.1.1",
