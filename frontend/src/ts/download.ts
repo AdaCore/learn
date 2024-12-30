@@ -23,12 +23,10 @@ const MAIN_GPR = `project Main is
    --LANGUAGE_PLACEHOLDER--
 
    package Compiler is
-      for Default_Switches ("Ada") use ("-g", "-O0");
       --COMPILER_SWITCHES_PLACEHOLDER--
    end Compiler;
 
    package Builder is
-      for Default_Switches ("Ada") use ("-g");
       --BUILDER_SWITCHES_PLACEHOLDER--
       for Global_Configuration_Pragmas use "main.adc";
    end Builder;
@@ -42,12 +40,10 @@ const SPARK_GPR = `project Main_Spark is
    --LANGUAGE_PLACEHOLDER--
 
    package Compiler is
-      for Default_Switches ("Ada") use ("-g", "-O0");
       --COMPILER_SWITCHES_PLACEHOLDER--
    end Compiler;
 
    package Builder is
-      for Default_Switches ("Ada") use ("-g");
       --BUILDER_SWITCHES_PLACEHOLDER--
       for Global_Configuration_Pragmas use "main_spark.adc";
    end Builder;
