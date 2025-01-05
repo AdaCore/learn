@@ -34,7 +34,7 @@ of the volatile object from memory for each access.
 
 Let's look at a simple example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Object_Ada
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Volatile.Object_Ada
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -53,7 +53,7 @@ In this example, :ada:`Val` has the :ada:`Volatile` aspect, which makes the
 object volatile. We can also use the :ada:`Volatile` aspect in type
 declarations. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Volatile.Type
 
     package Shared_Var_Types is
 
@@ -86,7 +86,7 @@ In addition to that, we can declare components of an array to be volatile. In
 this case, we can use the :ada:`Volatile_Components` aspect in the array
 declaration. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Array_Components
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Volatile.Array_Components
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -110,7 +110,7 @@ declaration. For example:
 Note that it's possible to use the :ada:`Volatile` aspect for the array
 declaration as well:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Volatile_Array
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Volatile.Array
 
     package Shared_Var_Types is
 
@@ -148,7 +148,7 @@ the way objects can be represented in memory, as we'll see next.
 To indicate that an object is independent, we use the :ada:`Independent`
 aspect:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Object
 
     package Shared_Var_Types is
 
@@ -158,7 +158,7 @@ aspect:
 
 Similarly, we can use this aspect when declaring types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Type
 
     package Shared_Var_Types is
 
@@ -176,7 +176,7 @@ In this example, we're declaring the :ada:`Independent_Boolean` type and using
 it in the declaration of the :ada:`Flag` record type. Let's now derive the
 :ada:`Flags` type and use a representation clause for the derived type:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Type
     :class: ada-expect-compile-error
 
     package Shared_Var_Types.Representation is
@@ -215,7 +215,7 @@ the issues in the code above by:
 
 This is the corrected version:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Type
 
     with System;
 
@@ -235,7 +235,7 @@ likely the representation that the compiler would have chosen for this data
 type. We could, however, have added an empty storage unit between :ada:`F1` and
 :ada:`F2` |mdash| by simply writing :ada:`F2 at 2 ...`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Type
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Type
 
     with System;
 
@@ -256,7 +256,7 @@ might select.
 
 For arrays, we can use the :ada:`Independent_Components` aspect:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Independent_Components
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Components
 
     package Shared_Var_Types is
 
@@ -271,7 +271,7 @@ same restrictions apply when we use the :ada:`Independent_Components` aspect.
 For example, this aspect prevents that array components are packed when the
 :ada:`Pack` aspect is used. Let's discuss the following erroneous code example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Packed_Independent_Components
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Packed_Independent_Components
     :class: ada-expect-compile-error
 
     package Shared_Var_Types is
@@ -293,7 +293,7 @@ limitation. If we remove the :ada:`Size` aspect, however, the code is compiled
 successfully because the compiler ignores the :ada:`Pack` aspect and allocates
 a larger size for :ada:`F`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Packed_Independent_Components
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Independent.Packed_Independent_Components
 
     package Shared_Var_Types is
 
@@ -370,7 +370,7 @@ memory-mapped registers are handled atomically. In Ada, we can use the
 :ada:`Atomic` aspect to indicate that an object is atomic. This is how we can
 use the aspect to declare a shared hardware register:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Object
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic.Object
 
     with System;
 
@@ -395,7 +395,7 @@ Later on, we talk again about the
 In addition to atomic objects, we can declare atomic types |mdash| similar to
 what we've seen before for volatile objects. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic.Types
 
     with System;
 
@@ -417,7 +417,7 @@ atomic type. Objects of this type |mdash| such as :ada:`R` in this example
 
 We can also declare atomic array components:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Array_Components
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic.Array_Components
 
     package Shared_Var_Types is
 
@@ -434,7 +434,7 @@ components |mdash| the atomicity of its components is indicated by the
 Note that if an object is atomic, it is also volatile and independent. In other
 words, these type declarations are equivalent:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Volatile_Independent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic.Volatile_Independent
 
     package Shared_Var_Types is
 
@@ -453,7 +453,7 @@ A simular rule applies to components of an array. When we use the
 :ada:`Volatile_Components` and :ada:`Independent_Components`. For example,
 these array declarations are equivalent:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Volatile_Independent
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic.Volatile_Independent
 
     package Shared_Var_Types is
 
