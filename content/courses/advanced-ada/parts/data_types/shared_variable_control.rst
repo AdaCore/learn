@@ -1,5 +1,5 @@
 Shared variable control
------------------------
+=======================
 
 Ada has built-in support for handling both volatile and atomic data. Let's
 start by discussing volatile objects.
@@ -8,8 +8,9 @@ start by discussing volatile objects.
 
     - :arm22:`C.6 Shared Variable Control <C-6>`
 
+
 Volatile
-~~~~~~~~
+--------
 
 A :wikipedia:`volatile <Volatile_(computer_programming)>`
 object can be described as an object in memory whose value may change between
@@ -123,8 +124,9 @@ makes sense in the context, of course. In the example above, even though
 :ada:`Volatile_Components` isn't specified in the declaration of the :ada:`Arr`
 array , it's automatically set as well.
 
+
 Independent
-~~~~~~~~~~~
+-----------
 
 When you write code to access a single object in memory, you might actually be
 accessing multiple objects at once. For example, when you declare types that
@@ -325,7 +327,7 @@ storage units, one per each component of the :ada:`F` array.
 .. _Adv_Ada_Shared_Variable_Control_Atomic:
 
 Atomic
-~~~~~~
+------
 
 An atomic object is an object that only accepts atomic reads and updates. The
 Ada standard specifies that "for an atomic object (including an atomic
@@ -469,7 +471,7 @@ these array declarations are equivalent:
     TO BE DONE:
 
     :ada:`Full_Access_Only`
-    ~~~~~~~~~~~~~~~~~~~~~~~
+    -----------------------
 
     .. admonition:: Relevant topics
 
@@ -484,7 +486,7 @@ these array declarations are equivalent:
     TO BE DONE:
 
     Package System.Atomic_Operations
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    --------------------------------
 
    .. admonition:: Relevant topics
 
