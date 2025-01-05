@@ -529,8 +529,10 @@ various PID gain parameters, that are not shown.
        task body Servo is
           Next_Release       : Time;
           Target_Angle       : Float;
-          Current_Angle      : Float := 0.0;  --  zero for call to Steering_Computer.Enable
-          Steering_Power     : Float := 0.0;  --  zero for call to Steering_Computer.Enable
+          Current_Angle      : Float := 0.0;
+          --  zero for call to Steering_Computer.Enable
+          Steering_Power     : Float := 0.0;
+          --  zero for call to Steering_Computer.Enable
           Motor_Power        : NXT.Motors.Power_Level;
           Rotation_Direction : NXT.Motors.Directions;
           Steering_Offset    : Float;
@@ -545,16 +547,20 @@ various PID gain parameters, that are not shown.
        begin
           Global_Initialization.Critical_Instant.Wait (Epoch => Next_Release);
           Initialize_Steering_Mechanism (Steering_Offset);
-          Steering_Computer.Enable (Process_Variable => Current_Angle, Control_Variable => Steering_Power);
+          Steering_Computer.Enable (Process_Variable => Current_Angle,
+                                    Control_Variable => Steering_Power);
           loop
-             Current_Angle := Current_Motor_Angle (Steering_Motor) - Steering_Offset;
+             Current_Angle := Current_Motor_Angle (Steering_Motor) -
+                              Steering_Offset;
              Target_Angle := Float (Remote_Control.Requested_Steering_Angle);
              Limit (Target_Angle, -Steering_Offset, +Steering_Offset);
              Steering_Computer.Compute_Output
                (Process_Variable => Current_Angle,
                 Setpoint         => Target_Angle,
                 Control_Variable => Steering_Power);
-             Convert_To_Motor_Values (Steering_Power, Motor_Power, Rotation_Direction);
+             Convert_To_Motor_Values (Steering_Power,
+                                      Motor_Power,
+                                      Rotation_Direction);
              Steering_Motor.Engage (Rotation_Direction, Motor_Power);
 
              Next_Release := Next_Release + Period;
@@ -601,7 +607,8 @@ representing the current instance object, thus any object of the type.
 
     package Bounded_Stacks is
 
-       subtype Element is Integer; --  arbitrary substitute for generic formal type
+       subtype Element is Integer;
+       --  arbitrary substitute for generic formal type
 
        type Stack (Capacity : Positive) is limited private with
          Default_Initial_Condition => Empty (Stack);
@@ -849,8 +856,10 @@ the idiom solution.
        --  counter, i.e., RDTSC, which returns a 64-bit count of the number of
        --  system clock cycles since power-up.
 
-       function Sample (This : not null access Cycle_Counter) return Cycle_Count is
-         (Read_TimeStamp_Counter);  --  The formal parameter This is not referenced
+       function Sample (This : not null access Cycle_Counter)
+                        return Cycle_Count is
+         (Read_TimeStamp_Counter);
+         --  The formal parameter This is not referenced
 
     end Timestamp;
 
@@ -979,12 +988,17 @@ additional primitives for working with samples.
        function Counter return not null Timestamp_Sampler_Reference with Inline;
        --  returns an access value designating the single instance
 
-       procedure Take_First_Sample  (This : not null access Timestamp_Sampler) with Inline;
-       procedure Take_Second_Sample (This : not null access Timestamp_Sampler) with Inline;
+       procedure Take_First_Sample  (This : not null access Timestamp_Sampler)
+         with Inline;
+       procedure Take_Second_Sample (This : not null access Timestamp_Sampler)
+         with Inline;
 
-       function First_Sample  (This : not null access Timestamp_Sampler) return Cycle_Count;
-       function Second_Sample (This : not null access Timestamp_Sampler) return Cycle_Count;
-       function Elapsed       (This : not null access Timestamp_Sampler) return Cycle_Count;
+       function First_Sample  (This : not null access Timestamp_Sampler)
+                               return Cycle_Count;
+       function Second_Sample (This : not null access Timestamp_Sampler)
+                               return Cycle_Count;
+       function Elapsed       (This : not null access Timestamp_Sampler)
+                               return Cycle_Count;
 
     private
 
@@ -1033,21 +1047,24 @@ additional primitives for working with samples.
        -- First_Sample --
        ------------------
 
-       function First_Sample (This : not null access Timestamp_Sampler) return Cycle_Count is
+       function First_Sample (This : not null access Timestamp_Sampler)
+                              return Cycle_Count is
          (This.First);
 
        -------------------
        -- Second_Sample --
        -------------------
 
-       function Second_Sample (This : not null access Timestamp_Sampler) return Cycle_Count is
+       function Second_Sample (This : not null access Timestamp_Sampler)
+                               return Cycle_Count is
          (This.Second);
 
        -------------
        -- Elapsed --
        -------------
 
-       function Elapsed (This : not null access Timestamp_Sampler) return Cycle_Count is
+       function Elapsed (This : not null access Timestamp_Sampler)
+                         return Cycle_Count is
          (This.Second - This.First + 1);
 
     end Timestamp.Sampling;
@@ -1103,7 +1120,9 @@ removing it:
 
 .. code-block:: ada
 
-    function Sample (This : not null access Cycle_Counter'Class) return Cycle_Count with Inline;
+    function Sample (This : not null access Cycle_Counter'Class)
+                     return Cycle_Count
+      with Inline;
 
 In the version above, the formal parameter type is now (anonymous) access to
 :ada:`Cycle_Counter'Class`, i.e., class-wide, so in this version :ada:`Sample`
@@ -1142,7 +1161,8 @@ frequency.
 
     procedure Demo_Sampling_Cycle_Counter is
 
-       Delay_Interval : constant Duration := 1.0;  --  arbitrary, change if desired
+       Delay_Interval : constant Duration := 1.0;
+       --  arbitrary, change if desired
        Elapsed_Time   : Duration;
 
        GHz : constant := 1_000_000_000;
@@ -1154,7 +1174,8 @@ frequency.
 
        use type Timestamp.Cycle_Count;  --  for "<"
     begin
-       Put_Line ("Using" & Machine_Cycles_Per_Second'Image & " Hertz for system clock");
+       Put_Line ("Using" & Machine_Cycles_Per_Second'Image
+                 & " Hertz for system clock");
 
        Put_Line ("Delaying for" & Delay_Interval'Image & " second(s) ...");
 
