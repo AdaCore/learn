@@ -6,6 +6,7 @@ Data types
 
     types
     types_representation
+    shared_variable_control
     records
     aggregates
     arrays
