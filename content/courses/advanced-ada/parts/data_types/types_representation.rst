@@ -2458,8 +2458,7 @@ the :ada:`I` variable).
 .. admonition:: In the GNAT toolchain
 
     We could call the GNAT-specific :ada:`System'To_Address` attribute when using
-    the :ada:`Address` aspect, as we did while talking about the
-    :ref:`Atomic <Adv_Ada_Shared_Variable_Control_Atomic>` aspect:
+    the :ada:`Address` aspect:
 
     .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Show_Access_Address
 
@@ -2484,6 +2483,9 @@ the :ada:`I` variable).
     :ada:`To_Address` (from the :ada:`System.Storage_Elements` package) except
     that it is a static attribute. (We talk about the
     :ref:`To_Address function <Adv_Ada_Address_Integer>` function later on.)
+
+    Note that we're using the :ada:`Atomic` aspect here, which we discuss
+    :ref:`in another chapter <Adv_Ada_Shared_Variable_Control_Atomic>`.
 
 .. admonition:: In the Ada Reference Manual
 
