@@ -486,8 +486,8 @@ these array declarations are equivalent:
 
 
 
-Package System.Atomic_Operations
---------------------------------
+Atomic operations
+-----------------
 
 .. admonition:: Relevant topics
 
