@@ -1287,6 +1287,7 @@ of the :ada:`Full_Access_Only` aspect.
 
 
 
+.. _Adv_Ada_Package_System_Atomic_Operations:
 
 Atomic operations
 -----------------
