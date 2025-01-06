@@ -1288,8 +1288,8 @@ of the :ada:`Full_Access_Only` aspect.
 
 
 
-Package System.Atomic_Operations
---------------------------------
+Atomic operations
+-----------------
 
 .. admonition:: Relevant topics
 
