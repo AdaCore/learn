@@ -87,6 +87,8 @@ totally arbitrary values as well. For example:
     end Days;
 
 
+.. _Adv_Ada_Data_Representation:
+
 Data Representation
 -------------------
 
@@ -551,6 +553,9 @@ want to see. For example, having an exception being raised when the allocated
 memory for this data type has reached its limit might allow the application to
 have enough memory to at least handle the exception gracefully.
 
+
+.. _Adv_Ada_Data_Representation_Alignment:
+
 Alignment
 ---------
 
@@ -687,6 +692,9 @@ Note that you can also retrieve the alignment associated with a class using
        Put_Line ("3D_Point'Class'Alignment: "
                  & Point_3D'Class'Alignment'Image);
     end Show_Class_Alignment;
+
+
+.. _Adv_Ada_Overlapping_Storage:
 
 Overlapping Storage
 -------------------
@@ -835,6 +843,9 @@ procedure:
 - in the :ada:`Process (A, B)` call, we have two different arrays |mdash| which
   obviously don't share any storage space |mdash|, so we can use out-of-place
   processing.
+
+
+.. _Adv_Ada_Packed_Representation:
 
 Packed Representation
 ---------------------
