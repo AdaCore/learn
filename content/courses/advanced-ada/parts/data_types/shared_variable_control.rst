@@ -1294,6 +1294,5 @@ Atomic operations
 
 .. admonition:: Relevant topics
 
-
-    - :arm22:`The Package System.Atomic_Operations <C-6-1>`
+    - :arm22:`C.6.1 The Package System.Atomic_Operations <C-6-1>`
 
