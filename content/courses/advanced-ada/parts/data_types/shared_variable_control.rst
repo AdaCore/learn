@@ -485,6 +485,7 @@ these array declarations are equivalent:
         - Add to previous section!
 
 
+.. _Adv_Ada_Package_System_Atomic_Operations:
 
 Atomic operations
 -----------------
