@@ -105,10 +105,11 @@ course.
     - :arm22:`13.3 Operational and Representation Attributes <13-3>`
     - :arm22:`13.5.3 Bit Ordering <13-5-3>`
 
+
 .. _Adv_Ada_Data_Representation_Sizes:
 
 Sizes
-~~~~~
+-----
 
 Ada offers multiple attributes to retrieve the size of a type or an object:
 
@@ -151,7 +152,7 @@ to better understand the differences among those attributes.
 
 
 Size attribute and aspect
-^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's start with a code example using the :ada:`Size` attribute:
 
@@ -243,7 +244,7 @@ this:
     possibly do it! COMPILATION ERROR!"
 
 Component size
-^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~
 
 Let's continue our discussion on sizes with an example that makes use of the
 :ada:`Component_Size` attribute:
@@ -364,7 +365,7 @@ multiplication of 2\ :sup:`31` - 1 components (maximum length) by 8 bits
 .. _Adv_Ada_Storage_Size_Attribute:
 
 Storage size
-^^^^^^^^^^^^
+~~~~~~~~~~~~
 
 To complete our discussion on sizes, let's look at this example of storage
 sizes:
@@ -551,7 +552,7 @@ memory for this data type has reached its limit might allow the application to
 have enough memory to at least handle the exception gracefully.
 
 Alignment
-~~~~~~~~~
+---------
 
 For many algorithms, it's important to ensure that we're using the appropriate
 alignment. This can be done by using the :ada:`Alignment` attribute and the
@@ -688,7 +689,7 @@ Note that you can also retrieve the alignment associated with a class using
     end Show_Class_Alignment;
 
 Overlapping Storage
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Algorithms can be designed to perform in-place or out-of-place processing. In
 other words, they can take advantage of the fact that input and output arrays
@@ -836,7 +837,7 @@ procedure:
   processing.
 
 Packed Representation
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 As we've seen previously, the minimum number of bits required to represent a
 data type might be less than the actual number of bits used to store an object
@@ -1020,7 +1021,7 @@ We elaborate on the topic of converting between data representations in the
 section on :ref:`changing data representation <Adv_Ada_Changing_Data_Representation>`.
 
 Trade-offs
-^^^^^^^^^^
+~~~~~~~~~~
 
 As indicated previously, when we're using a packed representation (vs. using a
 standard *unpacked* representation), we're trading off speed of access for less
