@@ -484,17 +484,13 @@ these array declarations are equivalent:
         - **Briefly** discuss :ada:`Full_Access_Only`
         - Add to previous section!
 
-..
-    TO BE DONE:
 
-    Package System.Atomic_Operations
-    --------------------------------
 
-   .. admonition:: Relevant topics
+Package System.Atomic_Operations
+--------------------------------
 
-      - :arm22:`The Package System.Atomic_Operations <C-6-1>`
+.. admonition:: Relevant topics
 
-   .. todo::
 
-      Add to previous section!
+    - :arm22:`The Package System.Atomic_Operations <C-6-1>`
 
