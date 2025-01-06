@@ -80,6 +80,9 @@ follows:
        package Elementary_Functions is new
          Ada.Numerics.Generic_Elementary_Functions (Float);
 
+
+.. _Intro_Ada_Random_Number_Generation:
+
 Random Number Generation
 ------------------------
 
