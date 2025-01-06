@@ -92,7 +92,7 @@ totally arbitrary values as well. For example:
 Data Representation
 -------------------
 
-This section provides a glimpse on attributes and aspects used for data
+The following sections provide a glimpse on attributes and aspects used for data
 representation. They are usually used for embedded applications because of
 strict requirements that are often found there. Therefore, unless you have
 very specific requirements for your application, in most cases, you won't need
