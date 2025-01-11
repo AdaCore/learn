@@ -720,6 +720,11 @@ previous code example. We also have an assignment, in which we read the value
 of :ada:`WR` and use it in the calculation.
 
 
+.. _Adv_Ada_Shared_Variable_Control_Non_Atomic_Full_Access_Delta_Aggregates:
+
+Delta aggregates
+^^^^^^^^^^^^^^^^
+
 If we want to just change two components, but leave the information of other
 components untouched, we can use a
 :ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
