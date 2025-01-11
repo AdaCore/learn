@@ -621,6 +621,8 @@ For example:
 
     end Registers;
 
+Let's use the :ada:`Window_Register` type from the :ada:`Registers` package in
+a test application:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
@@ -639,7 +641,20 @@ For example:
        Show (WR);
     end Show_Register;
 
+The example contains assignments such as :ada:`WR.Horizontal_Cnt := 800` and
+:ada:`WR.Vertical_Cnt:= 600`. Because :ada:`Window_Register` is a full-access
+type, these assignments are performed for the complete 32-bit register, even
+though we're updating just a single component of the record object. (Note that
+if :ada:`Window_Register` wasn't a *full-access* object, an assignment such as
+:ada:`WR.Horizontal_Cnt := 800` could be performed with a 16-bit operation.)
 
+Whenever possible, this *full-access* assignment is performed in a single
+machine operation. However, if it's not possible to generate a single machine
+operation on the target machine, the compiler may generate multiple operations
+for the update of the record components.
+
+Note that we could combine these two assignments into a single one using an
+aggregate:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
@@ -660,6 +675,10 @@ For example:
        Show (WR);
     end Show_Register;
 
+Again, this assignment is performed for the complete 32-bit register |mdash|
+ideally, using a single 32-bit machine operation |mdash| by reading the value
+from the memory.
+
 If we want to just change two components, but leave the information of other
 components untouched, we can use a
 :ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
@@ -668,6 +687,8 @@ that :ref:`later on in this course <Adv_Ada_Delta_Aggregates>`. However, in
 simple terms, we can use them to modify specific components of a record without
 changing the remaining components of the record.)
 
+For example, we might want to update just the vertical count and indicate that
+update via the :ada:`Refresh_Needed` flag, but keep the same horizontal count:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
@@ -689,8 +710,13 @@ changing the remaining components of the record.)
        Show (WR);
     end Show_Registers;
 
-Now, by assigning the delta aggregate to a full-access object, we ensure that
-the complete :ada:`A` object is updated at once.
+A delta assignment using an aggregate such as :ada:`(WR with delta ...)`
+includes reading the value of complete 32-bit :ada:`WR` object from memory,
+changing the components specified after :ada:`with delta`, and writing the
+complete 32-bit :ada:`WR` object back to memory. The reason is that we need to
+retrieve the information that is supposed to remain intact |mdash| the
+:ada:`Horizontal_Cnt` and the reserved components |mdash| in order to write
+them back as a *full-access* operation.
 
 
 Atomic full-access
