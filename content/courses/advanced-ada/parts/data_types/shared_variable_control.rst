@@ -703,7 +703,7 @@ i.e. they must be done in a single instruction, so that no other instruction
 could execute on that same object before the read or update completes.
 
 In the case of atomic full-access objects, the complete object must be read and
-updated at once. Ideally, this operation corresponds to a single atomic
+updated. Ideally, this operation corresponds to a single atomic
 operation on the target machine, but it can also translate to multiple atomic
 operations.
 
