@@ -660,15 +660,7 @@ For example:
        Show (WR);
     end Show_Register;
 
-In this example, we have a very simple alarm system specified in the
-:ada:`Alarms` package. We can set the alarm to ring at the same time on
-specific days. In the :ada:`Show_Alarm` procedure, we set the alarm to just
-ring on Mondays and Wednesdays.
-
-The compiler may generate multiple operations for the update of the
-:ada:`A.Days (Mon)` and :ada:`A.Days (Wed)` components. If we use
-:ada:`Full_Access_Only` aspect, we may combine those updates in a single
-operation |mdash| in addition, we have to use a
+In addition, we have to use a
 :ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
 
 Note that we haven't discussed the topic of delta aggregates yet: we'll do that
@@ -810,11 +802,10 @@ We then use the package in our test application:
        Show (WR);
     end Show_Register;
 
-In the :ada:`Show_Alarm` procedure, we again activate the alarm to ring on
-Mondays and Wednesdays by assigning a delta aggregate to :ada:`D`. This
-assignment is performed at once because :ada:`D` is an atomic full-access
-object. Note, however, that if multiple atomic operations are needed, those
-will be sequential for this object.
+In this example, we first have an atomic initialization of :ada:`WR` using an
+aggregate. Then, we have an atomic assignment to the atomic full-access object
+:ada:`WR`. Because its type is an atomic full-access type, the operations are
+atomic operations that always access the full object from and to memory.
 
 
 ..
