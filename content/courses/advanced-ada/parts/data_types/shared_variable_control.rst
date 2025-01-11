@@ -489,7 +489,7 @@ objects follow this requirement. Note that a full access type must be
 simultaneously a
 :ref:`volatile type <Adv_Ada_Shared_Variable_Control_Volatile>` or an
 :ref:`atomic type <Adv_Ada_Shared_Variable_Control_Atomic>`. (In other words,
-if a type isn't volatile or atomic, it cannot be a full access type.)
+if a type is neither volatile nor atomic, it cannot be a full access type.)
 
 Let's see some examples:
 
@@ -542,7 +542,8 @@ value cannot be stored in a register for further processing.)
 
 In the case of nonatomic full-access objects, the value of the object must not
 only be read from memory or updated to memory every time, but those operations
-must also be performed for the complete object at once.
+must also be performed for the complete record object |mdash| not just parts of
+it.
 
 For example:
 
