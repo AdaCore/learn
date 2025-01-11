@@ -782,7 +782,7 @@ operations.
 Let's adapt the previous example to illustrate this. First, we adapt the type
 in the package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
 
     pragma Ada_2022;
 
@@ -856,7 +856,7 @@ in the package:
 
 We then use the package in our test application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
 
     with Registers;   use Registers;
 
