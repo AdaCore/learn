@@ -660,7 +660,8 @@ For example:
        Show (WR);
     end Show_Register;
 
-In addition, we have to use a
+If we want to just change two components, but leave the information of other
+components untouched, we can use a
 :ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
 
 Note that we haven't discussed the topic of delta aggregates yet: we'll do that
