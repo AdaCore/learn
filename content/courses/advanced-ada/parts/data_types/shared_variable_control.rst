@@ -621,6 +621,18 @@ For example:
 
     end Registers;
 
+In this example, we have a 32-bit register (of :ada:`Window_Register` type)
+that contains window information for a display:
+
+.. graphviz::
+
+    digraph foo {
+        "Record_R" [
+            label = "{ position | bits | component } |  { 0 | { { #0 .. 13 | Horizontal_Cnt } | { #14 .. #15 | Reserved_14_15 } | { #16 .. #29 | Vertical_Cnt } | { #30 .. #31 | Reserved_30_31 } } }"
+            shape = "record"
+        ];
+   }
+
 Let's use the :ada:`Window_Register` type from the :ada:`Registers` package in
 a test application:
 
