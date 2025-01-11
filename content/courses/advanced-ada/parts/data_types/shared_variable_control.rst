@@ -663,11 +663,11 @@ For example:
 If we want to just change two components, but leave the information of other
 components untouched, we can use a
 :ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
+(Note that we haven't discussed the topic of delta aggregates yet: we'll do
+that :ref:`later on in this course <Adv_Ada_Delta_Aggregates>`. However, in
+simple terms, we can use them to modify specific components of a record without
+changing the remaining components of the record.)
 
-Note that we haven't discussed the topic of delta aggregates yet: we'll do that
-:ref:`later on in this course <Adv_Ada_Delta_Aggregates>`. However, in simple
-terms, we can use them to modify specific components of a record without
-changing the remaining components of the record.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
