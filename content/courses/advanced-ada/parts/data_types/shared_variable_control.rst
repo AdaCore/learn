@@ -691,6 +691,35 @@ Again, this assignment is performed for the complete 32-bit register |mdash|
 ideally, using a single 32-bit machine operation |mdash| by reading the value
 from the memory.
 
+Let's add another statement to the code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+
+    pragma Ada_2022;
+
+    with Registers;   use Registers;
+
+    procedure Show_Register is
+       WR : Window_Register :=
+              (Horizontal_Cnt => 800,
+               Vertical_Cnt   => 600,
+               Refresh_Needed => True,
+               others         => <>);
+    begin
+       WR := (Horizontal_Cnt =>
+                WR.Horizontal_Cnt * 2,
+              Vertical_Cnt   =>
+                Wr.Vertical_Cnt   * 2,
+              others         => <>);
+
+       Show (WR);
+    end Show_Register;
+
+In this example, we have an initialization using the same aggregate as in the
+previous code example. We also have an assignment, in which we read the value
+of :ada:`WR` and use it in the calculation.
+
+
 If we want to just change two components, but leave the information of other
 components untouched, we can use a
 :ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
