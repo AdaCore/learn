@@ -549,65 +549,116 @@ it.
 
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Alarms_Nonatomic_Full_Access
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
     pragma Ada_2022;
 
-    package Alarms is
+    with System;
 
-       type Day is (Mon, Tue, Wed,
-                    Thu, Fri,
-                    Sat, Sun);
+    package Registers is
 
-       type Enabled is new Boolean
+       type Boolean_Bit is new Boolean
          with Size => 1;
 
-       type Hours is range 0 .. 23
-         with Size => 5;
+       type UInt1 is mod 2**1
+         with Size => 1;
 
-       type Minutes is range 0 .. 59
-         with Size => 6;
+       type UInt2 is mod 2**2
+         with Size => 2;
 
-       type Day_Enabled is
-         array (Day) of Enabled
-           with Pack;
+       type UInt14 is mod 2**14
+         with Size => 14;
 
-       type Alarm is record
-          Days   : Day_Enabled;
-          Hour   : Hours;
-          Minute : Minutes;
+       type Window_Register is record
+          --  horizontal line count
+          Horizontal_Cnt : UInt14 := 16#0#;
+
+          --  unspecified
+          Reserved_14_15 : UInt2  := 16#0#;
+
+          --  vertical line count
+          Vertical_Cnt   : UInt14 := 16#0#;
+
+          --  refresh signalling
+          Refresh_Needed : Boolean_Bit := False;
+
+          --  unspecified
+          Reserved_30    : UInt1  := 16#0#;
        end record
-         with
-           Volatile,
-           Size      => 24;
+         with Size      => 32,
+              Bit_Order => System.Low_Order_First,
+              Volatile,
+              Full_Access_Only;
 
-       for Alarm use record
-          Days   at 0 range 0  .. 6;
-          Hour   at 0 range 8  .. 12;
-          Minute at 0 range 16 .. 21;
-       end record;
+       for Window_Register use record
+          Horizontal_Cnt at 0 range 0 .. 13;
+          Reserved_14_15 at 0 range 14 .. 15;
+          Vertical_Cnt   at 0 range 16 .. 29;
+          Refresh_Needed at 0 range 30 .. 30;
+          Reserved_30    at 0 range 31 .. 31;
+          end record;
 
-    end Alarms;
+       procedure Show (WR : Window_Register);
+
+    end Registers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Registers is
+
+       procedure Show (WR : Window_Register) is
+       begin
+          Put_Line ("WR = (Horizontal_Cnt => "
+                    & WR.Horizontal_Cnt'Image
+                    & ",");
+          Put_Line ("      Vertical_Cnt   => "
+                    & WR.Vertical_Cnt'Image
+                    & ",");
+          Put_Line ("      Refresh_Needed => "
+                    & WR.Refresh_Needed'Image
+                    & ")");
+       end Show;
+
+    end Registers;
+
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
     pragma Ada_2022;
 
-    with Alarms; use Alarms;
+    with Registers;   use Registers;
 
-    procedure Show_Alarm is
-
-       A : Alarm;
-
+    procedure Show_Register is
+       WR : Window_Register;
     begin
-       --  Initializing the alarm
-       A := (Days   => (others => False),
-             Hour   => 8,
-             Minute => 0);
+       --  Nonatomic full-access assignments
+       WR.Horizontal_Cnt := 800;
+       WR.Vertical_Cnt   := 600;
+       WR.Refresh_Needed := True;
 
-       --  Activating alarm on
-       --  Monday and Wednesday
-       A.Days (Mon) := True;
-       A.Days (Wed) := True;
-    end Show_Alarm;
+       Show (WR);
+    end Show_Register;
+
+
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Registers;   use Registers;
+
+    procedure Show_Register is
+       WR : Window_Register;
+    begin
+       --  Nonatomic full-access assignment
+       --  using an aggregate:
+       WR := (Horizontal_Cnt => 800,
+              Vertical_Cnt   => 600,
+              Refresh_Needed => True,
+              others         => <>);
+
+       Show (WR);
+    end Show_Register;
 
 In this example, we have a very simple alarm system specified in the
 :ada:`Alarms` package. We can set the alarm to ring at the same time on
@@ -625,32 +676,25 @@ Note that we haven't discussed the topic of delta aggregates yet: we'll do that
 terms, we can use them to modify specific components of a record without
 changing the remaining components of the record.
 
-Let's update the previous example:
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Alarms_Nonatomic_Full_Access
+    with Ada.Text_IO; use Ada.Text_IO;
 
+    with Registers;   use Registers;
 
-    pragma Ada_2022;
-
-    with Alarms; use Alarms;
-
-    procedure Show_Alarm is
-
-       A : Alarm
-             with Full_Access_Only;
-
+    procedure Show_Registers is
+       WR : Window_Register :=
+              (Horizontal_Cnt => 800,
+               Vertical_Cnt   => 600,
+               others         => <>);
     begin
-       --  Initializing the alarm
-       A := (Days   => (others    => False),
-             Hour   => 8,
-             Minute => 0);
+       --  Delta assignment
+       WR := (WR with delta
+                   Vertical_Cnt   => 800,
+                   Refresh_Needed => True);
 
-       --  Activating alarm on
-       --  Monday and Wednesday
-       A.Days := (A.Days
-                    with delta Mon |
-                               Wed => True);
-    end Show_Alarm;
+       Show (WR);
+    end Show_Registers;
 
 Now, by assigning the delta aggregate to a full-access object, we ensure that
 the complete :ada:`A` object is updated at once.
@@ -672,42 +716,99 @@ operations.
 
 Let's see a simplified version of the previous example to illustrate this:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Alarms_Atomic_Full_Access
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
 
     pragma Ada_2022;
 
-    package Alarms is
+    with System;
 
-       type Day is (Mon, Tue, Wed,
-                    Thu, Fri,
-                    Sat, Sun);
+    package Registers is
 
-       type Enabled is new Boolean
+       type Boolean_Bit is new Boolean
          with Size => 1;
 
-       type Day_Enabled is
-         array (Day) of Enabled
-           with Pack;
+       type UInt1 is mod 2**1
+         with Size => 1;
 
-    end Alarms;
+       type UInt2 is mod 2**2
+         with Size => 2;
 
-    pragma Ada_2022;
+       type UInt14 is mod 2**14
+         with Size => 14;
 
-    with Alarms; use Alarms;
+       type Window_Register is record
+          --  horizontal line count
+          Horizontal_Cnt : UInt14 := 16#0#;
 
-    procedure Show_Alarm is
+          --  unspecified
+          Reserved_14_15 : UInt2  := 16#0#;
 
-       D : Day_Enabled
-             with Atomic, Full_Access_Only;
+          --  vertical line count
+          Vertical_Cnt   : UInt14 := 16#0#;
 
+          --  refresh signalling
+          Refresh_Needed : Boolean_Bit := False;
+
+          --  unspecified
+          Reserved_30    : UInt1  := 16#0#;
+       end record
+         with Size      => 32,
+              Bit_Order => System.Low_Order_First,
+              Volatile,
+              Full_Access_Only;
+
+       for Window_Register use record
+          Horizontal_Cnt at 0 range 0 .. 13;
+          Reserved_14_15 at 0 range 14 .. 15;
+          Vertical_Cnt   at 0 range 16 .. 29;
+          Refresh_Needed at 0 range 30 .. 30;
+          Reserved_30    at 0 range 31 .. 31;
+          end record;
+
+       procedure Show (WR : Window_Register);
+
+    end Registers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Registers is
+
+       procedure Show (WR : Window_Register) is
+       begin
+          Put_Line ("WR = (Horizontal_Cnt => "
+                    & WR.Horizontal_Cnt'Image
+                    & ",");
+          Put_Line ("      Vertical_Cnt   => "
+                    & WR.Vertical_Cnt'Image
+                    & ",");
+          Put_Line ("      Refresh_Needed => "
+                    & WR.Refresh_Needed'Image
+                    & ")");
+       end Show;
+
+    end Registers;
+
+We then use the package in our test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
+
+    with Registers;   use Registers;
+
+    procedure Show_Register is
+       WR : Window_Register :=
+              (Horizontal_Cnt => 800,
+               Vertical_Cnt   => 600,
+               Refresh_Needed => True,
+               others         => <>);
     begin
-       --  Initializing the alarm
-       D := (others => False);
+       WR := (Horizontal_Cnt =>
+                WR.Horizontal_Cnt * 2,
+              Vertical_Cnt   =>
+                Wr.Vertical_Cnt   * 2,
+              others         => <>);
 
-       --  Activating alarm on
-       --  Monday and Wednesday
-       D := (D with delta Mon | Wed => True);
-    end Show_Alarm;
+       Show (WR);
+    end Show_Register;
 
 In the :ada:`Show_Alarm` procedure, we again activate the alarm to ring on
 Mondays and Wednesdays by assigning a delta aggregate to :ada:`D`. This
