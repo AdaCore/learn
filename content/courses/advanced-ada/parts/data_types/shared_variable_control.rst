@@ -820,7 +820,7 @@ in the package:
        end record
          with Size      => 32,
               Bit_Order => System.Low_Order_First,
-              Volatile,
+              Atomic,
               Full_Access_Only;
 
        for Window_Register use record
