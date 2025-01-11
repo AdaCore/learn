@@ -547,7 +547,7 @@ only be read from memory or updated to memory every time, but those operations
 must also be performed for the complete record object |mdash| not just parts of
 it.
 
-For example:
+Consider the following example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
@@ -774,7 +774,8 @@ updated. Ideally, this operation corresponds to a single atomic
 operation on the target machine, but it can also translate to multiple atomic
 operations.
 
-Let's see a simplified version of the previous example to illustrate this:
+Let's adapt the previous example to illustrate this. First, we adapt the type
+in the package:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
 
