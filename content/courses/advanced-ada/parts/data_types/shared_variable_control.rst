@@ -532,6 +532,8 @@ Likewise, we can define nonatomic and atomic full-access objects:
     - :arm22:`C.6 Shared Variable Control <C-6>`
 
 
+.. _Adv_Ada_Shared_Variable_Control_Non_Atomic_Full_Access:
+
 Nonatomic full-access
 ~~~~~~~~~~~~~~~~~~~~~
 
