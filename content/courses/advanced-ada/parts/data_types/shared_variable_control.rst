@@ -596,7 +596,7 @@ Consider the following example:
           Vertical_Cnt   at 0 range 16 .. 29;
           Refresh_Needed at 0 range 30 .. 30;
           Reserved_30    at 0 range 31 .. 31;
-          end record;
+       end record;
 
        procedure Show (WR : Window_Register);
 
@@ -738,6 +738,8 @@ update via the :ada:`Refresh_Needed` flag, but keep the same horizontal count:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
 
+    pragma Ada_2022;
+
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Registers;   use Registers;
@@ -829,7 +831,7 @@ in the package:
           Vertical_Cnt   at 0 range 16 .. 29;
           Refresh_Needed at 0 range 30 .. 30;
           Reserved_30    at 0 range 31 .. 31;
-          end record;
+       end record;
 
        procedure Show (WR : Window_Register);
 
