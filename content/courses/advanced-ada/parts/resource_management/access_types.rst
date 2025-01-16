@@ -4178,13 +4178,13 @@ Let's see an example:
          (if Obj /= null then Obj.all else "");
 
        function Copy (Obj : Info) return Info is
-         (To_Info (Obj.all));
+         (To_Info (To_String (Obj)));
 
        procedure Copy (To   : in out Info;
                        From :        Info) is
        begin
           Destroy (To);
-          To := To_Info (From.all);
+          To := Copy (From);
        end Copy;
 
        procedure Append (Obj : in out Info;
