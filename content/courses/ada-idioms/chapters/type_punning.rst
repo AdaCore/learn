@@ -73,8 +73,8 @@ both in the following subsections. The purpose in both approaches is to apply a
 different type, thereby making available a different type-specific view of the
 storage.
 
-Implementation 1: Overlays
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Overlays
+~~~~~~~~
 
 The first approach applies an alternative type to an existing object by
 declaring another object at the same location in memory but with a different
@@ -180,8 +180,8 @@ the other hand, even one Ada object with an address specified overlays that obje
 with the machine storage view of that address...)
 
 
-Implementation 2: Unchecked Conversions on Address Values
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unchecked Conversions on Address Values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The common implementation of type punning, across multiple languages, involves
 converting the address of a given object into a pointer designating the
