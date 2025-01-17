@@ -63,8 +63,8 @@ packages, developers should do so in a manner that minimizes the amount of
 object code that might result.
 
 
-Solution
---------
+Implementation(s)
+-----------------
 
 The application source code should be written in a manner that shares the
 instantiations themselves, when possible, thereby reducing the number of

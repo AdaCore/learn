@@ -44,21 +44,21 @@ application code, the association of an application task to a given
 interrupt-driven event is convenient and common.
 
 Hence a task is often involved. How the handler procedure notifies the task
-leads to a couple of different idiom solutions.  In both cases notification
+leads to a couple of different idiom implementations.  In both cases notification
 amounts to releasing the previously suspended task for further execution.
 
-In the Solution section below, we show how to express these three idioms: one
+In the following section we show how to express these three idioms: one
 for using protected procedures alone, and two in which a protected procedure
 handler notifies a task.
 
 
-Solution
---------
+Implementation(s)
+-----------------
 
 First Level Handler Alone
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this solution the interrupt handler protected procedure does everything
+In this approach the interrupt handler protected procedure does everything
 necessary and does not require a second-level handler.
 
 An interrupt handler that simply copies data from one location to another is a
@@ -77,7 +77,7 @@ output is physically connected to a high-quality amplifier and speakers. No
 upper-level application thread requires notification of the copying: if the
 transfer is working the audio output occurs, otherwise it does not.
 
-In our solution the CODEC device is *fed* from a buffer named
+In our implementation the CODEC device is *fed* from a buffer named
 :ada:`Outgoing_PCM_Samples`. The buffer must always have new samples available
 when the CODEC is ready for them, because delays or breaks would introduce
 audible artifacts. The timing is determined by the sampling rate used by the
@@ -301,8 +301,8 @@ as well as maintaining the change.
 Task Notification Introduction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The first idiom solution did not require notifying a task, but these next idiom
-solutions will do so. As we mentioned earlier, how the interrupt handler
+The first idiom implementation did not require notifying a task, but these next idiom
+implementations will do so. As we mentioned earlier, how the interrupt handler
 achieves this notification leads to two distinct idioms. Ultimately the
 difference between them is whether or not the interrupt handler must
 communicate with the task. In both cases the handler synchronizes with the task
@@ -312,7 +312,7 @@ because of the notification required.
 Task Notification With Communication
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this solution the interrupt handler releases a task but also communicates
+In this implementation the interrupt handler releases a task but also communicates
 with it when doing so. Therefore, a protected entry is used, and the entry
 parameters are the communication medium.  The approach is depicted in the
 figure below:
@@ -328,7 +328,7 @@ The dashed lines in the figure represent this data flow.
 
 By coincidence, this is the notification approach used in the idiom entry
 :ref:`Providing Component Access to Enclosing Record Objects <Ada_Idioms_Component_Access_To_Enclosing_Record_Objects>`.
-In that solution, client tasks call two entries to :ada:`Put` and :ada:`Get`
+In that implementation, client tasks call two entries to :ada:`Put` and :ada:`Get`
 single characters, so the data stored in the PO consists of those characters.
 We did not mention it there because we were focused on that other idiom, i.e.,
 how to give visibility within a PO/task component to an enclosing record
@@ -518,7 +518,7 @@ be applied.
 Task Notification Without Communication
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this solution, the interrupt handler procedure is not required to
+In this implementation, the interrupt handler procedure is not required to
 communicate with the task. It only needs to synchronize with it, to release it.
 
 Therefore, we can use a :ada:`Suspension_Object`: a language-defined,
@@ -536,7 +536,7 @@ caller returns without suspending.)  Critically, procedure
 returning. As a result, those are the only two routines you're likely to need,
 although there are others.
 
-The interrupt handler procedure in this idiom solution simply calls
+The interrupt handler procedure in this approach simply calls
 :ada:`Set_True` for a :ada:`Suspension_Object` (an object of that type) visible
 to both the handler and the task. This arrangement is illustrated by the
 following figure:
@@ -552,13 +552,13 @@ has its ceiling priority in the :ada:`Interrupt_Priority` range, so this
 approach will work for interrupt handlers as well as tasks.
 
 For our example we implement a facility for sending and receiving *messages*
-over a serial port, using interrupts. The design is similar to the solution we
+over a serial port, using interrupts. The design is similar to the implementation we
 just explored, and thus to the
 :ref:`Providing Component Access to Enclosing Record Objects <Ada_Idioms_Component_Access_To_Enclosing_Record_Objects>`
-idiom. In that solution, however, only single characters were sent and
+idiom. In that implementation, however, only single characters were sent and
 received, whereas messages will consist of one or more characters. Although
 there are differences, we assume that you are familiar enough with that idiom's
-solution that we don't need to go into all the details of the serial I/O, the
+approach that we don't need to go into all the details of the serial I/O, the
 USART, or the interrupt handler within a PO. We'll focus instead of the
 differences due to this idiom.
 
@@ -782,7 +782,7 @@ as the PO implementation of type :ada:`Suspension_Object`.)
 Pros
 ----
 
-In all three idioms, the solution is directly expressed, meets the
+In all three idioms, the approach is directly expressed, meets the
 requirements, and hides the implementation details. The implementations are
 efficient relative to their requirements, the only reasonable metric. In
 particular, :ada:`Suspension_Objects` are expected to be faster than protected
@@ -803,7 +803,7 @@ Relationship With Other Idioms
 
 The idiom showing how to connect a PO or task to an enclosing record object was
 illustrated by an interrupt handler PO, but that idiom is not necessary.
-Indeed, we used a protected type directly in the last solution.
+Indeed, we used a protected type directly in the last implementation.
 
 
 What About Priorities?

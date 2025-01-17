@@ -208,20 +208,20 @@ that sufficient constructor functions are possible.
 Therefore, a general design idiom is required for defining constructor functions
 for concrete tagged Abstract Data Types.
 
-Solution
---------
+Implementation(s)
+-----------------
 
-The general solution uses functions for constructing objects but prevents these
+The general approach uses functions for constructing objects but prevents these
 functions from being inherited. The problem is thus circumvented entirely.
 
-To prevent their being inherited, the solution prevents the constructor
+To prevent their being inherited, the implementation prevents the constructor
 functions from being primitive operations. However, these functions require
 compile-time visibility to the parent type's representation in order to
 construct values of the type, as this typically involves assigning values to
 components in the return object. The alternative approach must supply the
 compile-time visibility that primitive operations have.
 
-Therefore, the specific solution is to declare constructor functions in a
+Therefore, the specific implementation is to declare constructor functions in a
 separate package that is a *child* of the package declaring the tagged type.
 This takes advantage of the *hierarchical library units* capability introduced in Ada 95.
 
@@ -331,7 +331,7 @@ Notes
 -----
 
 For those interested, in this section we provide a discussion of alternatives
-to the solution given, and why they are inadequate.
+to the implementation presented, and why they are inadequate.
 
 Changing the behavior of an inherited operation requires an explicit conforming
 subprogram declaration and therefore a new subprogram body for that operation.
@@ -386,7 +386,7 @@ might be called accidentally. For example:
 Although the overridden :ada:`Make` does not have a :ada:`Radius` parameter and
 could only assign some default to that component, if that default is reasonable
 then the overridden function could be called on purpose, i.e., not
-accidentally. That's not a general solution, however.
+accidentally. That's not a general approach, however.
 
 Alternatively, developers could use procedures as their constructors, with a
 mode-out parameter for the result. The procedure would not become implicitly
@@ -437,4 +437,4 @@ But the same issues arise as with functions. Clients might accidentally call
 the wrong procedure, i.e., the inherited routine that doesn't have a parameter
 for the :ada:`Radius`.  That routine would not even mention the :ada:`Radius`
 component, much less assign a default value, so it would have to be overridden
-in order to do so. This too is not a general solution.
+in order to do so. This too is not a general approach.

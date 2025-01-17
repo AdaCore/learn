@@ -12,7 +12,9 @@ What is an idiom? Some would say that an idiom is a workaround for an
 expressive deficiency in a programming language. That is not what we mean.
 
 What we have in mind are answers to the question "In this situation,
-how can one best use the Ada language to express an elegant solution?".
+what is the most elegant implementation approach?". Elegant software is
+comprehensible, efficient, concise, reliable, and, as a result,
+maintainable, so elegance is an economically and technically desirable characteristic.
 
 Design patterns [1]_ are intended to answer that question, and indeed
 some would equate idioms with design patterns. But what we have in mind

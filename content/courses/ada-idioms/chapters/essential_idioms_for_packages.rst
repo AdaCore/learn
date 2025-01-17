@@ -26,8 +26,8 @@ module in relative isolation.  Coupling and cohesion are interrelated:
 higher cohesion tends to result in less coupling.
 
 
-Solution
---------
+Implementation(s)
+-----------------
 
 Three idioms for packages were envisioned when the language was first designed.
 They were introduced and described in detail in the Rationale document for the
