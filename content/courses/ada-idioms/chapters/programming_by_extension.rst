@@ -93,8 +93,8 @@ requirement for the :ada:`Content` type because :ada:`Values` is not a record
 component; anonymously-typed array objects are legal.) From the viewpoint of
 the language and the abstraction, the location is purely up to the developer.
 
-Solution
---------
+Implementation(s)
+-----------------
 
 When you have a choice of placement, putting the state in either the package
 private part or the package body is reasonable, but only one of the two is

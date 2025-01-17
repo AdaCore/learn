@@ -92,12 +92,12 @@ determined by the function, and need not start at :ada:`Positive'First`.
 
 An object cannot be used before it is declared. Since this explicit initial
 value is part of the declaration, the object cannot be read before it is
-initialized. That fact is the key to the solutions.
+initialized. That fact is the key to the implementation approaches.
 
 However, although the object declaration is guaranteed to occur, explicit
 initialization is optional. But unlike a procedure call, we can force the
 initial value to be given. There are two ways to force it, so there are two
-solutions presented.
+implementations presented.
 
 In addition, a specific form of explicit initialization may be required because
 not all forms of initialization are necessarily appropriate for a given
@@ -164,20 +164,20 @@ is an example, in which a type is defined but corresponding object creation by
 clients is not intended. Instead, the abstraction implementation creates a
 single object of the type. The abstraction is a type, rather than an
 :ref:`ADM <Ada_Idioms_Abstract_Data_Machines>`, for the sake of potential
-extension via inheritance. We will illustrate this design pattern and solution
+extension via inheritance. We will illustrate this design pattern and implementation
 using a real-world hardware device.
 
 
-Requiring Initialization by Clients
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Implementation(s)
+-----------------
 
 There are two ways to force an explicit initial value as part of an object
 declaration. One is a matter of legality at compile-time so it is enforced by
 the compiler. The other is enforced by a run-time check.
 
-Note that both solutions are type-specific, so when we say *objects* we mean
-objects of a type that has been designed with one of these two idiom solutions.
-Neither solution applies to every object of every type used in the client code.
+Note that both approaches are type-specific, so when we say *objects* we mean
+objects of a type that has been designed with one of these two idiom implementations.
+Neither implementation applies to every object of every type used in the client code.
 (SPARK, a formal language based closely on Ada, statically ensures all objects
 are initialized before read.)
 
@@ -198,13 +198,13 @@ creating a type that is both private and limited.
 Throughout this discussion we will assume that these designs are based on
 :ref:`Abstract Data Types <Ada_Idioms_Abstract_Data_Types>`, hence we assume
 the use of private types. That's a general, initial design assumption but in
-this case private types are required by the two idiom solutions. The types are
+this case private types are required by the two idiom implementations. The types are
 not necessarily limited as well, but in one situation they will be limited too.
-But in both solutions the primary types will be private types.
+But in both implementations the primary types will be private types.
 
 
-Solution 1: Compile-Time Legality
----------------------------------
+Compile-Time Legality
+~~~~~~~~~~~~~~~~~~~~~
 
 We can combine the private type and limited type building blocks with another,
 known as *unknown discriminants*, to force explicit object initialization by
@@ -381,7 +381,7 @@ built in place instead of copied.)
 
 To recap, the primary purpose of the idiom, for a given type, is to ensure that
 clients initialize objects of that type as part of the object declarations. In
-this first solution we meet the requirement by composing the type via building
+this first implementation we meet the requirement by composing the type via building
 blocks that:
 
     #. require a constraint to be given when declaring any object of the type,
@@ -430,10 +430,10 @@ a viable alternative, but that's also beyond the scope of this document.)
 
 Therefore, default initialization doesn't really suffice for this ADT. We need
 to force initialization (configuration) during object creation so that enabling
-the ADT output will always be safe. This idiom solution does exactly that.
+the ADT output will always be safe. This idiom implementation does exactly that.
 
 The following is a cut-down version of the package declaration using this idiom
-solution, with some operations and record components elided for the sake of
+implementation, with some operations and record components elided for the sake of
 simplicity. In the full version the unit is a generic package for the sake of
 not hard-coding the floating point types. We use a regular package and type
 :ada:`Float` here for convenience. The full version is here:
@@ -573,8 +573,8 @@ parameter, the call to configure the object's state necessarily precedes any
 other operation (e.g., :ada:`Enable`).
 
 
-Solution 2: Run-Time Checks
-----------------------------------------------------------
+Run-Time Checks
+~~~~~~~~~~~~~~~
 
 Ada 2022 adds another building block, :ada:`Default_Initial_Condition` (DIC),
 that can be used as an alternative to the unknown discriminants used above. We
@@ -668,7 +668,7 @@ all object declarations of that type that rely on default initialization. But
 suppose the type does not define any default initialization. We can detect
 these uninitialized objects at run-time if we set the DIC Boolean expression
 to indicate that there is no default initialization defined for this type. The
-checks will then fail for those objects. That's the second solution to the
+checks will then fail for those objects. That's the second implementation approach to the
 initialization requirement.
 
 Specifically, we can express the lack of default initialization by a DIC
@@ -782,7 +782,7 @@ program a chance to execute a handler? If so, is there sufficient storage
 remaining to execute the exception handler's statements? In any case you can
 see the problem that the declaration failure semantics preclude.
 
-Therefore, although the DIC solution is not enforced at compile-time, it is
+Therefore, although the DIC approach is not enforced at compile-time, it is
 nevertheless sufficient to ensure no uninitialized object of the type can be
 used.
 
@@ -791,11 +791,11 @@ Preventing Object Creation by Clients
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The other idiom requirement is the ability to control object creation itself.
-The solution is trivially achieved using an indefinite limited private type:
+The implementation is trivially achieved using an indefinite limited private type:
 we can prevent client object creation simply by not providing any constructor
 functions. Doing so removes any means for initializing objects of the type, and
 since the type is indefinite there is then no way for clients to declare
-objects at all. The compiler again enforces this solution.
+objects at all. The compiler again enforces this implementation.
 
 For a concrete example, we can apply the Singleton design pattern to represent
 the *time stamp counter* (:wikipedia:`TSC <Time_Stamp_Counter>`) provided by
@@ -804,7 +804,7 @@ clock cycle, starting from zero at power-up. We can use it to make a timestamp
 abstraction. As explained by
 :wikipedia:`Wikipedia page <Time_Stamp_Counter>`, some care is required when
 using the register for that purpose on modern hardware, but it will suffice to
-illustrate the idiom solution. Note that the Singleton pattern is itself
+illustrate the idiom implementation. Note that the Singleton pattern is itself
 somewhat controversial in the OOP community, but that's beyond the scope of
 this document.
 
@@ -825,7 +825,7 @@ times. We'll use the design approach of indefinite limited private types
 without any constructor functions in order to ensure clients cannot create
 objects of the type. The type will also be tagged for the sake of allowing type
 extensions. Adding the tagged characteristic doesn't change anything regarding
-the idiom solution.
+the idiom implementation.
 
 .. code-block:: ada
 
@@ -1263,7 +1263,7 @@ The types above will either have a corresponding completion or a generic actual
 parameter to either define the discriminants or specify that there are none.
 
 As we mentioned, :ada:`Default_Initial_Condition` is new in Ada 2022. The other
-solution, based on indefinite private types, is supported by Ada 2022 but also
+implementation, based on indefinite private types, is supported by Ada 2022 but also
 by earlier versions of the language. However, if the type is also limited, Ada
-2005 is the earliest version allowing that solution. Prior to that version an
+2005 is the earliest version allowing that implementation. Prior to that version an
 object of a limited type could not be initialized in the object's declaration.

@@ -65,16 +65,16 @@ Unchecked conversions remain explicit, but the compiler does not limit them to
 the types defined as reasonable by the language.
 
 
-Solution
---------
+Implementation(s)
+-----------------
 
 There are two common approaches for expressing type punning in Ada. We show
 both in the following subsections. The purpose in both approaches is to apply a
 different type, thereby making available a different type-specific view of the
 storage.
 
-First Solution: Overlays
-~~~~~~~~~~~~~~~~~~~~~~~~
+Implementation 1: Overlays
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The first approach applies an alternative type to an existing object by
 declaring another object at the same location in memory but with a different
@@ -180,8 +180,8 @@ the other hand, even one Ada object with an address specified overlays that obje
 with the machine storage view of that address...)
 
 
-Second Solution: Unchecked Conversions on Address Values
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Implementation 2: Unchecked Conversions on Address Values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The common implementation of type punning, across multiple languages, involves
 converting the address of a given object into a pointer designating the

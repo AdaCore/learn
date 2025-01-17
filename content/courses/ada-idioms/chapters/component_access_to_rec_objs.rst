@@ -73,14 +73,14 @@ defining major types, for the good reasons given in that idiom entry. There's
 no reason not to use an ADT in this case so we will.
 
 
-Solution
+Implementation(s)
 -----------------
 
-As mentioned, the solution applies to enclosed components of both task types
+As mentioned, the implementation approach applies to enclosed components of both task types
 and protected types. We will continue the discussion in terms of protected
 types.
 
-The solution has two parts:
+The implementation has two parts:
 
     1. An access discriminant on the PO type, designating the enclosing
        record's type. That part is straightforward.
@@ -118,7 +118,7 @@ two parts:
 
 The record type named :ada:`Device` contains a component named :ada:`X`,
 arbitrarily of type :ada:`Integer`, and another component :ada:`C` that is of
-protected type :ada:`Controller`.  Part #1 of the solution is the access
+protected type :ada:`Controller`.  Part #1 of the implementation is the access
 discriminant on the declaration of the protected type :ada:`Controller`:
 
 .. code-block:: ada
@@ -185,7 +185,7 @@ discriminant :ada:`Encloser` to get to the current instance's :ada:`X`
 component. (We could express it as :ada:`Encloser.all.X` but why bother.
 Implicit dereferencing is a wonderful thing.)
 
-That's the solution. Now for some necessary details.
+That's the implementation. Now for some necessary details.
 
 Note that we declared type :ada:`Device` as a limited type, first in the
 visible part of the package:
@@ -212,11 +212,11 @@ a component that uses the :ada:`Access` attribute in this way.
 Also note that any type that includes a protected or task object
 is limited, so a type like Device will necessarily be limited in any case.
 
-The type need not be tagged for this idiom solution, but it must be
+The type need not be tagged for this approach, but it must be
 limited in both its partial view and its full view. More generally, a tagged type
 must be limited in both views if it is limited in either view.
 
-For the idiom solution to be legal, the type's completion in the private part
+For the idiom implementation to be legal, the type's completion in the private part
 must not merely be limited, but actually *immutably limited*, meaning that it is always truly limited.
 There are various ways to make that happen (see
 :aarm22:`AARM22 7.5 (8.1/3) <7-5>` ) but the easiest way to is to include the
@@ -532,11 +532,11 @@ inherited IO pin components.
 Pros
 -----------------
 
-The solution is directly expressed, requiring only an access discriminant and
+The implementation is directly expressed, requiring only an access discriminant and
 the current instance semantics of :ada:`type_name'Access`.
 
 Although the real-word example is complex |mdash| multiple discriminants are
-involved, and a type extension |mdash| the idiom solution itself requires little
+involved, and a type extension |mdash| the implementation itself requires little
 text. Interrupt handling is relatively complex in any language.
 
 
@@ -554,7 +554,7 @@ Relationship With Other Idioms
 This idiom is useful when we have a record type enclosing a PO or task object.
 If the :ref:`Abstract Data Machine (ADM) <Ada_Idioms_Abstract_Data_Machines>`
 would instead be appropriate, the necessary visibility can be achieved without
-requiring this idiom solution because there would be no enclosing record type.
+requiring this implementation approach because there would be no enclosing record type.
 But as described in the ADM discussion, the
 :ref:`ADT approach <Ada_Idioms_Abstract_Data_Types>` is usually superior.
 

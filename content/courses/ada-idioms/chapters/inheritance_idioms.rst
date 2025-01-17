@@ -90,7 +90,7 @@ types.
 For example, in Ada, full dynamic OOP capabilities require type declarations to
 be decorated with the reserved word :ada:`tagged`. However, from its earliest days,
 Ada has also supported a static form of inheritance, using types that are not
-tagged. The solution we describe below works with both forms of inheritance.
+tagged. The implementation we describe below works with both forms of inheritance.
 
 The developer also has a choice of whether the parent type and/or the child type
 is a private type. Using private types is the default design choice, for the
@@ -178,10 +178,10 @@ with a completion in the package private part. The difference is the client
 visibility to the parent type.
 
 
-Solution
---------
+Implementation(s)
+-----------------
 
-There are two *solutions* in this entry, one for each of the two inheritance
+There are two implementations presented, one for each of the two inheritance
 idioms under discussion. First, we will specify our building block choices,
 then show the two idiom expressions in separate subsections.
 
@@ -200,16 +200,16 @@ then show the two idiom expressions in separate subsections.
 
 - We're going to declare the child type in a distinct, dedicated package,
   following the :ref:`ADT idiom <Ada_Idioms_Abstract_Data_Types>`. This package
-  may or may not be a child of the parent package. This solution's
+  may or may not be a child of the parent package. This implementation's
   approach does not require a child package's special compile-time visibility,
   although a child package is often necessary for the sake of that visibility.
 
 - Whether the child type is visibly derived will vary with the
-  :ref:`inheritance idiom <Ada_Idioms_Implementation_Inheritance>` solution.
+  :ref:`inheritance idiom <Ada_Idioms_Implementation_Inheritance>` implementation.
 
 To avoid unnecessary code duplication, we use
 the same parent type, declared as a simple tagged private type, in the examples
-for the two idiom solutions. The parent type
+for the two idiom implementations. The parent type
 could itself be derived from some other tagged type, but that changes nothing
 conceptually significant. We declare parent type in package :ada:`P` as
 follows:

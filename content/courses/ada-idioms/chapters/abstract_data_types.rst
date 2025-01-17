@@ -68,8 +68,8 @@ likely introduce new bugs.
 These disadvantages argue for an alternative. That is the purpose of this next
 idiom, known as the Abstract Data Type (ADT) [1]_, [2]_.
 
-Solution
---------
+Implementation(s)
+-----------------
 
 Abstraction is one of the central principles of software engineering because
 it is one of the primary ways that humans manage complexity. The idea is to
@@ -344,7 +344,7 @@ type can be private, as illustrated by the client expectation for array
 indexing in Ada prior to Ada 2012.
 Not every type should be private, for example those that are
 explicitly numeric. But the ADT should be the default design idiom when
-decomposing a problem into a solution.
+composing a solution.
 
 Cons
 ----

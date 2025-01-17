@@ -53,8 +53,8 @@ Machine (ADM). The Abstract Data Machine was introduced by Grady Booch [1]_
 as the Abstract State Machine, but that name, though appropriate,
 encompasses more in computer science than we intend to evoke.
 
-Solution
---------
+Implementation(s)
+-----------------
 
 The ADM is similar to the ADT idiom in that it presents an 
 abstraction that doesn't already exist in the programming language. 
