@@ -34,15 +34,17 @@ They were introduced and described in detail in the Rationale document for the
 initial language design [2]_ and were further developed in Grady Booch's
 book *Software Engineering with Ada* [3]_, a foundational work on design with
 the (sequential part of the) language. Booch added a fourth idiom, the Abstract
-Data Machine, to the three described by the Rationale.
-
-These four idioms have proven themselves capable of producing packages that
-exhibit high cohesion and loose coupling, resulting in more comprehensible and
-maintainable source code.
+Data Machine, to the three described by the Rationale. These four idioms have
+proven themselves capable of producing packages that exhibit high cohesion and
+loose coupling, resulting in more comprehensible and maintainable source code.
 
 These idioms pre-date later package facilities, such as private packages
 and hierarchical packages. We describe idioms for those kinds of packages
 separately.
+
+Two of the simpler idioms are described here. The other two, that are more
+commonly used, are described in two separate, dedicated entries within
+this document.
 
 Generic packages are not actually packages, but their instantiations are, so
 these design idioms apply to generic packages as well.
@@ -54,8 +56,8 @@ contain is a reflection of the degree of information hiding involved.
 
 .. _Ada_Idioms_Named_Collection_Of_Declarations:
 
-Essential Idiom 1: Named Collection of Declarations
----------------------------------------------------
+Named Collection of Declarations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the first idiom, the package declaration can contain other declarations
 only for the following:
@@ -89,7 +91,7 @@ needed:
 No information hiding is occurring when using this idiom.
 
 Pros
-~~~~
+^^^^
 
 Packages designed with this idiom will have high cohesion and low coupling.
 
@@ -98,7 +100,7 @@ necessary, need only be made in one place, although in this particular
 example, we would hope that no such changes will be made.
 
 Cons
-~~~~
+^^^^
 
 When a library package contains variable declarations, these variables comprise
 global data. In this sense, *global* means potential visibility to multiple
@@ -113,8 +115,8 @@ are less problematic than variables because they can't be changed.
 
 .. _Ada_Idioms_Groups_Of_Related_Program_Units:
 
-Essential Idiom 2: Groups of Related Program Units
---------------------------------------------------
+Groups of Related Program Units
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this idiom, the package can contain all of the declarations allowed by
 the first idiom, but also contains declarations for operations. These are
@@ -188,7 +190,7 @@ formal type:
     end Linear_Algebra;
 
 Pros
-~~~~
+^^^^
 
 The types and the associated operations are grouped together and are hence
 highly cohesive. Such packages usually can be loosely coupled as well.
@@ -201,7 +203,7 @@ arrays: for example, they can create values via aggregates and use array
 indexing to access specific components.
 
 Cons
-~~~~
+^^^^
 
 Clients can write code that depends on the type's representation, and can be
 relied upon to do so. Consequently, a change in the representation will
