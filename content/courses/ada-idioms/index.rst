@@ -25,7 +25,7 @@ Ada Idioms
 
     .. container:: content-copyright
 
-        Copyright © 2024, AdaCore
+        Copyright © 2025, AdaCore
 
         This book is published under a CC BY-SA license, which means that you
         can copy, redistribute, remix, transform, and build upon the content
@@ -115,4 +115,3 @@ Ada Idioms
     Providing Component Access to Enclosing Record Objects <chapters/component_access_to_rec_objs>
     Interrupt Handling <chapters/interrupt_handling>
     Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
-    Appendices <chapters/appendices>

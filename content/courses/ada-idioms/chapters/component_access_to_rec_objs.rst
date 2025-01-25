@@ -200,12 +200,12 @@ and again in the type completion in the package private part:
 
     type Device is tagged limited record ... end record;
 
-We declare :ada:`Device` as a limited type because we want to preclude 
-assignment statements for client objects of the type. Assignment of the 
-enclosing record object would leave the PO Encloser discriminant 
-designating the prior (right-hand side) enclosing object. If the PO is 
-written with the assumption that the enclosing object is always the one 
-identified during creation of the PO, that assumption will no longer 
+We declare :ada:`Device` as a limited type because we want to preclude
+assignment statements for client objects of the type. Assignment of the
+enclosing record object would leave the PO Encloser discriminant
+designating the prior (right-hand side) enclosing object. If the PO is
+written with the assumption that the enclosing object is always the one
+identified during creation of the PO, that assumption will no longer
 hold. We didn't state it up-front, but that is the assumption underlying
 the idiom as described, and in fact, only limited types may have
 a component that uses the :ada:`Access` attribute in this way.
