@@ -101,7 +101,8 @@ private part or the package body is reasonable, but only one of the two is
 amenable to future requirements.
 
 Specifically, placement in the private part of the package allows
-*programming by extension* [1]_ via hierarchical *child* packages. Child
+*programming by extension* :footcite:p:`1998:barnes`
+via hierarchical *child* packages. Child
 packages can be written immediately after the *parent* package but can also be
 written years later, thus accommodating changes due to new requirements.
 
@@ -245,4 +246,5 @@ library units, some declarations in existing package bodies tended to
 
     .. rubric:: Bibliography
 
-.. [1] Barnes, J. (1998). Programming In Ada 95, Addison-Wesley.
+.. footbibliography::
+

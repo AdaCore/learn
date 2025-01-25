@@ -15,7 +15,8 @@ way to use packages when designing an application, the language just specifies
 what is legal. However, some legal approaches are more advisable than others.
 
 Specifically, packages should exhibit high cohesion and loose coupling
-[1]_. Cohesion is the degree to which the declarations within a module are
+:footcite:p:`1979:yourdon`.
+Cohesion is the degree to which the declarations within a module are
 related to one another, in the context of the problem being solved.
 Unrelated entities should not be declared in the same module.  This allows
 the reader to focus on one primary concept, which should be the subject of
@@ -31,8 +32,10 @@ Implementation(s)
 
 Three idioms for packages were envisioned when the language was first designed.
 They were introduced and described in detail in the Rationale document for the
-initial language design [2]_ and were further developed in Grady Booch's
-book *Software Engineering with Ada* [3]_, a foundational work on design with
+initial language design :footcite:p:`1986:ichbiah`
+and were further developed in Grady Booch's
+book *Software Engineering with Ada* :footcite:p:`1983:booch`,
+a foundational work on design with
 the (sequential part of the) language. Booch added a fourth idiom, the Abstract
 Data Machine, to the three described by the Rationale. These four idioms have
 proven themselves capable of producing packages that exhibit high cohesion and
@@ -226,12 +229,4 @@ Notes
 
     .. rubric:: Bibliography
 
-.. [1] Yourdon, E. and L. L. Constantine (1979). Structured Design:
-       Fundamentals of a Discipline of Computer Program and System Design,
-       Prentice-Hall.
-
-.. [2] Ichbiah, J., J. Barnes, et al. (1986). Rationale for the Design of the
-       Ada Programming Language.
-
-.. [3] Booch, G. (1983). Software Engineering with Ada, Benjamin/Cummings
-       Publishing Company.
+.. footbibliography::

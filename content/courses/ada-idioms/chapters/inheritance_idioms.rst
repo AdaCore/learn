@@ -8,7 +8,8 @@ Using Building Blocks to Express Inheritance Idioms
 Motivation
 ----------
 
-Betrand Meyer's magisterial book on OOP [1]_ includes a taxonomy of inheritance
+Betrand Meyer's magisterial book on OOP :footcite:p:`1997:meyer`
+includes a taxonomy of inheritance
 idioms. Two especially well-known entries in that taxonomy are
 :wikipedia:`Subtype Inheritance <Subtyping>` and
 :wikipedia:`Implementation Inheritance <Inheritance_(object-oriented_programming)>`.
@@ -50,7 +51,8 @@ entities.
 
 Although the derived child type is distinct from the parent type, the child is
 the same *kind* as the parent type. Some authors use *kind of* as the name for the
-relationship between the child and parent. Meyer uses the term *is-a* [1]_, a
+relationship between the child and parent. Meyer uses the term *is-a*
+:footcite:p:`1997:meyer`, a
 popular term that we will use too. For example, a cat *is a* mammal, and also is
 an animal.
 
@@ -579,4 +581,4 @@ Notes
 
     .. rubric:: Bibliography
 
-.. [1] Meyer, B. (1997). Object-Oriented Software Construction, Prentice-Hall.
+.. footbibliography::

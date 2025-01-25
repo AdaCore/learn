@@ -16,7 +16,8 @@ what is the most elegant implementation approach?". Elegant software is
 comprehensible, efficient, concise, reliable, and, as a result,
 maintainable, so elegance is an economically and technically desirable characteristic.
 
-Design patterns [1]_ are intended to answer that question, and indeed
+Design patterns :footcite:p:`1995:gamma`
+are intended to answer that question, and indeed
 some would equate idioms with design patterns. But what we have in mind
 is more general in scope.
 
@@ -36,7 +37,7 @@ Those are the kinds of situations and solutions we focus upon.
 That said, we may refer to a design pattern to illustrate an idiom's
 purpose and/or implementation. For example, in the idiom for controlling
 object creation and initialization, the implementation approach happens
-to be the same as for expressing a Singleton [1]_.
+to be the same as for expressing a Singleton :footcite:p:`1995:gamma`.
 
 In addition to language-independent situations, we also include
 solutions for situations specific to the Ada language. These idioms are
@@ -99,7 +100,8 @@ supplier to the client that instantiates it, but instantiation is the only
 possibility in that narrow case. Only the routines in the instances can be
 called.)
 
-Betrand Meyer's book on OOP [2]_ limits these terms specifically to the case of
+Betrand Meyer's book on OOP :footcite:p:`1997:meyer`
+limits these terms specifically to the case of
 a type used in an object declaration. Our definitions cover that case but
 others as well.
 
@@ -242,9 +244,4 @@ For further details about type views, please refer to that
 
     .. rubric:: Bibliography
 
-.. [1] Gamma, E., R. Helm, et al. (1995), pp. 127. Design Patterns: Elements of
-       Reusable Object-Oriented Software. Reading, MA, Addison-Wesley
-       Publishing Company.
-
-.. [2] Meyer, B. (1997), pp. 182. Object-Oriented Software Construction,
-       Prentice-Hall.
+.. footbibliography::

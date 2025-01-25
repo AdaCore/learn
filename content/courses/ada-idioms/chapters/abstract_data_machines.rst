@@ -49,7 +49,8 @@ Singletons can be expressed easily in Ada
 but there is an alternative in this specific situation.
 
 This idiom entry describes the alternative, known as the Abstract Data
-Machine (ADM). The Abstract Data Machine was introduced by Grady Booch [1]_
+Machine (ADM). The Abstract Data Machine was introduced by
+Grady Booch :footcite:p:`1983:booch`
 as the Abstract State Machine, but that name, though appropriate,
 encompasses more in computer science than we intend to evoke.
 
@@ -364,5 +365,4 @@ irrelevant.
 
     .. rubric:: Bibliography
 
-.. [1] Booch, G. (1983). Software Engineering with Ada, Benjamin/Cummings
-       Publishing Company.
+.. footbibliography::
