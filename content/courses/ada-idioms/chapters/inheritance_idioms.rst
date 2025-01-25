@@ -573,8 +573,6 @@ so we are using private types throughout. That includes the child type, and, as
 we saw, allows us to control the compile-time visibility to the parent type.
 
 
-Notes
------
 
 
 .. only:: builder_html
