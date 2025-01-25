@@ -402,9 +402,9 @@ Notes
     3. The ADT is the conceptual foundation for the *class* construct's
        visibility control in some class-oriented languages.
 
+.. only:: builder_html
 
-Bibliography
-------------
+    .. rubric:: Bibliography
 
 .. [1] Booch, G. (1983). Software Engineering with Ada, Benjamin/Cummings
        Publishing Company.

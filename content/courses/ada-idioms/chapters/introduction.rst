@@ -238,9 +238,9 @@ default.)
 For further details about type views, please refer to that
 :ref:`specific section of the Advanced Ada course <Adv_Ada_Type_View>`.
 
+.. only:: builder_html
 
-Bibliography
-------------
+    .. rubric:: Bibliography
 
 .. [1] Gamma, E., R. Helm, et al. (1995), pp. 127. Design Patterns: Elements of
        Reusable Object-Oriented Software. Reading, MA, Addison-Wesley

@@ -474,8 +474,9 @@ potential problem. For that reason, the GNAT implementation issues a warning in
 such cases.
 
 
-Bibliography
-------------
+.. only:: builder_html
+
+    .. rubric:: Bibliography
 
 .. [1] S. Tucker Taft, 1993, post in Comp.Lang.Ada,
        https://groups.google.com/g/comp.lang.ada/c/9WXgvv8Xjuw/m/JMyo9_P7nxAJ

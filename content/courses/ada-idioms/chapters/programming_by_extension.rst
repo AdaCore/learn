@@ -241,7 +241,8 @@ library units, some declarations in existing package bodies tended to
 "percolate up" to the package declarations' private parts.
 
 
-Bibliography
-------------
+.. only:: builder_html
+
+    .. rubric:: Bibliography
 
 .. [1] Barnes, J. (1998). Programming In Ada 95, Addison-Wesley.

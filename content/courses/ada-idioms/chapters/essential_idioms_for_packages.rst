@@ -222,8 +222,9 @@ Notes
        iron-clad; hybrids are possible but should be considered initially
        suspect and reviewed accordingly.
 
-Bibliography
-------------
+.. only:: builder_html
+
+    .. rubric:: Bibliography
 
 .. [1] Yourdon, E. and L. L. Constantine (1979). Structured Design:
        Fundamentals of a Discipline of Computer Program and System Design,

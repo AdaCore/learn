@@ -575,8 +575,8 @@ Notes
 -----
 
 
+.. only:: builder_html
 
-Bibliography
-------------
+    .. rubric:: Bibliography
 
 .. [1] Meyer, B. (1997). Object-Oriented Software Construction, Prentice-Hall.

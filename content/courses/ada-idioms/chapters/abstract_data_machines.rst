@@ -360,8 +360,9 @@ But if one can know with certainty that only one thing is ever going to be
 represented, as in the hardware rotary switch example, the ADM limitations are
 irrelevant.
 
-Bibliography
-------------
+.. only:: builder_html
+
+    .. rubric:: Bibliography
 
 .. [1] Booch, G. (1983). Software Engineering with Ada, Benjamin/Cummings
        Publishing Company.
