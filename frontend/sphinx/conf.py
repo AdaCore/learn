@@ -95,6 +95,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import widget_extension
 
 extensions = [
+    'sphinxcontrib.bibtex',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.ifconfig',
@@ -480,6 +481,22 @@ intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
 # -- Options for redirects extension -----------------------------------------
 
 redirects = { }
+
+# -- Options for bibtex extension --------------------------------------------
+
+bibtex_bibfiles = []
+
+if config.has_option('', 'bibtex_file'):
+    bibtex_file = config['DEFAULT']['bibtex_file']
+
+    bibtex_file_full_path = get_file_from_conf_ini(bibtex_file)
+    bibtex_bibfiles.append(bibtex_file_full_path)
+else:
+    ## PATCH: get content directory
+    content_dir = os.path.abspath(os.path.dirname(__file__ ) + '/../../content')
+
+    for bib_file in Path(content_dir).rglob('*.bib'):
+        bibtex_bibfiles.append(str(bib_file))
 
 
 def setup(app):
