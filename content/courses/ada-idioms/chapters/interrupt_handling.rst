@@ -856,9 +856,6 @@ Notes
        urgent priorities.
 
 
-Bibliography
-------------
-
 .. todo::
 
     Ravenscar Guide??? Surely there is some document that first introduced

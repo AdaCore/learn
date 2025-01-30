@@ -46,7 +46,8 @@ spoken.
 
 Ada is accurately described as "a language with inherently reliable features,
 only compromised via explicit escape hatches having well-defined and portable
-semantics when used appropriately." [1]_ The foundation for this reliability is
+semantics when used appropriately." :footcite:p:`1993:taft`
+The foundation for this reliability is
 static named typing with rigorous enforcement by the compiler.
 
 Specifically, the Ada compiler checks that the operations and values applied to
@@ -474,8 +475,8 @@ potential problem. For that reason, the GNAT implementation issues a warning in
 such cases.
 
 
-Bibliography
-------------
+.. only:: builder_html
 
-.. [1] S. Tucker Taft, 1993, post in Comp.Lang.Ada,
-       https://groups.google.com/g/comp.lang.ada/c/9WXgvv8Xjuw/m/JMyo9_P7nxAJ
+    .. rubric:: Bibliography
+
+.. footbibliography::

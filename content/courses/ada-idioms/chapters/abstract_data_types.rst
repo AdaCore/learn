@@ -66,7 +66,9 @@ potentially very expensive, perhaps prohibitively so. Worse, our *fixes* will
 likely introduce new bugs.
 
 These disadvantages argue for an alternative. That is the purpose of this next
-idiom, known as the Abstract Data Type (ADT) [1]_, [2]_.
+idiom, known as the Abstract Data Type (ADT)
+:footcite:p:`1983:booch`, :footcite:p:`1974:liskov`.
+
 
 Implementation(s)
 -----------------
@@ -96,7 +98,7 @@ to manage complexity because at any given layer we can focus on *what* is being
 done, rather than how.
 
 Therefore, an abstract data type is a type that is abstract in the sense that
-[2]_:
+:footcite:p:`1974:liskov`:
 
     - It is a higher level of abstraction than the built-in programming
       language types.
@@ -391,8 +393,10 @@ Notes
 
     2. The Ada Rationale document did not introduce the concept of Abstract Data
        Types. The ADT concept had already been introduced and recognized as
-       effective when the first version of Ada was being designed [2]_. The Ada
-       language requirements document, *Steelman* [3]_, uses the term
+       effective when the first version of Ada was being designed
+       :footcite:p:`1974:liskov`.
+       The Ada language requirements document, *Steelman*
+       :footcite:p:`1978:HOLWG`, uses the term
        "Encapsulated Definitions" and describes the information hiding to be
        provided. Steelman does not specify the implementation syntax because
        requirements documents do not include such directives. The language
@@ -402,15 +406,8 @@ Notes
     3. The ADT is the conceptual foundation for the *class* construct's
        visibility control in some class-oriented languages.
 
+.. only:: builder_html
 
-Bibliography
-------------
+    .. rubric:: Bibliography
 
-.. [1] Booch, G. (1983). Software Engineering with Ada, Benjamin/Cummings
-       Publishing Company.
-
-.. [2] Liskov, B. and S. Zilles (1974). Programming with Abstract Data Types.
-       ACM SIGPLAN symposium on Very high level languages.
-
-.. [3] HOLWG (1978). Department of Defense Requirements for High Order Computer
-       Programming Language "STEELMAN".
+.. footbibliography::
