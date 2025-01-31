@@ -327,7 +327,7 @@ barrier when ready to either produce it or consume it via the entry parameters.
 The dashed lines in the figure represent this data flow.
 
 By coincidence, this is the notification approach used in the idiom entry
-:ref:`Providing Component Access to Enclosing Record Objects <Ada_Idioms_Component_Access_To_Enclosing_Record_Objects>`.
+:ref:`Providing Component Access to Enclosing Record Objects <Ada_In_Practice_Component_Access_To_Enclosing_Record_Objects>`.
 In that implementation, client tasks call two entries to :ada:`Put` and :ada:`Get`
 single characters, so the data stored in the PO consists of those characters.
 We did not mention it there because we were focused on that other idiom, i.e.,
@@ -554,7 +554,7 @@ approach will work for interrupt handlers as well as tasks.
 For our example we implement a facility for sending and receiving *messages*
 over a serial port, using interrupts. The design is similar to the implementation we
 just explored, and thus to the
-:ref:`Providing Component Access to Enclosing Record Objects <Ada_Idioms_Component_Access_To_Enclosing_Record_Objects>`
+:ref:`Providing Component Access to Enclosing Record Objects <Ada_In_Practice_Component_Access_To_Enclosing_Record_Objects>`
 idiom. In that implementation, however, only single characters were sent and
 received, whereas messages will consist of one or more characters. Although
 there are differences, we assume that you are familiar enough with that idiom's

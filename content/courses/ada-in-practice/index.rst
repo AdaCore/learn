@@ -1,10 +1,10 @@
 :prev_state: False
 :next_state: False
 
-.. _Ada_Idioms_Course_Index:
+.. _Ada_In_Practice_Course_Index:
 
-Ada Idioms
-==========
+Ada In Practice
+===============
 
 .. include:: ../global.txt
 
@@ -91,11 +91,11 @@ Ada Idioms
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/pdf_books/courses/ada-idioms.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/ada-in-practice.pdf">
                 Download PDF
             </a>
 
-            <a class="ebook-download-button" href="/epub_books/courses/ada-idioms.epub">
+            <a class="ebook-download-button" href="/epub_books/courses/ada-in-practice.epub">
                 Download EPUB
             </a>
 

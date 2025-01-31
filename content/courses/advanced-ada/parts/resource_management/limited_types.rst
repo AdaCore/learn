@@ -2811,7 +2811,7 @@ are always passed by reference.
 
     .. todo::
 
-        Add link to chapter the in the Ada Idioms course that explains this
+        Add link to chapter the in the Ada In Practice course that explains this
         topic in more details (once it's available).
 
 Let's reuse an example of an explicitly limited type:

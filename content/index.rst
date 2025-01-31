@@ -84,7 +84,7 @@
 
         Introduction to Ada <courses/intro-to-ada/index>
         Advanced Journey With Ada <courses/advanced-ada/index>
-        Ada Idioms <courses/ada-idioms/index>
+        Ada In Practice <courses/ada-in-practice/index>
         Introduction to SPARK <courses/intro-to-spark/index>
         Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
         What's New in Ada 2022 <courses/whats-new-in-ada-2022/index>

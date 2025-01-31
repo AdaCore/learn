@@ -10,4 +10,4 @@ courses/advanced-ada/parts/initialization/*.*
 courses/advanced-ada/parts/abstraction-oriented_prog/*.*
 courses/advanced-ada/parts/design_by_contracts/*.*
 courses/advanced-ada/index_hidden.rst
-courses/ada-idioms/chapters/appendices.rst
+courses/ada-in-practice/chapters/appendices.rst

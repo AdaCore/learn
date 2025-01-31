@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Essential_Design_Idioms_For_Packages:
+.. _Ada_In_Practice_Essential_Design_Idioms_For_Packages:
 
 Essential Design Idioms for Packages
 ====================================
@@ -57,7 +57,7 @@ package declarations will contain. But as you will see, what they can
 contain is a reflection of the degree of information hiding involved.
 
 
-.. _Ada_Idioms_Named_Collection_Of_Declarations:
+.. _Ada_In_Practice_Named_Collection_Of_Declarations:
 
 Named Collection of Declarations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,7 +116,7 @@ idiom provides the way to declare it. Note also that global *constants*
 are less problematic than variables because they can't be changed.
 
 
-.. _Ada_Idioms_Groups_Of_Related_Program_Units:
+.. _Ada_In_Practice_Groups_Of_Related_Program_Units:
 
 Groups of Related Program Units
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,7 +151,7 @@ For example:
 In this example, :ada:`Vector` and :ada:`Matrix` are the types under
 consideration. The type :ada:`Real` might be declared here too, but it might be
 better declared in a
-:ref:`Named Collection of Declarations <Ada_Idioms_Named_Collection_Of_Declarations>`
+:ref:`Named Collection of Declarations <Ada_In_Practice_Named_Collection_Of_Declarations>`
 package referenced in a with_clause. In any case, this package declares types
 and subprograms that manipulate values of those types.
 
