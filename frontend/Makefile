@@ -114,11 +114,11 @@ test_content_courses_advanced-spark:                                           #
 	$(eval CONTENT_CHAPTERS := courses/advanced-spark/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_courses_ada-idioms:                                               ## Test course: Ada Idioms.
-	@echo "===== ADA IDIOMS ====="
+test_content_courses_ada-in-practice:                                          ## Test course: Ada In Practice.
+	@echo "===== ADA IN PRACTICE ====="
 	$(eval MAX_SRC_COLUMNS := 80)
 	$(eval DIR_LEVELS := 0)
-	$(eval CONTENT_CHAPTERS := courses/ada-idioms/chapters)
+	$(eval CONTENT_CHAPTERS := courses/ada-in-practice/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
 test_content_courses_whats-new-in-ada-2022:                                    ## Test course: What's New in Ada 2022.
