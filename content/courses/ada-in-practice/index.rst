@@ -3,8 +3,8 @@
 
 .. _Ada_In_Practice_Course_Index:
 
-Ada Idioms
-==========
+Ada In Practice
+===============
 
 .. include:: ../global.txt
 
