@@ -91,11 +91,11 @@ Ada In Practice
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/pdf_books/courses/ada-idioms.pdf">
+            <a class="ebook-download-button" href="/pdf_books/courses/ada-in-practice.pdf">
                 Download PDF
             </a>
 
-            <a class="ebook-download-button" href="/epub_books/courses/ada-idioms.epub">
+            <a class="ebook-download-button" href="/epub_books/courses/ada-in-practice.epub">
                 Download EPUB
             </a>
 
