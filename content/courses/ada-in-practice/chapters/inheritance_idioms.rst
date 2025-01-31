@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Inheritance_Idioms:
+.. _Ada_In_Practice_Inheritance_Idioms:
 
 Using Building Blocks to Express Inheritance Idioms
 ===================================================
@@ -57,8 +57,8 @@ popular term that we will use too. For example, a cat *is a* mammal, and also is
 an animal.
 
 The fundamental difference between
-:ref:`Subtype Inheritance <Ada_Idioms_Subtype_Inheritance>` and
-:ref:`Implementation Inheritance <Ada_Idioms_Implementation_Inheritance>` is
+:ref:`Subtype Inheritance <Ada_In_Practice_Subtype_Inheritance>` and
+:ref:`Implementation Inheritance <Ada_In_Practice_Implementation_Inheritance>` is
 whether clients have compile-time visibility to the *is-a* relationship between
 the parent and child types. The relationship exists in both idioms but is only
 visible to clients in one. In Subtype Inheritance, clients do have compile-time
@@ -79,7 +79,7 @@ Ada uses distinct *building block* constructs to compose types that have
 specific characteristics and capabilities. In particular, Ada packages, with
 their control over compile-time visibility, are modules. Private types are
 combined with packages to define
-:ref:`abstract data types <Ada_Idioms_Abstract_Data_Types>` having hidden
+:ref:`abstract data types <Ada_In_Practice_Abstract_Data_Types>` having hidden
 representations. Sets of related types are presented explicitly by class-wide
 types.
 
@@ -194,20 +194,20 @@ then show the two idiom expressions in separate subsections.
 
 - We  assume that the parent type and the child type are both private
   types, i.e., abstract data types, because that is the best practice. See the
-  :ref:`Abstract Data Type idiom <Ada_Idioms_Abstract_Data_Types>` for
+  :ref:`Abstract Data Type idiom <Ada_In_Practice_Abstract_Data_Types>` for
   justification and details.
 
 - To provide the most general capabilities, we assume the parent type is
   visibly tagged.
 
 - We're going to declare the child type in a distinct, dedicated package,
-  following the :ref:`ADT idiom <Ada_Idioms_Abstract_Data_Types>`. This package
+  following the :ref:`ADT idiom <Ada_In_Practice_Abstract_Data_Types>`. This package
   may or may not be a child of the parent package. This implementation's
   approach does not require a child package's special compile-time visibility,
   although a child package is often necessary for the sake of that visibility.
 
 - Whether the child type is visibly derived will vary with the
-  :ref:`inheritance idiom <Ada_Idioms_Implementation_Inheritance>` implementation.
+  :ref:`inheritance idiom <Ada_In_Practice_Implementation_Inheritance>` implementation.
 
 To avoid unnecessary code duplication, we use
 the same parent type, declared as a simple tagged private type, in the examples
@@ -227,7 +227,7 @@ follows:
     end P;
 
 
-.. _Ada_Idioms_Subtype_Inheritance:
+.. _Ada_In_Practice_Subtype_Inheritance:
 
 Subtype Inheritance
 ~~~~~~~~~~~~~~~~~~~
@@ -258,10 +258,10 @@ declared in the visible part as well, as will any overriding declarations for
 those inherited operations that are to be changed.
 
 For example, here is a basic bank account
-:ref:`ADT <Ada_Idioms_Abstract_Data_Types>` that we will use as the parent type
+:ref:`ADT <Ada_In_Practice_Abstract_Data_Types>` that we will use as the parent type
 in a derivation:
 
-.. code:: ada no_button project=Courses.Ada_Idioms.Inheritance_Idioms.Subtype_Inheritance_Bank switches=Compiler(-gnatX)
+.. code:: ada no_button project=Courses.Ada_In_Practice.Inheritance_Idioms.Subtype_Inheritance_Bank switches=Compiler(-gnatX)
 
     with Ada.Strings.Unbounded;  use Ada.Strings.Unbounded;
     with Ada.Containers.Doubly_Linked_Lists;
@@ -328,7 +328,7 @@ in a derivation:
 We could then declare an interest-bearing bank account using Subtype
 Inheritance:
 
-.. code:: ada no_button project=Courses.Ada_Idioms.Inheritance_Idioms.Subtype_Inheritance_Bank switches=Compiler(-gnatX)
+.. code:: ada no_button project=Courses.Ada_In_Practice.Inheritance_Idioms.Subtype_Inheritance_Bank switches=Compiler(-gnatX)
 
     package Bank.Interest_Bearing is
 
@@ -432,7 +432,7 @@ fulfilled. :ada:`Circle` inherits :ada:`Shape` operations because
 can do more than is contractually required by the client view is perfectly fine.
 
 
-.. _Ada_Idioms_Implementation_Inheritance:
+.. _Ada_In_Practice_Implementation_Inheritance:
 
 Implementation Inheritance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -477,7 +477,7 @@ for unbounded queues. As such, the :ada:`Queue` type uses dynamic allocation
 internally. This specific version automatically reclaims the allocated storage
 when objects of the :ada:`Queue` type cease to exist:
 
-.. code:: ada no_button project=Courses.Ada_Idioms.Inheritance_Idioms.Implementation_Inheritance_Queue
+.. code:: ada no_button project=Courses.Ada_In_Practice.Inheritance_Idioms.Implementation_Inheritance_Queue
 
     with Ada.Finalization;
     generic
@@ -568,7 +568,7 @@ it really is.
 Relationship With Other Idioms
 ------------------------------
 
-We assume the :ref:`Abstract Data Type idiom <Ada_Idioms_Abstract_Data_Types>`,
+We assume the :ref:`Abstract Data Type idiom <Ada_In_Practice_Abstract_Data_Types>`,
 so we are using private types throughout. That includes the child type, and, as
 we saw, allows us to control the compile-time visibility to the parent type.
 

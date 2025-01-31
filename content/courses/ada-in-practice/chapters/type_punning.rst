@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Type_Punning:
+.. _Ada_In_Practice_Type_Punning:
 
 Type Punning
 ============
@@ -141,7 +141,7 @@ right thing anyway, but this makes it certain.
 
 Here is a simple main program that illustrates the approach.
 
-.. code:: ada run_button project=Courses.Ada_Idioms.Type_Punning.Solutions.Overlay
+.. code:: ada run_button project=Courses.Ada_In_Practice.Type_Punning.Solutions.Overlay
 
    with Ada.Text_IO;  use Ada.Text_IO;
 
@@ -244,7 +244,7 @@ is not :ada:`To_Acceleration_Pointer`.
 
 The following is the device driver routine for getting the scaled accelerations
 from the device. The type :ada:`Three_Axis_Accelerometer` is the device driver
-:ref:`ADT <Ada_Idioms_Abstract_Data_Types>`, and type :ada:`Axes_Accelerations`
+:ref:`ADT <Ada_In_Practice_Abstract_Data_Types>`, and type :ada:`Axes_Accelerations`
 is a record type containing the three axis values. The procedure gets the raw
 acceleration values from the device and scales them per the current device
 sensitivity, returning all three in the mode-out record parameter.
@@ -300,7 +300,7 @@ sensitivity, returning all three in the mode-out record parameter.
 
 This procedure first reads the six bytes representing all three acceleration
 values into the array :ada:`Buffer`. Procedure :ada:`Loc_IO_Read` is defined
-by the driver :ref:`ADT <Ada_Idioms_Abstract_Data_Types>`. The constants
+by the driver :ref:`ADT <Ada_In_Practice_Abstract_Data_Types>`. The constants
 :ada:`OUT_n_L` and :ada:`OUT_n_H`, also defined by the driver, specify the low-order and high-order bytes
 requested for the given *n* axis. Then the declare blocks do the actual scaling
 and that's where the type punning is applied to the :ada:`Buffer` content.

@@ -130,12 +130,12 @@ body, as both parts contain implementation artifacts. In class-oriented
 languages, parts of the class can be marked as *public,* *private*, and
 *protected* (the details depend on the specific language).
 
-The idioms :ref:`Abstract Data Types <Ada_Idioms_Abstract_Data_Types>`
-and :ref:`Abstract Data Machines <Ada_Idioms_Abstract_Data_Machines>` are
+The idioms :ref:`Abstract Data Types <Ada_In_Practice_Abstract_Data_Types>`
+and :ref:`Abstract Data Machines <Ada_In_Practice_Abstract_Data_Machines>` are
 prime examples used throughout the other idioms.
 
 The idioms explored in :ref:`Fundamental Packages
-<Ada_Idioms_Essential_Design_Idioms_For_Packages>` are largely
+<Ada_In_Practice_Essential_Design_Idioms_For_Packages>` are largely
 variations on expressing this control in Ada.
 
 More details on the topic are provided in those idioms.

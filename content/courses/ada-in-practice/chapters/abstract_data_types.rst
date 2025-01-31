@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Abstract_Data_Types:
+.. _Ada_In_Practice_Abstract_Data_Types:
 
 Abstract Data Types
 ===================
@@ -9,7 +9,7 @@ Motivation
 ----------
 
 In the
-:ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>` idiom,
+:ref:`Groups of Related Program Units <Ada_In_Practice_Groups_Of_Related_Program_Units>` idiom,
 client compile-time visibility to the type's representation is both an
 advantage and a disadvantage. Visibility to the representation makes available
 the expressiveness of low-level syntax, such as array indexing and aggregates,
@@ -26,7 +26,7 @@ bound. The likely representation for the :ada:`Stack` type will require both
 an array for the contained values and a *stack pointer* indicating the *top* of
 the stack. Hence this will be a composite type, probably a record type. If we
 use the
-:ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>`
+:ref:`Groups of Related Program Units <Ada_In_Practice_Groups_Of_Related_Program_Units>`
 idiom the code might look like this:
 
 .. code-block:: ada
@@ -166,7 +166,7 @@ internal representation.
 Consider the following revision to the package :ada:`Integer_Stacks`, now as
 an ADT:
 
-.. _Ada_Idioms_Abstract_Data_Types_Code_Example:
+.. _Ada_In_Practice_Abstract_Data_Types_Code_Example:
 
 .. code-block:: ada
 
@@ -225,7 +225,7 @@ former case. When it is strictly an implementation artifact, as in this
 case, it should be in the private part so that it's hidden from clients.
 
 The ADT idiom extends the information hiding applied by the
-:ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>`
+:ref:`Groups of Related Program Units <Ada_In_Practice_Groups_Of_Related_Program_Units>`
 idiom to include the type's representation.
 
 The compile-time lack of visibility to the representation means that clients no
@@ -353,7 +353,7 @@ Cons
 
 There is more source code text required in an ADT package compared to the idiom
 in which the representation is not hidden (the
-:ref:`Groups of Related Program Units <Ada_Idioms_Groups_Of_Related_Program_Units>`).
+:ref:`Groups of Related Program Units <Ada_In_Practice_Groups_Of_Related_Program_Units>`).
 The bulk of the additional text is due to the functions and procedures
 required to provide the capabilities that the low-level representation-based
 syntax might have provided, i.e., the *constructor* and *selector/accessor*
@@ -366,10 +366,10 @@ Relationship With Other Idioms
 ------------------------------
 
 The package-oriented idioms described here and
-:ref:`previously <Ada_Idioms_Essential_Design_Idioms_For_Packages>`
+:ref:`previously <Ada_In_Practice_Essential_Design_Idioms_For_Packages>`
 are the foundational program composition idioms because packages are the
 primary structuring unit in Ada. That is especially true of the
-:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` idiom, which is the
+:ref:`Abstract Data Type <Ada_In_Practice_Abstract_Data_Types>` idiom, which is the
 primary type specification facility in Ada. We will
 describe additional package-oriented idioms,
 especially regarding hierarchical packages, but those kinds

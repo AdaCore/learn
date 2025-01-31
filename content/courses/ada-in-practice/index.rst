@@ -1,7 +1,7 @@
 :prev_state: False
 :next_state: False
 
-.. _Ada_Idioms_Course_Index:
+.. _Ada_In_Practice_Course_Index:
 
 Ada Idioms
 ==========

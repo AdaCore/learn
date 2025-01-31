@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Abstract_Data_Machines:
+.. _Ada_In_Practice_Abstract_Data_Machines:
 
 Abstract Data Machines
 ======================
@@ -22,7 +22,7 @@ How can the software representing the abstraction best implement this
 requirement?
 
 The Abstract Data Type (ADT) :ref:`Abstract Data Type
-<Ada_Idioms_Abstract_Data_Types>` idiom is the primary abstraction
+<Ada_In_Practice_Abstract_Data_Types>` idiom is the primary abstraction
 definition facility in Ada. Given an ADT that provides the required
 facility you could simply declare a single object of the type. But how
 could you ensure that some other client, perhaps in the future, doesn't
@@ -45,7 +45,7 @@ implementation only creates one such object, so multiple object
 declarations are precluded.
 
 Singletons can be expressed easily in Ada
-:ref:`Controlling Object Initialization and Creation <Ada_Idioms_Controlling_Object_Initialization_And_Creation>`
+:ref:`Controlling Object Initialization and Creation <Ada_In_Practice_Controlling_Object_Initialization_And_Creation>`
 but there is an alternative in this specific situation.
 
 This idiom entry describes the alternative, known as the Abstract Data
@@ -134,7 +134,7 @@ Consider the following ADM version of the package :ada:`Integer_Stacks`, now
 renamed to :ada:`Integer_Stack` for reasons we will discuss shortly. In this
 version we declare the state in the package body.
 
-.. _Ada_Idioms_Abstract_Data_Machines_Code_Example:
+.. _Ada_In_Practice_Abstract_Data_Machines_Code_Example:
 
 .. code-block:: ada
 
@@ -242,7 +242,7 @@ declare the data in the package body.
 The ADM idiom applies information hiding to the internal state, like the
 ADT idiom, except that the state is not in an object declared by the
 client. Also, like the :ref:`Groups of Related Program Units
-<Ada_Idioms_Groups_Of_Related_Program_Units>`, the implementations of
+<Ada_In_Practice_Groups_Of_Related_Program_Units>`, the implementations of
 the visible subprograms are hidden in the package body, along with any
 non-visible entities required for their implementation.
 

@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Controlling_Object_Initialization_And_Creation:
+.. _Ada_In_Practice_Controlling_Object_Initialization_And_Creation:
 
 Controlling Object Initialization and Creation
 ==============================================
@@ -145,7 +145,7 @@ up to :ada:`Top`.
 And of course, the initial value might require client-specific information.
 
 Calling a
-:ref:`constructor function <Ada_Idioms_Constructor_Functions_For_Abstract_Data_Types>`
+:ref:`constructor function <Ada_In_Practice_Constructor_Functions_For_Abstract_Data_Types>`
 for the initial value would be the right approach in these cases, returning an
 object of the type. The function might even take an existing object as a
 parameter, creating a new object with only the necessary parts copied.
@@ -163,7 +163,7 @@ Preventing object creation is not typical but is not unknown. The
 is an example, in which a type is defined but corresponding object creation by
 clients is not intended. Instead, the abstraction implementation creates a
 single object of the type. The abstraction is a type, rather than an
-:ref:`ADM <Ada_Idioms_Abstract_Data_Machines>`, for the sake of potential
+:ref:`ADM <Ada_In_Practice_Abstract_Data_Machines>`, for the sake of potential
 extension via inheritance. We will illustrate this design pattern and implementation
 using a real-world hardware device.
 
@@ -185,7 +185,7 @@ are initialized before read.)
 
     Add link to SPARK ref for data initialization
 
-The :ref:`ADT idiom <Ada_Idioms_Abstract_Data_Types>` describes Ada *building
+The :ref:`ADT idiom <Ada_In_Practice_Abstract_Data_Types>` describes Ada *building
 blocks* that developers can use to compose types with semantics that we
 require. We can declare a type to be private, for example, so that the
 implementation is not compile-time visible to clients.
@@ -196,7 +196,7 @@ things) for client objects of the type. We can combine the two building blocks,
 creating a type that is both private and limited.
 
 Throughout this discussion we will assume that these designs are based on
-:ref:`Abstract Data Types <Ada_Idioms_Abstract_Data_Types>`, hence we assume
+:ref:`Abstract Data Types <Ada_In_Practice_Abstract_Data_Types>`, hence we assume
 the use of private types. That's a general, initial design assumption but in
 this case private types are required by the two idiom implementations. The types are
 not necessarily limited as well, but in one situation they will be limited too.
@@ -287,7 +287,7 @@ private.
 
 Unknown discriminants can be specified for various kinds of types, not only
 private types. See the
-:ref:`Notes section <Ada_Idioms_Controlling_Object_Initialization_And_Creation_Notes>`
+:ref:`Notes section <Ada_In_Practice_Controlling_Object_Initialization_And_Creation_Notes>`
 for the full list. That said, combining them with private type declarations, or
 private type extension declarations, is the most common usage when composing
 abstraction definitions. For example:
@@ -509,7 +509,7 @@ value. The compiler will not compile the code containing the declaration
 otherwise. The only constructor function provided is
 :ada:`Configured_Controller` so it is guaranteed to be called. (A later child
 package could add another
-:ref:`constructor function <Ada_Idioms_Constructor_Functions_For_Abstract_Data_Types>`.
+:ref:`constructor function <Ada_In_Practice_Constructor_Functions_For_Abstract_Data_Types>`.
 For that matter, we probably should have declared this one in a child package.
 In any case one of them is guaranteed to be called.)
 
@@ -967,7 +967,7 @@ class-wide type so that extensions could use it to allocate objects of their
 specific type, otherwise extensions in child packages would have no need for
 it. But that only saves the storage for an access object in the child packages,
 so we leave the declaration in the parent package body. See the
-:ref:`Programming by Extension idiom <Ada_Idioms_Programming_By_Extension>`
+:ref:`Programming by Extension idiom <Ada_In_Practice_Programming_By_Extension>`
 for a discussion of whether to declare an entity in the package private part or
 the package body.
 
@@ -1239,11 +1239,11 @@ None.
 Relationship With Other Idioms
 ------------------------------
 
-The :ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` is assumed, in
+The :ref:`Abstract Data Type <Ada_In_Practice_Abstract_Data_Types>` is assumed, in
 the form of a private type.
 
 
-.. _Ada_Idioms_Controlling_Object_Initialization_And_Creation_Notes:
+.. _Ada_In_Practice_Controlling_Object_Initialization_And_Creation_Notes:
 
 Notes
 ----------------------------------------------------------

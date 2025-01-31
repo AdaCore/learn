@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Component_Access_To_Enclosing_Record_Objects:
+.. _Ada_In_Practice_Component_Access_To_Enclosing_Record_Objects:
 
 Providing Component Access to Enclosing Record Objects
 ======================================================
@@ -67,7 +67,7 @@ entities being represented in software. Representing these entities as multiple
 objects declared of a single type is by far the most reasonable approach.
 
 We assume the functional unit will be implemented as an
-:ref:`Abstract Data Type (ADT) <Ada_Idioms_Abstract_Data_Types>`. Strictly
+:ref:`Abstract Data Type (ADT) <Ada_In_Practice_Abstract_Data_Types>`. Strictly
 speaking, the ADT idiom is not required here, but that is the best approach for
 defining major types, for the good reasons given in that idiom entry. There's
 no reason not to use an ADT in this case so we will.
@@ -307,7 +307,7 @@ designs.
 
 Here's the resulting package declaration for the serial IO device ADT. Parts of
 the package are elided for simplicity (the full code is
-:ref:`at the end of this idiom entry <Ada_Idioms_Serial_IO_Complete_Example>`):
+:ref:`at the end of this idiom entry <Ada_In_Practice_Serial_IO_Complete_Example>`):
 
 .. code-block:: ada
 
@@ -395,7 +395,7 @@ Here is the client view of the ADT for the interrupt-driven implementation:
     end Serial_IO.Interrupt_Driven;
 
 The declaration of type :ada:`Serial_Port` uses
-:ref:`Interface Inheritance <Ada_Idioms_Inheritance_Idioms>` to extend
+:ref:`Interface Inheritance <Ada_In_Practice_Inheritance_Idioms>` to extend
 :ada:`Serial_IO.Device` with both visible and hidden components. The three
 visible extension components are the discriminants :ada:`Transceiver`,
 :ada:`IRQ`, and :ada:`IRQ_Priority`. :ada:`Transceiver` will designate the
@@ -552,11 +552,11 @@ Relationship With Other Idioms
 -------------------------------
 
 This idiom is useful when we have a record type enclosing a PO or task object.
-If the :ref:`Abstract Data Machine (ADM) <Ada_Idioms_Abstract_Data_Machines>`
+If the :ref:`Abstract Data Machine (ADM) <Ada_In_Practice_Abstract_Data_Machines>`
 would instead be appropriate, the necessary visibility can be achieved without
 requiring this implementation approach because there would be no enclosing record type.
 But as described in the ADM discussion, the
-:ref:`ADT approach <Ada_Idioms_Abstract_Data_Types>` is usually superior.
+:ref:`ADT approach <Ada_In_Practice_Abstract_Data_Types>` is usually superior.
 
 
 Notes
@@ -570,7 +570,7 @@ record component types. We could use the Hardware Abstraction Layer
 affect the idiom expression itself.
 
 
-.. _Ada_Idioms_Serial_IO_Complete_Example:
+.. _Ada_In_Practice_Serial_IO_Complete_Example:
 
 
 Full Source Code for Selected Units

@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Constructor_Functions_For_Abstract_Data_Types:
+.. _Ada_In_Practice_Constructor_Functions_For_Abstract_Data_Types:
 
 Constructor Functions For Abstract Data Types
 =============================================
@@ -25,7 +25,7 @@ existing parent type.
 
 This discussion assumes these tagged types are declared in packages designed
 using the
-:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` (ADT) idiom.
+:ref:`Abstract Data Type <Ada_In_Practice_Abstract_Data_Types>` (ADT) idiom.
 We strongly recommend the reader be comfortable with that idiom before
 proceeding.
 
@@ -98,7 +98,7 @@ their inheritance.
 The explanation and illustration for these rules first requires explanation of
 the word *abstract*. We mentioned above that the package enclosing the
 type will be designed with the
-:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` idiom. In that idiom
+:ref:`Abstract Data Type <Ada_In_Practice_Abstract_Data_Types>` idiom. In that idiom
 *abstract* means that the type represents an abstraction. (See that section for
 the details.)
 

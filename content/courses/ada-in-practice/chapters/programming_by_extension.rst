@@ -1,4 +1,4 @@
-.. _Ada_Idioms_Programming_By_Extension:
+.. _Ada_In_Practice_Programming_By_Extension:
 
 Programming by Extension
 ========================
@@ -23,9 +23,9 @@ package that do not make declarations compile-time visible to client code.
 Some of these entities must be declared in the package private part because
 they are required in the declaration of some other entity appearing in that
 part. For example, when using the
-:ref:`ADT idiom <Ada_Idioms_Abstract_Data_Types>`, an ancillary type might be
+:ref:`ADT idiom <Ada_In_Practice_Abstract_Data_Types>`, an ancillary type might be
 required for the completion of the private type. That was the case with the
-:ref:`ADT version <Ada_Idioms_Abstract_Data_Types_Code_Example>` of the
+:ref:`ADT version <Ada_In_Practice_Abstract_Data_Types_Code_Example>` of the
 :ada:`Integer_Stacks` package, repeated here for convenience:
 
 .. code-block:: ada
@@ -59,7 +59,7 @@ alternatively be declared in the package declaration's private part. Those are
 the entities (declarations) in question for this idiom.
 
 For a concrete example, here is an elided
-:ref:`ADM version of the stack abstraction <Ada_Idioms_Abstract_Data_Machines_Code_Example>`,
+:ref:`ADM version of the stack abstraction <Ada_In_Practice_Abstract_Data_Machines_Code_Example>`,
 with the stack state declared in the package body:
 
 .. code-block:: ada
@@ -86,7 +86,7 @@ with the stack state declared in the package body:
 
 We could add the private part to the package declaration and move the
 state of the
-:ref:`ADM <Ada_Idioms_Abstract_Data_Machines>` |mdash| the two variables in
+:ref:`ADM <Ada_In_Practice_Abstract_Data_Machines>` |mdash| the two variables in
 this case |mdash| up there without any other changes. The subprogram bodies
 have the same visibility to the two variables either way. (There is no
 requirement for the :ada:`Content` type because :ada:`Values` is not a record
@@ -219,8 +219,8 @@ Relationship With Other Idioms
 ------------------------------
 
 We assume the use of the
-:ref:`Abstract Data Type <Ada_Idioms_Abstract_Data_Types>` or
-:ref:`Abstract Data Machine <Ada_Idioms_Abstract_Data_Machines>` idioms for the
+:ref:`Abstract Data Type <Ada_In_Practice_Abstract_Data_Types>` or
+:ref:`Abstract Data Machine <Ada_In_Practice_Abstract_Data_Machines>` idioms for the
 existing package abstraction, as well as for the child package.
 
 
