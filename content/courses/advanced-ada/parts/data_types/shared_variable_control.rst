@@ -645,7 +645,7 @@ before updating the :ada:`ID`.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Another function from the :ada:`System.Atomic_Operations.Exchange` package is
-:ada:`Atomic_Compare_And_Exchange`, which perform the following operations
+:ada:`Atomic_Compare_And_Exchange`, which performs the following operations
 atomically:
 
 .. code-block:: ada
@@ -668,7 +668,7 @@ atomically:
        end if;
     end Atomic_Exchange;
 
-This function that be used for
+This function can be used for
 :wikipedia:`lazy initialization <Lazy_initialization>` of variables. For
 example, consider an application with multiple tasks that make use of a certain
 value that isn't initialized at its declaration, but at a later point in time
