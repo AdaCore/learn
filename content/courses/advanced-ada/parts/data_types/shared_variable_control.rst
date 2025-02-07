@@ -397,7 +397,7 @@ Later on, we talk again about the
 :ref:`System'To_Address attribute <Adv_Ada_System_To_Address>`.
 
 In addition to atomic objects, we can declare atomic types |mdash| similar to
-what we've seen before for volatile objects. For example:
+what we've seen before for volatile types. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic.Types
 
