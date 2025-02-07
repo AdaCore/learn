@@ -662,9 +662,14 @@ a test application:
 The example contains assignments such as :ada:`WR.Horizontal_Cnt := 800` and
 :ada:`WR.Vertical_Cnt:= 600`. Because :ada:`Window_Register` is a full-access
 type, these assignments are performed for the complete 32-bit register, even
-though we're updating just a single component of the record object. (Note that
-if :ada:`Window_Register` wasn't a *full-access* object, an assignment such as
-:ada:`WR.Horizontal_Cnt := 800` could be performed with a 16-bit operation.)
+though we're updating just a single component of the record object.
+
+Note that if :ada:`Window_Register` wasn't a *full-access* object, an
+assignment such as :ada:`WR.Horizontal_Cnt := 800` could be performed with a
+16-bit operation. In fact, this is what a compiler would most probably select
+for this assignment, because that is more efficient than manipulating the
+entire object. Therefore, using a *full-access* object prevents the compiler
+from generating operations that could lead to unexpected results.
 
 Whenever possible, this *full-access* assignment is performed in a single
 machine operation. However, if it's not possible to generate a single machine
