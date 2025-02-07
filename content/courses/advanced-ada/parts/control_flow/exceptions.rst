@@ -829,26 +829,32 @@ For completeness, these are the error conditions checked by the
 `Action Item (AI) 12-0309 document <http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/ai12-0309-1.txt?rev=1.5&raw=N>`_),
 according to their definition in the Ada Reference Manual:
 
-- :arm22:`3.2.4 Subtype Predicates <3-2-4>` (29.1/4): it checks that subtypes
-  with predicates are not used to index an array in a generic bodies;
-
-- :arm22:`5.5 Loop Statements <5-5>` (8.1/5): it checks that the maximum number
-  of chunks is greater than zero;
-
-- :arm22:`Parameter Associations <6-4-1>` (13.4/4): it checks that the default
-  value of an out parameter is convertible: an error occurs when we have an out
-  parameter with :ada:`Default_Value`, and the actual is a view conversion of
-  an unrelated type that does not have :ada:`Default_Value`.
-
-- :arm22:`Formal Private and Derived Types <12-5-1>` (23.3/2): it checks that
-  there is no misuse of functions in a generic with a class-wide actual type.
-
-- :arm22:`Operational and Representation Attributes <13-3>` (75.1/3): it checks
-  that that there are no colliding :ada:`External_Tag` values.
-
-- :arm22:`Unchecked Union Types <B-3-3>` (22/2): it checks that there is no
-  misuse of operations of :ada:`Unchecked_Unions` without inferable
-  discriminants.
++---------------------------------------------------------------+-----------+-------------------------------------------------+
+| Ada Reference Manual                                          | Paragraph | Description                                     |
++===============================================================+===========+=================================================+
+| :arm22:`3.2.4 Subtype Predicates <3-2-4>`                     | (29.1/4)  | It checks that subtypes with predicates are     |
+|                                                               |           | not used to index an array in a generic bodies. |
++---------------------------------------------------------------+-----------+-------------------------------------------------+
+| :arm22:`5.5 Loop Statements <5-5>`                            | (8.1/5)   | It checks that the maximum number of chunks is  |
+|                                                               |           | greater than zero.                              |
++---------------------------------------------------------------+-----------+-------------------------------------------------+
+| :arm22:`6.4.1 Parameter Associations <6-4-1>`                 | (13.4/4)  | It checks that the default value of an out      |
+|                                                               |           | parameter is convertible: an error occurs when  |
+|                                                               |           | we have an out parameter with                   |
+|                                                               |           | :ada:`Default_Value`, and the actual is a       |
+|                                                               |           | view conversion of an unrelated type that does  |
+|                                                               |           | not have :ada:`Default_Value`.                  |
++---------------------------------------------------------------+-----------+-------------------------------------------------+
+| :arm22:`12.5.1 Formal Private and Derived Types <12-5-1>`     | (23.3/2)  | It checks that there is no misuse of functions  |
+|                                                               |           | in a generic with a class-wide actual type.     |
++---------------------------------------------------------------+-----------+-------------------------------------------------+
+| :arm22:`13.3 Operational and Representation Attributes <13-3>`| (75.1/3)  | It checks that there are no colliding           |
+|                                                               |           | :ada:`External_Tag` values.                     |
++---------------------------------------------------------------+-----------+-------------------------------------------------+
+| :arm22:`B.3.3 Unchecked Union Types <B-3-3>`                  | (22/2)    | It checks that there is no misuse of            |
+|                                                               |           | operations of :ada:`Unchecked_Unions` without   |
+|                                                               |           | inferable discriminants.                        |
++---------------------------------------------------------------+-----------+-------------------------------------------------+
 
 .. admonition:: In the Ada Reference Manual
 
