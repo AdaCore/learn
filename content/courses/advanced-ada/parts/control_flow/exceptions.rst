@@ -808,6 +808,7 @@ body.) Therefore,  at runtime, the elaboration check fails because the body of
 the first declaration of the :ada:`F` function is actually missing.
 
 
+.. _Adv_Ada_Program_Error_Check:
 
 :ada:`Program_Error_Check`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
