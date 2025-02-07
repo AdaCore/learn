@@ -879,22 +879,23 @@ units:
     package body Some_Generic_Package is
 
        procedure Process is
-          type Arr is array (R) of Integer;
-          L : Arr := (others => 0);
+          type Arr is
+            array (R) of Integer;
+
+          Dummy : Arr := (others => 0);
        begin
           null;
        end Process;
 
     end Some_Generic_Package;
 
-    with Ada.Text_IO;  use Ada.Text_IO;
-
     with Some_Generic_Package;
 
     procedure Show_Subtype_Predicate_Programm_Error is
 
        type Custom_Range is range 1 .. 5
-         with Dynamic_Predicate => Custom_Range not in 4;
+         with Dynamic_Predicate =>
+                Custom_Range not in 4;
 
        package P is new
          Some_Generic_Package (Custom_Range);
