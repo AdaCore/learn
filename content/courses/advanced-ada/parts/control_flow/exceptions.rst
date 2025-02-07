@@ -873,9 +873,7 @@ checks fails and raises a :ada:`Storage_Error` exception.
         - Complete section!
 
 
-.. admonition:: In the Ada Reference Manual
 
-    - :arm22:`11.5 Suppressing Checks <11-5>`
 
 
 ``Ada.Exceptions`` package
