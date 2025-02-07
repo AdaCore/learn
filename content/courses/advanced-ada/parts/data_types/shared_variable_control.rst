@@ -780,7 +780,8 @@ As we already know,
 :ref:`atomic objects <Adv_Ada_Shared_Variable_Control_Atomic>` only accept
 atomic reads and updates, which |mdash| as a whole |mdash| are indivisible,
 i.e. they must be done in a single instruction, so that no other instruction
-could execute on that same object before the read or update completes.
+could execute on that same object before the read or update completes. (Again,
+if an object is atomic, this implies it is also volatile.)
 
 In the case of atomic full-access objects, the complete object must be read and
 updated. Ideally, this operation corresponds to a single atomic
