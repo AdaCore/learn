@@ -5,6 +5,19 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2025-01
+---------------
+
+- New chapter:
+
+    - :doc:`Shared Variable Control <parts/data_types/shared_variable_control>`
+
+        - Note: these are editorial changes, as the content was moved
+          from the
+          :doc:`Types and Representation <parts/data_types/types_representation>`
+          chapter.
+
+
 Release 2024-11
 ---------------
 
