@@ -491,6 +491,12 @@ simultaneously a
 :ref:`atomic type <Adv_Ada_Shared_Variable_Control_Atomic>`. (In other words,
 if a type is neither volatile nor atomic, it cannot be a full access type.)
 
+.. admonition:: Important
+
+    Just as a reminder, any atomic type is automatically also
+    :ref:`volatile <Adv_Ada_Shared_Variable_Control_Volatile>` and
+    :ref:`independent <Adv_Ada_Shared_Variable_Control_Independent>`.
+
 Let's see some examples:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Types
