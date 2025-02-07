@@ -806,6 +806,11 @@ body.) Therefore,  at runtime, the elaboration check fails because the body of
 the first declaration of the :ada:`F` function is actually missing.
 
 
+
+:ada:`Program_Error_Check`
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 .. _Adv_Ada_Storage_Check:
 
 Storage Check
@@ -850,19 +855,7 @@ there isn't enough reserved storage space before the second allocation, the
 checks fails and raises a :ada:`Storage_Error` exception.
 
 
-..
-    TO BE DONE:
 
-    :ada:`Program_Error_Check`
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. admonition:: In the Ada Reference Manual
-
-        - :arm22:`11.5 Suppressing Checks <11-5>`
-
-    .. todo::
-
-        - Complete section!
 
 
 ..
