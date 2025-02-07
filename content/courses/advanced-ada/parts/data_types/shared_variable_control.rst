@@ -765,7 +765,7 @@ update via the :ada:`Refresh_Needed` flag, but keep the same horizontal count:
     end Show_Registers;
 
 A delta assignment using an aggregate such as :ada:`(WR with delta ...)`
-includes reading the value of complete 32-bit :ada:`WR` object from memory,
+includes reading the value of the complete 32-bit :ada:`WR` object from memory,
 changing the components specified after :ada:`with delta`, and writing the
 complete 32-bit :ada:`WR` object back to memory. The reason is that we need to
 retrieve the information that is supposed to remain intact |mdash| the
@@ -916,7 +916,7 @@ of the :ada:`Full_Access_Only` aspect.
 
 .. admonition:: For further reading...
 
-    By running on an PC, we can compare the
+    By running on a PC, we can compare the
     :wikipedia:`Intel Assembly <X86_instruction_listings>` code for various
     versions of the code. Let's start with the version using a nonatomic
     full-access version of :ada:`Window_Register` vs. the nonatomic
