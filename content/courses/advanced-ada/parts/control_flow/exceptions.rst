@@ -292,6 +292,8 @@ This table shows all language-defined checks and the associated exceptions:
 +-----------------------------+-------------------------+
 | :ada:`Elaboration_Check`    | :ada:`Program_Error`    |
 +-----------------------------+-------------------------+
+| :ada:`Program_Error_Check`  | :ada:`Program_Error`    |
++-----------------------------+-------------------------+
 | :ada:`Storage_Check`        | :ada:`Storage_Error`    |
 +-----------------------------+-------------------------+
 
@@ -809,6 +811,103 @@ the first declaration of the :ada:`F` function is actually missing.
 
 :ada:`Program_Error_Check`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   This concept was introduced in Ada 2022.
+
+As we've seen before, there are three checks that may raise a
+:ada:`Program_Error` exception: the :ada:`Accessibility_Check`, the
+:ada:`Allocation_Check` and the :ada:`Elaboration_Check`. In addition to that,
+we have the :ada:`Program_Error_Check`, which is actually a collection of
+various different checks that may raise a :ada:`Program_Error`, but don't have
+a category for themselves.
+
+For completeness, these are the error conditions checked by the
+:ada:`Program_Error_Check` (listed in the
+`Action Item (AI) 12-0309 document <http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/ai12-0309-1.txt?rev=1.5&raw=N>`_),
+according to their definition in the Ada Reference Manual:
+
+- :arm22:`3.2.4 Subtype Predicates <3-2-4>` (29.1/4): it checks that subtypes
+  with predicates are not used to index an array in a generic bodies;
+
+- :arm22:`5.5 Loop Statements <5-5>` (8.1/5): it checks that the maximum number
+  of chunks is greater than zero;
+
+- :arm22:`Parameter Associations <6-4-1>` (13.4/4): it checks that the default
+  value of an out parameter is convertible: an error occurs when we have an out
+  parameter with :ada:`Default_Value`, and the actual is a view conversion of
+  an unrelated type that does not have :ada:`Default_Value`.
+
+- :arm22:`Formal Private and Derived Types <12-5-1>` (23.3/2): it checks that
+  there is no misuse of functions in a generic with a class-wide actual type.
+
+- :arm22:`Operational and Representation Attributes <13-3>` (75.1/3): it checks
+  that that there are no colliding :ada:`External_Tag` values.
+
+- :arm22:`Unchecked Union Types <B-3-3>` (22/2): it checks that there is no
+  misuse of operations of :ada:`Unchecked_Unions` without inferable
+  discriminants.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`11.5 Suppressing Checks <11-5>`
+    - :arm22:`3.2.4 Subtype Predicates <3-2-4>`
+    - :arm22:`5.5 Loop Statements <5-5>`
+    - :arm22:`6.4.1 Parameter Associations <6-4-1>`
+    - :arm22:`12.5.1 Formal Private and Derived Types <12-5-1>`
+    - :arm22:`13.3 Operational and Representation Attributes <13-3>`
+    - :arm22:`B.3.3 Unchecked Union Types <B-3-3>`
+
+
+Example of a :ada:`Program_Error_Check`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Just as an example, let's look at the check for subtypes predicates in generic
+units:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Checks_And_Exceptions.Subtype_Predicate_Programm_Error
+    :class: ada-run-expect-failure
+
+    generic
+       type R is (<>);
+    package Some_Generic_Package is
+       procedure Process;
+    end Some_Generic_Package;
+
+    package body Some_Generic_Package is
+
+       procedure Process is
+          type Arr is array (R) of Integer;
+          L : Arr := (others => 0);
+       begin
+          null;
+       end Process;
+
+    end Some_Generic_Package;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Some_Generic_Package;
+
+    procedure Show_Subtype_Predicate_Programm_Error is
+
+       type Custom_Range is range 1 .. 5
+         with Dynamic_Predicate => Custom_Range not in 4;
+
+       package P is new
+         Some_Generic_Package (Custom_Range);
+       use P;
+    begin
+       Process;
+    end Show_Subtype_Predicate_Programm_Error;
+
+Here, we're using the :ada:`Custom_Range` type for the formal type :ada:`R`
+in the instantiation of the generic package :ada:`Some_Generic_Package`. Since
+we use :ada:`R` as an index for the array type :ada:`Arr` (in the procedure
+:ada:`Process`), we cannot map a type to :ada:`R` that uses a predicate.
+However, because :ada:`Custom_Range` type has a dynamic predicate, the
+:ada:`Program_Error` exception is raised.
 
 
 .. _Adv_Ada_Storage_Check:
