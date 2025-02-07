@@ -870,7 +870,7 @@ according to their definition in the Ada Reference Manual:
 Example of a :ada:`Program_Error_Check`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Just as an example, let's look at the check for subtypes predicates in generic
+Just as an example, let's look at the check for subtype predicates in generic
 units:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Checks_And_Exceptions.Subtype_Predicate_Programm_Error
