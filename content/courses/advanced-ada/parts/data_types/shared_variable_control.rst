@@ -11,6 +11,8 @@ start by discussing volatile objects.
     - :arm22:`C.6 Shared Variable Control <C-6>`
 
 
+.. _Adv_Ada_Shared_Variable_Control_Volatile:
+
 Volatile
 --------
 
@@ -126,6 +128,8 @@ makes sense in the context, of course. In the example above, even though
 :ada:`Volatile_Components` isn't specified in the declaration of the :ada:`Arr`
 array , it's automatically set as well.
 
+
+.. _Adv_Ada_Shared_Variable_Control_Independent:
 
 Independent
 -----------
@@ -393,7 +397,7 @@ Later on, we talk again about the
 :ref:`System'To_Address attribute <Adv_Ada_System_To_Address>`.
 
 In addition to atomic objects, we can declare atomic types |mdash| similar to
-what we've seen before for volatile objects. For example:
+what we've seen before for volatile types. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic.Types
 
@@ -469,20 +473,818 @@ these array declarations are equivalent:
     end Shared_Var_Types;
 
 
-..
-    TO BE DONE:
+.. _Adv_Ada_Shared_Variable_Control_Full_Access_Only:
 
-    :ada:`Full_Access_Only`
-    -----------------------
+Full access only
+----------------
 
-    .. admonition:: Relevant topics
+.. note::
 
-        - :arm22:`The Package System.Atomic_Operations <C-6-1>`
+   This feature was introduced in Ada 2022.
 
-    .. todo::
+A full access object is an object that requires that read or write operations
+on this object are performed by reading or writing all bits of the object (i.e.
+the *full object*) at once. Accordingly, a full access type is a type whose
+objects follow this requirement. Note that a full access type must be
+simultaneously a
+:ref:`volatile type <Adv_Ada_Shared_Variable_Control_Volatile>` or an
+:ref:`atomic type <Adv_Ada_Shared_Variable_Control_Atomic>`. (In other words,
+if a type is neither volatile nor atomic, it cannot be a full access type.)
 
-        - **Briefly** discuss :ada:`Full_Access_Only`
-        - Add to previous section!
+.. admonition:: Important
+
+    Just as a reminder, any atomic type is automatically also
+    :ref:`volatile <Adv_Ada_Shared_Variable_Control_Volatile>` and
+    :ref:`independent <Adv_Ada_Shared_Variable_Control_Independent>`.
+
+Let's see some examples:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Types
+
+    pragma Ada_2022;
+
+    package Show_Full_Access_Only_Types is
+
+       type Nonatomic_Full_Access_Type is
+         new Long_Float
+           with Volatile, Full_Access_Only;
+
+       type Atomic_Full_Access_Type is
+         new Long_Float
+           with Atomic, Full_Access_Only;
+
+    end Show_Full_Access_Only_Types;
+
+Likewise, we can define nonatomic and atomic full-access objects:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Objects
+
+    pragma Ada_2022;
+
+    package Show_Full_Access_Only_Objects is
+
+       Nonatomic_Full_Access_Obj : Long_Float
+         with Volatile, Full_Access_Only;
+
+       Atomic_Full_Access_Obj : Long_Float
+         with Atomic, Full_Access_Only;
+
+    end Show_Full_Access_Only_Objects;
+
+
+.. admonition:: Relevant topics
+
+    - :arm22:`9.10 Shared Variables <9-10>`
+    - :arm22:`C.6 Shared Variable Control <C-6>`
+
+
+.. _Adv_Ada_Shared_Variable_Control_Non_Atomic_Full_Access:
+
+Nonatomic full-access
+~~~~~~~~~~~~~~~~~~~~~
+
+As we already know, the value of a volatile object may be constantly changing,
+so the compiler generates code to read the
+value of the volatile object from memory for each access. (In other words, the
+value cannot be stored in a register for further processing.)
+
+In the case of nonatomic full-access objects, the value of the object must not
+only be read from memory or updated to memory every time, but those operations
+must also be performed for the complete record object |mdash| not just parts of
+it.
+
+Consider the following example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+
+    pragma Ada_2022;
+
+    with System;
+
+    package Registers is
+
+       type Boolean_Bit is new Boolean
+         with Size => 1;
+
+       type UInt1 is mod 2**1
+         with Size => 1;
+
+       type UInt2 is mod 2**2
+         with Size => 2;
+
+       type UInt14 is mod 2**14
+         with Size => 14;
+
+       type Window_Register is record
+          --  horizontal line count
+          Horizontal_Cnt : UInt14 := 16#0#;
+
+          --  unspecified
+          Reserved_14_15 : UInt2  := 16#0#;
+
+          --  vertical line count
+          Vertical_Cnt   : UInt14 := 16#0#;
+
+          --  refresh signalling
+          Refresh_Needed : Boolean_Bit := False;
+
+          --  unspecified
+          Reserved_30    : UInt1  := 16#0#;
+       end record
+         with Size      => 32,
+              Bit_Order => System.Low_Order_First,
+              Volatile,
+              Full_Access_Only;
+
+       for Window_Register use record
+          Horizontal_Cnt at 0 range 0 .. 13;
+          Reserved_14_15 at 0 range 14 .. 15;
+          Vertical_Cnt   at 0 range 16 .. 29;
+          Refresh_Needed at 0 range 30 .. 30;
+          Reserved_30    at 0 range 31 .. 31;
+       end record;
+
+       procedure Show (WR : Window_Register);
+
+    end Registers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Registers is
+
+       procedure Show (WR : Window_Register) is
+       begin
+          Put_Line ("WR = (Horizontal_Cnt => "
+                    & WR.Horizontal_Cnt'Image
+                    & ",");
+          Put_Line ("      Vertical_Cnt   => "
+                    & WR.Vertical_Cnt'Image
+                    & ",");
+          Put_Line ("      Refresh_Needed => "
+                    & WR.Refresh_Needed'Image
+                    & ")");
+       end Show;
+
+    end Registers;
+
+In this example, we have a 32-bit register (of :ada:`Window_Register` type)
+that contains window information for a display:
+
+.. graphviz::
+
+    digraph foo {
+        "Record_R" [
+            label = "{ position | bits | component } |  { 0 | { { #0 .. 13 | Horizontal_Cnt } | { #14 .. #15 | Reserved_14_15 } | { #16 .. #29 | Vertical_Cnt } | { #30 .. #31 | Reserved_30_31 } } }"
+            shape = "record"
+        ];
+   }
+
+Let's use the :ada:`Window_Register` type from the :ada:`Registers` package in
+a test application:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+
+    pragma Ada_2022;
+
+    with Registers;   use Registers;
+
+    procedure Show_Register is
+       WR : Window_Register;
+    begin
+       --  Nonatomic full-access assignments
+       WR.Horizontal_Cnt := 800;
+       WR.Vertical_Cnt   := 600;
+       WR.Refresh_Needed := True;
+
+       Show (WR);
+    end Show_Register;
+
+The example contains assignments such as :ada:`WR.Horizontal_Cnt := 800` and
+:ada:`WR.Vertical_Cnt:= 600`. Because :ada:`Window_Register` is a full-access
+type, these assignments are performed for the complete 32-bit register, even
+though we're updating just a single component of the record object.
+
+Note that if :ada:`Window_Register` wasn't a *full-access* object, an
+assignment such as :ada:`WR.Horizontal_Cnt := 800` could be performed with a
+16-bit operation. In fact, this is what a compiler would most probably select
+for this assignment, because that is more efficient than manipulating the
+entire object. Therefore, using a *full-access* object prevents the compiler
+from generating operations that could lead to unexpected results.
+
+Whenever possible, this *full-access* assignment is performed in a single
+machine operation. However, if it's not possible to generate a single machine
+operation on the target machine, the compiler may generate multiple operations
+for the update of the record components.
+
+Note that we could combine these two assignments into a single one using an
+aggregate:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Registers;   use Registers;
+
+    procedure Show_Register is
+       WR : Window_Register;
+    begin
+       --  Nonatomic full-access assignment
+       --  using an aggregate:
+       WR := (Horizontal_Cnt => 800,
+              Vertical_Cnt   => 600,
+              Refresh_Needed => True,
+              others         => <>);
+
+       Show (WR);
+    end Show_Register;
+
+Again, this assignment is performed for the complete 32-bit register |mdash|
+ideally, using a single 32-bit machine operation |mdash| by reading the value
+from the memory.
+
+Let's add another statement to the code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+
+    pragma Ada_2022;
+
+    with Registers;   use Registers;
+
+    procedure Show_Register is
+       WR : Window_Register :=
+              (Horizontal_Cnt => 800,
+               Vertical_Cnt   => 600,
+               Refresh_Needed => True,
+               others         => <>);
+    begin
+       WR := (Horizontal_Cnt =>
+                WR.Horizontal_Cnt * 2,
+              Vertical_Cnt   =>
+                Wr.Vertical_Cnt   * 2,
+              others         => <>);
+
+       Show (WR);
+    end Show_Register;
+
+In this example, we have an initialization using the same aggregate as in the
+previous code example. We also have an assignment, in which we read the value
+of :ada:`WR` and use it in the calculation.
+
+
+.. _Adv_Ada_Shared_Variable_Control_Non_Atomic_Full_Access_Delta_Aggregates:
+
+Delta aggregates
+^^^^^^^^^^^^^^^^
+
+If we want to just change two components, but leave the information of other
+components untouched, we can use a
+:ref:`delta aggregate <Adv_Ada_Delta_Aggregates>`.
+(Note that we haven't discussed the topic of delta aggregates yet: we'll do
+that :ref:`later on in this course <Adv_Ada_Delta_Aggregates>`. However, in
+simple terms, we can use them to modify specific components of a record without
+changing the remaining components of the record.)
+
+For example, we might want to update just the vertical count and indicate that
+update via the :ada:`Refresh_Needed` flag, but keep the same horizontal count:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+
+    pragma Ada_2022;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Registers;   use Registers;
+
+    procedure Show_Registers is
+       WR : Window_Register :=
+              (Horizontal_Cnt => 800,
+               Vertical_Cnt   => 600,
+               others         => <>);
+    begin
+       --  Delta assignment
+       WR := (WR with delta
+                   Vertical_Cnt   => 800,
+                   Refresh_Needed => True);
+
+       Show (WR);
+    end Show_Registers;
+
+A delta assignment using an aggregate such as :ada:`(WR with delta ...)`
+includes reading the value of the complete 32-bit :ada:`WR` object from memory,
+changing the components specified after :ada:`with delta`, and writing the
+complete 32-bit :ada:`WR` object back to memory. The reason is that we need to
+retrieve the information that is supposed to remain intact |mdash| the
+:ada:`Horizontal_Cnt` and the reserved components |mdash| in order to write
+them back as a *full-access* operation.
+
+
+Atomic full-access
+~~~~~~~~~~~~~~~~~~
+
+As we already know,
+:ref:`atomic objects <Adv_Ada_Shared_Variable_Control_Atomic>` only accept
+atomic reads and updates, which |mdash| as a whole |mdash| are indivisible,
+i.e. they must be done in a single instruction, so that no other instruction
+could execute on that same object before the read or update completes. (Again,
+if an object is atomic, this implies it is also volatile.)
+
+In the case of atomic full-access objects, the complete object must be read and
+updated. Ideally, this operation corresponds to a single atomic
+operation on the target machine, but it can also translate to multiple atomic
+operations.
+
+Let's adapt the previous example to illustrate this. First, we adapt the type
+in the package:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
+
+    pragma Ada_2022;
+
+    with System;
+
+    package Registers is
+
+       type Boolean_Bit is new Boolean
+         with Size => 1;
+
+       type UInt1 is mod 2**1
+         with Size => 1;
+
+       type UInt2 is mod 2**2
+         with Size => 2;
+
+       type UInt14 is mod 2**14
+         with Size => 14;
+
+       type Window_Register is record
+          --  horizontal line count
+          Horizontal_Cnt : UInt14 := 16#0#;
+
+          --  unspecified
+          Reserved_14_15 : UInt2  := 16#0#;
+
+          --  vertical line count
+          Vertical_Cnt   : UInt14 := 16#0#;
+
+          --  refresh signalling
+          Refresh_Needed : Boolean_Bit := False;
+
+          --  unspecified
+          Reserved_30    : UInt1  := 16#0#;
+       end record
+         with Size      => 32,
+              Bit_Order => System.Low_Order_First,
+              Atomic,
+              Full_Access_Only;
+
+       for Window_Register use record
+          Horizontal_Cnt at 0 range 0 .. 13;
+          Reserved_14_15 at 0 range 14 .. 15;
+          Vertical_Cnt   at 0 range 16 .. 29;
+          Refresh_Needed at 0 range 30 .. 30;
+          Reserved_30    at 0 range 31 .. 31;
+       end record;
+
+       procedure Show (WR : Window_Register);
+
+    end Registers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Registers is
+
+       procedure Show (WR : Window_Register) is
+       begin
+          Put_Line ("WR = (Horizontal_Cnt => "
+                    & WR.Horizontal_Cnt'Image
+                    & ",");
+          Put_Line ("      Vertical_Cnt   => "
+                    & WR.Vertical_Cnt'Image
+                    & ",");
+          Put_Line ("      Refresh_Needed => "
+                    & WR.Refresh_Needed'Image
+                    & ")");
+       end Show;
+
+    end Registers;
+
+We then use the package in our test application:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
+
+    with Registers;   use Registers;
+
+    procedure Show_Register is
+       WR : Window_Register :=
+              (Horizontal_Cnt => 800,
+               Vertical_Cnt   => 600,
+               Refresh_Needed => True,
+               others         => <>);
+    begin
+       WR := (Horizontal_Cnt =>
+                WR.Horizontal_Cnt * 2,
+              Vertical_Cnt   =>
+                Wr.Vertical_Cnt   * 2,
+              others         => <>);
+
+       Show (WR);
+    end Show_Register;
+
+In this example, we first have an atomic initialization of :ada:`WR` using an
+aggregate. Then, we have an atomic assignment to the atomic full-access object
+:ada:`WR`. Because its type is an atomic full-access type, the operations are
+atomic operations that always access the full object from and to memory.
+
+
+Comparison: full-access and non-full-access types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An interesting exercise for the reader is to compare the Assembly code
+generated for the code example above with a version of this code where the
+:ada:`Window_Register` is not a full-access type.
+
+.. admonition:: Relevant topics
+
+    On a Linux platform, you can use `objdump` to retrieve the Assembly code
+    and `diff` to see the difference between both versions of the type.
+    For example:
+
+    .. code-block:: bash
+
+        objdump --target=elf64-x86-64 -d -S ./show_register > full_access.txt
+
+        #  [...]
+
+        diff --width=80 -t -y full_access.txt no_full_access.txt
+
+By doing this kind of comparisons, you might gain more insights on the impact
+of the :ada:`Full_Access_Only` aspect.
+
+.. admonition:: For further reading...
+
+    By running on a PC, we can compare the
+    :wikipedia:`Intel Assembly <X86_instruction_listings>` code for various
+    versions of the code. Let's start with the version using a nonatomic
+    full-access version of :ada:`Window_Register` vs. the nonatomic
+    (non-full-access) version of :ada:`Window_Register`:
+
+    .. code-block:: ada
+
+           type Window_Register is record
+              --  [...]
+           end record
+             with Size      => 32,
+                  Bit_Order => System.Low_Order_First,
+                  Volatile,
+                  Full_Access_Only;
+
+           type Window_Register is record
+              --  [...]
+           end record
+             with Size      => 32,
+                  Bit_Order => System.Low_Order_First,
+                  Volatile;
+
+    These are the manually-adapted differences between both versions:
+
+    .. code-block:: none
+
+        --  Volatile, Full_Access_Only         |  --  Volatile
+
+        procedure Show_Register is                procedure Show_Register is
+            push   %rbp                               push   %rbp
+            mov    %rsp,%rbp                          mov    %rsp,%rbp
+            sub    $0x20,%rsp                  |      sub    $0x10,%rsp
+           WR : Window_Register :=                   WR : Window_Register :=
+                  (Horizontal_Cnt => 800,                   (Horizontal_Cnt => 800,
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0xffffc000,%eax                   and    $0xffffc000,%eax
+            or     $0x320,%eax                        or     $0x320,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0x3f,%ah                          and    $0x3f,%ah
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0xc000ffff,%eax                   and    $0xc000ffff,%eax
+            or     $0x2580000,%eax                    or     $0x2580000,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            or     $0x40000000,%eax                   or     $0x40000000,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0x7fffffff,%eax                   and    $0x7fffffff,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax             <
+            mov    %eax,-0x14(%rbp)            <
+            mov    -0x14(%rbp),%eax            <
+            mov    %eax,-0x8(%rbp)             <
+                   Vertical_Cnt   => 600,                    Vertical_Cnt   => 600,
+                   Refresh_Needed => True,                   Refresh_Needed => True,
+                   others         => <>);                    others         => <>);
+        begin                                     begin
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+                    WR.Horizontal_Cnt * 2,                    WR.Horizontal_Cnt * 2,
+            mov    -0x8(%rbp),%eax             |      mov    -0x4(%rbp),%eax
+            mov    %eax,%ecx                   <
+            and    $0x3fff,%cx                 |      and    $0x3fff,%ax
+                                               >      add    %eax,%eax
+           WR := (Horizontal_Cnt =>            <
+            mov    -0xc(%rbp),%eax             <
+            mov    %eax,%edx                   <
+                    WR.Horizontal_Cnt * 2,     <
+            lea    (%rcx,%rcx,1),%eax          <
+            and    $0x3fff,%ax                        and    $0x3fff,%ax
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            movzwl %ax,%eax                           movzwl %ax,%eax
+            and    $0x3fff,%eax                       and    $0x3fff,%eax
+            and    $0xffffc000,%edx            <
+            or     %edx,%eax                   <
+            mov    %eax,%edx                          mov    %eax,%edx
+            mov    %edx,%eax                   |      mov    -0x8(%rbp),%eax
+            mov    %eax,-0xc(%rbp)             |      and    $0xffffc000,%eax
+            mov    -0xc(%rbp),%eax             |      or     %edx,%eax
+                                               >      mov    %eax,-0x8(%rbp)
+                                               >      mov    -0x8(%rbp),%eax
+            and    $0x3f,%ah                          and    $0x3f,%ah
+            mov    %eax,-0xc(%rbp)             |      mov    %eax,-0x8(%rbp)
+                  Vertical_Cnt   =>                         Vertical_Cnt   =>
+                    Wr.Vertical_Cnt   * 2,                    Wr.Vertical_Cnt   * 2,
+            mov    -0x8(%rbp),%eax             |      mov    -0x4(%rbp),%eax
+            shr    $0x10,%eax                         shr    $0x10,%eax
+            mov    %eax,%ecx                   |      and    $0x3fff,%ax
+            and    $0x3fff,%cx                 |      add    %eax,%eax
+           WR := (Horizontal_Cnt =>            <
+            mov    -0xc(%rbp),%eax             <
+            mov    %eax,%edx                   <
+                    Wr.Vertical_Cnt   * 2,     <
+            lea    (%rcx,%rcx,1),%eax          <
+            and    $0x3fff,%ax                        and    $0x3fff,%ax
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            movzwl %ax,%eax                           movzwl %ax,%eax
+            and    $0x3fff,%eax                       and    $0x3fff,%eax
+            shl    $0x10,%eax                         shl    $0x10,%eax
+            and    $0xc000ffff,%edx            <
+            or     %edx,%eax                   <
+            mov    %eax,%edx                          mov    %eax,%edx
+            mov    %edx,%eax                   |      mov    -0x8(%rbp),%eax
+            mov    %eax,-0xc(%rbp)             |      and    $0xc000ffff,%eax
+            mov    -0xc(%rbp),%eax             |      or     %edx,%eax
+                                               >      mov    %eax,-0x8(%rbp)
+                                               >      mov    -0x8(%rbp),%eax
+            and    $0xbfffffff,%eax                   and    $0xbfffffff,%eax
+            mov    %eax,-0xc(%rbp)             |      mov    %eax,-0x8(%rbp)
+            mov    -0xc(%rbp),%eax             |      mov    -0x8(%rbp),%eax
+            and    $0x7fffffff,%eax                   and    $0x7fffffff,%eax
+            mov    %eax,-0xc(%rbp)             <
+            mov    -0xc(%rbp),%eax             <
+            mov    %eax,-0x8(%rbp)                    mov    %eax,-0x8(%rbp)
+                                               >      mov    -0x8(%rbp),%eax
+                                               >      mov    %eax,-0x4(%rbp)
+                  others         => <>);                    others         => <>);
+
+    As we can see, although parts of the Assembly code are the same or look
+    very similar, there are some differences between both versions. These
+    differences are mostly related to the fact that we have to operate on the
+    full object when reading it from memory.
+
+    Likewise, we can compare the Assembly code for the atomic full-access
+    version of :ada:`Window_Register` vs. the atomic (non-full-access) version
+    of :ada:`Window_Register`:
+
+    .. code-block:: ada
+
+           type Window_Register is record
+              --  [...]
+           end record
+             with Size      => 32,
+                  Bit_Order => System.Low_Order_First,
+                  Atomic,
+                  Full_Access_Only;
+
+           type Window_Register is record
+              --  [...]
+           end record
+             with Size      => 32,
+                  Bit_Order => System.Low_Order_First,
+                  Atomic;
+
+    These are the manually-adapted differences between both versions:
+
+    .. code-block:: none
+
+        --  Atomic, Full_Access_Only           |  --  Atomic
+
+        procedure Show_Register is                procedure Show_Register is
+            push   %rbp                               push   %rbp
+            mov    %rsp,%rbp                          mov    %rsp,%rbp
+            sub    $0x20,%rsp                  |      sub    $0x10,%rsp
+           WR : Window_Register :=                   WR : Window_Register :=
+                  (Horizontal_Cnt => 800,                   (Horizontal_Cnt => 800,
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0xffffc000,%eax                   and    $0xffffc000,%eax
+            or     $0x320,%eax                        or     $0x320,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0x3f,%ah                          and    $0x3f,%ah
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0xc000ffff,%eax                   and    $0xc000ffff,%eax
+            or     $0x2580000,%eax                    or     $0x2580000,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            or     $0x40000000,%eax                   or     $0x40000000,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0x7fffffff,%eax                   and    $0x7fffffff,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+           WR : Window_Register :=                   WR : Window_Register :=
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            mov    %eax,-0x14(%rbp)            <
+            mov    -0x14(%rbp),%eax            <
+            mov    %eax,-0x8(%rbp)                    mov    %eax,-0x8(%rbp)
+                   Vertical_Cnt   => 600,                    Vertical_Cnt   => 600,
+                   Refresh_Needed => True,                   Refresh_Needed => True,
+                   others         => <>);                    others         => <>);
+        begin                                     begin
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+                    WR.Horizontal_Cnt * 2,                    WR.Horizontal_Cnt * 2,
+            mov    -0x8(%rbp),%eax                    mov    -0x8(%rbp),%eax
+            mov    %eax,%ecx                   <
+            and    $0x3fff,%cx                 |      and    $0x3fff,%ax
+                                               |      add    %eax,%eax
+           WR := (Horizontal_Cnt =>            <
+            mov    -0xc(%rbp),%eax             <
+            mov    %eax,%edx                   <
+                    WR.Horizontal_Cnt * 2,     <
+            lea    (%rcx,%rcx,1),%eax          <
+            and    $0x3fff,%ax                        and    $0x3fff,%ax
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            movzwl %ax,%eax                           movzwl %ax,%eax
+            and    $0x3fff,%eax                       and    $0x3fff,%eax
+                                               >      mov    %eax,%edx
+                                               >      mov    -0xc(%rbp),%eax
+            and    $0xffffc000,%edx            |      and    $0xffffc000,%eax
+            or     %edx,%eax                          or     %edx,%eax
+            mov    %eax,%edx                   <
+            mov    %edx,%eax                   <
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            and    $0x3f,%ah                          and    $0x3f,%ah
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+                  Vertical_Cnt   =>                         Vertical_Cnt   =>
+                    Wr.Vertical_Cnt   * 2,                    Wr.Vertical_Cnt   * 2,
+            mov    -0x8(%rbp),%eax                    mov    -0x8(%rbp),%eax
+            shr    $0x10,%eax                         shr    $0x10,%eax
+            mov    %eax,%ecx                   <
+            and    $0x3fff,%cx                 |      and    $0x3fff,%ax
+                                               >      add    %eax,%eax
+           WR := (Horizontal_Cnt =>            <
+            mov    -0xc(%rbp),%eax             <
+            mov    %eax,%edx                   <
+                    Wr.Vertical_Cnt   * 2,     <
+            lea    (%rcx,%rcx,1),%eax          <
+            and    $0x3fff,%ax                        and    $0x3fff,%ax
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            movzwl %ax,%eax                           movzwl %ax,%eax
+            and    $0x3fff,%eax                       and    $0x3fff,%eax
+            shl    $0x10,%eax                         shl    $0x10,%eax
+                                               >      mov    %eax,%edx
+                                               >      mov    -0xc(%rbp),%eax
+            and    $0xc000ffff,%edx            |      and    $0xc000ffff,%eax
+            or     %edx,%eax                          or     %edx,%eax
+            mov    %eax,%edx                   <
+            mov    %edx,%eax                   <
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            and    $0xbfffffff,%eax                   and    $0xbfffffff,%eax
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            and    $0x7fffffff,%eax                   and    $0x7fffffff,%eax
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            xchg   %eax,-0x8(%rbp)                    xchg   %eax,-0x8(%rbp)
+                  others         => <>);                    others         => <>);
+
+    Again, there are some differences between both versions, even though some
+    parts of the Assembly code are the same or look very similar.
+
+    Finally, we might want to compare the nonatomic full-access version
+    vs. the atomic full-access version of the :ada:`Window_Register` type:
+
+    .. code-block:: ada
+
+           type Window_Register is record
+              --  [...]
+           end record
+             with Size      => 32,
+                  Bit_Order => System.Low_Order_First,
+                  Volatile,
+                  Full_Access_Only;
+
+           type Window_Register is record
+              --  [...]
+           end record
+             with Size      => 32,
+                  Bit_Order => System.Low_Order_First,
+                  Atomic,
+                  Full_Access_Only;
+
+    These are the differences between both versions:
+
+    .. code-block:: none
+
+        --  Volatile, Full_Access_Only         |  --  Atomic, Full_Access_Only
+
+        procedure Show_Register is                procedure Show_Register is
+            push   %rbp                               push   %rbp
+            mov    %rsp,%rbp                          mov    %rsp,%rbp
+            sub    $0x20,%rsp                         sub    $0x20,%rsp
+           WR : Window_Register :=                   WR : Window_Register :=
+                  (Horizontal_Cnt => 800,                   (Horizontal_Cnt => 800,
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0xffffc000,%eax                   and    $0xffffc000,%eax
+            or     $0x320,%eax                        or     $0x320,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0x3f,%ah                          and    $0x3f,%ah
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0xc000ffff,%eax                   and    $0xc000ffff,%eax
+            or     $0x2580000,%eax                    or     $0x2580000,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            or     $0x40000000,%eax                   or     $0x40000000,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            and    $0x7fffffff,%eax                   and    $0x7fffffff,%eax
+            mov    %eax,-0x4(%rbp)                    mov    %eax,-0x4(%rbp)
+           WR : Window_Register :=                   WR : Window_Register :=
+            mov    -0x4(%rbp),%eax                    mov    -0x4(%rbp),%eax
+            mov    %eax,-0x14(%rbp)                   mov    %eax,-0x14(%rbp)
+            mov    -0x14(%rbp),%eax                   mov    -0x14(%rbp),%eax
+            mov    %eax,-0x8(%rbp)                    mov    %eax,-0x8(%rbp)
+                   Vertical_Cnt   => 600,                    Vertical_Cnt   => 600,
+                   Refresh_Needed => True,                   Refresh_Needed => True,
+                   others         => <>);                    others         => <>);
+        begin                                     begin
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+                    WR.Horizontal_Cnt * 2,                    WR.Horizontal_Cnt * 2,
+            mov    -0x8(%rbp),%eax                    mov    -0x8(%rbp),%eax
+            mov    %eax,%ecx                          mov    %eax,%ecx
+            and    $0x3fff,%cx                        and    $0x3fff,%cx
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            mov    %eax,%edx                          mov    %eax,%edx
+                    WR.Horizontal_Cnt * 2,                    WR.Horizontal_Cnt * 2,
+            lea    (%rcx,%rcx,1),%eax                 lea    (%rcx,%rcx,1),%eax
+            and    $0x3fff,%ax                        and    $0x3fff,%ax
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            movzwl %ax,%eax                           movzwl %ax,%eax
+            and    $0x3fff,%eax                       and    $0x3fff,%eax
+            and    $0xffffc000,%edx                   and    $0xffffc000,%edx
+            or     %edx,%eax                          or     %edx,%eax
+            mov    %eax,%edx                          mov    %eax,%edx
+            mov    %edx,%eax                          mov    %edx,%eax
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            and    $0x3f,%ah                          and    $0x3f,%ah
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+                  Vertical_Cnt   =>                         Vertical_Cnt   =>
+                    Wr.Vertical_Cnt   * 2,                    Wr.Vertical_Cnt   * 2,
+            mov    -0x8(%rbp),%eax                    mov    -0x8(%rbp),%eax
+            shr    $0x10,%eax                         shr    $0x10,%eax
+            mov    %eax,%ecx                          mov    %eax,%ecx
+            and    $0x3fff,%cx                        and    $0x3fff,%cx
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            mov    %eax,%edx                          mov    %eax,%edx
+                    Wr.Vertical_Cnt   * 2,                    Wr.Vertical_Cnt   * 2,
+            lea    (%rcx,%rcx,1),%eax                 lea    (%rcx,%rcx,1),%eax
+            and    $0x3fff,%ax                        and    $0x3fff,%ax
+           WR := (Horizontal_Cnt =>                  WR := (Horizontal_Cnt =>
+            movzwl %ax,%eax                           movzwl %ax,%eax
+            and    $0x3fff,%eax                       and    $0x3fff,%eax
+            shl    $0x10,%eax                         shl    $0x10,%eax
+            and    $0xc000ffff,%edx                   and    $0xc000ffff,%edx
+            or     %edx,%eax                          or     %edx,%eax
+            mov    %eax,%edx                          mov    %eax,%edx
+            mov    %edx,%eax                          mov    %edx,%eax
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            and    $0xbfffffff,%eax                   and    $0xbfffffff,%eax
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            and    $0x7fffffff,%eax                   and    $0x7fffffff,%eax
+            mov    %eax,-0xc(%rbp)                    mov    %eax,-0xc(%rbp)
+            mov    -0xc(%rbp),%eax                    mov    -0xc(%rbp),%eax
+            mov    %eax,-0x8(%rbp)             |      xchg   %eax,-0x8(%rbp)
+                  others         => <>);                    others         => <>);
+
+    As we can see, the code is basically the same |mdash| except for the last
+    Assembly instruction, which is a `mov` instruction in the volatile version
+    and an `xchg` instruction in the atomic version |mdash| which is an atomic
+    instruction on this platform.
+
 
 ..
     TO BE DONE:
