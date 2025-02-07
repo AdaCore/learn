@@ -544,7 +544,7 @@ Nonatomic full-access
 ~~~~~~~~~~~~~~~~~~~~~
 
 As we already know, the value of a volatile object may be constantly changing,
-so the compiler generates code in such a way that the process must read the
+so the compiler generates code to read the
 value of the volatile object from memory for each access. (In other words, the
 value cannot be stored in a register for further processing.)
 
