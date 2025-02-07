@@ -1296,7 +1296,7 @@ Atomic operations
 
     This feature was introduced in Ada 2022.
 
-Ada offers four child packages to handle atomic operations. Those packages are
+Ada offers four packages to handle atomic operations. Those packages are
 child packages of the :ada:`System.Atomic_Operations` package. We will discuss
 each of those package individually in this section.
 
