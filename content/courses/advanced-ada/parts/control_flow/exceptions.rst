@@ -969,6 +969,8 @@ checks fails and raises a :ada:`Storage_Error` exception.
 
 
 
+.. _Adv_Ada_Tasking_Check:
+
 :ada:`Tasking_Check`
 ~~~~~~~~~~~~~~~~~~~~
 
