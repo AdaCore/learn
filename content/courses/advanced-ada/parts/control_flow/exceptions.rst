@@ -296,6 +296,8 @@ This table shows all language-defined checks and the associated exceptions:
 +-----------------------------+-------------------------+
 | :ada:`Storage_Check`        | :ada:`Storage_Error`    |
 +-----------------------------+-------------------------+
+| :ada:`Tasking_Check`        | :ada:`Tasking_Error`    |
++-----------------------------+-------------------------+
 
 In addition, we can use :ada:`All_Checks` to refer to all those checks above at
 once.
@@ -970,7 +972,58 @@ checks fails and raises a :ada:`Storage_Error` exception.
 :ada:`Tasking_Check`
 ~~~~~~~~~~~~~~~~~~~~
 
+The :ada:`Tasking_Check` ensures that all tasks have been activated
+successfully and that no terminated task is called. If the check fails, a
+:ada:`Tasking_Error` exception is raised.
 
+.. note::
+
+   This concept was introduced in Ada 2022. It was created to group all checks
+   that might raise the :ada:`Tasking_Error` exception.
+
+Let's look at a simple example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Checks_And_Exceptions.Tasking_Check_Error
+    :class: ada-run-expect-failure
+
+    package Workers is
+
+        task type Worker  is
+            entry Start;
+        end Worker;
+
+    end Workers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package body Workers is
+
+        task body Worker  is
+        begin
+           Put_Line ("Task has started.");
+           delay 1.0;
+           Put_Line ("Task has finished.");
+        end Worker;
+
+    end Workers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Workers;     use Workers;
+
+    procedure Show_Tasking_Check_Error is
+        W : Worker;
+    begin
+        Put_Line ("W.Start...");
+        W.Start;
+        Put_Line ("Finished");
+    end Show_Tasking_Check_Error;
+
+In this example, the body of :ada:`Worker` doesn't have an :ada:`accept`.
+Therefore, no rendezvous can happen for the :ada:`W.Start` call. Since the
+task eventually terminates (as you can see in the user messages), the call
+to :ada:`Start` constitutes a call to a terminated task. This condition is
+checked by the :ada:`Tasking_Check`, which fails in this case, thereby
+raising a :ada:`Tasking_Error`.
 
 
 
