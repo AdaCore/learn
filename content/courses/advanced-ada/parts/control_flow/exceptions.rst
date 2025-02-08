@@ -966,19 +966,10 @@ checks fails and raises a :ada:`Storage_Error` exception.
 
 
 
-..
-    TO BE DONE:
 
-    :ada:`Tasking_Check`
-    ~~~~~~~~~~~~~~~~~~~~
+:ada:`Tasking_Check`
+~~~~~~~~~~~~~~~~~~~~
 
-    .. admonition:: In the Ada Reference Manual
-
-        - :arm22:`11.5 Suppressing Checks <11-5>`
-
-    .. todo::
-
-        - Complete section!
 
 
 
