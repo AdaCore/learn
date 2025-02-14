@@ -100,7 +100,7 @@ supplier to the client that instantiates it, but instantiation is the only
 possibility in that narrow case. Only the routines in the instances can be
 called.)
 
-Betrand Meyer's book on OOP :footcite:p:`1997:meyer`
+Bertrand Meyer's book on OOP :footcite:p:`1997:meyer`
 limits these terms specifically to the case of
 a type used in an object declaration. Our definitions cover that case but
 others as well.
