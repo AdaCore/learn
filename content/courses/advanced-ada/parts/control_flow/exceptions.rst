@@ -109,11 +109,14 @@ Let's see a code example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Bounded_Error is
-       subtype Int_1_10 is Integer range 1 .. 10;
+       subtype Int_1_10 is
+         Integer range 1 .. 10;
 
        I1         : Int_1_10;
        I1_Overlay : Integer
-         with Address => I1'Address, Import, Volatile;
+         with Address => I1'Address,
+                         Import,
+                         Volatile;
     begin
        I1_Overlay := 0;
        --  ^^^^^^^^^^^
@@ -171,11 +174,13 @@ code example:
     with Ada.Unchecked_Conversion;
 
     procedure Show_Erroneous_Execution is
-       subtype Int_1_10 is Integer range 1 .. 10;
+       subtype Int_1_10 is
+         Integer range 1 .. 10;
 
        function To_Int_1_10 is new
-         Ada.Unchecked_Conversion (Source => Integer,
-                                   Target => Int_1_10);
+         Ada.Unchecked_Conversion
+           (Source => Integer,
+            Target => Int_1_10);
 
        I1 : Int_1_10 := To_Int_1_10 (0);
        --               ^^^^^^^^^^^^^^^
