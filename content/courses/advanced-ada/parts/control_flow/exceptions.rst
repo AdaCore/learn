@@ -4,6 +4,7 @@ Exceptions
 .. include:: ../../../global.txt
 
 
+.. _Adv_Ada_Classification_Of_Errors:
 
 Classification of Errors
 ------------------------
