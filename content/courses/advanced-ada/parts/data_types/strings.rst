@@ -550,17 +550,6 @@ not the standard "x" from the
 :wikipedia:`Basic Latin block <Basic_Latin_(Unicode_block)>`.)
 
 
-..
-    TO BE DONE:
-
-    Parsing UTF-8 files for Wide-Wide-String processing
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. todo::
-
-        - Complete section!
-
-
 UTF-16 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -925,6 +914,17 @@ the corresponding UTF-8 code:
 
 Here, we use a sequence of three calls to the :ada:`Character'Val(code)`
 function for the UTF-8 code that corresponds to the "★" symbol.
+
+
+..
+    TO BE DONE:
+
+    Parsing UTF-8 files for Wide-Wide-String processing
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    .. todo::
+
+        - Complete section!
 
 
 .. _Adv_Ada_Image_Attribute:
