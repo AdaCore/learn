@@ -706,6 +706,13 @@ the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
 the :ada:`Wide_Wide_String` types.
 
 
+UTF-8 applications
+------------------
+
+In this section, we take a further look into UTF-8 encoding and some real-world
+applications. First, we discuss the use of UTF-8 encoding in source-code files.
+Then, we talk about parsing UTF-8 files using *wide-wide* strings.
+
 UTF-8 encoding in source-code files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
