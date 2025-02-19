@@ -916,15 +916,8 @@ Here, we use a sequence of three calls to the :ada:`Character'Val(code)`
 function for the UTF-8 code that corresponds to the "★" symbol.
 
 
-..
-    TO BE DONE:
-
-    Parsing UTF-8 files for Wide-Wide-String processing
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. todo::
-
-        - Complete section!
+Parsing UTF-8 files for Wide-Wide-String processing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 .. _Adv_Ada_Image_Attribute:
