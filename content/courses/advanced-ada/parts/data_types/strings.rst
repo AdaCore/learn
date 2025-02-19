@@ -561,6 +561,151 @@ not the standard "x" from the
         - Complete section!
 
 
+UTF-16 encoding and decoding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+So far, we've discussed the UTF-8 encoding scheme. However, other encoding
+schemes exist and are supported as well. In fact, the
+:ada:`Ada.Strings.UTF_Encoding` package defines three encoding schemes:
+
+.. code-block:: ada
+
+    type Encoding_Scheme is (UTF_8,
+                             UTF_16BE,
+                             UTF_16LE);
+
+For example, instead of using UTF-8 encoding, we can use UTF-16 encoding
+|mdash| either in the big-endian or in the little-endian version.
+To convert between UTF-8 and UTF-16 encoding schemes, we can make use of the
+conversion functions from the :ada:`Ada.Strings.UTF_Encoding.Conversions`
+package.
+
+To declare a UTF-16 encoded string, we can use one of the following data types:
+
+- the 8-bit-character based :ada:`UTF_String` type, or
+
+- the 16-bit-character based :ada:`UTF_16_Wide_String` type.
+
+When using the 8-bit version, though, we have to specify the input and output
+schemes when converting between UTF-8 and UTF-16 encoding schemes.
+
+Let's see a code example that makes use of both :ada:`UTF_String` and
+:ada:`UTF_16_Wide_String` types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_16_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Conversions;
+    use  Ada.Strings.UTF_Encoding.Conversions;
+
+    procedure Show_UTF16_Types is
+       Symbols_UTF_8  : constant
+         UTF_8_String := "♥♫";
+
+       Symbols_UTF_16 : constant
+         UTF_16_Wide_String :=
+           Convert (Symbols_UTF_8);
+       --  ^ Calling Convert for UTF_8_String
+       --    to UTF_16_Wide_String conversion.
+
+       Symbols_UTF_16BE : constant
+         UTF_String :=
+           Convert (Item          => Symbols_UTF_8,
+                    Input_Scheme  => UTF_8,
+                    Output_Scheme => UTF_16BE);
+       --  ^ Calling Convert for UTF_8_String
+       --    to UTF_String conversion in UTF-16BE
+       --    encoding.
+    begin
+       Put_Line ("UTF_8_String:          "
+                 & Symbols_UTF_8);
+
+       Put_Line ("UTF_16_Wide_String:    "
+                 & Convert (Symbols_UTF_16));
+       --          ^ Calling Convert for
+       --            the UTF_16_Wide_String to
+       --            UTF_8_String conversion.
+
+       Put_Line
+         ("UTF_String / UTF_16BE: "
+          & Convert
+              (Item          => Symbols_UTF_16BE,
+               Input_Scheme  => UTF_16BE,
+               Output_Scheme => UTF_8));
+    end Show_UTF16_Types;
+
+In this example, we're declaring a UTF-8 encoded string and storing it in the
+:ada:`Symbols_UTF_8` constant. Then, we're calling the :ada:`Convert`
+functions to convert between UTF-8 and UTF-16 encoding schemes. We're using two
+versions of this function:
+
+- the :ada:`Convert` function that returns an object of
+  :ada:`UTF_16_Wide_String` type for an input of :ada:`UTF_8_String` type, and
+
+- the :ada:`Convert` function that returns an object of :ada:`UTF_String`
+  type for an input of :ada:`UTF_8_String` type.
+
+  - In this case, we need to specify the input and output schemes (see
+    :ada:`Input_Scheme` and :ada:`Output_Scheme` parameters in the code
+    example).
+
+Previously, we've seen that the
+:ada:`Ada.Strings.UTF_Encoding.Wide_Wide_Strings` package offers functions to
+convert between UTF-8 and the :ada:`Wide_Wide_String` type. The same kind of
+conversion functions exist for UTF-16 strings as well. Let's look at this code
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WW_UTF_16_String
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    with Ada.Strings.UTF_Encoding.Conversions;
+    use  Ada.Strings.UTF_Encoding.Conversions;
+
+    procedure Show_WW_UTF16_String is
+       Symbols_UTF_16 : constant
+         UTF_16_Wide_String :=
+           Wide_Character'Val (16#2665#) &
+           Wide_Character'Val (16#266B#);
+       --  ^ Calling Wide_Character'Val
+       --    to specify the UTF-16 BE code
+       --    for "♥" and "♫".
+
+       Symbols_WWS : constant
+         Wide_Wide_String :=
+           Decode (Symbols_UTF_16);
+       --  ^ Calling Decode for UTF_16_Wide_String
+       --    to Wide_Wide_String conversion.
+    begin
+       Put_Line ("UTF_16_Wide_String: "
+                 & Convert (Symbols_UTF_16));
+       --          ^ Calling Convert for the
+       --            UTF_16_Wide_String to
+       --            UTF_8_String conversion.
+
+       Put_Line ("Wide_Wide_String:   "
+                 & Encode (Symbols_WWS));
+       --          ^ Calling Encode for the
+       --            Wide_Wide_String to
+       --            UTF_8_String conversion.
+    end Show_WW_UTF16_String;
+
+In this example, we're calling the :ada:`Wide_Character'Val` function to
+specify the UTF-16 BE code of the "♥" and "♫" symbols. We're then using
+the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
+the :ada:`Wide_Wide_String` types.
+
+
 UTF-8 encoding in source-code files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -771,151 +916,6 @@ the corresponding UTF-8 code:
 
 Here, we use a sequence of three calls to the :ada:`Character'Val(code)`
 function for the UTF-8 code that corresponds to the "★" symbol.
-
-
-UTF-16 encoding and decoding
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-So far, we've discussed the UTF-8 encoding scheme. However, other encoding
-schemes exist and are supported as well. In fact, the
-:ada:`Ada.Strings.UTF_Encoding` package defines three encoding schemes:
-
-.. code-block:: ada
-
-    type Encoding_Scheme is (UTF_8,
-                             UTF_16BE,
-                             UTF_16LE);
-
-For example, instead of using UTF-8 encoding, we can use UTF-16 encoding
-|mdash| either in the big-endian or in the little-endian version.
-To convert between UTF-8 and UTF-16 encoding schemes, we can make use of the
-conversion functions from the :ada:`Ada.Strings.UTF_Encoding.Conversions`
-package.
-
-To declare a UTF-16 encoded string, we can use one of the following data types:
-
-- the 8-bit-character based :ada:`UTF_String` type, or
-
-- the 16-bit-character based :ada:`UTF_16_Wide_String` type.
-
-When using the 8-bit version, though, we have to specify the input and output
-schemes when converting between UTF-8 and UTF-16 encoding schemes.
-
-Let's see a code example that makes use of both :ada:`UTF_String` and
-:ada:`UTF_16_Wide_String` types:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_16_Types
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    with Ada.Strings.UTF_Encoding;
-    use  Ada.Strings.UTF_Encoding;
-
-    with Ada.Strings.UTF_Encoding.Conversions;
-    use  Ada.Strings.UTF_Encoding.Conversions;
-
-    procedure Show_UTF16_Types is
-       Symbols_UTF_8  : constant
-         UTF_8_String := "♥♫";
-
-       Symbols_UTF_16 : constant
-         UTF_16_Wide_String :=
-           Convert (Symbols_UTF_8);
-       --  ^ Calling Convert for UTF_8_String
-       --    to UTF_16_Wide_String conversion.
-
-       Symbols_UTF_16BE : constant
-         UTF_String :=
-           Convert (Item          => Symbols_UTF_8,
-                    Input_Scheme  => UTF_8,
-                    Output_Scheme => UTF_16BE);
-       --  ^ Calling Convert for UTF_8_String
-       --    to UTF_String conversion in UTF-16BE
-       --    encoding.
-    begin
-       Put_Line ("UTF_8_String:          "
-                 & Symbols_UTF_8);
-
-       Put_Line ("UTF_16_Wide_String:    "
-                 & Convert (Symbols_UTF_16));
-       --          ^ Calling Convert for
-       --            the UTF_16_Wide_String to
-       --            UTF_8_String conversion.
-
-       Put_Line
-         ("UTF_String / UTF_16BE: "
-          & Convert
-              (Item          => Symbols_UTF_16BE,
-               Input_Scheme  => UTF_16BE,
-               Output_Scheme => UTF_8));
-    end Show_UTF16_Types;
-
-In this example, we're declaring a UTF-8 encoded string and storing it in the
-:ada:`Symbols_UTF_8` constant. Then, we're calling the :ada:`Convert`
-functions to convert between UTF-8 and UTF-16 encoding schemes. We're using two
-versions of this function:
-
-- the :ada:`Convert` function that returns an object of
-  :ada:`UTF_16_Wide_String` type for an input of :ada:`UTF_8_String` type, and
-
-- the :ada:`Convert` function that returns an object of :ada:`UTF_String`
-  type for an input of :ada:`UTF_8_String` type.
-
-  - In this case, we need to specify the input and output schemes (see
-    :ada:`Input_Scheme` and :ada:`Output_Scheme` parameters in the code
-    example).
-
-Previously, we've seen that the
-:ada:`Ada.Strings.UTF_Encoding.Wide_Wide_Strings` package offers functions to
-convert between UTF-8 and the :ada:`Wide_Wide_String` type. The same kind of
-conversion functions exist for UTF-16 strings as well. Let's look at this code
-example:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WW_UTF_16_String
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    with Ada.Strings.UTF_Encoding;
-    use  Ada.Strings.UTF_Encoding;
-
-    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
-    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
-
-    with Ada.Strings.UTF_Encoding.Conversions;
-    use  Ada.Strings.UTF_Encoding.Conversions;
-
-    procedure Show_WW_UTF16_String is
-       Symbols_UTF_16 : constant
-         UTF_16_Wide_String :=
-           Wide_Character'Val (16#2665#) &
-           Wide_Character'Val (16#266B#);
-       --  ^ Calling Wide_Character'Val
-       --    to specify the UTF-16 BE code
-       --    for "♥" and "♫".
-
-       Symbols_WWS : constant
-         Wide_Wide_String :=
-           Decode (Symbols_UTF_16);
-       --  ^ Calling Decode for UTF_16_Wide_String
-       --    to Wide_Wide_String conversion.
-    begin
-       Put_Line ("UTF_16_Wide_String: "
-                 & Convert (Symbols_UTF_16));
-       --          ^ Calling Convert for the
-       --            UTF_16_Wide_String to
-       --            UTF_8_String conversion.
-
-       Put_Line ("Wide_Wide_String:   "
-                 & Encode (Symbols_WWS));
-       --          ^ Calling Encode for the
-       --            Wide_Wide_String to
-       --            UTF_8_String conversion.
-    end Show_WW_UTF16_String;
-
-In this example, we're calling the :ada:`Wide_Character'Val` function to
-specify the UTF-16 BE code of the "♥" and "♫" symbols. We're then using
-the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
-the :ada:`Wide_Wide_String` types.
 
 
 .. _Adv_Ada_Image_Attribute:
