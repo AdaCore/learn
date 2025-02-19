@@ -203,6 +203,24 @@
 
         .. container:: frontpage-ebook-and-buttons-block
 
+            .. image:: images/page-1-of-ada-in-practice.jpeg
+                :alt: Ada In Practice (e-book)
+                :target: /courses/ada-in-practice/index.html
+
+            .. raw:: html
+
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/ada-in-practice.pdf">
+                            PDF
+                        </a>
+
+                        <a class="ebook-download-button" href="/epub_books/courses/ada-in-practice.epub">
+                            EPUB
+                        </a>
+                    </div>
+
+        .. container:: frontpage-ebook-and-buttons-block
+
             .. image:: images/page-1-of-intro-to-spark.jpeg
                 :alt: Introduction to SPARK (e-book)
                 :target: courses/intro-to-spark/index.html
