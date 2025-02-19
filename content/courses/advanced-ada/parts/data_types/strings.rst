@@ -921,6 +921,317 @@ function for the UTF-8 code that corresponds to the "★" symbol.
 Parsing UTF-8 files for Wide-Wide-String processing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+A typical use-case is to parse a text file in UTF-8 format and use *wide-wide*
+strings to process the lines of that file. Before we look at the implementation
+that does that, let's first write a procedure that generate a text file in
+UTF-8 format:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    procedure Generate_UTF_8_File
+      (Output_File_Name : String)
+    is
+       F : File_Type;
+    begin
+       Create (F, Out_File, Output_File_Name);
+       Put_Line (F, UTF_8_String'("♥♫"));
+       Put_Line
+         (F,
+          UTF_8_String'("مرحبا يا عالم"));
+       Close (F);
+    end Generate_UTF_8_File;
+
+Procedure :ada:`Generate_UTF_8_File` writes two strings with non-Latin
+characters into the UTF-8 file indicated by the :ada:`Output_File_Name`
+parameter.
+
+In addition, let's implement an auxiliary procedure to display the individual
+characters of a *wide-wide* string:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    procedure Put_Line_UTF_8_Characters
+      (WSS : Wide_Wide_String)
+    is
+       procedure Put_Complete_UTF_8_String
+         (WSS : Wide_Wide_String)
+       is
+          S_UTF_8 : constant UTF_8_String :=
+                      Encode (WSS);
+       begin
+          Put_Line ("STRING: " & S_UTF_8);
+          Put_Line ("Length: "
+                    & WSS'Length'Image
+                    & " characters");
+          New_Line;
+       end Put_Complete_UTF_8_String;
+
+       --  This is a wrapper function of the
+       --  Encode function for the
+       --  Wide_Wide_Character type:
+       function Encode (Item : Wide_Wide_Character)
+                        return UTF_8_String
+        is
+           SC : constant Wide_Wide_String (1 .. 1)
+                  := (1 => Item);
+           --  We need a 1-character string
+           --  for the call to Encode.
+       begin
+           return Encode (SC);
+       end Encode;
+
+       procedure Put_UTF_8_Characters
+         (WSS : Wide_Wide_String) is
+       begin
+          for I in WSS'Range loop
+             Put (I'Image & ": ");
+             Put (Encode (WSS (I)));
+             New_Line;
+          end loop;
+       end Put_UTF_8_Characters;
+
+    begin
+        Put_Complete_UTF_8_String (WSS);
+        Put_UTF_8_Characters (WSS);
+        Put_Line ("--------------------");
+    end Put_Line_UTF_8_Characters;
+
+Finally, let's look at a code example that parses an UTF-8 file:
+
+.. code:: ada run_button main=show_utf_8.adb project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    with Generate_UTF_8_File;
+    with Put_Line_UTF_8_Characters;
+
+    procedure Show_UTF_8 is
+
+       File_Name : constant String :=
+                     "utf-8_test.txt";
+
+       procedure Read_UTF_8_File
+         (Input_File_Name : String)
+       is
+          F : File_Type;
+       begin
+          Open (F, In_File, Input_File_Name);
+
+          while not End_Of_File (F) loop
+             declare
+                S_UTF8 : constant UTF_8_String
+                           := Get_Line (F);
+                S      : constant Wide_Wide_String
+                           := Decode (S_UTF8);
+             begin
+                Put_Line_UTF_8_Characters (S);
+             end;
+          end loop;
+          Close (F);
+       end Read_UTF_8_File;
+
+    begin
+       Generate_UTF_8_File (File_Name);
+       Read_UTF_8_File (File_Name);
+    end Show_UTF_8;
+
+The :ada:`Show_UTF_8` procedure first calls the :ada:`Generate_UTF_8_File`
+procedure to generate a text file in UTF-8 format, and then calls the nested
+:ada:`Read_UTF_8_File` procedure to read from that file |mdash| this is done by
+reading the 8-bit UTF-8 encoded string and decoding it into a string of
+:ada:`Wide_Wide_String` type.
+
+(Note that we call the auxiliary :ada:`Put_Line_UTF_8_Characters` procedure to
+display the characters of each line we read from the UTF-8 file.)
+
+For completeness, we include the nested :ada:`Read_Write_UTF_8_File` procedure,
+which not only reads each line from a UTF-8 file, but also writes it into
+another UTF-8 file:
+
+.. code:: ada run_button main=show_utf_8.adb project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    with Generate_UTF_8_File;
+    with Put_Line_UTF_8_Characters;
+
+    procedure Show_UTF_8 is
+
+       File_Name_In  : constant String :=
+                         "utf-8_test.txt";
+       File_Name_Out : constant String :=
+                         "utf-8_copy.txt";
+
+       procedure Read_Write_UTF_8_File
+         (Input_File_Name,
+         Output_File_Name : String)
+       is
+          F_In, F_Out : File_Type;
+       begin
+          Open (F_In, In_File, Input_File_Name);
+          Create (F_Out, Out_File, Output_File_Name);
+
+          while not End_Of_File (F_In) loop
+             declare
+                S : constant Wide_Wide_String :=
+                      Decode (Get_Line (F_In));
+             begin
+                Put_Line_UTF_8_Characters (S);
+                Put_Line (F_Out, Encode (S));
+             end;
+          end loop;
+
+          Close (F_In);
+          Close (F_Out);
+       end Read_Write_UTF_8_File;
+
+    begin
+       Generate_UTF_8_File (File_Name_In);
+
+       Read_Write_UTF_8_File
+         (Input_File_Name  => File_Name_In,
+          Output_File_Name => File_Name_Out);
+    end Show_UTF_8;
+
+In the nested :ada:`Read_Write_UTF_8_File` procedure, we see both :ada:`Decode`
+and :ada:`Encode` functions being called to convert from and to the
+:ada:`UTF_8_String` type, respectively.
+
+.. admonition:: In the GNAT toolchain
+
+    If we use the ``-gnatW8`` switch, which we mentioned
+    :ref:`in a previous section <Adv_Ada_GNAT_W8_Switch>`, the implementation
+    of :ada:`Generate_UTF_8_File` and :ada:`Put_Line_UTF_8_Characters` must be
+    adapted. In addition, we can simplify the implementation of the
+    :ada:`Show_UTF_8` procedure, too. (Note, however, that the previous
+    implementation, which makes use of the :ada:`Decode` and :ada:`Encode`
+    functions, would work fine as well.)
+
+    .. code:: ada run_button main=show_utf_8.adb project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing switches=Compiler(-gnatW8);
+
+        with Ada.Wide_Wide_Text_IO;
+        use  Ada.Wide_Wide_Text_IO;
+
+        procedure Put_Line_UTF_8_Characters
+          (WSS : Wide_Wide_String)
+        is
+           procedure Put_Complete_UTF_8_String
+             (WSS : Wide_Wide_String)
+           is
+           begin
+              Put_Line ("STRING: " & WSS);
+              Put_Line ("Length: "
+                        & WSS'Length'Wide_Wide_Image
+                        & " characters");
+              New_Line;
+           end Put_Complete_UTF_8_String;
+
+           procedure Put_UTF_8_Characters
+             (WSS : Wide_Wide_String)
+           is
+           begin
+              for I in WSS'Range loop
+                 Put (I'Wide_Wide_Image & ": ");
+                 Put (WSS (I));
+                 New_Line;
+              end loop;
+           end Put_UTF_8_Characters;
+
+        begin
+            Put_Complete_UTF_8_String (WSS);
+            Put_UTF_8_Characters (WSS);
+            Put_Line ("--------------------");
+        end Put_Line_UTF_8_Characters;
+
+        with Ada.Wide_Wide_Text_IO;
+        use  Ada.Wide_Wide_Text_IO;
+
+        procedure Generate_UTF_8_File
+          (Output_File_Name : String)
+        is
+           F : File_Type;
+        begin
+           Create (F, Out_File, Output_File_Name);
+           Put_Line (F, "♥♫");
+           Put_Line (F, "مرحبا يا عالم");
+           Close (F);
+        end Generate_UTF_8_File;
+
+        with Ada.Wide_Wide_Text_IO;
+        use  Ada.Wide_Wide_Text_IO;
+
+        with Generate_UTF_8_File;
+        with Put_Line_UTF_8_Characters;
+
+        procedure Show_UTF_8 is
+
+           File_Name_In  : constant String :=
+                             "utf-8_test.txt";
+           File_Name_Out : constant String :=
+                             "utf-8_copy.txt";
+
+           procedure Read_Write_UTF_8_File
+             (Input_File_Name,
+              Output_File_Name : String)
+           is
+              F_In, F_Out : File_Type;
+           begin
+              Open (F_In, In_File, Input_File_Name);
+              Create (F_Out, Out_File, Output_File_Name);
+
+              while not End_Of_File (F_In) loop
+                 declare
+                    S : constant Wide_Wide_String :=
+                          Get_Line (F_In);
+                 begin
+                    Put_Line_UTF_8_Characters (S);
+                    Put_Line (F_Out, S);
+                 end;
+              end loop;
+
+              Close (F_In);
+              Close (F_Out);
+           end Read_Write_UTF_8_File;
+
+        begin
+           Generate_UTF_8_File (File_Name_In);
+
+           Read_Write_UTF_8_File
+             (Input_File_Name  => File_Name_In,
+              Output_File_Name => File_Name_Out);
+        end Show_UTF_8;
+
+    In this version of the code, we've removed all references to the
+    :ada:`UTF_8_String` type |mdash| as well as the :ada:`Decode` and
+    :ada:`Encode` functions that we were using to convert from and to this
+    type. In this case, all UTF-8 processing happens directly using strings of
+    :ada:`Wide_Wide_Strings` type.
+
 
 .. _Adv_Ada_Image_Attribute:
 
