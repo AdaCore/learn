@@ -804,6 +804,8 @@ Otherwise, we might get unexpected behavior. (Interpreting the characters in
 UTF-8 format as Latin-1 format is certainly an example of what we want to avoid
 here.)
 
+.. _Adv_Ada_GNAT_W8_Switch:
+
 .. admonition:: In the GNAT toolchain
 
     You can use UTF-8 coding in your source-code file and initialize strings of
