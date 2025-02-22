@@ -475,21 +475,21 @@ these array declarations are equivalent:
 
 .. _Adv_Ada_Shared_Variable_Control_Full_Access_Only:
 
-Full access only
+Full-access only
 ----------------
 
 .. note::
 
    This feature was introduced in Ada 2022.
 
-A full access object is an object that requires that read or write operations
+A full-access object is an object that requires that read or write operations
 on this object are performed by reading or writing all bits of the object (i.e.
-the *full object*) at once. Accordingly, a full access type is a type whose
-objects follow this requirement. Note that a full access type must be
+the *full object*) at once. Accordingly, a full-access type is a type whose
+objects follow this requirement. Note that a full-access type must be
 simultaneously a
 :ref:`volatile type <Adv_Ada_Shared_Variable_Control_Volatile>` or an
 :ref:`atomic type <Adv_Ada_Shared_Variable_Control_Atomic>`. (In other words,
-if a type is neither volatile nor atomic, it cannot be a full access type.)
+if a type is neither volatile nor atomic, it cannot be a full-access type.)
 
 .. admonition:: Important
 
