@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2025-02
+---------------
+
+- New section:
+
+    - :ref:`Full-access only <Adv_Ada_Shared_Variable_Control_Full_Access_Only>`
+
+
 Release 2025-01
 ---------------
 
