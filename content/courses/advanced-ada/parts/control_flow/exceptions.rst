@@ -902,7 +902,7 @@ units:
 
        type Custom_Range is range 1 .. 5
          with Dynamic_Predicate =>
-                Custom_Range not in 4;
+                4 not in Custom_Range;
 
        package P is new
          Some_Generic_Package (Custom_Range);
