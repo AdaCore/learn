@@ -1640,8 +1640,8 @@ start by declaring some variables. Here, it's important to highlight that the
 :ada:`Prior` as actual parameters. We can have two possible outcomes:
 
 #. If :ada:`Value` hasn't been modified by a task yet, it will contain the
-   default value |mdash| which means that the value of the :ada:`Prior` and
-   :ada:`Value` variables matches. In this case, the call to
+   default value |mdash| which means that the values of the :ada:`Prior` and
+   :ada:`Value` variables match. In this case, the call to
    :ada:`Atomic_Compare_And_Exchange` will update the :ada:`Value` variable and
    return :ada:`True`. (Note that we also update the :ada:`Value_Modified_By`
    variable when :ada:`Atomic_Compare_And_Exchange` returns :ada:`True`.)
