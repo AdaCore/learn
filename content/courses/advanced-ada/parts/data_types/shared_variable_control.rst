@@ -1379,7 +1379,7 @@ Note that :ada:`System.Atomic_Operations.Exchange` is a generic package, so we
 have to instantiate it for a specific atomic type |mdash| in this case, the
 atomic Boolean :ada:`Lock` type.
 
-.. _Adv_Ada_Package_System_Atomic_Operations_Spinlocks_Task_ID:
+.. _Adv_Ada_Package_System_Atomic_Operations_Spinlocks_Task_Number:
 
 We can use multiple tasks to illustrate a situation where using a lock is
 important to ensure that no :wikipedia:`race conditions <Race_condition>`
@@ -1407,13 +1407,13 @@ occur:
     use Spinlocks.Lock_Exchange;
 
     procedure Show_Locks is
-       L  : aliased Lock := False;
-       ID : Integer := 0;
+       L          : aliased Lock := False;
+       Task_Count : Integer      := 0;
 
        task type A_Task;
 
        task body A_Task is
-          Task_ID : Integer;
+          Task_Number : Integer;
        begin
           --  Get the lock
           while Atomic_Exchange (Item  => L,
@@ -1422,13 +1422,14 @@ occur:
           end loop;
 
           --  At this point, we got the lock.
-          ID      := ID + 1;
-          Task_ID := ID;
+          Task_Count  := Task_Count + 1;
+          Task_Number := Task_Count;
 
           --  Release the lock.
           L := False;
 
-          Put_Line ("Task_ID: " & Task_ID'Image);
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
 
        end A_Task;
 
@@ -1438,10 +1439,10 @@ occur:
     end Show_Locks;
 
 In this example, we create multiple tasks (:ada:`A`, :ada:`B`, :ada:`C`,
-:ada:`D`, :ada:`E`, :ada:`F`) and initialize the :ada:`Task_ID` of each task
-based on the value of the :ada:`ID` variable. To avoid multiple tasks accessing
-the :ada:`ID` variable at the same time, we use the :ada:`L` lock, which we get
-before updating the :ada:`ID`.
+:ada:`D`, :ada:`E`, :ada:`F`) and initialize the :ada:`Task_Number` of each task
+based on the value of the :ada:`Task_Count` variable. To avoid multiple tasks accessing
+the :ada:`Task_Count` variable at the same time, we use the :ada:`L` lock, which we get
+before updating the :ada:`Task_Count`.
 
 :ada:`Atomic_Compare_And_Exchange` function
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1542,21 +1543,21 @@ Let's use this package in the :ada:`Show_Lazy_Initialization` procedure:
     use Lazy_Initialization.Value_Exchange;
 
     procedure Show_Lazy_Initialization is
-      subtype A_Task_ID is Natural;
+      subtype A_Task_Number is Natural;
 
        Value             : aliased Lazy_Value;
-       Value_Modified_By : A_Task_ID := 0;
+       Value_Modified_By : A_Task_Number := 0;
 
        task type A_Task is
-          entry Start (ID : A_Task_ID);
+          entry Start (This : A_Task_Number);
           entry Stop;
        end A_Task;
 
        task body A_Task is
-          Task_ID : A_Task_ID;
+          Task_Number : A_Task_Number;
        begin
-          accept Start (ID : A_Task_ID) do
-             Task_ID := ID;
+          accept Start (This : A_Task_Number) do
+             Task_Number := This;
           end Start;
 
           Sleep_Some_Time : declare
@@ -1589,17 +1590,17 @@ Let's use this package in the :ada:`Show_Lazy_Initialization` procedure:
                 Prior   => Prior,
                 Desired => Lazy_Value (Initial_Value))
              then
-                Value_Modified_By := Task_ID;
+                Value_Modified_By := Task_Number;
              end if;
 
           end Generate_Value;
 
           accept Stop do
-             Put_Line ("Current task ID:     "
-                       & Task_ID'Image);
+             Put_Line ("Current task number:     "
+                       & Task_Number'Image);
              Put_Line ("Value:               "
                        & Value'Image);
-             Put_Line ("Modified by task ID: "
+             Put_Line ("Modified by task number: "
                        & Value_Modified_By'Image);
              Put_Line ("---------------------");
           end Stop;
@@ -1618,7 +1619,7 @@ Let's use this package in the :ada:`Show_Lazy_Initialization` procedure:
 In the :ada:`Show_Lazy_Initialization` procedure, the most important variable
 is :ada:`Value`, which is the variable we have to protect via a lock. In
 addition, we have the auxiliary :ada:`Value_Modified_By` variable, which
-indicates the ID of the task that initialized the :ada:`Value` variable.
+indicates the number of the task that initialized the :ada:`Value` variable.
 
 In this procedure, we also see two main
 :ref:`block statements <Adv_Ada_Block_Statements>`:
@@ -1692,13 +1693,13 @@ we've seen before:
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Test_And_Set is
-       Lock : aliased Test_And_Set_Flag;
-       ID   : Integer := 0;
+       Lock       : aliased Test_And_Set_Flag;
+       Task_Count : Integer := 0;
 
        task type A_Task;
 
        task body A_Task is
-          Task_ID : Integer;
+          Task_Number : Integer;
        begin
           --  Get the lock
           while Atomic_Test_And_Set (Lock) loop
@@ -1706,13 +1707,14 @@ we've seen before:
           end loop;
 
           --  At this point, we got the lock.
-          ID      := ID + 1;
-          Task_ID := ID;
+          Task_Count  := Task_Count + 1;
+          Task_Number := Task_Count;
 
           --  Release the lock.
           Atomic_Clear (Lock);
 
-          Put_Line ("Task_ID: " & Task_ID'Image);
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
 
        end A_Task;
 
@@ -1722,7 +1724,7 @@ we've seen before:
     end Show_Test_And_Set;
 
 Here, we call :ada:`Atomic_Test_And_Set` in a loop until it returns
-:ada:`True`. Then, we update the :ada:`ID` and :ada:`Task_ID`. When we're
+:ada:`True`. Then, we update the :ada:`Task_Count` and :ada:`Task_Number`. When we're
 finished, we call the :ada:`Atomic_Clear` procedure to release the lock.
 
 .. todo::
@@ -1800,11 +1802,11 @@ following operations atomically:
        return Old_Item;
     end Atomic_Fetch_And_Subtract;
 
-.. _Adv_Ada_Package_System_Integer_Arithmetic_Task_ID:
+.. _Adv_Ada_Package_System_Integer_Arithmetic_Task_Number:
 
 Let's reuse a
-:ref:`previous code example <Adv_Ada_Package_System_Atomic_Operations_Spinlocks_Task_ID>`
-that sets a unique ID for each task. In this case, instead of using locks, we
+:ref:`previous code example <Adv_Ada_Package_System_Atomic_Operations_Spinlocks_Task_Number>`
+that sets a unique number for each task. In this case, instead of using locks, we
 use the atomic operations from the
 :ada:`System.Atomic_Operations.Integer_Arithmetic` package:
 
@@ -1832,16 +1834,18 @@ use the atomic operations from the
     use  Atomic_Integers.Atomic_Integer_Arithmetic;
 
     procedure Show_Atomic_Integers is
-       ID : aliased Atomic_Integer := 0;
+       Task_Count : aliased Atomic_Integer := 0;
 
        task type A_Task;
 
        task body A_Task is
-          Task_ID : Atomic_Integer;
+          Task_Number : Atomic_Integer;
        begin
-          Task_ID := Atomic_Fetch_And_Add (ID, 1);
+          Task_Number :=
+            Atomic_Fetch_And_Add (Task_Count, 1);
 
-          Put_Line ("Task_ID: " & Task_ID'Image);
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
 
        end A_Task;
 
@@ -1851,7 +1855,7 @@ use the atomic operations from the
     end Show_Atomic_Integers;
 
 In this example, we call the :ada:`Atomic_Fetch_And_Add` function to update the
-:ada:`ID` variable and, at the same time, initialize the :ada:`Task_ID`
+:ada:`Task_Count` variable and, at the same time, initialize the :ada:`Task_Number`
 variable of the current task.
 
 
@@ -1871,7 +1875,7 @@ fact, it provides the same operations: the procedures :ada:`Atomic_Add` and
 modular types instead of integer types.
 
 Let's reuse the
-:ref:`previous code example <Adv_Ada_Package_System_Integer_Arithmetic_Task_ID>`,
+:ref:`previous code example <Adv_Ada_Package_System_Integer_Arithmetic_Task_Number>`,
 but replace the atomic integer type by an atomic modular type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Modular_Arithmetic
@@ -1898,16 +1902,18 @@ but replace the atomic integer type by an atomic modular type:
     use  Atomic_Modulars.Atomic_Modular_Arithmetic;
 
     procedure Show_Atomic_Modulars is
-       ID : aliased Atomic_Modular := 0;
+       Task_Count : aliased Atomic_Modular := 0;
 
        task type A_Task;
 
        task body A_Task is
-          Task_ID : Atomic_Modular;
+          Task_Number : Atomic_Modular;
        begin
-          Task_ID := Atomic_Fetch_And_Add (ID, 1);
+          Task_Number :=
+            Atomic_Fetch_And_Add (Task_Count, 1);
 
-          Put_Line ("Task_ID: " & Task_ID'Image);
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
 
        end A_Task;
 
@@ -1917,8 +1923,8 @@ but replace the atomic integer type by an atomic modular type:
     end Show_Atomic_Modulars;
 
 As we did in the previous example, we again call the
-:ada:`Atomic_Fetch_And_Add` function to update the :ada:`ID` variable and, at
-the same time, initialize the :ada:`Task_ID` variable of the current task. The
+:ada:`Atomic_Fetch_And_Add` function to update the :ada:`Task_Count` variable and, at
+the same time, initialize the :ada:`Task_Number` variable of the current task. The
 only difference is that we use a modular type (:ada:`Atomic_Modular`).
 
 .. admonition:: Relevant topics
