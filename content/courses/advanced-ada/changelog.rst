@@ -8,9 +8,17 @@ CHANGELOG
 Release 2025-02
 ---------------
 
-- New section:
+- New sections / subsections:
 
   - :ref:`Full-access only <Adv_Ada_Shared_Variable_Control_Full_Access_Only>`
+
+  - :ref:`Atomic operations <Adv_Ada_Package_System_Atomic_Operations>`
+
+  - :ref:`Classification of errors <Adv_Ada_Classification_Of_Errors>`
+
+  - :ref:`Program_Error_Check <Adv_Ada_Program_Error_Check>`
+
+  - :ref:`Tasking_Check <Adv_Ada_Tasking_Check>`
 
 
 Release 2025-01
