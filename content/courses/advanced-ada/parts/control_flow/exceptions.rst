@@ -34,8 +34,8 @@ In this section, we discuss each of these categories.
 Compilation errors
 ~~~~~~~~~~~~~~~~~~
 
-In the category of compilation errors, the goal is to prevent compilers to
-accept illegal programs. Here, any program that doesn't follow the rules
+In the category of compilation errors, the goal is to prevent compilers from
+accepting illegal programs. Here, any program that doesn't follow the rules
 described in the Ada Reference Manual is considered illegal. Those rules
 include not only simple syntax errors, but also more complicated rules, such as
 the ones concerning
@@ -65,7 +65,7 @@ Consider a calculation using variables: if this calculation leads to a result
 that isn't representable with the underlying data types, we cannot possibly
 store a value  into a register or memory that can be considered correct |mdash|
 so we have to detect this situation. Unfortunately, because we're using
-variables, we obviously cannot verify the result of he calculation at
+variables, we obviously cannot verify the result of the calculation at
 compilation time, so we have to verify it at runtime.
 
 As we've mentioned before, Ada strives for detecting as many erroneous
@@ -85,7 +85,8 @@ Bounded errors
 
 For certain kinds of errors, the compiler might not be able to detect the error
 |mdash| neither at compilation time, nor with checks at runtime. Such errors
-are called bounded errors if their possible effects are *bounded*. In fact, the
+are called bounded errors because their possible effects are *bounded*.
+In fact, the
 Ada Reference Manual describes each bounded error and its possible effects
 |mdash| one of those effects is raising the :ada:`Program_Error` exception.
 
@@ -196,7 +197,7 @@ code example:
        Put_Line ("I1 = " & I1'Image);
     end Show_Erroneous_Execution;
 
-It is consider to be a bounded error to use the :ada:`To_Int_1_10` function
+It is considered to be a bounded error to use the :ada:`To_Int_1_10` function
 (based on :ada:`Unchecked_Conversion`) with a value that is invalid for the
 target data type. However, if we use the invalid value of :ada:`I1` in an
 operation such as the :ada:`I1 := I1 + 1` assignment, this leads to erroneous
