@@ -1286,17 +1286,647 @@ of the :ada:`Full_Access_Only` aspect.
     instruction on this platform.
 
 
-..
-    TO BE DONE:
 
-    Package System.Atomic_Operations
-    --------------------------------
+.. _Adv_Ada_Package_System_Atomic_Operations:
 
-   .. admonition:: Relevant topics
+Atomic operations
+-----------------
 
-      - :arm22:`The Package System.Atomic_Operations <C-6-1>`
+.. note::
 
-   .. todo::
+    This feature was introduced in Ada 2022.
 
-      Add to previous section!
+Ada offers four packages to handle atomic operations. Those packages are
+child packages of the :ada:`System.Atomic_Operations` package. We will discuss
+each of those package individually in this section.
 
+.. admonition:: Relevant topics
+
+    - :arm22:`C.6.1 The Package System.Atomic_Operations <C-6-1>`
+
+
+Atomic Exchange
+~~~~~~~~~~~~~~~
+
+The generic :ada:`System.Atomic_Operations.Exchange` package provides
+operations to compare and exchange objects atomically.
+
+:ada:`Atomic_Exchange` function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+One of those operations is the :ada:`Atomic_Exchange` function, which performs
+the following operations atomically:
+
+.. code-block:: ada
+
+    function Atomic_Exchange
+      (Item  : aliased in out Atomic_Type;
+       Value :                Atomic_Type)
+       return Atomic_Type
+    is
+       Old_Item : Atomic_Type := Item;
+    begin
+       Item := Value;
+       return Old_Item;
+    end Atomic_Exchange;
+
+.. _Adv_Ada_Package_System_Atomic_Operations_Spinlocks:
+
+As mentioned in the :arm22:`Ada Reference Manual <C-6-2>`, we can use this
+function to implement a :wikipedia:`spinlock <Spinlock>`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Exchange
+
+    pragma Ada_2022;
+
+    with System.Atomic_Operations.Exchange;
+
+    package Spinlocks is
+
+       type Lock is new Boolean with Atomic;
+
+       package Lock_Exchange is new
+         System.Atomic_Operations.Exchange (Lock);
+
+    end Spinlocks;
+
+    with Spinlocks;
+    use Spinlocks;
+    use Spinlocks.Lock_Exchange;
+
+    procedure Show_Locks is
+       L : aliased Lock := False;
+    begin
+       --  Get the lock
+       while Atomic_Exchange (Item  => L,
+                              Value => True) loop
+          null;
+       end loop;
+
+       --  At this point, we got the lock.
+       --  Do some stuff here...
+
+       --  Release the lock.
+       L := False;
+    end Show_Locks;
+
+In this example, we call the :ada:`Atomic_Exchange` function for the :ada:`L`
+lock until we get it. Then, we can use the resource that we protected via the
+lock. After we finish our work, we can release the lock by setting :ada:`L` to
+:ada:`False`.
+
+Note that :ada:`System.Atomic_Operations.Exchange` is a generic package, so we
+have to instantiate it for a specific atomic type |mdash| in this case, the
+atomic Boolean :ada:`Lock` type.
+
+.. _Adv_Ada_Package_System_Atomic_Operations_Spinlocks_Task_Number:
+
+We can use multiple tasks to illustrate a situation where using a lock is
+important to ensure that no :wikipedia:`race conditions <Race_condition>`
+occur:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Exchange
+
+    pragma Ada_2022;
+
+    with System.Atomic_Operations.Exchange;
+
+    package Spinlocks is
+
+       type Lock is new Boolean with Atomic;
+
+       package Lock_Exchange is new
+         System.Atomic_Operations.Exchange (Lock);
+
+    end Spinlocks;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Spinlocks;
+    use Spinlocks;
+    use Spinlocks.Lock_Exchange;
+
+    procedure Show_Locks is
+       L          : aliased Lock := False;
+       Task_Count : Integer      := 0;
+
+       task type A_Task;
+
+       task body A_Task is
+          Task_Number : Integer;
+       begin
+          --  Get the lock
+          while Atomic_Exchange (Item  => L,
+                                 Value => True) loop
+             null;
+          end loop;
+
+          --  At this point, we got the lock.
+          Task_Count  := Task_Count + 1;
+          Task_Number := Task_Count;
+
+          --  Release the lock.
+          L := False;
+
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
+
+       end A_Task;
+
+       A, B, C, D, E, F : A_Task;
+    begin
+       null;
+    end Show_Locks;
+
+In this example, we create multiple tasks (:ada:`A`, :ada:`B`, :ada:`C`,
+:ada:`D`, :ada:`E`, :ada:`F`) and initialize the :ada:`Task_Number` of each task
+based on the value of the :ada:`Task_Count` variable. To avoid multiple tasks accessing
+the :ada:`Task_Count` variable at the same time, we use the :ada:`L` lock, which we get
+before updating the :ada:`Task_Count`.
+
+:ada:`Atomic_Compare_And_Exchange` function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Another function from the :ada:`System.Atomic_Operations.Exchange` package is
+:ada:`Atomic_Compare_And_Exchange`, which performs the following operations
+atomically:
+
+.. code-block:: ada
+
+   function Atomic_Compare_And_Exchange
+     (Item    : aliased in out Atomic_Type;
+      Prior   : aliased in out Atomic_Type;
+      Desired :                Atomic_Type)
+      return Boolean is
+    begin
+       if Item = Prior then
+          Item := Value;
+          --  The item is only updated if its
+          --  value and the prior value match
+
+          return True;
+       else
+          Prior := Item;
+          return False;
+       end if;
+    end Atomic_Exchange;
+
+This function can be used for
+:wikipedia:`lazy initialization <Lazy_initialization>` of variables. For
+example, consider an application with multiple tasks that make use of a certain
+value that isn't initialized at its declaration, but at a later point in time
+by an arbitrary task. We can use :ada:`Atomic_Compare_And_Exchange` to ensure
+that we only update that value if it wasn't already initialized.
+
+Let's start with the package specification:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Compare_And_Exchange
+
+    pragma Ada_2022;
+
+    with System.Atomic_Operations.Exchange;
+    with Ada.Numerics.Discrete_Random;
+
+    package Lazy_Initialization is
+
+       subtype Lazy_Value_Total_Range is
+         Integer range 99 .. 1000;
+
+       Lazy_Value_Default_Value : constant
+          := Lazy_Value_Total_Range'First;
+
+       subtype Lazy_Value_Range is Integer
+         range Lazy_Value_Default_Value + 1 ..
+               Lazy_Value_Total_Range'Last;
+
+       type Lazy_Value is new Lazy_Value_Total_Range
+         with Atomic,
+              Default_Value =>
+                Lazy_Value_Default_Value;
+
+       package Value_Exchange is new
+         System.Atomic_Operations.Exchange
+           (Lazy_Value);
+
+       package Lazy_Value_Random is new
+         Ada.Numerics.Discrete_Random
+           (Lazy_Value_Range);
+
+    end Lazy_Initialization;
+
+In this package, we declare the :ada:`Lazy_Value` type with a default value
+(specified by the :ada:`Lazy_Value_Default_Value` constant). Note that we have
+two ranges here: :ada:`Lazy_Value_Total_Range` and :ada:`Lazy_Value_Range`. We
+use the :ada:`Lazy_Value_Total_Range` in the declaration of the
+:ada:`Lazy_Value` type: it indicates the *total range* of the type. We use the
+:ada:`Lazy_Value_Range` as a constraint for the total range. This range doesn't
+contain the default value (:ada:`Lazy_Value_Default_Value`), and we use it to
+indicate the valid values of the type. (We discuss the application of
+:ada:`Lazy_Value_Range` later on.)
+
+Also, in addition to instantiating the :ada:`System.Atomic_Operations.Exchange`
+package, we instantiate the :ada:`Ada.Numerics.Discrete_Random` package, which
+we'll use to generate random numbers in the expected range
+(:ada:`Lazy_Value_Range`) for the :ada:`Lazy_Value` type. (We discussed the
+:ada:`Ada.Numerics.Discrete_Random` package in the
+:ref:`Introduction to Ada <Intro_Ada_Random_Number_Generation>` course.)
+
+Let's use this package in the :ada:`Show_Lazy_Initialization` procedure:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Compare_And_Exchange
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Numerics.Discrete_Random;
+
+    with Lazy_Initialization;
+    use Lazy_Initialization;
+    use Lazy_Initialization.Value_Exchange;
+
+    procedure Show_Lazy_Initialization is
+      subtype A_Task_Number is Natural;
+
+       Value             : aliased Lazy_Value;
+       Value_Modified_By : A_Task_Number := 0;
+
+       task type A_Task is
+          entry Start (This : A_Task_Number);
+          entry Stop;
+       end A_Task;
+
+       task body A_Task is
+          Task_Number : A_Task_Number;
+       begin
+          accept Start (This : A_Task_Number) do
+             Task_Number := This;
+          end Start;
+
+          Sleep_Some_Time : declare
+             subtype Sleep_Range is
+               Integer range 1 .. 3;
+
+             package Random_Sleep is new
+               Ada.Numerics.Discrete_Random
+                 (Sleep_Range);
+             use Random_Sleep;
+
+             G : Generator;
+          begin
+             Reset (G);
+             delay Duration (Random (G));
+          end Sleep_Some_Time;
+
+          Generate_Value : declare
+             use Lazy_Value_Random;
+
+             G             :         Generator;
+             Initial_Value :         Lazy_Value_Range;
+             Prior         : aliased Lazy_Value;
+          begin
+             Reset (G);
+             Initial_Value := Random (G);
+
+             if Atomic_Compare_And_Exchange
+               (Item    => Value,
+                Prior   => Prior,
+                Desired => Lazy_Value (Initial_Value))
+             then
+                Value_Modified_By := Task_Number;
+             end if;
+
+          end Generate_Value;
+
+          accept Stop do
+             Put_Line ("Current task number:     "
+                       & Task_Number'Image);
+             Put_Line ("Value:               "
+                       & Value'Image);
+             Put_Line ("Modified by task number: "
+                       & Value_Modified_By'Image);
+             Put_Line ("---------------------");
+          end Stop;
+       end A_Task;
+
+       Some_Tasks : array (1 .. 5) of A_Task;
+    begin
+       for I in Some_Tasks'Range loop
+          Some_Tasks (I).Start (I);
+       end loop;
+       for I in Some_Tasks'Range loop
+          Some_Tasks (I).Stop;
+       end loop;
+    end Show_Lazy_Initialization;
+
+In the :ada:`Show_Lazy_Initialization` procedure, the most important variable
+is :ada:`Value`, which is the variable we have to protect via a lock. In
+addition, we have the auxiliary :ada:`Value_Modified_By` variable, which
+indicates the number of the task that initialized the :ada:`Value` variable.
+
+In this procedure, we also see two main
+:ref:`block statements <Adv_Ada_Block_Statements>`:
+
+- the block statement with the :ada:`Sleep_Some_Time` identifier, where we make
+  the task *sleep* for a random amount of time (in the :ada:`Sleep_Range`
+  range); and
+
+- the block statement with the :ada:`Generate_Value` identified, where we
+  generate a new value randomly and attempt to update the :ada:`Value` variable
+  (of :ada:`Lazy_Value` type).
+
+Let's discuss some details about the :ada:`Generate_Value` block statement. We
+start by declaring some variables. Here, it's important to highlight that the
+:ada:`Prior` variable is initialized with the default value
+(:ada:`Lazy_Value_Default_Value`). We then call the
+:ada:`Atomic_Compare_And_Exchange` function, and pass :ada:`Value` and
+:ada:`Prior` as actual parameters. We can have two possible outcomes:
+
+#. If :ada:`Value` hasn't been modified by a task yet, it will contain the
+   default value |mdash| which means that the values of the :ada:`Prior` and
+   :ada:`Value` variables match. In this case, the call to
+   :ada:`Atomic_Compare_And_Exchange` will update the :ada:`Value` variable and
+   return :ada:`True`. (Note that we also update the :ada:`Value_Modified_By`
+   variable when :ada:`Atomic_Compare_And_Exchange` returns :ada:`True`.)
+
+#. If :ada:`Value` has already been modified by a task, its value doesn't match
+   the (default) value of :ada:`Prior` anymore, so the call to
+   :ada:`Atomic_Compare_And_Exchange` doesn't modify the :ada:`Value` variable.
+
+As mentioned before, we use a stricter range for the random number generator:
+the :ada:`Lazy_Value_Range`. Because this range doesn't contain the default
+value (:ada:`Lazy_Value_Default_Value`), we will never generate a random value
+that matches the default value.
+
+.. todo::
+
+    Mention :ada:`Is_Lock_Free` function.
+
+.. admonition:: Relevant topics
+
+    - :arm22:`C.6.2 The Package System.Atomic_Operations.Exchange <C-6-2>`
+
+
+Atomic Test and Set
+^^^^^^^^^^^^^^^^^^^
+
+The :ada:`System.Atomic_Operations.Test_And_Set` package provides atomic
+operations to set and clear atomic flags. To declare flags, we use the
+:ada:`Test_And_Set_Flag` type. The following operations are available:
+
+#. the :ada:`Atomic_Test_And_Set` function, which we call to verify whether the
+   flag can be set and, if positive, set it accordingly.
+
+    - The function returns :ada:`True` if the flag has been set, and
+      :ada:`False` otherwise.
+
+#. the :ada:`Atomic_Clear` procedure, which we call to clear the flag.
+
+We can use these functions to implement an application similar to the
+:ref:`spinlocks <Adv_Ada_Package_System_Atomic_Operations_Spinlocks>` that
+we've seen before:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Test_And_Set
+
+    pragma Ada_2022;
+
+    with System.Atomic_Operations.Test_And_Set;
+    use  System.Atomic_Operations.Test_And_Set;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Test_And_Set is
+       Lock       : aliased Test_And_Set_Flag;
+       Task_Count : Integer := 0;
+
+       task type A_Task;
+
+       task body A_Task is
+          Task_Number : Integer;
+       begin
+          --  Get the lock
+          while Atomic_Test_And_Set (Lock) loop
+             null;
+          end loop;
+
+          --  At this point, we got the lock.
+          Task_Count  := Task_Count + 1;
+          Task_Number := Task_Count;
+
+          --  Release the lock.
+          Atomic_Clear (Lock);
+
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
+
+       end A_Task;
+
+       A, B, C, D, E, F : A_Task;
+    begin
+       null;
+    end Show_Test_And_Set;
+
+Here, we call :ada:`Atomic_Test_And_Set` in a loop until it returns
+:ada:`True`. Then, we update the :ada:`Task_Count` and :ada:`Task_Number`. When we're
+finished, we call the :ada:`Atomic_Clear` procedure to release the lock.
+
+.. todo::
+
+    Mention :ada:`Is_Lock_Free` function.
+
+.. admonition:: Relevant topics
+
+    - :arm22:`C.6.3 The Package System.Atomic_Operations.Test_and_Set <C-6-3>`
+
+
+Atomic Operations using Integer Arithmetic
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The generic :ada:`System.Atomic_Operations.Integer_Arithmetic` package is used
+to perform atomic operations on atomic integer types. It provides the following
+operations: the procedures :ada:`Atomic_Add` and :ada:`Atomic_Subtract`, and
+the functions :ada:`Atomic_Fetch_And_Add` and :ada:`Atomic_Fetch_And_Subtract`.
+The procedures and the corresponding :ada:`Atomic_Fetch_` functions do
+basically the same thing, with the difference that :ada:`Atomic_Fetch`
+functions return the previous (older) value of the input item.
+
+The :ada:`Atomic_Add` procedure performs the following operations atomically:
+
+.. code-block:: ada
+
+    procedure Atomic_Add
+      (Item  : aliased in out Atomic_Type;
+       Value :                Atomic_Type) is
+    begin
+       Item := Item + Value;
+    end Atomic_Add;
+
+The corresponding :ada:`Atomic_Fetch_And_Add` function performs the following
+operations atomically:
+
+.. code-block:: ada
+
+    function Atomic_Fetch_And_Add
+      (Item  : aliased in out Atomic_Type;
+       Value :                Atomic_Type)
+       return Atomic_Type
+    is
+       Old_Item : Atomic_Type := Item;
+    begin
+       Item := Item + Value;
+       return Old_Item;
+    end Atomic_Fetch_And_Add;
+
+The :ada:`Atomic_Subtract` procedure performs the following operations
+atomically:
+
+.. code-block:: ada
+
+    procedure Atomic_Subtract
+      (Item  : aliased in out Atomic_Type;
+       Value :                Atomic_Type) is
+    begin
+       Item := Item - Value;
+    end Atomic_Subtract;
+
+The corresponding :ada:`Atomic_Fetch_And_Subtract` function performs the
+following operations atomically:
+
+.. code-block:: ada
+
+    function Atomic_Fetch_And_Subtract
+      (Item  : aliased in out Atomic_Type;
+       Value :                Atomic_Type)
+       return Atomic_Type
+    is
+       Old_Item : Atomic_Type := Item;
+    begin
+       Item := Item - Value;
+       return Old_Item;
+    end Atomic_Fetch_And_Subtract;
+
+.. _Adv_Ada_Package_System_Integer_Arithmetic_Task_Number:
+
+Let's reuse a
+:ref:`previous code example <Adv_Ada_Package_System_Atomic_Operations_Spinlocks_Task_Number>`
+that sets a unique number for each task. In this case, instead of using locks, we
+use the atomic operations from the
+:ada:`System.Atomic_Operations.Integer_Arithmetic` package:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Integer_Arithmetic
+
+    pragma Ada_2022;
+
+    with System.Atomic_Operations.Integer_Arithmetic;
+
+    package Atomic_Integers is
+
+       type Atomic_Integer is new Integer
+         with Atomic;
+
+       package Atomic_Integer_Arithmetic is new
+         System.Atomic_Operations.Integer_Arithmetic
+           (Atomic_Integer);
+
+    end Atomic_Integers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Atomic_Integers;
+    use  Atomic_Integers;
+    use  Atomic_Integers.Atomic_Integer_Arithmetic;
+
+    procedure Show_Atomic_Integers is
+       Task_Count : aliased Atomic_Integer := 0;
+
+       task type A_Task;
+
+       task body A_Task is
+          Task_Number : Atomic_Integer;
+       begin
+          Task_Number :=
+            Atomic_Fetch_And_Add (Task_Count, 1);
+
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
+
+       end A_Task;
+
+       A, B, C, D, E, F : A_Task;
+    begin
+       null;
+    end Show_Atomic_Integers;
+
+In this example, we call the :ada:`Atomic_Fetch_And_Add` function to update the
+:ada:`Task_Count` variable and, at the same time, initialize the :ada:`Task_Number`
+variable of the current task.
+
+
+.. admonition:: Relevant topics
+
+    - :arm22:`C.6.4 The Package System.Atomic_Operations.Integer_Arithmetic <C-6-4>`
+
+
+Atomic Operations using Modular Arithmetic
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The generic :ada:`System.Atomic_Operations.Modular_Arithmetic` package is very
+similar to the :ada:`System.Atomic_Operations.Integer_Arithmetic` package. In
+fact, it provides the same operations: the procedures :ada:`Atomic_Add` and
+:ada:`Atomic_Subtract`, and the functions :ada:`Atomic_Fetch_And_Add` and
+:ada:`Atomic_Fetch_And_Subtract`. The only difference is that it is used for
+modular types instead of integer types.
+
+Let's reuse the
+:ref:`previous code example <Adv_Ada_Package_System_Integer_Arithmetic_Task_Number>`,
+but replace the atomic integer type by an atomic modular type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Modular_Arithmetic
+
+    pragma Ada_2022;
+
+    with System.Atomic_Operations.Modular_Arithmetic;
+
+    package Atomic_Modulars is
+
+       type Atomic_Modular is mod 100
+         with Atomic;
+
+       package Atomic_Modular_Arithmetic is new
+         System.Atomic_Operations.Modular_Arithmetic
+           (Atomic_Modular);
+
+    end Atomic_Modulars;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Atomic_Modulars;
+    use  Atomic_Modulars;
+    use  Atomic_Modulars.Atomic_Modular_Arithmetic;
+
+    procedure Show_Atomic_Modulars is
+       Task_Count : aliased Atomic_Modular := 0;
+
+       task type A_Task;
+
+       task body A_Task is
+          Task_Number : Atomic_Modular;
+       begin
+          Task_Number :=
+            Atomic_Fetch_And_Add (Task_Count, 1);
+
+          Put_Line ("Task_Number: "
+                    & Task_Number'Image);
+
+       end A_Task;
+
+       A, B, C, D, E, F : A_Task;
+    begin
+       null;
+    end Show_Atomic_Modulars;
+
+As we did in the previous example, we again call the
+:ada:`Atomic_Fetch_And_Add` function to update the :ada:`Task_Count` variable and, at
+the same time, initialize the :ada:`Task_Number` variable of the current task. The
+only difference is that we use a modular type (:ada:`Atomic_Modular`).
+
+.. admonition:: Relevant topics
+
+    - :arm22:`C.6.5 The Package System.Atomic_Operations.Modular_Arithmetic <C-6-5>`

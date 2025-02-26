@@ -508,6 +508,8 @@ its :ref:`base type <Adv_Ada_Base_Attribute>` :ada:`Scale'Base'Range`.
     statement.
 
 
+.. _Adv_Ada_Block_Statements:
+
 Block Statements
 ----------------
 
