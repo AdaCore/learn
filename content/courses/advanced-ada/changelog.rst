@@ -10,7 +10,7 @@ Release 2025-02
 
 - New section:
 
-    - :ref:`Full-access only <Adv_Ada_Shared_Variable_Control_Full_Access_Only>`
+  - :ref:`Full-access only <Adv_Ada_Shared_Variable_Control_Full_Access_Only>`
 
 
 Release 2025-01
@@ -18,12 +18,11 @@ Release 2025-01
 
 - New chapter:
 
-    - :doc:`Shared Variable Control <parts/data_types/shared_variable_control>`
+  - :doc:`Shared Variable Control <parts/data_types/shared_variable_control>`
 
-        - Note: these are editorial changes, as the content was moved
-          from the
-          :doc:`Types and Representation <parts/data_types/types_representation>`
-          chapter.
+    - Note: these are editorial changes, as the content was moved from the
+      :doc:`Types and Representation <parts/data_types/types_representation>`
+      chapter.
 
 
 Release 2024-11
@@ -31,7 +30,7 @@ Release 2024-11
 
 - New section:
 
-    - :ref:`Variant parts <Adv_Ada_Variant_Records>`
+  - :ref:`Variant parts <Adv_Ada_Variant_Records>`
 
 
 Release 2024-10
@@ -39,11 +38,11 @@ Release 2024-10
 
 - New sections:
 
-    - :ref:`Discriminant constraints and operations <Adv_Ada_Record_Discriminant_Constraints_Operations>`
+  - :ref:`Discriminant constraints and operations <Adv_Ada_Record_Discriminant_Constraints_Operations>`
 
-    - :ref:`Unknown discriminants <Adv_Ada_Unknown_Discriminants>`
+  - :ref:`Unknown discriminants <Adv_Ada_Unknown_Discriminants>`
 
-    - :ref:`Derived array types and array subtypes <Adv_Ada_Derived_Array_Types_Array_Subtypes>`
+  - :ref:`Derived array types and array subtypes <Adv_Ada_Derived_Array_Types_Array_Subtypes>`
 
 
 Release 2024-09
@@ -51,7 +50,7 @@ Release 2024-09
 
 - New section:
 
-    - :ref:`Record Discriminants <Adv_Ada_Record_Discriminants>`
+  - :ref:`Record Discriminants <Adv_Ada_Record_Discriminants>`
 
 
 Release 2024-08
@@ -59,7 +58,7 @@ Release 2024-08
 
 - New chapter:
 
-    - :doc:`Controlled Types <parts/resource_management/controlled_types>`
+  - :doc:`Controlled Types <parts/resource_management/controlled_types>`
 
 
 Release 2024-05
@@ -67,7 +66,7 @@ Release 2024-05
 
 - New chapter:
 
-    - :doc:`Limited Types <parts/resource_management/limited_types>`
+  - :doc:`Limited Types <parts/resource_management/limited_types>`
 
 
 Release 2024-04
@@ -75,7 +74,7 @@ Release 2024-04
 
 - Improvements to sections:
 
-    - :ref:`Per-object expressions <Adv_Ada_Per_Object_Expressions>`
+  - :ref:`Per-object expressions <Adv_Ada_Per_Object_Expressions>`
 
 
 Release 2024-03
@@ -83,20 +82,20 @@ Release 2024-03
 
 - New chapter:
 
-    - :doc:`Records <parts/data_types/records>`
+  - :doc:`Records <parts/data_types/records>`
 
-        - Note: these are editorial changes, as the content was moved
-          from other chapters.
+    - Note: these are editorial changes, as the content was moved from other
+      chapters.
 
 - New sections:
 
-    - :ref:`Per-object expressions <Adv_Ada_Per_Object_Expressions>`
+  - :ref:`Per-object expressions <Adv_Ada_Per_Object_Expressions>`
 
-    - :ref:`Mutually dependent types using access types <Adv_Ada_Mutually_Dependent_Types_Access_Types>`
+  - :ref:`Mutually dependent types using access types <Adv_Ada_Mutually_Dependent_Types_Access_Types>`
 
 - Improvements to sections:
 
-    - :ref:`Design strategies for access types <Adv_Ada_Design_Strategies_Access_Types>`
+  - :ref:`Design strategies for access types <Adv_Ada_Design_Strategies_Access_Types>`
 
 
 Release 2024-01
@@ -104,7 +103,7 @@ Release 2024-01
 
 - Improvements to sections:
 
-    - New admonition: :ref:`Storage Elements <Adv_Ada_Storage_Elements>`
+  - New admonition: :ref:`Storage Elements <Adv_Ada_Storage_Elements>`
 
 
 Release 2023-12
@@ -112,9 +111,9 @@ Release 2023-12
 
 - New chapters:
 
-    - :doc:`Access Types <parts/resource_management/access_types>`
+  - :doc:`Access Types <parts/resource_management/access_types>`
 
-    - :doc:`Anonymous Access Types <parts/resource_management/anonymous_access_types>`
+  - :doc:`Anonymous Access Types <parts/resource_management/anonymous_access_types>`
 
 
 Release 2023-07
@@ -122,11 +121,11 @@ Release 2023-07
 
 - New section:
 
-    - :ref:`Addresses <Adv_Ada_Addresses>`
+  - :ref:`Addresses <Adv_Ada_Addresses>`
 
 - Improvements to sections:
 
-    - :ref:`Aliased parameters <Adv_Ada_Aliased_Parameters>`
+  - :ref:`Aliased parameters <Adv_Ada_Aliased_Parameters>`
 
 
 Release 2023-06
@@ -134,7 +133,7 @@ Release 2023-06
 
 - Improvements to sections:
 
-    - :ref:`Definite and Indefinite Subtypes <Adv_Ada_Definite_Indefinite_Subtypes>`
+  - :ref:`Definite and Indefinite Subtypes <Adv_Ada_Definite_Indefinite_Subtypes>`
 
 
 Release 2023-05
@@ -142,8 +141,8 @@ Release 2023-05
 
 - First draft release including following parts:
 
-    - :doc:`Data Types <parts/data_types/index>`
+  - :doc:`Data Types <parts/data_types/index>`
 
-    - :doc:`Control Flow <parts/control_flow/index>`
+  - :doc:`Control Flow <parts/control_flow/index>`
 
-    - :doc:`Modular Programming <parts/modular_prog/index>`
+  - :doc:`Modular Programming <parts/modular_prog/index>`
