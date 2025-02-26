@@ -833,7 +833,7 @@ according to their definition in the Ada Reference Manual:
 | Ada Reference Manual                                          | Paragraph | Description                                     |
 +===============================================================+===========+=================================================+
 | :arm22:`3.2.4 Subtype Predicates <3-2-4>`                     | (29.1/4)  | It checks that subtypes with predicates are     |
-|                                                               |           | not used to index an array in a generic bodies. |
+|                                                               |           | not used to index an array in generic units.    |
 +---------------------------------------------------------------+-----------+-------------------------------------------------+
 | :arm22:`5.5 Loop Statements <5-5>`                            | (8.1/5)   | It checks that the maximum number of chunks is  |
 |                                                               |           | greater than zero.                              |
