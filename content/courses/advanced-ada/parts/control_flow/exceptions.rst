@@ -37,8 +37,8 @@ Compilation errors
 In the category of compilation errors, the goal is to prevent compilers from
 accepting illegal programs. Here, any program that doesn't follow the rules
 described in the Ada Reference Manual is considered illegal. Those rules
-include not only simple syntax errors, but also more complicated rules, such as
-the ones concerning
+include not only simple syntax errors, but also more complicated semantic
+rules, such as the ones concerning
 :ref:`accessibility levels <Adv_Ada_Accessibility_Levels_Intro>` for access
 types.
 
