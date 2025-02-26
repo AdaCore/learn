@@ -915,7 +915,7 @@ Here, we're using the :ada:`Custom_Range` type for the formal type :ada:`R`
 in the instantiation of the generic package :ada:`Some_Generic_Package`. Since
 we use :ada:`R` as an index for the array type :ada:`Arr` (in the procedure
 :ada:`Process`), we cannot map a type to :ada:`R` that uses a predicate.
-However, because :ada:`Custom_Range` type has a dynamic predicate, the
+Therefore, because :ada:`Custom_Range` type has a dynamic predicate, the
 :ada:`Program_Error` exception is raised.
 
 
