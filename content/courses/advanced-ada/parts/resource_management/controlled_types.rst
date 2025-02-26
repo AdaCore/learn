@@ -2107,7 +2107,8 @@ procedure is never called for object :ada:`A`.
 Bounded errors of controlled types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bounded errors are an important topic when talking about exception and
+:ref:`Bounded errors <Adv_Ada_Bounded_Errors>` are an important topic when
+talking about exception and
 controlled types. In general, if an exception is raised in the :ada:`Adjust` or
 :ada:`Finalize` procedure, this is considered a bounded error. If the bounded
 error is detected, the :ada:`Program_Error` exception is raised.

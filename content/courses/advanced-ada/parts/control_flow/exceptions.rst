@@ -3,19 +3,210 @@ Exceptions
 
 .. include:: ../../../global.txt
 
-..
-    TO BE DONE:
 
-    Classification of Errors
-    ------------------------
+.. _Adv_Ada_Classification_Of_Errors:
 
-    .. admonition:: In the Ada Reference Manual
+Classification of Errors
+------------------------
 
-        - :arm:`1.1.5 Classification of Errors <1-1-5>`
+When we talk about errors and erroneous behavior in Ada, we can classify them
+in one of the four categories:
 
-    .. todo::
+- compilation errors |mdash| i.e. errors that an Ada compiler must detect at
+  compilation time;
 
-        - (MENTION: bounded errors)
+- runtime errors |mdash| i.e. errors that are detected by an Ada-based
+  application using checks at runtime;
+
+- bounded errors;
+
+- erroneous execution.
+
+In this section, we discuss each of these categories.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`1.1.5 Classification of Errors <1-1-5>`
+
+
+.. _Adv_Ada_Compilation_Errors:
+
+Compilation errors
+~~~~~~~~~~~~~~~~~~
+
+In the category of compilation errors, the goal is to prevent compilers from
+accepting illegal programs. Here, any program that doesn't follow the rules
+described in the Ada Reference Manual is considered illegal. Those rules
+include not only simple syntax errors, but also more complicated semantic
+rules, such as the ones concerning
+:ref:`accessibility levels <Adv_Ada_Accessibility_Levels_Intro>` for access
+types.
+
+Note that Ada |mdash| in contrast to many programming languages, which can be
+quite permissive |mdash| tries to prevent as many errors as possible at
+compilation time because of its focus on safety. However, even though a wide
+range of errors can be detected at compilation time, this doesn't mean that a
+legal Ada program is free of errors. Therefore, using methods such as static
+analysis or unit testing is important.
+
+
+.. _Adv_Ada_Runtime_Errors:
+
+Runtime errors
+~~~~~~~~~~~~~~
+
+When a rule cannot be verified at compilation time, a common strategy is to
+have the compiler insert runtime checks into the resulting application. We see
+details about these checks later on when we discuss
+:ref:`checks and exceptions <Adv_Ada_Checks_And_Exceptions>`.
+
+A typical example is an :ref:`overflow check <Adv_Ada_Overflow_Check>`.
+Consider a calculation using variables: if this calculation leads to a result
+that isn't representable with the underlying data types, we cannot possibly
+store a value  into a register or memory that can be considered correct |mdash|
+so we have to detect this situation. Unfortunately, because we're using
+variables, we obviously cannot verify the result of the calculation at
+compilation time, so we have to verify it at runtime.
+
+As we've mentioned before, Ada strives for detecting as many erroneous
+conditions as possible, while other programming language would allow errors
+such as overflow errors to remain undetected |mdash| which would likely lead
+the application to misbehave. Those checks raise an exception if an erroneous
+condition is detected, so the programmer has the means |mdash| and the
+responsibility |mdash| to catch that exception and handle the situation
+properly (Note, however, that some of the runtime checks can be deactivated.
+We will discuss this topic later on.)
+
+
+.. _Adv_Ada_Bounded_Errors:
+
+Bounded errors
+~~~~~~~~~~~~~~
+
+For certain kinds of errors, the compiler might not be able to detect the error
+|mdash| neither at compilation time, nor with checks at runtime. Such errors
+are called bounded errors because their possible effects are *bounded*.
+In fact, the
+Ada Reference Manual describes each bounded error and its possible effects
+|mdash| one of those effects is raising the :ada:`Program_Error` exception.
+
+Just as an example, consider the bounded error described in section
+:arm:`13.9.1 Data Validity <13-9-1>`, paragraphs 9:
+
+    If the representation of a scalar object does not represent a value of the
+    object's subtype (perhaps because the object was not initialized), the
+    object is said to have an invalid representation. It is a bounded error to
+    evaluate the value of such an object. If the error is detected, either
+    :ada:`Constraint_Error` or :ada:`Program_Error` is raised. Otherwise,
+    execution continues using the invalid representation. The rules of the
+    language outside this subclause assume that all objects have valid
+    representations.
+
+Let's see a code example:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Classification_Of_Errors.Data_Validity_Bounded_Error
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Bounded_Error is
+       subtype Int_1_10 is
+         Integer range 1 .. 10;
+
+       I1         : Int_1_10;
+       I1_Overlay : Integer
+         with Address => I1'Address,
+                         Import,
+                         Volatile;
+    begin
+       I1_Overlay := 0;
+       --  ^^^^^^^^^^^
+       --  We use this overlay to write an invalid
+       --  value to I1.
+
+       Put_Line ("I1 = " & I1'Image);
+       --                  ^^^^^^^^
+       --  Bounded error: value in
+       --  I1 is out of range.
+
+       I1 := I1 + 1;
+       --    ^^
+       --  Bounded error: using value
+       --  in operation that is out of
+       --  range.
+
+       Put_Line ("I1 = " & I1'Image);
+    end Show_Bounded_Error;
+
+In this example, we simulate a missing initialization by using an overlay
+(:ada:`I1_Overlay`). As a consequence, :ada:`I1` has an invalid value that is
+out of the allowed range of the :ada:`Int_1_10` subtype. This situation causes
+two bounded errors:
+
+- a bounded error when :ada:`I1` is evaluated in the call to :ada:`Image`; and
+
+- a bounded error when the value of the right-sided :ada:`I1` is evaluated
+  |mdash| in the increment :ada:`I1 := I1 + 1`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`13.9.1 Data Validity <13-9-1>`
+
+
+.. _Adv_Ada_Erroneous_Execution:
+
+Erroneous execution
+~~~~~~~~~~~~~~~~~~~
+
+Erroneous execution is similar to bounded errors in the sense that having the
+compiler detect the erroneous condition at compilation time or at runtime isn't
+possible. However, unlike bounded errors, the effects are usually
+nondeterministic: a bound on possible effects is not described by the language.
+
+Again, as an example of erroneous execution, consider the description from
+section :arm:`13.9.1 Data Validity <13-9-1>`, paragraph 12/3, which discusses
+the implications of using the :ada:`Unchecked_Conversion` function. Let's see a
+code example:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Classification_Of_Errors.Data_Validity_Erroneous_Execution
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Unchecked_Conversion;
+
+    procedure Show_Erroneous_Execution is
+       subtype Int_1_10 is
+         Integer range 1 .. 10;
+
+       function To_Int_1_10 is new
+         Ada.Unchecked_Conversion
+           (Source => Integer,
+            Target => Int_1_10);
+
+       I1 : Int_1_10 := To_Int_1_10 (0);
+       --               ^^^^^^^^^^^^^^^
+       --  Bounded error
+    begin
+       Put_Line ("I1 = " & I1'Image);
+
+       I1 := I1 + 1;
+       --    ^^^^^^
+       --  Erroneous execution: using value
+       --  in operation that is out of range.
+
+       Put_Line ("I1 = " & I1'Image);
+    end Show_Erroneous_Execution;
+
+It is considered to be a bounded error to use the :ada:`To_Int_1_10` function
+(based on :ada:`Unchecked_Conversion`) with a value that is invalid for the
+target data type. However, if we use the invalid value of :ada:`I1` in an
+operation such as the :ada:`I1 := I1 + 1` assignment, this leads to erroneous
+execution, and the effects are unpredictable: they aren't described in the Ada
+Reference Manual, as they are nondeterministic.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm:`13.9.1 Data Validity <13-9-1>`
 
 
 Asserts
@@ -178,7 +369,7 @@ The following table presents all policies that we can set:
     a policy to :ada:`Disable` and :ada:`Suppressible`.
 
     You can read more about them in the
-    `GNAT Reference Manual <https://gcc.gnu.org/onlinedocs/gnat_rm/Pragma-Assertion_005fPolicy.html>`_.
+    `GNAT Reference Manual <https://gcc.gnu.org/onlinedocs/gnat_rm/Pragma-Assertion_005fPolicy>`_.
 
 You can specify multiple policies in a single call to :ada:`Assertion_Policy`.
 For example, you can activate all policies by writing:
@@ -204,7 +395,7 @@ For example, you can activate all policies by writing:
 
     With GNAT, policies can be specified in multiple ways. In addition to calls
     to :ada:`Assertion_Policy`, you can use
-    `configuration pragmas files <https://gcc.gnu.org/onlinedocs/gnat_ugn/The-Configuration-Pragmas-Files.html#The-Configuration-Pragmas-Files>`_.
+    `configuration pragmas files <https://gcc.gnu.org/onlinedocs/gnat_ugn/The-Configuration-Pragmas-Files#The-Configuration-Pragmas-Files>`_.
     You can use these files to specify all pragmas that are relevant to your
     application, including :ada:`Assertion_Policy`. In addition, you can manage
     the granularity for those pragmas. For example, you can use a global
@@ -261,6 +452,8 @@ the call to :ada:`Assert` is not ignored.
 
         Complete section!
 
+
+.. _Adv_Ada_Checks_And_Exceptions:
 
 Checks and exceptions
 ---------------------
