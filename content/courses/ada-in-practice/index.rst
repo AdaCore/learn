@@ -45,7 +45,8 @@ Ada In Practice
     the Ada language. Prior knowledge of Ada is required, although some
     explanations of the underlying semantics are provided when appropriate.
 
-    This document was written by Patrick Rogers.
+    This document was written by Patrick Rogers and reviewed by
+    Gustavo A. Hoffmann, Richard Kenner, Robert A. Duff, and Tucker Taft.
 
     .. note::
 
