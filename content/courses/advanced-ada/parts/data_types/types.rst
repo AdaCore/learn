@@ -6,6 +6,21 @@ Types
 ..
     TO BE DONE:
 
+    Names
+    -----
+
+    .. todo::
+
+        - Simple definition of names in Ada
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm22:`4.1 Name <4-1>`
+
+
+..
+    TO BE DONE:
+
     Objects
     -------
 
