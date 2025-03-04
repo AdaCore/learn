@@ -231,17 +231,12 @@ In this example, we see instances of the following kinds of names:
     - :arm22:`5.2.1 Target Name Symbols <5-2-1>`
 
 
-..
-    TO BE DONE:
+Objects
+-------
 
-    Objects
-    -------
+.. admonition:: In the Ada Reference Manual
 
-    .. todo::
-
-        - Definition of an object in Ada
-        - Difference to object-oriented programming
-
+    - :arm22:`3.3 Objects and Named Numbers <3-3>`
 
 Scalar Types
 ------------
