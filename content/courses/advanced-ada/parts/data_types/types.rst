@@ -236,9 +236,277 @@ In this example, we see instances of the following kinds of names:
 Objects
 -------
 
+The term *object* may be misleading for readers that have a strong background
+in object-oriented programming. Moreover, its meaning can vary depending on the
+context. Therefore, it's important to define what we mean by *objects* when
+focusing on Ada programming.
+
+In computer science, the term :wikipedia:`object <Object_(computer_science)>`
+can refer to a piece of data stored in memory |mdash| but it can also refer to
+a table or a form in a database. Also, even when we define the term *object* as
+data in memory, we can still classify programming languages as
+:wikipedia:`object-based <Object-based_language>` or
+:wikipedia:`object-oriented <Object-oriented_programming>` languages.
+
+.. admonition:: Important
+
+    In object-oriented programming, an object belongs to a *class* of objects.
+    In Ada, this kind of objects are called *tagged* objects. Note, however,
+    that we can have objects that don't belong to a class of objects: those are
+    called *untagged* objects.
+
+In the context of Ada programming, an object is an "entity that contains a
+value, and is either a constant or a variable" |mdash| according to the Ada
+Reference Manual. In other words, any constants or variables that we declare in
+Ada source code are objects. In addition, there are other examples of objects
+that don't originate from object declarations:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Objects.Object_Examples
+
+    procedure Show_Objects is
+
+       type New_Integer is new
+         Integer;
+
+       type Integer_Array is
+         array (Positive range <>) of
+           Integer;
+
+       procedure Dummy (Obj : Integer)
+         is null;
+       --               ^^^
+       --              object
+
+       task type TT is
+          entry Start (Id : Integer);
+          --           ^^
+          --         object
+       end TT;
+
+       task body TT is
+       begin
+          accept Start (Id : Integer) do
+             null;
+          end Start;
+       end TT;
+
+       function Add_One (V : Integer)
+       --                ^
+       --    view of an object
+                         return Integer is
+       begin
+          return V + 1;
+          --     ^^^^^
+          --     object
+       end Add_One;
+
+       Arr : Integer_Array (1 .. 10);
+       --  ^^^^^^^^^^^^^^^
+       --  object
+
+       NI  : New_Integer;
+    begin
+       Arr (1 .. 3) := (others => 1);
+       --  ^^^^^^^^
+       --  object
+       --              ^^^^^^^^^^^^^
+       --                 object
+
+       NI := New_Integer (Arr (1));
+       --    ^^^^^^^^^^^^^^^^^^^^^
+       --      object
+
+       for I in Arr'Range loop
+       --  ^
+       --  object
+
+          Arr (I) := Add_One (Arr (I));
+          --                  ^^^^^^^
+          --                  object
+       end loop;
+    end Show_Objects;
+
+As we can see in this code example a formal parameter of a subprogram or an
+entry is also an object |mdash| in addition, so are
+:ref:`value conversions <Adv_Ada_Value_Conversion>`, the result returned by a
+function, the result of evaluating an :doc:`aggregate <./aggregates>`, loop
+parameters, :doc:`arrays <./arrays>`, or the slices or the components of an
+array.
+
+.. todo::
+
+    Add link to section on entries.
+
+.. todo::
+
+    Add link to section on array slices.
+
+Other examples of objects include:
+
+- the object created via a :ref:`view conversion <Adv_Ada_View_Conversion>`;
+
+- a :ref:`dereference <Adv_Ada_Dereferencing>` of an
+  :ref:`access-to-variable <Adv_Ada_General_Access_Modifiers>` value;
+
+- the return object of a function;
+
+- a choice parameter of an
+  :ref:`exception handler <Intro_Ada_Handling_An_Exception>`.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.3 Objects and Named Numbers <3-3>`
+
+
+Constant and variable objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Objects can be classified as constant and variable objects. When declaring
+objects, the distinction is clear:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Objects.Object_Declaration_Examples
+
+    procedure Show_Objects is
+       Const : constant Integer := 42;
+       Var   :          Integer := 0;
+    begin
+       null;
+    end Show_Objects;
+
+In this example, :ada:`Const` is a constant object, while :ada:`Var` is a
+variable object.
+
+In addition to this, constant objects include:
+
+- the :ref:`discriminant component <Adv_Ada_Record_Discriminants>` of a
+  variable discriminant;
+
+- a formal parameter or generic formal object of mode :ada:`in`.
+
+.. todo::
+
+    Add link to section on generic formal object.
+
+On the other hand, variable objects include:
+
+- the object created via a :ref:`view conversion <Adv_Ada_View_Conversion>` of
+  a variable;
+
+- a :ref:`dereference <Adv_Ada_Dereferencing>` of an
+  :ref:`access-to-variable <Adv_Ada_General_Access_Modifiers>` value.
+
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Objects.Object_Examples
+
+    procedure Show_Objects is
+
+       type Rec (Id : Positive) is
+       record
+          Value : Integer;
+       end record;
+
+       type Rec_Access is
+         access all Rec;
+
+       R     : aliased Rec (99);
+       --                   ^^
+       --  Discriminant `Id` is a
+       --  constant object.
+       --
+       --  `R` is a variable object,
+       --  though.
+
+       R_Acc : Rec_Access := R'Access;
+
+       procedure Process (R : Rec) is
+         null;
+       --                 ^
+       --         constant object
+    begin
+       R.Value := 0;
+       --  ^^^
+       --  variable object
+
+       R_Acc.all.Value := 1;
+       --  ^^^^^
+       --  variable object
+    end Show_Objects;
+
+In this example, we see that :ada:`R` is a variable object, while its
+:ada:`Id` discriminant is a constant object. In addition, the :ada:`R_Acc.all`
+dereference is a variable object. Finally, the :ada:`in` parameter of procedure
+:ada:`Process` is a constant object.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.3 Objects and Named Numbers <3-3>`
+    - :arm22:`3.3.1 Object Declarations <3-3-1>`
+
+
+View of an object
+~~~~~~~~~~~~~~~~~
+
+As we've just seen, an object can be either constant or variable. In addition,
+the *view* of an object is classified as constant or variable as well.
+
+.. todo::
+
+    Discuss more about what the view of an object really means?
+
+Before we start, note that the classification of an object as (constant or
+variable) doesn't directly imply how its view is classified. You may, for
+example, expect that a constant object has a constant view, but this is not
+necessarily the case, as we discuss in this section.
+
+A constant object only has a constant view if it doesn't have a part that has a
+variable view |mdash| a part has a variable view if it is of
+:ref:`immutably limited type <Adv_Ada_Immutably_Limited_Types>`,
+:ref:`controlled type <Adv_Ada_Controlled_Types_Overview_Controlled_Objects>`,
+:ref:`private type <Adv_Ada_Type_View>`, or private extension.
+If any of those parts exist in a constant object, then we say that the whole
+object has a variable view *because* of those parts with variable view.
+Otherwise, if a constant object doesn't have any parts with variable view, then
+it has a constant view.
+
+.. todo::
+
+    Add link to section on private extension.
+
+In contrast, variable objects always have a variable view.
+
+
+Named numbers
+~~~~~~~~~~~~~
+
+In addition to objects, we can have named numbers. Those aren't objects, but
+rather names that we assign to numeric values. For example:
+
+.. todo::
+
+    Add link to section on names.
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Objects.Named_Number
+
+    procedure Show_Named_Number is
+
+       Pi : constant := 3.1415926535;
+
+    begin
+       null;
+    end Show_Named_Number;
+
+In this example, :ada:`Pi` is a named number.
+
+A named number is always known at compilation time. Also, it doesn't have a
+type associated with it. In fact, its type is called universal real or
+universal integer |mdash| depending on the number being a real or integer
+number.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.3.2 Number Declarations <3-3-2>`
+
 
 Scalar Types
 ------------
@@ -1880,6 +2148,8 @@ conversion, but only :ada:`A`. In a value conversion, we could use both forms.
 
     - :arm22:`4.6 Type Conversions <4-6>`
 
+
+.. _Adv_Ada_Value_Conversion:
 
 Value conversion
 ~~~~~~~~~~~~~~~~
