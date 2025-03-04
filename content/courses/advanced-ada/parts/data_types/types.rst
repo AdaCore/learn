@@ -231,6 +231,8 @@ In this example, we see instances of the following kinds of names:
     - :arm22:`5.2.1 Target Name Symbols <5-2-1>`
 
 
+.. _Adv_Ada_Objects:
+
 Objects
 -------
 
