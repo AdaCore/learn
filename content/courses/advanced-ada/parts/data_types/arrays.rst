@@ -766,3 +766,17 @@ that the length be 20 at most, and it's 40 in this case. Also, the
 assignment to :ada:`M_F2` fails because the predicate requires that the first
 element must be set to :ada:`2.0`, and :ada:`MD10 (1)` has the value 4.0.
 
+
+..
+    TO BE DONE:
+
+    Slices
+    -----
+
+    .. todo::
+
+        - Simple definition of array slices in Ada
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm22:`4.1.2 Slices <4-1-2>`
