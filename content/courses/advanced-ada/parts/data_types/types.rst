@@ -18,6 +18,8 @@ Types
         - :arm22:`4.1 Name <4-1>`
 
 
+.. _Adv_Ada_Objects:
+
 Objects
 -------
 
