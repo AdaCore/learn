@@ -1,10 +1,6 @@
 $frontend = <<-SHELL
   #!/bin/bash -eux
 
-  # TEMPORARY: Path old Ubuntu release
-  sed -i -e 's#archive.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
-  sed -i -e 's#security.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
-
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_22.x | bash -
 
@@ -90,10 +86,6 @@ SHELL
 
 $epub = <<-SHELL
   #!/bin/bash -eux
-
-  # TEMPORARY: Path old Ubuntu release
-  sed -i -e 's#archive.ubuntu.com#old-releases.ubuntu.com#'  /etc/apt/sources.list
-  sed -i -e 's#security.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
 
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_22.x | bash -
