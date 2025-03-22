@@ -9,18 +9,18 @@ import toolchain_info
 class Block(object):
     @staticmethod
     def get_blocks_from_rst(rst_file, input_text):
-        lang_re = re.compile("\s*.. code::\s*(\w+)?\s*")
-        project_re = re.compile("\s*.. code::.*project=(\S+)?")
-        main_re = re.compile("\s*.. code::.*main=(\S+)?")
-        manual_chop_re = re.compile("\s*.. code::.*manual_chop?")
-        button_re = re.compile("\s+(\S+)_button")
-        code_config_re = re.compile(":code-config:`(.*)?`")
-        classes_re = re.compile("\s*:class:\s*(.+)")
-        switches_re = re.compile("\s*.. code::.*switches=(\S+)?")
-        compiler_switches_re = re.compile("Compiler[(](\S+)?[)]")
-        gnat_version_re=re.compile("\s*.. code::.*gnat=(\S+)?")
-        gnatprove_version_re=re.compile("\s*.. code::.*gnatprove=(\S+)?")
-        gprbuild_version_re=re.compile("\s*.. code::.*gprbuild=(\S+)?")
+        lang_re = re.compile(r"\s*.. code::\s*(\w+)?\s*")
+        project_re = re.compile(r"\s*.. code::.*project=(\S+)?")
+        main_re = re.compile(r"\s*.. code::.*main=(\S+)?")
+        manual_chop_re = re.compile(r"\s*.. code::.*manual_chop?")
+        button_re = re.compile(r"\s+(\S+)_button")
+        code_config_re = re.compile(r":code-config:`(.*)?`")
+        classes_re = re.compile(r"\s*:class:\s*(.+)")
+        switches_re = re.compile(r"\s*.. code::.*switches=(\S+)?")
+        compiler_switches_re = re.compile(r"Compiler[(](\S+)?[)]")
+        gnat_version_re=re.compile(r"\s*.. code::.*gnat=(\S+)?")
+        gnatprove_version_re=re.compile(r"\s*.. code::.*gnatprove=(\S+)?")
+        gprbuild_version_re=re.compile(r"\s*.. code::.*gprbuild=(\S+)?")
 
         blocks = []
         lines = input_text.splitlines()
