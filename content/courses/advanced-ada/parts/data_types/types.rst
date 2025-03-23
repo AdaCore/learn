@@ -3,6 +3,8 @@ Types
 
 .. include:: ../../../global.txt
 
+.. _Adv_Ada_Names:
+
 Names
 -----
 
