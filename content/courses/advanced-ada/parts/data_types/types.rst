@@ -3,19 +3,9 @@ Types
 
 .. include:: ../../../global.txt
 
-..
-    TO BE DONE:
+Names
+-----
 
-    Names
-    -----
-
-    .. todo::
-
-        - Simple definition of names in Ada
-
-    .. admonition:: In the Ada Reference Manual
-
-        - :arm22:`4.1 Name <4-1>`
 
 
 ..
