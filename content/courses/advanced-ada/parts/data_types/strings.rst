@@ -550,229 +550,6 @@ not the standard "x" from the
 :wikipedia:`Basic Latin block <Basic_Latin_(Unicode_block)>`.)
 
 
-..
-    TO BE DONE:
-
-    Parsing UTF-8 files for Wide-Wide-String processing
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. todo::
-
-        - Complete section!
-
-
-UTF-8 encoding in source-code files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In the past, it was common to use different character sets in text files when
-writing in different (human) languages. By default, Ada source-code files are
-expected to use the Latin-1 coding, which is a 8-bit character set.
-
-Nowadays, however, using UTF-8 coding for text files |mdash| including
-source-code files |mdash| is very common. If your Ada code only uses standard
-ASCII characters, but you're saving it in a UTF-8 coded file, there's no need
-to worry about character sets, as UTF-8 is backwards compatible with ASCII.
-
-However, you might want to use Unicode symbols in your Ada source code to
-declare constants |mdash| as we did in the previous sections |mdash| and store
-the source code in a UTF-8 coded file. In this case, you need be careful about
-how this file is parsed by the compiler.
-
-Let's look at this source-code example:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_Strings
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    with Ada.Strings.UTF_Encoding;
-    use  Ada.Strings.UTF_Encoding;
-
-    procedure Show_UTF_8_Strings is
-
-        Symbols_UTF_8 : constant
-          UTF_8_String := "♥♫";
-
-    begin
-        Put_Line ("UTF_8_String: "
-                  & Symbols_UTF_8);
-
-        Put_Line ("Length:       "
-                  & Symbols_UTF_8'Length'Image);
-
-    end Show_UTF_8_Strings;
-
-Here, we're using Unicode symbols to initialize the :ada:`Symbols_UTF_8`
-constant of :ada:`UTF_8_String` type.
-
-Now, let's assume this source-code example is stored in a UTF-8 coded file.
-Because the :ada:`"♥♫"` string makes use of non-ASCII Unicode symbols,
-representing this string in UTF-8 format will require more than 2 bytes.
-In fact, each one of those Unicode symbols requires 2 bytes to be encoded in
-UTF-8. (Keep in mind that Unicode symbols may require
-:wikipedia:`between 1 to 4 bytes <UTF-8>` to be encoded in UTF-8 format.) Also,
-in this case, the UTF-8 encoding process is using two additional bytes.
-Therefore, the total length of the string is six, which matches what we see
-when running the :ada:`Show_UTF_8_Strings` procedure. In other words, the
-length of the :ada:`Symbols_UTF_8` string doesn't refer to those two characters
-(:ada:`"♥♫"`) that we were using in the constant declaration, but the length of
-the encoded bytes in its UTF-8 representation.
-
-The UTF-8 format is very useful for storing and transmitting texts. However, if
-we want to process Unicode symbols, it's probably better to use string types
-with 32-bit characters |mdash| such as :ada:`Wide_Wide_String`. For example,
-let's say we want to use the :ada:`"♥♫"` string again to initialize a constant
-of :ada:`Wide_Wide_String` type:
-
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_W8 switches=Compiler(-gnatW8);
-
-    with Ada.Text_IO;
-    with Ada.Wide_Wide_Text_IO;
-
-    procedure Show_WWS_Strings is
-
-       package TIO   renames Ada.Text_IO;
-       package WWTIO renames Ada.Wide_Wide_Text_IO;
-
-       Symbols_WWS : constant
-         Wide_Wide_String := "♥♫";
-
-    begin
-       WWTIO.Put_Line ("Wide_Wide_String: "
-                       & Symbols_WWS);
-
-       TIO.Put_Line ("Length:           "
-                     & Symbols_WWS'Length'Image);
-
-    end Show_WWS_Strings;
-
-In this case, as mentioned above, if we store this source code in a text file
-using UTF-8 format, we need to ensure that the UTF-8 coded symbols are
-correctly interpreted by the compiler when it parses the text file.
-Otherwise, we might get unexpected behavior. (Interpreting the characters in
-UTF-8 format as Latin-1 format is certainly an example of what we want to avoid
-here.)
-
-.. admonition:: In the GNAT toolchain
-
-    You can use UTF-8 coding in your source-code file and initialize strings of
-    32-bit characters. However, as we just mentioned, you need to make sure
-    that the UTF-8 coded symbols are correctly interpreted by the compiler when
-    dealing with types such as :ada:`Wide_Wide_String`. For this case, GNAT
-    offers the ``-gnatW8`` switch. Let's run the previous example using this
-    switch:
-
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_W8 switches=Compiler(-gnatW8);
-
-        with Ada.Text_IO;
-        with Ada.Wide_Wide_Text_IO;
-
-        procedure Show_WWS_Strings is
-
-           package TIO   renames Ada.Text_IO;
-           package WWTIO renames Ada.Wide_Wide_Text_IO;
-
-           Symbols_WWS : constant
-             Wide_Wide_String := "♥♫";
-
-        begin
-           WWTIO.Put_Line ("Wide_Wide_String: "
-                           & Symbols_WWS);
-
-           TIO.Put_Line ("Length:           "
-                         & Symbols_WWS'Length'Image);
-
-        end Show_WWS_Strings;
-
-    Because the :ada:`Wide_Wide_String` type has 32-bit characters. we expect
-    the length of the string to match the number of symbols that we're using.
-    Indeed, when running the :ada:`Show_WWS_Strings` procedure, we see that
-    the :ada:`Symbols_WWS` string has a length of two characters, which matches
-    the number of characters of the :ada:`"♥♫"` string.
-
-    When we use the ``-gnatW8`` switch, GNAT converts the UTF-8-coded string
-    (:ada:`"♥♫"`) to UTF-32 format, so we get two 32-bit characters. It then
-    uses the UTF-32-coded string to initialize the :ada:`Symbols_WWS` string.
-
-    If we don't use the ``-gnatW8`` switch, however, we get wrong results.
-    Let's look at the same example again without the switch:
-
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_No_W8
-
-        with Ada.Text_IO;
-        with Ada.Wide_Wide_Text_IO;
-
-        procedure Show_WWS_Strings is
-
-           package TIO   renames Ada.Text_IO;
-           package WWTIO renames Ada.Wide_Wide_Text_IO;
-
-           Symbols_WWS : constant
-             Wide_Wide_String := "♥♫";
-
-        begin
-           WWTIO.Put_Line ("Wide_Wide_String: "
-                           & Symbols_WWS);
-
-           TIO.Put_Line ("Length:           "
-                         & Symbols_WWS'Length'Image);
-
-        end Show_WWS_Strings;
-
-    Now, the :ada:`"♥♫"` string is being interpreted as a string of six 8-bit
-    characters. (In other words, the UTF-8-coded string isn't converted to
-    the UTF-32 format.) Each of those 8-bit characters is then stored in a
-    32-bit character of the :ada:`Wide_Wide_String` type. This explains why
-    the :ada:`Show_WWS_Strings` procedure reports a length of 6 components for
-    the :ada:`Symbols_WWS` string.
-
-Portability of UTF-8 in source-code files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In a previous code example, we were assuming that the format that we use for
-the source-code file is UTF-8. This allows us to simply use Unicode symbols
-directly in strings:
-
-.. code-block:: ada
-
-    Symbol_UTF_8 : constant UTF_8_String := "★";
-
-This approach, however, might not be portable. For example, if the compiler
-uses a different string encoding for source-code files, it might interpret that
-Unicode character as something else |mdash| or just throw a compilation error.
-
-If you're afraid that format mismatches might happen in your compilation
-environment, you may want to write strings in your code in a completely
-portable fashion, which consists in entering the exact sequence of codes in
-bytes |mdash| using the :ada:`Character'Val` function |mdash| for the symbols
-you want to use.
-
-We can reuse parts of the previous example and replace the UTF-8 character with
-the corresponding UTF-8 code:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8
-
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    with Ada.Strings.UTF_Encoding;
-    use  Ada.Strings.UTF_Encoding;
-
-    procedure Show_UTF_8 is
-
-       Symbol_UTF_8 : constant
-         UTF_8_String :=
-           Character'Val (16#e2#)
-           & Character'Val (16#98#)
-           & Character'Val (16#85#);
-
-    begin
-       Put_Line ("UTF-8 String: "
-                 & Symbol_UTF_8);
-    end Show_UTF_8;
-
-Here, we use a sequence of three calls to the :ada:`Character'Val(code)`
-function for the UTF-8 code that corresponds to the "★" symbol.
-
-
 UTF-16 encoding and decoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -916,6 +693,544 @@ In this example, we're calling the :ada:`Wide_Character'Val` function to
 specify the UTF-16 BE code of the "♥" and "♫" symbols. We're then using
 the :ada:`Decode` function to convert between the :ada:`UTF_16_Wide_String` and
 the :ada:`Wide_Wide_String` types.
+
+
+UTF-8 applications
+------------------
+
+In this section, we take a further look into UTF-8 encoding and some real-world
+applications. First, we discuss the use of UTF-8 encoding in source-code files.
+Then, we talk about parsing UTF-8 files using *wide-wide* strings.
+
+UTF-8 encoding in source-code files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the past, it was common to use different character sets in text files when
+writing in different (human) languages. By default, Ada source-code files are
+expected to use the Latin-1 coding, which is a 8-bit character set.
+
+Nowadays, however, using UTF-8 coding for text files |mdash| including
+source-code files |mdash| is very common. If your Ada code only uses standard
+ASCII characters, but you're saving it in a UTF-8 coded file, there's no need
+to worry about character sets, as UTF-8 is backwards compatible with ASCII.
+
+However, you might want to use Unicode symbols in your Ada source code to
+declare constants |mdash| as we did in the previous sections |mdash| and store
+the source code in a UTF-8 coded file. In this case, you need be careful about
+how this file is parsed by the compiler.
+
+Let's look at this source-code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_Strings
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    procedure Show_UTF_8_Strings is
+
+        Symbols_UTF_8 : constant
+          UTF_8_String := "♥♫";
+
+    begin
+        Put_Line ("UTF_8_String: "
+                  & Symbols_UTF_8);
+
+        Put_Line ("Length:       "
+                  & Symbols_UTF_8'Length'Image);
+
+    end Show_UTF_8_Strings;
+
+Here, we're using Unicode symbols to initialize the :ada:`Symbols_UTF_8`
+constant of :ada:`UTF_8_String` type.
+
+Now, let's assume this source-code example is stored in a UTF-8 coded file.
+Because the :ada:`"♥♫"` string makes use of non-ASCII Unicode symbols,
+representing this string in UTF-8 format will require more than 2 bytes.
+In fact, each one of those Unicode symbols requires 2 bytes to be encoded in
+UTF-8. (Keep in mind that Unicode symbols may require
+:wikipedia:`between 1 to 4 bytes <UTF-8>` to be encoded in UTF-8 format.) Also,
+in this case, the UTF-8 encoding process is using two additional bytes.
+Therefore, the total length of the string is six, which matches what we see
+when running the :ada:`Show_UTF_8_Strings` procedure. In other words, the
+length of the :ada:`Symbols_UTF_8` string doesn't refer to those two characters
+(:ada:`"♥♫"`) that we were using in the constant declaration, but the length of
+the encoded bytes in its UTF-8 representation.
+
+The UTF-8 format is very useful for storing and transmitting texts. However, if
+we want to process Unicode symbols, it's probably better to use string types
+with 32-bit characters |mdash| such as :ada:`Wide_Wide_String`. For example,
+let's say we want to use the :ada:`"♥♫"` string again to initialize a constant
+of :ada:`Wide_Wide_String` type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_W8 switches=Compiler(-gnatW8);
+
+    with Ada.Text_IO;
+    with Ada.Wide_Wide_Text_IO;
+
+    procedure Show_WWS_Strings is
+
+       package TIO   renames Ada.Text_IO;
+       package WWTIO renames Ada.Wide_Wide_Text_IO;
+
+       Symbols_WWS : constant
+         Wide_Wide_String := "♥♫";
+
+    begin
+       WWTIO.Put_Line ("Wide_Wide_String: "
+                       & Symbols_WWS);
+
+       TIO.Put_Line ("Length:           "
+                     & Symbols_WWS'Length'Image);
+
+    end Show_WWS_Strings;
+
+In this case, as mentioned above, if we store this source code in a text file
+using UTF-8 format, we need to ensure that the UTF-8 coded symbols are
+correctly interpreted by the compiler when it parses the text file.
+Otherwise, we might get unexpected behavior. (Interpreting the characters in
+UTF-8 format as Latin-1 format is certainly an example of what we want to avoid
+here.)
+
+.. _Adv_Ada_GNAT_W8_Switch:
+
+.. admonition:: In the GNAT toolchain
+
+    You can use UTF-8 coding in your source-code file and initialize strings of
+    32-bit characters. However, as we just mentioned, you need to make sure
+    that the UTF-8 coded symbols are correctly interpreted by the compiler when
+    dealing with types such as :ada:`Wide_Wide_String`. For this case, GNAT
+    offers the ``-gnatW8`` switch. Let's run the previous example using this
+    switch:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_W8 switches=Compiler(-gnatW8);
+
+        with Ada.Text_IO;
+        with Ada.Wide_Wide_Text_IO;
+
+        procedure Show_WWS_Strings is
+
+           package TIO   renames Ada.Text_IO;
+           package WWTIO renames Ada.Wide_Wide_Text_IO;
+
+           Symbols_WWS : constant
+             Wide_Wide_String := "♥♫";
+
+        begin
+           WWTIO.Put_Line ("Wide_Wide_String: "
+                           & Symbols_WWS);
+
+           TIO.Put_Line ("Length:           "
+                         & Symbols_WWS'Length'Image);
+
+        end Show_WWS_Strings;
+
+    Because the :ada:`Wide_Wide_String` type has 32-bit characters. we expect
+    the length of the string to match the number of symbols that we're using.
+    Indeed, when running the :ada:`Show_WWS_Strings` procedure, we see that
+    the :ada:`Symbols_WWS` string has a length of two characters, which matches
+    the number of characters of the :ada:`"♥♫"` string.
+
+    When we use the ``-gnatW8`` switch, GNAT converts the UTF-8-coded string
+    (:ada:`"♥♫"`) to UTF-32 format, so we get two 32-bit characters. It then
+    uses the UTF-32-coded string to initialize the :ada:`Symbols_WWS` string.
+
+    If we don't use the ``-gnatW8`` switch, however, we get wrong results.
+    Let's look at the same example again without the switch:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.WWS_Strings_No_W8
+
+        with Ada.Text_IO;
+        with Ada.Wide_Wide_Text_IO;
+
+        procedure Show_WWS_Strings is
+
+           package TIO   renames Ada.Text_IO;
+           package WWTIO renames Ada.Wide_Wide_Text_IO;
+
+           Symbols_WWS : constant
+             Wide_Wide_String := "♥♫";
+
+        begin
+           WWTIO.Put_Line ("Wide_Wide_String: "
+                           & Symbols_WWS);
+
+           TIO.Put_Line ("Length:           "
+                         & Symbols_WWS'Length'Image);
+
+        end Show_WWS_Strings;
+
+    Now, the :ada:`"♥♫"` string is being interpreted as a string of six 8-bit
+    characters. (In other words, the UTF-8-coded string isn't converted to
+    the UTF-32 format.) Each of those 8-bit characters is then stored in a
+    32-bit character of the :ada:`Wide_Wide_String` type. This explains why
+    the :ada:`Show_WWS_Strings` procedure reports a length of 6 components for
+    the :ada:`Symbols_WWS` string.
+
+Portability of UTF-8 in source-code files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In a previous code example, we were assuming that the format that we use for
+the source-code file is UTF-8. This allows us to simply use Unicode symbols
+directly in strings:
+
+.. code-block:: ada
+
+    Symbol_UTF_8 : constant UTF_8_String := "★";
+
+This approach, however, might not be portable. For example, if the compiler
+uses a different string encoding for source-code files, it might interpret that
+Unicode character as something else |mdash| or just throw a compilation error.
+
+If you're afraid that format mismatches might happen in your compilation
+environment, you may want to write strings in your code in a completely
+portable fashion, which consists in entering the exact sequence of codes in
+bytes |mdash| using the :ada:`Character'Val` function |mdash| for the symbols
+you want to use.
+
+We can reuse parts of the previous example and replace the UTF-8 character with
+the corresponding UTF-8 code:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    procedure Show_UTF_8 is
+
+       Symbol_UTF_8 : constant
+         UTF_8_String :=
+           Character'Val (16#e2#)
+           & Character'Val (16#98#)
+           & Character'Val (16#85#);
+
+    begin
+       Put_Line ("UTF-8 String: "
+                 & Symbol_UTF_8);
+    end Show_UTF_8;
+
+Here, we use a sequence of three calls to the :ada:`Character'Val(code)`
+function for the UTF-8 code that corresponds to the "★" symbol.
+
+
+.. _Adv_Ada_UTF_8_Files_Wide_Wide_Strings:
+
+Parsing UTF-8 files for Wide-Wide-String processing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A typical use-case is to parse a text file in UTF-8 format and use *wide-wide*
+strings to process the lines of that file. Before we look at the implementation
+that does that, let's first write a procedure that generate a text file in
+UTF-8 format:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    procedure Generate_UTF_8_File
+      (Output_File_Name : String)
+    is
+       F : File_Type;
+    begin
+       Create (F, Out_File, Output_File_Name);
+       Put_Line (F, UTF_8_String'("♥♫"));
+       Put_Line
+         (F,
+          UTF_8_String'("مرحبا يا عالم"));
+       Close (F);
+    end Generate_UTF_8_File;
+
+Procedure :ada:`Generate_UTF_8_File` writes two strings with non-Latin
+characters into the UTF-8 file indicated by the :ada:`Output_File_Name`
+parameter.
+
+In addition, let's implement an auxiliary procedure to display the individual
+characters of a *wide-wide* string:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    procedure Put_Line_UTF_8_Characters
+      (WSS : Wide_Wide_String)
+    is
+       procedure Put_Complete_UTF_8_String
+         (WSS : Wide_Wide_String)
+       is
+          S_UTF_8 : constant UTF_8_String :=
+                      Encode (WSS);
+       begin
+          Put_Line ("STRING: " & S_UTF_8);
+          Put_Line ("Length: "
+                    & WSS'Length'Image
+                    & " characters");
+          New_Line;
+       end Put_Complete_UTF_8_String;
+
+       --  This is a wrapper function of the
+       --  Encode function for the
+       --  Wide_Wide_Character type:
+       function Encode (Item : Wide_Wide_Character)
+                        return UTF_8_String
+        is
+           SC : constant Wide_Wide_String (1 .. 1)
+                  := (1 => Item);
+           --  We need a 1-character string
+           --  for the call to Encode.
+       begin
+           return Encode (SC);
+       end Encode;
+
+       procedure Put_UTF_8_Characters
+         (WSS : Wide_Wide_String) is
+       begin
+          for I in WSS'Range loop
+             Put (I'Image & ": ");
+             Put (Encode (WSS (I)));
+             New_Line;
+          end loop;
+       end Put_UTF_8_Characters;
+
+    begin
+        Put_Complete_UTF_8_String (WSS);
+        Put_UTF_8_Characters (WSS);
+        Put_Line ("--------------------");
+    end Put_Line_UTF_8_Characters;
+
+Finally, let's look at a code example that parses an UTF-8 file:
+
+.. code:: ada run_button main=show_utf_8.adb project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    with Generate_UTF_8_File;
+    with Put_Line_UTF_8_Characters;
+
+    procedure Show_UTF_8 is
+
+       File_Name : constant String :=
+                     "utf-8_test.txt";
+
+       procedure Read_UTF_8_File
+         (Input_File_Name : String)
+       is
+          F : File_Type;
+       begin
+          Open (F, In_File, Input_File_Name);
+
+          while not End_Of_File (F) loop
+             declare
+                S_UTF8 : constant UTF_8_String
+                           := Get_Line (F);
+                S      : constant Wide_Wide_String
+                           := Decode (S_UTF8);
+             begin
+                Put_Line_UTF_8_Characters (S);
+             end;
+          end loop;
+          Close (F);
+       end Read_UTF_8_File;
+
+    begin
+       Generate_UTF_8_File (File_Name);
+       Read_UTF_8_File (File_Name);
+    end Show_UTF_8;
+
+The :ada:`Show_UTF_8` procedure first calls the :ada:`Generate_UTF_8_File`
+procedure to generate a text file in UTF-8 format, and then calls the nested
+:ada:`Read_UTF_8_File` procedure to read from that file |mdash| this is done by
+reading the 8-bit UTF-8 encoded string and decoding it into a string of
+:ada:`Wide_Wide_String` type.
+
+(Note that we call the auxiliary :ada:`Put_Line_UTF_8_Characters` procedure to
+display the characters of each line we read from the UTF-8 file.)
+
+For completeness, we include the nested :ada:`Read_Write_UTF_8_File` procedure,
+which not only reads each line from a UTF-8 file, but also writes it into
+another UTF-8 file:
+
+.. code:: ada run_button main=show_utf_8.adb project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Ada.Strings.UTF_Encoding;
+    use  Ada.Strings.UTF_Encoding;
+
+    with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+    use  Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
+
+    with Generate_UTF_8_File;
+    with Put_Line_UTF_8_Characters;
+
+    procedure Show_UTF_8 is
+
+       File_Name_In  : constant String :=
+                         "utf-8_test.txt";
+       File_Name_Out : constant String :=
+                         "utf-8_copy.txt";
+
+       procedure Read_Write_UTF_8_File
+         (Input_File_Name,
+         Output_File_Name : String)
+       is
+          F_In, F_Out : File_Type;
+       begin
+          Open (F_In, In_File, Input_File_Name);
+          Create (F_Out, Out_File, Output_File_Name);
+
+          while not End_Of_File (F_In) loop
+             declare
+                S : constant Wide_Wide_String :=
+                      Decode (Get_Line (F_In));
+             begin
+                Put_Line_UTF_8_Characters (S);
+                Put_Line (F_Out, Encode (S));
+             end;
+          end loop;
+
+          Close (F_In);
+          Close (F_Out);
+       end Read_Write_UTF_8_File;
+
+    begin
+       Generate_UTF_8_File (File_Name_In);
+
+       Read_Write_UTF_8_File
+         (Input_File_Name  => File_Name_In,
+          Output_File_Name => File_Name_Out);
+    end Show_UTF_8;
+
+In the nested :ada:`Read_Write_UTF_8_File` procedure, we see both :ada:`Decode`
+and :ada:`Encode` functions being called to convert from and to the
+:ada:`UTF_8_String` type, respectively.
+
+.. admonition:: In the GNAT toolchain
+
+    If we use the ``-gnatW8`` switch, which we mentioned
+    :ref:`in a previous section <Adv_Ada_GNAT_W8_Switch>`, the implementation
+    of :ada:`Generate_UTF_8_File` and :ada:`Put_Line_UTF_8_Characters` must be
+    adapted. In addition, we can simplify the implementation of the
+    :ada:`Show_UTF_8` procedure, too. (Note, however, that the previous
+    implementation, which makes use of the :ada:`Decode` and :ada:`Encode`
+    functions, would work fine as well.)
+
+    .. code:: ada run_button main=show_utf_8.adb project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing switches=Compiler(-gnatW8);
+
+        with Ada.Wide_Wide_Text_IO;
+        use  Ada.Wide_Wide_Text_IO;
+
+        procedure Put_Line_UTF_8_Characters
+          (WSS : Wide_Wide_String)
+        is
+           procedure Put_Complete_UTF_8_String
+             (WSS : Wide_Wide_String)
+           is
+           begin
+              Put_Line ("STRING: " & WSS);
+              Put_Line ("Length: "
+                        & WSS'Length'Wide_Wide_Image
+                        & " characters");
+              New_Line;
+           end Put_Complete_UTF_8_String;
+
+           procedure Put_UTF_8_Characters
+             (WSS : Wide_Wide_String)
+           is
+           begin
+              for I in WSS'Range loop
+                 Put (I'Wide_Wide_Image & ": ");
+                 Put (WSS (I));
+                 New_Line;
+              end loop;
+           end Put_UTF_8_Characters;
+
+        begin
+            Put_Complete_UTF_8_String (WSS);
+            Put_UTF_8_Characters (WSS);
+            Put_Line ("--------------------");
+        end Put_Line_UTF_8_Characters;
+
+        with Ada.Wide_Wide_Text_IO;
+        use  Ada.Wide_Wide_Text_IO;
+
+        procedure Generate_UTF_8_File
+          (Output_File_Name : String)
+        is
+           F : File_Type;
+        begin
+           Create (F, Out_File, Output_File_Name);
+           Put_Line (F, "♥♫");
+           Put_Line (F, "مرحبا يا عالم");
+           Close (F);
+        end Generate_UTF_8_File;
+
+        with Ada.Wide_Wide_Text_IO;
+        use  Ada.Wide_Wide_Text_IO;
+
+        with Generate_UTF_8_File;
+        with Put_Line_UTF_8_Characters;
+
+        procedure Show_UTF_8 is
+
+           File_Name_In  : constant String :=
+                             "utf-8_test.txt";
+           File_Name_Out : constant String :=
+                             "utf-8_copy.txt";
+
+           procedure Read_Write_UTF_8_File
+             (Input_File_Name,
+              Output_File_Name : String)
+           is
+              F_In, F_Out : File_Type;
+           begin
+              Open (F_In, In_File, Input_File_Name);
+              Create (F_Out, Out_File, Output_File_Name);
+
+              while not End_Of_File (F_In) loop
+                 declare
+                    S : constant Wide_Wide_String :=
+                          Get_Line (F_In);
+                 begin
+                    Put_Line_UTF_8_Characters (S);
+                    Put_Line (F_Out, S);
+                 end;
+              end loop;
+
+              Close (F_In);
+              Close (F_Out);
+           end Read_Write_UTF_8_File;
+
+        begin
+           Generate_UTF_8_File (File_Name_In);
+
+           Read_Write_UTF_8_File
+             (Input_File_Name  => File_Name_In,
+              Output_File_Name => File_Name_Out);
+        end Show_UTF_8;
+
+    In this version of the code, we've removed all references to the
+    :ada:`UTF_8_String` type |mdash| as well as the :ada:`Decode` and
+    :ada:`Encode` functions that we were using to convert from and to this
+    type. In this case, all UTF-8 processing happens directly using strings of
+    :ada:`Wide_Wide_Strings` type.
 
 
 .. _Adv_Ada_Image_Attribute:
