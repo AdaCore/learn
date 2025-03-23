@@ -1765,6 +1765,8 @@ parameter designating the child type:
     - :arm22:`3.9.2 Dispatching Operations of Tagged Types <3-9-2>`
 
 
+.. _Adv_Ada_User_Defined_References:
+
 User-Defined References
 -----------------------
 
