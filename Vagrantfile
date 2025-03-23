@@ -1,10 +1,6 @@
 $frontend = <<-SHELL
   #!/bin/bash -eux
 
-  # TEMPORARY: Path old Ubuntu release
-  sed -i -e 's#archive.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
-  sed -i -e 's#security.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
-
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_22.x | bash -
 
@@ -90,10 +86,6 @@ SHELL
 
 $epub = <<-SHELL
   #!/bin/bash -eux
-
-  # TEMPORARY: Path old Ubuntu release
-  sed -i -e 's#archive.ubuntu.com#old-releases.ubuntu.com#'  /etc/apt/sources.list
-  sed -i -e 's#security.ubuntu.com#old-releases.ubuntu.com#' /etc/apt/sources.list
 
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_22.x | bash -
@@ -235,8 +227,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
   config.vm.define "web" do |web|
-    web.vm.box = "bento/ubuntu-23.10"
-    web.vm.box_version = "202402.01.0"
+    web.vm.box = "bento/ubuntu-24.04"
+    web.vm.box_version = "202502.21.0"
     web.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
@@ -248,8 +240,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "epub" do |epub|
-    epub.vm.box = "bento/ubuntu-23.10"
-    epub.vm.box_version = "202402.01.0"
+    epub.vm.box = "bento/ubuntu-24.04"
+    epub.vm.box_version = "202502.21.0"
 
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'
