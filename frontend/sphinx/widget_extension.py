@@ -287,11 +287,9 @@ class WidgetCodeDirective(Directive):
                                                 filename=self.content.items[0][0],
                                                 line_number=self.content.items[0][1] - 1,
                                                 text_hash_short=text_hash_short)
-                if ('builder_latex' in self.state.state_machine.document.settings.env.app.tags.tags
-                    and self.state.state_machine.document.settings.env.app.tags.tags['builder_latex']):
+                if (self.state.state_machine.document.settings.env.app.tags.eval_condition('builder_latex')):
                     nodes_latex = self.create_static_node(widget, code_block_info, 'latex')
-                if ('builder_epub' in self.state.state_machine.document.settings.env.app.tags.tags
-                    and self.state.state_machine.document.settings.env.app.tags.tags['builder_epub']):
+                if (self.state.state_machine.document.settings.env.app.tags.eval_condition('builder_epub')):
                     nodes_epub = self.create_static_node(widget, code_block_info, 'html')
 
         except Exception as err:
