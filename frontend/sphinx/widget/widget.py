@@ -1,6 +1,6 @@
 from itertools import count
 import re
-from typing import List, Match, Dict
+from typing import List, Match, Dict, Optional
 
 from .button import Button
 from .chop import manual_chop, cheapo_gnatchop, real_gnatchop, ChopStrategy
@@ -381,7 +381,7 @@ class Widget:
         elif self.__chop_strategy is ChopStrategy.CHEAPO:
             self.__files = cheapo_gnatchop(content)
         elif self.__chop_strategy is ChopStrategy.REAL:
-            self.__files = real_gnatchop(content)
+            self.__files = real_gnatchop(content, self.switches['Compiler'])
         else:
             raise ChopException('No chop strategy defined')
 
