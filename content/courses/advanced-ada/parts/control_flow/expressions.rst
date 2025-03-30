@@ -956,10 +956,9 @@ For example, if we use :ada:`+` as the operator and :ada:`0` an the initial
 value, we get the reduction expression: :ada:`0 + 2 + 3 + 4 = 9`. This can be
 implemented using an array:
 
-.. code:: ada no_button gnat=12.2.0-1 manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
     :class: ada-run
 
-    !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Reduction_Expression is
@@ -989,10 +988,9 @@ a single value |mdash| in this case, an integer value that is stored in
 
 Naturally, we can reduce the array using the :ada:`*` operator:
 
-.. code:: ada no_button gnat=12.2.0-1 manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Simple_Reduction_Expression switches=Compiler(-gnatX)
     :class: ada-run
 
-    !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Reduction_Expression is
@@ -1026,10 +1024,9 @@ which consist of an iterated element association |mdash| for example,
 :ada:`[for I in 1 .. 3 => I + 1]`. We can simply *append* the reduction
 expression to a value sequence:
 
-.. code:: ada no_button gnat=12.2.0-1 manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Reduction_Expression_Value_Sequences switches=Compiler(-gnatX)
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Reduction_Expression_Value_Sequences switches=Compiler(-gnatX)
     :class: ada-run
 
-    !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Reduction_Expression is
@@ -1059,10 +1056,9 @@ In the previous examples, we've used standard operators such as :ada:`+` and
 :ada:`*` as the reducer. We can, however, write our own reducers and pass
 them to the :ada:`Reduce` attribute. For example:
 
-.. code:: ada no_button gnat=12.2.0-1 manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Custom_Reducer_Procedure switches=Compiler(-gnatX)
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Custom_Reducer_Procedure switches=Compiler(-gnatX)
     :class: ada-run
 
-    !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Reduction_Expression is
@@ -1121,10 +1117,9 @@ In the example above, we've implemented the reducer as a procedure. However, we
 can also implement it as a function. In this case, the accumulated value is
 returned by the function:
 
-.. code:: ada no_button gnat=12.2.0-1 manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Custom_Reducer_Function switches=Compiler(-gnatX)
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Custom_Reducer_Function switches=Compiler(-gnatX)
     :class: ada-run
 
-    !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Reduction_Expression is
@@ -1175,10 +1170,9 @@ Other accumulator types
 The accumulator type isn't restricted to scalars: in fact, we could use record
 types as well. For example:
 
-.. code:: ada no_button gnat=12.2.0-1 manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Reducer_Integer_Accumulator switches=Compiler(-gnatX)
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Reducer_Integer_Accumulator switches=Compiler(-gnatX)
     :class: ada-run
 
-    !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Show_Reduction_Expression is
@@ -1230,10 +1224,9 @@ Also, we're not limited to numeric types: we can also create a reducer using
 strings as the accumulator type. In fact, we can display the initial value and
 the elements of the list by using unbounded strings:
 
-.. code:: ada no_button gnat=12.2.0-1 manual_chop project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Reducer_String_Accumulator switches=Compiler(-gnatX)
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Control_Flow.Expressions.Reduction_Expressions.Reducer_String_Accumulator switches=Compiler(-gnatX)
     :class: ada-run
 
-    !show_reduction_expression.adb
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Ada.Strings.Unbounded;
