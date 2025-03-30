@@ -270,7 +270,7 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
                     if block.manual_chop:
                         source_files = manual_chop(split)
                     else:
-                        source_files = real_gnatchop(split)
+                        source_files = real_gnatchop(split, block.compiler_switches)
 
                     if len(source_files) == 0:
                         print_error(loc, "Failed to chop example, skipping\n")

@@ -5,7 +5,7 @@ import re
 import shutil
 import subprocess
 import tempfile
-from typing import List
+from typing import List, Optional
 
 from .resource import Resource
 
@@ -93,7 +93,7 @@ def cheapo_gnatchop(lines: List[str]) -> List[Resource]:
     return results
 
 
-def real_gnatchop(lines: List[str]) -> List[Resource]:
+def real_gnatchop(lines: List[str], compiler_switches: Optional[dict] = None) -> List[Resource]:
     """Uses gnatchop to chop the text into files
 
     Args:
@@ -114,7 +114,15 @@ def real_gnatchop(lines: List[str]) -> List[Resource]:
             f.write('\n'.join(lines))
 
         # run gnatchop on temp file
-        cmd = ['gnatchop', gnatchop_file]
+        if compiler_switches is None:
+            cmd = ['gnatchop', gnatchop_file]
+        else:
+            cmd = ['gnatchop']
+            for sw in compiler_switches:
+                # gnatchop only accepts `-gnatXXX` switches
+                if "gnat" in sw:
+                    cmd.append(sw)
+            cmd.append(gnatchop_file)
         output = subprocess.check_output(cmd, cwd=wd)
         files = [os.path.join(wd, f.decode("utf-8").strip()) for f in output.splitlines()
                  if not f.startswith(b'splitting ')]
