@@ -745,9 +745,7 @@ In those cases, we can use a declare expression.
 A declare expression allows for declaring or renaming objects within an
 expression:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Declare_Expressions.Simple_Declare_Expression
-
-    pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Declare_Expressions.Simple_Declare_Expression switches=Compiler(-gnat2022);
 
     package P is
 
@@ -767,9 +765,7 @@ expression.
 Of course, the code above isn't really useful, so let's look at a more complete
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Declare_Expressions.Integer_Arrays
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Declare_Expressions.Integer_Arrays switches=Compiler(-gnat2022);
 
     package Integer_Arrays is
 
@@ -807,8 +803,6 @@ example:
        end Sum;
 
     end Integer_Arrays;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;    use Ada.Text_IO;
 
@@ -855,10 +849,8 @@ declarative part of a subprogram or declare block. In fact, we cannot:
 
 Let's see some examples of erroneous declarations:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Declare_Expressions.Integer_Arrays_Error
+.. code:: ada compile_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Declare_Expressions.Integer_Arrays_Error switches=Compiler(-gnat2022);
     :class: ada-expect-compile-error
-
-    pragma Ada_2022;
 
     package Integer_Arrays is
 

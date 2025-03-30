@@ -1884,7 +1884,7 @@ Similarly, we can convert between array types. For example, if we have the
 array type :ada:`Integer_Array` and its derived type
 :ada:`Derived_Integer_Array`, we can convert between those array types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion switches=Compiler(-gnat2022);
 
     package Custom_Arrays is
 
@@ -1895,8 +1895,6 @@ array type :ada:`Integer_Array` and its derived type
          Integer_Array;
 
     end Custom_Arrays;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Custom_Arrays; use Custom_Arrays;
@@ -1941,7 +1939,7 @@ Converting between different array types can be very handy, especially when
 we're dealing with array types that were not declared in the same package. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion switches=Compiler(-gnat2022);
 
     package Custom_Arrays_1 is
 
@@ -1962,8 +1960,6 @@ example:
          array (Positive range <>) of Float;
 
     end Custom_Arrays_2;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;     use Ada.Text_IO;
     with Custom_Arrays_1; use Custom_Arrays_1;
@@ -2030,7 +2026,7 @@ We may also encounter array types originating from the instantiation of generic
 packages. In this case as well, we can use array conversions. Consider the
 following generic package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion switches=Compiler(-gnat2022);
 
     generic
        type T is private;
@@ -2042,9 +2038,7 @@ following generic package:
 We could instantiate this generic package and reuse parts of the previous code
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Custom_Arrays;

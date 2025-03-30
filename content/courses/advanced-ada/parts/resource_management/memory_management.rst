@@ -321,9 +321,7 @@ package to define a memory buffer:
 
 Let's see a simple example that makes use of the :ada:`Storage_IO` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Storage_Elements
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Storage_Elements switches=Compiler(-gnat2022);
 
     with Ada.Text_IO;    use Ada.Text_IO;
     with Ada.Storage_IO;

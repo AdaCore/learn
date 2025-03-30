@@ -282,9 +282,7 @@ type conversion is allowed is when both types have a common ancestor.
 
 Let's see an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Pool_Specific_Access_Types
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Pool_Specific_Access_Types switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -357,9 +355,7 @@ the :ada:`A1 := A2` or the :ada:`A1 := Integer_Access_1 (A2)` assignment.)
 
     For example:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Array_Allocation
-
-        pragma Ada_2022;
+    .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Array_Allocation switches=Compiler(-gnat2022);
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -422,9 +418,7 @@ It's possible to allocate multiple objects *at once* as well |mdash| i.e.
 syntactic sugar is available to simplify the code that performs this
 allocation. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Integer_Access_Array
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Integer_Access_Array switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1398,7 +1392,7 @@ As we've discussed in the section about
 to create a recursive, self-referencing type. Let's revisit a code example from
 that section:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Self_Reference.Linked_List_Example
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Self_Reference.Linked_List_Example switches=Compiler(-gnat2022);
 
     package Linked_List_Example is
 
@@ -1421,7 +1415,7 @@ Self-references are useful, for example, to create unbounded containers |mdash|
 such as the linked lists mentioned in the example above. Let's extend this code
 example and partially implement a generic package for linked lists:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Self_Reference.Linked_List_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Self_Reference.Linked_List_Example switches=Compiler(-gnat2022);
 
     generic
        type T is private;
@@ -1455,8 +1449,6 @@ example and partially implement a generic package for linked lists:
        end record;
 
     end Linked_Lists;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO; use Ada.Text_IO;
 

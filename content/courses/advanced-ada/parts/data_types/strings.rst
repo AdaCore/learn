@@ -1044,7 +1044,7 @@ In the previous code examples, we were using the :ada:`Image` attribute with
 scalar types, but it isn't restricted to those types. In fact, we can also use
 this attribute when dealing with non-scalar types. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Non_Scalar_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Non_Scalar_Image switches=Compiler(-gnat2022);
 
     package Simple_Records is
 
@@ -1067,8 +1067,6 @@ this attribute when dealing with non-scalar types. For example:
           ((F => 10.0, I => 4));
 
     end Simple_Records;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Unchecked_Deallocation;
@@ -1119,9 +1117,7 @@ and :ada:`R_A` is null after the call to :ada:`Free`.
 
 Let's see another example, this time with arrays:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Array_Image
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Array_Image switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1151,7 +1147,7 @@ In this example, we display the values of the three components of the
 In addition to untagged types, we can also use the :ada:`Image` attribute with
 tagged types. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Tagged_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Tagged_Image switches=Compiler(-gnat2022);
 
     package Simple_Records is
 
@@ -1184,8 +1180,6 @@ tagged types. For example:
 
     end Simple_Records;
 
-    pragma Ada_2022;
-
     with Ada.Text_IO;    use Ada.Text_IO;
 
     with Simple_Records; use Simple_Records;
@@ -1212,7 +1206,7 @@ object of :ada:`Rec'Class` type. Also, we display the contents of the
 
 We can also apply the :ada:`Image` attribute to protected objects and tasks:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Protected_Task_Image
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Protected_Task_Image switches=Compiler(-gnat2022);
 
     package Simple_Tasking is
 
@@ -1248,8 +1242,6 @@ We can also apply the :ada:`Image` attribute to protected objects and tasks:
        end T;
 
     end Simple_Tasking;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;    use Ada.Text_IO;
 
@@ -1304,9 +1296,7 @@ that via the :ada:`Put_Image` aspect. This is what we have to do:
 
 We can see these steps performed in the code example below:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Simple_Put_Image
-
-    pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Simple_Put_Image switches=Compiler(-gnat2022);
 
     with Ada.Strings.Text_Buffers;
 
@@ -1362,9 +1352,7 @@ Complete Example of :ada:`Put_Image`
 Let's see a complete example in which we use the :ada:`Put_Image` aspect and
 write useful information to the buffer:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Put_Image_Custom_Numerics
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Put_Image_Custom_Numerics switches=Compiler(-gnat2022);
 
     with Ada.Strings.Text_Buffers;
 
@@ -1402,8 +1390,6 @@ write useful information to the buffer:
        end Put_Float_Integer;
 
     end Custom_Numerics;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;     use Ada.Text_IO;
 
@@ -1490,9 +1476,7 @@ their parent type |mdash| either a custom procedure indicated in the
 has the :ada:`Put_Image` aspect, the procedure indicated in the aspect is used
 instead. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Untagged_Put_Image
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Untagged_Put_Image switches=Compiler(-gnat2022);
 
     with Ada.Strings.Text_Buffers;
 
@@ -1539,8 +1523,6 @@ instead. For example:
 
     end Untagged_Put_Image;
 
-    pragma Ada_2022;
-
     with Ada.Text_IO;        use Ada.Text_IO;
 
     with Untagged_Put_Image; use Untagged_Put_Image;
@@ -1580,10 +1562,8 @@ Types that are derived from a tagged type may also inherit the :ada:`Put_Image`
 aspect. However, there are a couple of small differences in comparison to
 untagged types, as we can see in the following example:
 
-.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Tagged_Put_Image
+.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Tagged_Put_Image switches=Compiler(-gnat2022);
     :class: ada-run
-
-    pragma Ada_2022;
 
     with Ada.Strings.Text_Buffers;
 
@@ -1637,8 +1617,6 @@ untagged types, as we can see in the following example:
        end Put_Image_T_Child_3;
 
     end Tagged_Put_Image;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;      use Ada.Text_IO;
 
@@ -1757,9 +1735,7 @@ counter.
 Let's revisit an example from the previous section and use the procedures
 mentioned above:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Universal_Text_Buffer.Put_Image_Custom_Numerics
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Universal_Text_Buffer.Put_Image_Custom_Numerics switches=Compiler(-gnat2022);
 
     with Ada.Strings.Text_Buffers;
 
@@ -1810,8 +1786,6 @@ mentioned above:
        end Put_Float_Integer;
 
     end Custom_Numerics;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;     use Ada.Text_IO;
 
