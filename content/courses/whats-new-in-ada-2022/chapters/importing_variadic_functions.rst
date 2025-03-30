@@ -102,7 +102,7 @@ facility.
 
 Here is the complete code snippet:
 
-.. code:: ada no_button project=Courses.Ada_2022_Whats_New.Variadic_Import
+.. code:: ada no_button project=Courses.Ada_2022_Whats_New.Variadic_Import switches=Compiler(-gnat2022);
 
    with Interfaces.C;
 

@@ -2029,9 +2029,7 @@ Overview
 
 Let's start with a simple declaration of big numbers:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Numbers
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Numbers switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2068,9 +2066,7 @@ normal numeric types. In fact, the common unary operators
 :ada:`*`, :ada:`/`, :ada:`**`, :ada:`Min` and :ada:`Max`) are available to us.
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Numbers_Operators
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Numbers_Operators switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2101,7 +2097,7 @@ A typical example is the :wikipedia:`factorial <Factorial>`: a sequence of the
 factorial of consecutive small numbers can quickly lead to big numbers. Let's
 take this implementation as an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Factorial_Integer
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Factorial_Integer switches=Compiler(-gnat2022);
     :class: ada-run-expect-failure
 
     function Factorial (N : Integer)
@@ -2138,9 +2134,7 @@ before getting an exception is `20!`, which basically shows the limitation of
 standard integers for this kind of algorithm. If we use big integers instead,
 we can easily display all numbers up to `50!` (and more!):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Factorial_Big_Numbers
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Factorial_Big_Numbers switches=Compiler(-gnat2022);
 
     with Ada.Numerics.Big_Numbers.Big_Integers;
     use  Ada.Numerics.Big_Numbers.Big_Integers;
@@ -2158,8 +2152,6 @@ we can easily display all numbers up to `50!` (and more!):
 
        return Fact;
     end Factorial;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2263,9 +2255,7 @@ Big integer to integer
 We use the :ada:`To_Big_Integer` and :ada:`To_Integer` functions to convert
 back and forth between :ada:`Big_Integer` and :ada:`Integer` types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Integer_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Simple_Big_Integer_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2287,9 +2277,7 @@ In addition, we can use the generic :ada:`Signed_Conversions` and
 :ada:`Unsigned_Conversions` packages to convert between :ada:`Big_Integer` and
 any signed or unsigned integer types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Arbitrary_Big_Integer_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Arbitrary_Big_Integer_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2342,9 +2330,7 @@ Big real to floating-point types
 When converting between big real and floating-point types, we have to
 instantiate the generic :ada:`Float_Conversions` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Floating_Point_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Floating_Point_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2395,9 +2381,7 @@ Big real to fixed-point types
 When converting between big real and ordinary fixed-point types, we have to
 instantiate the generic :ada:`Fixed_Conversions` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Fixed_Point_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Fixed_Point_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2440,9 +2424,7 @@ Big reals to (big) integers
 
 We can also convert between big reals and big integers (or standard integers):
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Big_Integer_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Big_Integer_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2478,9 +2460,7 @@ String conversions
 
 In addition to that, we can use string conversions:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Number_String_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Number_String_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2602,9 +2582,7 @@ Therefore, we cannot simply use attributes such as :ada:`Big_Natural'First`.
 However, we can use the subtypes to ensure that a big integer is in the
 expected (natural or positive) range:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Positive_Natural
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Positive_Natural switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2632,9 +2610,7 @@ Other operators for big integers
 
 We can use the :ada:`mod` and :ada:`rem` operators with big integers:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Integer_Rem_Mod
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Integer_Rem_Mod switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2658,9 +2634,7 @@ Moreover, there's a :ada:`Greatest_Common_Divisor` function for big
 integers which, as the name suggests, calculates the greatest common divisor of
 two big integer values:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Integer_Greatest_Common_Divisor
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Integer_Greatest_Common_Divisor switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2688,9 +2662,7 @@ we can simply assign `2/3` to a big real variable. (Note that we're able to
 omit the decimal points, as we write :ada:`2/3` instead of :ada:`2.0 / 3.0`.)
 For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Quotient_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Real_Quotient_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2731,9 +2703,7 @@ Previously, we've talked about the :ada:`Big_Natural` and :ada:`Big_Positive`
 subtypes. In addition to those subtypes, we have the :ada:`In_Range` function
 for big numbers:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Numbers_In_Range
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Big_Numbers.Big_Numbers_In_Range switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 

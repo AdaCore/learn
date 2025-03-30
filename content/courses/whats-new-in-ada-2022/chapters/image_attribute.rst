@@ -37,9 +37,7 @@ including records, arrays, access types, and private types. Let's see how
 this works. We'll define array, record, and access types and corresponding
 objects and then convert these objects to strings and print them:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Image_Attribute
-
-   pragma Ada_2022;
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Image_Attribute switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
 

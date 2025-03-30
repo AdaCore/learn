@@ -23,10 +23,7 @@ For our example, let's define all three for a simple type and see how
 they work. For simplicity, we use a :ada:`Wide_Wide_String` component
 for the internal representation:
 
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.User_Defined_Literals
-
-   !main.adb
-   pragma Ada_2022;
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.User_Defined_Literals switches=Compiler(-gnat2022);
 
    with Ada.Wide_Wide_Text_IO;
    with Ada.Characters.Conversions;
@@ -80,10 +77,7 @@ Do you know that `'5'+3` in JavaScript is `53`?
 Now we can get the same result in Ada! But before we do, we need to
 define a custom :ada:`+` operator:
 
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.User_Defined_Literals_JS
-
-   !main.adb
-   pragma Ada_2022;
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.User_Defined_Literals_JS switches=Compiler(-gnat2022);
 
    with Ada.Wide_Wide_Text_IO;
    with Ada.Characters.Conversions;

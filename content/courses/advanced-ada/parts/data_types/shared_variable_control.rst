@@ -499,9 +499,7 @@ if a type is neither volatile nor atomic, it cannot be a full-access type.)
 
 Let's see some examples:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Types
-
-    pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Types switches=Compiler(-gnat2022);
 
     package Show_Full_Access_Only_Types is
 
@@ -517,9 +515,7 @@ Let's see some examples:
 
 Likewise, we can define nonatomic and atomic full-access objects:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Objects
-
-    pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Full_Access_Only_Objects switches=Compiler(-gnat2022);
 
     package Show_Full_Access_Only_Objects is
 
@@ -555,9 +551,7 @@ it.
 
 Consider the following example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
-
-    pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with System;
 
@@ -642,9 +636,7 @@ that contains window information for a display:
 Let's use the :ada:`Window_Register` type from the :ada:`Registers` package in
 a test application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with Registers;   use Registers;
 
@@ -679,7 +671,7 @@ for the update of the record components.
 Note that we could combine these two assignments into a single one using an
 aggregate:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -704,9 +696,7 @@ from the memory.
 
 Let's add another statement to the code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with Registers;   use Registers;
 
@@ -747,9 +737,7 @@ changing the remaining components of the record.)
 For example, we might want to update just the vertical count and indicate that
 update via the :ada:`Refresh_Needed` flag, but keep the same horizontal count:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Nonatomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -796,9 +784,7 @@ operations.
 Let's adapt the previous example to illustrate this. First, we adapt the type
 in the package:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
-
-    pragma Ada_2022;
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with System;
 
@@ -870,7 +856,7 @@ in the package:
 
 We then use the package in our test application:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with Registers;   use Registers;
 
@@ -1335,9 +1321,7 @@ the following operations atomically:
 As mentioned in the :arm22:`Ada Reference Manual <C-6-2>`, we can use this
 function to implement a :wikipedia:`spinlock <Spinlock>`. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Exchange
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Exchange switches=Compiler(-gnat2022);
 
     with System.Atomic_Operations.Exchange;
 
@@ -1385,9 +1369,7 @@ We can use multiple tasks to illustrate a situation where using a lock is
 important to ensure that no :wikipedia:`race conditions <Race_condition>`
 occur:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Exchange
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Exchange switches=Compiler(-gnat2022);
 
     with System.Atomic_Operations.Exchange;
 
@@ -1480,9 +1462,7 @@ that we only update that value if it wasn't already initialized.
 
 Let's start with the package specification:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Compare_And_Exchange
-
-    pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Compare_And_Exchange switches=Compiler(-gnat2022);
 
     with System.Atomic_Operations.Exchange;
     with Ada.Numerics.Discrete_Random;
@@ -1533,7 +1513,7 @@ we'll use to generate random numbers in the expected range
 
 Let's use this package in the :ada:`Show_Lazy_Initialization` procedure:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Compare_And_Exchange
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Compare_And_Exchange switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Numerics.Discrete_Random;
@@ -1683,9 +1663,7 @@ We can use these functions to implement an application similar to the
 :ref:`spinlocks <Adv_Ada_Package_System_Atomic_Operations_Spinlocks>` that
 we've seen before:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Test_And_Set
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Test_And_Set switches=Compiler(-gnat2022);
 
     with System.Atomic_Operations.Test_And_Set;
     use  System.Atomic_Operations.Test_And_Set;
@@ -1810,9 +1788,7 @@ that sets a unique number for each task. In this case, instead of using locks, w
 use the atomic operations from the
 :ada:`System.Atomic_Operations.Integer_Arithmetic` package:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Integer_Arithmetic
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Integer_Arithmetic switches=Compiler(-gnat2022);
 
     with System.Atomic_Operations.Integer_Arithmetic;
 
@@ -1878,9 +1854,7 @@ Let's reuse the
 :ref:`previous code example <Adv_Ada_Package_System_Integer_Arithmetic_Task_Number>`,
 but replace the atomic integer type by an atomic modular type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Modular_Arithmetic
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Modular_Arithmetic switches=Compiler(-gnat2022);
 
     with System.Atomic_Operations.Modular_Arithmetic;
 

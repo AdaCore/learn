@@ -51,9 +51,7 @@ won't fit into memory. However, if you keep intermediate result :ada:`mod
 n` during the m\ :sup:`d` calculation, it will work. Let's write this operation
 as a function:
 
-.. code:: ada compile_button project=Courses.Ada_2022_Whats_New.Big_Integers
-
-   pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Ada_2022_Whats_New.Big_Integers switches=Compiler(-gnat2022);
 
    with Ada.Numerics.Big_Numbers.Big_Integers;
    use  Ada.Numerics.Big_Numbers.Big_Integers;
@@ -113,9 +111,7 @@ So :ada:`65` is the original message m. Easy!
 
 Here is the complete code snippet:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Big_Numbers_Tiny_RSA
-
-   pragma Ada_2022;
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Big_Numbers_Tiny_RSA switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
    with Ada.Numerics.Big_Numbers.Big_Integers;

@@ -1158,7 +1158,7 @@ Previously, we've seen that we can declare
 types. We can do the same with anonymous access types. Let's revisit the code
 example that implements linked lists:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Self_Reference.Linked_List_Example
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Self_Reference.Linked_List_Example switches=Compiler(-gnat2022);
 
     generic
        type T is private;
@@ -1194,8 +1194,6 @@ example that implements linked lists:
        type List is access all Component;
 
     end Linked_Lists;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO; use Ada.Text_IO;
 

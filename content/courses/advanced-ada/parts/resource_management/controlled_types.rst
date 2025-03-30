@@ -95,9 +95,7 @@ For example, objects of access types are initialized by default to :ada:`null`.
 Likewise, we can declare
 :ref:`types with default initial value <Adv_Ada_Default_Initial_Values>`:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Default_Initialization
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Overview.Default_Initialization switches=Compiler(-gnat2022);
 
     with Ada.Text_IO; use Ada.Text_IO;
 

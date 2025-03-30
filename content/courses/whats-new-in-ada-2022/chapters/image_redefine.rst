@@ -19,10 +19,7 @@ In our example, let's redefine the :ada:`'Image` attribute for a
 location in source code. To do this, we provide a new :ada:`Put_Image`
 aspect for the type:
 
-.. code:: ada run_button manual_chop project=Courses.Ada_2022_Whats_New.Image_Redefine
-
-   !main.adb
-   pragma Ada_2022;
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Image_Redefine switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
    with Ada.Strings.Text_Buffers;

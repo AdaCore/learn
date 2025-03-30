@@ -153,9 +153,7 @@ two scenarios:
 
 Let's see a complete code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -192,8 +190,6 @@ Let's see a complete code example:
 
     end Custom_Container_Aggregates;
 
-    pragma Ada_2022;
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Custom_Container_Aggregates;
@@ -220,9 +216,7 @@ can confirm this by running this example and seeing the
 
 We can also use a constant for the :ada:`Empty` element instead of a function:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty_Const
-
-    pragma Ada_2022;
+.. code:: ada compile_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty_Const switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -254,9 +248,7 @@ needed.
 In addition to this, we can specify a signed integer parameter |mdash| which
 indicates the number of components |mdash| for the :ada:`Empty` function:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -302,8 +294,6 @@ indicates the number of components |mdash| for the :ada:`Empty` function:
 
     end Custom_Container_Aggregates;
 
-    pragma Ada_2022;
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Custom_Container_Aggregates;
@@ -343,9 +333,7 @@ of these elements: :ada:`Add_Unnamed`, :ada:`New_Indexed` or
 :ada:`Assign_Indexed`. In other words, when we specify the :ada:`Add_Named`
 element, we can only use the :ada:`Empty` element in the same declaration.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Named
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Named switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -404,8 +392,6 @@ element, we can only use the :ada:`Empty` element in the same declaration.
 
     end Custom_Container_Aggregates;
 
-    pragma Ada_2022;
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Custom_Container_Aggregates;
@@ -451,9 +437,7 @@ procedure that is called when we have a positional container aggregate.
 
 Let's look at an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -508,8 +492,6 @@ Let's look at an example:
 
     end Custom_Container_Aggregates;
 
-    pragma Ada_2022;
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Custom_Container_Aggregates;
@@ -547,9 +529,7 @@ that, when we specify the :ada:`Assign_Indexed` element, we must also use the
 
 Let's look at an example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Indexed
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Indexed switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -629,8 +609,6 @@ Let's look at an example:
 
     end Custom_Container_Aggregates;
 
-    pragma Ada_2022;
-
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Custom_Container_Aggregates;
@@ -700,9 +678,7 @@ As mentioned previously, we may specify both :ada:`Add_Named` and
 :ada:`Assign_Indexed` elements together in the same aspect declaration. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed_Indexed
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed_Indexed switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -794,8 +770,6 @@ example:
        end Assign_Indexed_Proc;
 
     end Custom_Container_Aggregates;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO; use Ada.Text_IO;
 

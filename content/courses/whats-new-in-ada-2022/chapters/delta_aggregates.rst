@@ -55,9 +55,7 @@ brackets for record aggregates.
 
 Here is the complete code snippet:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Delta_Aggregates
-
-   pragma Ada_2022;
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Delta_Aggregates switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
 

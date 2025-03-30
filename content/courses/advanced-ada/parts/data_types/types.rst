@@ -1884,7 +1884,7 @@ Similarly, we can convert between array types. For example, if we have the
 array type :ada:`Integer_Array` and its derived type
 :ada:`Derived_Integer_Array`, we can convert between those array types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion switches=Compiler(-gnat2022);
 
     package Custom_Arrays is
 
@@ -1895,8 +1895,6 @@ array type :ada:`Integer_Array` and its derived type
          Integer_Array;
 
     end Custom_Arrays;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Custom_Arrays; use Custom_Arrays;
@@ -1941,7 +1939,7 @@ Converting between different array types can be very handy, especially when
 we're dealing with array types that were not declared in the same package. For
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Array_Type_Conversion switches=Compiler(-gnat2022);
 
     package Custom_Arrays_1 is
 
@@ -1962,8 +1960,6 @@ example:
          array (Positive range <>) of Float;
 
     end Custom_Arrays_2;
-
-    pragma Ada_2022;
 
     with Ada.Text_IO;     use Ada.Text_IO;
     with Custom_Arrays_1; use Custom_Arrays_1;
@@ -2030,7 +2026,7 @@ We may also encounter array types originating from the instantiation of generic
 packages. In this case as well, we can use array conversions. Consider the
 following generic package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion switches=Compiler(-gnat2022);
 
     generic
        type T is private;
@@ -2042,9 +2038,7 @@ following generic package:
 We could instantiate this generic package and reuse parts of the previous code
 example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion
-
-    pragma Ada_2022;
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Type_Conversion.Generic_Array_Type_Conversion switches=Compiler(-gnat2022);
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Custom_Arrays;
@@ -2936,7 +2930,7 @@ Any type definition has a kind of literal associated with it. For example,
 integer types are associated with integer literals. Therefore, we can
 initialize an object of integer type with an integer literal:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Simple_Integer_Literal
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Simple_Integer_Literal
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2955,7 +2949,7 @@ literals, as we'll see later.
 When we declare an enumeration type, we limit the set of literals that we can
 use to initialize objects of that type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Simple_Enumeration
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Simple_Enumeration
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2999,9 +2993,8 @@ For our previous :ada:`Activation_States` type, we could declare a function
 enumeration literals that we've specified for the :ada:`Activation_States`
 type:
 
-.. code:: ada manual_chop no_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.User_Defined_Literals
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.User_Defined_Literals switches=Compiler(-gnat2022);
 
-    !activation_states.ads
     package Activation_States is
 
        type Activation_State is (Unknown, Off, On)
@@ -3028,9 +3021,8 @@ only used to convert integer literals (but not string literals) to the
 the implementation of the :ada:`Integer_To_Activation_State` function and
 convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
 
-.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.User_Defined_Literals
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.User_Defined_Literals switches=Compiler(-gnat2022);
 
-    !activation_states.adb
     package body Activation_States is
 
        function Integer_To_Activation_State
@@ -3048,9 +3040,8 @@ convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
 
 Let's look at a complete example that makes use of all three kinds of literals:
 
-.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States switches=Compiler(-gnat2022);
 
-    !activation_states.ads
     package Activation_States is
 
        type Activation_State is (Unknown, Off, On)
@@ -3075,7 +3066,6 @@ Let's look at a complete example that makes use of all three kinds of literals:
 
     end Activation_States;
 
-    !activation_states.adb
     package body Activation_States is
 
        function To_Activation_State
@@ -3121,7 +3111,6 @@ Let's look at a complete example that makes use of all three kinds of literals:
 
     end Activation_States;
 
-    !activation_examples.adb
     with Ada.Text_IO;       use Ada.Text_IO;
     with Activation_States; use Activation_States;
 
@@ -3172,9 +3161,8 @@ With the definition of the :ada:`Activation_State` type that we've seen in the
 complete example, we can initialize an object of this type with an enumeration
 literal or a string, as both forms are defined in the type specification:
 
-.. code:: ada manual_chop run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States switches=Compiler(-gnat2022);
 
-    !using_string_literal.adb
     with Ada.Text_IO;       use Ada.Text_IO;
     with Activation_States; use Activation_States;
 
@@ -3190,10 +3178,9 @@ Note we need to be very careful when designing conversion functions. For
 example, the use of string literals may limit the kind of checks that we can
 do. Consider the following misspelling of the :ada:`Off` literal:
 
-.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States switches=Compiler(-gnat2022);
     :class: ada-expect-compile-error
 
-    !misspelling_example.adb
     with Ada.Text_IO;       use Ada.Text_IO;
     with Activation_States; use Activation_States;
 
@@ -3208,9 +3195,8 @@ do. Consider the following misspelling of the :ada:`Off` literal:
 As expected, the compiler detects this error. However, this error is accepted
 when using the corresponding string literal:
 
-.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States switches=Compiler(-gnat2022);
 
-    !misspelling_example.adb
     with Ada.Text_IO;       use Ada.Text_IO;
     with Activation_States; use Activation_States;
 
@@ -3245,9 +3231,8 @@ allowed for the :ada:`To_Activation_State` type.
 User-defined literals can also be used for more complex types, such as records.
 For example:
 
-.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Record_Literals
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Record_Literals switches=Compiler(-gnat2022);
 
-    !silly_records.ads
     package Silly_Records is
 
        type Silly is record
@@ -3260,7 +3245,6 @@ For example:
                           return Silly;
     end Silly_Records;
 
-    !silly_records.adb
     package body Silly_Records is
 
        function To_Silly (S : Wide_Wide_String)
@@ -3276,7 +3260,6 @@ For example:
 
     end Silly_Records;
 
-    !silly_magic.adb
     with Ada.Text_IO;   use Ada.Text_IO;
     with Silly_Records; use Silly_Records;
 
