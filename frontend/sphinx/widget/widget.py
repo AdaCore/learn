@@ -76,6 +76,7 @@ class Widget:
                 "-gnato22",
                 "-gnato23",
                 "-gnateE",
+                "-gnat2022",
                 "-gnatX",
             ],
         }
@@ -95,6 +96,7 @@ class Widget:
             "-gnato22" : "Handling of intermediate overflow: minimized mode",
             "-gnato23" : "Handling of intermediate overflow: minimized mode; eliminated mode within assertions, pre/postconditions, and type invariants",
             "-gnateE" : "Generate extra information in exception messages",
+            "-gnat2022" : "Use Ada 2022 standard (if not selected, use Ada 2012)",
             "-gnatX" : "Enable GNAT implementation extensions and latest Ada version",
         }
 
