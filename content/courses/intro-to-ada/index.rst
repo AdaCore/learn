@@ -18,7 +18,6 @@ Introduction to Ada
     .. warning::
 
         This version of the website contains UNPUBLISHED contents.
-        Please do not share it externally!
 
 .. only:: builder_epub
 

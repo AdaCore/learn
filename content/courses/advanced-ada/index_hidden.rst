@@ -11,7 +11,6 @@ Advanced Journey With Ada: A Flight In Progress (UNPUBLISHED)
     .. warning::
 
         This version of the website contains UNPUBLISHED contents.
-        Please do not share it externally!
 
 .. toctree::
     :maxdepth: 4

@@ -16,7 +16,6 @@
         .. warning::
 
             This version of the website contains UNPUBLISHED contents.
-            Please do not share it externally!
 
 .. only:: builder_latex or builder_epub
 
@@ -28,7 +27,6 @@
         .. warning::
 
             This version of the book contains UNPUBLISHED contents.
-            Please do not share it externally!
 
 .. only:: builder_html
 
