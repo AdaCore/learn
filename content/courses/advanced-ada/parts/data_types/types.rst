@@ -2930,7 +2930,7 @@ Any type definition has a kind of literal associated with it. For example,
 integer types are associated with integer literals. Therefore, we can
 initialize an object of integer type with an integer literal:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Simple_Integer_Literal
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Simple_Integer_Literal
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2949,7 +2949,7 @@ literals, as we'll see later.
 When we declare an enumeration type, we limit the set of literals that we can
 use to initialize objects of that type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Simple_Enumeration
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Simple_Enumeration
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -2993,7 +2993,7 @@ For our previous :ada:`Activation_States` type, we could declare a function
 enumeration literals that we've specified for the :ada:`Activation_States`
 type:
 
-.. code:: ada manual_chop no_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.User_Defined_Literals
+.. code:: ada manual_chop no_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.User_Defined_Literals
 
     !activation_states.ads
     package Activation_States is
@@ -3022,7 +3022,7 @@ only used to convert integer literals (but not string literals) to the
 the implementation of the :ada:`Integer_To_Activation_State` function and
 convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
 
-.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.User_Defined_Literals
+.. code:: ada manual_chop compile_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.User_Defined_Literals
 
     !activation_states.adb
     package body Activation_States is
@@ -3042,7 +3042,7 @@ convert it to an integer value |mdash| using :ada:`Integer'Value`, for example:
 
 Let's look at a complete example that makes use of all three kinds of literals:
 
-.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States
 
     !activation_states.ads
     package Activation_States is
@@ -3166,7 +3166,7 @@ With the definition of the :ada:`Activation_State` type that we've seen in the
 complete example, we can initialize an object of this type with an enumeration
 literal or a string, as both forms are defined in the type specification:
 
-.. code:: ada manual_chop run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada manual_chop run_button main=using_string_literal.adb project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States
 
     !using_string_literal.adb
     with Ada.Text_IO;       use Ada.Text_IO;
@@ -3184,7 +3184,7 @@ Note we need to be very careful when designing conversion functions. For
 example, the use of string literals may limit the kind of checks that we can
 do. Consider the following misspelling of the :ada:`Off` literal:
 
-.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States
     :class: ada-expect-compile-error
 
     !misspelling_example.adb
@@ -3202,7 +3202,7 @@ do. Consider the following misspelling of the :ada:`Off` literal:
 As expected, the compiler detects this error. However, this error is accepted
 when using the corresponding string literal:
 
-.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Activation_States
+.. code:: ada manual_chop run_button main=misspelling_example.adb project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Activation_States
 
     !misspelling_example.adb
     with Ada.Text_IO;       use Ada.Text_IO;
@@ -3239,7 +3239,7 @@ allowed for the :ada:`To_Activation_State` type.
 User-defined literals can also be used for more complex types, such as records.
 For example:
 
-.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User-Defined_Literals.Record_Literals
+.. code:: ada manual_chop run_button project=Courses.Advanced_Ada.Data_Types.Types.User_Defined_Literals.Record_Literals
 
     !silly_records.ads
     package Silly_Records is
