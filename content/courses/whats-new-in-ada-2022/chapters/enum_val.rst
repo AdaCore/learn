@@ -21,7 +21,7 @@ Each enumeration literal has a corresponding position in the type
 declaration. We can easily obtain it from the :ada:`Type'Pos (Enum)`
 attribute.
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Pos
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Pos switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
    with Ada.Integer_Text_IO;
@@ -37,7 +37,7 @@ attribute.
 
 For the reverse mapping, we use :ada:`Type'Val (Int)`:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Val
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Val switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
 
@@ -59,7 +59,7 @@ positions, but you can redefine them.  Here, we created a copy of
 In Ada 2022, we can get an integer value of the representation with
 :ada:`Type'Enum_Rep(Enum)` attribute:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Enum_Rep
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Enum_Rep switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
    with Ada.Integer_Text_IO;
@@ -77,7 +77,7 @@ In Ada 2022, we can get an integer value of the representation with
 
 And, for the reverse mapping, we can use :ada:`Type'Enum_Val (Int)`:
 
-.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Enum_Val
+.. code:: ada run_button project=Courses.Ada_2022_Whats_New.Enum_Val.Enum_Val switches=Compiler(-gnat2022);
 
    with Ada.Text_IO;
    with Ada.Integer_Text_IO;
