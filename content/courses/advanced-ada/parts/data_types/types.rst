@@ -3,6 +3,234 @@ Types
 
 .. include:: ../../../global.txt
 
+.. _Adv_Ada_Names:
+
+Names
+-----
+
+In simple terms, a "name" can be an identifier, i.e. the *name* that we use to
+refer to an object or a subprogram, for example. This is what we call a
+*direct name*. However, in Ada, a name can also refer to other language
+constructs, as we discuss later on in this section.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`4.1 Name <4-1>`
+
+
+Direct names
+~~~~~~~~~~~~
+
+Direct names are the simplest form of names in Ada. They can be either
+identifiers or operator symbols.
+
+Identifiers
+^^^^^^^^^^^
+
+An identifier |mdash| as the term implies |mdash| is a (direct) name that we
+use to *identify* an object, a subprogram, a type, and so on. When specifying
+an identifier, we aren't limited to :wikipedia:`ASCII <ASCII>`  characters: we
+can use a subset of the :wikipedia:`Unicode <Universal_Coded_Character_Set>`
+standard.
+
+.. admonition:: For further reading...
+
+    To be more precise, the Normalization Form KC of the Unicode standard is
+    applied to identifiers. You can find more information about it in the
+    `Unicode Standard Annex #15 <https://unicode.org/reports/tr15/>`_.
+
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Names.Identifiers
+
+    procedure Show_Identifiers is
+    --        ^^^^^^^^^^^^^^^^
+    --           identifier
+
+       type New_Integer is new
+       --   ^^^^^^^^^^^
+       --     identifier
+         Integer;
+       --  ^^^^^
+       --   identifier
+
+       Something_Important : New_Integer;
+       --  ^^^^^^^^^^^^^^^
+       --  identifier
+       --                    ^^^^^^^^^^^
+       --                     identifier
+    begin
+      null;
+    end Show_Identifiers;
+
+In this example, we see the following identifiers: :ada:`Show_Identifiers`
+(subprogram), :ada:`New_Integer` (type), :ada:`Integer` (type), and
+:ada:`Something_Important` (object).
+
+
+Operator symbols
+^^^^^^^^^^^^^^^^
+
+The set of operator symbols that we can use is restricted to the following
+symbols or reserved words specified in the Ada language:
+
++------------------------------+----------------------------------------------+
+| Operator kind                | Operators                                    |
++==============================+==============================================+
+| Logical operators            | :ada:`and`, :ada:`or`, :ada:`xor`            |
++------------------------------+----------------------------------------------+
+| Relational operators         | :ada:`=`, :ada:`/=`, :ada:`<`, :ada:`<=`     |
+|                              | :ada:`>`, :ada:`>=`                          |
++------------------------------+----------------------------------------------+
+| Binary adding operators      | :ada:`+`, :ada:`-`, :ada:`&`                 |
++------------------------------+----------------------------------------------+
+| Unary adding operators       | :ada:`+`, :ada:`-`                           |
++------------------------------+----------------------------------------------+
+| multiplying opertors         | :ada:`*`, :ada:`/`, :ada:`mod`, :ada:`rem`   |
++------------------------------+----------------------------------------------+
+| Highest precedence operators | :ada:`**`, :ada:`abs`, :ada:`not`            |
++------------------------------+----------------------------------------------+
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`4.5 Operators and Expression Evaluation <4-5>`
+
+Other kinds of names
+~~~~~~~~~~~~~~~~~~~~
+
+In addition to direct names, we have the following kinds of names:
+:ref:`explicit dereferences <Adv_Ada_Dereferencing>`, indexed components,
+slices, selected components, attribute references,
+:ref:`type conversions <Adv_Ada_Type_Conversion>`, function calls,
+character literals,
+:ref:`qualified expressions <Adv_Ada_Qualified_Expressions>`,
+:ref:`generalized references <Adv_Ada_User_Defined_References>`, and
+target name.
+
+.. todo::
+
+    - Add to the list: generalized indexing.
+    - Include examples.
+
+Let's see an example of some of them:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Names.Other_Names
+
+    pragma Ada_2022;
+
+    procedure Show_Other_Names is
+
+       type Integer_Access is
+         access Integer;
+
+       type Integer_Array is array
+         (Positive range <>) of Integer;
+
+       type New_Integer is new
+         Integer;
+
+       function Zero
+         return New_Integer is
+           (0);
+
+       subtype Sub_Integer is
+         Integer;
+
+       type Rec is record
+          Val : Integer := 0;
+       end record;
+
+       type ABC_Enum is
+         ('A', 'B', 'C');
+
+       IA  : Integer_Access := new Integer;
+       Arr : Integer_Array (1 .. 5) :=
+               (others => 0);
+       R   : Rec;
+       NI  : New_Integer;
+       SI  : Sub_Integer;
+       E   : ABC_Enum := 'A';
+    begin
+       R.Val := IA.all;
+       --       ^^^^^^
+       --  explicit dereference
+
+       R.Val := Arr (1);
+       --       ^^^^^^^
+       --    indexed component
+
+       Arr (1 .. 2) := Arr (3 .. 4);
+       --              ^^^^^^^^^^^^
+       --                  slice
+
+       Arr (1 .. 2) := (others => R.Val);
+       --                         ^^^^^
+       --              selected component
+
+       R.Val := Arr'Size;
+       --       ^^^^^^^^
+       --  attribute reference
+
+       NI := New_Integer (IA.all);
+       --    ^^^^^^^^^^^^^^^^^^^^
+       --      type conversion
+
+       NI := Zero;
+       --    ^^^^
+       --  function call
+
+       E  := 'A';
+       --    ^^^
+       --  character literal
+
+       IA.all := Sub_Integer (R.Val);
+       --        ^^^^^^^^^^^^^^^^^^^
+       --        qualified expression
+
+       R.Val := @ + 1;
+       --       ^
+       --  target name
+       --
+       --  equivalent to:
+       --     R.Val := R.Val + 1;
+
+    end Show_Other_Names;
+
+In this example, we see instances of the following kinds of names:
+
+- explicit dereference: :ada:`IA.all`;
+
+- indexed components: :ada:`Arr (1)`;
+
+- slices: :ada:`Arr (1 .. 2)`, :ada:`Arr (3 .. 4)`;
+
+- selected components: :ada:`R.Val`;
+
+- attribute references: :ada:`Arr'Size`;
+
+- type conversions: :ada:`New_Integer (IA.all)`;
+
+- function calls: :ada:`Zero`;
+
+- character literals: :ada:`'A'`;
+
+- qualified expressions: :ada:`Sub_Integer (R.Val)`;
+
+- target name: :ada:`@`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`4.1 Name <4-1>`
+    - :arm22:`4.1.1 Indexed Components <4-1-1>`
+    - :arm22:`4.1.2 Slices <4-1-2>`
+    - :arm22:`4.1.3 Selected Components <4-1-3>`
+    - :arm22:`4.1.4 Attributes <4-1-4>`
+    - :arm22:`4.1.5 User-Defined References <4-1-5>`
+    - :arm22:`4.6 Type Conversions <4-6>`
+    - :arm22:`4.7 Qualified Expressions <4-7>`
+    - :arm22:`5.2.1 Target Name Symbols <5-2-1>`
+
+
 ..
     TO BE DONE:
 
