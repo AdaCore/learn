@@ -401,42 +401,42 @@ For example:
 
     procedure Show_Objects is
 
-       type Rec (Id : Positive) is
+       type Device (Id : Positive) is
        record
           Value : Integer;
        end record;
 
-       type Rec_Access is
-         access all Rec;
+       type Device_Access is
+         access all Device;
 
-       R     : aliased Rec (99);
-       --                   ^^
+       Dev : aliased Device (99);
+       --                    ^^
        --  Discriminant `Id` is a
        --  constant object.
        --
-       --  `R` is a variable object,
+       --  `Dev` is a variable object,
        --  though.
 
-       R_Acc : Rec_Access := R'Access;
+       Dev_Acc : Device_Access := Dev'Access;
 
-       procedure Process (R : Rec) is
+       procedure Process (D : Device) is
          null;
        --                 ^
        --         constant object
     begin
-       R.Value := 0;
-       --  ^^^
+       Dev.Value := 0;
+       --  ^^^^^
        --  variable object
 
-       R_Acc.all.Value := 1;
-       --  ^^^^^
+       Dev_Acc.all.Value := 1;
+       --  ^^^^^^^
        --  variable object
     end Show_Objects;
 
-In this example, we see that :ada:`R` is a variable object, while its
-:ada:`Id` discriminant is a constant object. In addition, the :ada:`R_Acc.all`
-dereference is a variable object. Finally, the :ada:`in` parameter of procedure
-:ada:`Process` is a constant object.
+In this example, we see that :ada:`Dev` is a variable object, while its
+:ada:`Id` discriminant is a constant object. In addition, the
+:ada:`Dev_Acc.all` dereference is a variable object. Finally, the :ada:`in`
+parameter of procedure :ada:`Process` is a constant object.
 
 .. admonition:: In the Ada Reference Manual
 
