@@ -457,17 +457,18 @@ the *view* of an object is classified as constant or variable as well.
 Before we start, note that the classification of an object as constant or
 variable doesn't directly imply how its view is classified. You may, for
 example, expect that a constant object has a constant view, but this is not
-necessarily the case, as we discuss in this section.
+necessarily the case, as we discuss in this section. (In fact, a constant
+object only has a constant view if it doesn't have a part that has a variable
+view.)
 
-A constant object only has a constant view if it doesn't have a part that has a
-variable view |mdash| a part has a variable view if it is of
+A part of an object has a variable view if it is of
 :ref:`immutably limited type <Adv_Ada_Immutably_Limited_Types>`,
 :ref:`controlled type <Adv_Ada_Controlled_Types_Overview_Controlled_Objects>`,
 :ref:`private type <Adv_Ada_Type_View>`, or private extension.
-If any of those parts exist in a constant object, then we say that the whole
-object has a variable view *because* of those parts with variable view.
-Otherwise, if a constant object doesn't have any parts with variable view, then
-it has a constant view.
+In that sense, if any of those parts with variable view exist in a constant
+object, then we say that the *whole object* has a variable view.
+Only if a constant object doesn't have *any* parts with variable view, then
+this object has a constant view.
 
 .. todo::
 
