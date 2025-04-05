@@ -251,7 +251,7 @@ data in memory, we can still classify programming languages as
 .. admonition:: Important
 
     In object-oriented programming, an object belongs to a *class* of objects.
-    In Ada, this kind of objects are called *tagged* objects. Note, however,
+    In Ada, objects of this kind are called *tagged* objects. Note, however,
     that we can have objects that don't belong to a class of objects: those are
     called *untagged* objects.
 
@@ -330,8 +330,8 @@ As we can see in this code example a formal parameter of a subprogram or an
 entry is also an object |mdash| in addition, so are
 :ref:`value conversions <Adv_Ada_Value_Conversion>`, the result returned by a
 function, the result of evaluating an :doc:`aggregate <./aggregates>`, loop
-parameters, :doc:`arrays <./arrays>`, or the slices or the components of an
-array.
+parameters, :doc:`arrays <./arrays>`, or the slices of arrays objects, or the
+components of composite objects.
 
 .. todo::
 
