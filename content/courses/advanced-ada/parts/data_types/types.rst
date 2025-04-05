@@ -454,8 +454,8 @@ the *view* of an object is classified as constant or variable as well.
 
     Discuss more about what the view of an object really means?
 
-Before we start, note that the classification of an object as (constant or
-variable) doesn't directly imply how its view is classified. You may, for
+Before we start, note that the classification of an object as constant or
+variable doesn't directly imply how its view is classified. You may, for
 example, expect that a constant object has a constant view, but this is not
 necessarily the case, as we discuss in this section.
 
