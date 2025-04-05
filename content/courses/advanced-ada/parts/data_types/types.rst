@@ -476,6 +476,59 @@ this object has a constant view.
 
 In contrast, variable objects always have a variable view.
 
+Let's see an example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Objects.Object_View
+
+    package Devices is
+
+       type Device_Settings is
+       record
+          Started : Boolean;
+       end record;
+
+       type Device (Id : Positive) is
+         private;
+
+       function Init (Id : Positive)
+                      return Device;
+
+    private
+
+       type Device (Id : Positive) is
+         null record;
+
+       function Init (Id : Positive)
+                      return Device is
+          (Device'(Id => Id));
+
+    end Devices;
+
+
+    with Devices; use Devices;
+
+    procedure Show_Object_View is
+       Dev      : constant Device := Init (5);
+       --  Constant object with
+       --  variable view.
+
+       Default  : constant Device_Settings
+                   := (Started => False);
+       --  Constant object with
+       --  constant view.
+
+       Settings : Device_Settings;
+
+    begin
+       Settings := (Started => True);
+    end Show_Object_View;
+
+In this example, both :ada:`Default_S` and :ada:`Dev` are constant objects.
+However, they have different views: while :ada:`Default_S` has a constant view
+because it doesn't have any parts with variable view, :ada:`Dev` has a variable
+view because it's a private type. Finally, as expected, :ada:`Settings` has a
+variable view because it's a variable object.
+
 
 Named numbers
 ~~~~~~~~~~~~~
