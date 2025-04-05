@@ -534,7 +534,8 @@ Named numbers
 ~~~~~~~~~~~~~
 
 In addition to objects, we can have named numbers. Those aren't objects, but
-rather names that we assign to numeric values. For example:
+rather :ref:`names <Adv_Ada_Names>` that we assign to numeric values. For
+example:
 
 .. todo::
 
