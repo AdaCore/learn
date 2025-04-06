@@ -3,6 +3,146 @@ Strings
 
 .. include:: ../../../global.txt
 
+.. _Adv_Ada_Character_String_Literals:
+
+Character and String Literals
+-----------------------------
+
+So far, we're already seen many examples of string literals |mdash| both in
+the :ref:`Introduction to Ada <Intro_Ada_Course_Index>` course and in the
+present course. In this section, we define them once more and discuss a couple
+of details about them.
+
+
+Character Literals
+~~~~~~~~~~~~~~~~~~
+
+A character literal is simply a character between apostrophes (or
+*single quotation marks*). For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Character_String_Literals.Character_Literals
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Character_Literals is
+       C   : Character := 'a';
+       --                 ^^^
+       --           Character literal
+    begin
+       Put_Line ("Character : " & C);
+    end Show_Character_Literals;
+
+In this example, we initialize the character variable :ada:`C` with the
+character literal :ada:`'a'`.
+
+
+String Literals
+~~~~~~~~~~~~~~~
+
+A string literal is simply a collection of character between quotation marks.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Character_String_Literals.Simple_String_Literals
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Simple_String_Literals is
+       S1 : String := "Hello";
+       --             ^^^^^^^
+       --         String literal
+
+       S2 : String := "World";
+       --             ^^^^^^^
+       --           String literal
+    begin
+       Put_Line (S1 & " " & S2);
+    end Show_Simple_String_Literals;
+
+In this example, :ada:`"Hello"` and :ada:`"World"` are string literals.
+
+
+String literals with quotation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to include a quotation mark in a string literal, you have to write
+:ada:`""` (inside that string literal):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Character_String_Literals.String_Literals_With_Quotes
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_String_Literals_With_Quotes is
+       S1 : String := "Hello";
+       S2 : String := "World";
+    begin
+       Put_Line ("  "" " & S1
+       --           ^^
+       --       Quotation marks
+                 & " " & S2 & " ""  ");
+       --                       ^^
+       --       Quotation marks
+
+       Put_Line ("""Hello World!""");
+       --         ^^            ^^
+       --          Quotation marks
+
+       Put_Line ("""""");
+       --         ^^^^
+       --    Quotation marks
+    end Show_String_Literals_With_Quotes;
+
+In this example, we display ``" Hello World "`` to the user by adding
+quotation marks to the concatenated strings in the call to :ada:`Put_Line`.
+
+Note that the three quotation marks at the beginning of
+:ada:`"""Hello World!"""` consist of the quotation mark that indicate the
+beginning of the string literal and the two quotation marks that represent a
+single quotation mark inside the string literal. (The same thing happens at the
+end of this string literal, but in reverse.) This string literal is displayed
+as ``"Hello World!"`` to the user.
+
+Finally, the string literal :ada:`""""""` is displayed as ``""`` to the
+user.
+
+
+Empty string literals
+^^^^^^^^^^^^^^^^^^^^^
+
+An empty string is represented by quotation marks without characters in
+between: :ada:`""`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Character_String_Literals.Empty_String_Literals
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Empty_String_Literals is
+       S1 : String          := "";
+       S2 : String (1 .. 0) := "";
+    begin
+       Put_Line (S1);
+       Put_Line (S2);
+       Put_Line ("");
+    end Show_Empty_String_Literals;
+
+Note that an empty string is an array of characters without any components.
+This is made explicit by the declaration of :ada:`S2`. Here, by using the range
+:ada:`1 .. 0`, we're declaring an empty array.
+
+.. todo::
+
+    Add link to subsection on empty arrays.
+
+.. admonition:: In other languages
+
+    In C, an empty string still contains a single character: the null character
+    (``\0``). In Ada, however, an empty string doesn't have any characters.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`2.5 Character Literals <2-5>`
+    - :arm22:`2.6 String Literals <2-6>`
+
+
 .. _Adv_Ada_Wide_Wide_Strings:
 
 Wide and Wide-Wide Strings
