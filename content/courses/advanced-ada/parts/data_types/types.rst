@@ -556,7 +556,13 @@ In this example, :ada:`Pi` is a named number.
 A named number is always known at compilation time. Also, it doesn't have a
 type associated with it. In fact, its type is called universal real or
 universal integer |mdash| depending on the number being a real or integer
-number.
+number. (In this specific case, :ada:`Pi` is a universal real number.) We talk
+about universal real and universal integer types in another chapter.
+
+.. todo::
+
+    Add link to section on universal real and universal integer types
+    (Adv_Ada_Universal_Real_Integer) once it's available.
 
 .. admonition:: In the Ada Reference Manual
 
