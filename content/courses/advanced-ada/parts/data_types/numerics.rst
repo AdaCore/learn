@@ -3,6 +3,24 @@ Numerics
 
 .. include:: ../../../global.txt
 
+.. ::
+
+    .. _Adv_Ada_Universal_Real_Integer:
+
+    Universal Real and Integer
+    --------------------------
+
+    .. todo::
+
+        Complete section!
+
+        - Universal real vs. integer
+        - Accuracy
+        - Compile time vs. runtime evaluation
+        - Named Numbers
+        - Operations in named numbers expressions
+
+
 Modular Types
 -------------
 
