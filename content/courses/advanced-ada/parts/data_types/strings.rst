@@ -39,7 +39,7 @@ character literal :ada:`'a'`.
 String Literals
 ~~~~~~~~~~~~~~~
 
-A string literal is simply a collection of character between quotation marks.
+A string literal is simply a collection of characters between quotation marks.
 For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Character_String_Literals.Simple_String_Literals
