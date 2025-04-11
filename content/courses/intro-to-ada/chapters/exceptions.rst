@@ -64,6 +64,8 @@ Here, the :ada:`My_Except` exception is raised. We can also specify a message:
 In this case, we see an additional message when the exception is displayed.
 
 
+.. _Intro_Ada_Handling_An_Exception:
+
 Handling an exception
 ---------------------
 
