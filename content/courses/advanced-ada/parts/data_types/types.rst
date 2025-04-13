@@ -530,6 +530,8 @@ view because it's a private type. Finally, as expected, :ada:`Settings` has a
 variable view because it's a variable object.
 
 
+.. _Adv_Ada_Named_Numbers:
+
 Named numbers
 ~~~~~~~~~~~~~
 
