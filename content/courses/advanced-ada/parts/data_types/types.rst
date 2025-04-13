@@ -571,6 +571,8 @@ about universal real and universal integer types in another chapter.
     - :arm22:`3.3.2 Number Declarations <3-3-2>`
 
 
+.. _Adv_Ada_Scalar_Types:
+
 Scalar Types
 ------------
 
