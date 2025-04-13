@@ -563,8 +563,8 @@ about universal real and universal integer types in another chapter.
 
 .. todo::
 
-    Add link to section on universal real and universal integer types
-    (Adv_Ada_Universal_Real_Integer) once it's available.
+    Add link to section on universal real, integer and fixed types
+    (Adv_Ada_Universal_Real_Integer_Fixed) once it's available.
 
 .. admonition:: In the Ada Reference Manual
 
