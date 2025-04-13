@@ -1613,8 +1613,6 @@ derived from the root real type. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Root_Integer_Real
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
     package Show_Root_Integer_Real is
 
        type Score is range 0 .. 10;
@@ -1638,8 +1636,6 @@ In contrast, if we derive from a standard floating-point or integer type, we're
 not deriving directly from the root types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Standard_Integer_Float_Derivation
-
-    with Ada.Text_IO; use Ada.Text_IO;
 
     package Show_Standard_Derivation is
 
