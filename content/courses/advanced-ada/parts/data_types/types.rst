@@ -1487,6 +1487,191 @@ representation clause. We discuss this topic
 :ref:`in another section <Adv_Ada_Enumeration_Representation_Clauses>`.
 
 
+.. _Adv_Ada_Universal_And_Root_Types:
+
+Universal and Root Types
+------------------------
+
+Previously, in the section about :ref:`scalar types <Adv_Ada_Scalar_Types>`,
+we said that scalar types are the most basic types that we can get. However,
+Ada has the peculiar concept of universal and root types, which could be
+considered *more basic* than scalar types. In fact, universal and root types
+are underlying scalar types. In this section, we briefly introduce this topic.
+
+
+.. _Adv_Ada_Universal_Types:
+
+Universal Types
+~~~~~~~~~~~~~~~
+
+The Ada standard defines four universal types:
+
+#. universal integer types
+
+#. universal real types
+
+#. universal fixed types
+
+#. universal access types
+
+The first three are numeric types, and we discuss them in details later on
+in another chapter. The last one
+is used for :ref:`anonymous access types <Adv_Ada_Anonymous_Access_Types>`.
+
+.. todo::
+
+    Add link to section on universal real, integer and fixed types
+    (Adv_Ada_Universal_Real_Integer_Fixed) once it's available.
+
+.. todo::
+
+    Add link to section on universal access types once it's available.
+
+Universal types aren't types we can use directly, but rather via specific
+languages constructs. In this sense, we cannot derive from universal types, but
+only make use of them indirectly.
+
+For instance, if we declare :ref:`named numbers <Adv_Ada_Named_Numbers>` using
+a real value, we're indirectly using a universal real type. If we declare
+another named number using an expression, the computation is performed based on
+the universal types of the elements of that expression:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Universal_Real_Integer
+
+    procedure Show_Universal_Real_Integer is
+
+       Pi     : constant := 3.1415926535;
+       --                   ^^^^^^^^^^^^
+       --               universal real type
+
+       Two_Pi : constant := Pi * 2.0;
+       --                   ^^^^^^^^
+       --                 operation on
+       --              universal real type
+
+       N      : constant := 10;
+       --                   ^^
+       --           universal integer type
+
+       N_10   : constant := N * 10;
+       --                   ^^^^^^
+       --                operation on
+       --             universal real type
+
+    begin
+       null;
+    end Show_Universal_Real_Integer;
+
+In this example, the expression :ada:`Pi * 2.0` is computed using universal
+real types, while the expression :ada:`N * 10` is computed using universal
+integer types.
+
+Similarly, for anonymous access types, the equality operator uses universal
+access types for the comparison:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Universal_Access
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Universal_Access is
+       I : aliased Integer;
+       A : access Integer := I'Access;
+       B : access Integer := I'Access;
+    begin
+       if A = B then
+          Put_Line ("A = B");
+       else
+          Put_Line ("A /= B");
+       end if;
+    end Show_Universal_Access;
+
+In this example, both :ada:`A` and :ada:`B` are variables of anonymous access
+types. Because the type isn't a known named type, the equality operation
+:ada:`=` uses the universal access type for the comparison.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.3.2 Number Declarations <3-3-2>`
+    - :arm22:`4.5.2 Relational Operators and Membership Tests <4-5-2>`
+
+
+.. _Adv_Ada_Root_Types:
+
+Root Types
+~~~~~~~~~~
+
+The root types can be found on a level above the universal types. In this
+category, we can find the same numeric types that we have for universal types,
+namely the root real, root integer and root fixed types.
+
+The term *root* is used in the context of type derivation. In fact, the root
+type is first type that we derive all other types from. In other words, if we
+declare an integer range as a new type, that type is derived from the root
+integer type. Similarly, if we declare a new floating-point type, that type is
+derived from the root real type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Root_Integer_Real
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package Show_Root_Integer_Real is
+
+       type Score is range 0 .. 10;
+       --  Type Score is derived from
+       --  the root integer type.
+
+       type Real_Score is
+         digits 10 range 0.0 .. 10.0;
+       --  Type Real_Score is derived from
+       --  the root real type.
+
+    end Show_Root_Integer_Real;
+
+Here, :ada:`Score` and :ada:`Real_Score` are derived from the root integer and
+real types, respectively. Note that the derivation is always implicit, as we
+cannot write something like
+:ada:`type Score is new Root_Integer range 0 .. 10` or
+:ada:`type Real_Score is new Root_Real digits 10 range 0.0 .. 10.0`.
+
+In contrast, if we derive from a standard floating-point or integer type, we're
+not deriving directly from the root types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Standard_Integer_Float_Derivation
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    package Show_Standard_Derivation is
+
+       type Score is new Integer
+         range 0 .. 10;
+       --  Type Score is derived from
+       --  the Integer type.
+
+       type Real_Score is new Float
+         range 0.0 .. 10.0;
+       --  Type Real_Score is derived from
+       --  the Float type.
+
+    end Show_Standard_Derivation;
+
+In this case, we're explicitly deriving from the standard Ada types
+:ada:`Integer` and :ada:`Float`, which, on their turn, are derived from the
+root integer and root real types, respectively.
+
+.. admonition:: For further reading...
+
+    You might remember our discussion about the
+    :ref:`Base attribute <Adv_Ada_Base_Attribute>` and the fact that it
+    indicates the underlying subtype of a type. We said, for example, that
+    :ada:`Integer'Base` gives us the base type of :ada:`Integer`, i.e. the
+    the underlying hardware type representing the :ada:`Integer` type.
+
+    Although the concept of the base type *sounds* similar to the concept of
+    the root type, the focus of each one is different: while the base type
+    refers to the constraints of a type, the root type refers to the derivation
+    tree of a type.
+
+
 .. _Adv_Ada_Definite_Indefinite_Subtypes:
 
 Definite and Indefinite Subtypes
