@@ -1611,7 +1611,7 @@ declare an integer range as a new type, that type is derived from the root
 integer type. Similarly, if we declare a new floating-point type, that type is
 derived from the root real type. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Root_Integer_Real
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Root_Integer_Real
 
     package Show_Root_Integer_Real is
 
@@ -1635,7 +1635,7 @@ cannot write something like
 In contrast, if we derive from a standard floating-point or integer type, we're
 not deriving directly from the root types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Standard_Integer_Float_Derivation
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Standard_Integer_Float_Derivation
 
     package Show_Standard_Derivation is
 
