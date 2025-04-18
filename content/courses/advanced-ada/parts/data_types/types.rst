@@ -1515,7 +1515,7 @@ The Ada standard defines four universal types:
 
 #. universal access types
 
-The first three are numeric types, and we discuss them in details later on
+The first three are numeric types, and we discuss them in detail later on
 in another chapter. The last one
 is used for :ref:`anonymous access types <Adv_Ada_Anonymous_Access_Types>`.
 
