@@ -377,6 +377,27 @@ and be guaranteed that :ada:`Nil` is equal to zero.
         - Operations in named numbers expressions
 
 
+.. ::
+
+    .. _Adv_Ada_Numeric_Types:
+
+    Numeric Types
+    -------------
+
+    .. todo::
+
+        Complete section!
+
+        - Recap of numeric types
+            - Integer types
+            - Floating-point types
+            - Fixed-point types
+            - Modular types
+        - Standard types vs. compiler-specific types
+            - e.g.: `Integer` vs. `Long_Long_Integer`
+        - Rename sections on numeric type attributes!
+
+
 Modular Types
 -------------
 
