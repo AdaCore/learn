@@ -1537,9 +1537,9 @@ a real value, we're indirectly using a universal real type. If we declare
 another named number using an expression, the computation is performed based on
 the universal types of the elements of that expression:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Universal_Real_Integer
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Universal_Real_Integer
 
-    procedure Show_Universal_Real_Integer is
+    package Show_Universal_Real_Integer is
 
        Pi     : constant := 3.1415926535;
        --                   ^^^^^^^^^^^^
@@ -1559,8 +1559,6 @@ the universal types of the elements of that expression:
        --                operation on
        --           universal integer type
 
-    begin
-       null;
     end Show_Universal_Real_Integer;
 
 In this example, the expression :ada:`Pi * 2.0` is computed using universal
