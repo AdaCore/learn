@@ -1495,7 +1495,7 @@ Universal and Root Types
 
 Previously, in the section about :ref:`scalar types <Adv_Ada_Scalar_Types>`,
 we said that scalar types are the most basic types that we can get. However,
-Ada has the peculiar concept of universal and root types, which could be
+Ada has the concept of universal and root types, which could be
 considered *more basic* than scalar types. In fact, universal and root types
 are underlying scalar types. In this section, we briefly introduce this topic.
 
@@ -1606,8 +1606,8 @@ category, we can find the same numeric types that we have for universal types,
 namely the root real, root integer and root fixed types.
 
 The term *root* is used in the context of type derivation. In fact, the root
-type is first type that we derive all other types from. In other words, if we
-declare an integer range as a new type, that type is derived from the root
+type is the first type that we derive all other types from. In other words, if
+we declare an integer range as a new type, that type is derived from the root
 integer type. Similarly, if we declare a new floating-point type, that type is
 derived from the root real type. For example:
 
