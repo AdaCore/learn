@@ -1497,8 +1497,8 @@ Previously, in the section about :ref:`scalar types <Adv_Ada_Scalar_Types>`,
 we said that scalar types are the most basic types that we can get. However,
 Ada has the concept of universal and root types, which could be
 considered *more basic* than scalar types. In fact, universal and root types
-are underlying scalar types. In this section, we briefly introduce this topic.
-
+are underlying scalar types used by the language designers to define the
+language semantics. In this section, we briefly introduce this topic.
 
 .. _Adv_Ada_Universal_Types:
 
@@ -1632,8 +1632,8 @@ cannot write something like
 :ada:`type Score is new Root_Integer range 0 .. 10` or
 :ada:`type Real_Score is new Root_Real digits 10 range 0.0 .. 10.0`.
 
-In contrast, if we derive from a standard floating-point or integer type, we're
-not deriving directly from the root types:
+In contrast, if we derive from an existing floating-point or integer type
+defined by the Ada standard, we're not deriving directly from the root types:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_And_Root_Types.Standard_Integer_Float_Derivation
 
