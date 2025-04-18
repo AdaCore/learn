@@ -3,6 +3,8 @@ Numerics
 
 .. include:: ../../../global.txt
 
+.. _Adv_Ada_Numeric_Literals:
+
 Numeric Literals
 ----------------
 
