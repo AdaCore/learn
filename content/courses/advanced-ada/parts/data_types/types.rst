@@ -1557,7 +1557,7 @@ the universal types of the elements of that expression:
        N_10   : constant := N * 10;
        --                   ^^^^^^
        --                operation on
-       --             universal real type
+       --           universal integer type
 
     begin
        null;
