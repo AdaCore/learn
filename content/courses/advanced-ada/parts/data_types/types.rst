@@ -560,12 +560,9 @@ type associated with it. In fact, its type is called universal real or
 universal integer |mdash| depending on the number being a real or integer
 number. (In this specific case, :ada:`Pi` is a universal real number.) We talk
 about :ref:`universal types <Adv_Ada_Universal_Types>` later on in this
-chapter.
-
-.. todo::
-
-    Add link to section on universal real, integer and fixed types
-    (Adv_Ada_Universal_Real_Integer_Fixed) once it's available.
+chapter and about
+:ref:`universal real and integer types <Adv_Ada_Universal_Numeric_Types>`
+in another chapter.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -1516,13 +1513,8 @@ The Ada standard defines four universal types:
 #. universal access types
 
 The first three are numeric types, and we discuss them in detail later on
-in another chapter. The last one
+:ref:`in another chapter <Adv_Ada_Universal_Numeric_Types>`. The last one
 is used for :ref:`anonymous access types <Adv_Ada_Anonymous_Access_Types>`.
-
-.. todo::
-
-    Add link to section on universal real, integer and fixed types
-    (Adv_Ada_Universal_Real_Integer_Fixed) once it's available.
 
 .. todo::
 
