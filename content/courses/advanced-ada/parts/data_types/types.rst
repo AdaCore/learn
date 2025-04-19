@@ -539,10 +539,6 @@ In addition to objects, we can have named numbers. Those aren't objects, but
 rather :ref:`names <Adv_Ada_Names>` that we assign to numeric values. For
 example:
 
-.. todo::
-
-    Add link to section on names.
-
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Objects.Named_Number
 
     procedure Show_Named_Number is
