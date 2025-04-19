@@ -829,6 +829,7 @@ example, writing :ada:`A * B` triggers a compilation error. Therefore, we have
 to convert one of the objects to have matching types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Float_Multiplication
+    :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
