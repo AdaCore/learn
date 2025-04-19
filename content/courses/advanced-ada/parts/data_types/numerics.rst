@@ -2191,6 +2191,8 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     :ada:`Float` type.
 
 
+.. _Adv_Ada_Fixed_Point_Type_Attributes:
+
 Fixed-Point Types
 -----------------
 
