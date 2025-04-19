@@ -359,6 +359,615 @@ Along these same lines, we can write:
 and be guaranteed that :ada:`Nil` is equal to zero.
 
 
+.. _Adv_Ada_Universal_Numeric_Types:
+
+Universal Numeric Types
+-----------------------
+
+Previously, we introduced the concept of
+:ref:`universal types <Adv_Ada_Universal_Types>`. Three of them are numeric
+types: universal real, universal integer and universal fixed types. In this
+section, we discuss these universal numeric types in more detail.
+
+
+.. _Adv_Ada_Universal_Real_Integer:
+
+Universal Real and Integer
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Universal real and integer types are mainly used in the declaration of
+:ref:`named numbers <Adv_Ada_Named_Numbers>`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Universal_Real_Integer
+
+    package Show_Universal_Real_Integer is
+
+       Pi : constant := 3.1415926535;
+       --               ^^^^^^^^^^^^
+       --            universal real type
+
+       N  : constant := 10;
+       --               ^^
+       --        universal integer type
+
+    end Show_Universal_Real_Integer;
+
+The type of a named number is implied by the type of the
+:ref:`numeric literal <Adv_Ada_Numeric_Literals>` and the type of the named
+numbers that we use in the
+:ref:`static expression <Adv_Ada_Static_Expressions>`. (We discuss static
+expressions next.) In this specific example, we declare :ada:`Pi` using a real
+literal, which implies that it's a named number of universal real type.
+Likewise, :ada:`N` is of universal integer type because we use an integer
+literal in its declaration.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.3.2 Number Declarations <3-3-2>`
+
+
+.. _Adv_Ada_Static_Expressions:
+
+Static expressions
+^^^^^^^^^^^^^^^^^^
+
+As we've just seen, we can use an expression in the declaration of a named
+number. This expression is static, as it's always evaluated at compile time.
+Therefore, we must use the keyword :ada:`constant` in the declaration of named
+numbers.
+
+If all components of the static expression are of universal integer type, then
+the named number is of universal integer type. Otherwise, the static expression
+is of universal real type. For example, if the first element of a static
+expression is of universal integer type, but we have a constant of universal
+real type in the same expression, then the type of the whole static expression
+is universal real:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Static_Expressions
+
+    package Static_Expressions is
+
+       Two_Pi : constant := 2 * 3.1415926535;
+       --                   ^
+       --              universal integer type
+       --
+       --                       ^^^^^^^^^^^^
+       --                 universal real type
+       --
+       --      => result: universal real type
+
+    end Static_Expressions;
+
+In this example, the static expression is of universal real type because of the
+real literal (:ada:`3.1415926535`) |mdash| even though we have the universal
+integer :ada:`2` in the expression.
+
+Likewise, if we use a constant of universal real type in the static expression,
+the result is of universal real type:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Static_Expressions
+
+    package Static_Expressions is
+
+       Pi     : constant := 3.1415926535;
+       --                   ^^^^^^^^^^^^
+       --               universal real type
+
+       Two_Pi : constant := 2 * Pi;
+       --                   ^
+       --              universal integer type
+       --
+       --                       ^^
+       --                 universal real type
+       --
+       --      => result: universal real type
+
+    end Static_Expressions;
+
+In this example, the result of the static expression is of universal real type
+because of we're using the named number :ada:`Pi`, which is of universal real
+type.
+
+Complexity of static expressions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The operations that we use in static expressions may be arbitrarily complex.
+For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Static_Expressions
+
+    package Static_Expressions is
+
+       C1 : constant := 300_453.5;
+       C2 : constant := 455_233.5 * C1;
+       C3 : constant := 872_922.5 * C2;
+       C4 : constant := 155_277.5 * C1 + C2 / C3;
+       C5 : constant := 2.0 * C1 +
+                        3.0 * (C2 / (C4 * C3)) +
+                        4.0 * (C1 / (C2 * C2)) +
+                        5.0 * (C3 / (C1 * C1));
+
+    end Static_Expressions;
+
+As we can see in this example, we may create a chain of dependencies, where the
+result of a static expression depends on the result of previously evaluated
+static expressions. For instance, :ada:`C5` depends on the evaluation of
+:ada:`C1`, :ada:`C2`, :ada:`C3`, :ada:`C4`.
+
+Accuracy of static expressions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The accuracy and range of numeric literals used in static expressions may be
+arbitrarily high as well:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Static_Expressions
+
+    package Static_Expressions is
+
+       Pi : constant :=
+          3.14159_26535_89793_23846_26433_83279_50288;
+
+       Seed : constant :=
+          143_574_786_272_784_656_928_283_872_972_764;
+
+       Super_Seed : constant :=
+          Seed * Seed * Seed * Seed * Seed * Seed;
+
+    end Static_Expressions;
+
+In this example, :ada:`Super_Seed` has a value that is above the typical range
+of integer constants. This might become challenging when using such named
+numbers in actual computations, as we
+:ref:`discuss soon <Adv_Ada_Conversion_Of_Universal_Real_Integer>`.
+
+Another example is when the result of the expression is a
+:wikipedia:`repeating decimal <Repeating_decimal>`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Repeating_Decimal
+
+    package Repeating_Decimals is
+
+       One_Over_Three : constant :=
+          1.0 / 3.0;
+
+    end Repeating_Decimals;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Repeating_Decimals;
+    use  Repeating_Decimals;
+
+    procedure Show_Repeating_Decimals is
+       F_1_3    : constant Float           :=
+                    One_Over_Three;
+       LF_1_3   : constant Long_Float      :=
+                    One_Over_Three;
+       LLF_1_3  : constant Long_Long_Float :=
+                    One_Over_Three;
+    begin
+       Put_Line (F_1_3'Image);
+       Put_Line (LF_1_3'Image);
+       Put_Line (LLF_1_3'Image);
+    end Show_Repeating_Decimals;
+
+In this example, as expected, we see that the accuracy of the value we display
+increases if we use a type with higher precision. This wouldn't be possible if
+we had used a floating-point type with limited precision for the
+:ada:`One_Over_Three` constant:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Repeating_Decimal
+
+    package Repeating_Decimals is
+
+       One_Over_Three : constant Long_Float :=
+          1.0 / 3.0;
+       --                        ^^^^^^^^^^
+       --          using Long_Float instead of
+       --              universal real type
+
+    end Repeating_Decimals;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Repeating_Decimals;
+    use  Repeating_Decimals;
+
+    procedure Show_Repeating_Decimals is
+       F_1_3    : constant Float           :=
+                    Float (One_Over_Three);
+       LF_1_3   : constant Long_Float      :=
+                    Long_Float (One_Over_Three);
+       LLF_1_3  : constant Long_Long_Float :=
+                    Long_Long_Float (One_Over_Three);
+    begin
+       Put_Line (F_1_3'Image);
+       Put_Line (LF_1_3'Image);
+       Put_Line (LLF_1_3'Image);
+    end Show_Repeating_Decimals;
+
+Because we're using the :ada:`Long_Float` type for the :ada:`One_Over_Three`
+constant instead of the universal real type, the accuracy doesn't increase when
+we use the :ada:`Long_Long_Float` type |mdash| as we see in the value of the
+:ada:`LLF_1_3` constant |mdash| even though this type has a higher precision.
+
+.. admonition:: For further reading...
+
+    When using :ref:`big numbers <Adv_Ada_Big_Numbers>`, you could simply
+    assign the named number :ada:`One_Over_Three` to a big real:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Repeating_Decimal switches=Compiler(-gnat2022);
+
+        package Repeating_Decimals is
+
+           One_Over_Three : constant :=
+              1.0 / 3.0;
+
+        end Repeating_Decimals;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Ada.Numerics.Big_Numbers.Big_Reals;
+        use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+        with Repeating_Decimals;
+        use  Repeating_Decimals;
+
+        procedure Show_Repeating_Decimals is
+           BR_1_3 : constant Big_Real := One_Over_Three;
+        begin
+           Put_Line ("BR: "
+                     & To_String (Arg   => BR_1_3,
+                                  Fore  => 2,
+                                  Aft   => 31,
+                                  Exp   => 0));
+        end Show_Repeating_Decimals;
+
+    Another approach is to use the division operation directly:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Repeating_Decimal switches=Compiler(-gnat2022);
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Ada.Numerics.Big_Numbers.Big_Reals;
+        use  Ada.Numerics.Big_Numbers.Big_Reals;
+
+        with Repeating_Decimals;
+        use  Repeating_Decimals;
+
+        procedure Show_Repeating_Decimals is
+           BR_1_3   : constant Big_Real := 1 / 3;
+        begin
+           Put_Line ("BR: "
+                     & To_String (Arg   => BR_1_3,
+                                  Fore  => 2,
+                                  Aft   => 31,
+                                  Exp   => 0));
+        end Show_Repeating_Decimals;
+
+    We talk more about
+    :ref:`big real and quotients <Adv_Ada_Big_Real_Quotients>` later on.
+
+.. _Adv_Ada_Conversion_Of_Universal_Real_Integer:
+
+Conversion of universal real and integer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Although a named number exists as an numeric representation form in Ada, the
+value it represents cannot be used directly at runtime |mdash| even if we
+*just* display the value of the constant at runtime, for example. In fact, a
+conversion to a non-universal type is required in order to use the named number
+anywhere else other than a static expression:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Conversion_To_Non_Universal_Types
+
+    package Static_Expressions is
+
+       Pi : constant :=
+          3.14159_26535_89793_23846_26433_83279_50288;
+
+       Seed : constant :=
+          143_574_786_272_784_656_928_283_872_972_764;
+
+       Super_Seed : constant :=
+          Seed * Seed * Seed * Seed * Seed * Seed;
+
+    end Static_Expressions;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Static_Expressions;
+    use  Static_Expressions;
+
+    procedure Show_Static_Expressions is
+    begin
+       Put_Line (Pi'Image);
+       --  Same as:
+       --  Put_Line (Float (Pi)'Image);
+
+       Put_Line (Seed'Image);
+       --  Same as:
+       --  Put_Line (
+       --    Long_Long_Long_Integer (Seed)'Image);
+    end Show_Static_Expressions;
+
+As we see in this example, the named number :ada:`Pi` is converted to
+:ada:`Float` before being used as an actual parameter in the call to
+:ada:`Put_Line`. Similarly, :ada:`Seed` is converted to
+:ada:`Long_Long_Long_Integer`.
+
+When we use the :ada:`Image` attribute, the compiler automatically selects a
+numeric type which has a suitable range for the named number. In the example
+above, we wouldn't be able to represent the value of :ada:`Seed` with
+:ada:`Integer`, so the compiler selected :ada:`Long_Long_Long_Integer`. Of
+course, we could have also specified the type by using explicit
+:ref:`type conversions <Adv_Ada_Type_Conversion>` or a
+:ref:`qualified expressions <Adv_Ada_Qualified_Expressions>`:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Conversion_To_Non_Universal_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Static_Expressions;
+    use  Static_Expressions;
+
+    procedure Show_Static_Expressions is
+    begin
+       Put_Line (Long_Long_Float (Pi)'Image);
+       Put_Line (Long_Long_Float'(Pi)'Image);
+    end Show_Static_Expressions;
+
+Now, we're explicitly converting to :ada:`Long_Long_Float` in the first call
+to :ada:`Put_Line` and using a qualified expression in the second call to
+:ada:`Put_Line`.
+
+A conversion is also performed when we use a named number in an object
+declaration:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Conversion_To_Non_Universal_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Static_Expressions;
+    use  Static_Expressions;
+
+    procedure Show_Static_Expressions is
+       Two_Pi : constant Float := 2.0 * Pi;
+       --  Same as:
+       --  Two_Pi: constant Float :=
+       --            2.0 * Float (Pi);
+
+       Two_Pi_More_Precise :
+         constant Long_Long_Float := 2.0 * Pi;
+       --  Same as:
+       --  Two_Pi_More_Precise :
+       --    constant Long_Long_Float :=
+       --      2.0 * Long_Long_Float (Pi);
+    begin
+       Put_Line (Two_Pi'Image);
+       Put_Line (Two_Pi_More_Precise'Image);
+    end Show_Static_Expressions;
+
+In this example, :ada:`Pi` is converted to :ada:`Float` in the declaration of
+:ada:`Two_Pi` because we use the :ada:`Float` type in its declaration.
+Likewise, :ada:`Pi` is converted to :ada:`Long_Long_Float` in the declaration
+of :ada:`Two_Pi_More_Precise` because we use the :ada:`Long_Long_Float` type in
+its declaration. (Actually, the same conversion is performed for each instance
+of the real literal :ada:`2.0` in this example.)
+
+Note that the range of the type we select might not be suitable for the named
+number we want to use. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Conversion_To_Non_Universal_Types
+    :class: ada-expect-compile-error
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Static_Expressions;
+    use  Static_Expressions;
+
+    procedure Show_Static_Expressions is
+       Initial_Seed : constant
+         Long_Long_Long_Integer :=
+           Super_Seed;
+    begin
+       Put_Line (Initial_Seed'Image);
+    end Show_Static_Expressions;
+
+In this example, we get a compilation error because the range of the
+:ada:`Long_Long_Long_Integer` type isn't enough to store the value of the
+:ada:`Super_Seed`.
+
+.. admonition:: For further reading...
+
+    To circumvent the compilation error in the code example we've just seen,
+    the best alternative to use :ref:`big numbers <Adv_Ada_Big_Numbers>`
+    |mdash| we discuss this topic later on in this chapter:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Conversion_To_Non_Universal_Types switches=Compiler(-gnat2022);
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Ada.Numerics.Big_Numbers.Big_Integers;
+        use  Ada.Numerics.Big_Numbers.Big_Integers;
+
+        with Static_Expressions;
+        use  Static_Expressions;
+
+        procedure Show_Static_Expressions is
+           Initial_Seed : constant
+             Big_Integer :=
+               Super_Seed;
+        begin
+           Put_Line (Initial_Seed'Image);
+        end Show_Static_Expressions;
+
+    By changing the type from :ada:`Long_Long_Long_Integer` to
+    :ada:`Big_Integer`, we get rid of the compilation error. (The value of
+    :ada:`Super_Seed` |mdash| stored in :ada:`Initial_Seed` |mdash| is
+    displayed at runtime.)
+
+
+.. _Adv_Ada_Universal_Fixed:
+
+Universal Fixed
+~~~~~~~~~~~~~~~
+
+For fixed-point types, we also have a corresponding universal type. However, in
+contrast to the universal real and integer types, universal fixed types aren't
+an abstraction used in static expressions, but rather a concept that permeates
+actual fixed-point types. In fact, for
+:ref:`fixed-point types <Adv_Ada_Fixed_Point_Type_Attributes>`, some operations
+are accomplished via universal fixed types |mdash| for example, the conversion
+between fixed-point types and the multiplication and division operations.
+
+Let's start by analyzing how floating-point and integer types associate their
+operations to the specific type of an object. For example, if we have an object
+:ada:`A` of type :ada:`Float` in a multiplication, we cannot just write
+:ada:`A * B` if we want to multiply :ada:`A` by an object :ada:`B` of another
+floating-point type |mdash| if :ada:`B` is of type :ada:`Long_Float`, for
+example, writing :ada:`A * B` triggers a compilation error. Therefore, we have
+to convert one of the objects to have matching types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Float_Multiplication
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Float_Multiplication_Mismatch is
+       F  : Float      := 0.25;
+       LF : Long_Float := 0.50;
+    begin
+       F := F * LF;
+       Put_Line ("F = " & F'Image);
+    end Show_Float_Multiplication_Mismatch;
+
+This code example fails to compile because of the :ada:`F * LF` operation.
+(We could correct the code by writing :ada:`F * Float (LF)`, for example.)
+
+In contrast, for fixed-point types, we can mix objects of different types in a
+multiplication:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Fixed_Point_Multiplication
+
+    package Normalized_Fixed_Point_Types is
+
+       type TQ31 is
+         delta 2.0 ** (-31)
+         range -1.0 .. 1.0 - 2.0 ** (-31);
+
+       type TQ15 is
+         delta 2.0 ** (-15)
+         range -1.0 .. 1.0 - 2.0 ** (-15);
+
+    end Normalized_Fixed_Point_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Normalized_Fixed_Point_Types;
+    use  Normalized_Fixed_Point_Types;
+
+    procedure Show_Fixed_Multiplication is
+       A : TQ15 := 0.25;
+       B : TQ31 := 0.50;
+    begin
+       A := A * B;
+       Put_Line ("A = " & A'Image);
+    end Show_Fixed_Multiplication;
+
+In this example, the :ada:`A * B` is accepted by the compiler, even though
+:ada:`A` and :ada:`B` have different types. This is only possible because the
+multiplication operation of fixed-point types makes use of the universal fixed
+type. In other words, the multiplication operation in this code example doesn't
+operate directly on the fixed-point type :ada:`TQ31`. Instead, it converts
+:ada:`A` and :ada:`B` to the universal fixed type, performs the operation using
+this type, and converts back to the original type |mdash| :ada:`TQ31` in this
+case.
+
+In addition to the multiplication operation, other operations such as the
+conversion between fixed-point types and the division operations make use of
+universal fixed types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Universal_Fixed
+
+    package Custom_Decimal_Types is
+
+      type T3_D3 is delta 10.0 ** (-3) digits 3;
+      type T3_D6 is delta 10.0 ** (-3) digits 6;
+      type T6_D6 is delta 10.0 ** (-6) digits 6;
+
+    end Custom_Decimal_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Universal_Fixed is
+      Val_T3_D3 : T3_D3;
+      Val_T3_D6 : T3_D6;
+      Val_T6_D6 : T6_D6;
+    begin
+       Val_T3_D3 := 0.65;
+
+       Val_T3_D6 := T3_D6 (Val_T3_D3);
+       --           ^^^^^^^^^^^^^^^^^
+       --      type conversion using
+       --       universal fixed type
+
+       Val_T6_D6 := T6_D6 (Val_T3_D6);
+       --           ^^^^^^^^^^^^^^^^^
+       --      type conversion using
+       --       universal fixed type
+
+       Put_Line ("Val_T3_D3 = "
+                 & Val_T3_D3'Image);
+       Put_Line ("Val_T3_D6 = "
+                 & Val_T3_D6'Image);
+       Put_Line ("Val_T6_D6 = "
+                 & Val_T3_D6'Image);
+       Put_Line ("-----------------");
+
+       Val_T3_D6 := Val_T6_D6 * 2.0;
+       --           ^^^^^^^^^^^^^^^^
+       --    using universal fixed type for
+       --      the multiplication operation
+       Put_Line ("Val_T3_D6 = "
+                 & Val_T3_D6'Image);
+
+       Val_T3_D6 := Val_T6_D6 / Val_T3_D3;
+       --           ^^^^^^^^^^^^^^^^^^^^^
+       --      different fixed-point types:
+       --    using universal fixed type for
+       --           the division operation
+       Put_Line ("Val_T3_D6 = "
+                 & Val_T3_D6'Image);
+
+
+    end Show_Universal_Fixed;
+
+In this example, the conversion from the fixed-point type :ada:`T3_D3` to the
+:ada:`T3_D6` and :ada:`T6_D6` types is performed via universal fixed types.
+
+Similarly, the multiplication operation :ada:`Val_T6_D6 * 2.0` uses universal
+fixed types. Here, we're actually multiplying a variable of type :ada:`T6_D6`
+by two and assigning it to a variable of type :ada:`Val_T3_D6`. Although these
+variable have different fixed-point types, no explicit conversion (e.g.:
+:ada:`Val_T3_D6 := T3_D6 (Val_T6_D6 * 2.0);`) is required in this case because
+the result of the operation is of universal fixed type, so that it can be
+assigned to a variable of any fixed-point type.
+
+Finally, in the :ada:`Val_T3_D6 := Val_T6_D6 / Val_T3_D3` statement, we're
+using three fixed-point types: we're dividing a variable of type :ada:`T6_D6`
+by a variable of type :ada:`T3_D3`, and assigning it to a variable of type
+:ada:`T3_D6`. All these operations are only possible without explicit type
+conversions because the underlying types for the fixed-point division operation
+are universal fixed types.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.3.2 Number Declarations <3-3-2>`
+    - :arm22:`4.5.5 Multiplying Operators <4-5-5>`
+
+
 .. ::
 
     .. _Adv_Ada_Base_Type:
