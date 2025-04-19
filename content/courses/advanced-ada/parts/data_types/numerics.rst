@@ -3290,6 +3290,8 @@ In this example, we retrieve the greatest common divisor of 145 and 25
 (i.e.: 5).
 
 
+.. _Adv_Ada_Big_Real_Quotients:
+
 Big real and quotients
 ~~~~~~~~~~~~~~~~~~~~~~
 
