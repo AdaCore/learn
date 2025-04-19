@@ -942,7 +942,6 @@ universal fixed types:
        Put_Line ("Val_T3_D6 = "
                  & Val_T3_D6'Image);
 
-
     end Show_Universal_Fixed;
 
 In this example, the conversion from the fixed-point type :ada:`T3_D3` to the
