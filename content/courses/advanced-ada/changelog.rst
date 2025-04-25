@@ -5,6 +5,22 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2025-04
+---------------
+
+- New sections / subsections:
+
+  - :ref:`Names <Adv_Ada_Names>`
+
+  - :ref:`Objects <Adv_Ada_Objects>`
+
+  - :ref:`Universal and Root Types <Adv_Ada_Universal_And_Root_Types>`
+
+  - :ref:`Character and String Literals <Adv_Ada_Character_String_Literals>`
+
+  - :ref:`Parsing UTF-8 files for Wide-Wide-String processing <Adv_Ada_UTF_8_Files_Wide_Wide_Strings>`
+
+
 Release 2025-02
 ---------------
 
