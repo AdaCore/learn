@@ -81,7 +81,7 @@ def check_block(block : blocks.CodeBlock,
 
     def extract_diagnostics(lines):
         diags = []
-        r = re.compile("(.+?):(\d+):(\d+): (.+)")
+        r = re.compile(r"(.+?):(\d+):(\d+): (.+)")
         for l in lines:
             m = r.match(l)
             if m:
@@ -90,7 +90,7 @@ def check_block(block : blocks.CodeBlock,
         return diags
 
     def remove_string(some_text, rem):
-        return re.sub(".*" + rem + ".*\n?","", some_text)
+        return re.sub(r".*" + rem + r".*\n?","", some_text)
 
     has_error = False
     loc = "at {}:{} (code block hash: {})".format(
