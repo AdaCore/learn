@@ -422,8 +422,10 @@ and be guaranteed that :ada:`Nil` is equal to zero.
             - Fixed-point types
 
 
-Modular Types
--------------
+.. _Adv_Ada_Modular_Attributes:
+
+Attributes of Modular Types
+---------------------------
 
 In the Introduction to Ada course, we've seen that Ada has two kinds of integer
 type: :ref:`signed <Intro_Ada_Integers>` and
