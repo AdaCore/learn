@@ -422,7 +422,7 @@ and be guaranteed that :ada:`Nil` is equal to zero.
             - Fixed-point types
 
 
-.. _Adv_Ada_Modular_Attributes:
+.. _Adv_Ada_Modular_Type_Attributes:
 
 Attributes of Modular Types
 ---------------------------
