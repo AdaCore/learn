@@ -698,8 +698,11 @@ In this example, the core of the algorithm is implemented in the
 by eight bits. We also use the :ada:`xor` operator.
 
 
-Floating-Point Types
---------------------
+
+.. _Adv_Ada_Floating_Point_Attributes:
+
+Attributes of Floating-Point Types
+----------------------------------
 
 In this section, we discuss various attributes related to floating-point types.
 
