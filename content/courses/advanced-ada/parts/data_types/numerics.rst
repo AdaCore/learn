@@ -1642,8 +1642,8 @@ fixed-point types.
     - :arm22:`3.5.10 Operations of Fixed Point Types <3-5-10>`
     - :arm22:`A.5.4 Attributes of Fixed Point Types <A-5-4>`
 
-Attributes of fixed-point types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Attributes of ordinary and decimal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Attribute: :ada:`Machine_Radix`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
