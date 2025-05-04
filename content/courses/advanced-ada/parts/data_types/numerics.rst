@@ -379,23 +379,35 @@ and be guaranteed that :ada:`Nil` is equal to zero.
 
 .. ::
 
-    .. _Adv_Ada_Numeric_Types:
+    .. _Adv_Ada_Discrete_Numeric_Types:
 
-    Numeric Types
-    -------------
+    Discrete Numeric Types
+    ----------------------
 
     .. todo::
 
         Complete section!
 
-        - Recap of numeric types
+        - Recap of discrete numeric types
             - Integer types
-            - Floating-point types
-            - Fixed-point types
             - Modular types
         - Standard types vs. compiler-specific types
             - e.g.: `Integer` vs. `Long_Long_Integer`
         - Rename sections on numeric type attributes!
+.. ::
+
+    .. _Adv_Ada_Real_Numeric_Types:
+
+    Real Numeric Types
+    ------------------
+
+    .. todo::
+
+        Complete section!
+
+        - Recap of real numeric types
+            - Floating-point types
+            - Fixed-point types
 
 
 Modular Types
