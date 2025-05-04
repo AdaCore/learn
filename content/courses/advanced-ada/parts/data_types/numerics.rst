@@ -379,27 +379,53 @@ and be guaranteed that :ada:`Nil` is equal to zero.
 
 .. ::
 
-    .. _Adv_Ada_Numeric_Types:
+    .. _Adv_Ada_Base_Type:
 
-    Numeric Types
-    -------------
+    Base type
+    ---------
 
     .. todo::
 
         Complete section!
 
-        - Recap of numeric types
+
+.. ::
+
+    .. _Adv_Ada_Discrete_Numeric_Types:
+
+    Discrete Numeric Types
+    ----------------------
+
+    .. todo::
+
+        Complete section!
+
+        - Recap of discrete numeric types
             - Integer types
-            - Floating-point types
-            - Fixed-point types
             - Modular types
         - Standard types vs. compiler-specific types
             - e.g.: `Integer` vs. `Long_Long_Integer`
-        - Rename sections on numeric type attributes!
+
+.. ::
+
+    .. _Adv_Ada_Real_Numeric_Types:
+
+    Real Numeric Types
+    ------------------
+
+    .. todo::
+
+        Complete section!
+
+        - Recap of real numeric types
+            - Floating-point types
+            - Fixed-point types
 
 
-Modular Types
--------------
+.. _Adv_Ada_Modular_Type_Attributes:
+
+Attributes of Modular Types
+---------------------------
 
 In the Introduction to Ada course, we've seen that Ada has two kinds of integer
 type: :ref:`signed <Intro_Ada_Integers>` and
@@ -672,8 +698,11 @@ In this example, the core of the algorithm is implemented in the
 by eight bits. We also use the :ada:`xor` operator.
 
 
-Floating-Point Types
---------------------
+
+.. _Adv_Ada_Floating_Point_Type_Attributes:
+
+Attributes of Floating-Point Types
+----------------------------------
 
 In this section, we discuss various attributes related to floating-point types.
 
@@ -1600,8 +1629,10 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     :ada:`Float` type.
 
 
-Fixed-Point Types
------------------
+.. _Adv_Ada_Fixed_Point_Type_Attributes:
+
+Attributes of Fixed-Point types
+-------------------------------
 
 In this section, we discuss various attributes and operations related to
 fixed-point types.
@@ -1611,8 +1642,8 @@ fixed-point types.
     - :arm22:`3.5.10 Operations of Fixed Point Types <3-5-10>`
     - :arm22:`A.5.4 Attributes of Fixed Point Types <A-5-4>`
 
-Attributes of fixed-point types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Attributes of ordinary and decimal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Attribute: :ada:`Machine_Radix`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2032,6 +2063,8 @@ Let's look at this example:
 Here, the :ada:`T3_D3` has a precision of three digits. Therefore, to fit this
 precision, 0.2774 is rounded to 0.277, and 0.2777 is rounded to 0.278.
 
+
+.. _Adv_Ada_Big_Numbers:
 
 Big Numbers
 -----------
@@ -2694,6 +2727,8 @@ two big integer values:
 In this example, we retrieve the greatest common divisor of 145 and 25
 (i.e.: 5).
 
+
+.. _Adv_Ada_Big_Real_Quotients:
 
 Big real and quotients
 ~~~~~~~~~~~~~~~~~~~~~~
