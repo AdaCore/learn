@@ -405,7 +405,7 @@ and be guaranteed that :ada:`Nil` is equal to zero.
             - Modular types
         - Standard types vs. compiler-specific types
             - e.g.: `Integer` vs. `Long_Long_Integer`
-        - Rename sections on numeric type attributes!
+
 .. ::
 
     .. _Adv_Ada_Real_Numeric_Types:
