@@ -699,7 +699,7 @@ by eight bits. We also use the :ada:`xor` operator.
 
 
 
-.. _Adv_Ada_Floating_Point_Attributes:
+.. _Adv_Ada_Floating_Point_Type_Attributes:
 
 Attributes of Floating-Point Types
 ----------------------------------
