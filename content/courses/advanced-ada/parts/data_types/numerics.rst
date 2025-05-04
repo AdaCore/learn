@@ -1629,8 +1629,10 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     :ada:`Float` type.
 
 
-Fixed-Point Types
------------------
+.. _Adv_Ada_Fixed_Point_Type_Attributes:
+
+Attributes of Fixed-Point types
+-------------------------------
 
 In this section, we discuss various attributes and operations related to
 fixed-point types.
