@@ -964,6 +964,105 @@ by a variable of type :ada:`T3_D3`, and assigning it to a variable of type
 conversions because the underlying types for the fixed-point division operation
 are universal fixed types.
 
+.. admonition:: For further reading...
+
+    It's possible to implement custom :ada:`*` and :ada:`/` operators for
+    fixed-point types. However, those operators do **not** override the
+    corresponding operators for universal fixed-point types. For example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Fixed_Point_Custom_Multiplication
+
+        package Normalized_Fixed_Point_Types is
+
+           type TQ63 is
+             delta 2.0 ** (-63)
+             range -1.0 .. 1.0 - 2.0 ** (-63);
+
+           type TQ31 is
+             delta 2.0 ** (-31)
+             range -1.0 .. 1.0 - 2.0 ** (-31);
+
+           overriding
+           --  ^^^^^^
+           --  "+" operator is overriding!
+           function "+" (L, R: TQ31)
+                         return TQ31;
+
+           not overriding
+           --  ^^^^^^^^^^
+           --  "*" operator is NOT overriding!
+           function "*" (L, R: TQ31)
+                         return TQ31;
+
+           type TQ15 is
+             delta 2.0 ** (-15)
+             range -1.0 .. 1.0 - 2.0 ** (-15);
+
+        end Normalized_Fixed_Point_Types;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Normalized_Fixed_Point_Types is
+
+           function "+" (L, R: TQ31)
+                         return TQ31 is
+           begin
+               Put_Line ("Using the overriding ´+' operator");
+              return TQ31 (TQ63 (L) + TQ63 (R));
+           end "+";
+
+           function "*" (L, R: TQ31)
+                         return TQ31 is
+           begin
+               Put_Line ("Using the non-overriding ´*' operator");
+              return TQ31 (TQ63 (L) * TQ63 (R));
+           end "*";
+
+        end Normalized_Fixed_Point_Types;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Normalized_Fixed_Point_Types;
+        use  Normalized_Fixed_Point_Types;
+
+        procedure Show_Fixed_Multiplication is
+           Q31_A : TQ31 := 0.25;
+           Q31_B : TQ31 := 0.50;
+           Q15_A : TQ15 := 0.25;
+           Q15_B : TQ15 := 0.50;
+        begin
+           Q31_A := Q31_A * Q31_B;
+           Put_Line ("Q31_A = " & Q31_A'Image);
+
+           Q15_A := Q15_A * Q15_B;
+           Put_Line ("Q15_A = " & Q31_A'Image);
+
+           Q15_A := TQ15 (Q31_A) * Q15_B;
+           --       ^^^^^^^^^^^^
+           --  A conversion is required because of
+           --  the multiplication operator of
+           --  TQ15.
+           Put_Line ("Q31_A = " & Q31_A'Image);
+        end Show_Fixed_Multiplication;
+
+    In this example, we're declaring a custom multiplication operator for the
+    :ada:`TQ31` type. As we can see in the declaration, we specify that it's
+    :ada:`not overriding` the :ada:`*` operator. (Removing the :ada:`not`
+    keyword triggers a compilation error.) In contrast, for the :ada:`+`
+    operator, we're indeed overriding the default :ada:`+` operator of the
+    :ada:`TQ31` type in the :ada:`Normalized_Fixed_Point_Types` because the
+    addition operator is associate with its corresponding fixed-point type,
+    not with the universal fixed-point type. In the
+    :ada:`Q31_A := Q31_A * Q31_B` statement, we see at runtime (through the
+    "Using the non-overriding ´*' operator" message) that the custom
+    multiplication is being used.
+
+    However, because of this custom :ada:`*` operator, we cannot mix objects of
+    this type with objects of other fixed-point types in multiplication or
+    division operations. Therefore, for a statement such as
+    :ada:`Q15_A := Q31_A * Q15_B`, we have to convert :ada:`Q31_A` to the
+    :ada:`TQ15` type before multiplying it by :ada:`Q15_B`.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`4.5.5 Multiplying Operators <4-5-5>`
