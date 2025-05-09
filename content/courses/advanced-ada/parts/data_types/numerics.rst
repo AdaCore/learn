@@ -393,7 +393,7 @@ Universal real and integer types are mainly used in the declaration of
     end Show_Universal_Real_Integer;
 
 The type of a named number is implied by the type of the
-:ref:`numeric literal <Adv_Ada_Numeric_Literals>` and the type of the named
+:ref:`numeric literal <Adv_Ada_Numeric_Literals>` and the type of any named
 numbers that we use in the
 :ref:`static expression <Adv_Ada_Static_Expressions>`. (We discuss static
 expressions next.) In this specific example, we declare :ada:`Pi` using a real
@@ -825,7 +825,8 @@ operations to the specific type of an object. For example, if we have an object
 :ada:`A` of type :ada:`Float` in a multiplication, we cannot just write
 :ada:`A * B` if we want to multiply :ada:`A` by an object :ada:`B` of another
 floating-point type |mdash| if :ada:`B` is of type :ada:`Long_Float`, for
-example, writing :ada:`A * B` triggers a compilation error. Therefore, we have
+example, writing :ada:`A * B` triggers a compilation error. (Otherwise, which
+precision should be used for the result?) Therefore, we have
 to convert one of the objects to have matching types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Float_Multiplication
@@ -845,7 +846,8 @@ This code example fails to compile because of the :ada:`F * LF` operation.
 (We could correct the code by writing :ada:`F * Float (LF)`, for example.)
 
 In contrast, for fixed-point types, we can mix objects of different types in a
-multiplication:
+multiplication or division. (In this case, mixing is allowed for the
+convenience of the programmer.) For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Fixed_Point_Multiplication
 
