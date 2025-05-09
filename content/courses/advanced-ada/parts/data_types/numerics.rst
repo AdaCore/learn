@@ -1008,7 +1008,7 @@ are universal fixed types.
                          return TQ31 is
            begin
               Put_Line
-                ("Using the overriding ´+' operator");
+                ("=> Overriding '+'");
               return TQ31 (TQ63 (L) + TQ63 (R));
            end "+";
 
@@ -1016,7 +1016,8 @@ are universal fixed types.
                          return TQ31 is
            begin
               Put_Line
-                ("Using the non-overriding ´*' operator");
+                ("=> Custom "
+                 & "non-overriding '*'");
               return TQ31 (TQ63 (L) * TQ63 (R));
            end "*";
 
@@ -1056,7 +1057,7 @@ are universal fixed types.
     addition operator is associated with its corresponding fixed-point type,
     not with the universal fixed-point type. In the
     :ada:`Q31_A := Q31_A * Q31_B` statement, we see at runtime (through the
-    "Using the non-overriding ´*' operator" message) that the custom
+    "=> Custom non-overriding '*'" message) that the custom
     multiplication is being used.
 
     However, because of this custom :ada:`*` operator, we cannot mix objects of
