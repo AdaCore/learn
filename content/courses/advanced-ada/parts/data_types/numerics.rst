@@ -966,7 +966,6 @@ are universal fixed types.
 
 .. admonition:: In the Ada Reference Manual
 
-    - :arm22:`3.3.2 Number Declarations <3-3-2>`
     - :arm22:`4.5.5 Multiplying Operators <4-5-5>`
 
 
