@@ -882,7 +882,7 @@ multiplication operation of fixed-point types makes use of the universal fixed
 type. In other words, the multiplication operation in this code example doesn't
 operate directly on the fixed-point type :ada:`TQ31`. Instead, it converts
 :ada:`A` and :ada:`B` to the universal fixed type, performs the operation using
-this type, and converts back to the original type |mdash| :ada:`TQ31` in this
+this type, and converts back to the original type |mdash| :ada:`TQ15` in this
 case.
 
 In addition to the multiplication operation, other operations such as the
