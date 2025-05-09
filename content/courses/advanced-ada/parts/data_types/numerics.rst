@@ -985,13 +985,13 @@ are universal fixed types.
            overriding
            --  ^^^^^^
            --  "+" operator is overriding!
-           function "+" (L, R: TQ31)
+           function "+" (L, R : TQ31)
                          return TQ31;
 
            not overriding
            --  ^^^^^^^^^^
            --  "*" operator is NOT overriding!
-           function "*" (L, R: TQ31)
+           function "*" (L, R : TQ31)
                          return TQ31;
 
            type TQ15 is
@@ -1004,17 +1004,19 @@ are universal fixed types.
 
         package body Normalized_Fixed_Point_Types is
 
-           function "+" (L, R: TQ31)
+           function "+" (L, R : TQ31)
                          return TQ31 is
            begin
-               Put_Line ("Using the overriding ´+' operator");
+              Put_Line
+                ("Using the overriding ´+' operator");
               return TQ31 (TQ63 (L) + TQ63 (R));
            end "+";
 
-           function "*" (L, R: TQ31)
+           function "*" (L, R : TQ31)
                          return TQ31 is
            begin
-               Put_Line ("Using the non-overriding ´*' operator");
+              Put_Line
+                ("Using the non-overriding ´*' operator");
               return TQ31 (TQ63 (L) * TQ63 (R));
            end "*";
 
