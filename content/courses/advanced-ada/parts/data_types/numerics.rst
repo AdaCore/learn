@@ -1053,7 +1053,7 @@ are universal fixed types.
     keyword triggers a compilation error.) In contrast, for the :ada:`+`
     operator, we're indeed overriding the default :ada:`+` operator of the
     :ada:`TQ31` type in the :ada:`Normalized_Fixed_Point_Types` because the
-    addition operator is associate with its corresponding fixed-point type,
+    addition operator is associated with its corresponding fixed-point type,
     not with the universal fixed-point type. In the
     :ada:`Q31_A := Q31_A * Q31_B` statement, we see at runtime (through the
     "Using the non-overriding ´*' operator" message) that the custom
