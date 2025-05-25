@@ -34,7 +34,8 @@ Relations and simple expressions
 Expressions usually consist of relations, which in turn consist of simple
 expressions. (There are more details to this, but we'll keep it simple for the
 moment.) Let's see a code example with a few expressions, which we dissect into
-the corresponding grammatical elements (we're going to discuss them later):
+the corresponding grammatical elements |mdash| we're going to discuss them
+later:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Expressions.Expressions_Definition.Expression_Elements
 
