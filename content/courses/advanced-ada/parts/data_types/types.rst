@@ -855,6 +855,11 @@ we can use:
 - the :ada:`Wide_Wide_Width` attribute for strings returned by
   :ada:`Wide_Wide_Image`.
 
+Other attributes
+~~~~~~~~~~~~~~~~
+
+The :ada:`Base` attribute is specific for numeric types. We discuss this topic
+:ref:`in another chapter <Adv_Ada_Base_Attribute>`.
 
 
 Enumerations
