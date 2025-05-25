@@ -1070,6 +1070,67 @@ are universal fixed types.
 
     - :arm22:`4.5.5 Multiplying Operators <4-5-5>`
 
+The Ada standard defines that the minimum range of the :ada:`Integer` type
+is :ada:`-2**15 + 1 .. 2**15 - 1`. In modern 64-bit systems |mdash|
+where wider types such as :ada:`Long_Integer` are defined |mdash| the range
+is at least :ada:`-2**31 + 1 .. 2**31 - 1`. Therefore, we could think of
+the :ada:`Integer` type as having the following declaration:
+
+.. code-block:: ada
+
+    type Integer is
+      range -2 ** 31 .. 2 ** 31 - 1;
+
+However, even though :ada:`Integer` is a predefined Ada type, it's actually
+a subtype of an anonymous type. That anonymous "type" is the hardware's
+representation for the numeric type as chosen by the compiler based on the
+requested range (for the signed integer types) or digits of precision (for
+floating-point types). In other words, these types are actually subtypes of
+something that does not have a specific name in Ada, and that is not
+constrained.
+
+In effect,
+
+.. code-block:: ada
+
+    type Integer is
+      range -2 ** 31 .. 2 ** 31 - 1;
+
+is really as if we said this:
+
+.. code-block:: ada
+
+    subtype Integer is
+      Some_Hardware_Type_With_Sufficient_Range
+      range -2 ** 31 .. 2 ** 31 - 1;
+
+Since the :ada:`Some_Hardware_Type_With_Sufficient_Range` type is anonymous
+and we therefore cannot refer to it in the code, we just say that
+:ada:`Integer` is a type rather than a subtype.
+
+Let's focus on signed integers |mdash| as the other numerics work the same
+way. When we declare a signed integer type, we have to specify the required
+range, statically. If the compiler cannot find a hardware-defined or
+supported signed integer type with at least the range requested, the
+compilation is rejected. For example, in current architectures, the code
+below most likely won't compile:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Very_Big_Range
+    :class: ada-expect-compile-error
+
+    package Int_Def is
+
+        type Too_Big_To_Fail is
+          range -2 ** 255 .. 2 ** 255 - 1;
+
+    end Int_Def;
+
+Otherwise, the compiler maps the named Ada type to the hardware "type",
+presumably choosing the smallest one that supports the requested range.
+(That's why the range has to be static in the source code, unlike for
+explicit subtypes.)
+
+
 .. _Adv_Ada_Base_Attribute:
 
 Base
@@ -1096,68 +1157,6 @@ underlying hardware representation selected for :ada:`One_To_Ten`. As
 the same base type. (This base type is the underlying hardware type
 representing the :ada:`Integer` type |mdash| but is not the :ada:`Integer` type
 itself.)
-
-.. admonition:: For further reading...
-
-    The Ada standard defines that the minimum range of the :ada:`Integer` type
-    is :ada:`-2**15 + 1 .. 2**15 - 1`. In modern 64-bit systems |mdash|
-    where wider types such as :ada:`Long_Integer` are defined |mdash| the range
-    is at least :ada:`-2**31 + 1 .. 2**31 - 1`. Therefore, we could think of
-    the :ada:`Integer` type as having the following declaration:
-
-    .. code-block:: ada
-
-        type Integer is
-          range -2 ** 31 .. 2 ** 31 - 1;
-
-    However, even though :ada:`Integer` is a predefined Ada type, it's actually
-    a subtype of an anonymous type. That anonymous "type" is the hardware's
-    representation for the numeric type as chosen by the compiler based on the
-    requested range (for the signed integer types) or digits of precision (for
-    floating-point types). In other words, these types are actually subtypes of
-    something that does not have a specific name in Ada, and that is not
-    constrained.
-
-    In effect,
-
-    .. code-block:: ada
-
-        type Integer is
-          range -2 ** 31 .. 2 ** 31 - 1;
-
-    is really as if we said this:
-
-    .. code-block:: ada
-
-        subtype Integer is
-          Some_Hardware_Type_With_Sufficient_Range
-          range -2 ** 31 .. 2 ** 31 - 1;
-
-    Since the :ada:`Some_Hardware_Type_With_Sufficient_Range` type is anonymous
-    and we therefore cannot refer to it in the code, we just say that
-    :ada:`Integer` is a type rather than a subtype.
-
-    Let's focus on signed integers |mdash| as the other numerics work the same
-    way. When we declare a signed integer type, we have to specify the required
-    range, statically. If the compiler cannot find a hardware-defined or
-    supported signed integer type with at least the range requested, the
-    compilation is rejected. For example, in current architectures, the code
-    below most likely won't compile:
-
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Very_Big_Range
-        :class: ada-expect-compile-error
-
-        package Int_Def is
-
-           type Too_Big_To_Fail is
-             range -2 ** 255 .. 2 ** 255 - 1;
-
-        end Int_Def;
-
-    Otherwise, the compiler maps the named Ada type to the hardware "type",
-    presumably choosing the smallest one that supports the requested range.
-    (That's why the range has to be static in the source code, unlike for
-    explicit subtypes.)
 
 The following example shows how the :ada:`Base` attribute affects the bounds of
 a variable:
