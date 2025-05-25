@@ -249,6 +249,16 @@ and
 cover more specific details on anonymous access types.
 
 
+.. ::
+
+    Universal Access Types
+    ~~~~~~~~~~~~~~~~~~~~~~
+
+    .. todo::
+
+        Complete section!
+
+
 .. _Adv_Ada_Anonymous_Access_To_Object_Types:
 
 Anonymous Access-To-Object Types
