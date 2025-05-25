@@ -1411,16 +1411,13 @@ root integer and root real types, respectively.
 
 .. admonition:: For further reading...
 
-    You might remember our discussion about the
-    :ref:`Base attribute <Adv_Ada_Base_Attribute>` and the fact that it
-    indicates the underlying subtype of a type. We said, for example, that
-    :ada:`Integer'Base` gives us the base type of :ada:`Integer`, i.e. the
-    the underlying hardware type representing the :ada:`Integer` type.
+    Ada also has the concept of :ref:`base types <Adv_Ada_Base_Types>`, which
+    *sounds* similar to the concept of the root type. However, the focus of
+    each one is different: while the root type refers to the derivation tree of
+    a type, the base type refers to the constraints of a type.
 
-    Although the concept of the base type *sounds* similar to the concept of
-    the root type, the focus of each one is different: while the base type
-    refers to the constraints of a type, the root type refers to the derivation
-    tree of a type.
+    We discuss base types and the
+    :ref:`Base attribute <Adv_Ada_Base_Attribute>` in another chapter.
 
 
 .. _Adv_Ada_Definite_Indefinite_Subtypes:
