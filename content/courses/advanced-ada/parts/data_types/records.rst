@@ -3615,7 +3615,9 @@ Per-Object Expressions
 ----------------------
 
 In record type declarations, we might want to define a component that makes use
-of a name that refers to a discriminant of the record type, or to the record
+of a :ref:`name <Adv_Ada_Names>` that refers to a
+:ref:`discriminant <Adv_Ada_Record_Discriminants>`
+of the record type, or to the record
 type itself. An expression where we use such a name is called a per-object
 expression.
 
