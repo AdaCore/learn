@@ -227,16 +227,22 @@ to explicitly store it in a local variable.
            return I * 2;
         end Double;
 
-       Res : Integer := Double (Double (I));
-       --               ^ Calling the Double
-       --                 function
+       Res : Integer;
     begin
-       Double (I);
+       Double (Double (I));
        --  ERROR: cannot use call to function
        --         "Double" as a statement
 
+       Res := Double (Double (I));
+       --  OK: return value of Double is
+       --      assigned to Res
+
        return Res;
     end Quadruple;
+
+A statement such as :ada:`Double (Double (I));` is wrong because we're not
+assigning the return value to a variable |mdash| we can correct this statement
+by writing :ada:`Res := Double (Double (I));`.
 
 .. admonition:: In the GNAT toolchain
 
