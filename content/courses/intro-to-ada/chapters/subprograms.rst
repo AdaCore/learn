@@ -212,7 +212,7 @@ call cannot be ignored; that is, a function call cannot be used as a statement.
 If you want to call a function and do not need its result, you will still need
 to explicitly store it in a local variable.
 
-.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Quadruple
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Quadruple
     :class: ada-expect-compile-error
 
     function Quadruple (I : Integer)
