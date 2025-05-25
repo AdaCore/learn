@@ -829,7 +829,7 @@ example, writing :ada:`A * B` triggers a compilation error. (Otherwise, which
 precision should be used for the result?) Therefore, we have
 to convert one of the objects to have matching types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Float_Multiplication
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Types.Float_Multiplication
     :class: ada-expect-compile-error
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -849,7 +849,7 @@ In contrast, for fixed-point types, we can mix objects of different types in a
 multiplication or division. (In this case, mixing is allowed for the
 convenience of the programmer.) For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Fixed_Point_Multiplication
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Types.Fixed_Point_Multiplication
 
     package Normalized_Fixed_Point_Types is
 
@@ -889,7 +889,7 @@ In addition to the multiplication operation, other operations such as the
 conversion between fixed-point types and the division operations make use of
 universal fixed types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Universal_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Types.Universal_Fixed
 
     package Custom_Decimal_Types is
 
@@ -970,7 +970,7 @@ are universal fixed types.
     fixed-point types. However, those operators do **not** override the
     corresponding operators for universal fixed-point types. For example:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Universal_Types.Fixed_Point_Custom_Multiplication
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Types.Fixed_Point_Custom_Multiplication
 
         package Normalized_Fixed_Point_Types is
 
