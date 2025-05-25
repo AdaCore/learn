@@ -10,6 +10,9 @@ What's New in Ada 2022
 
 .. only:: no_hidden_books
 
+    .. meta::
+        :robots: noindex, nofollow
+
     .. warning::
 
         This version of the website contains UNPUBLISHED contents.
