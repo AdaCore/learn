@@ -216,6 +216,9 @@ to explicitly store it in a local variable.
     :class: ada-expect-compile-error
 
     function Quadruple (I : Integer)
+                        return Integer;
+
+    function Quadruple (I : Integer)
                         return Integer is
 
         function Double (I : Integer)
