@@ -1070,6 +1070,28 @@ are universal fixed types.
 
     - :arm22:`4.5.5 Multiplying Operators <4-5-5>`
 
+
+.. _Adv_Ada_Base_Types:
+
+Base types
+----------
+
+You might remember our discussion on :ref:`root types <Adv_Ada_Root_Types>`
+and the corresponding numeric root types.
+
+Ada also has the concept of base types, which *sounds* similar to the
+concept of the root type. However, the focus of each one is different:
+while the the root type refers to the derivation tree of a type, the base
+type refers to the constraints of a type.
+
+In fact, the base type denotes the unconstrained underlying hardware
+representation selected for a given numeric type. For example, if we were
+making use of a constrained type :ada:`T`, the compiler would select a type
+based on the hardware characteristics that has sufficient precision to
+represent :ada:`T` on the target platform. Of course, that type |mdash| the
+base type |mdash| would necessarily be unconstrained.
+
+Let's discuss the :ada:`Integer` type as an example.
 The Ada standard defines that the minimum range of the :ada:`Integer` type
 is :ada:`-2**15 + 1 .. 2**15 - 1`. In modern 64-bit systems |mdash|
 where wider types such as :ada:`Long_Integer` are defined |mdash| the range
