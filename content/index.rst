@@ -13,6 +13,9 @@
 
     .. only:: no_hidden_books
 
+        .. meta::
+            :robots: noindex, nofollow
+
         .. warning::
 
             This version of the website contains UNPUBLISHED contents.
