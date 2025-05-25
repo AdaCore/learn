@@ -1073,18 +1073,6 @@ are universal fixed types.
 
 .. ::
 
-    .. _Adv_Ada_Base_Type:
-
-    Base type
-    ---------
-
-    .. todo::
-
-        Complete section!
-
-
-.. ::
-
     .. _Adv_Ada_Discrete_Numeric_Types:
 
     Discrete Numeric Types
