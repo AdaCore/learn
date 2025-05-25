@@ -46,6 +46,8 @@ using `make local` which will point the widgets at 127.0.0.1:8000
 You can then point your browser on your host to 127.0.0.1:8080 to see the learn
 website being served from vagrant.
 
+## Generate content for publishing
+
 To build and start the publishing server, run:
 
 ```
@@ -61,7 +63,26 @@ $ make site
 This will build the content for the learn website. You can find it in the
 `/vagrant/frontend/dist` directory.
 
+Once you have generated the content for the website, you can test it by coping
+the files (from your local clone of the repository) to a temporary folder and
+starting a local server. For example:
 
+```bash
+LEARN_TEST=$(mktemp -d)
+
+rsync -avz ./frontend/dist/html/       ${LEARN_TEST}/
+rsync -avz ./frontend/dist/pdf_books/  ${LEARN_TEST}/pdf_books/
+rsync -avz ./frontend/dist/epub_books/ ${LEARN_TEST}/epub_books/
+rsync -avz ./frontend/dist/zip/        ${LEARN_TEST}/zip/
+
+rm -r ${LEARN_TEST}/_sources
+rm -r ${LEARN_TEST}/_plantuml
+
+( cd ${LEARN_TEST} && python3 -m http.server 8001 )
+```
+
+You can then point your browser on your host to 127.0.0.1:8001 to see the learn
+website being served from the local Python-based HTTP server.
 
 ## Testing the source-code examples
 
