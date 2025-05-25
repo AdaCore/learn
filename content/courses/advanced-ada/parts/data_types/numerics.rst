@@ -1115,7 +1115,7 @@ supported signed integer type with at least the range requested, the
 compilation is rejected. For example, in current architectures, the code
 below most likely won't compile:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Very_Big_Range
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Very_Big_Range
     :class: ada-expect-compile-error
 
     package Int_Def is
@@ -1140,7 +1140,7 @@ The :ada:`Base` attribute gives us the unconstrained underlying hardware
 representation selected for a given numeric type. As an example, let's say we
 declared a subtype of the :ada:`Integer` type named :ada:`One_To_Ten`:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Base_Attr
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Base_Attr
 
     package My_Integers is
 
@@ -1161,7 +1161,7 @@ itself.)
 The following example shows how the :ada:`Base` attribute affects the bounds of
 a variable:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Base_Attr
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Base_Attr
 
     with Ada.Text_IO; use Ada.Text_IO;
     with My_Integers; use My_Integers;
@@ -1213,7 +1213,7 @@ exception being raised.
 In the following example, we adjust the result of additions and subtractions
 to avoid constraint errors:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Types.Scalar_Types.Base_Attr_Sat
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Base_Attr_Sat
 
     package My_Integers is
 
