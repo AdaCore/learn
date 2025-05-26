@@ -212,8 +212,11 @@ call cannot be ignored; that is, a function call cannot be used as a statement.
 If you want to call a function and do not need its result, you will still need
 to explicitly store it in a local variable.
 
-.. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Quadruple
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Subprograms.Quadruple
     :class: ada-expect-compile-error
+
+    function Quadruple (I : Integer)
+                        return Integer;
 
     function Quadruple (I : Integer)
                         return Integer is
@@ -224,16 +227,22 @@ to explicitly store it in a local variable.
            return I * 2;
         end Double;
 
-       Res : Integer := Double (Double (I));
-       --               ^ Calling the Double
-       --                 function
+       Res : Integer;
     begin
-       Double (I);
+       Double (Double (I));
        --  ERROR: cannot use call to function
        --         "Double" as a statement
 
+       Res := Double (Double (I));
+       --  OK: return value of Double is
+       --      assigned to Res
+
        return Res;
     end Quadruple;
+
+A statement such as :ada:`Double (Double (I));` is wrong because we're not
+assigning the return value to a variable |mdash| we can correct this statement
+by writing :ada:`Res := Double (Double (I));`.
 
 .. admonition:: In the GNAT toolchain
 
