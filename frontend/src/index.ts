@@ -4,8 +4,8 @@ import {getElemsByClass, getElemById} from './ts/dom-utils';
 import {widgetFactory} from './ts/widget';
 import {scrollTop} from './ts/scrolltop';
 
-// #if STAGING
-import {stagingRedirect} from './ts/staging';
+// #if SANDBOX
+import {sandboxRedirect} from './ts/sandbox-redirect';
 // #endif
 
 /**
@@ -22,10 +22,10 @@ function entrypoint(): void {
   const btn = getElemById('scrollToTopBtn');
   scrollTop(btn as HTMLButtonElement);
 
-  // #if STAGING
+  // #if SANDBOX
   // This is used to redirect non AdaCore staff to the main site if
   //  the staging site is accidentally reached
-  stagingRedirect();
+  sandboxRedirect();
   // #endif
 }
 
