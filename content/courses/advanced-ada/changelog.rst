@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2025-05
+---------------
+
+- New section:
+
+  - :ref:`Universal Numeric Types <Adv_Ada_Universal_Numeric_Types>`
+
+
 Release 2025-04
 ---------------
 
