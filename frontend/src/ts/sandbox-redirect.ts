@@ -2,8 +2,6 @@ import Cookies from 'js-cookie';
 
 /**
  * Redirects the user to main learn site if not AdaCore employee
- *
- * @export
  */
 export function sandboxRedirect(): void {
   /* istanbul ignore next */
