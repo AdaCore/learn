@@ -1980,7 +1980,8 @@ the example above accordingly:
     end Incomplete_Type_Example;
 
 A typical application of incomplete types is to create linked lists using
-access types based on those incomplete types. This kind of type is called
+:ref:`access types <Adv_Ada_Access_Types_Terminology>`
+based on those incomplete types. This kind of type is called
 a recursive type. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Incomplete_Types.Linked_List_Example

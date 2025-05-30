@@ -82,6 +82,16 @@ its whole lifetime:
     --  Bounds cannot be changed!
 
 
+.. ::
+
+    Empty arrays
+    ~~~~~~~~~~~~
+
+    .. todo::
+
+        Complete section!
+
+
 .. _Adv_Ada_Constrained_Array_Type:
 
 Constrained array types
