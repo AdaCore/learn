@@ -18,14 +18,20 @@
                 Settings
             </button>
             <div class="dropdown-content">
-                <label>
-                    <input id="{{ w.id }}.settings-bar.tab-setting" type="checkbox" class="checkbox tab-setting">
-                    Use tabbed editor view
-                </label>
-                <label>
-                    <input id="{{ w.id }}.settings-bar.theme-setting" type="checkbox" class="checkbox theme-setting">
-                    Use the dark theme
-                </label>
+                <div class="settings-bar-entries">
+                    <div class="settings-bar-entry">
+                        <label>
+                            <input id="{{ w.id }}.settings-bar.tab-setting" type="checkbox" class="checkbox tab-setting">
+                            Use tabbed editor view
+                        </label>
+                    </div>
+                    <div class="settings-bar-entry">
+                        <label>
+                            <input id="{{ w.id }}.settings-bar.theme-setting" type="checkbox" class="checkbox theme-setting">
+                            Use the dark theme
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
 
