@@ -1,7 +1,6 @@
 import './styles/learn.scss';
-import {getElemsByClass, getElemById} from './ts/dom-utils';
+import {getElemsByClass} from './ts/dom-utils';
 import {widgetFactory} from './ts/widget';
-import {scrollTop} from './ts/scrolltop';
 
 // #if SANDBOX
 import {sandboxRedirect} from './ts/sandbox-redirect';
@@ -16,10 +15,6 @@ function entrypoint(): void {
   const we = getElemsByClass(document, 'widget');
 
   widgetFactory(we as Array<HTMLDivElement>);
-
-  // register scroll to top btn functionality
-  const btn = getElemById('scrollToTopBtn');
-  scrollTop(btn as HTMLButtonElement);
 
   // #if SANDBOX
   // This is used to redirect non AdaCore staff to the main site if
