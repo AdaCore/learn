@@ -222,13 +222,16 @@ div {
         line-height: normal;
     }
     &.code_block_info_header {
+        background: v.$color-widget-output-area;
+        color: v.$color-widget-output;
         margin-top: 2px;
         font-weight: bold;
         padding-left: 3px;
         padding-right: 3px;
     }
     &.code_block_info_contents {
-        color: v.$color-font-grey;
+        background: v.$color-widget-output-area;
+        color: v.$color-widget-output;
         padding-left: 15px;
         padding-right: 3px;
         white-space: pre-wrap;
