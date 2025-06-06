@@ -275,6 +275,9 @@ if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
     html_logo = "img/logo.svg"
 else:
     html_logo = "img/logo_sandbox.svg"
+    html_theme_options["announcement"] = \
+        "<p>⚠️ This version of the website contains UNPUBLISHED contents. " \
+        "⚠️</p>"
 
 html_favicon = "img/favicon.ico"
 
