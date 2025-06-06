@@ -16,9 +16,12 @@ img {
 .btn {
     background-color: v.$color-theme-bg-dark;
     color: #fff;
+    padding: 10px;
+    font-family: v.$lato-sans-serif-font;
+    font-size: 16px;
 
     &:hover {
-        background-color: color.scale(v.$color-theme-bg-dark, $lightness: 10%);
+        background-color: color.scale(v.$color-theme-bg-dark, $lightness: 30%);
     }
 }
 
