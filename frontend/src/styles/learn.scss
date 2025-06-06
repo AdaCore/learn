@@ -120,6 +120,8 @@ pre.widget {
             display: none;
             position: absolute;
             background-color: v.$color-theme-bg-light;
+            color: v.$color-theme-fg-dark;
+            font-size: 0.90em;
             min-width: 300px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 10;
