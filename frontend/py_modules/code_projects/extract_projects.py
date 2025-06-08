@@ -365,7 +365,8 @@ def analyze_file(rst_file, extracted_projects_list_file=None):
 
                 if block.language == "ada":
 
-                    block.project_main_file = get_main_filename(block)
+                    if block.run_it:
+                        block.project_main_file = get_main_filename(block)
                     block.spark_project_filename = write_project_file(block.project_main_file,
                                                                       block.compiler_switches,
                                                                       spark_mode=True)
