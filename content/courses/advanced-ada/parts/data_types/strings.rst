@@ -2017,8 +2017,7 @@ Types that are derived from a tagged type may also inherit the :ada:`Put_Image`
 aspect. However, there are a couple of small differences in comparison to
 untagged types, as we can see in the following example:
 
-.. code:: ada no_button gnat=12.2.0-1 project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Tagged_Put_Image switches=Compiler(-gnat2022);
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Put_Image.Tagged_Put_Image switches=Compiler(-gnat2022);
 
     with Ada.Strings.Text_Buffers;
 
@@ -2106,10 +2105,6 @@ code, we see that:
 - for both :ada:`T_Child_1` and :ada:`T_Child_2`, the parent's
   :ada:`Put_Image` aspect (the :ada:`Put_Image_T` procedure) is called and its
   information is combined with the information from the type extension;
-
-    - The information from the parent's :ada:`Put_Image_T` procedure is
-      presented in an aggregate syntax |mdash| in this case, this results in
-      ``(Put_Image_T)``.
 
     - For the :ada:`T_Child_1` type, the :ada:`I1` component of the type
       extension is displayed by calling a default version of the
