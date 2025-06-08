@@ -113,21 +113,21 @@ def check_block(block : blocks.CodeBlock,
         #
         # Clean-up source-code examples after compilation
         #
-        if project_filename is not None:
+        if language == "ada":
+            if project_filename is not None:
 
-            try:
-                run("gprclean", "-P", project_filename)
-            except S.CalledProcessError as e:
-                out = str(e.output.decode("utf-8"))
-                print_error(loc, "Failed to clean-up example")
-                print(out)
+                try:
+                    run("gprclean", "-P", project_filename)
+                except S.CalledProcessError as e:
+                    out = str(e.output.decode("utf-8"))
+                    print_error(loc, "Failed to clean-up example")
+                    print(out)
 
-            try:
-                run("gnatprove", "-P", project_filename, "--clean")
-            except S.CalledProcessError as e:
-                out = str(e.output.decode("utf-8"))
-
-        if language == "c":
+                try:
+                    run("gnatprove", "-P", project_filename, "--clean")
+                except S.CalledProcessError as e:
+                    out = str(e.output.decode("utf-8"))
+        elif language == "c":
             try:
                 cmd = ["rm", "-f"] + glob.glob('*.o') + glob.glob('*.gch')
                 if main_file is not None:
@@ -421,17 +421,14 @@ def check_block(block : blocks.CodeBlock,
                 or 'ada-report-all' in block.classes:
                 extra_args = ["--report=all"]
 
-            line = None
-            if block.gnatprove_version[1].startswith("14"):
-                line = ["gnatprove", "-P", block.spark_project_filename,
-                        "--checks-as-errors=on", "--level=0",
-                        "--function-sandboxing=off", "--output=oneline"]
-            elif block.gnatprove_version[1].startswith("12"):
+            # Default switches for GNATprove 14 and above
+            line = ["gnatprove", "-P", block.spark_project_filename,
+                    "--checks-as-errors=on", "--level=0",
+                    "--function-sandboxing=off", "--output=oneline"]
+            if block.gnatprove_version[1].startswith("12"):
                 line = ["gnatprove", "-P", block.spark_project_filename,
                         "--checks-as-errors", "--level=0",
                         "--no-axiom-guard", "--output=oneline"]
-            else:
-                prove_error = True
 
             line.extend(extra_args)
 
