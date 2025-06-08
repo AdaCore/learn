@@ -113,21 +113,21 @@ def check_block(block : blocks.CodeBlock,
         #
         # Clean-up source-code examples after compilation
         #
-        if project_filename is not None:
+        if language == "ada":
+            if project_filename is not None:
 
-            try:
-                run("gprclean", "-P", project_filename)
-            except S.CalledProcessError as e:
-                out = str(e.output.decode("utf-8"))
-                print_error(loc, "Failed to clean-up example")
-                print(out)
+                try:
+                    run("gprclean", "-P", project_filename)
+                except S.CalledProcessError as e:
+                    out = str(e.output.decode("utf-8"))
+                    print_error(loc, "Failed to clean-up example")
+                    print(out)
 
-            try:
-                run("gnatprove", "-P", project_filename, "--clean")
-            except S.CalledProcessError as e:
-                out = str(e.output.decode("utf-8"))
-
-        if language == "c":
+                try:
+                    run("gnatprove", "-P", project_filename, "--clean")
+                except S.CalledProcessError as e:
+                    out = str(e.output.decode("utf-8"))
+        elif language == "c":
             try:
                 cmd = ["rm", "-f"] + glob.glob('*.o') + glob.glob('*.gch')
                 if main_file is not None:
