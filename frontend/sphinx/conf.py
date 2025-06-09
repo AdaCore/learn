@@ -232,7 +232,6 @@ extlinks_detect_hardcoded_links = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#html_theme = 'learn_theme'
 html_theme = 'furo'
 
 if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
