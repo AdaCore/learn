@@ -33,7 +33,7 @@ pydot-ng==2.0.0
 Pygments==2.19.1
 pyparsing==3.2.3
 PyYAML==6.0.2
-requests==2.32.3
+requests==2.32.4
 roman-numerals-py==3.1.0
 setuptools==79.0.1
 six==1.17.0
