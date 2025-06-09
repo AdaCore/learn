@@ -14,24 +14,30 @@
     <div id="{{ w.id }}.settings-bar" class="settings-bar">
         <div class="dropdown-container settingsbar-item">
             <button class="dropdown-btn">
-                <span class="fa fa-cog"></span>
+                <span class="fa-solid fa-gear"></span>
                 Settings
             </button>
             <div class="dropdown-content">
-                <label>
-                    <input id="{{ w.id }}.settings-bar.tab-setting" type="checkbox" class="checkbox tab-setting">
-                    Use tabbed editor view
-                </label>
-                <label>
-                    <input id="{{ w.id }}.settings-bar.theme-setting" type="checkbox" class="checkbox theme-setting">
-                    Use the dark theme
-                </label>
+                <div class="settings-bar-entries">
+                    <div class="settings-bar-entry">
+                        <label>
+                            <input id="{{ w.id }}.settings-bar.tab-setting" type="checkbox" class="checkbox tab-setting">
+                            Use tabbed editor view
+                        </label>
+                    </div>
+                    <div class="settings-bar-entry">
+                        <label>
+                            <input id="{{ w.id }}.settings-bar.theme-setting" type="checkbox" class="checkbox theme-setting">
+                            Use the dark theme
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="dropdown-container settingsbar-item">
             <button class="dropdown-btn">
-                <span class="fa fa-cog"></span>
+                <span class="fa-solid fa-gear"></span>
                 Switches
             </button>
             <div id="{{ w.id }}.settings-bar.compiler-switches" class="dropdown-content compiler-switches">
@@ -45,7 +51,7 @@
                       </span>
                       <span class="compiler-switch-help">
                         <button id="{{ w.id }}.settings-bar.compiler-switches-help.{{ sw }}" type="button" title="{{ w.switch_description[sw] }}">
-                          <span class="fa fa-question-circle"></span>
+                        <span class="fa-solid fa-circle-question"></span>
                         </button>
                       </span>
                     </div>
@@ -57,11 +63,11 @@
         </div>
 
         <button id="{{ w.id }}.settings-bar.reset-btn" type="button" class="settingsbar-item reset-btn" title="Reset editor to default state">
-            <span class="fa fa-undo"></span>
+            <span class="fa-solid fa-rotate-left"></span>
             Reset
         </button>
         <button id="{{ w.id }}.settings-bar.download-btn" type="button" class="settingsbar-item download-btn" title="Download source files">
-            <span class="fa fa-download"></span>
+            <span class="fa-solid fa-download"></span>
             Download
         </button>
     </div>
