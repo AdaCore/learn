@@ -3,20 +3,36 @@
 @use 'variables' as v;
 
 // theme overrides
-img {
-    &.dark-mode-invert-image {
-        -webkit-filter: invert(0.9);
-        filter: invert(0.9);
+@mixin dark_mode_image_background_adaptation {
+    img {
+        &.dark-mode-invert-image {
+            -webkit-filter: invert(0.9);
+            filter: invert(0.9);
+        }
+        &.dark-mode-light-background {
+            background-color: lightgrey !important;
+        }
     }
-    &.dark-mode-light-background {
-        background-color: lightgrey !important;
+}
+
+@media not print {
+    body[data-theme="dark"] {
+        @include dark_mode_image_background_adaptation;
+    }
+    @media (prefers-color-scheme: dark) {
+        body:not([data-theme="light"]) {
+            @include dark_mode_image_background_adaptation;
+        }
     }
 }
 
 .btn {
     background-color: v.$color-theme-bg-dark;
     color: #fff;
-    padding: 10px;
+    padding-top: 6px;
+    padding-right: 12px;
+    padding-bottom: 8px;
+    padding-left: 12px;
     font-family: v.$lato-sans-serif-font;
     font-size: 16px;
 
