@@ -264,9 +264,13 @@ html_theme_options = {
     # }
     'sidebar_hide_name': True,
     'navigation_with_keys': True,
-    # 'top_of_page_buttons': ["view", "edit"],
+    'top_of_page_buttons': ["view", "edit"],
     # 'announcement': "",
     # 'footer_icons': [],
+
+    "source_repository": "https://github.com/AdaCore/learn",
+    "source_branch": "master",
+    "source_directory": "content/",
 }
 
 html_show_sphinx = False
