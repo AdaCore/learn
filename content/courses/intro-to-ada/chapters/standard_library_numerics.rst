@@ -219,7 +219,7 @@ variables of the :ada:`Complex` type and initialize them using an aggregate:
        Put ("Modulus     of ");
        Put (X);
        Put (" is ");
-       Put (Float'Image (abs (X)));
+       Put (Float'Image (abs X));
        New_Line;
 
        Put ("Argument    of ");

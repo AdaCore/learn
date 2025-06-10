@@ -761,8 +761,8 @@ than the value passed to :ada:`X`.
 
 Consider a client calling this function:
 
-.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2 switches=Compiler(-gnato23);
-    :class: ada-expect-prove-error
+.. code:: ada no_button gnatprove=14.1.0-1 project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_2 switches=Compiler(-gnato23);
+    :class: ada-prove, ada-expect-prove-error
 
     with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -784,7 +784,8 @@ elsewhere.)
 Let's change the argument passed to :ada:`Y` in the second call (line 8).
 Instead of -1 we will pass -2:
 
-.. code:: ada prove_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_3 switches=Compiler(-gnato23);
+.. code:: ada no_button gnatprove=14.1.0-1 project=Courses.Ada_For_Embedded_C_Dev.SPARK.Contracts_3 switches=Compiler(-gnato23);
+    :class: ada-prove
 
     with Mid;
     with Ada.Text_IO; use Ada.Text_IO;
