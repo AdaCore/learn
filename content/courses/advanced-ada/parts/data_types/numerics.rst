@@ -1092,7 +1092,7 @@ represent :ada:`T` on the target platform. Of course, that type |mdash| the
 base type |mdash| would necessarily be unconstrained.
 
 Let's discuss the :ada:`Integer` type as an example.
-The Ada standard defines that the minimum range of the :ada:`Integer` type
+The Ada standard specifies that the minimum range of the :ada:`Integer` type
 is :ada:`-2**15 + 1 .. 2**15 - 1`. In modern 64-bit systems |mdash|
 where wider types such as :ada:`Long_Integer` are defined |mdash| the range
 is at least :ada:`-2**31 + 1 .. 2**31 - 1`. Therefore, we could think of
