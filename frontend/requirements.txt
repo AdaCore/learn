@@ -10,7 +10,6 @@ Pygments==2.19.2
 pyparsing==3.2.3
 Sphinx==8.2.3
 sphinx-reredirects==1.0.0
-sphinx-rtd-theme==3.0.2
 sphinxcontrib-bibtex==2.6.4
 sphinxcontrib-plantuml==0.30
 websocket-client==1.8.0
