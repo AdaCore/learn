@@ -26,7 +26,7 @@ pexpect==4.9.0
 pillow==11.2.1
 prompt_toolkit==3.0.51
 ptyprocess==0.7.0
-pure-eval==0.2.3
+pure_eval==0.2.3
 pybtex==0.25.0
 pybtex-docutils==1.0.3
 pydot-ng==2.0.0
@@ -40,8 +40,8 @@ six==1.17.0
 snowballstemmer==3.0.1
 soupsieve==2.7
 Sphinx==8.2.3
-sphinx-reredirects==1.0.0
 sphinx-basic-ng==1.0.0b2
+sphinx-reredirects==1.0.0
 sphinx-rtd-theme==3.0.2
 sphinxcontrib-applehelp==2.0.0
 sphinxcontrib-bibtex==2.6.4
