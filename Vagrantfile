@@ -2,7 +2,7 @@ $frontend = <<-SHELL
   #!/bin/bash -eux
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_22.x | bash -
+  curl -sL https://deb.nodesource.com/setup_24.x | bash -
 
   # Generate list of installed packages
   dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
@@ -191,6 +191,8 @@ $epub = <<-SHELL
     mv gprbuild-* ${path_ada_toolchain_root}/gprbuild/${tool_version} && \
     rm *.tar.gz
   done
+
+  rm -f ${path_ada_toolchain_default}/*
 
   ln -sf ${path_ada_toolchain_root}/gnat/${default_version_gnat}            ${path_ada_toolchain_default}/gnat
   ln -sf ${path_ada_toolchain_root}/gnatprove/${default_version_gnatprove}  ${path_ada_toolchain_default}/gnatprove
