@@ -1071,17 +1071,263 @@ are universal fixed types.
     - :arm22:`4.5.5 Multiplying Operators <4-5-5>`
 
 
-.. ::
+.. _Adv_Ada_Base_Types:
 
-    .. _Adv_Ada_Base_Type:
+Base types
+----------
 
-    Base type
-    ---------
+You might remember our discussion on :ref:`root types <Adv_Ada_Root_Types>`
+and the corresponding numeric root types.
 
-    .. todo::
+Ada also has the concept of base types, which *sounds* similar to the
+concept of the root type. However, the focus of each one is different:
+while the the root type refers to the derivation tree of a type, the base
+type refers to the constraints of a type.
 
-        Complete section!
+In fact, the base type denotes the unconstrained underlying hardware
+representation selected for a given numeric type. For example, if we were
+making use of a constrained type :ada:`T`, the compiler would select a type
+based on the hardware characteristics that has sufficient precision to
+represent :ada:`T` on the target platform. Of course, that type |mdash| the
+base type |mdash| would necessarily be unconstrained.
 
+Let's discuss the :ada:`Integer` type as an example.
+The Ada standard specifies that the minimum range of the :ada:`Integer` type
+is :ada:`-2**15 + 1 .. 2**15 - 1`. In modern 64-bit systems |mdash|
+where wider types such as :ada:`Long_Integer` are defined |mdash| the range
+is at least :ada:`-2**31 + 1 .. 2**31 - 1`. Therefore, we could think of
+the :ada:`Integer` type as having the following declaration:
+
+.. code-block:: ada
+
+    type Integer is
+      range -2 ** 31 .. 2 ** 31 - 1;
+
+However, even though :ada:`Integer` is a predefined Ada type, it's actually
+a subtype of an anonymous type. That anonymous "type" is the hardware's
+representation for the numeric type as chosen by the compiler based on the
+requested range (for the signed integer types) or digits of precision (for
+floating-point types). In other words, these types are actually subtypes of
+something that does not have a specific name in Ada, and that is not
+constrained.
+
+In effect,
+
+.. code-block:: ada
+
+    type Integer is
+      range -2 ** 31 .. 2 ** 31 - 1;
+
+is really as if we said this:
+
+.. code-block:: ada
+
+    subtype Integer is
+      Some_Hardware_Type_With_Sufficient_Range
+      range -2 ** 31 .. 2 ** 31 - 1;
+
+Since the :ada:`Some_Hardware_Type_With_Sufficient_Range` type is anonymous
+and we therefore cannot refer to it in the code, we just say that
+:ada:`Integer` is a type rather than a subtype.
+
+Let's focus on signed integers |mdash| as the other numerics work the same
+way. When we declare a signed integer type, we have to specify the required
+range, statically. If the compiler cannot find a hardware-defined or
+supported signed integer type with at least the range requested, the
+compilation is rejected. For example, in current architectures, the code
+below most likely won't compile:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Very_Big_Range
+    :class: ada-expect-compile-error
+
+    package Int_Def is
+
+        type Too_Big_To_Fail is
+          range -2 ** 255 .. 2 ** 255 - 1;
+
+    end Int_Def;
+
+Otherwise, the compiler maps the named Ada type to the hardware "type",
+presumably choosing the smallest one that supports the requested range.
+(That's why the range has to be static in the source code, unlike for
+explicit subtypes.)
+
+
+.. _Adv_Ada_Base_Attribute:
+
+Base
+~~~~
+
+The :ada:`Base` attribute gives us the unconstrained underlying hardware
+representation selected for a given numeric type. As an example, let's say we
+declared a subtype of the :ada:`Integer` type named :ada:`One_To_Ten`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Base_Attr
+
+    package My_Integers is
+
+       subtype One_To_Ten is Integer
+         range 1 .. 10;
+
+    end My_Integers;
+
+If we then use the :ada:`Base` attribute |mdash| by writing
+:ada:`One_To_Ten'Base` |mdash|, we're actually referring to the unconstrained
+underlying hardware representation selected for :ada:`One_To_Ten`. As
+:ada:`One_To_Ten` is a subtype of the :ada:`Integer` type, this also means that
+:ada:`One_To_Ten'Base` is equivalent to :ada:`Integer'Base`, i.e. they refer to
+the same base type. (This base type is the underlying hardware type
+representing the :ada:`Integer` type |mdash| but is not the :ada:`Integer` type
+itself.)
+
+The following example shows how the :ada:`Base` attribute affects the bounds of
+a variable:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Base_Attr
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with My_Integers; use My_Integers;
+
+    procedure Show_Base is
+       C : constant One_To_Ten := One_To_Ten'Last;
+    begin
+       Using_Constrained_Subtype : declare
+          V : One_To_Ten := C;
+       begin
+          Put_Line
+            ("Increasing value for One_To_Ten...");
+
+          V := One_To_Ten'Succ (V);
+       exception
+          when others =>
+             Put_Line ("Exception raised!");
+       end Using_Constrained_Subtype;
+
+       Using_Base : declare
+          V : One_To_Ten'Base := C;
+       begin
+          Put_Line
+          ("Increasing value for One_To_Ten'Base...");
+
+          V := One_To_Ten'Succ (V);
+       exception
+          when others =>
+             Put_Line ("Exception raised!");
+       end Using_Base;
+
+       Put_Line ("One_To_Ten'Last: "
+                 & One_To_Ten'Last'Image);
+       Put_Line ("One_To_Ten'Base'Last: "
+                 & One_To_Ten'Base'Last'Image);
+    end Show_Base;
+
+In the first block of the example (:ada:`Using_Constrained_Subtype`), we're
+asking for the next value after the last value of a range |mdash| in this case,
+:ada:`One_To_Ten'Succ (One_To_Ten'Last)`. As expected, since the last value of
+the range doesn't have a successor, a constraint exception is raised.
+
+In the :ada:`Using_Base` block, we're declaring a variable :ada:`V` of
+:ada:`One_To_Ten'Base` subtype. In this case, the next value exists |mdash|
+because the condition :ada:`One_To_Ten'Last + 1 <= One_To_Ten'Base'Last` is
+true |mdash|, so we can use the :ada:`Succ` attribute without having an
+exception being raised.
+
+In the following example, we adjust the result of additions and subtractions
+to avoid constraint errors:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Base_Type.Base_Attr_Sat
+
+    package My_Integers is
+
+       subtype One_To_Ten is Integer range 1 .. 10;
+
+       function Sat_Add (V1, V2 : One_To_Ten'Base)
+                         return One_To_Ten;
+
+       function Sat_Sub (V1, V2 : One_To_Ten'Base)
+                         return One_To_Ten;
+
+    end My_Integers;
+
+    --  with Ada.Text_IO; use Ada.Text_IO;
+
+    package body My_Integers is
+
+       function Saturate (V : One_To_Ten'Base)
+                          return One_To_Ten is
+       begin
+          --  Put_Line ("SATURATE " & V'Image);
+
+          if V < One_To_Ten'First then
+             return One_To_Ten'First;
+          elsif V > One_To_Ten'Last then
+             return One_To_Ten'Last;
+          else
+             return V;
+          end if;
+       end Saturate;
+
+       function Sat_Add (V1, V2 : One_To_Ten'Base)
+                         return One_To_Ten is
+       begin
+          return Saturate (V1 + V2);
+       end Sat_Add;
+
+       function Sat_Sub (V1, V2 : One_To_Ten'Base)
+                         return One_To_Ten is
+       begin
+          return Saturate (V1 - V2);
+       end Sat_Sub;
+
+    end My_Integers;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with My_Integers; use My_Integers;
+
+    procedure Show_Base is
+
+       type Display_Saturate_Op is (Add, Sub);
+
+       procedure Display_Saturate
+         (V1, V2 : One_To_Ten;
+          Op     : Display_Saturate_Op)
+       is
+          Res : One_To_Ten;
+       begin
+          case Op is
+          when Add =>
+             Res := Sat_Add (V1, V2);
+          when Sub =>
+             Res := Sat_Sub (V1, V2);
+          end case;
+          Put_Line ("SATURATE " & Op'Image
+                    & " (" & V1'Image
+                    & ", " & V2'Image
+                    & ") = " & Res'Image);
+       end Display_Saturate;
+
+    begin
+       Display_Saturate (1,  1, Add);
+       Display_Saturate (10, 8, Add);
+       Display_Saturate (1,  8, Sub);
+    end Show_Base;
+
+In this example, we're using the :ada:`Base` attribute to declare the
+parameters of the :ada:`Sat_Add`, :ada:`Sat_Sub` and :ada:`Saturate` functions.
+Note that the parameters of the :ada:`Display_Saturate` procedure are of
+:ada:`One_To_Ten` type, while the parameters of the :ada:`Sat_Add`,
+:ada:`Sat_Sub` and :ada:`Saturate` functions are of the (unconstrained) base
+subtype (:ada:`One_To_Ten'Base`). In those functions, we perform operations
+using the parameters of unconstrained subtype and adjust the result |mdash| in
+the :ada:`Saturate` function |mdash| before returning it as a constrained value
+of :ada:`One_To_Ten` subtype.
+
+The code in the body of the :ada:`My_Integers` package contains lines that were
+commented out |mdash| to be more precise, a call to :ada:`Put_Line` call in the
+:ada:`Saturate` function. If you uncomment them, you'll see the value of the
+input parameter :ada:`V` (of :ada:`One_To_Ten'Base` type) in the runtime output
+of the program before it's adapted to fit the constraints of the
+:ada:`One_To_Ten` subtype.
 
 .. ::
 
