@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.12']
-        node-version: [22.x]
+        node-version: [24.x]
 
     steps:
     - name: Trigger publishing on learn-latest repo
