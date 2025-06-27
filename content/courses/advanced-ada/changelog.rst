@@ -5,6 +5,14 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2025-06
+---------------
+
+- New section:
+
+  - :ref:`Base types <Adv_Ada_Base_Types>`
+
+
 Release 2025-05
 ---------------
 
