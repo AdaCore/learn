@@ -12,3 +12,4 @@ Data types
     arrays
     strings
     numerics
+    numeric_attributes

@@ -5,6 +5,17 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2025-07
+---------------
+
+- New chapter:
+
+  - :doc:`Numeric Attributes <parts/data_types/numeric_attributes>`
+
+    - Note: these are editorial changes, as the content was moved from the
+      :doc:`Numerics <parts/data_types/numerics>` chapter.
+
+
 Release 2025-06
 ---------------
 
