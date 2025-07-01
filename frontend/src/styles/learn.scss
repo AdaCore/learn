@@ -35,6 +35,131 @@
     }
 }
 
+a {
+    color: #e1641b;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        color: #bc4600;
+    }
+
+    &:visited {
+        color: #eba177;
+    }
+}
+
+// Add scrollbar to TOC (side navigation)
+.wy-side-scroll {
+    width: auto;
+    overflow-y: auto;
+}
+
+.wy-side-nav-search {
+    background-color: v.$color-theme-bg-dark;
+    a {
+        text-align: right !important;
+        float: right;
+    }
+}
+
+@mixin menu_vertical_current_hover_light_mode_colors {
+    &:hover {
+        background-color: #777777;
+        color: darkorange;
+    }
+}
+
+@mixin menu_vertical_current_light_mode_colors {
+    @include menu_vertical_current_hover_light_mode_colors;
+
+    &:visited {
+        color: #303030;
+        @include menu_vertical_current_hover_light_mode_colors;
+    }
+}
+
+@mixin menu_vertical_alt_current_hover_light_mode_colors {
+    color: #e8e8e8;
+    &:hover {
+        color: lightgoldenrodyellow;
+    }
+}
+
+.wy-menu-vertical {
+    p.caption {
+        color: #fff;
+    }
+    li {
+        a {
+            @include menu_vertical_alt_current_hover_light_mode_colors;
+
+            &:visited {
+                @include menu_vertical_alt_current_hover_light_mode_colors;
+            }
+        }
+        &.current {
+            a {
+                background-color: #eeeeee;
+                color: #303030;
+
+                @include menu_vertical_current_light_mode_colors;
+            }
+            &.toctree-l2 {
+                li.toctree-l3>a {
+                    @include menu_vertical_current_light_mode_colors;
+                }
+            }
+            &.toctree-l3 {
+                li.toctree-l4>a {
+                    @include menu_vertical_current_light_mode_colors;
+                }
+            }
+        }
+    }
+}
+
+.wy-nav-top {
+    background-color: v.$color-theme-bg-dark;
+    img {
+        border-radius: 0 !important;
+        background-color: transparent !important;
+    }
+
+    a {
+        color: #e8e8e8;
+
+        &:hover {
+            color: #100000;
+        }
+
+        &:visited {
+            color: #e8e8e8;
+            &:hover {
+                color: #100000;
+            }
+        }
+    }
+}
+
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: normal;
+}
+
+.wy-table-responsive {
+    margin-bottom: 24px;
+    max-width: 100%;
+    overflow: visible;
+}
+
+.wy-menu {
+    p {
+        margin-left: 20px;
+        margin-bottom: 7px;
+        margin-top: 10px;
+    }
+}
+
 .admonition-in-other-languages {
     background: v.$color-theme-alt-bg;
     padding: 12px;
