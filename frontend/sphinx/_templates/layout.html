@@ -1,0 +1,43 @@
+{% extends "!layout.html" %}
+
+{%- block extrahead %}
+  {% include "analytics.html" %}
+  {% include "metatags.html" %}
+{% endblock %}
+
+{% block extrabody %}
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KD5HNRR"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- LinkedIn Tracking Tags (noscript) -->
+  <noscript> <img height="1" width="1" style="display:none;" alt="" src="https://dc.ads.linkedin.com/collect/?pid=482585&fmt=gif" /> </noscript>
+  <!-- End LinkedIn Tracking Tags (noscript) -->
+{% endblock %}
+
+{%- block mobile_nav %}
+  <i data-toggle="wy-nav-top" class="fas fa-bars"></i>
+  {%- if logo and theme_logo_only %}
+    <a href="{{ pathto(master_doc) }}">
+  {%- else %}
+    <a href="{{ pathto(master_doc) }}" class="icon icon-home"> {{ project }}
+  {%- endif %}
+
+  {%- if logo %}
+    {#- Not strictly valid HTML, but it's the only way to display/scale
+        it properly, without weird scripting or heaps of work
+    #}
+    <img src="{{ pathto('_static/' + logo, 1) }}" class="logo" alt="{{ _('Logo') }}"/>
+  {%- endif %}
+  </a>
+{%- endblock %}
+
+{% block footer %}
+  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-caret-square-up"></i></button>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable({{ 'true' if theme_sticky_navigation|tobool else 'false' }});
+      });
+</script>
+{% endblock %}
