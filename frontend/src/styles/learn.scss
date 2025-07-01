@@ -98,15 +98,14 @@ pre.widget {
 
 .settings-bar {
     background-color: v.$color-settingsbar-bg;
-    color: v.$color-settingsbar-fg;
     font-family: v.$lato-sans-serif-font;
     padding-left: 13px;
     display: block;
     margin-top: 0px;
 
     button {
-        background-color: v.$color-settingsbar-bg;
-        color: v.$color-settingsbar-fg;
+        background-color: transparent;
+        color: v.$color-font-grey;
         opacity: 0.5;
         padding: 5px;
         margin-left: 5px;
