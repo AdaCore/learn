@@ -3,29 +3,6 @@
 @use 'variables' as v;
 
 // theme overrides
-@mixin dark_mode_image_background_adaptation {
-    img {
-        &.dark-mode-invert-image {
-            -webkit-filter: invert(0.9);
-            filter: invert(0.9);
-        }
-        &.dark-mode-light-background {
-            background-color: lightgrey !important;
-        }
-    }
-}
-
-@media not print {
-    body[data-theme="dark"] {
-        @include dark_mode_image_background_adaptation;
-    }
-    @media (prefers-color-scheme: dark) {
-        body:not([data-theme="light"]) {
-            @include dark_mode_image_background_adaptation;
-        }
-    }
-}
-
 .btn {
     background-color: v.$color-theme-bg-dark;
     color: #fff;
