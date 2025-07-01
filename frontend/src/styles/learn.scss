@@ -70,6 +70,7 @@ pre.widget {
     margin-bottom: 10px;
 
     button {
+        background-color: inherit;
         float: left;
         outline: none;
         cursor: pointer;
@@ -77,22 +78,19 @@ pre.widget {
         transition: 0.3s;
         flex: 0 0 auto;
         border: 1px solid transparent;
-        // Inactivate tab is darker
-        background-color: color.scale(v.$color-tab-bg, $lightness: -30%);
-        color: color.scale(v.$color-tab-font, $lightness: -30%);
+        color: v.$color-tab-font;
         font-family: v.$mono-font;
         font-size: 13px;
         border-left: 1px dotted v.$color-widget-border;
         border-right: 1px dotted v.$color-widget-border;
         border-bottom: 1px dotted v.$color-widget-border;
         &:hover {
-            background-color: color.scale(v.$color-tab-bg, $lightness: 30%);
-            color: color.scale(v.$color-tab-font, $lightness: -30%);
+            background-color: color.scale(v.$color-theme-bg-dark, $lightness: 30%);
+            color: v.$color-tab-hover-font;
             cursor: pointer;
         }
         &.active {
-            background-color: v.$color-tab-bg;
-            color: v.$color-tab-font;
+            color: v.$color-tab-active-font;
             border-left: 1px solid v.$color-widget-border;
             border-right: 1px solid v.$color-widget-border;
             border-bottom: 3px solid v.$color-theme-bg-dark;
