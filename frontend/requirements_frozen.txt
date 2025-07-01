@@ -23,7 +23,7 @@ packaging==25.0
 parso==0.8.4
 pdf2image==1.17.0
 pexpect==4.9.0
-pillow==11.2.1
+pillow==11.3.0
 prompt_toolkit==3.0.51
 ptyprocess==0.7.0
 pure_eval==0.2.3
