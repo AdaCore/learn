@@ -249,21 +249,6 @@ html_theme_path = ['.'] # make sphinx search for themes in current dir
 # documentation.
 #
 html_theme_options = {
-    # furo options
-
-    # 'light_css_variables': {
-    # },
-    # 'dark_css_variables': {
-    # }
-    'sidebar_hide_name': True,
-    'navigation_with_keys': True,
-    'top_of_page_buttons': ["view", "edit"],
-    # 'announcement': "",
-    # 'footer_icons': [],
-
-    "source_repository": "https://github.com/AdaCore/learn",
-    "source_branch": "master",
-    "source_directory": "content/",
 }
 
 html_show_sphinx = False
