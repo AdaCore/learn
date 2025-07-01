@@ -267,12 +267,6 @@ div {
             background-color: #fdd;
         }
     }
-    &.output_console {
-        color: v.$color-widget-output;
-        &:hover {
-            background-color: color.scale(v.$color-widget-output-area, $lightness: 30%);
-        }
-    }
     &.output_msg_info {
         color: v.$color-widget-info;
         padding-left: 15px;
