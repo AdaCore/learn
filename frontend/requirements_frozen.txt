@@ -8,7 +8,6 @@ coverage==7.9.1
 decorator==5.2.1
 docutils==0.21.2
 executing==2.2.0
-furo==2024.8.6
 graphviz==0.21
 idna==3.10
 imagesize==1.4.1
