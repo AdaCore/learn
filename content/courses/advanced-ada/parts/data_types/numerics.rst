@@ -1329,22 +1329,14 @@ input parameter :ada:`V` (of :ada:`One_To_Ten'Base` type) in the runtime output
 of the program before it's adapted to fit the constraints of the
 :ada:`One_To_Ten` subtype.
 
-.. ::
 
-    .. _Adv_Ada_Discrete_Numeric_Types:
+.. _Adv_Ada_Discrete_Numeric_Types:
 
-    Discrete Numeric Types
-    ----------------------
+Discrete Numeric Types
+----------------------
 
-    .. todo::
 
-        Complete section!
 
-        - Recap of discrete numeric types
-            - Integer types
-            - Modular types
-        - Standard types vs. compiler-specific types
-            - e.g.: `Integer` vs. `Long_Long_Integer`
 
 
 .. _Adv_Ada_Real_Numeric_Types:
