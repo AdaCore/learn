@@ -1335,7 +1335,448 @@ of the program before it's adapted to fit the constraints of the
 Discrete Numeric Types
 ----------------------
 
+In the Introduction to Ada course, we've seen that Ada has two kinds of integer
+type: :ref:`signed integer <Intro_Ada_Integers>` and
+:ref:`modular <Intro_Ada_Unsigned_Types>` types. For example:
 
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Signed_Modular_Types
+
+    package Num_Types is
+
+       type Signed_Integer is range 1 .. 1_000_000;
+       type Modular is mod 2**32;
+
+    end Num_Types;
+
+Remember that modular types are similar to *unsigned* integer types in other
+programming languages.
+
+In this section, we review these types and look into a couple of details that
+haven't been covered yet. We start the discussion with
+:ref:`signed integer types <Adv_Ada_Integer_Types>`, and then move on to
+:ref:`modular types <Adv_Ada_Modular_Types>`.
+
+.. _Adv_Ada_Integer_Types:
+
+Integer types
+~~~~~~~~~~~~~
+
+In the :ref:`Introduction to Ada <Intro_Ada_Integers>` course, we mentioned
+that you can define your own integer types in Ada. In fact, you're almost
+expected to do so, as Ada only guarantees the existence of a single integer
+type |mdash| and a few optional integer types. Even though a specific compiler
+might offer multiple predefined integer types, there's no guarantee that it
+does that. Therefore, you should carefully evaluate the expected range of each
+integer type in your implementation and specify that information in the
+corresponding type definition.
+
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.5.4 Integer Types <3-5-4>`
+
+Predefined integer types
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ada only has a single predefined integer type (:ada:`Integer`) and two subtypes
+(:ada:`Natural` and :ada:`Positive`). Although the actual range of
+:ada:`Integer` depends on the compiler and the target architecture, it must at
+least support a 16-bit range |mdash| we can say that the following
+specification is the minimum requirement for the :ada:`Integer` type:
+
+.. code-block:: ada
+
+    package Standard is
+
+       --  [...]
+
+       type Integer is
+         range -2**15 + 1 .. +2**15 - 1;
+
+       subtype Natural  is Integer
+         range 0 .. Integer'Last;
+
+       subtype Positive is Integer
+         range 1 .. Integer'Last;
+
+       --  [...]
+
+    end Standard;
+
+Note that the range of :ada:`Integer` doesn't start at :math:`-2^{15}`, but
+rather at :math:`-2^{15} + 1`, which might seem a bit unusual. Thus, if your
+algorithm requires the existence of :math:`-2^{15}`, you have a good reason to
+define a custom range instead of relying on the :ada:`Integer` type.
+
+As we've just said, the Ada standard only guarantees that :ada:`Integer` is at
+least a 16-bit type, but it doesn't define its actual range for a specific
+compiler or target architecture. For example, :ada:`Integer` could be defined
+as a 32-bit type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Check_Integer_Type_Range
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Check_Integer_Type_Range is
+    begin
+       Put_Line ("Integer'Size  :"
+                 & Integer'Size'Image
+                 & " bits");
+       Put_Line ("Integer'First :"
+                 & Integer'First'Image);
+       Put_Line ("Integer'Last  :"
+                 & Integer'Last'Image);
+    end Check_Integer_Type_Range;
+
+When running the example above on a typical PC, we might indeed confirm that
+:ada:`Integer` is a 32-bit type |mdash| ranging from -2147483648 up to
+2147483647. Of course, this doesn't go against the Ada standard, as it doesn't
+specify the maximum range of the :ada:`Integer` type, only the minimum range.
+
+The Ada standard also recommends that the :ada:`Long_Integer` type should be
+available if the target architecture supports at least 32-bit operations.
+However, the standard only guarantees that, if the :ada:`Long_Integer` is
+available, it must support at least a 32-bit range |mdash| again, starting at
+:math:`-2^{31} + 1` instead of :math:`-2^{31}`:
+
+.. code-block:: ada
+
+    package Standard is
+
+       --  [...]
+
+       type Long_Integer is
+         range -2**31 + 1 .. +2**31 - 1;
+
+       --  [...]
+
+    end Standard;
+
+Since this is a minimum requirement, it is possible that different types have
+the same range |mdash| e.g. :ada:`Integer` and :ada:`Long_Integer` could have
+the same range on a specific target architecture.
+
+In addition, the Ada standard suggests that compilers may offer integer types
+with names such as :ada:`Long_Long_Integer` and :ada:`Long_Long_Long_Integer`
+|mdash| or :ada:`Short_Integer` and :ada:`Short_Short_Integer`. However, all
+these types are considered non-portable, as there's no requirement concerning
+their availability or expected range.
+
+.. admonition:: In other languages
+
+    In C, you have a longer list of standard integer types:
+
+    .. code:: c run_button manual_chop project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Integer_Types_C
+
+        !main.c
+        #include <stdio.h>
+
+        int main(int argc, const char * argv[])
+        {
+            printf("signed char:   %zu bytes\n",
+                   sizeof(signed char) * 8);
+            printf("short int:     %zu bytes\n",
+                   sizeof(short int) * 8);
+            printf("int:           %zu bytes\n",
+                   sizeof(int) * 8);
+            printf("long int:      %zu bytes\n",
+                   sizeof(long int) * 8);
+            printf("long long int: %zu bytes\n",
+                   sizeof(long long int) * 8);
+            return 0;
+        }
+
+    (Note that some of the types above aren't available in all versions of the
+    C standard.)
+
+    For the types above, there are no equivalent types in the Ada standard.
+    (However, a compiler may implement this equivalence for practical reasons.)
+    Therefore, if you're porting code from C to Ada, for example, you should
+    check the expected range of your algorithm and specify the corresponding
+    types in the Ada implementation.
+
+
+.. admonition:: In the GNAT toolchain
+
+    The GNAT compiler provides a couple of integer types in addition to the
+    standard :ada:`Integer` type:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.GNAT_Integer_Types
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_GNAT_Integer_Types is
+        begin
+
+           Put_Line ("Short_Short_Integer'Size:    "
+                     & Short_Short_Integer'Size'Image
+                     & " bits");
+
+           Put_Line ("Short_Integer'Size:          "
+                     & Short_Integer'Size'Image
+                     & " bits");
+
+           Put_Line ("Integer'Size:                "
+                     & Integer'Size'Image
+                     & " bits");
+
+           Put_Line ("Long_Integer'Size:           "
+                     & Long_Integer'Size'Image
+                     & " bits");
+
+           Put_Line ("Long_Long_Integer'Size:      "
+                     & Long_Long_Integer'Size'Image
+                     & " bits");
+
+           Put_Line ("Long_Long_Long_Integer'Size: "
+                     & Long_Long_Long_Integer'Size'Image
+                     & " bits");
+
+        end Show_GNAT_Integer_Types;
+
+    The actual range of each of these integer types depends on the target
+    architecture. (Note that you may have different types with the same range.)
+
+    Also, when interfacing with C code, GNAT guarantees the following type
+    equivalence:
+
+    +------------------------------+------------------------------------------+
+    | C type                       | Ada type                                 |
+    +==============================+==========================================+
+    | :c:`signed char`             | :ada:`Short_Short_Integer`               |
+    +------------------------------+------------------------------------------+
+    | :c:`short int`               | :ada:`Short_Integer`                     |
+    +------------------------------+------------------------------------------+
+    | :c:`int`                     | :ada:`Integer`                           |
+    +------------------------------+------------------------------------------+
+    | :c:`long`                    | :ada:`Long_Integer`                      |
+    +------------------------------+------------------------------------------+
+    | :c:`long long`               | :ada:`Long_Long_Integer`                 |
+    +------------------------------+------------------------------------------+
+
+
+.. _Adv_Ada_Custom_Integer_Types:
+
+Custom integer types
+^^^^^^^^^^^^^^^^^^^^
+
+As we've mentioned before, numeric data types such as :ada:`Integer` or
+:ada:`Long_Integer` might not provide enough control over the ranges |mdash|
+i.e. the range selected by the compiler may not correspond to the expected
+range of the numeric algorithm we're implementing. Therefore, it is best to
+simply define custom ranges. To do that, you should evaluate the algorithm and
+reach a clear understanding about the adequate range of each integer type
+|mdash| this should be based on the requirements of the algorithm.
+
+For example, if some coefficients in your algorithm expected at least 32-bit
+precision, you may consider defining this type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Integer_Type
+
+    package Custom_Integer_Types is
+
+       type Coefficient is
+         range -2**31 .. +2**31 - 1;
+
+       --  [...]
+
+    end Custom_Integer_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Integer_Types;
+    use Custom_Integer_Types;
+
+    procedure Show_Custom_Integer_Types is
+    begin
+       Put_Line ("Coefficient'Size  :"
+                 & Coefficient'Size'Image
+                 & " bits");
+       Put_Line ("Coefficient'First :"
+                 & Coefficient'First'Image);
+       Put_Line ("Coefficient'Last  :"
+                 & Coefficient'Last'Image);
+    end Show_Custom_Integer_Types;
+
+In this example, we declare the 32-bit :ada:`Coefficient` type. We ensure that
+it's a 32-bit type by explicitly writing :ada:`range -2**31 .. +2**31 - 1`.
+
+Note that a custom type definition is always derived from the
+:ref:`root integer type <Adv_Ada_Root_Types>`, which we discussed in another
+chapter.
+
+
+.. _Adv_Ada_System_Min_Max_Int:
+
+System max. and min. values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As we've just mentioned, a custom type definition is derived from the
+:ref:`root integer type <Adv_Ada_Root_Types>`. The base range of the root
+integer type is :ada:`System.Min_Int .. System.Max_Int`.
+
+The value of :ada:`System.Min_Int` and :ada:`System.Max_Int` depends on the
+target system. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.System_Int_Range
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with System;
+
+    procedure Show_System_Int_Range is
+    begin
+       Put_Line ("System.Min_Int :"
+                 & System.Min_Int'Image);
+       Put_Line ("System.Max_Int :"
+                 & System.Max_Int'Image);
+    end Show_System_Int_Range;
+
+On a typical desktop PC, you might get the following values:
+
+- :ada:`System.Min_Int`: -170141183460469231731687303715884105728
+- :ada:`System.Max_Int`:  170141183460469231731687303715884105727
+
+Because :ref:`custom integer types <Adv_Ada_Custom_Integer_Types>` are
+implicitly derived from the root integer type, we cannot declare a custom
+integer type outside of the :ada:`System.Min_Int .. System.Max_Int` range:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Int_Out_Of_Range
+    :class: ada-expect-compile-error
+
+    with System;
+
+    package Custom_Int_Out_Of_Range is
+
+       type Custom_Int is
+         range System.Min_Int - 1 ..
+               System.Max_Int + 1;
+
+    end Custom_Int_Out_Of_Range;
+
+The compilation of this package fails because the :ada:`Custom_Int'First` is
+below :ada:`System.Min_Int` and :ada:`Custom_Int'Last` is above
+:ada:`System.Max_Int`.
+
+
+Range of base type
+^^^^^^^^^^^^^^^^^^
+
+As we've said before, a custom type definition is derived from the root
+integer type. The range of its :ref:`base type <Adv_Ada_Base_Types>`, however,
+is *not* derived from the root integer type, but rather determined by the range
+of the type specification. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Int_Base_Range
+
+    with System;
+
+    package Custom_Integer_Types is
+
+       type Custom_Int is
+         range 1 .. 10;
+
+    end Custom_Integer_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Integer_Types;
+    use  Custom_Integer_Types;
+
+    procedure Show_Custom_Integer_Types is
+    begin
+       Put_Line ("Custom_Int'Size  :"
+                 & Custom_Int'Size'Image
+                 & " bits");
+       Put_Line ("Custom_Int'First :"
+                 & Custom_Int'First'Image);
+       Put_Line ("Custom_Int'Last  :"
+                 & Custom_Int'Last'Image);
+
+       Put_Line ("Custom_Int'Base'Size  :"
+                 & Custom_Int'Base'Size'Image);
+       Put_Line ("Custom_Int'Base'First :"
+                 & Custom_Int'Base'First'Image);
+       Put_Line ("Custom_Int'Base'Last  :"
+                 & Custom_Int'Base'Last'Image);
+    end Show_Custom_Integer_Types;
+
+On a typical desktop PC, you might see that the range of :ada:`Custom_Int'Base`
+is :ada:`-128 .. 127`, while the
+:ref:`system max. and min. values <Adv_Ada_System_Min_Max_Int>` we've seen
+before had a much wider range.
+
+As a reminder, the range of the base type might be wider than the range of the
+custom integer type we're defining. (We mentioned this earlier on when
+discussing :ref:`base types <Adv_Ada_Base_Types>`.)
+
+
+.. _Adv_Ada_Modular_Types:
+
+Modular Types
+~~~~~~~~~~~~~
+
+As we've mentioned in the :ref:`Introduction to Ada <Intro_Ada_Unsigned_Types>`
+course, modular types are the Ada version of *unsigned* integer types. We
+declare a modular type by specifying its modulo |mdash| by using the
+:ada:`mod` keyword:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Modular_Types
+
+    package Modular_Types is
+
+       type Modular is mod 2**32;
+
+    end Modular_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Modular_Types;
+    use  Modular_Types;
+
+    procedure Show_Modular_Types is
+    begin
+       Put_Line ("Modular'Size  :"
+                 & Modular'Size'Image
+                 & " bits");
+       Put_Line ("Modular'First :"
+                 & Modular'First'Image);
+       Put_Line ("Modular'Last  :"
+                 & Modular'Last'Image);
+    end Show_Modular_Types;
+
+This example declares the 32-bit modular type :ada:`Modular`.
+
+There are many attributes on modular types. We talk about them
+:ref:`in another chapter <Adv_Ada_Modular_Type_Attributes>`.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.5.4 Integer Types <3-5-4>`
+
+
+.. todo::
+
+    - Add subsection: "Binary and nonbinary modulus"
+
+    - Discuss: :ada:`System.Max_Binary_Modulus` and
+      :ada:`System.Max_Nonbinary_Modulus`
+
+    - Circumvent `Constraint_Error` for `System.Max_Binary_Modulus` in the
+      :ada:`Show_Max_Binary_Nonbinary_Modulus` procedure below!
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus
+        :class: ada-run-expect-failure
+
+        with System;
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Max_Binary_Nonbinary_Modulus is
+        begin
+           Put_Line ("System.Max_Binary_Modulus    :"
+                     & System.Max_Binary_Modulus'Image);
+           Put_Line ("System.Max_Nonbinary_Modulus :"
+                     & System.Max_Nonbinary_Modulus'Image);
+        end Show_Max_Binary_Nonbinary_Modulus;
 
 
 

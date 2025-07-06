@@ -8,19 +8,6 @@ Numeric Attributes
 Attributes of Modular Types
 ---------------------------
 
-In the Introduction to Ada course, we've seen that Ada has two kinds of integer
-type: :ref:`signed <Intro_Ada_Integers>` and
-:ref:`modular <Intro_Ada_Unsigned_Types>` types. For example:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_1
-
-    package Num_Types is
-
-       type Signed_Integer is range 1 .. 1_000_000;
-       type Modular is mod 2**32;
-
-    end Num_Types;
-
 In this section, we discuss two attributes of modular types: :ada:`Modulus`
 and :ada:`Mod`. We also discuss operations on modular types.
 
