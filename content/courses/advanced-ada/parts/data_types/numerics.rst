@@ -1772,10 +1772,12 @@ There are many attributes on modular types. We talk about them
 
         procedure Show_Max_Binary_Nonbinary_Modulus is
         begin
-           Put_Line ("System.Max_Binary_Modulus    :"
-                     & System.Max_Binary_Modulus'Image);
-           Put_Line ("System.Max_Nonbinary_Modulus :"
-                     & System.Max_Nonbinary_Modulus'Image);
+           Put_Line
+             ("System.Max_Binary_Modulus    :"
+              & System.Max_Binary_Modulus'Image);
+           Put_Line
+             ("System.Max_Nonbinary_Modulus :"
+              & System.Max_Nonbinary_Modulus'Image);
         end Show_Max_Binary_Nonbinary_Modulus;
 
 
