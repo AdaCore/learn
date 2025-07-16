@@ -126,6 +126,14 @@
         Introduction to Ada: Laboratories <labs/intro-to-ada/index>
         Bug Free Coding <labs/bug-free-coding/index>
 
+    .. only:: no_hidden_books
+
+        .. toctree::
+            :maxdepth: 1
+            :caption: AdaCore Technologies Booklets
+
+            AdaCore Technologies For Airborne Software <booklets/adacore-technologies-for-airborne-software/index>
+
 .. only:: builder_html
 
     E-books
