@@ -1362,7 +1362,7 @@ Integer types
 ~~~~~~~~~~~~~
 
 In the :ref:`Introduction to Ada <Intro_Ada_Integers>` course, we mentioned
-that you can define your own integer types in Ada. In fact, you're almost
+that you can define your own integer types in Ada. In fact, typically you're
 expected to do so, as Ada only guarantees the existence of a single integer
 type |mdash| and a few optional integer types. Even though a specific compiler
 might offer multiple predefined integer types, there's no guarantee that it
