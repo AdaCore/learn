@@ -310,9 +310,11 @@ We can retrieve the size of an object of type :ada:`T` by using the
 directly on objects of type :ada:`T` to retrieve their actual size |mdash| in
 our example, we write :ada:`V1'Size` to retrieve the size of :ada:`V1`.
 
-Note that, in the example above, we've used both the :ada:`Size` attribute
-(for example, :ada:`UInt_7'Size`) and the :ada:`Size` aspect
-(:ada:`with Size => 24`).
+Similarly, for the :ada:`UInt_7_S24` type, the :ada:`Size` attribute tells us
+that the type requires a minimum number of 24 bits to represent objects of that
+type, while the actual storage makes use of 32 bits. Note that, in this case,
+we've used the :ada:`Size` aspect (:ada:`with Size => 24`) to request 24 bits
+for the size of the :ada:`UInt_7_S24` type.
 
 
 Component size
