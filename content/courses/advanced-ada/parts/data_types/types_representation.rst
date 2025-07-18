@@ -153,6 +153,8 @@ to better understand the differences among those attributes.
     eight in certain architectures.
 
 
+.. _Adv_Ada_Size_Aspect:
+
 Size aspect
 ~~~~~~~~~~~
 
@@ -228,6 +230,8 @@ this:
     (Ada compiler) "For the target platform that you selected, I cannot
     possibly do it! COMPILATION ERROR!"
 
+
+.. _Adv_Ada_Size_Attributes:
 
 Size attributes
 ~~~~~~~~~~~~~~~
