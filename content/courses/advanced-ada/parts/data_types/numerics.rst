@@ -1660,10 +1660,10 @@ and :ada:`System.Max_Int` values. We discuss this topic
 
         package Custom_Integer_Types is
 
-        type Int_128_Bits is
-            range -2**127 .. +2**127 - 1;
+           type Int_128_Bits is
+             range -2**127 .. +2**127 - 1;
 
-        --  [...]
+           --  [...]
 
         end Custom_Integer_Types;
 
@@ -1674,13 +1674,13 @@ and :ada:`System.Max_Int` values. We discuss this topic
 
         procedure Show_Custom_Integer_Types is
         begin
-        Put_Line ("Int_128_Bits'Size  :"
-                    & Int_128_Bits'Size'Image
-                    & " bits");
-        Put_Line ("Int_128_Bits'First :"
-                    & Int_128_Bits'First'Image);
-        Put_Line ("Int_128_Bits'Last  :"
-                    & Int_128_Bits'Last'Image);
+           Put_Line ("Int_128_Bits'Size  :"
+                     & Int_128_Bits'Size'Image
+                     & " bits");
+           Put_Line ("Int_128_Bits'First :"
+                     & Int_128_Bits'First'Image);
+           Put_Line ("Int_128_Bits'Last  :"
+                     & Int_128_Bits'Last'Image);
         end Show_Custom_Integer_Types;
 
 
