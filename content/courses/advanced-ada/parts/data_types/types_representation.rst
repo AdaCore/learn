@@ -250,8 +250,8 @@ Let's start with a code example using the :ada:`Size` attribute:
 
        type UInt_7 is range 0 .. 127;
 
-       type UInt_7_S32 is range 0 .. 127
-         with Size => 32;
+       type UInt_7_S24 is range 0 .. 127
+         with Size => 24;
 
     end Custom_Types;
 
@@ -261,7 +261,7 @@ Let's start with a code example using the :ada:`Size` attribute:
 
     procedure Show_Sizes is
        V1 : UInt_7;
-       V2 : UInt_7_S32;
+       V2 : UInt_7_S24;
     begin
        Put_Line ("UInt_7'Size:            "
                  & UInt_7'Size'Image);
@@ -271,10 +271,10 @@ Let's start with a code example using the :ada:`Size` attribute:
                  & V1'Size'Image);
        New_Line;
 
-       Put_Line ("UInt_7_S32'Size:        "
-                 & UInt_7_S32'Size'Image);
-       Put_Line ("UInt_7_S32'Object_Size: "
-                 & UInt_7_S32'Object_Size'Image);
+       Put_Line ("UInt_7_S24'Size:        "
+                 & UInt_7_S24'Size'Image);
+       Put_Line ("UInt_7_S24'Object_Size: "
+                 & UInt_7_S24'Object_Size'Image);
        Put_Line ("V2'Size:                "
                  & V2'Size'Image);
     end Show_Sizes;
@@ -287,8 +287,8 @@ Depending on your target architecture, you may see this output:
     UInt_7'Object_Size:      8
     V1'Size:                 8
 
-    UInt_7_S32'Size:         32
-    UInt_7_S32'Object_Size:  32
+    UInt_7_S24'Size:         24
+    UInt_7_S24'Object_Size:  32
     V2'Size:                 32
 
 As we said above, when we use the :ada:`Size` attribute for a type :ada:`T`,
@@ -312,7 +312,7 @@ our example, we write :ada:`V1'Size` to retrieve the size of :ada:`V1`.
 
 Note that, in the example above, we've used both the :ada:`Size` attribute
 (for example, :ada:`UInt_7'Size`) and the :ada:`Size` aspect
-(:ada:`with Size => 32`).
+(:ada:`with Size => 24`).
 
 
 Component size
