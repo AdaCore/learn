@@ -1837,6 +1837,36 @@ declare a modular type by specifying its modulo |mdash| by using the
 
 This example declares the 32-bit modular type :ada:`Modular`.
 
+Note that, different from other languages such as C, the modulus need not be a
+power of two. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Modular_Types_Not_Power_Of_Two
+
+    package Modular_Types is
+
+       type Modular_10 is mod 10;
+
+    end Modular_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Modular_Types;
+    use  Modular_Types;
+
+    procedure Show_Not_Power_Of_Two_Modular is
+    begin
+       Put_Line ("Modular_10'Size  :"
+                 & Modular_10'Size'Image
+                 & " bits");
+       Put_Line ("Modular_10'First :"
+                 & Modular_10'First'Image);
+       Put_Line ("Modular_10'Last  :"
+                 & Modular_10'Last'Image);
+    end Show_Not_Power_Of_Two_Modular;
+
+In this example, the modulus of type :ada:`Modular_10` is 10 (which obviously
+is not a power-of-two number).
+
 There are many attributes on modular types. We talk about them
 :ref:`in another chapter <Adv_Ada_Modular_Type_Attributes>`.
 
