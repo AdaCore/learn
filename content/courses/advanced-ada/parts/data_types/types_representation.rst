@@ -186,6 +186,10 @@ that data type. For example:
 On a typical desktop PC, the compiler selects a size of 7 bits for the custom
 integer type :ada:`My_Int`. (In this example, we use the
 :ref:`Size attribute <Adv_Ada_Size_Attributes>`, which we discuss soon.)
+This means that, in order to represent objects of :ada:`My_Int` type, the
+compiler has to reserve **at least** 7 bits. (In other words, this is the
+minimum requirement for that data type. We revisit this topic later on in this
+section.)
 
 Depending on the requirements of your target system, however, you might have to
 request the compiler to select a specific size for your data type. You can do
