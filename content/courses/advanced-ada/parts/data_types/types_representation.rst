@@ -153,8 +153,90 @@ to better understand the differences among those attributes.
     eight in certain architectures.
 
 
-Size attribute and aspect
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Size aspect
+~~~~~~~~~~~
+
+Before we discuss these attributes, however, we briefly look into the
+:ada:`Size` aspect.
+
+When we define a type, the compiler selects the most appropriate size for
+that data type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Size_Aspect
+
+    package Custom_Types is
+
+       type My_Int is range 0 .. 127;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+    begin
+       Put_Line ("Size of My_Int: "
+                 & My_Int'Size'Image
+                 & " bits");
+    end Show_Sizes;
+
+On a typical desktop PC, the compiler selects a size of 7 bits for the custom
+integer type :ada:`My_Int`. (In this example, we use the
+:ref:`Size attribute <Adv_Ada_Size_Attributes>`, which we discuss soon.)
+
+Depending on the requirements of your target system, however, you might have to
+request the compiler to select a specific size for your data type. You can do
+this by using the :ada:`Size` aspect. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Data_Representation.Size_Aspect
+
+    package Custom_Types is
+
+       type My_Int is range 0 .. 127
+         with Size => 24;
+
+    end Custom_Types;
+
+    with Ada.Text_IO;  use Ada.Text_IO;
+
+    with Custom_Types; use Custom_Types;
+
+    procedure Show_Sizes is
+    begin
+       Put_Line ("Size of My_Int: "
+                 & My_Int'Size'Image
+                 & " bits");
+    end Show_Sizes;
+
+The size aspect is a request to the compiler to verify that the expected size
+can be used on the target platform. You can think of this attribute as a dialog
+between the developer and the compiler:
+
+    (Developer) "I think that :ada:`My_Int` should be stored using at
+    least 24 bits. Do you agree?"
+
+    (Ada compiler) "For the target platform that you selected, I can confirm
+    that this is indeed the case."
+
+Depending on the target platform, however, the conversation might play out like
+this:
+
+    (Developer) "I think that :ada:`My_Int` should be stored using at
+    least 24 bits. Do you agree?"
+
+    (Ada compiler) "For the target platform that you selected, I cannot
+    possibly do it! COMPILATION ERROR!"
+
+
+Size attributes
+~~~~~~~~~~~~~~~
+
+The :ada:`Size` attribute is a function that returns the minimum number of bits
+necessary to represent objects of that type. Remember that this number is
+selected by the compiler |mdash| unless, of course, we use the :ada:`Size`
+aspect as a request to the compiler to verify that the expected size can be
+used on the target platform.
 
 Let's start with a code example using the :ada:`Size` attribute:
 
@@ -205,7 +287,8 @@ Depending on your target architecture, you may see this output:
     UInt_7_S32'Object_Size:  32
     V2'Size:                 32
 
-When we use the :ada:`Size` attribute for a type :ada:`T`, we're retrieving the
+As we said above, when we use the :ada:`Size` attribute for a type :ada:`T`,
+we're retrieving the
 minimum number of bits necessary to represent objects of that type. Note that
 this is not the same as the actual size of an object of type :ada:`T` because
 the compiler will select an object size that is appropriate for the target
@@ -223,27 +306,10 @@ We can retrieve the size of an object of type :ada:`T` by using the
 directly on objects of type :ada:`T` to retrieve their actual size |mdash| in
 our example, we write :ada:`V1'Size` to retrieve the size of :ada:`V1`.
 
-In the example above, we've used both the :ada:`Size` attribute (for example,
-:ada:`UInt_7'Size`) and the :ada:`Size` aspect (:ada:`with Size => 32`).
-While the size attribute is a function that returns the size, the size aspect
-is a request to the compiler to verify that the expected size can be used on
-the target platform. You can think of this attribute as a dialog between the
-developer and the compiler:
+Note that, in the example above, we've used both the :ada:`Size` attribute
+(for example, :ada:`UInt_7'Size`) and the :ada:`Size` aspect
+(:ada:`with Size => 32`).
 
-    (Developer) "I think that :ada:`UInt_7_S32` should be stored using at
-    least 32 bits. Do you agree?"
-
-    (Ada compiler) "For the target platform that you selected, I can confirm
-    that this is indeed the case."
-
-Depending on the target platform, however, the conversation might play out like
-this:
-
-    (Developer) "I think that :ada:`UInt_7_S32` should be stored using at
-    least 32 bits. Do you agree?"
-
-    (Ada compiler) "For the target platform that you selected, I cannot
-    possibly do it! COMPILATION ERROR!"
 
 Component size
 ~~~~~~~~~~~~~~
