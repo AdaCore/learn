@@ -1615,6 +1615,7 @@ compiler will reject the source code containing the type declaration (and all
 clients of that code). For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Illegal_Custom_Integer_Type
+    :class: ada-expect-compile-error
 
     package Custom_Integer_Types is
 
