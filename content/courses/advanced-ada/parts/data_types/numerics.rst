@@ -1561,11 +1561,11 @@ their availability or expected range.
 Custom integer types
 ^^^^^^^^^^^^^^^^^^^^
 
-As we've mentioned before, numeric data types such as :ada:`Integer` or
-:ada:`Long_Integer` might not provide enough control over the ranges |mdash|
-i.e. the range selected by the compiler may not correspond to the expected
-range of the numeric algorithm we're implementing. Therefore, it is best to
-simply define custom ranges. To do that, you should evaluate the algorithm and
+As we've mentioned before, for the language-defined numeric data types such as
+:ada:`Integer` or :ada:`Long_Integer`, the range selected by the compiler may
+not correspond to the required range of the numeric algorithm we're
+implementing. Therefore, it is best to simply declare custom types with the
+necessary ranges specified. To do that, you should evaluate the algorithm and
 reach a clear understanding about the adequate range of each integer type
 |mdash| this should be based on the requirements of the algorithm.
 
