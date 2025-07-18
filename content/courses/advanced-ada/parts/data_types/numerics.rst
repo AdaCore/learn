@@ -1607,6 +1607,96 @@ Note that a custom type definition is always derived from the
 chapter.
 
 
+Illegal integer definitions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If the specified range cannot be supported by the target machine, the Ada
+compiler will reject the source code containing the type declaration (and all
+clients of that code). For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Illegal_Custom_Integer_Type
+
+    package Custom_Integer_Types is
+
+       type Int_1024_Bits is
+         range -2**1023 .. +2**1023 - 1;
+
+       --  [...]
+
+    end Custom_Integer_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Integer_Types;
+    use Custom_Integer_Types;
+
+    procedure Show_Custom_Integer_Types is
+    begin
+       Put_Line ("Int_1024_Bits'Size  :"
+                 & Int_1024_Bits'Size'Image
+                 & " bits");
+       Put_Line ("Int_1024_Bits'First :"
+                 & Int_1024_Bits'First'Image);
+       Put_Line ("Int_1024_Bits'Last  :"
+                 & Int_1024_Bits'Last'Image);
+    end Show_Custom_Integer_Types;
+
+In this example, we're trying to define a 1024-bit integer type. Unless you're
+compiling this code example many decades in the future, the compiler will (most
+likely) reject this definition because current hardware architectures don't
+support this range in any way. In order to handle integer values in such
+ranges, you might consider using :ref:`big numbers <Adv_Ada_Big_Numbers>`.
+
+You can query the maximum supported range by using the :ada:`System.Min_Int`
+and :ada:`System.Max_Int` values. We discuss this topic
+:ref:`next <Adv_Ada_System_Min_Max_Int>`.
+
+.. admonition:: In the GNAT toolchain
+
+    As of 2025, GNAT supports 128-bit integers:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Custom_Integer_Type
+
+        package Custom_Integer_Types is
+
+        type Int_128_Bits is
+            range -2**127 .. +2**127 - 1;
+
+        --  [...]
+
+        end Custom_Integer_Types;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Custom_Integer_Types;
+        use Custom_Integer_Types;
+
+        procedure Show_Custom_Integer_Types is
+        begin
+        Put_Line ("Int_128_Bits'Size  :"
+                    & Int_128_Bits'Size'Image
+                    & " bits");
+        Put_Line ("Int_128_Bits'First :"
+                    & Int_128_Bits'First'Image);
+        Put_Line ("Int_128_Bits'Last  :"
+                    & Int_128_Bits'Last'Image);
+        end Show_Custom_Integer_Types;
+
+
+.. admonition:: For further reading...
+
+    This is a different approach to portability than that of, say, C, where for
+    example type :c:`int` is always defined and hence the client code always
+    compiles, but won't necessarily work at run-time. In that case, at best you
+    find the problem during testing, which is comparatively expensive. Worse,
+    if you don't find out until after deployment, the cost to fix it is much,
+    much higher.
+
+    In contrast, with a user-specified integer type, if the specified range
+    cannot be supported by the (perhaps new) target machine, you find out at
+    compile-time, which is far less expensive and more robust too.
+
+
 .. _Adv_Ada_System_Min_Max_Int:
 
 System max. and min. values
