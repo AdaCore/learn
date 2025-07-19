@@ -1357,9 +1357,29 @@ of the program before it's adapted to fit the constraints of the
 
         Complete section!
 
-        - Recap of real numeric types
-            - Floating-point types
-            - Fixed-point types
+
+.. ::
+
+    .. _Adv_Ada_Floating_Point_Types:
+
+    Floating-point types
+    --------------------
+
+    .. todo::
+
+        Complete section!
+
+
+.. ::
+
+    .. _Adv_Ada_Fixed_Point_Types:
+
+    Fixed-point types
+    -----------------
+
+    .. todo::
+
+        Complete section!
 
 
 .. _Adv_Ada_Big_Numbers:
