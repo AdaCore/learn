@@ -1346,16 +1346,12 @@ of the program before it's adapted to fit the constraints of the
         - Standard types vs. compiler-specific types
             - e.g.: `Integer` vs. `Long_Long_Integer`
 
-.. ::
 
-    .. _Adv_Ada_Real_Numeric_Types:
+.. _Adv_Ada_Real_Numeric_Types:
 
-    Real Numeric Types
-    ------------------
+Real Numeric Types
+------------------
 
-    .. todo::
-
-        Complete section!
 
 
 .. ::
