@@ -156,13 +156,6 @@ test_content_courses_GNAT_Toolchain_Intro:                                     #
 	$(eval CONTENT_CHAPTERS := courses/GNAT_Toolchain_Intro/chapters)
 	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
 
-test_content_training_examples:                                                ## Test course: training examples (Fundamentals of Ada).
-	@echo "===== TRAINING EXAMPLES: FUNDAMENTALS OF ADA ====="
-	$(eval MAX_SRC_COLUMNS := 80)
-	$(eval DIR_LEVELS := 1)
-	$(eval CONTENT_CHAPTERS := training_examples/fundamentals_of_ada)
-	$(call test_content,$(MAX_SRC_COLUMNS),$(DIR_LEVELS),$(CONTENT_CHAPTERS))
-
 ##@ Test source-code examples of various courses
 test_content_courses:                                                          ## Test all published courses.
 test_content_courses:  \
@@ -190,8 +183,6 @@ test_content: test_content_courses                                             #
 test_hidden_content:                                                           ## Test all hidden courses.
 test_hidden_content: \
 	test_content_courses_advanced-spark
-#	DEACTIVATED DUE TO FAILING TESTS:
-#		test_content_training_examples
 	@echo ""
 
 test_all_content: test_content test_hidden_content                             ## Test all (published and hidden) courses.
