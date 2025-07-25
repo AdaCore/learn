@@ -1,4 +1,4 @@
-.. include:: common_defs.rst
+.. include:: ../../courses/global.txt
 
 .. index:: single: DO-178C/ED-12C; Compliance
 
@@ -7,6 +7,7 @@ Compliance with DO-178C/ED-12C Guidance: Analysis
 
 Overview
 --------
+
 |do-178c| uses the term "requirement" to identify the expected behavior of the system, the software, or a part thereof. The
 desired functions are formulated at the system level as "system requirements" and are refined and elaborated into "software
 requirements". |do-178c| identifies several categories of software requirements.
@@ -32,7 +33,7 @@ manual reviews, automated analyses (possibly including the use of formal methods
 .. index:: V software life cycle
 
 While it is not a |do-178c| concept, a "V" cycle is often used to represent the complete software life cycle. A variation of
-the traditional "V" cycle, oriented around the |do-178c| processes, was shown earlier in :numref:`fig1`. As is seen in that figure,
+the traditional "V" cycle, oriented around the |do-178c| processes, was shown earlier in :numref:`Airborn_SW_fig1`. As is seen in that figure,
 AdaCore tools mostly apply towards the bottom stages of the "V" cycle:
 
 * Design (architecture + LLR), coding and integration (EOC generation), for the development activities.
@@ -89,21 +90,22 @@ A-2[6]: 5.3.1.a refers to Table A-2, Objective 6, paragraph 5.3.1a.
 
 Use case #1a: Coding with Ada 2012
 ----------------------------------
+
 The adoption of Ada as the coding language brings a number of benefits during design, coding, and testing, both from language
 features (as summarized in the table below) and from the AdaCore ecosystem.
 
 .. index:: single: Ada language; Benefits
 
-.. _Benefits_of_the_Ada_language:
+.. _Airborn_SW_Benefits_of_the_Ada_language:
 
 Benefits of the Ada language
-+++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -130,7 +132,8 @@ that help meet these goals.
 .. index:: single: Ada language; Programming in the large
 .. index:: single: Ada language; Object-Oriented Programming (OOP)
 
-**Modularization**
+Modularization
+^^^^^^^^^^^^^^
 
 Ada's package facility was designed for "programming in the large": designing a system comprising millions of lines of code
 through modules (packages) that maximize reuse while making explicit the allowed inter-module dependencies.
@@ -151,11 +154,12 @@ coupling on any subprogram defined in the visible part of the specification for 
 `Q` references these items, and they must be demonstrated by structural code coverage tests.
 On the other hand, data items or subprograms defined in `P`'s private part or package body are inaccessible to `Q`
 (any such accesses would be flagged as compile-time errors), and thus they do not constitute a coupling for `Q`.
-For further details, see :ref:`Data_and_control_coupling_coverage_with_GNATcoverage`.
+For further details, see :ref:`Airborn_SW_Data_and_control_coupling_coverage_with_GNATcoverage`.
 
 .. index:: single: Ada language; Strong typing
 
-**Strong typing**
+Strong typing
+^^^^^^^^^^^^^
 
 The emphasis on early error detection and program clarity is perhaps most clearly illustrated in the language's "strong typing". A
 type in Ada is a semantic entity that can embody static (and possibly also dynamic) constraints. For example:
@@ -207,7 +211,8 @@ by the programmer. Explicit conversions make the programmer's intent clear. For 
 
 .. index:: single: Ada language; Dimensionality checking
 
-**Dimensionality checking**
+Dimensionality checking
+^^^^^^^^^^^^^^^^^^^^^^^
 
 One of the challenges to a language's type model is the enforcement of the proper use of units of measurement. For example dividing a
 distance by a time should be allowed, yielding a velocity. But the error of dividing a time by a distance where a velocity value is
@@ -254,7 +259,8 @@ GNAT Pro's support for dimensionality checking is a useful adjunct to Ada's stro
 
 .. index:: single: Ada language; Pointers
 
-**Pointers**
+Pointers
+^^^^^^^^
 
 For compliance with |do-178c|, the use of dynamic memory (and pointers) should be kept to the bare minimum, and Ada helps
 support this goal. Features such as arrays or by-reference parameter passing, which require pointers or explicit references in other
@@ -352,7 +358,8 @@ This syntax, though wordier than the C version, makes potentially unsafe operati
 
 .. index:: single: Ada language; Arrays
 
-**Arrays**
+Arrays
+^^^^^^
 
 The array (an indexable sequence of elements) is a fundamental and efficient data structuring mechanism, but a major vulnerability
 unless attempted accesses to data outside the bounds of the array are prevented. Ada avoids this vulnerability since array operations
@@ -394,10 +401,11 @@ compared for equality. All of this is done through standard language syntax as o
 The code at the end of the example illustrates Ada's index checking. If `I` is not in the index range of array `A` (i.e., between 1 and 8
 inclusive) then a run-time exception (`Constraint_Error`) is raised.
 
-**Other Ada features**
+Other Ada features
+^^^^^^^^^^^^^^^^^^
 
 Many other features contribute to Ada's support for reliable and maintainable embedded software. Some were described briefly in
-:ref:`Language Overview<Language-Overview>`. Others include the :index:`Ravenscar profile`, a deterministic tasking subset that is simple enough for certification but rich
+:ref:`Language Overview<Airborn_SW_Language-Overview>`. Others include the :index:`Ravenscar profile`, a deterministic tasking subset that is simple enough for certification but rich
 enough to program real-time embedded systems; and Ada's low-level facilities, which allow the programmer to specify target-specific
 representations for data types (including the bit layout of fields in a record, and the values for enumeration elements). Further
 information on features that contribute to safe software may be found in [Barnes_Brosgol_2015]_.
@@ -410,18 +418,18 @@ example at production time, after verification has provided confidence that they
 
 Additional Ada features will be described and highlighted in other sections of this document.
 
-.. _Using_Ada_during_the_design_process:
+.. _Airborn_SW_Using_Ada_during_the_design_process:
 
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Using Ada during the design process
 
 Using Ada during the design process
-++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -437,11 +445,11 @@ Using Ada during the design process
        - Reviews and Analyses of LLR: Compatibility with target (6.3.2)
        - Reviews and Analyses of architecture: Compatibility with target (6.3.3)
 
-An application's design --- that is its low-level requirements and software architecture --- may be specified in many ways, combining text
+An application's design |mdash| that is its low-level requirements and software architecture |mdash| may be specified in many ways, combining text
 and graphics at various levels of formality. The main principle is to keep the design at a higher level of abstraction than the code:
 in particular avoiding expression of requirements as code or pseudo-code. Requirements are properties to be verified by the code and
-are not the code itself. Thus the general advice is to avoid using a programming language as the medium for expressing --- even in
-part --- the software design.
+are not the code itself. Thus the general advice is to avoid using a programming language as the medium for expressing |mdash| even in
+part |mdash| the software design.
 
 .. index:: single: Ada language; Interface / implementation separation
 
@@ -460,7 +468,8 @@ The separation of specification and implementation means that an Ada specificati
 language, for example C. Although this may lose some of Ada's benefits, it illustrates the flexibility and relevance of the approach.
 
 Component identification
-''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^
+
 Regardless of the method used for designing the software as a hierarchical set of components, Ada may be directly used to identify
 the software components and define their interfaces. This is typically done via package specifications and subprogram specifications.
 
@@ -471,7 +480,7 @@ regarded as comprising the following:
 
 * Syntactic interface: the procedure's name and its formal parameters (their names, parameter passing modes, and types).
 * Information flow interface: how, if at all, non-local data are accessed by the procedure (read, written, or both)
-* Semantic (functional) interface: the function performed by the procedure --- what does it mean to sort an array, independent of the algorithm --- which is a low-level requirement for the procedure
+* Semantic (functional) interface: the function performed by the procedure |mdash| what does it mean to sort an array, independent of the algorithm |mdash| which is a low-level requirement for the procedure
 
 Other low-level constraints may also be considered as part of the interface, such as a time or space constraint.
 
@@ -509,7 +518,8 @@ component's specification. They can be defined in natural language, as comments,
 illustrated in the next subsection.
 
 Low-Level Requirements
-''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^
+
 A simple example of a low-level requirement, for the `Sort` procedure defined above, is the following:
 
     *The component shall order the array from the smallest value to highest one*
@@ -609,10 +619,11 @@ from those that cannot.
 
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Implementation of hardware / software interfaces
 
-.. _Implementation_of_Hardware_Software_Interfaces:
+.. _Airborn_SW_Implementation_of_Hardware_Software_Interfaces:
 
 Implementation of Hardware / Software Interfaces
-''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Ada's type system makes it straightforward to implement hardware/software interfaces, while also detecting target incompatibilities
 at compile time. Such interfaces may be defined as part of the coding process, but performing this activity during the design process
 has a number of benefits. It may avoid duplication of effort and also helps prevent errors from being introduced during the
@@ -620,7 +631,8 @@ translation from design to code. It also allows early error detection through co
 
 .. index:: single: Ada language; package Interfaces
 
-**Package Interfaces**
+Package Interfaces
+''''''''''''''''''
 
 Applications sometimes need to use types that correspond exactly to the native numeric data representations supported on the target
 machine, for example 16- or 32-bit signed and unsigned integers. Such types are defined in package `Interfaces`, which is part of the
@@ -630,7 +642,8 @@ for hardware / software interfacing since they support bitwise operations includ
 
 .. index:: single: Ada language; Specifying data representation
 
-**Specifying data representation**
+Specifying data representation
+''''''''''''''''''''''''''''''
 
 Embedded systems often need to deal with external data having a specific representation, and Ada has a variety of features to help
 meet this requirement. For example, the following can be defined:
@@ -640,16 +653,16 @@ meet this requirement. For example, the following can be defined:
 * the address, size, and/or alignment of a data object.
 
 The compiler will check that the specified representation is consistent with the target hardware.
-For example, :numref:`fig3` shows the required layout (on a "little-endian" machine) for a data object consisting of an unsigned 16-bit
+For example, :numref:`Airborn_SW_fig3` shows the required layout (on a "little-endian" machine) for a data object consisting of an unsigned 16-bit
 integer (`Num`), a 4-bit enumeration value (`Urgency`) that is either `Low`, `Medium`, or `High`, with the respective values 2, 5, and 10), and
 a Boolean flag (F).
 
-.. _fig3:
+.. _Airborn_SW_fig3:
 .. figure:: images/analysis-fig3.png
-  :align: center
-  :scale: 30%
+    :align: center
+    :scale: 30%
 
-  Data Layout
+    Data Layout
 
 .. index:: single: Ada language; Endianness
 
@@ -713,7 +726,8 @@ the object are a proper subset of the full value set supported by the object's r
 
 .. index:: single: Ada language; Numeric types
 
-**Numeric types**
+Numeric types
+'''''''''''''
 
 Another feature related to hardware/software interfaces is Ada's numeric type facility (integer, floating-point, fixed-point). The
 programmer can specify the type's essential properties, such as range and precision, in a machine-independent fashion; these will be
@@ -752,16 +766,16 @@ the target has a 64-bit floating point unit, and would be rejected otherwise.
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Integration of C components with Ada
 
 
-.. _Integration_of_C_components_with_Ada:
+.. _Airborn_SW_Integration_of_C_components_with_Ada:
 
 Integration of C components with Ada
-+++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -807,16 +821,16 @@ Friendly cooperation between Ada and C is supported in several ways by AdaCore t
 
 .. index:: Robustness / defensive programming
 
-.. _Robustness_defensive_programming:
+.. _Airborn_SW_Robustness_defensive_programming:
 
 Robustness / defensive programming
-++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -904,10 +918,10 @@ Enforcement of these preconditions may be accomplished through several possible 
 * **Code reviews using the Ada contracts as constraints**. This is the least formal technique, but the explicit specification of the preconditions in Ada contract syntax (versus comments) helps improve the thoroughness of the review and avoids the potential ambiguity of requirements expressed in natural language.
 * **Enabling dynamic checks during testing, and removing them in the final executable object code**. Run-time checks are generated for pre- and postconditions if the program specifies `pragma Assertion_Policy (Check)` and the code is compiled with the compiler switch |gnata|. A violation of a pre- or postcondition will then raise the `Assertion_Error` exception. After testing and related verification activities achieve sufficient assurance that no violations will occur, the checking code can be removed (either by `pragma Asserion_Policy(Ignore)` or by compiling without |gnata|).
 * **Enabling dynamic checks during testing, and keeping them in the final executable object code**. In this case, the software requirements should define the expected behavior in case a pre- or postcondition is violated, for example to reset the application to a known safe state as soon as an inconsistency is detected.
-* **Static analysis or formal proof**. The :ref:`GNAT Static Analysis Suite technology<GNAT_Static_Analysis_Suite>`) takes
+* **Static analysis or formal proof**. The :ref:`GNAT Static Analysis Suite technology<Airborn_SW_GNAT_Static_Analysis_Suite>`) takes
   preconditions into account as part of its analysis
   in detecting potential errors. It can be tuned based on whether the priority is on finding as many errors as possible, at the expense of false positives, or on "picking the low-hanging fruit": detecting defects but minimizing the false positives at the expense of missing some actual errors.
-  The :ref:`SPARK` tools likewise use preconditions, in this case to guide formal analysis.
+  The :ref:`Airborn_SW_SPARK` tools likewise use preconditions, in this case to guide formal analysis.
   The proof engine can statically verify (or else report otherwise) that (1) a precondition is strong enough to guarantee the absence of run-time errors in the subprogram, and (2) every call satisfies the precondition.
   The SPARK analysis is sound (no false negatives): if the proof succeeds, then there is no violation of the properties that SPARK checks for.
 
@@ -923,16 +937,16 @@ any, to make sure that these contracts are respected.
 .. index:: GNATcheck
 .. index:: single: Code Standard enforcement; GNATcheck
 
-.. _Defining_and_Verifying_a_Code_Standard_with_GNATcheck:
+.. _Airborn_SW_Defining_and_Verifying_a_Code_Standard_with_GNATcheck:
 
 Defining and Verifying a Code Standard with GNATcheck
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -983,16 +997,16 @@ justification would then appear in the tool's report.
 
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Checking source code accuracy and consistency with GNAT SAS
 
-.. _Checking_source_code_accuracy_and_consistency_with_GNAT_SAS:
+.. _Airborn_SW_Checking_source_code_accuracy_and_consistency_with_GNAT_SAS:
 
 Checking source code accuracy and consistency with GNAT SAS
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1003,7 +1017,7 @@ Checking source code accuracy and consistency with GNAT SAS
 
 "Accuracy and consistency" is a rather broad objective in |do-178c|, identifying a range of development errors that need to be
 prevented. Satisfying this objective requires a combination of reviews, analyses and tests, and tools may be used for some of these
-activities. The :ref:`GNAT Static Analysis Suite (GNAT SAS) <GNAT_Static_Analysis_Suite>` specifically targets issues that correspond to Ada exceptions, such as scalar overflow, range constraint
+activities. The :ref:`GNAT Static Analysis Suite (GNAT SAS) <Airborn_SW_GNAT_Static_Analysis_Suite>` specifically targets issues that correspond to Ada exceptions, such as scalar overflow, range constraint
 violations, and array indexing errors. It also detects other errors including reads of uninitialized variables, useless assignments,
 and data corruption due to race conditions.
 The depth of the tool's analysis can be adjusted based on whether the priority is maximal error detection
@@ -1013,16 +1027,16 @@ at the expense of false alarms, or minimal false alarms at the expense of undete
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Checking worst-case stack consumption with GNATstack
 .. index:: GNATstack
 
-.. _Checking_worst-case_stack_consumption_with_GNATstack:
+.. _Airborn_SW_Checking_worst-case_stack_consumption_with_GNATstack:
 
 Checking worst case stack consumption with GNATstack
-++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1037,25 +1051,25 @@ the actual stack space used. This approach may provide a false sense of confiden
 worst case usage has been addressed.
 
 A more precise analysis method is to statically determine the actual stack consumption, looking at the memory statically allocated by
-the compiler together with the stack usage implied by the subprogram call graphs. The :ref:`GNATstack tool<GNATstack>` can perform this analysis for
+the compiler together with the stack usage implied by the subprogram call graphs. The :ref:`GNATstack tool<Airborn_SW_GNATstack>` can perform this analysis for
 Ada and C, determining the maximum amount of memory needed for each task stack.
 
 In many cases, however, not everything can be statically computed; examples are recursive calls, dynamically sized stack frames, and
 system calls. In such cases, the user can provide a worst-case estimate as input to GNATstack's computation.
 
 
-.. _Compiling_with_the_GNAT_Pro_compiler:
+.. _Airborn_SW_Compiling_with_the_GNAT_Pro_compiler:
 
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Compiling with the GNAT Pro compiler
 
 Compiling with the GNAT Pro compiler
-++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1090,21 +1104,21 @@ technology. A safety analysis of the list entries is also available, helping dev
 appropriate actions. Possible actions are code workarounds or a choice of a different set of compiler code generation options.
 
 For certain Ada language features the GNAT Pro compiler may generate object code that is not directly traceable to source code. This
-non-traceable code can be verified using a traceability analysis (see :ref:`Demonstrating_traceability_of_source_to_object_code`).
+non-traceable code can be verified using a traceability analysis (see :ref:`Airborn_SW_Demonstrating_traceability_of_source_to_object_code`).
 
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Using GNATtest for low-level testing
 .. index:: GNATtest
 
-.. _Using_GNATtest_for_low-level_testing:
+.. _Airborn_SW_Using_GNATtest_for_low-level_testing:
 
 Using GNATtest for low-level testing
-++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1125,7 +1139,7 @@ each terminal component is defined through a set of low-level requirements. Typi
 #. Exercising the test procedures separately on one or more components, and
 #. Verifying the test results
 
-:ref:`GNATtest` may be used to develop the test data. The general approach is
+:ref:`Airborn_SW_GNATtest` may be used to develop the test data. The general approach is
 for GNATtest to generate an Ada test harness around the component under test, leaving the tester to complete test skeletons based on
 the predefined test cases, with actual inputs and expected results. Since the test generation is carried out in a systematic way, it's
 very easy to identify where tests are missing (they will be reported as non-implemented).
@@ -1143,9 +1157,10 @@ test cases during the design process. (Note that independence between design and
 between code development and test case derivation, to satisfy the independence criteria of objectives A6-3 and 4 for software level A
 and B).
 
-**Approach 1: Test cases are not specified in Ada specifications**
+Approach 1: Test cases are not specified in Ada specifications
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A traditional approach can be followed by GNATtest --- that is to say, tests cases are described outside of the Ada specification, but
+A traditional approach can be followed by GNATtest |mdash| that is to say, tests cases are described outside of the Ada specification, but
 linked to a particular function. When working this way, GNATtest will generate one test per subprogram; for example :
 
 .. code-block:: ada
@@ -1154,9 +1169,10 @@ linked to a particular function. When working this way, GNATtest will generate o
 
 This will generate one unique test procedure skeleton.
 
-**Approach 2: Test cases are developed during the design process**
+Approach 2: Test cases are developed during the design process
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this approach, Ada package specifications are considered as an output of the design process (see :ref:`Using_Ada_during_the_design_process`). More than one test
+In this approach, Ada package specifications are considered as an output of the design process (see :ref:`Airborn_SW_Using_Ada_during_the_design_process`). More than one test
 per subprogram may be developed. Here's a simple example:
 
 .. code-block:: ada
@@ -1194,7 +1210,8 @@ cases have been implemented and exercised), and that the test results are as exp
 In addition, the traceability between test case, test procedures and test results is direct, and does not require production of
 further trace data.
 
-**Approach 3: Test cases are developed separately from the design process**
+Approach 3: Test cases are developed separately from the design process
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The two test cases developed in Approach 2 are not sufficient to fully verify the `Sqrt` function. To comply with |do-178c| Table
 A-6 Objectives 3 and 4, the activities presented in |sect|\ 6.4.2 (Requirements-Based Test Selection) for normal and robustness cases are
@@ -1226,7 +1243,7 @@ An alternative approach is to develop the test data separately from the Ada pack
            Ensures  => raise Constraint_Error
                        with "Non-negative value needed");
 
-In this approach, three `Test_Case` aspects are defined --- in effect test case classes that partition the set of possible input values --- defining the expected high-level characteristics of the function. For each
+In this approach, three `Test_Case` aspects are defined |mdash| in effect test case classes that partition the set of possible input values |mdash| defining the expected high-level characteristics of the function. For each
 `Test_Case`, at least one actual test case will be developed. In this example, at least three test cases need to be defined,
 corresponding to an actual parameter that is positive, zero, or negative, with the respective expected results of positive, zero, and
 raising an exception.
@@ -1245,16 +1262,16 @@ correct".
 .. index:: single: Use Case 1a: Traditional development process excluding OOT; Using GNATemulator for low-level and software / software integration tests
 .. index:: GNATemulator
 
-.. _Using_GNATemulator_for_low-level_and_software/software_integration_tests:
+.. _Airborn_SW_Using_GNATemulator_for_low-level_and_software/software_integration_tests:
 
 Using GNATemulator for low-level and software / software integration tests
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1292,16 +1309,16 @@ can trigger interactions with such code, through the GNATbus interface.
 .. index:: single: GNATcoverage; Example for Use Case 1a
 .. index:: Structural code coverage
 
-.. _Structural_code_coverage_with_GNATcoverage:
+.. _Airborn_SW_Structural_code_coverage_with_GNATcoverage:
 
 Structural code coverage with GNATcoverage
-++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1443,7 +1460,7 @@ value of one condition to False:
    :header-rows: 1
    :widths: 20, 30, 25, 25, 25
 
-   * - |blank|
+   * - |blankcell|
      - Closed_Doors > 0
      - Open_Ordered
      - Plane_Landed
@@ -1501,16 +1518,16 @@ independent of execution duration, and support for coverage of shared libraries.
 .. index:: single: GNATcoverage; Data and control coupling coverage
 .. index:: single: Data and control coupling coverage; GNATcoverage
 
-.. _Data_and_control_coupling_coverage_with_GNATcoverage:
+.. _Airborn_SW_Data_and_control_coupling_coverage_with_GNATcoverage:
 
 Data and control coupling coverage with GNATcoverage
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1573,16 +1590,16 @@ constraints, such as limited use of global data, or additional verification for 
 
 .. index:: Traceability of source to object code
 
-.. _Demonstrating_traceability_of_source_to_object_code:
+.. _Airborn_SW_Demonstrating_traceability_of_source_to_object_code:
 
 Demonstrating traceability of source to object code
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 16, 84
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1646,6 +1663,7 @@ language features, options, or compiler versions are not suitable for the analys
 
 Use case #1b: Coding with Ada using OOT features
 -------------------------------------------------
+
 This use case is based on use case #1, taking advantage of Ada and the AdaCore ecosystem, but with a design that uses Object-Oriented
 Technologies. As a result, the following "vulnerabilities" identified in the technology supplement |do-332| need to be
 addressed:
@@ -1658,16 +1676,16 @@ addressed:
 * Exception management
 * Component-based development
 
-.. _Object_orientation_for_the_architecture:
+.. _Airborn_SW_Object_orientation_for_the_architecture:
 
 Object orientation for the architecture
-+++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1696,16 +1714,16 @@ between a set of requirements and one module, one function or one piece of code.
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Parametric polymorphism (genericity)
 
-.. _Coverage_in_the_case_of_generics:
+.. _Airborn_SW_Coverage_in_the_case_of_generics:
 
 Coverage in the case of generics
-++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1785,18 +1803,18 @@ is not at the level of source text, but rather is based on a program representat
 As a result, using a generic doesn't add any non-traceable code. Code is traced from the generic template to the object code, once
 per instance.
 
-.. _Dealing_with_dynamic_dispatching_and_substitutability:
+.. _Airborn_SW_Dealing_with_dynamic_dispatching_and_substitutability:
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Dynamic dispatching and substitutability
 
 Dealing with dynamic dispatching and substitutability
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -1821,7 +1839,7 @@ parameter", in Ada terms).
 
 .. index:: single: Ada language; Dynamic dispatching (primitive subprogram)
 
-In Ada, a subprogram that can be invoked through dynamic dispatching --- this is known as a "primitive subprogram" --- can never be
+In Ada, a subprogram that can be invoked through dynamic dispatching |mdash| this is known as a "primitive subprogram" |mdash| can never be
 removed by a subclass; it is either inherited or overridden. Thus on a call that is dynamically dispatched, although it is not
 known at compile time which subclass's version of the subprogram will be invoked, some subclass's implementation of the subprogram
 will indeed be called. Ada is not susceptible to "no such method" errors that can arise with dynamic dispatching in some other
@@ -1830,7 +1848,8 @@ languages.
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Liskov Substitution Principle (LSP)
 .. index:: Liskov Substitution Principle (LSP)
 
-**Understanding Substitutability**
+Understanding Substitutability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 From a safety point of view, not knowing the specific target of a given call introduces significant issues for verifiability.
 |do-332| states that if an inheritance hierarchy is constructed so that each subclass specializes its superclass
@@ -1841,7 +1860,7 @@ If a hierarchy complies with LSP, then testing and other verification can be con
 level, which will then need to be respected by each subclass. As will be explained below, this has implications on the pre- and postconditions
 that are allowed when a dispatching subprogram is overridden.
 
-Here is a specific --- although simplified --- example: an aircraft type with a subprogram that is supposed to open the doors.
+Here is a specific |mdash| although simplified |mdash| example: an aircraft type with a subprogram that is supposed to open the doors.
 
 .. code-block:: ada
 
@@ -1924,7 +1943,7 @@ Suppose that `Landing_Procedure` is invoked on an object of type `Jet`:
 
 In the call `My_Aircraft.Open_Doors`, first the precondition for `Open_Doors` for `Aircraft` will be evaluated (since the actual parameter
 is of the class-wide type `Aircraft'Class`. That's not a problem, since the caller sees this precondition. However, then the specific
-precondition for `Open_Doors` for Jet is evaluated, and there is a problem with the additional constraint --- requiring the engines to
+precondition for `Open_Doors` for Jet is evaluated, and there is a problem with the additional constraint |mdash| requiring the engines to
 be off. The `Jet` type could have been defined long after the `Landing_Procedure` subprogram was written, so the design of the
 `Landing_Procedure` code would not have taken the added precondition into account. As a result, the `Open_Doors` procedure could be
 invoked when the engines were still running, violating the requirement. (With run-time assertion checking enabled, an exception
@@ -1993,7 +2012,8 @@ application. |do-332| provides three approaches: pessimistic testing, local subs
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Verifying substitutability by pessimistic testing
 
-**Verifying substitutability by pessimistic testing**
+Verifying substitutability by pessimistic testing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Pessimistic testing is conceptually the easiest to understand. The idea is to test at each point of dispatch all possible types that
 could be substituted. In the `Landing_Procedure` example, assuming that our system is managing both jets and hot air balloons, this
@@ -2007,7 +2027,8 @@ testing can quickly become unmanageable as the depth of the class hierarchy incr
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Verifying substitutability through requirement-based testing
 
-**Verifying substitutability through requirement-based testing**
+Verifying substitutability through requirement-based testing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this case verification of substitutability is done on top of regular testing. In the above examples the `Aircraft`, `Jet` and
 `Hot_Air_Balloon` requirements are all associated with specific requirement-based tests. Substitutability can be demonstrated by
@@ -2020,12 +2041,13 @@ actual code.
 .. index:: GNATtest
 
 The GNATtest tool supports generation of the appropriate test framework for substitution testing; see the GNATtest option
-`\-\-validate-type-extensions`.
+``--validate-type-extensions``.
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Verifying substitutability through formal proof
 .. index:: single: SPARK language; Verifying substitutability through formal proof
 
-**Verifying substitutability through formal proof**
+Verifying substitutability through formal proof
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In conjunction with |do-333|  (Formal Methods supplement), and assuming that requirements can be expressed in the form of
 pre- and postconditions, the consistency between an overriding subprogram and its parent type's version can be verified through
@@ -2034,7 +2056,7 @@ formal proof. This can be done in particular with the SPARK language. There are 
 * The precondition of a subprogram for a type must imply the precondition of each overriding subprogram in the class hierarchy.
 * The postcondition of any overriding subprogram for a type must imply the postcondition of the corresponding subprogram for each ancestor type in the hierarchy
 
-These preconditions and postconditions --- or requirements --- must also be verified, through either requirement-based testing or formal
+These preconditions and postconditions |mdash| or requirements |mdash| must also be verified, through either requirement-based testing or formal
 proofs.
 
 .. index:: GNATprove
@@ -2045,7 +2067,8 @@ above.
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Local and global substitutablity
 
-**Differences between local and global substitutability**
+Differences between local and global substitutability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 |do-332| does not require classes to be globally substitutable, but only locally; that is, only around actual dispatching
 points. For example, the following code is not globally substitutable, but is locally substitutable at the dispatching calls:
@@ -2107,16 +2130,16 @@ means is the most appropriate.
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Dispatching as a new module coupling mechanism
 
-.. _Dispatching_as_a_new_module_coupling_mechanism:
+.. _Airborn_SW_Dispatching_as_a_new_module_coupling_mechanism:
 
 Dispatching as a new module coupling mechanism
-++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2155,16 +2178,16 @@ coupling, in particular the coverage objectives. Whether or not testing with all
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Memory management issues
 
-.. _Memory_management_issues:
+.. _Airborn_SW_Memory_management_issues:
 
 Memory management issues
-+++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2268,16 +2291,16 @@ probably need some form of dynamic memory and thus need to comply with the crite
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Exception handling
 
-.. _Exception_handling:
+.. _Airborn_SW_Exception_handling:
 
 Exception handling
-++++++++++++++++++
+~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2313,7 +2336,7 @@ program could be left in an inconsistent state.
 
 The GNAT Pro compiler supplies several strategies concerning exceptions.
 
-* Checks can be globally deactivated. By default, execution of certain constructs (an out-of-range assignment for example) generates a run-time check. This can be removed through the `-p` option for the compiler. This should only be done after verifying that such checks cannot fail.
+* Checks can be globally deactivated. By default, execution of certain constructs (an out-of-range assignment for example) generates a run-time check. This can be removed through the ``-p`` option for the compiler. This should only be done after verifying that such checks cannot fail.
 * If exceptions are kept but are meant to trigger an application shutdown, they can be connected to a "last chance handler". This allows the application to perform the needed finalization, such as diagnostics and logging, after which it is terminated and possibly rebooted.
 * Exceptions can also be locally handled; this is achieved by specifying `pragma Restrictions (No_Exception_Propagation)`. This GNAT-specific restriction ensures that an exception is only raised when its handler is statically in the same subprogram. Exception handling can then be implemented (conceptually) by a simple branch to its handler. Such a policy is much easier to manage in a safe way than general exception propagation. Local handling is useful in situations where the software requirements specify a particular termination behavior for a subprogram under conditions that are best detected by raising an exception. An example is a "saturated add" procedure that takes two positive integers and delivers a positive integer result and an overflow status: the integer result will be the actual sum if no overflow occurred, and the maximum positive value if an overflow occurred.
 
@@ -2343,16 +2366,16 @@ SPARK addresses the exception handling issue by ensuring that exceptions are nev
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Overloading and type conversion vulnerabilities
 
-.. _Overloading_and_type_conversion_vulnerabilities:
+.. _Airborn_SW_Overloading_and_type_conversion_vulnerabilities:
 
 Overloading and type conversion vulnerabilities
-+++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2412,16 +2435,16 @@ supports the necessary verification activity to mitigate the vulnerabilities in 
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Accounting for dispatching in performing resource analysis
 
-.. _Accounting_for_dispatching_in_performing_resource_ analysis:
+.. _Airborn_SW_Accounting_for_dispatching_in_performing_resource_ analysis:
 
 Accounting for dispatching in performing resource analysis
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2445,7 +2468,7 @@ requirements are a form of postcondition.
 The GNATstack tool would provide a more pessimistic approach to worst-case stack computation, and use the maximum value required
 over all possible targets in its computation.
 
-.. TODO: find a use case to include instead of the original use case #2 QGen that has been removed
+.. ..todo:: find a use case to include instead of the original use case #2 QGen that has been removed
 
 .. index:: Use Case 2: Using SPARK and Formal Methods
 .. index:: GNATprove
@@ -2459,27 +2482,27 @@ requirements. These contracts are amenable to formal analysis by GNATProve, whic
 
 .. index:: single: Use Case 2: Using SPARK and Formal Methods; Using SPARK for design data development
 
-.. _Using_SPARK_for_design_data_development:
+.. _Airborn_SW_Using_SPARK_for_design_data_development:
 
 Using SPARK for design data development
-+++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
      - - Software Design (A-2[3,4]: 5.2.1.a, 5.2.1.b)
-       - Software Reviews and analyses --- Requirement formalization correctness (FM.A‑5[FM12]: FM.6.3.i)
+       - Software Reviews and analyses |mdash| Requirement formalization correctness (FM.A‑5[FM12]: FM.6.3.i)
        - Considerations for formal methods (FM.A-5[FM13]: FM.6.2.1.a, FM.6.2.1.b, FM.6.2.1.c)
 
    * - **Activities**
      - - Software Development Standards (4.5)
        - Software Design (5.2.2.a, 5.2.2.b)
-       - Software Reviews and analyses --- Requirement formalization correctness (FM.6.3.i)
+       - Software Reviews and analyses |mdash| Requirement formalization correctness (FM.6.3.i)
        - Considerations for formal methods (FM.6.2.1)
 
 
@@ -2494,7 +2517,7 @@ the SPARK language.
 SPARK is an Ada subset with deterministic semantics, whose features are amenable to static analysis based on formal methods. For
 example, it excludes exception handling, side effects in functions, and aliasing (two variables referring to the same
 object at the same time); it limits the use of pointers (access values); and it guarantees that variables are only read after they have been initialized. Note that a SPARK program
-has the same run-time semantics as Ada. It is compiled with a standard Ada compiler, and can be combined with code written in full
+has the same run time semantics as Ada. It is compiled with a standard Ada compiler, and can be combined with code written in full
 Ada.
 
 SPARK is also a superset of the Ada language in terms of statically verified specifications. A variety of pragmas and aspects can be
@@ -2536,16 +2559,16 @@ tool would typically address this issue. Moreover, any assumptions concerning th
 
 .. index:: single: SPARK language; Robustness
 
-.. _Robustness_and_SPARK:
+.. _Airborn_SW_Robustness_and_SPARK:
 
 Robustness and SPARK
-++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2555,7 +2578,7 @@ Robustness and SPARK
      - - Software Design (5.2.2.f)
 
 
-As discussed in :ref:`Robustness_defensive_programming`, robustness is concerned with ensuring correct software behavior
+As discussed in :ref:`Airborn_SW_Robustness_defensive_programming`, robustness is concerned with ensuring correct software behavior
 under abnormal input conditions. Abnormal input can come from two sources:
 
 * External: invalid data from the operational environment (for example due to an operator input error or a hardware failure), or
@@ -2571,16 +2594,16 @@ invocation satisfies the precondition.
 
 .. index:: single: SPARK language; Contributions to Low-Level Requirement reviews
 
-.. _Contributions_to_Low-Level_Requirement_reviews:
+.. _Airborn_SW_Contributions_to_Low-Level_Requirement_reviews:
 
 Contributions to Low-Level Requirement reviews
-++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2598,18 +2621,18 @@ expressions that can be either tested or formally proven.
 SPARK also makes it easier to define a software design standard, which can use the same terms and concepts as a code standard, and
 can be checked with similar tools.
 
-.. _Contributions_to_architecture_reviews:
+.. _Airborn_SW_Contributions_to_architecture_reviews:
 
 .. index:: single: SPARK language; Contributions to architecture reviews
 
 Contributions to architecture reviews
-+++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2648,16 +2671,16 @@ introduced during the development of the software architecture". SPARK helps mee
 
 .. index:: single: SPARK language; Contributions to Low-Level source code reviews
 
-.. _Contributions_to_source_code_reviews:
+.. _Airborn_SW_Contributions_to_source_code_reviews:
 
 Contributions to source code reviews
-++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2766,18 +2789,18 @@ Exhaustive analysis of all potential sources of errors requires verifying that:
 
 The GNATprove tool will check each of these conditions, and report any that might not hold.
 
-.. _Formal_analysis_as_an_alternative_to_low-level_testing:
+.. _Airborn_SW_Formal_analysis_as_an_alternative_to_low-level_testing:
 
 .. index:: single: SPARK language; Eliminating / reducing testing
 
 Formal analysis as an alternative to low-level testing
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2804,21 +2827,21 @@ are expressed as formal properties of the code, it's possible to formally verify
 requirements. Using this technique, however, requires additional activities to demonstrate absence of unintended function. Further,
 and more significantly, with formal analysis it's the source code that is checked against requirements, not the object code. As a
 result, additional activities are required to demonstrate correct behavior of the object code. This is the so-called "property
-preservation" issue, discussed in :ref:`Property_preservation_between_source_code_and_object_code`.
+preservation" issue, discussed in :ref:`Airborn_SW_Property_preservation_between_source_code_and_object_code`.
 
 .. index:: Hybrid verification
 .. index:: single: SPARK language; Hybrid verification
 
-.. _Low-level_verification_by_mixing_test_and_proof:
+.. _Airborn_SW_Low-level_verification_by_mixing_test_and_proof:
 
 Low-level verification by mixing test and proof ("Hybrid verification")
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2848,16 +2871,16 @@ formal proofs and those verified by testing. Mixing the two techniques is someti
 
 .. index:: single: SPARK language; Alternatives to code coverage when using proofs
 
-.. _Alternatives_to_code_coverage_when_using_proofs:
+.. _Airborn_SW_Alternatives_to_code_coverage_when_using_proofs:
 
 Alternatives to code coverage when using proofs
-+++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2878,16 +2901,16 @@ activities is needed to meet similar objectives. |do-333| lists four activities 
 
 .. index:: single: SPARK language; Property preservation between source code and object code
 
-.. _Property_preservation_between_source_code_and_object_code:
+.. _Airborn_SW_Property_preservation_between_source_code_and_object_code:
 
 Property preservation between source code and object code
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
@@ -2916,12 +2939,12 @@ considered as requirement-based testing (which is indeed replaced by proof). Thi
 confirmation of the formal analysis by executing the EOC with contract checking enabled.
 
 
-.. _SPARK_Development_Cycle_Example:
+.. _Airborn_SW_SPARK_Development_Cycle_Example:
 
 SPARK Development Cycle Example
-+++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An example in Appendix B of |do-333| --- "FM.B.1.5.1 Unit Proof" --- shows how the use of formal
+An example in Appendix B of |do-333| |mdash| "FM.B.1.5.1 Unit Proof" |mdash| shows how the use of formal
 methods (in this case the CAVEAT tool for C, based on Hoare logic) can help meet
 various |do-333| objectives.
 The same example can be expressed in SPARK, with the same contributions towards |do-333| compliance.
@@ -3105,16 +3128,10 @@ establish correctness of the overall system."
 * Table FM.A-7, Objective FM 5-8: Verification of software structure is achieved
 * Table FM.A-7, Objective FM 9: Verification of property preservation between source and object code
 
-
-
-
-
-
-
 .. index:: Parameter Data Items
 .. index:: single: Use Case 2: Using SPARK and Formal Methods; Parameter Data Items
 
-.. _Parameter_Data_Items:
+.. _Airborn_SW_Parameter_Data_Items:
 
 Parameter Data Items
 --------------------
@@ -3123,7 +3140,7 @@ Parameter Data Items
    :header-rows: 1
    :widths: 21, 79
 
-   * - |blank|
+   * - |blankcell|
      - **Contributions**
 
    * - **Objectives**
