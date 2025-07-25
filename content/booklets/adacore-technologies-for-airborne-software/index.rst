@@ -1,4 +1,4 @@
-.. include:: ./common_defs.rst
+.. include:: ../../courses/global.txt
 
 :prev_state: False
 :next_state: False
@@ -112,8 +112,8 @@ software meets its requirements. Certifying that a system complies with
 this guidance is a challenging task, especially for the verification
 activities, but appropriate usage of qualified tools and specialized run-time
 libraries can significantly simplify the effort. This document explains
-how a number of technologies offered by AdaCore --- tools, libraries, and
-supplemental services --- can help. It covers not only the "core" |do-178c|
+how a number of technologies offered by AdaCore |mdash| tools, libraries, and
+supplemental services |mdash| can help. It covers not only the "core" |do-178c|
 standard but also the technology supplements: Object-Oriented
 Technology and Related Techniques |do-332|, and Formal
 Methods (|do-333|). The content is based on the authors' many
@@ -142,7 +142,7 @@ GNAT Pro development environment have been integrated
 into a cohesive toolset (the *GNAT Static Analysis Suite*).
 The dynamic analysis tools have likewise been consolidated, and
 the resulting *GNAT Dynamic Analysis Suite* has introduced
-a fuzzing tool --- *GNATfuzz* --- which exercises the software
+a fuzzing tool |mdash| *GNATfuzz* |mdash| which exercises the software
 with invalid input and checks for failsafe behavior.
 
 I would like to express my appreciation to Olivier Appere (AdaCore) for
