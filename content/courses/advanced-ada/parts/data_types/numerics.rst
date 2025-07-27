@@ -2034,6 +2034,998 @@ In this example, we use :ada:`Max_Binary_Modulus` as the modulus of the
         Complete section!
 
 
+.. _Adv_Ada_Floating_Point_Types:
+
+Floating-point types
+--------------------
+
+In the :ref:`Introduction to Ada <Intro_Ada_Floating_Point_Types>` course, we
+already covered a couple of details about floating-point types. In this
+section, we will revise and expand on those topics.
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.5.7 Floating Point Types <3-5-7>`
+
+
+Decimal precision
+~~~~~~~~~~~~~~~~~
+
+The main defining characteristic of a floating-point types is its decimal
+precision |mdash| and not its range, as for integer types. (You may, however,
+define
+:ref:`ranges for floating-point types <Adv_Ada_Floating_Point_Type_Ranges>`,
+as we'll discuss later on.) This means in simple terms that, when the value of
+a floating-point object of type :ada:`T` is represented as a string, its
+accuracy is guaranteed for the number of significant decimal digits defined for
+type :ada:`T`.
+
+For example, consider a number such as 0.123456123, which has 9 significant
+digits. If we want to store this number on an object with a decimal precision
+of 6 digits, the number will be *simplified* (actually, truncated) to 0.123456
+|mdash| which has 6 significant digits:
+
+::
+
+    0.123456123     9 significant digits
+    0.123456        6 significant digits
+
+.. _Adv_Ada_Floating_Point_Types_Float_6_Digits_Example:
+
+Let's see a code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type Float_6_Digits is
+         digits 6;
+
+       type Float_9_Digits is
+         digits 9;
+
+       F6 : Float_6_Digits;
+    begin
+       F6 := 0.123456123;
+
+       Put_Line ("F6 = "
+                 & F6'Image);
+
+       Put_Line ("F6 = "
+                 & Float_9_Digits (F6)'Image
+                 & " (9 digits)");
+
+       Put_Line ("Float_6_Digits'Size  :"
+                 & Float_6_Digits'Size'Image
+                 & " bits");
+    end Show_Decimal_Digits;
+
+In this example, we define the custom floating-point type
+:ada:`Float_6_Digits`, which has a decimal precision of 6 digits. This ensures
+that, if we assign a number such as 0.123456123 to a variable :ada:`F` of this
+type, the 6 first significant digits of this number (123456) will be correctly
+represented. Because these are the only number of digits that the language
+guarantees, no further digits are used when converting the number to a string
+|mdash| therefore, we see ``F6 =  1.23456E+00`` in the user message.
+
+However, the digits that we specify in the decimal precision of the type
+definition are the required *minimum* number of significant decimal digits.
+This means that the compiler is allowed to make use of a higher precision when
+storing floating-point values into registers and the memory. In fact, the
+compiler might select a data type that allows for a much higher precision that
+the one that would be theoretically needed for the decimal precision we
+requested.
+
+In the code snippet above, we use the :ada:`Float_9_Digits (F6)` conversion to
+display the value stored in :ada:`F6` with a decimal precision of 9 digits
+|mdash| the requested precision for the :ada:`Float_9_Digits` type. When we
+display this converted value, we might see (at least, on a desktop PC) that the
+actual value stored in :ada:`F6` isn't 1.23456, but rather a value closer to
+the one we used in the :ada:`F6 := 0.123456123` assignment. This indicates that
+the underlying hardware precision for the :ada:`Float_6_Digits` type is higher
+than the 6 decimal digits we requested.
+
+
+Predefined floating-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we know, Ada offers the predefined floating-point type :ada:`Float`. If the
+compiler supports floating-point types with 6 or more digits of decimal
+precision, then the decimal precision of :ada:`Float` must be at least 6
+digits:
+
+.. code-block:: ada
+
+    package Standard is
+
+       --  [...]
+
+       type Float is digits 6;
+
+       --  [...]
+
+    end Standard;
+
+The Ada standard also recommends that, if the :ada:`Long_Float` type is made
+available, its decimal precision must be at least 11 digits:
+
+.. code-block:: ada
+
+    package Standard is
+
+       --  [...]
+
+       type Long_Float is digits 11;
+
+       --  [...]
+
+    end Standard;
+
+In addition, similar to integer types, the Ada standard suggests that
+compilers may offer floating-point types with names such as
+:ada:`Long_Long_Float` |mdash| or :ada:`Short_Float` and
+:ada:`Short_Short_Float`. However, all these types are considered non-portable,
+as there's no requirement concerning their availability or expected decimal
+precision.
+
+.. admonition:: In other languages
+
+    In C, we have a longer list of standard floating-point types:
+
+    .. code:: c run_button manual_chop project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Types_C
+
+        !main.c
+        #include <stdio.h>
+
+        int main(int argc, const char * argv[])
+        {
+            printf("float:        %zu bytes\n",
+                   sizeof(float) * 8);
+            printf("double:       %zu bytes\n",
+                   sizeof(double) * 8);
+            printf("long double:  %zu bytes\n",
+                   sizeof(long double) * 8);
+            return 0;
+        }
+
+    (Note that some of the types above aren't available in all versions of the
+    C standard.)
+
+    For the types above, there are no equivalent types in the Ada standard.
+    (However, a compiler may implement this equivalence for practical reasons.)
+    Therefore, if you're porting code from C to Ada, for example, you should
+    rather check the expected range of your algorithm and specify custom
+    floating-point types in the Ada implementation.
+
+.. admonition:: In the GNAT toolchain
+
+    The GNAT compiler provides a couple of integer types in addition to the
+    standard :ada:`Float` type:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.GNAT_Floating_Point_Types
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_GNAT_Float_Types is
+        begin
+
+           Put_Line ("Short_Float'Size:          "
+                     & Short_Float'Size'Image
+                     & " bits");
+
+           Put_Line ("Float'Size:                "
+                     & Float'Size'Image
+                     & " bits");
+
+           Put_Line ("Long_Float'Size:           "
+                     & Long_Float'Size'Image
+                     & " bits");
+
+           Put_Line ("Long_Long_Float'Size:      "
+                     & Long_Long_Float'Size'Image
+                     & " bits");
+
+        end Show_GNAT_Float_Types;
+
+    The actual range of each of these integer types depends on the target
+    architecture. (Note that you may have different types with the same range.)
+
+    Also, when interfacing with C code, GNAT guarantees the following type
+    equivalence:
+
+    +------------------------------+------------------------------------------+
+    | C type                       | Ada type                                 |
+    +==============================+==========================================+
+    | :c:`float`                   | :ada:`Float`                             |
+    +------------------------------+------------------------------------------+
+    | :c:`double`                  | :ada:`Long_Float`                        |
+    +------------------------------+------------------------------------------+
+    | :c:`long double`             | :ada:`Long_Long_Float`                   |
+    +------------------------------+------------------------------------------+
+
+
+.. _Adv_Ada_Custom_Floating_Point_Types:
+
+Custom floating-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Similarly to what we discussed for
+custom integer types, language-defined
+numeric data types such as :ada:`Float` or :ada:`Long_Float` may not be
+sufficient for the requirements of the numeric algorithm we're implementing. So
+again, it's best to simply declare custom types with sufficient precision.
+For that, we have to evaluate the algorithm and assess the minimum required
+precision of each floating-point type |mdash| this should be based on the
+requirements of the algorithm.
+
+.. todo::
+
+    Add link to section on custom integer types <Adv_Ada_Custom_Integer_Types>
+    once it has become available!
+
+For example, if some coefficients from your algorithm expect a decimal
+precision of at least 12 digits, you may consider defining this type:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Custom_Floating_Point_Types
+
+    package Custom_Floating_Point_Types is
+
+       type Coefficient is
+         digits 12;
+
+       --  [...]
+
+    end Custom_Floating_Point_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Floating_Point_Types;
+    use Custom_Floating_Point_Types;
+
+    procedure Show_Custom_Floating_Point_Types is
+    begin
+       Put_Line ("Coefficient'Digits :"
+                 & Coefficient'Digits'Image
+                 & " digits");
+       Put_Line ("Coefficient'Size   :"
+                 & Coefficient'Size'Image
+                 & " bits");
+    end Show_Custom_Floating_Point_Types;
+
+In this example, we declare the :ada:`Coefficient` type with a decimal
+precision of at least 12 digits. We ensure that this precision is maintained
+for the type by explicitly writing :ada:`digits 12`.
+(Here, we're using the :ref:`Digits attribute <Adv_Ada_Digits_Attribute>`,
+which we discuss in another chapter.)
+
+Note that a custom type definition is always derived from the
+:ref:`root real type <Adv_Ada_Root_Types>`, which we discussed in another
+chapter.
+
+
+.. _Adv_Ada_Floating_Point_Derived_Types_Subtypes:
+
+Derived floating-point types and subtypes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we have a brief discussion about types derived from
+floating-point types, as well as subtypes of floating-point types.
+
+Derived floating-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As expected, we can derive from any floating-point type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Derived_Floating_Point_Types
+
+    package Custom_Floating_Point_Types is
+
+       type Coefficient is
+         digits 12;
+
+       type Filter_Coefficient is new
+         Coefficient;
+
+    end Custom_Floating_Point_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Floating_Point_Types;
+    use Custom_Floating_Point_Types;
+
+    procedure Show_Derived_Floating_Point_Types is
+       C  : Coefficient;
+       FC : Filter_Coefficient;
+    begin
+       C  := 0.532344123;
+       Put_Line ("C  = "
+                 & C'Image);
+
+       FC := Filter_Coefficient (C);
+       Put_Line ("FC = "
+                 & FC'Image);
+    end Show_Derived_Floating_Point_Types;
+
+In this example, we derive the :ada:`Filter_Coefficient` type from the :ada:`Coefficient` type.
+
+.. admonition:: For further reading...
+
+    We can also constrain the decimal precision of the derived type. However,
+    this feature is considered obsolescent, so it should be avoided. (Note that
+    this applies to subtypes as well.) For example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Derived_Floating_Point_Types
+
+        package Custom_Floating_Point_Types is
+
+           type Coefficient is
+             digits 12;
+
+           type Filter_Coefficient is new
+             Coefficient
+               digits 6;
+
+        end Custom_Floating_Point_Types;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Custom_Floating_Point_Types;
+        use Custom_Floating_Point_Types;
+
+        procedure Show_Derived_Floating_Point_Types is
+           C  : Coefficient;
+           FC : Filter_Coefficient;
+        begin
+           C  := 0.532344123;
+           Put_Line ("C  = "
+                     & C'Image);
+
+           FC := Filter_Coefficient (C);
+           Put_Line ("FC = "
+                     & FC'Image);
+        end Show_Derived_Floating_Point_Types;
+
+    In this example, we derive the :ada:`Filter_Coefficient` type from the
+    :ada:`Coefficient` type and decrease the decimal precision from 12 to 6
+    digits.
+
+    .. admonition:: In the Ada Reference Manual
+
+        - :arm22:`J.3 Floating Point Types <J-3>`
+
+
+Floating-point subtypes
+^^^^^^^^^^^^^^^^^^^^^^^
+
+We can also declare subtypes of floating-point types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Subtypes
+
+    package Custom_Floating_Point_Types is
+
+       type Coefficient is
+         digits 12;
+
+       subtype Filter_Coefficient is
+         Coefficient;
+
+    end Custom_Floating_Point_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Floating_Point_Types;
+    use Custom_Floating_Point_Types;
+
+    procedure Show_Floating_Point_Subtypes is
+       C  : Coefficient;
+       FC : Filter_Coefficient;
+    begin
+       C  := 0.532344123;
+       Put_Line ("C  = "
+                 & C'Image);
+
+       FC := C;
+       Put_Line ("FC = "
+                 & FC'Image);
+    end Show_Floating_Point_Subtypes;
+
+In this example, we declare :ada:`Filter_Coefficient` as a subtype of the
+:ada:`Coefficient` type.
+
+
+Decimal precision of base type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We discussed :ref:`base types <Adv_Ada_Base_Types>` earlier on. For
+floating-point types, the decimal precision of the base type of a :ada:`T` type
+might be higher than the decimal precision we've specified for type :ada:`T`.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Base_Type_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Base_Type_Precision is
+
+       type Float_3_Digits is
+         digits 3;
+
+    begin
+       Put_Line
+         ("Float_3_Digits'Digits       :"
+          & Float_3_Digits'Digits'Image
+          & " digits");
+
+       Put_Line
+         ("Float_3_Digits'Base'Digits  :"
+          & Float_3_Digits'Base'Digits'Image
+          & " digits");
+    end Show_Base_Type_Precision;
+
+On a typical desktop PC, you may see that the base type of
+:ada:`Float_3_Digits` has 6 digits, while the :ada:`Float_3_Digits` type itself
+has only 3 digits |mdash| as requested in its type declaration.
+
+
+Size of floating-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Notice that the size of the :ada:`Float_6_Digits` type from the
+:ref:`first code example <Adv_Ada_Floating_Point_Types_Float_6_Digits_Example>`
+was 32 bits. Reducing the number of digits might not have a direct impact on
+the type's size. In fact, on a typical desktop PC, if we reduce the decimal
+precision of a type to, say, 3 or 2 digits, the compiler will most probably
+still select a 32-bit floating-point type for the target platform. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type Float_1_Digits is
+         digits 1;
+       type Float_2_Digits is
+         digits 2;
+       type Float_3_Digits is
+         digits 3;
+       type Float_4_Digits is
+         digits 4;
+       type Float_5_Digits is
+         digits 5;
+       type Float_6_Digits is
+         digits 6;
+       type Float_7_Digits is
+         digits 7;
+       type Float_8_Digits is
+         digits 8;
+       type Float_9_Digits is
+         digits 9;
+       type Float_10_Digits is
+         digits 10;
+       type Float_11_Digits is
+         digits 11;
+       type Float_12_Digits is
+         digits 12;
+       type Float_13_Digits is
+         digits 13;
+       type Float_14_Digits is
+         digits 14;
+       type Float_15_Digits is
+         digits 15;
+       type Float_16_Digits is
+         digits 16;
+       type Float_17_Digits is
+         digits 17;
+       type Float_18_Digits is
+         digits 18;
+    begin
+       Put_Line ("Float_1_Digits'Size   :"
+                 & Float_1_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_2_Digits'Size   :"
+                 & Float_2_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_3_Digits'Size   :"
+                 & Float_3_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_4_Digits'Size   :"
+                 & Float_4_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_5_Digits'Size   :"
+                 & Float_5_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_6_Digits'Size   :"
+                 & Float_6_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_7_Digits'Size   :"
+                 & Float_7_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_8_Digits'Size   :"
+                 & Float_8_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_9_Digits'Size   :"
+                 & Float_9_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_10_Digits'Size  :"
+                 & Float_10_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_11_Digits'Size  :"
+                 & Float_11_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_12_Digits'Size  :"
+                 & Float_12_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_13_Digits'Size  :"
+                 & Float_13_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_14_Digits'Size  :"
+                 & Float_14_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_15_Digits'Size  :"
+                 & Float_15_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_16_Digits'Size  :"
+                 & Float_16_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_17_Digits'Size  :"
+                 & Float_17_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Float_18_Digits'Size  :"
+                 & Float_18_Digits'Size'Image
+                 & " bits");
+    end Show_Decimal_Digits;
+
+On a typical desktop PC, we may see the following results:
+
++-------------+-------------+-------------+
+| Min. digits | Max. digits | Size (bits) |
++=============+=============+=============+
+|           1 |           6 |          32 |
++-------------+-------------+-------------+
+|           7 |          15 |          64 |
++-------------+-------------+-------------+
+|          16 |          18 |         128 |
++-------------+-------------+-------------+
+
+Ada doesn't actually give us any guarantees about specific sizes of
+floating-point data types on the target hardware. However, as you might recall
+from an earlier chapter, we can request specific sizes for custom types. We
+discuss this topic next.
+
+
+.. _Adv_Ada_Floating_Point_Type_Size:
+
+Custom size of floating-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As discussed earlier on, the Ada standard requires that the precision defined
+after the :ada:`digits` keyword of a type is maintained for all objects of that
+floating-point type. It doesn't require, however, that custom floating-point
+types |mdash| or even predefined floating-point types |mdash| have a certain
+size. Therefore, if we really have to use a specific size for a
+floating-point data type, we can add the
+:ref:`Size aspect <Adv_Ada_Size_Aspect>` to the type declaration. For example:
+
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type Float_6_Digits is
+         digits 6
+           with Size => 128;
+
+    begin
+       Put_Line ("Float_6_Digits'Size  :"
+                 & Float_6_Digits'Size'Image
+                 & " bits");
+    end Show_Decimal_Digits;
+
+In this example, we specify that :ada:`Float_6_Digits` requires a size of 128
+bits to be represented |mdash| instead of the 32 bits that we would typically
+see on a desktop PC. (Also, remember that this code example won't compile if
+your target architecture doesn't support 128-bit floating-point data types.)
+
+
+
+Range of custom floating-point types and subtypes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to specifying the decimal precision of a floating-point type, we
+can also specify its range:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Range_Def
+
+    package Show_Range_Definition is
+
+       type Float_6_Digits_Normalized is
+         digits 6
+           range -1.0 .. 1.0;
+
+    end Show_Range_Definition;
+
+You probably recall that, for integer types, we were able to declare a type by
+specifying its range. For floating-point types, however, we cannot specify the
+floating-point range without a decimal precision, as the compiler wouldn't be
+able to infer the intended precision based on the range alone:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Range_Def
+    :class: ada-expect-compile-error
+
+    package Show_Range_Definition is
+
+       type Float_Normalized is
+         range -1.0 .. 1.0;
+       --  ERROR: 'digits' specification
+       --         is missing!
+
+    end Show_Range_Definition;
+
+Compilation of this code example fails because the decimal precision was not
+specified.
+
+Assigning to objects of different floating-point types works as expected. For
+example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Range
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Range is
+
+       type Float_6_Digits_Normalized is
+         digits 6
+           range -1.0 .. 1.0;
+
+       type Float_9_Digits_Normalized is
+         digits 9
+           range -1.0 .. 1.0;
+
+       F6_N : Float_6_Digits_Normalized;
+       F9_N : Float_9_Digits_Normalized;
+    begin
+       F6_N := 0.123456123;
+
+       Put_Line ("F6_N = "
+                 & F6_N'Image);
+
+       F9_N := Float_9_Digits_Normalized (F6_N);
+       --  Converting from
+       --    Float_6_Digits_Normalized
+       --  to
+       --    Float_9_Digits_Normalized
+
+       Put_Line ("F9_N = "
+                 & F9_N'Image);
+
+       Put_Line
+         ("Float_6_Digits_Normalized'Size  :"
+          & Float_6_Digits_Normalized'Size'Image
+          & " bits");
+
+       Put_Line
+         ("Float_9_Digits_Normalized'Size  :"
+          & Float_9_Digits_Normalized'Size'Image
+          & " bits");
+    end Show_Range;
+
+In this example, we assign the :ada:`F6_N` object of
+:ada:`Float_6_Digits_Normalized` type to the :ada:`F9_N` object of
+:ada:`Float_9_Digits_Normalized` type. Of course, if a range is specified, the
+value of an object cannot be outside of the type's range:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Range
+    :class: ada-run-expect-failure
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Range is
+
+       type Float_6_Digits_Normalized is
+         digits 6
+           range -1.0 .. 1.0;
+
+       F6_N : Float_6_Digits_Normalized;
+    begin
+       F6_N := 0.123456123;
+
+       Put_Line ("F6_N = "
+                 & F6_N'Image);
+
+       F6_N := F6_N * 10.0 - 0.5;
+
+       Put_Line ("F6_N = "
+                 & F6_N'Image);
+
+       F6_N := F6_N + 1.0;
+       --  ERROR:  result of this operation
+       --          is outside of the interval
+       --          [-1.0, 1.0].
+
+       Put_Line ("F6_N = "
+                 & F6_N'Image);
+    end Show_Range;
+
+In this example, the assignment :ada:`F6_N := F6_N + 1.0` overflows because the
+resulting value is outside of the range of the :ada:`Float_6_Digits_Normalized`
+type. In contrast, the assignment :ada:`F6_N := F6_N * 10.0 - 0.5` doesn't
+raise an exception because the resulting value is inside the range |mdash| even
+though the intermediate value (1.23456) resulting from the :ada:`F6_N * 10.0`
+operation is outside the type's range.
+
+
+Range of derived floating-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can specify a range when deriving from floating-point types. In fact, it's
+possible to specify a range when the parent type doesn't have any range
+constraints, or specify a subrange when the parent type already has a range
+constraint. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Derived_Range
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Range is
+
+       type Float_6_Digits is
+         digits 6;
+
+       type Float_6_Digits_Normalized is new
+         Float_6_Digits
+           range -1.0 .. 1.0;
+
+       type Float_6_Digits_Normalized_Positive is new
+         Float_6_Digits_Normalized
+           range 0.0 .. 1.0;
+
+       F6_N  : Float_6_Digits_Normalized;
+       F6_NP : Float_6_Digits_Normalized_Positive;
+    begin
+       F6_N := 0.123456123;
+
+       Put_Line ("F6_N  = "
+                 & F6_N'Image);
+
+       F6_NP :=
+         Float_6_Digits_Normalized_Positive (F6_N);
+
+       Put_Line ("F6_NP = "
+                 & F6_NP'Image);
+
+       Put_Line
+         ("Float_6_Digits_Normalized'Size  :"
+          & Float_6_Digits_Normalized'Size'Image
+          & " bits");
+    end Show_Range;
+
+In this example, we derive the type :ada:`Float_6_Digits_Normalized` from
+:ada:`Float_6_Digits` and specify the normalized range -1.0 .. 1.0. Similarly,
+we derive :ada:`Float_6_Digits_Normalized_Positive` from
+:ada:`Float_6_Digits_Normalized` and constrain its range to positive numbers
+(0.0 .. 1.0).
+
+As we know, extending the range when deriving from a type isn't possible for
+any scalar type, be it discrete or real. Therefore, as expected, it's not
+possible to increase the range in this case:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Derived_Range_Increase
+
+    package Show_Extended_Range is
+
+       type Float_6_Digits is
+         digits 6;
+
+       type Float_6_Digits_Normalized is new
+         Float_6_Digits
+           range -1.0 .. 1.0;
+
+       type Float_6_Digits_Normalized_Ext is new
+         Float_6_Digits_Normalized
+           range -2.0 .. 2.0;
+
+    end Show_Extended_Range;
+
+Compilation fails for this example because we're trying to extend the range
+from -1.0 .. 1.0 to -2.0 .. 2.0 when deriving from the
+:ada:`Float_6_Digits_Normalized` type.
+
+
+.. _Adv_Ada_Floating_Point_Type_Ranges:
+
+Range of floating-point subtypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can also specify a range when declaring a subtype of a floating-point type.
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Subtype_Range
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Floating_Point_Subtype_Ranges is
+
+       type Float_6_Digits is
+         digits 6;
+
+       subtype Float_6_Digits_Subtype is
+         Float_6_Digits;
+       --  Same range as Float_6_Digits
+
+       subtype Float_6_Digits_Normalized is
+         Float_6_Digits
+           range -1.0 .. 1.0;
+
+       F6_N : Float_6_Digits_Normalized;
+    begin
+       F6_N := 0.123456123;
+
+       Put_Line ("F6_N = "
+                 & F6_N'Image);
+    end Show_Floating_Point_Subtype_Ranges;
+
+In this example, we declare the :ada:`Float_6_Digits_Normalized` type as a
+subtype of :ada:`Float_6_Digits` and specify the normalized range -1.0 .. 1.0.
+
+In the case of the subtype :ada:`Float_6_Digits_Subtype`, however, we haven't
+specified any range. Therefore, as expected, the range of the
+:ada:`Float_6_Digits` type is used.
+
+
+Range of base type
+~~~~~~~~~~~~~~~~~~
+
+Because the base type of a floating-point type is only constrained by the range
+of the root floating-point type, its range doesn't necessarily match the range
+of a floating-point type :ada:`T` |mdash| this is especially the case when
+we're specifying a custom range. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Base_Range
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Floating_Point_Base_Range is
+
+       type Float_6D is
+         digits 6;
+
+       type Float_6D_Norm is
+         digits 6
+           range -1.0 .. 1.0;
+
+    begin
+
+       Put_Line
+         ("Float_6D'First           = "
+          & Float_6D'First'Image);
+       Put_Line
+         ("Float_6D'Last            = "
+          & Float_6D'Last'Image);
+
+       Put_Line
+         ("--------------------------");
+
+       Put_Line
+         ("Float_6D_Norm'First      = "
+          & Float_6D_Norm'First'Image);
+       Put_Line
+         ("Float_6D_Norm'Last       = "
+          & Float_6D_Norm'Last'Image);
+
+       Put_Line
+         ("Float_6D_Norm'Base'First = "
+          & Float_6D_Norm'Base'First'Image);
+       Put_Line
+         ("Float_6D_Norm'Base'Last  = "
+          & Float_6D_Norm'Base'Last'Image);
+
+    end Show_Floating_Point_Base_Range;
+
+In this example, we see that the range of the range-constrained type
+:ada:`Float_6D_Norm` is restricted to -1.0 .. 1.0. On a desktop PC, the range
+of its base type |mdash| as well as the range of the :ada:`Float_6D` type
+|mdash| is typically -3.40282E+38 .. 3.40282E+38.
+
+
+.. _Adv_Ada_System_Max_Base_Digits_And_Max_Digits:
+
+System max. base digits and max. digits values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two values associated with the maximum decimal precision of
+floating-point types: :ada:`System.Max_Digits` and
+:ada:`System.Max_Base_Digits`. They are dependent on the compiler capabilities,
+as well as hardware limitations:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.System_Max_Digits
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with System;
+
+    procedure Show_System_Max_Digits is
+    begin
+       Put_Line ("System.Max_Digits      :"
+                 & System.Max_Digits'Image
+                 & " digits");
+       Put_Line ("System.Max_Base_Digits :"
+                 & System.Max_Base_Digits'Image
+                 & " digits");
+    end Show_System_Max_Digits;
+
+On a typical desktop PC, we might see that the maximum decimal precision is the
+same in both cases:
+
+- :ada:`System.Max_Digits`:       18 digits
+- :ada:`System.Max_Base_Digits`:  18 digits
+
+Note that this might not be the case for certain embedded devices.
+
+For floating-point type declarations without a range constraint, the maximum
+decimal precision must not be greater than :ada:`System.Max_Digits`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Max_Float
+
+    with System;
+
+    package Show_Max_Floating_Point is
+
+       type Max_Float is
+         digits System.Max_Digits;
+
+    end Show_Max_Floating_Point;
+
+Here, we're declaring the :ada:`Max_Float` using the maximum precision possible
+on the target platform.
+
+When a range constraint is included in floating-point type declarations, the
+maximum decimal precision must not be greater than
+:ada:`System.Max_Base_Digits`:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Max_Float_Range
+
+    with System;
+
+    package Show_Max_Floating_Point is
+
+       type Max_Float_Normalized is
+         digits System.Max_Base_Digits
+           range -1.0 .. 1.0;
+
+    end Show_Max_Floating_Point;
+
+Here, we're declaring the range-constrained :ada:`Max_Float_Normalized` using
+the maximum precision possible on the target platform.
+
+
+Illegal floating-point definitions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If a floating-point type declaration isn't supported by the Ada compiler or the
+target platform, it is considered illegal and, therefore, compilation will fail
+for that declaration. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Max_Float_Illegal
+    :class: ada-expect-compile-error
+
+    with System;
+
+    package Show_Max_Floating_Point is
+
+       type Max_Float is
+         digits System.Max_Digits + 1;
+
+    end Show_Max_Floating_Point;
+
+In this example, we're trying to declare the :ada:`Max_Float` type with a
+decimal precision greater than the maximum supported precision. Therefore,
+compilation fails for this example.
+
+
 .. _Adv_Ada_Big_Numbers:
 
 Big Numbers
