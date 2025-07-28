@@ -188,17 +188,18 @@ Packages make clear syntactically, and enforce with compile-time
 checks, the ways in which one module can depend on another; in
 |do-178c| terms, their coupling.  They thus help meet the |do-178c|
 objective A-7[8] of achieving test coverage of the system's control
-and data coupling.  For example, if a compilation unit `Q` has a
-`with` dependence on package `P`, then `Q` has a potential data
-coupling on any data item defined in the visible part of the
-specification for `P`, and likewise a potential control coupling on
-any subprogram defined in the visible part of the specification for
-`P`. These couplings are actualized if `Q` references these items, and
-they must be demonstrated by structural code coverage tests.  On the
-other hand, data items or subprograms defined in `P`'s private part or
-package body are inaccessible to `Q` (any such accesses would be
-flagged as compile-time errors), and thus they do not constitute a
-coupling for `Q`.  For further details, see
+and data coupling.  For example, if a compilation unit :ada:`Q` has a
+:ada:`with` dependence on package :ada:`P`, then :ada:`Q` has a
+potential data coupling on any data item defined in the visible part
+of the specification for :ada:`P`, and likewise a potential control
+coupling on any subprogram defined in the visible part of the
+specification for :ada:`P`. These couplings are actualized if :ada:`Q`
+references these items, and they must be demonstrated by structural
+code coverage tests.  On the other hand, data items or subprograms
+defined in :ada:`P`'s private part or package body are inaccessible to
+:ada:`Q` (any such accesses would be flagged as compile-time errors),
+and thus they do not constitute a coupling for :ada:`Q`.  For further
+details, see
 :ref:`Airborn_SW_Data_and_control_coupling_coverage_with_GNATcoverage`.
 
 .. index:: single: Ada language; Strong typing
@@ -215,18 +216,19 @@ dynamic) constraints. For example:
 
     type Ratio is digits 16 range -1.0 .. 1.0;
 
-In the above example, `Ratio` is a floating-point type. Two
+In the above example, :ada:`Ratio` is a floating-point type. Two
 constraints are specified:
 
-* `digits` specifies the minimum precision needed for objects of this
+* :ada:`digits` specifies the minimum precision needed for objects of this
   type, in terms of decimal digits. Here the compiler will likely
   choose a 64-bit representation. If the target architecture only
   supports 32-bit floating-point, the compiler will reject the
   program.
-* `range` defines the set of acceptable values. Here, only values
-  between -1.0 and 1.0 (inclusive) are acceptable; an attempt to
-  assign a value outside this range to a variable of type `Ratio` will
-  raise the `Constraint_Error` run-time exception.
+* :ada:`range` defines the set of acceptable values. Here, only values
+  between :ada:`-1.0` and :ada:`1.0` (inclusive) are acceptable; an
+  attempt to assign a value outside this range to a variable of type
+  :ada:`Ratio` will raise the :ada:`Constraint_Error` run-time
+  exception.
 
 Strong typing means an absence of implicit conversions (implicit
 "casts"), since such conversions can mask logical errors. For example:
@@ -241,12 +243,12 @@ Strong typing means an absence of implicit conversions (implicit
     ...
     Distance_1 := Distance_2; -- Illegal, rejected at compile time
 
-Both `Miles` and `Kilometers` are 16-digit floating-point types (the
-range constraint is optional in a floating-point type declaration) but
-they are different types, and thus the assignment is
-illegal. Likewise, it is illegal to combine `Miles` and `Kilometers`
-in an expression; `Miles + Kilometers` would also be rejected by the
-compiler.
+Both :ada:`Miles` and :ada:`Kilometers` are 16-digit floating-point
+types (the range constraint is optional in a floating-point type
+declaration) but they are different types, and thus the assignment is
+illegal. Likewise, it is illegal to combine :ada:`Miles` and
+:ada:`Kilometers` in an expression; :ada:`Miles + Kilometers` would
+also be rejected by the compiler.
 
 With strong typing the program's data can be partitioned so that an
 object of a given type can only be processed using operations that
@@ -289,15 +291,16 @@ the permitted operand combinations. This would be notationally
 cumbersome and probably not used much in practice.
 
 The GNAT Pro environment provides a solution through the
-implementation-defined aspects `Dimension_System` which can be applied
-to a type, and `Dimension` which can be applied to a subtype. Uses of
-variables are checked at compile time for consistency based on the
-`Dimension` aspect of their subtypes. The GNAT library includes a
-package `System.Dim.Mks` that defines a type and its associated
-subtypes that will be used for meters (`Length`), kilograms (`Mass`),
-seconds (`Time`), and other units. The programmer can define a subtype
-such as `Velocity` that corresponds to `Length` (in meters) divided by
-`Time` (in seconds):
+implementation-defined aspects :ada:`Dimension_System` which can be
+applied to a type, and :ada:`Dimension` which can be applied to a
+subtype. Uses of variables are checked at compile time for consistency
+based on the :ada:`Dimension` aspect of their subtypes. The GNAT
+library includes a package :ada:`System.Dim.Mks` that defines a type
+and its associated subtypes that will be used for meters
+(:ada:`Length`), kilograms (:ada:`Mass`), seconds (:ada:`Time`), and
+other units. The programmer can define a subtype such as
+:ada:`Velocity` that corresponds to :ada:`Length` (in meters) divided
+by :ada:`Time` (in seconds):
 
 .. code-block:: ada
 
@@ -318,7 +321,7 @@ With such a declaration the following is permitted:
                                          -- (3600.0 sec)
     My_Velocity : Velocity  := My_Distance / My_Time; -- OK
 
-A `Velocity` value should be computed as a distance divided by a
+A :ada:`Velocity` value should be computed as a distance divided by a
 time. The following will be detected as an error:
 
 .. code-block:: ada
@@ -365,12 +368,12 @@ example:
 
     Update (My_Rec);
 
-The above procedure takes a `Rec` object as an `in out` parameter. In
-the invocation `Update (My_Rec)`, the compiler may choose to pass
-`My_Rec` either by reference or by copy based on efficiency
-considerations. Other languages use pointers, either explicitly or
-implicitly, to obtain by-reference passing if the actual parameter
-needs to be modified by the called subprogram.
+The above procedure takes a :ada:`Rec` object as an :ada:`in out`
+parameter. In the invocation :ada:`Update (My_Rec)`, the compiler may
+choose to pass :ada:`My_Rec` either by reference or by copy based on
+efficiency considerations. Other languages use pointers, either
+explicitly or implicitly, to obtain by-reference passing if the actual
+parameter needs to be modified by the called subprogram.
 
 When pointers are absolutely required, Ada's approach is to supply a
 type-safe and high-level mechanism (known as "access types") to obtain
@@ -379,8 +382,8 @@ that are potentially unsafe but whose usage is always explicitly
 indicated in the source text (thus alerting the human reader).
 
 One example is the use of the generic procedure
-`Ada.Unchecked_Deallocation` to free the storage for an object that is
-no longer needed:
+:ada:`Ada.Unchecked_Deallocation` to free the storage for an object
+that is no longer needed:
 
 .. code-block:: ada
 
@@ -400,12 +403,13 @@ no longer needed:
        ...
     end Proc;
 
-An object of type `String_Ptr` is a value that is either `null` or
-else points to a dynamically allocated `String` object.  To deallocate
-an allocated object, it is necessary to instantiate the generic
-procedure `Ada.Unchecked_Deallocation`; the result is the definition
-of procedure `Free`.  The sample code allocates an initialized heap
-object and subsequently frees its storage
+An object of type :ada:`String_Ptr` is a value that is either
+:ada:`null` or else points to a dynamically allocated :ada:`String`
+object.  To deallocate an allocated object, it is necessary to
+instantiate the generic procedure :ada:`Ada.Unchecked_Deallocation`;
+the result is the definition of procedure :ada:`Free`.  The sample
+code allocates an initialized heap object and subsequently frees its
+storage
 
 As another example, here's a C code fragment that performs pointer
 arithmetic:
@@ -415,8 +419,8 @@ arithmetic:
     int *ptr = malloc (sizeof (int));
     ptr++;
 
-This may or may not be safe; after the increment, `ptr` points to a
-location immediately beyond the storage for the allocated `int`.
+This may or may not be safe; after the increment, :c:`ptr` points to a
+location immediately beyond the storage for the allocated :c:`int`.
 
 As part of its C interfacing facilities Ada supports such pointer
 arithmetic, indeed with algorithmic code that is similar to the C
@@ -494,17 +498,18 @@ Here's an example:
     Get (I);        -- Read in an integer
     A (I) := 100;   -- Run-time check that I is in range
 
-The above code creates two arrays, `A` with 8 elements indexed from 1
-to 8, and `B` with 11 elements indexed from 2 to 12. `A` is assigned
-all zeroes, and `B` is assigned 0 in its first 6 elements and 1 in the
-rest. Contiguous sequences (slices) of the two arrays are compared for
-equality. All of this is done through standard language syntax as
-opposed to explicit loops or library calls.
+The above code creates two arrays, :ada:`A` with 8 elements indexed
+from 1 to 8, and :ada:`B` with 11 elements indexed from 2
+to 12. :ada:`A` is assigned all zeroes, and :ada:`B` is assigned 0 in
+its first 6 elements and 1 in the rest. Contiguous sequences (slices)
+of the two arrays are compared for equality. All of this is done
+through standard language syntax as opposed to explicit loops or
+library calls.
 
 The code at the end of the example illustrates Ada's index
-checking. If `I` is not in the index range of array `A` (i.e., between
-1 and 8 inclusive) then a run-time exception (`Constraint_Error`) is
-raised.
+checking. If :ada:`I` is not in the index range of array :ada:`A`
+(i.e., between 1 and 8 inclusive) then a run-time exception
+(:ada:`Constraint_Error`) is raised.
 
 Other Ada features
 ^^^^^^^^^^^^^^^^^^
@@ -672,8 +677,8 @@ next subsection.
 Low-Level Requirements
 ^^^^^^^^^^^^^^^^^^^^^^
 
-A simple example of a low-level requirement, for the `Sort` procedure
-defined above, is the following:
+A simple example of a low-level requirement, for the :ada:`Sort`
+procedure defined above, is the following:
 
     *The component shall order the array from the smallest value to highest one*
 
@@ -690,15 +695,16 @@ the procedure:
                        My_Array (I) <= My_Array (I+1) );
 
 
-The `with Post` construct defines a postcondition for the procedure;
-i.e., a condition that is asserted to be True when the procedure
-returns. Here it expresses, in Ada syntax, the low-level requirement
-that the procedure sort the array in ascending order: for each index
-`I` into the array, from the first position through the next-to-last,
-the value of the element at position `I+1` is at least as large as the
-element at position `I`. In the degenerate case where the array is
-either empty or contains a single element (i.e., when the range of `I`
-is empty) the `for all` condition is considered to be True.
+The :ada:`with Post` construct defines a postcondition for the
+procedure; i.e., a condition that is asserted to be True when the
+procedure returns. Here it expresses, in Ada syntax, the low-level
+requirement that the procedure sort the array in ascending order: for
+each index :ada:`I` into the array, from the first position through
+the next-to-last, the value of the element at position :ada:`I+1` is
+at least as large as the element at position :ada:`I`. In the
+degenerate case where the array is either empty or contains a single
+element (i.e., when the range of :ada:`I` is empty) the :ada:`for all`
+condition is considered to be True.
 
 It's clear that the postcondition expression says nothing about how
 the procedure is implemented. It's not pseudo-code for an algorithm
@@ -707,10 +713,10 @@ verified. It's the formalization of a requirement that happens to use
 Ada syntax. Moreover, a postcondition can refer to the values of
 formal parameters and/or global data, both at the point of call and
 the point of return. (In the above example, the postcondition could be
-strengthened by specifying that the value of `My_Array` on return is a
-permutation, possibly the identity mapping, of the value on entry.)
-And a function postcondition can refer to the value being returned by
-the function.
+strengthened by specifying that the value of :ada:`My_Array` on return
+is a permutation, possibly the identity mapping, of the value on
+entry.)  And a function postcondition can refer to the value being
+returned by the function.
 
 A subprogram can also have a precondition (a Boolean expression),
 which is a requirement that the caller needs to satisfy and that is
@@ -787,16 +793,17 @@ represent a data structure for a last-in first-out stack:
        ...
     end Stack_Pkg;
 
-The `Global` aspect captures the data dependency: `Push` will
-reference and assign to the global variables `Length` and `Stack`. The
-`Depends` aspect captures the flow dependency: the new value of
-`Length` depends on its old value, and the new value of `Stack`
-depends on the values of `Stack`, `Length`, and `Item`. These
-dependencies can be verified by the SPARK tools (assuming that the
-subprogram body is written in the SPARK subset). The pre- and
-postconditions reflect some of the functional properties of the
-procedure, and the postcondition illustrates the `'Old` attribute for
-referencing the point-of-call value of a variable.
+The :ada:`Global` aspect captures the data dependency: :ada:`Push`
+will reference and assign to the global variables :ada:`Length` and
+:ada:`Stack`. The :ada:`Depends` aspect captures the flow dependency:
+the new value of :ada:`Length` depends on its old value, and the new
+value of :ada:`Stack` depends on the values of :ada:`Stack`,
+:ada:`Length`, and :ada:`Item`. These dependencies can be verified by
+the SPARK tools (assuming that the subprogram body is written in the
+SPARK subset). The pre- and postconditions reflect some of the
+functional properties of the procedure, and the postcondition
+illustrates the :ada:`'Old` attribute for referencing the
+point-of-call value of a variable.
 
 A more realistic version of this example would hide the representation
 in the private part or body of the package. The contracts would then
@@ -836,13 +843,13 @@ Package Interfaces
 Applications sometimes need to use types that correspond exactly to
 the native numeric data representations supported on the target
 machine, for example 16- or 32-bit signed and unsigned integers. Such
-types are defined in package `Interfaces`, which is part of the
+types are defined in package :ada:`Interfaces`, which is part of the
 standard Ada library. The exact set of types depends on the target but
-typically includes integer types such as `Unsigned_16`, `Unsigned_32`,
-`Integer_16`, and `Integer_32`, as well as several floating-point
-types. The unsigned integer types are especially useful for hardware /
-software interfacing since they support bitwise operations including
-shift and rotate functions.
+typically includes integer types such as :ada:`Unsigned_16`,
+:ada:`Unsigned_32`, :ada:`Integer_16`, and :ada:`Integer_32`, as well
+as several floating-point types. The unsigned integer types are
+especially useful for hardware / software interfacing since they
+support bitwise operations including shift and rotate functions.
 
 .. index:: single: Ada language; Specifying data representation
 
@@ -862,9 +869,10 @@ The compiler will check that the specified representation is
 consistent with the target hardware.  For example,
 :numref:`Airborn_SW_fig3` shows the required layout (on a
 "little-endian" machine) for a data object consisting of an unsigned
-16-bit integer (`Num`), a 4-bit enumeration value (`Urgency`) that is
-either `Low`, `Medium`, or `High`, with the respective values 2, 5,
-and 10), and a Boolean flag (F).
+16-bit integer (:ada:`Num`), a 4-bit enumeration value
+(:ada:`Urgency`) that is either :ada:`Low`, :ada:`Medium`, or
+:ada:`High`, with the respective values 2, 5, and 10), and a Boolean
+flag (F).
 
 .. _Airborn_SW_fig3:
 .. figure:: images/analysis-fig3.png
@@ -880,9 +888,9 @@ logical structure as a record type with named fields) from its
 "implementation" (its physical representation / layout including size,
 alignment, and exact position of each field). The representation can
 be specified through a combination of aspects and representation
-clauses. Defining the `Bit_Order` and the `Scalar_Storage_Order`
-explicitly means that the code will work correctly on both
-little-endian and big-endian hardware.
+clauses. Defining the :ada:`Bit_Order` and the
+:ada:`Scalar_Storage_Order` explicitly means that the code will work
+correctly on both little-endian and big-endian hardware.
 
 .. code-block:: ada
 
@@ -913,7 +921,7 @@ little-endian and big-endian hardware.
           F       at 3 range 2..2;
        end record;
 
-The `at` syntax in the record representation clause specifies the
+The :ada:`at` syntax in the record representation clause specifies the
 offset (in storage units) to the storage unit where the field begins,
 and the bit positions that are occupied. A field can overlap multiple
 storage units.
@@ -921,9 +929,9 @@ storage units.
 When the program specifies these kinds of representational details,
 it's typical for the application to read a "raw" value from an
 external source, and in such cases it is important to ensure that such
-data values are valid. In the above example, the `Urgency` field needs
-to have one of the values 2, 5, or 10. Any other value has to be
-detected by the program logic, and Ada's `'Valid` attribute can
+data values are valid. In the above example, the :ada:`Urgency` field
+needs to have one of the values 2, 5, or 10. Any other value has to be
+detected by the program logic, and Ada's :ada:`'Valid` attribute can
 perform that check. The following example illustrates a typical style:
 
 .. code-block:: ada
@@ -939,10 +947,10 @@ perform that check. The following example illustrates a typical style:
 
 .. index:: single: Ada language; 'Valid attribute
 
-The `'Valid` attribute can be applied to data objects from numeric and
-enumeration types. It is useful when the permitted values for the
-object are a proper subset of the full value set supported by the
-object's representation.
+The :ada:`'Valid` attribute can be applied to data objects from
+numeric and enumeration types. It is useful when the permitted values
+for the object are a proper subset of the full value set supported by
+the object's representation.
 
 .. index:: single: Ada language; Numeric types
 
@@ -1053,12 +1061,12 @@ AdaCore tools and the Ada language.
 
 * The Ada language directly supports interfacing Ada with other
   languages, most notably C (and also Fortran and COBOL). One of the
-  standard libraries is a package `Interfaces.C` that defines Ada
-  types corresponding to the C basic types (`int`, `char`, etc.) and
-  implementation advice in the Ada Language Reference Manual explains
-  how to import C functions and global data to be used in Ada code,
-  and in the other direction, how to export Ada subprograms and global
-  data so that they can be used in C.
+  standard libraries is a package :ada:`Interfaces.C` that defines Ada
+  types corresponding to the C basic types (:c:`int`, :c:`char`, etc.)
+  and implementation advice in the Ada Language Reference Manual
+  explains how to import C functions and global data to be used in Ada
+  code, and in the other direction, how to export Ada subprograms and
+  global data so that they can be used in C.
 * The GNAT Pro compiler uses the same back end technology for both Ada
   and C, facilitating interoperability.
 
@@ -1151,18 +1159,18 @@ elements in an array:
     end Swap;
 
 The above example illustrates the ambiguity of the requirements for
-defensive code. What does it mean to invoke `Swap` when one or both
-indices are out of range? Not doing anything (which is the effect of
-the above code) is a possible answer, but this should be identified as
-a derived requirement (since it is an additional behavior of the
+defensive code. What does it mean to invoke :ada:`Swap` when one or
+both indices are out of range? Not doing anything (which is the effect
+of the above code) is a possible answer, but this should be identified
+as a derived requirement (since it is an additional behavior of the
 component). Other possibilities:
 
 * Raise an exception
-* Report the error through an additional `out` parameter to the
+* Report the error through an additional :ada:`out` parameter to the
   procedure, or as a status value returned (if the subprogram were
   expressed as a function rather than a procedure)
-* Map an out-of-bounds low value to `FA'First`, and an out-of-bounds
-  high value to `FA'Last`
+* Map an out-of-bounds low value to :ada:`FA'First`, and an
+  out-of-bounds high value to :ada:`FA'Last`
 
 Even if one of these options is chosen as the required behavior, there
 are both efficiency questions (why should the procedure spend
@@ -1211,13 +1219,14 @@ possible activities:
   requirements expressed in natural language.
 * **Enabling dynamic checks during testing, and removing them in the
   final executable object code**. Run-time checks are generated for
-  pre- and postconditions if the program specifies `pragma
+  pre- and postconditions if the program specifies :ada:`pragma
   Assertion_Policy (Check)` and the code is compiled with the compiler
   switch |gnata|. A violation of a pre- or postcondition will then
-  raise the `Assertion_Error` exception. After testing and related
-  verification activities achieve sufficient assurance that no
+  raise the :ada:`Assertion_Error` exception. After testing and
+  related verification activities achieve sufficient assurance that no
   violations will occur, the checking code can be removed (either by
-  `pragma Asserion_Policy(Ignore)` or by compiling without |gnata|).
+  :ada:`pragma Asserion_Policy(Ignore)` or by compiling without
+  |gnata|).
 * **Enabling dynamic checks during testing, and keeping them in the
   final executable object code**. In this case, the software
   requirements should define the expected behavior in case a pre- or
@@ -1230,7 +1239,7 @@ possible activities:
   on finding as many errors as possible, at the expense of false
   positives, or on "picking the low-hanging fruit": detecting defects
   but minimizing the false positives at the expense of missing some
-  actual errors.  The :ref:`Airborn_SW_SPARK` tools likewise use
+  actual errors. The :ref:`Airborn_SW_SPARK` tools likewise use
   preconditions, in this case to guide formal analysis.  The proof
   engine can statically verify (or else report otherwise) that (1) a
   precondition is strong enough to guarantee the absence of run-time
@@ -1295,9 +1304,9 @@ GNATcheck provides an extensive set of user-selectable rules to verify
 compliance with various Ada coding standard requirements. These
 includes style convention enforcement (casing, indentation, etc.),
 detection of features that are susceptible to misuse (floating-point
-equality, `goto` statements), static complexity checks (block nesting,
-cyclomatic complexity) and detection of features with complex run-time
-semantics (tasking, dynamic memory).
+equality, :ada:`goto` statements), static complexity checks (block
+nesting, cyclomatic complexity) and detection of features with complex
+run-time semantics (tasking, dynamic memory).
 
 Since a code standard may include qualitative rules, or rules that are
 not handled by GNATcheck, verifying that the source code complies with
@@ -1334,7 +1343,7 @@ categories of deviations that were present in a given baseline.
 
 Another practicality with code standards is that some rules might need
 to admit deviations in specific contexts when justified (for example
-the `goto` statement might be acceptable to implement state
+the :ada:`goto` statement might be acceptable to implement state
 transitions in code that simulates a finite-state machine, and
 forbidden elsewhere). GNATcheck allows adding local check exemptions,
 around a statement or a piece of code. Such exemptions and their
@@ -1585,28 +1594,29 @@ test per subprogram may be developed. Here's a simple example:
                         with "Non-negative value needed");
 
 As part of the specification for the Sqrt function, the GNAT-specific
-aspect `Test_Case` is used to define two test cases. The one named
-"test case 1" is identified as `Nominal`, which means that the
-argument supplied as `Requires` should satisfy the function's
-precondition, and the argument supplied as `Ensures` should satisfy
-the function's postcondition. The test case named "test case 2" is
-specified as `Robustness`, so the pre- and postconditions are
-ignored. As with all test cases, these are based on the function's
+aspect :ada:`Test_Case` is used to define two test cases. The one
+named "test case 1" is identified as :ada:`Nominal`, which means that
+the argument supplied as `Requires` should satisfy the function's
+precondition, and the argument supplied as :ada:`Ensures` should
+satisfy the function's postcondition. The test case named "test case
+2" is specified as :ada:`Robustness`, so the pre- and postconditions
+are ignored. As with all test cases, these are based on the function's
 requirements.
 
 When generating the test harness, GNATtest provides a skeleton of the
 test procedures, and the user has to plug in the input values (from
-the `Requires` argument) and the expected results (from the `Ensures`
-argument) for all test cases defined in the Ada package specification.
+the :ada:`Requires` argument) and the expected results (from the
+:ada:`Ensures` argument) for all test cases defined in the Ada package
+specification.
 
 GNATtest will insert specific checks to verify that, within "test case
-1", all calls made to `Sqrt` have `X` equal to 16.0, and each value
-returned is equal to 4.0. This not only verifies that the test
-succeeded, but also confirms that the test conducted is indeed the
-intended test. As a result, GNATtest verifies that the test procedures
-comply with the test cases, that they are complete (all test cases
-have been implemented and exercised), and that the test results are as
-expected.
+1", all calls made to :ada:`Sqrt` have :ada:`X` equal to :ada:`16.0`,
+and each value returned is equal to 4.0. This not only verifies that
+the test succeeded, but also confirms that the test conducted is
+indeed the intended test. As a result, GNATtest verifies that the test
+procedures comply with the test cases, that they are complete (all
+test cases have been implemented and exercised), and that the test
+results are as expected.
 
 In addition, the traceability between test case, test procedures and
 test results is direct, and does not require production of further
@@ -1616,7 +1626,7 @@ Approach 3: Test cases are developed separately from the design process
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The two test cases developed in Approach 2 are not sufficient to fully
-verify the `Sqrt` function. To comply with |do-178c| Table A-6
+verify the :ada:`Sqrt` function. To comply with |do-178c| Table A-6
 Objectives 3 and 4, the activities presented in |sect|\ 6.4.2
 (Requirements-Based Test Selection) for normal and robustness cases
 are applicable. It is not generally practical to include all the test
@@ -1652,14 +1662,14 @@ the test harness. Here's an example:
            Ensures  => raise Constraint_Error
                        with "Non-negative value needed");
 
-In this approach, three `Test_Case` aspects are defined |mdash| in
-effect test case classes that partition the set of possible input
+In this approach, three :ada:`Test_Case` aspects are defined |mdash|
+in effect test case classes that partition the set of possible input
 values |mdash| defining the expected high-level characteristics of the
-function. For each `Test_Case`, at least one actual test case will be
-developed. In this example, at least three test cases need to be
-defined, corresponding to an actual parameter that is positive, zero,
-or negative, with the respective expected results of positive, zero,
-and raising an exception.
+function. For each :ada:`Test_Case`, at least one actual test case
+will be developed. In this example, at least three test cases need to
+be defined, corresponding to an actual parameter that is positive,
+zero, or negative, with the respective expected results of positive,
+zero, and raising an exception.
 
 As in Approach 2, the skeleton generated by GNATtest must be completed
 by the user, but in that case the data produced are the actual test
@@ -1669,9 +1679,10 @@ boundary values, for the value 1, or any representative data
 (equivalence classes).
 
 As previously, GNATtest will insert specific checks based on the
-`Requires` and `Ensures` values for each `Test_Case`. Then GNATtest
-will verify that at least one actual test case has been implemented
-for each `Test_Case`, and that the results are correct.
+:ada:`Requires` and :ada:`Ensures` values for each
+:ada:`Test_Case`. Then GNATtest will verify that at least one actual
+test case has been implemented for each :ada:`Test_Case`, and that the
+results are correct.
 
 Note that in this approach, the test procedures become the internal
 files generated by GNATtest. Therefore, as it will be difficult to
@@ -1792,18 +1803,18 @@ to open the aircraft doors:
       Open_Doors;
    end if;
 
-Note: the Ada short-circuit form `and then` is equivalent to the C
-shortcut boolean operator `&&`: the second operand is evaluated if and
-only if the first operand evaluates to True. If the first operand
-evaluates to False, then the expression's value is False.
+Note: the Ada short-circuit form :ada:`and then` is equivalent to the
+C shortcut boolean operator :ada:`&&`: the second operand is evaluated
+if and only if the first operand evaluates to True. If the first
+operand evaluates to False, then the expression's value is False.
 
 This code fragment consists of two statements:
 
-* The enclosing `if` statement
-* The enclosed `Open_Doors;` statement, which will be executed if the
-  decision in the `if` statement is True
+* The enclosing :ada:`if` statement
+* The enclosed :ada:`Open_Doors;` statement, which will be executed if
+  the decision in the :ada:`if` statement is True
 
-The `if` statement in turn contains a single decision:
+The :ada:`if` statement in turn contains a single decision:
 
 .. code-block:: ada
 
@@ -1811,9 +1822,9 @@ The `if` statement in turn contains a single decision:
 
 and this decision contains three conditions:
 
-* `Closed_Doors > 0`
-* `Open_Ordered`
-* `Plane_Landed`
+* :ada:`Closed_Doors > 0`
+* :ada:`Open_Ordered`
+* :ada:`Plane_Landed`
 
 .. index:: single: Structural code coverage; Statement Coverage
 
@@ -2038,8 +2049,8 @@ mechanisms. Control coupling concerns the influence on control
 flow. Inter-module subprogram calls are obvious cases of control
 coupling (they initiate a control flow sequence) but subtler cases
 such as a global variable influencing a condition can be also
-considered as control coupling. For example, if module `Alpha` has
-something like:
+considered as control coupling. For example, if module :ada:`Alpha`
+has something like:
 
 .. code-block:: ada
 
@@ -2049,7 +2060,7 @@ something like:
       Do_Something_Else;
    end if;
 
-and in a module `Beta`:
+and in a module :ada:`Beta`:
 
 .. code-block:: ada
 
@@ -2081,7 +2092,8 @@ data:
 
 .. index:: Global aspect
 
-* Global data: The `Global` aspect in SPARK (and in Ada 2022) can be used to verify correct usages of global data.
+* Global data: The :ada:`Global` aspect in SPARK (and in Ada 2022) can
+  be used to verify correct usages of global data.
 
 .. index:: Traceability of source to object code
 
@@ -2309,10 +2321,10 @@ Then consider two separate instantiations:
       N2 := Add_2 (6, 6, 10); -- Raises Constraint_Error
    end Test_Gen;
 
-Calling `Add_1 (6, 6, 10)` will yield 10 as a result. Calling `Add_2
-(6, 6, 10)` will raise `Constraint_Error` on the first addition, since
-the sum `Left+Right` will be equal to 12 and therefore violate the
-range constraint for `Small_Int`.
+Calling :ada:`Add_1 (6, 6, 10)` will yield 10 as a result. Calling
+:ada:`Add_2 (6, 6, 10)` will raise :ada:`Constraint_Error` on the
+first addition, since the sum :ada:`Left + Right` will be equal to 12
+and therefore violate the range constraint for :ada:`Small_Int`.
 
 Different instantiations of the same generic unit can thus exhibit
 different behaviors. As a result, |do-332| specifies that each generic
@@ -2439,7 +2451,7 @@ requirements:
   opened, and
 * the doors are opened as a result of the call.
 
-The `Aircraft` type could be used as follows:
+The :ada:`Aircraft` type could be used as follows:
 
 .. code-block:: ada
 
@@ -2460,18 +2472,20 @@ The `Aircraft` type could be used as follows:
 We're first waiting until the aircraft is actually on the ground, then
 open the doors, then as the doors are opened we let passengers out.
 
-All types in the `Aircraft` inheritance hierarchy have to comply with
-the `Aircraft` contracts. That is, for any type in the
-`Aircraft'Class` hierarchy, the `Open_Doors` subprogram for that type
-can require at most the `On_Ground` precondition and nothing
-stronger. If a stronger precondition were imposed, then a dynamically
-dispatching call of `Open_Doors` could fail if the actual parameter
-were of this (non-substitutable) type. The extra precondition would
-not necessarily be known to clients of the root type `Aircraft`.
+All types in the :ada:`Aircraft` inheritance hierarchy have to comply
+with the :ada:`Aircraft` contracts. That is, for any type in the
+:ada:`Aircraft'Class` hierarchy, the :ada:`Open_Doors` subprogram for
+that type can require at most the :ada:`On_Ground` precondition and
+nothing stronger. If a stronger precondition were imposed, then a
+dynamically dispatching call of :ada:`Open_Doors` could fail if the
+actual parameter were of this (non-substitutable) type. The extra
+precondition would not necessarily be known to clients of the root
+type :ada:`Aircraft`.
 
-Analogously for the postcondition, any type in the `Aircraft'Class`
-hierarchy has to guarantee *at least* the `Doors_Opened` property,
-since this will be assumed by callers of `Open_Doors`.
+Analogously for the postcondition, any type in the
+:ada:`Aircraft'Class` hierarchy has to guarantee *at least* the
+:ada:`Doors_Opened` property, since this will be assumed by callers of
+:ada:`Open_Doors`.
 
 In short, the substitutability property can be summarized as follows:
 
@@ -2483,13 +2497,13 @@ In short, the substitutability property can be summarized as follows:
 .. index:: single: Ada language; Pre'Class aspect
 .. index:: single: Ada language; Post'Class aspect
 
-The class-wide `Pre'Class` and `Post'Class` aspects are inherited
-(unless overridden) and have other semantics that directly support
-this substitutability property. The specific (non-class-wide) aspects
-`Pre` and `Post` are not inherited and should only be used if the
-hierarchy does not support substitutability.
+The class-wide :ada:`Pre'Class` and :ada:`Post'Class` aspects are
+inherited (unless overridden) and have other semantics that directly
+support this substitutability property. The specific (non-class-wide)
+aspects :ada:`Pre` and :ada:`Post` are not inherited and should only
+be used if the hierarchy does not support substitutability.
 
-Let's now define a `Jet`:
+Let's now define a :ada:`Jet`:
 
 .. code-block:: ada
 
@@ -2500,7 +2514,8 @@ Let's now define a `Jet`:
    with Pre        => Self.On_Ground and Self.Engines_Off,
         Post'Class => Self.Doors_Opened and not Self.Pressurized;
 
-Suppose that `Landing_Procedure` is invoked on an object of type `Jet`:
+Suppose that :ada:`Landing_Procedure` is invoked on an object of type
+:ada:`Jet`:
 
 .. code-block:: ada
 
@@ -2508,46 +2523,50 @@ Suppose that `Landing_Procedure` is invoked on an object of type `Jet`:
    ...
    Landing_Procedure (J);
 
-In the call `My_Aircraft.Open_Doors`, first the precondition for
-`Open_Doors` for `Aircraft` will be evaluated (since the actual
-parameter is of the class-wide type `Aircraft'Class`. That's not a
-problem, since the caller sees this precondition. However, then the
-specific precondition for `Open_Doors` for Jet is evaluated, and there
-is a problem with the additional constraint |mdash| requiring the
-engines to be off. The `Jet` type could have been defined long after
-the `Landing_Procedure` subprogram was written, so the design of the
-`Landing_Procedure` code would not have taken the added precondition
-into account. As a result, the `Open_Doors` procedure could be invoked
-when the engines were still running, violating the requirement. (With
-run-time assertion checking enabled, an exception would be raised.)
-The type `Jet` is not substitutable for the type `Aircraft` on
-invocations of `Open_Doors`.
+In the call :ada:`My_Aircraft.Open_Doors`, first the precondition for
+:ada:`Open_Doors` for :ada:`Aircraft` will be evaluated (since the
+actual parameter is of the class-wide type
+:ada:`Aircraft'Class`. That's not a problem, since the caller sees
+this precondition. However, then the specific precondition for
+:ada:`Open_Doors` for Jet is evaluated, and there is a problem with
+the additional constraint |mdash| requiring the engines to be off. The
+:ada:`Jet` type could have been defined long after the
+:ada:`Landing_Procedure` subprogram was written, so the design of the
+:ada:`Landing_Procedure` code would not have taken the added
+precondition into account. As a result, the :ada:`Open_Doors`
+procedure could be invoked when the engines were still running,
+violating the requirement. (With run-time assertion checking enabled,
+an exception would be raised.)  The type :ada:`Jet` is not
+substitutable for the type :ada:`Aircraft` on invocations of
+:ada:`Open_Doors`.
 
 The non-substitutabiity is reflected in the use of the specific aspect
-`Pre` rather than the class-wide aspect `Pre'Class`. In a type
-hierarchy rooted at type `T` where `Pre'Class` is specified at each
-level for a subprogram `Proc`, the effective precondition for a
-dispatching call `X.Proc` where `X` is of the type `T'Class` is simply
-the precondition specified for `Proc` for the root type `T` (which is
-the only precondition known to the caller). In the `Jet` example, if
-`Pre'Class` had been used, a dispatching call to `Open_Doors` would
-not check the `Engines_Off` condition.
+:ada:`Pre` rather than the class-wide aspect :ada:`Pre'Class`. In a
+type hierarchy rooted at type :ada:`T` where :ada:`Pre'Class` is
+specified at each level for a subprogram :ada:`Proc`, the effective
+precondition for a dispatching call :ada:`X.Proc` where :ada:`X` is of
+the type :ada:`T'Class` is simply the precondition specified for
+:ada:`Proc` for the root type :ada:`T` (which is the only precondition
+known to the caller). In the :ada:`Jet` example, if :ada:`Pre'Class`
+had been used, a dispatching call to :ada:`Open_Doors` would not check
+the :ada:`Engines_Off` condition.
 
 In short, if a subclass is to be substitutable then it may weaken but
 not strengthen a subprogram's precondition, and it should use
-`Pre'Class` rather than `Pre`. If a subclass needs to strengthen a
-precondition then it is not substitutable and should use `Pre` rather
-than `Pre'Class`.
+:ada:`Pre'Class` rather than :ada:`Pre`. If a subclass needs to
+strengthen a precondition then it is not substitutable and should use
+:ada:`Pre` rather than :ada:`Pre'Class`.
 
-The postcondition for `Open_Doors` for `Jet` does not have this
-problem. It adds an additional guarantee: pressurization is off after
-the opening of the doors. That's OK; it doesn't contradict the
-expectations of the `Landing_Procedure` subprogram, it just adds an
-additional guarantee.
+The postcondition for :ada:`Open_Doors` for :ada:`Jet` does not have
+this problem. It adds an additional guarantee: pressurization is off
+after the opening of the doors. That's OK; it doesn't contradict the
+expectations of the :ada:`Landing_Procedure` subprogram, it just adds
+an additional guarantee.
 
-The `Jet` type illustrated non-substitutability due to precondition
-strengthening. Non-substitutability can also arise for postconditions,
-as illustrated in a slight variation of the `Aircraft` type:
+The :ada:`Jet` type illustrated non-substitutability due to
+precondition strengthening. Non-substitutability can also arise for
+postconditions, as illustrated in a slight variation of the
+:ada:`Aircraft` type:
 
 .. code-block:: ada
 
@@ -2580,17 +2599,19 @@ tether). This is acceptable, since the landing procedure will still
 check the stronger precondition and wait for the aircraft to be on the
 ground; the class-wide precondition of the root type is checked on a
 dispatching call. (The weaker precondition would be checked on a call
-such as `B.Open_Doors` where `B` is either of the specific type
-`Hot_Air_Balloon` or the class-wide type `Hot_Air_Balloon'Class`.)
+such as :ada:`B.Open_Doors` where :ada:`B` is either of the specific
+type :ada:`Hot_Air_Balloon` or the class-wide type
+:ada:`Hot_Air_Balloon'Class`.)
 
-However, a `Hot_Air_Balloon` is less automated than a `Jet`: the doors
-don't open automatically, they just unlock. The `Landing_Procedure`
-subprogram assumes the postcondition for `Aircraft` (that the doors
-are opened), but this is not guaranteed for a `Hot_Air_Balloon`, so
-passengers might be pushed out while the doors are unlocked but still
-closed. The new postcondition is breaking the requirement by weakening
-its parent type's postcondition, and this is not acceptable. Thus the
-`Hot_Air_Balloon` type is not substitutable for `Aircraft`.
+However, a :ada:`Hot_Air_Balloon` is less automated than a :ada:`Jet`:
+the doors don't open automatically, they just unlock. The
+:ada:`Landing_Procedure` subprogram assumes the postcondition for
+:ada:`Aircraft` (that the doors are opened), but this is not
+guaranteed for a :ada:`Hot_Air_Balloon`, so passengers might be pushed
+out while the doors are unlocked but still closed. The new
+postcondition is breaking the requirement by weakening its parent
+type's postcondition, and this is not acceptable. Thus the
+:ada:`Hot_Air_Balloon` type is not substitutable for :ada:`Aircraft`.
 
 Substitutability defects may be evidence of a number of problems; for
 example, the hierarchy of classes or requirements may be incorrect, or
@@ -2612,9 +2633,9 @@ Verifying substitutability by pessimistic testing
 
 Pessimistic testing is conceptually the easiest to understand. The
 idea is to test at each point of dispatch all possible types that
-could be substituted. In the `Landing_Procedure` example, assuming
-that our system is managing both jets and hot air balloons, this would
-mean two sets of tests: one for the Jet type, and one for
+could be substituted. In the :ada:`Landing_Procedure` example,
+assuming that our system is managing both jets and hot air balloons,
+this would mean two sets of tests: one for the Jet type, and one for
 Hot_Air_Balloon. This is working around the difficulty of not knowing
 statically the potential target of a call: we just test all possible
 scenarios.
@@ -2636,17 +2657,18 @@ Verifying substitutability through requirement-based testing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this case verification of substitutability is done on top of
-regular testing. In the above examples the `Aircraft`, `Jet` and
-`Hot_Air_Balloon` requirements are all associated with specific
-requirement-based tests. Substitutability can be demonstrated by
-running top level tests with instances of other types of the class. In
-other words, tests developed based on requirements of `Aircraft` must
-pass with instances of `Jet` and `Hot_Air_Balloon`. This is enough to
-demonstrate substitutability, effectively testing the
-substitution. This may require more or fewer tests depending on OOP
-usage. In particular, for large class hierarchies, testing at the
-class level is much more cost-effective than testing every possible
-target of every possible dispatching call in the actual code.
+regular testing. In the above examples the :ada:`Aircraft`, :ada:`Jet`
+and :ada:`Hot_Air_Balloon` requirements are all associated with
+specific requirement-based tests. Substitutability can be demonstrated
+by running top level tests with instances of other types of the
+class. In other words, tests developed based on requirements of
+:ada:`Aircraft` must pass with instances of :ada:`Jet` and
+:ada:`Hot_Air_Balloon`. This is enough to demonstrate
+substitutability, effectively testing the substitution. This may
+require more or fewer tests depending on OOP usage. In particular, for
+large class hierarchies, testing at the class level is much more
+cost-effective than testing every possible target of every possible
+dispatching call in the actual code.
 
 .. index:: GNATtest
 
@@ -2743,19 +2765,20 @@ locally substitutable at the dispatching calls:
    X.Take_Off;
    Y.Take_Off;
 
-The `Jet` type is not globally substitutable for `Aircraft`, since the
-precondition on `Open_Doors` for `Jet` is stronger than the
-precondition on `Open_Doors` for `Aircraft`. But `Jet` is locally
-substitutable in the above fragment:
+The :ada:`Jet` type is not globally substitutable for :ada:`Aircraft`,
+since the precondition on :ada:`Open_Doors` for :ada:`Jet` is stronger
+than the precondition on :ada:`Open_Doors` for :ada:`Aircraft`. But
+:ada:`Jet` is locally substitutable in the above fragment:
 
- * The invocations `X.Take_Off` and `Y.Take_Off` dispatch to `Jet`,
-   but `Jet` is substitutable for `Aircraft` here:
+ * The invocations :ada:`X.Take_Off` and :ada:`Y.Take_Off` dispatch to
+   :ada:`Jet`, but :ada:`Jet` is substitutable for :ada:`Aircraft`
+   here:
 
-    * The precondition for `Take_Off(Aircraft)` is inherited by
-      `Jet`,and
+    * The precondition for :ada:`Take_Off(Aircraft)` is inherited by
+      :ada:`Jet`,and
 
-    * The postcondition for `Take_Off(Aircraft)` is strengthened by
-      `Jet`
+    * The postcondition for :ada:`Take_Off(Aircraft)` is strengthened
+      by :ada:`Jet`
 
 Whether it is easier to demonstrate local versus global suitability
 for a given class depends on the architecture and the ease of
@@ -2892,7 +2915,7 @@ memory. This can be done if such objects are of a class-wide type. The
 main constraint is that each object has to be initialized at
 declaration, and its specific type cannot change later. For example,
 the following code provides a function returning an object of a type
-in the `Aircraft` class hierarchy, depending on a parameter:
+in the :ada:`Aircraft` class hierarchy, depending on a parameter:
 
 .. code-block:: ada
 
@@ -2912,7 +2935,7 @@ in the `Aircraft` class hierarchy, depending on a parameter:
       end if;
    end Create;
 
-Objects of the class-wide type `Aircraft'Class` can be created as
+Objects of the class-wide type :ada:`Aircraft'Class` can be created as
 local or global variables:
 
 .. code-block:: ada
@@ -2922,8 +2945,9 @@ local or global variables:
    ...
    P.Take_Off;
 
-Here, `P` is allocated on the stack and may be either a `Jet` or a
-`Hot_Air_Balloon`. The call to `P.Take_Off` will dispatch accordingly.
+Here, :ada:`P` is allocated on the stack and may be either a
+:ada:`Jet` or a :ada:`Hot_Air_Balloon`. The call to :ada:`P.Take_Off`
+will dispatch accordingly.
 
 For notational convenience it may be useful to reference objects of a
 class-wide type through access values (pointers), since that makes it
@@ -3031,19 +3055,20 @@ exceptions.
   diagnostics and logging, after which it is terminated and possibly
   rebooted.
 * Exceptions can also be locally handled; this is achieved by
-  specifying `pragma Restrictions (No_Exception_Propagation)`. This
-  GNAT-specific restriction ensures that an exception is only raised
-  when its handler is statically in the same subprogram. Exception
-  handling can then be implemented (conceptually) by a simple branch
-  to its handler. Such a policy is much easier to manage in a safe way
-  than general exception propagation. Local handling is useful in
-  situations where the software requirements specify a particular
-  termination behavior for a subprogram under conditions that are best
-  detected by raising an exception. An example is a "saturated add"
-  procedure that takes two positive integers and delivers a positive
-  integer result and an overflow status: the integer result will be
-  the actual sum if no overflow occurred, and the maximum positive
-  value if an overflow occurred.
+  specifying :ada:`pragma Restrictions
+  (No_Exception_Propagation)`. This GNAT-specific restriction ensures
+  that an exception is only raised when its handler is statically in
+  the same subprogram. Exception handling can then be implemented
+  (conceptually) by a simple branch to its handler. Such a policy is
+  much easier to manage in a safe way than general exception
+  propagation. Local handling is useful in situations where the
+  software requirements specify a particular termination behavior for
+  a subprogram under conditions that are best detected by raising an
+  exception. An example is a "saturated add" procedure that takes two
+  positive integers and delivers a positive integer result and an
+  overflow status: the integer result will be the actual sum if no
+  overflow occurred, and the maximum positive value if an overflow
+  occurred.
 
 .. code-block:: ada
 
@@ -3115,12 +3140,13 @@ could be:
 
    int r = f (100);
 
-Knowing which function `f()` will be called is not immediately
+Knowing which function :cpp:`f()` will be called is not immediately
 obvious. Furthermore, if the original version of the program contained
-only the declaration of `f()` with a `float` parameter, and the
-declaration of `f()` with an `int` parameter was added during
-maintenance, then the recompilation of `f(100)` would silently change
-the effect of the program to invoke the new version of `f()`.
+only the declaration of :cpp:`f()` with a :cpp:`float` parameter, and
+the declaration of :cpp:`f()` with an `int` parameter was added during
+maintenance, then the recompilation of :cpp:`f(100)` would silently
+change the effect of the program to invoke the new version of
+:cpp:`f()`.
 
 Compiler warnings or static analysis tools are required to identify
 such cases and warn the user that a possibly unintended call may be
@@ -3142,9 +3168,9 @@ intent. Here is an example:
    R : Integer := F (100);  -- Ambiguous
 
 The above code is illegal in Ada due to the ambiguity: the literal 100
-could be interpreted as either a `Miles` or a `Kilometers` value.  A
-construct called "type qualification" can be used to make the type
-explicit and the call unambiguous:
+could be interpreted as either a :ada:`Miles` or a :ada:`Kilometers`
+value.  A construct called "type qualification" can be used to make
+the type explicit and the call unambiguous:
 
 .. code-block:: ada
 
@@ -3462,14 +3488,14 @@ several of the associated objectives:
            Depends =>
              (Probes => (Probes, Index, Min, Max));
 
-  The `Calibrate_Probe` procedure will use the global variable
-  `Probes` in `in out` mode (it can read from and write to the
-  variable) and will compute its new value using the old value of
-  `Probes` (at the point of call) together with the parameters
-  `Index`, `Min` and `Max`. SPARK will verify that the only global
-  variable used is `Probes`, and that this variable and the parameters
-  specified in the `Depends` aspect (and no other variables) are used
-  to compute the value.
+  The :ada:`Calibrate_Probe` procedure will use the global variable
+  :ada:`Probes` in :ada:`in out` mode (it can read from and write to
+  the variable) and will compute its new value using the old value of
+  :ada:`Probes` (at the point of call) together with the parameters
+  :ada:`Index`, :ada:`Min` and :ada:`Max`. SPARK will verify that the
+  only global variable used is :ada:`Probes`, and that this variable
+  and the parameters specified in the :ada:`Depends` aspect (and no
+  other variables) are used to compute the value.
 
 * Verifiability. As a formal notation with tool support, SPARK can
   help ensure that the architecture is verifiable. One example is the
@@ -3580,10 +3606,10 @@ occurrences of one value by the other:
       end loop;
    end Replace;
 
-When `Search` is invoked, the only things that the prover knows are
-its pre- and postconditions. It will attempt to show that the
+When :ada:`Search` is invoked, the only things that the prover knows
+are its pre- and postconditions. It will attempt to show that the
 precondition is satisfied, and will assume that the postcondition is
-True. Whether or not `Search` is proven doesn't matter at this
+True. Whether or not :ada:`Search` is proven doesn't matter at this
 stage. If it can't be proven with the SPARK tools, we may decide to
 verify it through other means, such as testing.
 
@@ -3610,13 +3636,13 @@ manual review. As an example, here's a simple piece of code:
 Exhaustive analysis of all potential sources of errors requires
 verifying that:
 
-* `X` is initialized
-* `Y` is initialized
-* `Z` is initialized
-* `Index` is initialized and is in `Arr'Range`
-* `(X * Y)` does not overflow
-* `Z` is not equal to zero
-* `(X * Y) / Z` is within the range of `Some_Int`
+* :ada:`X` is initialized
+* :ada:`Y` is initialized
+* :ada:`Z` is initialized
+* :ada:`Index` is initialized and is in :ada:`Arr'Range`
+* :ada:`(X * Y)` does not overflow
+* :ada:`Z` is not equal to zero
+* :ada:`(X * Y) / Z` is within the range of :ada:`Some_Int`
 
 .. index:: GNATprove
 
@@ -3770,10 +3796,10 @@ performed:
   input condition its corresponding output condition has been
   specified, and vice versa. This can be achieved, for example, by
   specifying dependency relationships between input and output (the
-  SPARK aspect `Depends`) or by partitioning the input space (the
-  SPARK aspect `Contract_Case`).
+  SPARK aspect :ada:`Depends`) or by partitioning the input space (the
+  SPARK aspect :ada:`Contract_Case`).
 * Detection of unintended dataflow relationships. The SPARK aspect
-  `Depends` will verify that each output is computed from its
+  :ada:`Depends` will verify that each output is computed from its
   specified set of inputs.
 * Detection of extraneous code. If the requirements are complete and
   all output variables (and their dependencies) are specified in these
@@ -3856,7 +3882,7 @@ check the contents of a flash zone:
 
 The Low-Level Requirments comprise a textual description and a set of
 formal properties.  The textual description appears in |do-333| and is
-not repeated here.  The formal properties of the `A1F2_TestZone`
+not repeated here.  The formal properties of the :ada:`A1F2_TestZone`
 procedure are of three kinds:
 
 * *Global* contract: identifies the dependence on external data
@@ -4110,7 +4136,7 @@ is to specify the accepted range of temperatures for a given sensor.
    with Dynamic_Predicate => Sensor.Min_Temp < Sensor.Max_Temp;
 
 Each PDI instance needs to satisfy the constraints expressed in the
-`Dynamic_Predicate` aspect. These constraints are based on a
+:ada:`Dynamic_Predicate` aspect. These constraints are based on a
 higher-level specification, such as customer-supplied requirements, a
 system configuration description, or an installation file. Generating
 the PDI file for an instance consists in using GNAT Pro to
@@ -4126,12 +4152,12 @@ inconsistencies will be detected at load time. For example,
    S2 : Sensor := (Min_Temp => -50.0, Max_Temp => 50.0);
    S3 : Sensor := (Min_Temp =>  40.0, Max_Temp => 30.0);
 
-`S1` will be accepted, `S2` will not (`Min_Temp` is out of range),
-`S3` will not (`Min_Temp` is above `Max_Temp`). (The
-`Dynamic_Predicate` check can also be enabled as a run-time check, via
-`pragma Assertion_Policy(Check)` and the |gnata| switch to the GNAT
-compiler.) If all PDIs are defined in this manner, completeness of
-verification is ensured.
+:ada:`S1` will be accepted, :ada:`S2` will not (:ada:`Min_Temp` is out
+of range), :ada:`S3` will not (:ada:`Min_Temp` is above
+:ada:`Max_Temp`). (The :ada:`Dynamic_Predicate` check can also be
+enabled as a run-time check, via :ada:`pragma Assertion_Policy(Check)`
+and the |gnata| switch to the GNAT compiler.) If all PDIs are defined
+in this manner, completeness of verification is ensured.
 
 The only remaining activity is to check that the PDI instance value
 complies with the system configuration.

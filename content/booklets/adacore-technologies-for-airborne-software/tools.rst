@@ -117,8 +117,8 @@ application, and can verify this behavior by testing, static analysis
 or formal proof.
 
 Here's a skeletal example that illustrates contact-based programming;
-a `Table` object is a fixed-length container for distinct `Float`
-values.
+a :ada:`Table` object is a fixed-length container for distinct
+:ada:`Float` values.
 
 .. code-block:: ada
 
@@ -145,7 +145,7 @@ values.
 A compiler option controls whether the pre- and postconditions are
 checked at run time. If checks are enabled, any pre- or postcondition
 failure |mdash| i.e., the contract's Boolean expression evaluating to
-False |mdash| raises the `Assertion_Error` exception.
+:ada:`False` |mdash| raises the :ada:`Assertion_Error` exception.
 
 .. index:: single: Ada language; Programming in the large
 
@@ -314,11 +314,12 @@ subprograms, and invariants for encapsulated (private) types. These
 can serve both for run-time checking and as input to static analysis
 tools.  The most recent version of the standard, Ada 2022, has added
 several contract-based programming constructs inspired by SPARK
-(`Contract_Cases`, `Global`, and `Depends` aspects) and, more
-generally, has enhanced the language's expressiveness. For example,
-Ada 2022 has introduced some new syntax in its concurrency support and
-has defined the :index:`Jorvik tasking profile <Jorvik profile>`,
-which is less restrictive than :index:`Ravenscar <Ravenscar profile>`.
+(:ada:`Contract_Cases`, :ada:`Global`, and :ada:`Depends` aspects)
+and, more generally, has enhanced the language's expressiveness. For
+example, Ada 2022 has introduced some new syntax in its concurrency
+support and has defined the :index:`Jorvik tasking profile <Jorvik
+profile>`, which is less restrictive than :index:`Ravenscar <Ravenscar
+profile>`.
 
 
 In brief, Ada is an internationally standardized language combining
@@ -507,8 +508,8 @@ certification in mind and are known as the Certifiable Profiles:
 The Light Profile provides a flexible Ada subset that is supported by
 a certifiable Ada run-time library. Depending on application
 requirements, this profile can be further restricted through the
-`Restrictions` pragma, with the application only including run-time
-code that is used by the application.
+:ada:`Restrictions` pragma, with the application only including
+run-time code that is used by the application.
 
 These run-time libraries can also be customized directly to suit
 certification requirements: unneeded packages can be removed to allow
@@ -532,7 +533,7 @@ supported. For example, these profiles allow the use of tagged types
 (at library level) and other Object-Oriented Programming features,
 including dynamic dispatching. The general use of dynamic dispatching
 at the application level can be prevented through pragma
-`Restrictions`.
+:ada:`Restrictions`.
 
 A traditional problem with predefined profiles is their inflexibility:
 if a feature outside a given profile is needed, then it is the
@@ -715,7 +716,6 @@ unbounded frames.
 .. index:: single: GNATstack; TQL-5 qualification material
 
 TQL-5 qualification material can be made available for GNATstack.
-
 
 .. index:: GNAT Static Analysis Suite (GNAT SAS)
 
