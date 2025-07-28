@@ -6,12 +6,16 @@ Summary of contributions to DO-178C/ED-12C objectives
 Overall summary: which objectives are met
 -----------------------------------------
 
-The following tables summarize how the Ada and SPARK languages and AdaCore's tools help meet the objectives in |do-178c| and
-the technology supplements. The numbers refer to the specific objectives in the core document or the relevant supplement.
+The following tables summarize how the Ada and SPARK languages and
+AdaCore's tools help meet the objectives in |do-178c| and the
+technology supplements. The numbers refer to the specific objectives
+in the core document or the relevant supplement.
 
-Table A-3 and Tables A-8 through A-10 are not included, since they are independent of AdaCore's technologies.
+Table A-3 and Tables A-8 through A-10 are not included, since they are
+independent of AdaCore's technologies.
 
-.. index:: single: DO-178C/ED-12C and AdaCore technologies; Summary mapping to DO-178C/ED-12C Objectives
+.. index:: single: DO-178C/ED-12C and AdaCore technologies; Summary
+           mapping to DO-178C/ED-12C Objectives
 
 .. only:: latex
 
@@ -63,21 +67,30 @@ Mapping of AdaCore's Technologies to DO-178C/ED-12C Objectives
 Detailed summary: which activities are supported
 -------------------------------------------------
 
-In the tables below, the references in the Activities column are to sections in |do-178c| or to one of the technology
-supplements. The references in the Use case columns are to sections in this document.
+In the tables below, the references in the Activities column are to
+sections in |do-178c| or to one of the technology supplements. The
+references in the Use case columns are to sections in this document.
 
-Since AdaCore's tools mostly contribute to the bottom stages of the "V" cycle (design, coding, integration and related verification
-activities), verification of High-Level Requirements (and thus Table A-3) are outside the scope of AdaCore solutions.
+Since AdaCore's tools mostly contribute to the bottom stages of the
+"V" cycle (design, coding, integration and related verification
+activities), verification of High-Level Requirements (and thus Table
+A-3) are outside the scope of AdaCore solutions.
 
-Likewise, the objectives in Table A-8 (Configuration Management), A-9 (Quality Assurance) and A-10 (Certification Liaison Process)
-are independent of AdaCore's technologies; they are the responsibility of the user.
+Likewise, the objectives in Table A-8 (Configuration Management), A-9
+(Quality Assurance) and A-10 (Certification Liaison Process) are
+independent of AdaCore's technologies; they are the responsibility of
+the user.
 
-.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-1: Software Planning Process
+.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-1:
+           Software Planning Process
 
 Table A-1: Software Planning Process
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The objectives of the Software Planning process are satisfied by developing software plans and standards. These activities are the responsibility of the software project. However, using AdaCore solutions can reduce the effort in meeting some of these objectives.
+The objectives of the Software Planning process are satisfied by
+developing software plans and standards. These activities are the
+responsibility of the software project. However, using AdaCore
+solutions can reduce the effort in meeting some of these objectives.
 
 .. csv-table::
    :widths: 10, 27, 8, 25, 15, 15
@@ -98,7 +111,9 @@ The objectives of the Software Planning process are satisfied by developing soft
 Table A-2: Software Development Processes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-AdaCore tools mostly contribute to the bottom stages of the traditional "V" cycle (design, coding, integration, and the related verification activities).
+AdaCore tools mostly contribute to the bottom stages of the
+traditional "V" cycle (design, coding, integration, and the related
+verification activities).
 
 .. csv-table::
    :widths: 6, 21, 7, 21, 23, 22
@@ -113,12 +128,16 @@ AdaCore tools mostly contribute to the bottom stages of the traditional "V" cycl
    6, "Source code is developed", All, "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`, :ref:`Airborn_SW_Integration_of_C_components_with_Ada`, :ref:`Airborn_SW_Robustness_defensive_programming`", "Same as #1a",   "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`"
    7, "Executable Object Code and Parameter Data Files, if any produced and loaded in the target computer.", "5.4.2.a, 5.4.2.b, 5.4.2.d", "See :ref:`Airborn_SW_Compiling_with_the_GNAT_Pro_compiler`, :ref:`Airborn_SW_Integration_of_C_components_with_Ada`, :ref:`Airborn_SW_Parameter_Data_Items`", "Same as #1a", "Same as #1a"
 
-.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-4: Verification of Outputs of Software Design Process
+.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-4:
+           Verification of Outputs of Software Design Process
 
 Table A-4: Verification of Outputs of Software Design Process
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-AdaCore solutions may contribute to the verification of the architecture and Low-Level Requirements when Ada/SPARK is used during design process. However, compliance with High-Level Requirements is not addressed by AdaCore solutions.
+AdaCore solutions may contribute to the verification of the
+architecture and Low-Level Requirements when Ada/SPARK is used during
+design process. However, compliance with High-Level Requirements is
+not addressed by AdaCore solutions.
 
 .. csv-table::
    :widths: 8, 15, 10, 25, 20, 22
@@ -167,7 +186,8 @@ Table A-5 Verification of Outputs of Software Requirement Process
    FM 12, "Requirement formalization is correct.", |blankcell|, |blankcell|, "See :ref:`Airborn_SW_Using_SPARK_for_design_data_development`"
    FM 13, "Formal method is correctly defined, justified and appropriate.", "FM.6.2.1.a, FM.6.2.1.b, FM.6.2.1.c", |blankcell|, |blankcell|, "See :ref:`Airborn_SW_Using_SPARK_for_design_data_development`"
 
-.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-6: Testing of Outputs of Integration Process
+.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-6:
+           Testing of Outputs of Integration Process
 
 Table A-6 Testing of Outputs of Integration Process
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -182,13 +202,15 @@ Table A-6 Testing of Outputs of Integration Process
    4, "Executable Object Code is robust with low-level requirements.", "6.4.2, 6.4.2.2, 6.4.3, 6.5", "See :ref:`Airborn_SW_Using_GNATtest_for_low-level_testing`, :ref:`Airborn_SW_Using_GNATemulator_for_low-level_and_software/software_integration_tests`, :ref:`Airborn_SW_Robustness_defensive_programming`", "Same as #1a", "See :ref:`Airborn_SW_Formal_analysis_as_an_alternative_to_low-level_testing`, :ref:`Airborn_SW_Low-level_verification_by_mixing_test_and_proof`"
    5, "Executable Object Code is compatible with target computer.", |blankcell|, "This objective is based on High-Level Requirements and is thus outside the scope of AdaCore solutions", "Same as #1a", "Same as #1a"
 
-.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-7: Verification of Verification Process Results
+.. index:: single: DO-178C/ED-12C and AdaCore technologies; Table A-7:
+           Verification of Verification Process Results
 
 Table A-7 Verification of Verification Process Results
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use case #2 applied formal analysis to verify compliance with Low-Level Requirements.
-In applying |do-333|, objectives 4 to 7 from |do-178c| are replaced with objectives FM 1 to FM 10.
+Use case #2 applied formal analysis to verify compliance with
+Low-Level Requirements.  In applying |do-333|, objectives 4 to 7 from
+|do-178c| are replaced with objectives FM 1 to FM 10.
 
 .. csv-table::
    :widths: 4, 17, 7, 26, 23, 22
@@ -224,7 +246,8 @@ In applying |do-333|, objectives 4 to 7 from |do-178c| are replaced with objecti
 AdaCore Tool Qualification and Library Certification
 ----------------------------------------------------
 
-Qualification material can be developed for GNATstack and is available for GNATcheck and GNATcoverage:
+Qualification material can be developed for GNATstack and is available
+for GNATcheck and GNATcoverage:
 
 .. csv-table::
    :widths: 14, 13, 38, 35
@@ -234,7 +257,8 @@ Qualification material can be developed for GNATstack and is available for GNATc
    GNATcheck, "TQL-5", "A-5[4]: 6.3.4.d", "T-5[1..6y]: 6.1.3.4.d"
    GNATcoverage, "TQL-5", "A-7[5..9]: 6.4.4.2", "T-7[5..9]: 6.1.4.3.2.a"
 
-Certification material up to Software Level A can be developed for the Light and Light-Tasking run-time libraries.
+Certification material up to Software Level A can be developed for the
+Light and Light-Tasking run-time libraries.
 
 .. only:: latex
 
