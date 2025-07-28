@@ -24,7 +24,8 @@ implementation of both of these languages.
 
 Although |do-178c| doesn't prescribe any specific software life cycle,
 the development and verification processes that it encompasses can be
-represented as a variation of the traditional "V" cycle. As shown in
+represented as a variation of the traditional
+:wikipedia:`"V-model"<V-model_(software_development)>`. As shown in
 :numref:`Airborn_SW_fig1`, AdaCore's products and the Ada and SPARK
 languages contribute principally to the bottom portions of the "V"
 |mdash| coding and integration and their verification. The Table
