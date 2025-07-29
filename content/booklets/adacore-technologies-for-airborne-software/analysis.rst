@@ -1579,20 +1579,20 @@ test per subprogram may be developed. Here's a simple example:
 
 .. code-block:: ada
 
-   function Sqrt (X : Float) return Float
-    with Pre       =>  X >= 0.0,
-         Post      =>  Sqrt'Result >= 0.0,
-         Test_Case =>
-           (Name     => "test case 1",
-            Mode     => Nominal,
-            Requires => X = 16.0,
-            Ensures  => Sqrt'Result = 4.0),
-         Test_Case =>
-           (Name     => "test case 2",
-            Mode     => Robustness,
-            Requires => X < 0.0,
-            Ensures  => raise Constraint_Error
-                        with "Non-negative value needed");
+    function Sqrt (X : Float) return Float
+     with Pre       =>  X >= 0.0,
+          Post      =>  Sqrt'Result >= 0.0,
+          Test_Case =>
+            (Name     => "test case 1",
+             Mode     => Nominal,
+             Requires => X = 16.0,
+             Ensures  => Sqrt'Result = 4.0),
+          Test_Case =>
+            (Name     => "test case 2",
+             Mode     => Robustness,
+             Requires => X < 0.0,
+             Ensures  => raise Constraint_Error
+                         with "Non-negative value needed");
 
 As part of the specification for the Sqrt function, the GNAT-specific
 aspect :ada:`Test_Case` is used to define two test cases. The one
@@ -1645,23 +1645,23 @@ the test harness. Here's an example:
 
 .. code-block:: ada
 
-   function Sqrt (X : Float) return Float
-   with Test_Case =>
-          (Name     => "test case 1",
-           Mode     => Nominal,
-           Requires => X > 0.0,
-           Ensures  => Sqrt'Result > 0.0),
-        Test_Case =>
-          (Name     => "test case 2",
-           Mode     => Nominal,
-           Requires => X = 0.0,
-           Ensures  => Sqrt'Result = 0.0),
-        Test_Case =>
-          (Name     => "test case 3",
-           Mode     => Robustness,
-           Requires => X < 0.0,
-           Ensures  => raise Constraint_Error
-                       with "Non-negative value needed");
+    function Sqrt (X : Float) return Float
+    with Test_Case =>
+           (Name     => "test case 1",
+            Mode     => Nominal,
+            Requires => X > 0.0,
+            Ensures  => Sqrt'Result > 0.0),
+         Test_Case =>
+           (Name     => "test case 2",
+            Mode     => Nominal,
+            Requires => X = 0.0,
+            Ensures  => Sqrt'Result = 0.0),
+         Test_Case =>
+           (Name     => "test case 3",
+            Mode     => Robustness,
+            Requires => X < 0.0,
+            Ensures  => raise Constraint_Error
+                        with "Non-negative value needed");
 
 In this approach, three :ada:`Test_Case` aspects are defined |mdash|
 in effect test case classes that partition the set of possible input
@@ -1796,13 +1796,13 @@ to open the aircraft doors:
 
 .. code-block:: ada
 
-   Closed_Doors               : Integer;
-   Open_Ordered, Plane_Landed : Boolean;
-    ...
+    Closed_Doors               : Integer;
+    Open_Ordered, Plane_Landed : Boolean;
+     ...
 
-   if Closed_Doors > 0 and then Open_Ordered and then Plane_Landed then
-      Open_Doors;
-   end if;
+    if Closed_Doors > 0 and then Open_Ordered and then Plane_Landed then
+       Open_Doors;
+    end if;
 
 Note: the Ada short-circuit form :ada:`and then` is equivalent to the
 C shortcut boolean operator :ada:`&&`: the second operand is evaluated
@@ -1819,7 +1819,7 @@ The :ada:`if` statement in turn contains a single decision:
 
 .. code-block:: ada
 
-   Closed_Doors > 0 and then Open_Ordered and then Plane_Landed
+    Closed_Doors > 0 and then Open_Ordered and then Plane_Landed
 
 and this decision contains three conditions:
 
@@ -2055,17 +2055,17 @@ has something like:
 
 .. code-block:: ada
 
-   if G then
-      Do_Something;
-   else
-      Do_Something_Else;
-   end if;
+    if G then
+       Do_Something;
+    else
+       Do_Something_Else;
+    end if;
 
 and in a module :ada:`Beta`:
 
 .. code-block:: ada
 
-   G := False;
+    G := False;
 
 Then this is really an example of control coupling, and not data
 coupling. Using a global variable to effect this control flow is
@@ -2128,20 +2128,20 @@ A statement like:
 
 .. code-block:: ada
 
-   A : Integer range 1..10;
-   B : Integer;
-   ...
-   A := B;
+    A : Integer range 1..10;
+    B : Integer;
+    ...
+    A := B;
 
 may be compiled into the following pseudo-object code:
 
 .. code-block:: ada
 
-   if B >= 1 or else B <= 10 then
-      A := B;
-   else
-      raise Constraint_Error;
-   end if;
+    if B >= 1 or else B <= 10 then
+       A := B;
+    else
+       raise Constraint_Error;
+    end if;
 
 This assumes that checks are retained at run-time. However, even with
 checks disabled, a compiler for either Ada or C may still need to
@@ -2151,9 +2151,9 @@ object code level on typical target hardware:
 
 .. code-block:: ada
 
-   A, B : String (1..100);
-   ...
-   A (1..50) := B (11..60);
+    A, B : String (1..100);
+    ...
+    A (1..50) := B (11..60);
 
 AdaCore has verified the correctness of non-traceable code for the
 *GNAT Pro for Ada* and *GNAT Pro for C* compilers, based on
@@ -2284,43 +2284,43 @@ basic computation:
 
 .. code-block:: ada
 
-   generic
-      type Int_Type is range <>;
-   function Add_Saturated (Left, Right, Max : Int_Type)
-     return Int_Type
-     with Pre => Max>0;
-   function Add_Saturated (Left, Right, Max : Int_Type)
-      return Int_Type is
-      Temp : Int_Type;
-   begin
-      Temp := Left + Right;
+    generic
+       type Int_Type is range <>;
+    function Add_Saturated (Left, Right, Max : Int_Type)
+      return Int_Type
+      with Pre => Max>0;
+    function Add_Saturated (Left, Right, Max : Int_Type)
+       return Int_Type is
+       Temp : Int_Type;
+    begin
+       Temp := Left + Right;
 
-      if Temp > Max then
-         return Max;
-      elsif Temp < -Max then
-         return -Max;
-      else
-         return Temp;
-      end if;
-   end Add_Saturated;
+       if Temp > Max then
+          return Max;
+       elsif Temp < -Max then
+          return -Max;
+       else
+          return Temp;
+       end if;
+    end Add_Saturated;
 
 Then consider two separate instantiations:
 
 .. code-block:: ada
 
-   with Add_Saturated;
-   procedure Test_Gen is
-      function Add_1 is new Add_Saturated (Integer);
+    with Add_Saturated;
+    procedure Test_Gen is
+       function Add_1 is new Add_Saturated (Integer);
 
-      type Small_Int is range -10 .. 10;
-      function Add_2 is new Add_Saturated (Small_Int);
+       type Small_Int is range -10 .. 10;
+       function Add_2 is new Add_Saturated (Small_Int);
 
-      N1 : Integer;
-      N2 : Small_Int;
-   begin
-      N1 := Add_1 (6, 6, 10); -- Correctly yields 10
-      N2 := Add_2 (6, 6, 10); -- Raises Constraint_Error
-   end Test_Gen;
+       N1 : Integer;
+       N2 : Small_Int;
+    begin
+       N1 := Add_1 (6, 6, 10); -- Correctly yields 10
+       N2 := Add_2 (6, 6, 10); -- Raises Constraint_Error
+    end Test_Gen;
 
 Calling :ada:`Add_1 (6, 6, 10)` will yield 10 as a result. Calling
 :ada:`Add_2 (6, 6, 10)` will raise :ada:`Constraint_Error` on the
@@ -2433,17 +2433,17 @@ aircraft type with a subprogram that is supposed to open the doors.
 
 .. code-block:: ada
 
-   package Aircraft_Pkg is
-      type Aircraft is abstract tagged private;
+    package Aircraft_Pkg is
+       type Aircraft is abstract tagged private;
 
-      procedure Open_Doors (Self : Aircraft)
-      with Pre'Class  => Self.On_Ground,
-           Post'Class => Self.Doors_Opened;
+       procedure Open_Doors (Self : Aircraft)
+       with Pre'Class  => Self.On_Ground,
+            Post'Class => Self.Doors_Opened;
 
-      ...
-   private
-   ...
-   end Aircraft_Pkg;
+       ...
+    private
+       ...
+    end Aircraft_Pkg;
 
 The contracts for the pre- and postconditions reflect the low-level
 requirements:
@@ -2456,19 +2456,19 @@ The :ada:`Aircraft` type could be used as follows:
 
 .. code-block:: ada
 
-   procedure Landing_Procedure (My_Aircraft : Aircraft'Class) is
-   begin
-      ...
-      while not My_Aircraft.On_Ground loop
-         ...
-      end loop;
+    procedure Landing_Procedure (My_Aircraft : Aircraft'Class) is
+    begin
+       ...
+       while not My_Aircraft.On_Ground loop
+          ...
+       end loop;
 
-      -- Here if My_Aircraft is on the ground
+       -- Here if My_Aircraft is on the ground
 
-      My_Aircraft.Open_Doors;  -- Dispatching call
-      My_Aircraft.Let_Passengers_Out;
-      ...
-   end Landing_Procedure;
+       My_Aircraft.Open_Doors;  -- Dispatching call
+       My_Aircraft.Let_Passengers_Out;
+       ...
+    end Landing_Procedure;
 
 We're first waiting until the aircraft is actually on the ground, then
 open the doors, then as the doors are opened we let passengers out.
@@ -2508,21 +2508,21 @@ Let's now define a :ada:`Jet`:
 
 .. code-block:: ada
 
-   type Jet is new Aircraft with ...
+    type Jet is new Aircraft with ...
 
-   overriding
-   procedure Open_Doors (Self : Jet)
-   with Pre        => Self.On_Ground and Self.Engines_Off,
-        Post'Class => Self.Doors_Opened and not Self.Pressurized;
+    overriding
+    procedure Open_Doors (Self : Jet)
+    with Pre        => Self.On_Ground and Self.Engines_Off,
+         Post'Class => Self.Doors_Opened and not Self.Pressurized;
 
 Suppose that :ada:`Landing_Procedure` is invoked on an object of type
 :ada:`Jet`:
 
 .. code-block:: ada
 
-   J : Aircraft'Class := Jet'(...);
-   ...
-   Landing_Procedure (J);
+    J : Aircraft'Class := Jet'(...);
+    ...
+    Landing_Procedure (J);
 
 In the call :ada:`My_Aircraft.Open_Doors`, first the precondition for
 :ada:`Open_Doors` for :ada:`Aircraft` will be evaluated (since the
@@ -2571,29 +2571,29 @@ postconditions, as illustrated in a slight variation of the
 
 .. code-block:: ada
 
-   package Aircraft_Pkg is
-      type Aircraft is abstract tagged private;
+    package Aircraft_Pkg is
+       type Aircraft is abstract tagged private;
 
-      procedure Open_Doors (Self : Aircraft)
-      with Pre'Class  => Self.On_Ground,
-           Post       => Self.Doors_Opened;
-           -- Specific, not class-wide
+       procedure Open_Doors (Self : Aircraft)
+       with Pre'Class  => Self.On_Ground,
+            Post       => Self.Doors_Opened;
+            -- Specific, not class-wide
 
-      ...
-   private
-      ...
-   end Aircraft_Pkg;
+       ...
+    private
+       ...
+    end Aircraft_Pkg;
 
 Here's a possible declaration for a hot air balloon:
 
 .. code-block:: ada
 
-   type Hot_Air_Balloon is new Aircraft with ...
+    type Hot_Air_Balloon is new Aircraft with ...
 
-   overriding
-   procedure Open_Doors (Self  : Hot_Air_Balloon)
-   with Pre'Class  => Self.On_Ground or Self.Tethered,
-        Post       => Self.Doors_Unlocked;
+    overriding
+    procedure Open_Doors (Self  : Hot_Air_Balloon)
+    with Pre'Class  => Self.On_Ground or Self.Tethered,
+         Post       => Self.Doors_Unlocked;
 
 In this case, the precondition is relaxed (we're assuming a short
 tether). This is acceptable, since the landing procedure will still
@@ -2724,47 +2724,47 @@ locally substitutable at the dispatching calls:
 
 .. code-block:: ada
 
-   package Aircraft_Pkg is
-      type Aircraft is abstract tagged private;
+    package Aircraft_Pkg is
+       type Aircraft is abstract tagged private;
 
-      procedure Open_Doors (Self : Aircraft)
-      with Pre'Class  => Self.On_Ground,
-           Post'Class => Self.Doors_Opened;
+       procedure Open_Doors (Self : Aircraft)
+       with Pre'Class  => Self.On_Ground,
+            Post'Class => Self.Doors_Opened;
 
-      procedure Take_Off (Self : Aircraft)
-      with Pre'Class  => Self.On_Ground and not
-                         Self.Doors_Opened,
-           Post'Class => not Self.On_Ground;
-      ...
-   private
-      ...
-   end Aircraft_Pkg;
+       procedure Take_Off (Self : Aircraft)
+       with Pre'Class  => Self.On_Ground and not
+                          Self.Doors_Opened,
+            Post'Class => not Self.On_Ground;
+       ...
+    private
+       ...
+    end Aircraft_Pkg;
 
-   package Aircraft_Pkg.Jet_Pkg is
-      type Jet is new Aircraft with ...
+    package Aircraft_Pkg.Jet_Pkg is
+       type Jet is new Aircraft with ...
 
-      overriding
-      procedure Open_Doors (Self : Jet)
-      with Pre        => Self.On_Ground and Self.Engines_Off,
-                         -- Not substitutable
-           Post'Class => not Self.Pressurized;
+       overriding
+       procedure Open_Doors (Self : Jet)
+       with Pre        => Self.On_Ground and Self.Engines_Off,
+                          -- Not substitutable
+            Post'Class => not Self.Pressurized;
 
-      overriding
-      procedure Take_Off (Self : Aircraft)
-      -- Inherit Aircraft's precondition
-      with Post'Class => not Self.On_Ground and
-                         Self.Speed >= 100.0;
+       overriding
+       procedure Take_Off (Self : Aircraft)
+       -- Inherit Aircraft's precondition
+       with Post'Class => not Self.On_Ground and
+                          Self.Speed >= 100.0;
 
-      ...
-   private
-      ...
-   end Aircraft_Pkg.Jet_Pkg;
-   ...
-   X, Y : Aircraft'Class := Jet'(...)
-  ...
+       ...
+    private
+       ...
+    end Aircraft_Pkg.Jet_Pkg;
+    ...
+    X, Y : Aircraft'Class := Jet'(...)
+    ...
 
-   X.Take_Off;
-   Y.Take_Off;
+    X.Take_Off;
+    Y.Take_Off;
 
 The :ada:`Jet` type is not globally substitutable for :ada:`Aircraft`,
 since the precondition on :ada:`Open_Doors` for :ada:`Jet` is stronger
@@ -2820,19 +2820,19 @@ derivation. Following-up on previous examples:
 
 .. code-block:: ada
 
-   procedure Control_Flight (Plane : Aircraft'Class) is
-   begin
+    procedure Control_Flight (Plane : Aircraft'Class) is
+    begin
+
+       ...
+
+       -- Dispatching call, may call Take_Off from instances
+       -- defined in other modules, creating coupling
+       -- relationship with those modules
+       Plane.Take_Off;
 
       ...
 
-      -- Dispatching call, may call Take_Off from instances
-      -- defined in other modules, creating coupling
-      -- relationship with those modules
-      Plane.Take_Off;
-
-     ...
-
-   end Control_Flight;
+    end Control_Flight;
 
 Aircraft of different types may be defined in separate modules. A
 connection between these modules and the rest of the application may
@@ -2920,31 +2920,31 @@ in the :ada:`Aircraft` class hierarchy, depending on a parameter:
 
 .. code-block:: ada
 
-   type Aircraft        is abstract tagged ...
-   type Jet             is new Aircraft with ...
-   type Hot_Air_Balloon is new Aircraft with ...
-   ...
-   function Create (T : Integer) return Aircraft'Class is
-   begin
-      if T = 1 then
-         return Jet'(<initialization of a Jet>);
-      elsif T = 2 then
-         return Hot_Air_Balloon'(...);
-          -- initialization of a Hot_Air_Balloon
-      else
-         raise <some exception>;
-      end if;
-   end Create;
+    type Aircraft        is abstract tagged ...
+    type Jet             is new Aircraft with ...
+    type Hot_Air_Balloon is new Aircraft with ...
+    ...
+    function Create (T : Integer) return Aircraft'Class is
+    begin
+       if T = 1 then
+          return Jet'(<initialization of a Jet>);
+       elsif T = 2 then
+          return Hot_Air_Balloon'(...);
+           -- initialization of a Hot_Air_Balloon
+       else
+          raise <some exception>;
+       end if;
+    end Create;
 
 Objects of the class-wide type :ada:`Aircraft'Class` can be created as
 local or global variables:
 
 .. code-block:: ada
 
-   N : Integer        := Get_Integer;  -- Dynamically computed
-   P : Aircraft'Class := Create (N);
-   ...
-   P.Take_Off;
+    N : Integer        := Get_Integer;  -- Dynamically computed
+    P : Aircraft'Class := Create (N);
+    ...
+    P.Take_Off;
 
 Here, :ada:`P` is allocated on the stack and may be either a
 :ada:`Jet` or a :ada:`Hot_Air_Balloon`. The call to :ada:`P.Take_Off`
@@ -2957,25 +2957,25 @@ allocation. This can be achieved in Ada:
 
 .. code-block:: ada
 
-   type Aircraft        is abstract tagged ...
-   type Jet             is new Aircraft with ...
-   type Hot_Air_Balloon is new Aircraft with ...
+    type Aircraft        is abstract tagged ...
+    type Jet             is new Aircraft with ...
+    type Hot_Air_Balloon is new Aircraft with ...
 
-   type Aircraft_Ref is access all Aircraft'Class;
-   for Aircraft_Ref'Storage_Size use 0;
-      -- No dynamic allocations
-   ...
-   Jet_1, Jet_2                    : aliased Jet := ...;
-   Balloon_1, Balloon_2, Balloon_3 : aliased Hot_Air_Balloon := ...;
+    type Aircraft_Ref is access all Aircraft'Class;
+    for Aircraft_Ref'Storage_Size use 0;
+       -- No dynamic allocations
+    ...
+    Jet_1, Jet_2                    : aliased Jet := ...;
+    Balloon_1, Balloon_2, Balloon_3 : aliased Hot_Air_Balloon := ...;
 
-   type Aircraft_Pool_Type is array(Positive range <>) of Aircraft_Ref;
-   Pool : Aircraft_Pool_Type := (Jet_2'Access,
-                                 Balloon_3'Access,
-                                 Jet_1'Access);
-   ...
-   for P of Pool loop
-      P.Take_Off;  -- Dispatches
-   end loop;
+    type Aircraft_Pool_Type is array(Positive range <>) of Aircraft_Ref;
+    Pool : Aircraft_Pool_Type := (Jet_2'Access,
+                                  Balloon_3'Access,
+                                  Jet_1'Access);
+    ...
+    for P of Pool loop
+       P.Take_Off;  -- Dispatches
+    end loop;
 
 These examples show how object orientation can be used in Ada without
 dynamic memory. More complicated designs, however, would probably need
@@ -3073,19 +3073,19 @@ exceptions.
 
 .. code-block:: ada
 
-   type Overflow_Status is (No_Overflow, Overflow);
+    type Overflow_Status is (No_Overflow, Overflow);
 
-   procedure Saturated_Add (I1, I2 : in Positive;
-                            Result : out Positive;
-                            Status : out Overflow_Status) is
-   begin
-      Result := I1+I2;
-      Status := No_Overflow;
-   exception
-      when Constraint_Error =>
-         Result := Integer'Last;
-         Status := Overflow;
-   end Saturated_Add;
+    procedure Saturated_Add (I1, I2 : in Positive;
+                             Result : out Positive;
+                             Status : out Overflow_Status) is
+    begin
+       Result := I1+I2;
+       Status := No_Overflow;
+    exception
+       when Constraint_Error =>
+          Result := Integer'Last;
+          Status := Overflow;
+    end Saturated_Add;
 
 .. index:: single: SPARK language; Exception handling
 
@@ -3134,12 +3134,12 @@ could be:
 
 .. code-block:: cpp
 
-   int f (int x);
-   int f (float x);
+    int f (int x);
+    int f (float x);
 
-   ...
+    ...
 
-   int r = f (100);
+    int r = f (100);
 
 Knowing which function :cpp:`f()` will be called is not immediately
 obvious. Furthermore, if the original version of the program contained
@@ -3160,13 +3160,13 @@ intent. Here is an example:
 
 .. code-block:: ada
 
-   type Miles      is new Integer;
-   type Kilometers is new Integer;
+    type Miles      is new Integer;
+    type Kilometers is new Integer;
 
-   function F (Distance : Miles)      return Integer;
-   function F (Distance : Kilometers) return Integer;
+    function F (Distance : Miles)      return Integer;
+    function F (Distance : Kilometers) return Integer;
 
-   R : Integer := F (100);  -- Ambiguous
+    R : Integer := F (100);  -- Ambiguous
 
 The above code is illegal in Ada due to the ambiguity: the literal 100
 could be interpreted as either a :ada:`Miles` or a :ada:`Kilometers`
@@ -3175,8 +3175,8 @@ the type explicit and the call unambiguous:
 
 .. code-block:: ada
 
-   R1 : Integer := F ( Miles'(100) );
-   R2 : Integer := F ( Kilometers'(100) );
+    R1 : Integer := F ( Miles'(100) );
+    R2 : Integer := F ( Kilometers'(100) );
 
 With its restrictions on implicit conversions and its provision of an
 explicit facility for making subprogram calls unambiguous, Ada
@@ -3475,19 +3475,19 @@ several of the associated objectives:
 
   .. code-block:: ada
 
-   type Probe_Type is
-      record
-      ...
-      end record;
+    type Probe_Type is
+       record
+       ...
+       end record;
 
-   Probes : array (1 .. 10) of Probe_Type;
+    Probes : array (1 .. 10) of Probe_Type;
 
-   procedure Calibrate_Probe (Index : Integer;
-                              Min, Max : Integer)
-      with Globals =>
-             (In_Out => Probes),
-           Depends =>
-             (Probes => (Probes, Index, Min, Max));
+    procedure Calibrate_Probe (Index : Integer;
+                               Min, Max : Integer)
+       with Globals =>
+              (In_Out => Probes),
+            Depends =>
+              (Probes => (Probes, Index, Min, Max));
 
   The :ada:`Calibrate_Probe` procedure will use the global variable
   :ada:`Probes` in :ada:`in out` mode (it can read from and write to
@@ -3555,32 +3555,32 @@ scalable. For example, consider the following function:
 
 .. code-block:: ada
 
-   type My_Array is array(Positive range <>) of Integer;
+    type My_Array is array(Positive range <>) of Integer;
 
-   function Search (Arr   : My_Array;
-                    Start : Positive;
-                    Value : Integer)
-      return Integer
-   with Pre  =>
-          Start in Arr'Range,
-        Post =>
-          (if Search'Result = -1 then
-             (for all I in Start .. Arr'Last => Arr (I) /= Value)
-           else Arr(Search'Result) = Value);
+    function Search (Arr   : My_Array;
+                     Start : Positive;
+                     Value : Integer)
+       return Integer
+    with Pre  =>
+           Start in Arr'Range,
+         Post =>
+           (if Search'Result = -1 then
+              (for all I in Start .. Arr'Last => Arr (I) /= Value)
+            else Arr(Search'Result) = Value);
 
 The code inside the body might start with:
 
 .. code-block:: ada
 
-   function Search (Arr   : My_Array;
-                    Start : Positive;
-                    Value : Integer)
-      return Integer is
-   begin
-   if Arr (Start) = Value then
-      return Start;
-   end if;
-   ...
+    function Search (Arr   : My_Array;
+                     Start : Positive;
+                     Value : Integer)
+       return Integer is
+    begin
+       if Arr (Start) = Value then
+          return Start;
+       end if;
+       ...
 
 Because of the precondition, the SPARK analysis tool can deduce that
 the array indexing will not raise an exception.
@@ -3590,22 +3590,22 @@ occurrences of one value by the other:
 
 .. code-block:: ada
 
-   procedure Replace (Arr  : in out My_Array;
-                   X, Y : in Integer)
-   with Pre  => Arr'Length /= 0 and X /= Y,
-        Post => (for all I in Arr'Range =>
-                    (if Arr'Old (I) = X then Arr (I) = Y));
+    procedure Replace (Arr  : in out My_Array;
+                    X, Y : in Integer)
+    with Pre  => Arr'Length /= 0 and X /= Y,
+         Post => (for all I in Arr'Range =>
+                     (if Arr'Old (I) = X then Arr (I) = Y));
 
-   procedure Replace (Arr : in out My_Array; X, Y : Integer) is
-      Ind : Integer := Arr'First;
-   begin
-      loop
-         Ind := Search (Arr, Ind, X);
-         exit when Ind = -1;
-         Arr (Ind) := Y;
-         exit when Ind = Arr'Last;
-      end loop;
-   end Replace;
+    procedure Replace (Arr : in out My_Array; X, Y : Integer) is
+       Ind : Integer := Arr'First;
+    begin
+       loop
+          Ind := Search (Arr, Ind, X);
+          exit when Ind = -1;
+          Arr (Ind) := Y;
+          exit when Ind = Arr'Last;
+       end loop;
+    end Replace;
 
 When :ada:`Search` is invoked, the only things that the prover knows
 are its pre- and postconditions. It will attempt to show that the
@@ -3627,12 +3627,12 @@ manual review. As an example, here's a simple piece of code:
 
 .. code-block:: ada
 
-   subtype Some_Int is Integer range ...;
-   Arr : array (Integer range <>) of Some_Int := ...;
+    subtype Some_Int is Integer range ...;
+    Arr : array (Integer range <>) of Some_Int := ...;
 
-   Index, X, Y, Z : Integer;
-   ...
-   Arr (Index) := (X * Y) / Z;
+    Index, X, Y, Z : Integer;
+    ...
+    Arr (Index) := (X * Y) / Z;
 
 Exhaustive analysis of all potential sources of errors requires
 verifying that:
@@ -3901,11 +3901,11 @@ procedure are of three kinds:
            ((for some K in T_A1F2_Index => A1F2_Memory_Zone(K) /= 16#FF#) and then
               Rl_Return = NOT_OK and then pFailure.FailureIndex = INDEX_FLASH_2);
 
-   pragma Loop_Invariant(for all K in T_A1F2_Index'First .. Rl_Index =>
-                         A1F2_Memory_Zone(K) = Rl_Expectedvalue);
-   pragma Loop_Invariant(pFailure = APAT_Ce_sFAILURE_NO_ERROR
-                           and then
-			 Rl_Return = OK);
+    pragma Loop_Invariant(for all K in T_A1F2_Index'First .. Rl_Index =>
+                          A1F2_Memory_Zone(K) = Rl_Expectedvalue);
+    pragma Loop_Invariant(pFailure = APAT_Ce_sFAILURE_NO_ERROR
+                            and then
+                          Rl_Return = OK);
 
 Here is the source code for the package spec (:file:`a1f2.ads`) and
 body (:file:`a1f2.adb`):
@@ -4129,12 +4129,12 @@ is to specify the accepted range of temperatures for a given sensor.
 
 .. code-block:: ada
 
-   type Sensor is
-      record
-         Min_Temp : Float range -40.0 .. 60.0;
-         Max_Temp : Float range -20.0 .. 80.0;
-      end record
-   with Dynamic_Predicate => Sensor.Min_Temp < Sensor.Max_Temp;
+    type Sensor is
+       record
+          Min_Temp : Float range -40.0 .. 60.0;
+          Max_Temp : Float range -20.0 .. 80.0;
+       end record
+    with Dynamic_Predicate => Sensor.Min_Temp < Sensor.Max_Temp;
 
 Each PDI instance needs to satisfy the constraints expressed in the
 :ada:`Dynamic_Predicate` aspect. These constraints are based on a
@@ -4149,9 +4149,9 @@ inconsistencies will be detected at load time. For example,
 
 .. code-block:: ada
 
-   S1 : Sensor := (Min_Temp => -30.0, Max_Temp => 50.0);
-   S2 : Sensor := (Min_Temp => -50.0, Max_Temp => 50.0);
-   S3 : Sensor := (Min_Temp =>  40.0, Max_Temp => 30.0);
+    S1 : Sensor := (Min_Temp => -30.0, Max_Temp => 50.0);
+    S2 : Sensor := (Min_Temp => -50.0, Max_Temp => 50.0);
+    S3 : Sensor := (Min_Temp =>  40.0, Max_Temp => 30.0);
 
 :ada:`S1` will be accepted, :ada:`S2` will not (:ada:`Min_Temp` is out
 of range), :ada:`S3` will not (:ada:`Min_Temp` is above
