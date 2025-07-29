@@ -117,7 +117,8 @@ and paragraph reference for the objective in the |do-178c| standard or
 the relevant technology supplement. For example, A-2[6]: 5.3.1.a
 refers to Table A-2, Objective 6, paragraph 5.3.1a.
 
-.. index:: single: Use Case 1a: Traditional development process excluding OOT; Coding with Ada 2012
+.. index:: single: Use Case 1a: Traditional development process
+           excluding OOT; Coding with Ada 2012
 
 Use case #1a: Coding with Ada 2012
 ----------------------------------
@@ -523,7 +524,7 @@ embedded systems; and Ada's low-level facilities, which allow the
 programmer to specify target-specific representations for data types
 (including the bit layout of fields in a record, and the values for
 enumeration elements). Further information on features that contribute
-to safe software may be found in [Barnes_Brosgol_2015]_.
+to safe software may be found in :cite:p:`Barnes_Brosgol_2015`.
 
 In summary, Ada's benefits stem from its expressive power, allowing
 the developer to specify the needed functionality or to constrain the
@@ -1075,7 +1076,7 @@ AdaCore tools and the Ada language.
 * A project using a C codebase can incrementally introduce Ada or
   SPARK. Ada has standard support for interfacing with C, SPARK can be
   combined with C (with checks at the interfaces)
-  [Kanig_Ochem_Comar_2016]_, and AdaCore's :index:`GNAT Pro Common
+  :cite:p:`Kanig_Ochem_Comar_2016`, and AdaCore's :index:`GNAT Pro Common
   Code Generator` compiles a SPARK-like subset of Ada into C (for use
   on processors lacking an Ada compiler). C projects can thus
   progressively adopt higher-tier languages without losing the
@@ -1469,13 +1470,13 @@ VxWorks 6 Cert, Lynx178, PikeOS) as well as bare metal configurations,
 for a wide range of processors (such as PowerPC and ARM).
 
 The Ada language helps reduce the risk of introducing errors during
-software development (see [Black_et_al_2011]_). This is achieved
-through a combination of specific programming constructs together with
-static and dynamic checks. As a result, Ada code standards tend to be
-shorter and simpler than C code standards, since many issues are taken
-care of by default. The GNAT Pro compiler and linker provide detailed
-error and warning diagnostics, making it easy to correct potential
-problems early in the development process.
+software development (see :cite:p:`Black_et_al_2011`). This is
+achieved through a combination of specific programming constructs
+together with static and dynamic checks. As a result, Ada code
+standards tend to be shorter and simpler than C code standards, since
+many issues are taken care of by default. The GNAT Pro compiler and
+linker provide detailed error and warning diagnostics, making it easy
+to correct potential problems early in the development process.
 
 As with all AdaCore tools, the list of known problems in the compiler
 is kept up to date and is available to all subscribers to the
@@ -1975,7 +1976,7 @@ the outcome of the two tests is different.
 
 In the general case, the MC/DC criterion for a decision with n
 conditions requires n+1 tests, instead of 2\ :sup:`n`. For more
-information about MC/DC, see [Hayhurst_et_al_2001]_.
+information about MC/DC, see :cite:p:`Hayhurst_et_al_2001`.
 
 .. index:: GNATcoverage
 .. index:: single: Structural code coverage; GNATcoverage
@@ -3325,7 +3326,7 @@ requirements, and this may be appropriate for some critical kernel
 modules. (A description of how SPARK may be introduced into a project
 at various levels, depending on the system's assurance requirements,
 may be found in a booklet co-authored by AdaCore and Thales
-[AdaCore_Thales_2020]_.) Since subprogram pre- and postcondition
+:cite:p:`AdaCore_Thales_2020`.) Since subprogram pre- and postcondition
 contracts often express low-level requirements, some low-level
 requirements-based testing may be replaced by formal proofs as
 described in the |do-333| Formal Methods supplement to |do-178c|.

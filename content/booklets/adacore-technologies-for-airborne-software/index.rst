@@ -160,8 +160,4 @@ booklet.
    AdaCore Tools and Technologies Overview<tools>
    Compliance with DO-178C / ED-12C Guidance: Analysis<analysis>
    Summary of contributions to DO-178C/ED-12C objectives<summary>
-   
-.. toctree::
-   :maxdepth: 2
-           
-   References<references>
+   Bibliography<bibliography>

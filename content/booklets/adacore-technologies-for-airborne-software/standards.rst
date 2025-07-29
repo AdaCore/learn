@@ -11,7 +11,7 @@ Overview
 "Every State has complete and exclusive sovereignty over the airspace
 above its territory." This general principle was codified in Article 1
 of the Convention on International Civil Aviation (the "Chicago
-Convention") in 1944 [ICAO_1944]_.  To control the airspace,
+Convention") in 1944 :cite:p:`ICAO_1944`. To control the airspace,
 harmonized regulations have been formulated to ensure that the
 aircraft are airworthy.
 
@@ -28,7 +28,7 @@ Operating Performance Standards" (MOPS) and a set of recognized
 |do-254| for Complex Electronic Hardware.
 
 *DO-178C/ED-12C - Software Considerations in Airborne Systems and
-Equipment Certification* [RTCA_EUROCAE_2011]_ |mdash| was issued in
+Equipment Certification* :cite:p:`RTCA_EUROCAE_2011` |mdash| was issued in
 December 2011, developed jointly by RTCA, Inc., and EUROCAE. It is the
 primary document by which certification authorities such as the FAA,
 EASA, and Transport Canada approve all commercial software-based
@@ -79,7 +79,7 @@ The |do-178c| document suite comprises:
   in other application domains.
 
 Details on how to use these standards in practice may be found in
-[Rierson_2013]_.
+:cite:p:`Rierson_2013`.
 
 .. index:: Design Assurance Level (DAL), Software level
 
@@ -237,14 +237,14 @@ target computer, the other objectives of EOC verification may be
 satisfied by formal analysis. This is a significant added
 value. However, employing formal analysis to replace tests is a new
 concept in the avionics domain, with somewhat limited experience in
-practice thus far (see [Moy_et_al_2013]_ for further information).  As
-noted in [Moy_2017]_, a significant issue is how to demonstrate that
-the compiler generates code that properly preserves the properties
-that have been formally demonstrated for the source code. Running the
-integration tests both with and without the contracts being executed,
-and showing that the results are the same in both cases, is one way to
-gain the necessary confidence that properties have been preserved in
-the EOC.
+practice thus far (see :cite:p:`Moy_et_al_2013` for further
+information).  As noted in :cite:p:`Moy_2017`, a significant issue is
+how to demonstrate that the compiler generates code that properly
+preserves the properties that have been formally demonstrated for the
+source code. Running the integration tests both with and without the
+contracts being executed, and showing that the results are the same in
+both cases, is one way to gain the necessary confidence that
+properties have been preserved in the EOC.
 
 Details from tool providers on the underlying models or mathematical
 theories implemented in the tool are necessary to assess the maturity
