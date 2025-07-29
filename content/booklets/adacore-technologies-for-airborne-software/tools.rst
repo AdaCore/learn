@@ -30,8 +30,9 @@ for contract-based programming in the form of subprogram pre- and
 postconditions and type invariants) were added in the Ada 2012 version
 of the language standard, and a number of features to increase the
 language's expressiveness were introduced in Ada 2022 (see
-[ISO_IEC_2012]_, [Barnes_Brosgol_2015]_, [Barnes_2014]_,
-[ISO_IEC_2022]_ for information about Ada).
+:cite:p:`ISO_IEC_2012`, :cite:p:`Barnes_Brosgol_2015`,
+:cite:p:`Barnes_2014`, :cite:p:`ISO_IEC_2022` for information about
+Ada).
 
 The name "Ada" is not an acronym; it was chosen in honor of Augusta
 Ada Lovelace (1815-1852), a mathematician who is regarded as the
@@ -198,7 +199,7 @@ additional OOP features including Java-like interfaces and traditional
 Ada is methodologically neutral and does not impose a distributed
 overhead for OOP. If an application does not need OOP, then the OOP
 features do not have to be used, and there is no run-time penalty.
-See [Barnes_2014]_ or [AdaCore_2016]_ for more details.
+See :cite:p:`Barnes_2014` or :cite:p:`AdaCore_2016` for more details.
 
 .. index:: single: Ada language; Concurrent programming
 
@@ -263,9 +264,9 @@ With its emphasis on sound software engineering principles, Ada
 supports the development of high-integrity applications, including
 those that need to be certified against safety standards such
 |do-178c| for avionics, CENELEC EN 50716:2023 for rail systems, and
-security standards such as the Common Criteria [CCDB_2022]_.  Key to
-Ada's support for high-assurance software is the language's memory
-safety; this is illustrated by a number of features, including:
+security standards such as the Common Criteria :cite:p:`CCDB_2022`.
+Key to Ada's support for high-assurance software is the language's
+memory safety; this is illustrated by a number of features, including:
 
 * Strong typing
 
@@ -357,7 +358,7 @@ cross-domain solutions.
 
 The SPARK language has been stable over the years, with periodic
 enhancements.  The 2014 version of SPARK represented a major revision
-(see [McCormick_Chapin_2015]_), incorporating contract-based
+(see :cite:p:`McCormick_Chapin_2015`), incorporating contract-based
 programming syntax from Ada 2012, and subsequent upgrades included
 support for pointers (access types) based on the Rust ownership model.
 
@@ -398,14 +399,15 @@ Ease of Adoption
 
 User experience has shown that the language and the SPARK Pro toolset
 do not require a steep learning curve. Training material such as
-AdaCore's online AdaLearn course for SPARK [AdaLearn]_ can quickly
-bring developers up to speed; users are assumed to be experts in their
-own application domain such as avionics software and do not need to be
-familiar with formal methods or the proof technology implemented by
-the toolset. In effect, SPARK Pro is an advanced static analysis tool
-that will detect many logic errors very early in the software life
-cycle. It can be smoothly integrated into an organization's existing
-development and verification methodology and infrastructure.
+AdaCore's online AdaLearn course for SPARK :cite:p:`Learn` can
+quickly bring developers up to speed; users are assumed to be experts
+in their own application domain such as avionics software and do not
+need to be familiar with formal methods or the proof technology
+implemented by the toolset. In effect, SPARK Pro is an advanced static
+analysis tool that will detect many logic errors very early in the
+software life cycle. It can be smoothly integrated into an
+organization's existing development and verification methodology and
+infrastructure.
 
 SPARK uses the standard Ada 2012 contract syntax, which both
 simplifies the learning process and also allows new paradigms of
