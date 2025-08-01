@@ -2,8 +2,6 @@
 
 ## Writing Guidelines
 
-- Text must contain up to 79 characters per line.
-
 - Source-code examples should be complete, compilable, and free of errors.
 
     - Valid exceptions for incomplete code are, for example, when the
@@ -28,6 +26,10 @@
 
     - They must be optional: readers should be able to understand the
       lessons without having to refer to other languages.
+
+### Editorial policies and guidelines
+
+- Text must contain up to 79 characters per line.
 
 ## Interactive snippets
 
