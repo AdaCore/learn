@@ -41,6 +41,11 @@
 
 ### Editorial policies and guidelines
 
+- The content must be written in ReST format.
+
+    - Sphinx is used to generate HTML, PDF and EPUB content based on the ReST
+      format.
+
 - Text must contain up to 79 characters per line.
 
 ## Interactive snippets
