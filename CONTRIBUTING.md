@@ -191,6 +191,16 @@
             :class: dark-mode-invert-image
     ```
 
+- ``|mdash|`` or ``|ndash|`` must be used instead of ``---`` or ``--``.
+
+  - Actual m-dashes and n-dashes (``­—`` or ``–``) should be avoided.
+
+  - ``|mdash|`` or ``|ndash|``  are defined in the isopub.txt file included in
+    the global definitions file.
+
+- For any bibliographical references, the sphinxcontrib.bibtex plug-in for
+  Sphinx should be used.
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
