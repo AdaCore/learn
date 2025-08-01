@@ -293,3 +293,21 @@ For special cases, a `class` can be added to the source code examples:
   - `ada-expect-compile-error`: a compilation error is expected.
 
   - `ada-run-expect-failure`: a run-time error is expected.
+
+When the `no_button` parameter is used, the following classes are available to
+compile or run the code examples:
+
+  - `ada-compile` and `c-compile`: to compile Ada or C code, respectively.
+
+  - `ada-run` and `c-run`: to build and run Ada or C code, respectively.
+
+  - `ada-norun` and `c-norun`: to explicitly deactivate the build and run of
+    Ada or C code, respectively.
+
+  - `ada-prove`, `ada-prove-flow`, `ada-prove-flow-report-all`,
+    `ada-prove-report-all`: to prove the code in various forms using gnatprove.
+
+These classes are useful to generate static output (such as compiler warnings
+and runtime output) that is included with a code example in the generated
+output.
+
