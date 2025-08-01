@@ -214,7 +214,22 @@
 
 ## Interactive snippets
 
-Interactive snippets get generated for code inside the `code::` directive.
+Interactive code-blocks (snippets) are generated for any code inside the
+`code::` directive. For example:
+
+```
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Hello_World_App.Hello_World_Terminal
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Hello_World is
+        begin
+           Put_Line ("Hello World!");
+        end Hello_World;
+```
+
+Note that non-interactive code block (using the `code-block::` directive)
+should be avoided.
 
 The following parameters are available for this directive:
 
