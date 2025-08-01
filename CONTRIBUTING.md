@@ -201,6 +201,17 @@
 - For any bibliographical references, the sphinxcontrib.bibtex plug-in for
   Sphinx should be used.
 
+- Todo items must be written in this format:
+
+  ```
+  .. todo::
+
+      This is a todo item...
+  ```
+
+  - When content is processed for publishing, those todo items are not
+    included in the generated files.
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
