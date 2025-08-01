@@ -27,6 +27,18 @@
     - They must be optional: readers should be able to understand the
       lessons without having to refer to other languages.
 
+- For any topic that isn't covered in the course itself, a reference to
+  external content may be used.
+
+    - We encourage the use of references to computer science pages on Wikipedia
+      whenever possible.
+
+    - For example:
+
+      ```
+          The :wikipedia:`V-model_(software_development)` is...
+      ```
+
 ### Editorial policies and guidelines
 
 - Text must contain up to 79 characters per line.
