@@ -140,6 +140,44 @@
         - These sections won't be part of the table of contents, and reader
           won't have a way to access them directly.
 
+- For any words or expressions referring to Ada keywords or elements from
+  source-code examples, the "ada role" (``:ada:<keyword|expression>``) must be
+  used.
+
+  - This rule applies even for elements that aren't explicitly shown in
+    source-code example.
+
+  - For example:
+
+    ```
+         If a compilation unit :ada:`Q` has a :ada:`with` dependence on package
+         :ada:`P`, then :ada:`Q` ...
+    ```
+
+- For content in a directive, 4-character indentations must be used. For
+  example:
+
+  ```
+      .. admonition:: For further reading...
+
+          You may also consult...
+
+      .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Hello_World_App.Hello_World_Terminal
+
+          with Ada.Text_IO; use Ada.Text_IO;
+
+          procedure Hello_World is
+             H : String := "Hello";
+             W : String := "World";
+          begin
+             Put_Line (H & " " & W & "!");
+          end Hello_World;
+  ```
+
+  - For Ada source-code examples, note that after the 4-character indentation
+    for the directive, the indentation follows the GNAT code style — which
+    makes use of a 3-character indentation in most cases.
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
