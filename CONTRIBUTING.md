@@ -241,27 +241,6 @@ The following parameters are available for this directive:
 
     * `no_button`: removes all buttons
 
-The role `:code-config:`can be used to globally activate or deactivate buttons,
-like so:
-
-```
-   :code-config:`run_button=True;prove_button=False`
-```
-
-This is active until this is overridden by another `:code-config:` role.
-Parameters to `code::` directives override the settings in `:code-config:`.
-
-It's possible to accumulate the code in several snippets. To do this, use
-the flag `accumulate_code` in the `:code-config` role:
-
-```
-   :code-config:`accumulate_code=True`
-
-    (several code:: snippets)
-
-   :code-config:`accumulate_code=False`
-```
-
 The code inside code:: directives is extracted into a list of files.
 The files are extracted the following way:
 
