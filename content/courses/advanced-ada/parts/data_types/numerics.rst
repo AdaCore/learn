@@ -1876,31 +1876,60 @@ There are many attributes on modular types. We talk about them
     - :arm22:`3.5.4 Integer Types <3-5-4>`
 
 
-.. todo::
+.. _Adv_Ada_System_Max_Modulus:
 
-    - Add subsection: "Binary and nonbinary modulus"
+System max. values for modulus
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    - Discuss: :ada:`System.Max_Binary_Modulus` and
-      :ada:`System.Max_Nonbinary_Modulus`
+When we use a power-of-two number as the modulus, the maximum value that we
+could use in the type declaration is indicated by the
+:ada:`System.Max_Binary_Modulus` constant. In contrast, for non-power-of-two
+numbers, the maximum value for the modulus is indicated by the
+:ada:`System.Max_Nonbinary_Modulus` constant:
 
-    - Circumvent `Constraint_Error` for `System.Max_Binary_Modulus` in the
-      :ada:`Show_Max_Binary_Nonbinary_Modulus` procedure below!
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus_Values
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus
-        :class: ada-run-expect-failure
+    with System;
+    with Ada.Text_IO; use Ada.Text_IO;
 
-        with System;
-        with Ada.Text_IO; use Ada.Text_IO;
+    procedure Show_Max_Binary_Nonbinary_Modulus is
+       type Modular_Max is
+         mod System.Max_Binary_Modulus;
+    begin
+       Put_Line
+         ("System.Max_Binary_Modulus - 1 :"
+          & Modular_Max'Last'Image);
+       Put_Line
+         ("System.Max_Nonbinary_Modulus  :"
+          & System.Max_Nonbinary_Modulus'Image);
+    end Show_Max_Binary_Nonbinary_Modulus;
 
-        procedure Show_Max_Binary_Nonbinary_Modulus is
-        begin
-           Put_Line
-             ("System.Max_Binary_Modulus    :"
-              & System.Max_Binary_Modulus'Image);
-           Put_Line
-             ("System.Max_Nonbinary_Modulus :"
-              & System.Max_Nonbinary_Modulus'Image);
-        end Show_Max_Binary_Nonbinary_Modulus;
+On a typical desktop PC, you might get the following values:
+
+- :ada:`System.Max_Binary_Modulus`: 2\ :sup:`128` =
+  340,282,366,920,938,463,463,374,607,431,768,211,456
+
+- :ada:`System.Max_Nonbinary_Modulus`:  2\ :sup:`32` - 1 = 4,294,967,295
+
+As expected, we can simply use these constants in modular type declarations:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus_Types
+
+    with System;
+
+    package Show_Max_Binary_Nonbinary_Modulus is
+
+       type Modular_Max is
+         mod System.Max_Binary_Modulus;
+
+       type Modular_Max_Non_Power_Two is
+         mod System.Max_Nonbinary_Modulus;
+
+    end Show_Max_Binary_Nonbinary_Modulus;
+
+In this example, we use :ada:`Max_Binary_Modulus` as the modulus of the
+:ada:`Modular_Max` type, and :ada:`Max_Nonbinary_Modulus` as the modulus of the
+:ada:`Modular_Max_Non_Power_Two` type.
 
 
 
