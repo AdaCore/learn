@@ -48,6 +48,9 @@
 
 - Text must contain up to 79 characters per line.
 
+- A blank line between a title and the first paragraph must be used, as this
+  improves readability for the website maintainers.
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
