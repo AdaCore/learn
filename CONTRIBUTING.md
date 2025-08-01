@@ -1,6 +1,6 @@
 # Contributing to the learning material
 
-## Writing Guidelines
+## Writing guidelines
 
 - Source-code examples should be complete, compilable, and free of errors.
 
