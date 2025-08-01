@@ -178,6 +178,19 @@
     for the directive, the indentation follows the GNAT code style — which
     makes use of a 3-character indentation in most cases.
 
+- For any images that are included in the content, the images in the generated
+  HTML page must be visualized in a browser using both light and dark modes, as
+  images might not be visible in one of those modes.
+
+  - When an image was created with a light background in mind, but it actually
+    makes use of a transparent background, we can use the
+    ``dark-mode-invert-image`` to adapt the colors for dark mode. For example:
+
+    ```
+        .. image:: images/light_mode_figure.png
+            :class: dark-mode-invert-image
+    ```
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
