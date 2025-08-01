@@ -62,6 +62,29 @@
 
     - The global definitions file may be extended if needed.
 
+- Anchors must be prefixed with a name that clearly identifies the course.
+
+    - There are two reasons for this requirement:
+
+        - Because of the risk of clashing with anchors from other courses.
+
+        - If a course A is referencing a section from course B, it's easier to
+          identify that the referenced section is located in course B.
+
+    - Also, anchors must use capital letters separated by underscores.
+
+    - For example, for a course called "Ada for desktop applications", we
+      could select a prefix such as ``Ada_Desktop_App``. For an anchor to a
+      section called "Implementing a 'Hello World' application", we could
+      use the following anchor:
+
+      ```
+          .. _Ada_Desktop_App_Hello_World_App:
+
+          Hello World Application
+          -----------------------
+      ```
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
