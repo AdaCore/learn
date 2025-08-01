@@ -51,6 +51,17 @@
 - A blank line between a title and the first paragraph must be used, as this
   improves readability for the website maintainers.
 
+- The global definitions file (global.txt) for Sphinx should be used — unless
+  there is a very good reason for using alternative definitions.
+
+    - The global definitions are included with the following format:
+
+      ```
+          .. include:: ../../global.txt
+      ```
+
+    - The global definitions file may be extended if needed.
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
