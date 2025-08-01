@@ -85,6 +85,61 @@
           -----------------------
       ```
 
+- The following format for section headers must be used:
+
+    ```
+        Course part
+        ***********
+
+        This is the beginning of a new part of a course.
+
+
+        Chapter Title
+        =============
+
+        This is the beginning of a new chapter.
+
+
+        Section Title
+        -------------
+
+        This is the beginning of a new section.
+
+
+        Subsection Title
+        ~~~~~~~~~~~~~~~~
+
+        This is the beginning of a subsection.
+
+
+        Sub-Subsection Title
+        ^^^^^^^^^^^^^^^^^^^^
+
+        This is the beginning of a sub-subsection.
+    ```
+
+    - Other formats for section headers must be avoided.
+
+    - Note that not all courses have to use parts: only chapters are required.
+      However, using parts can be useful for better structuring a course that
+      has many chapters — for example, more than 30 chapters.
+
+    - Note that Sphinx doesn't require a fixed format for section headers. That
+      being said, we use the format described above for better maintainance.
+
+    - Sections that do not use a section header should be avoided.
+
+        - For example:
+
+          ```
+              **Section Title**
+
+              This is the beginning of a new section.
+          ```
+
+        - These sections won't be part of the table of contents, and reader
+          won't have a way to access them directly.
+
 ## Interactive snippets
 
 Interactive snippets get generated for code inside the `code::` directive.
