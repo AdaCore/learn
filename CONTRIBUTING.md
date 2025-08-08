@@ -239,10 +239,22 @@ The following language-related parameters are available for this directive:
 
 The following button-related parameters are available for this directive:
 
-  - `<X>_button`: forces the existence of a button for mode X.
-                  Modes are defined in the MODES variable in editors.js.
+  - `no_button`: removes all buttons.
 
-  - `no_button`: removes all buttons
+  - `compile_button`: compile code to check syntax.
+
+  - `run_button`: run code in editor.
+
+  - `prove_button`: prove SPARK code.
+
+  - `prove_flow_button`: examine SPARK data and control flow.
+
+  - `prove_report_all_button`: prove SPARK code and report all findings.
+
+  - `prove_flow_report_all_button`: examine SPARK data and control flow and
+    report all findings.
+
+  - `submit_button`: submit code for a lab.
 
 The code inside `code::` directives is extracted into a list of files.
 The files are extracted the following way:
