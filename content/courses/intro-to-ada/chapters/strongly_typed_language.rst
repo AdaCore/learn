@@ -242,6 +242,9 @@ used to define the standard Boolean type:
 As mentioned previously, every "built-in" type in Ada is defined with facilities
 generally available to the user.
 
+
+.. _Intro_Ada_Floating_Point_Types:
+
 Floating-point types
 --------------------
 
