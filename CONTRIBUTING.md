@@ -279,7 +279,20 @@ The files are extracted the following way:
               return 0;
             }
      ```
+
+   - for Ada code, the argument `manual_chop` can be used as well. This
+     prevents `gnatchop` from being called for the code block. For example:
+
      ```
+        .. code:: ada manual_chop compile_button
+
+            !p.ads
+            package P is
+
+               function Is_OK (T : Float)
+                               return Boolean;
+
+            end P;
      ```
 
 For special cases, a `class` can be added to the source code examples:
