@@ -438,6 +438,58 @@ The files are extracted the following way:
             end P;
      ```
 
+### GNAT compiler switches
+
+A `switches` parameter can be provided. For this parameter, we use the
+following syntax: `switches=Compiler(<comma-separated list of GNAT switches);`.
+For example:
+
+```
+    .. code:: ada no_button project=Courses.Ada_Desktop_App.Types.User_Defined_Literals.Simple_Example switches=Compiler(-gnat2022);
+
+        package Activation_States is
+
+           type Activation_State is (Unknown, Off, On)
+             with Integer_Literal =>
+                    Integer_To_Activation_State;
+
+           function Integer_To_Activation_State
+             (S : String)
+              return Activation_State;
+
+        end Activation_States;
+```
+
+The following switches are available:
+
+| Switch       |  Description                                                 |
+|--------------|--------------------------------------------------------------|
+| `-g`         | optimize for debug                                           |
+| `-O0`        | no optimizations                                             |
+| `-gnata`     | assertions enabled                                           |
+| `-gnatW8`    | UTF-8 encoding of source-code files                          |
+| `-gnatwa`    | activate most optional warnings                              |
+| `-gnatyg0-s` | check default code style                                     |
+| `-gnatyM50`  | check maximum line length of 50 characters                   |
+| `-gnatyM80`  | check maximum line length of 80 characters                   |
+| `-gnato`     | enable numeric overflow checking                             |
+| `-gnato0`    | suppresses overflow checking                                 |
+| `-gnato11`   | handling of intermediate overflow: strict mode               |
+| `-gnato21`   | handling of intermediate overflow: strict mode               |
+|              | minimized mode within assertions, pre/postconditions,        |
+|              | and type invariants                                          |
+| `-gnato22`   | handling of intermediate overflow: minimized mode            |
+| `-gnato23`   | handling of intermediate overflow: minimized mode;           |
+|              | eliminated mode within assertions, pre/postconditions,       |
+|              | and type invariants                                          |
+| `-gnateE`    |  generate extra information in exception messages            |
+| `-gnat2022`  | use Ada 2022 standard instead of default version             |
+| `-gnatX`     | enable GNAT implementation extensions and latest Ada version |
+
+In the case of mutually-exclusive switches (such as `-gnato`, `-gnato0`,
+`-gnato11`, `-gnato21`, `-gnato22`, and `-gnato23`), only one of the switches
+can be used in a `code::` directive.
+
 ### Code block classes
 
 For special cases, a `class` can be added to the source code block. For
