@@ -266,15 +266,20 @@ The files are extracted the following way:
      form `!<basename>` placed at the beginning of each file in the snippet.
      This mechanism is also activated if the argument `manual_chop` is passed
      to the `code::` directive. For instance:
+
      ```
-        .. code:: prove_button manual_chop
+        .. code:: c run_button manual_chop
 
-           !main.c
-           int main(void);
+            !main.c
+            #include <stdio.h>
 
-           !t.ads
-           package T is
-           end T;
+            int main(int argc, const char * argv[])
+            {
+              printf("Hello World\n");
+              return 0;
+            }
+     ```
+     ```
      ```
 
 For special cases, a `class` can be added to the source code examples:
