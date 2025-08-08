@@ -474,6 +474,8 @@ run in the testing phase — in addition to being built. The relevant informatio
 from the test (e.g. compiler and runtime output) is displayed next to code
 block in the generated HTML or e-book output.
 
+The following classes are available for the testing phase:
+
   - `nosyntax-check`: code must not be checked for syntax errors (and not be
     compiled).
 
@@ -481,6 +483,9 @@ block in the generated HTML or e-book output.
 
   - `ada-syntax-only`: compiler should only check for syntax errors (no
     run).
+
+If an error is expected during the testing phase, one of the following classes
+must be used:
 
   - `ada-expect-compile-error`: a compilation error is expected.
 
