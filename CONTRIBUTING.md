@@ -228,15 +228,18 @@ Interactive code-blocks (snippets) are generated for any code inside the
         end Hello_World;
 ```
 
-Note that non-interactive code block (using the `code-block::` directive)
-should be avoided.
-
 ### Code directives
 
 By default, Sphinx supports the `code-block::` directive. When this directive
 is used, the widget is not used and no post-processing takes place. Only the
 features supported by Sphinx — such as syntax highlighting — are applied to
 the code block.
+
+Note that non-interactive code block using the `code-block::` directive
+should be avoided, as there's no testing taking place to ensure that the code
+compiles or runs as expected. In fact, not even a simple syntax check takes
+place, so the contributor has to ensure manually that the code is written and
+working as intended.
 
 On the other hand, when the `code::` directive is used, an interactive widget
 is created for the HTML output and the code block is verified. All the features
