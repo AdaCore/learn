@@ -304,7 +304,7 @@ The files are extracted the following way:
      prevents `gnatchop` from being called for the code block. For example:
 
      ```
-        .. code:: ada manual_chop compile_button project=Courses.Ada_Desktop_App.Introduction.Package.Simple_Package
+        .. code:: ada manual_chop compile_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
 
             !p.ads
             package P is
