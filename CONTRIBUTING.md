@@ -597,3 +597,218 @@ When the `run_button` parameter is used, the following classes are available:
   - `ada-norun` and `c-norun`: to explicitly deactivate the run of Ada or C
     code, respectively, during the testing phase.
 
+## Lab exercises
+
+Laboratory exercises (or labs) can be created by using an adapted version of
+the the `code::` directive. Readers use these labs to test their knowledge by
+interacting with the code widget and checking whether the resulting code is OK
+or not.
+
+In order to maintain consistency, the following guidelines should be followed:
+
+- Each section (or subsection) should contain only one lab.
+
+- The description of a lab should include the following topics:
+
+| Topic          | Description                                   |
+|----------------|-----------------------------------------------|
+| Goal           | The goal of the lab (ideally, in one phrase)  |
+| Steps          | The steps required to complete the lab        |
+| Requirements   | What the lab is supposed to do                |
+| Remarks        | Any remarks or hints that might be useful     |
+
+- After the description, the interactive code block for the lab should be
+  provided.
+
+  - Note that providing guiding hints in the lab source code — such as
+    "Implement the application here!" — is highly recommended.
+
+This is an example of a complete lab:
+
+```
+    Hello World
+    -----------
+
+    **Goal**: create a "Hello World!" application.
+
+    **Steps**:
+
+        #. Complete the :ada:`Main` procedure.
+
+    **Requirements**:
+
+        #. The application must display the message "Hello World!".
+
+    **Remarks**:
+
+        #. The part that you have to modify is indicated by the
+           :ada:`--  Implement the application here!` comment in the
+           source code.
+
+    .. code:: ada lab=Labs.Intro_To_Ada.Imperative_Language.Hello_World
+
+        --  START LAB IO BLOCK
+        in 0:
+        out 0:Hello World!
+        --  END LAB IO BLOCK
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Main is
+        begin
+           --  Implement the application here!
+           null;
+        end Main;
+```
+
+### Lab code block
+
+A code directive for a lab must use the lab parameter (with the `lab=` syntax)
+instead of the project parameter (`project=`).
+
+The lab code block includes an I/O block — which is placed before the actual
+Ada code —  describing the test cases. Each test case contains the input that
+is provided to the test application — which is built upon the lab source code
+— and the expected output for that input.
+
+In the I/O block, the input is indicated by the `in <number>:` entries, while
+the corresponding expected output is indicated by the `out <number>:` entries.
+For instance, for the first test case of a lab, `in 0:` and `out 0:` have to be
+provided; for the second test case, `in 1:` and `out 1:` have to be provided,
+and so on.
+
+This is an example of a complete lab I/O block:
+
+```
+    --  START LAB IO BLOCK
+    in 0:John
+    out 0:Hello John!
+    in 1:Joanna
+    out 1:Hello Joanna!
+    --  END LAB IO BLOCK
+```
+
+Newlines from the standard output must be replaced by whitespaces in the
+corresponding output entries. For example, if the expected output of a specific
+test case is the following:
+
+```
+    Months:
+    - January
+    - February
+```
+
+then the corresponding output entry in the I/O block is:
+
+```
+    out 0:Months: - January - February
+```
+
+In most cases, labs must process input data, which is provided to the test
+application in the standard input at runtime. Because of this dependency on
+input data, some sort of command-line parsing must be part of the Ada code of
+each lab — unless, of course, a specific lab doesn't require any input. For
+each test case, the actual output of the application is extracted by the test
+environment and compared to the expected output.
+
+As an example, this is the complete code for a lab:
+
+```
+    .. code:: ada lab=Labs.Intro_To_Ada.Imperative_Language.Greetings
+
+        --  START LAB IO BLOCK
+        in 0:John
+        out 0:Hello John!
+        in 1:Joanna
+        out 1:Hello Joanna!
+        --  END LAB IO BLOCK
+
+        with Ada.Command_Line; use Ada.Command_Line;
+        with Ada.Text_IO;      use Ada.Text_IO;
+
+        procedure Main is
+
+           procedure Greet (Name : String) is
+           begin
+              --  Implement the application here!
+              null;
+           end Greet;
+
+        begin
+           if Argument_Count < 1 then
+              Put_Line ("ERROR: missing arguments! Exiting...");
+              return;
+           elsif Argument_Count > 1 then
+              Put_Line ("Ignoring additional arguments...");
+           end if;
+
+           Greet (Argument (1));
+        end Main;
+```
+
+Note that using command-line arguments to indicate a specific test case is also
+a valid approach when creating labs. For example, you could declare a
+`Test_Case_Index` enumeration in the lab source code and let the command-line
+arguments trigger each test case at runtime:
+
+```
+    .. code:: ada lab=Labs.Intro_To_Ada.Modular_Programming.Monthly_Check
+
+        --  START LAB IO BLOCK
+        in 0:January_Chk
+        out 0:January
+        in 1:February_Chk
+        out 1:February
+        --  END LAB IO BLOCK
+
+        package Months is
+
+           --  type Month is...
+
+           procedure Display_Month (M : Month);
+
+        end Months;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Months is
+
+           procedure Display_Month (M : Month);
+
+        end Months;
+
+        with Ada.Command_Line; use Ada.Command_Line;
+        with Ada.Text_IO;      use Ada.Text_IO;
+
+        with Months;           use Months;
+
+        procedure Main is
+
+           type Test_Case_Index is
+             (January_Chk, February_Chk);
+
+           procedure Check (TC : Test_Case_Index) is
+           begin
+              case TC is
+                 when January_Chk =>
+                    Display_Month (Jan);
+                 when February_Chk =>
+                    Display_Month (Feb);
+              end case;
+           end Check;
+
+        begin
+           if Argument_Count < 1 then
+              Put_Line ("ERROR: missing arguments! Exiting...");
+              return;
+           elsif Argument_Count > 1 then
+              Put_Line ("Ignoring additional arguments...");
+           end if;
+
+           Check (Test_Case_Index'Value (Argument (1)));
+        end Main;
+```
+
+In this case, `in 0:` and `in 1:` contain the enumeration name, which
+corresponds to a test case triggered by the `Check` procedure.
+
