@@ -274,6 +274,129 @@ The following button-related parameters are available for this directive:
 
   - `submit_button`: submit code for a lab.
 
+### Project parameter and code accumulation
+
+A `project` parameter must be provided. For this parameter, we use the
+following syntax: `project=<name>`. For example:
+
+```
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Hello_World_App.Hello_World_Terminal
+```
+
+Dots in the project name (`.`) indicate the position of the code example in the
+tree structure — corresponding to the directory tree within the _contents_
+directory — and within the book/course itself. For the example above, we can
+identify the following elements:
+
+- `Courses`: indicates a course in the _content/courses/_ directory.
+
+- `Ada_Desktop_App`: an abbreviation indicating the current course (in this
+  case, "Ada for desktop applications").
+
+- `Introduction`: the name or abbreviation of the current chapter
+  ("Introduction").
+
+- `Hello_World_App`: the name or abbreviation of the current section within the
+  chapter ("Hello World Application").
+
+- `Hello_World_Terminal`: name or abbreviation of the current code example.
+
+Code blocks that share the same project name "accumulate" code. For example:
+
+```
+    .. code:: ada compile_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
+
+        package P is
+
+           function Is_OK (T : Float)
+                           return Boolean;
+
+        end P;
+```
+
+At this point, the project consists of the following code:
+
+```ada
+    package P is
+
+       function Is_OK (T : Float)
+                       return Boolean;
+
+    end P;
+```
+
+We can then add another code block — after the code block above — using the
+same project name as the previous code block:
+
+```
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
+
+        with P; use P;
+
+        procedure Show_P is
+        begin
+           null;
+        end Show_P;
+```
+
+At this point, the project consists of the following code:
+
+```ada
+    package P is
+
+       function Is_OK (T : Float)
+                       return Boolean;
+
+    end P;
+
+    with P; use P;
+
+    procedure Show_P is
+    begin
+       null;
+    end Show_P;
+```
+
+We may replace the `Show_P` procedure by adding another code block and using
+the same project name and procedure name:
+
+```
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with P;           use P;
+
+        procedure Show_P is
+           V : Float := 1.0;
+        begin
+           if Is_OK (V) then
+              Put_Line ("Value is OK: " & V'Image);
+           end if;
+        end Show_P;
+```
+
+At this point, the project is changed to the following code:
+
+```ada
+    package P is
+
+       function Is_OK (T : Float)
+                       return Boolean;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with P;           use P;
+
+    procedure Show_P is
+       V : Float := 1.0;
+    begin
+       if Is_OK (V) then
+          Put_Line ("Value is OK: " & V'Image);
+       end if;
+    end Show_P;
+```
+
 ### Code extraction / manual chop
 
 The code inside `code::` directives is extracted into a list of files.
