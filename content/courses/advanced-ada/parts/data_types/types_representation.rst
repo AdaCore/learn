@@ -158,7 +158,7 @@ to better understand the differences among those attributes.
 Size aspect
 ~~~~~~~~~~~
 
-Before we discuss these attributes, however, we briefly look into the
+Before we discuss the size attributes, however, we briefly look into the
 :ada:`Size` aspect.
 
 When we define a type, the compiler selects the most appropriate size for
