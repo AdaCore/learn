@@ -243,7 +243,7 @@ The following button-related parameters are available for this directive:
 
     * `no_button`: removes all buttons
 
-The code inside code:: directives is extracted into a list of files.
+The code inside `code::` directives is extracted into a list of files.
 The files are extracted the following way:
 
    - for valid Ada code, `gnatchop` is run on the entirety of the
@@ -251,7 +251,7 @@ The files are extracted the following way:
 
    - for C code, the files should be named explicitely, with a marker of the
      form `!<basename>` placed at the beginning of each file in the snippet.
-     This mechanism is also activated if the argument manual_chop is passed
+     This mechanism is also activated if the argument `manual_chop` is passed
      to the `code::` directive. For instance:
      ```
         .. code:: prove_button manual_chop
