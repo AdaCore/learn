@@ -39,6 +39,25 @@
           The :wikipedia:`V-model_(software_development)` is...
       ```
 
+- Admonitions can be used to either indicate that a certain text block is
+  especially important or to indicate that it is optional.
+
+  - Although the title of an admonition can be selected according to the
+    specific topic, the following titles are widely used and strongly
+    recommended:
+
+| Admonition title            | Description                                                                             |
+|-----------------------------|-----------------------------------------------------------------------------------------|
+| Attention                   | When a piece of information might be missed by the reader at first sight.               |
+| Important                   | To elaborate on details that are important for the current topic.                       |
+| For further reading...      | When elaborating on interesting, but not important details (which might be skipped).    |
+| In other languages          | When comparing Ada to other programming languages.                                      |
+| In other contexts           | When discussing specific terminology in other contexts.                                 |
+| Historically                | When discussing historical details, e.g. comparing to an older version of Ada.          |
+| In the Ada Reference Manual | When indicating a relevant section from the Ada Reference Manual.                       |
+| In the GNAT toolchain       | To describe details that are specific for the GNAT toolchain, but not the Ada language. |
+| CHANGELOG                   | When describing changes to a course/book.                                               |
+
 ### Editorial policies and guidelines
 
 - The content must be written in ReST format.
