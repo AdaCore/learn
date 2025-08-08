@@ -440,7 +440,39 @@ The files are extracted the following way:
 
 ### Code block classes
 
-For special cases, a `class` can be added to the source code examples:
+For special cases, a `class` can be added to the source code block. For
+example:
+
+```
+    .. code:: ada no_button project=Courses.Embedded_Ada.Exceptions.Classification_Of_Errors.Data_Validity_Bounded_Error
+        :class: ada-run
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Bounded_Error is
+           subtype Int_1_10 is
+             Integer range 1 .. 10;
+
+           I1         : Int_1_10;
+           I1_Overlay : Integer
+             with Address => I1'Address,
+                             Import,
+                             Volatile;
+        begin
+           I1_Overlay := 0;
+           Put_Line ("I1 = " & I1'Image);
+
+           I1 := I1 + 1;
+           Put_Line ("I1 = " & I1'Image);
+        end Show_Bounded_Error;```
+```
+
+The `.. code::` directive above includes the `no_button` parameter, so no
+button is available for this code block in the HTML output. Nevertheless,
+because of `ada-run` class, the code extracted from this code block is also
+run in the testing phase — in addition to being built. The relevant information
+from the test (e.g. compiler and runtime output) is displayed next to code
+block in the generated HTML or e-book output.
 
   - `nosyntax-check`: code must not be checked for syntax errors (and not be
     compiled).
