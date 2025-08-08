@@ -233,15 +233,16 @@ should be avoided.
 
 The following language-related parameters are available for this directive:
 
-    * `ada`: indicates that the code is written in Ada or SPARK
-    * `c`: indicates that the code is written in C or C++
+  -  `ada`: indicates that the code is written in Ada or SPARK
+
+  -  `c`: indicates that the code is written in C or C++
 
 The following button-related parameters are available for this directive:
 
-    * `<X>_button`: forces the existence of a button for mode X.
-                    Modes are defined in the MODES variable in editors.js.
+  - `<X>_button`: forces the existence of a button for mode X.
+                  Modes are defined in the MODES variable in editors.js.
 
-    * `no_button`: removes all buttons
+  - `no_button`: removes all buttons
 
 The code inside `code::` directives is extracted into a list of files.
 The files are extracted the following way:
