@@ -490,6 +490,28 @@ In the case of mutually-exclusive switches (such as `-gnato`, `-gnato0`,
 `-gnato11`, `-gnato21`, `-gnato22`, and `-gnato23`), only one of the switches
 can be used in a `code::` directive.
 
+### Alternative GNAT toolchain
+
+By default, the standard version of the GNAT toolchain specified in the
+frontend is used in the testing phase. The list of versions for each specific
+tool from the GNAT toolchain can be found in this file:
+
+frontend/py_modules/code_projects/toolchain.ini
+
+An alternative version of a tool can be selected for a specific code block
+using the `gnat=`, `gnatprove=` or `gprbuild=` parameters. For example:
+
+```
+    .. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.SPARK_Course.Introduction.Example_01
+```
+
+In this example, GNAT 12.2.0-1 and GNATprove 12.1.0-1 are used instead of the
+default version of each tool.
+
+Note that this tool selection mechanism can only be used when the `no_button`
+parameter is specified. Also, only the versions listed in the file mentioned
+above can be used.
+
 ### Code block classes
 
 For special cases, a `class` can be added to the source code block. For
