@@ -231,10 +231,12 @@ Interactive code-blocks (snippets) are generated for any code inside the
 Note that non-interactive code block (using the `code-block::` directive)
 should be avoided.
 
-The following parameters are available for this directive:
+The following language-related parameters are available for this directive:
 
     * `ada`: indicates that the code is written in Ada or SPARK
     * `c`: indicates that the code is written in C or C++
+
+The following button-related parameters are available for this directive:
 
     * `<X>_button`: forces the existence of a button for mode X.
                     Modes are defined in the MODES variable in editors.js.
