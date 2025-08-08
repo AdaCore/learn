@@ -231,11 +231,15 @@ Interactive code-blocks (snippets) are generated for any code inside the
 Note that non-interactive code block (using the `code-block::` directive)
 should be avoided.
 
+### Language-related parameters
+
 The following language-related parameters are available for this directive:
 
   -  `ada`: indicates that the code is written in Ada or SPARK
 
   -  `c`: indicates that the code is written in C or C++
+
+### Button-related parameters
 
 The following button-related parameters are available for this directive:
 
@@ -255,6 +259,8 @@ The following button-related parameters are available for this directive:
     report all findings.
 
   - `submit_button`: submit code for a lab.
+
+### Code extraction / manual chop
 
 The code inside `code::` directives is extracted into a list of files.
 The files are extracted the following way:
@@ -294,6 +300,8 @@ The files are extracted the following way:
 
             end P;
      ```
+
+### Code block classes
 
 For special cases, a `class` can be added to the source code examples:
 
