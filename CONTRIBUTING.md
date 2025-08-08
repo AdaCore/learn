@@ -297,6 +297,9 @@ The files are extracted the following way:
 
 For special cases, a `class` can be added to the source code examples:
 
+  - `nosyntax-check`: code must not be checked for syntax errors (and not be
+    compiled).
+
   - `ada-nocheck`: code must not be compiled.
 
   - `ada-syntax-only`: compiler should only check for syntax errors (no
