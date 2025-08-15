@@ -1,8 +1,6 @@
 # Contributing to the learning material
 
-## Writing Guidelines
-
-- Text must contain up to 79 characters per line.
+## Writing guidelines
 
 - Source-code examples should be complete, compilable, and free of errors.
 
@@ -29,69 +27,788 @@
     - They must be optional: readers should be able to understand the
       lessons without having to refer to other languages.
 
+- For any topic that isn't covered in the course itself, a reference to
+  external content may be used.
+
+    - We encourage the use of references to computer science pages on Wikipedia
+      whenever possible.
+
+    - For example:
+
+      ```
+          The :wikipedia:`V-model_(software_development)` is...
+      ```
+
+- Admonitions can be used to either indicate that a certain text block is
+  especially important or to indicate that it is optional.
+
+  - Although the title of an admonition can be selected according to the
+    specific topic, the following titles are widely used and strongly
+    recommended:
+
+| Admonition title            | Description                                                                             |
+|-----------------------------|-----------------------------------------------------------------------------------------|
+| Attention                   | When a piece of information might be missed by the reader at first sight.               |
+| Important                   | To elaborate on details that are important for the current topic.                       |
+| For further reading...      | When elaborating on interesting, but not important details (which might be skipped).    |
+| In other languages          | When comparing Ada to other programming languages.                                      |
+| In other contexts           | When discussing specific terminology in other contexts.                                 |
+| Historically                | When discussing historical details, e.g. comparing to an older version of Ada.          |
+| In the Ada Reference Manual | When indicating a relevant section from the Ada Reference Manual.                       |
+| In the GNAT toolchain       | To describe details that are specific for the GNAT toolchain, but not the Ada language. |
+| CHANGELOG                   | When describing changes to a course/book.                                               |
+
+### Editorial policies and guidelines
+
+- The content must be written in ReST format.
+
+    - Sphinx is used to generate HTML, PDF and EPUB content based on the ReST
+      format.
+
+- Text must contain up to 79 characters per line.
+
+- A blank line between a title and the first paragraph must be used, as this
+  improves readability for the website maintainers.
+
+- The global definitions file (global.txt) for Sphinx should be used — unless
+  there is a very good reason for using alternative definitions.
+
+    - The global definitions are included with the following format:
+
+      ```
+          .. include:: ../../global.txt
+      ```
+
+    - The global definitions file may be extended if needed.
+
+- Anchors must be prefixed with a name that clearly identifies the course.
+
+    - There are two reasons for this requirement:
+
+        - Because of the risk of clashing with anchors from other courses.
+
+        - If a course A is referencing a section from course B, it's easier to
+          identify that the referenced section is located in course B.
+
+    - Also, anchors must use capital letters separated by underscores.
+
+    - For example, for a course called "Ada for desktop applications", we
+      could select a prefix such as ``Ada_Desktop_App``. For an anchor to a
+      section called "Implementing a 'Hello World' application", we could
+      use the following anchor:
+
+      ```
+          .. _Ada_Desktop_App_Hello_World_App:
+
+          Hello World Application
+          -----------------------
+      ```
+
+- The following format for section headers must be used:
+
+    ```
+        Course part
+        ***********
+
+        This is the beginning of a new part of a course.
+
+
+        Chapter Title
+        =============
+
+        This is the beginning of a new chapter.
+
+
+        Section Title
+        -------------
+
+        This is the beginning of a new section.
+
+
+        Subsection Title
+        ~~~~~~~~~~~~~~~~
+
+        This is the beginning of a subsection.
+
+
+        Sub-Subsection Title
+        ^^^^^^^^^^^^^^^^^^^^
+
+        This is the beginning of a sub-subsection.
+    ```
+
+    - Other formats for section headers must be avoided.
+
+    - Note that not all courses have to use parts: only chapters are required.
+      However, using parts can be useful for better structuring a course that
+      has many chapters — for example, more than 30 chapters.
+
+    - Note that Sphinx doesn't require a fixed format for section headers. That
+      being said, we use the format described above for better maintainance.
+
+    - Sections that do not use a section header should be avoided.
+
+        - For example:
+
+          ```
+              **Section Title**
+
+              This is the beginning of a new section.
+          ```
+
+        - These sections won't be part of the table of contents, and reader
+          won't have a way to access them directly.
+
+- For any words or expressions referring to Ada keywords or elements from
+  source-code examples, the "ada role" (``:ada:<keyword|expression>``) must be
+  used.
+
+  - This rule applies even for elements that aren't explicitly shown in
+    source-code example.
+
+  - For example:
+
+    ```
+         If a compilation unit :ada:`Q` has a :ada:`with` dependence on package
+         :ada:`P`, then :ada:`Q` ...
+    ```
+
+- For content in a directive, 4-character indentations must be used. For
+  example:
+
+  ```
+      .. admonition:: For further reading...
+
+          You may also consult...
+
+      .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Hello_World_App.Hello_World_Terminal
+
+          with Ada.Text_IO; use Ada.Text_IO;
+
+          procedure Hello_World is
+             H : String := "Hello";
+             W : String := "World";
+          begin
+             Put_Line (H & " " & W & "!");
+          end Hello_World;
+  ```
+
+  - For Ada source-code examples, note that after the 4-character indentation
+    for the directive, the indentation follows the GNAT code style — which
+    makes use of a 3-character indentation in most cases.
+
+- For any images that are included in the content, the images in the generated
+  HTML page must be visualized in a browser using both light and dark modes, as
+  images might not be visible in one of those modes.
+
+  - When an image was created with a light background in mind, but it actually
+    makes use of a transparent background, we can use the
+    ``dark-mode-invert-image`` to adapt the colors for dark mode. For example:
+
+    ```
+        .. image:: images/light_mode_figure.png
+            :class: dark-mode-invert-image
+    ```
+
+- ``|mdash|`` or ``|ndash|`` must be used instead of ``---`` or ``--``.
+
+  - Actual m-dashes and n-dashes (``­—`` or ``–``) should be avoided.
+
+  - ``|mdash|`` or ``|ndash|``  are defined in the isopub.txt file included in
+    the global definitions file.
+
+- For any bibliographical references, the sphinxcontrib.bibtex plug-in for
+  Sphinx should be used.
+
+- Todo items must be written in this format:
+
+  ```
+  .. todo::
+
+      This is a todo item...
+  ```
+
+  - When content is processed for publishing, those todo items are not
+    included in the generated files.
+
 ## Interactive snippets
 
-Interactive snippets get generated for code inside the `code::` directive.
-
-The following parameters are available for this directive:
-
-    * `ada`: indicates that the code is written in Ada or SPARK
-    * `c`: indicates that the code is written in C or C++
-
-    * `<X>_button`: forces the existence of a button for mode X.
-                    Modes are defined in the MODES variable in editors.js.
-
-    * `no_button`: removes all buttons
-
-The role `:code-config:`can be used to globally activate or deactivate buttons,
-like so:
+Interactive code-blocks (snippets) are generated for any code inside the
+`code::` directive. For example:
 
 ```
-   :code-config:`run_button=True;prove_button=False`
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Hello_World_App.Hello_World_Terminal
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Hello_World is
+        begin
+           Put_Line ("Hello World!");
+        end Hello_World;
 ```
 
-This is active until this is overridden by another `:code-config:` role.
-Parameters to `code::` directives override the settings in `:code-config:`.
+### Code directives
 
-It's possible to accumulate the code in several snippets. To do this, use
-the flag `accumulate_code` in the `:code-config` role:
+By default, Sphinx supports the `code-block::` directive. When this directive
+is used, the widget is not used and no post-processing takes place. Only the
+features supported by Sphinx — such as syntax highlighting — are applied to
+the code block.
+
+Note that non-interactive code block using the `code-block::` directive
+should be avoided, as there's no testing taking place to ensure that the code
+compiles or runs as expected. In fact, not even a simple syntax check takes
+place, so the contributor has to ensure manually that the code is written and
+working as intended.
+
+On the other hand, when the `code::` directive is used, an interactive widget
+is created for the HTML output and the code block is verified. All the features
+described below are available for this directive.
+
+### Language-related parameters
+
+The following language-related parameters are available for this directive:
+
+  -  `ada`: indicates that the code is written in Ada or SPARK
+
+  -  `c`: indicates that the code is written in C or C++
+
+### Button-related parameters
+
+The following button-related parameters are available for this directive:
+
+| Button indicator               | Description                                                 |
+|--------------------------------|-------------------------------------------------------------|
+| `no_button`                    | removes all buttons                                         |
+| `compile_button`               | compile code to check syntax                                |
+| `run_button`                   | run code in editor                                          |
+| `prove_button`                 | prove SPARK code                                            |
+| `prove_flow_button`            | examine SPARK data and control flow                         |
+| `prove_report_all_button`      | prove SPARK code and report all findings.                   |
+| `prove_flow_report_all_button` | examine SPARK data and control flow and report all findings |
+| `submit_button`                | submit code for a lab                                       |
+
+### Project parameter and code accumulation
+
+A `project` parameter must be provided. For this parameter, we use the
+following syntax: `project=<name>`. For example:
 
 ```
-   :code-config:`accumulate_code=True`
-
-    (several code:: snippets)
-
-   :code-config:`accumulate_code=False`
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Hello_World_App.Hello_World_Terminal
 ```
 
-The code inside code:: directives is extracted into a list of files.
+Dots in the project name (`.`) indicate the position of the code example in the
+tree structure — corresponding to the directory tree within the _contents_
+directory — and within the book/course itself. For the example above, we can
+identify the following elements:
+
+- `Courses`: indicates a course in the _content/courses/_ directory.
+
+- `Ada_Desktop_App`: an abbreviation indicating the current course (in this
+  case, "Ada for desktop applications").
+
+- `Introduction`: the name or abbreviation of the current chapter
+  ("Introduction").
+
+- `Hello_World_App`: the name or abbreviation of the current section within the
+  chapter ("Hello World Application").
+
+- `Hello_World_Terminal`: name or abbreviation of the current code example.
+
+Code blocks that share the same project name "accumulate" code. For example:
+
+```
+    .. code:: ada compile_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
+
+        package P is
+
+           function Is_OK (T : Float)
+                           return Boolean;
+
+        end P;
+```
+
+At this point, the project consists of the following code:
+
+```ada
+    package P is
+
+       function Is_OK (T : Float)
+                       return Boolean;
+
+    end P;
+```
+
+We can then add another code block — after the code block above — using the
+same project name as the previous code block:
+
+```
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
+
+        with P; use P;
+
+        procedure Show_P is
+        begin
+           null;
+        end Show_P;
+```
+
+At this point, the project consists of the following code:
+
+```ada
+    package P is
+
+       function Is_OK (T : Float)
+                       return Boolean;
+
+    end P;
+
+    with P; use P;
+
+    procedure Show_P is
+    begin
+       null;
+    end Show_P;
+```
+
+We may replace the `Show_P` procedure by adding another code block and using
+the same project name and procedure name:
+
+```
+    .. code:: ada run_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with P;           use P;
+
+        procedure Show_P is
+           V : Float := 1.0;
+        begin
+           if Is_OK (V) then
+              Put_Line ("Value is OK: " & V'Image);
+           end if;
+        end Show_P;
+```
+
+At this point, the project is changed to the following code:
+
+```ada
+    package P is
+
+       function Is_OK (T : Float)
+                       return Boolean;
+
+    end P;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with P;           use P;
+
+    procedure Show_P is
+       V : Float := 1.0;
+    begin
+       if Is_OK (V) then
+          Put_Line ("Value is OK: " & V'Image);
+       end if;
+    end Show_P;
+```
+
+### Code extraction / manual chop
+
+The code inside `code::` directives is extracted into a list of files.
 The files are extracted the following way:
 
    - for valid Ada code, `gnatchop` is run on the entirety of the
      snippet
 
-   - for C code, the files should be named explicitely, with a marker of the
+   - for C code, the files should be named explicitly, with a marker of the
      form `!<basename>` placed at the beginning of each file in the snippet.
-     This mechanism is also activated if the argument manual_chop is passed
+     This mechanism is also activated if the argument `manual_chop` is passed
      to the `code::` directive. For instance:
+
      ```
-        .. code:: prove_button manual_chop
+        .. code:: c run_button manual_chop
 
-           !main.c
-           int main(void);
+            !main.c
+            #include <stdio.h>
 
-           !t.ads
-           package T is
-           end T;
+            int main(int argc, const char * argv[])
+            {
+              printf("Hello World\n");
+              return 0;
+            }
      ```
 
-For special cases, a `class` can be added to the source code examples:
+   - for Ada code, the argument `manual_chop` can be used as well. This
+     prevents `gnatchop` from being called for the code block. For example:
 
-  - `ada-nocheck`: code must not be compiled.
+     ```
+        .. code:: ada manual_chop compile_button project=Courses.Ada_Desktop_App.Introduction.Packages.Simple_Package
+
+            !p.ads
+            package P is
+
+               function Is_OK (T : Float)
+                               return Boolean;
+
+            end P;
+     ```
+
+### GNAT compiler switches
+
+A `switches` parameter can be provided. For this parameter, we use the
+following syntax: `switches=Compiler(<comma-separated list of GNAT switches);`.
+For example:
+
+```
+    .. code:: ada no_button project=Courses.Ada_Desktop_App.Types.User_Defined_Literals.Simple_Example switches=Compiler(-gnat2022);
+
+        package Activation_States is
+
+           type Activation_State is (Unknown, Off, On)
+             with Integer_Literal =>
+                    Integer_To_Activation_State;
+
+           function Integer_To_Activation_State
+             (S : String)
+              return Activation_State;
+
+        end Activation_States;
+```
+
+The following switches are available:
+
+| Switch       |  Description                                                 |
+|--------------|--------------------------------------------------------------|
+| `-g`         | optimize for debug                                           |
+| `-O0`        | no optimizations                                             |
+| `-gnata`     | assertions enabled                                           |
+| `-gnatW8`    | UTF-8 encoding of source-code files                          |
+| `-gnatwa`    | activate most optional warnings                              |
+| `-gnatyg0-s` | check default code style                                     |
+| `-gnatyM50`  | check maximum line length of 50 characters                   |
+| `-gnatyM80`  | check maximum line length of 80 characters                   |
+| `-gnato`     | enable numeric overflow checking                             |
+| `-gnato0`    | suppresses overflow checking                                 |
+| `-gnato11`   | handling of intermediate overflow: strict mode               |
+| `-gnato21`   | handling of intermediate overflow: strict mode               |
+|              | minimized mode within assertions, pre/postconditions,        |
+|              | and type invariants                                          |
+| `-gnato22`   | handling of intermediate overflow: minimized mode            |
+| `-gnato23`   | handling of intermediate overflow: minimized mode;           |
+|              | eliminated mode within assertions, pre/postconditions,       |
+|              | and type invariants                                          |
+| `-gnateE`    |  generate extra information in exception messages            |
+| `-gnat2022`  | use Ada 2022 standard instead of default version             |
+| `-gnatX`     | enable GNAT implementation extensions and latest Ada version |
+
+In the case of mutually-exclusive switches (such as `-gnato`, `-gnato0`,
+`-gnato11`, `-gnato21`, `-gnato22`, and `-gnato23`), only one of the switches
+can be used in a `code::` directive.
+
+### Alternative GNAT toolchain
+
+By default, the standard version of the GNAT toolchain specified in the
+frontend is used in the testing phase. The list of versions for each specific
+tool from the GNAT toolchain can be found in this file:
+
+frontend/py_modules/code_projects/toolchain.ini
+
+An alternative version of a tool can be selected for a specific code block
+using the `gnat=`, `gnatprove=` or `gprbuild=` parameters. For example:
+
+```
+    .. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.SPARK_Course.Introduction.Example_01
+```
+
+In this example, GNAT 12.2.0-1 and GNATprove 12.1.0-1 are used instead of the
+default version of each tool.
+
+Note that this tool selection mechanism can only be used when the `no_button`
+parameter is specified. Also, only the versions listed in the file mentioned
+above can be used.
+
+### Code block classes
+
+For special cases, a `class` can be added to the source code block. For
+example:
+
+```
+    .. code:: ada no_button project=Courses.Embedded_Ada.Exceptions.Classification_Of_Errors.Data_Validity_Bounded_Error
+        :class: ada-run
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Bounded_Error is
+           subtype Int_1_10 is
+             Integer range 1 .. 10;
+
+           I1         : Int_1_10;
+           I1_Overlay : Integer
+             with Address => I1'Address,
+                             Import,
+                             Volatile;
+        begin
+           I1_Overlay := 0;
+           Put_Line ("I1 = " & I1'Image);
+
+           I1 := I1 + 1;
+           Put_Line ("I1 = " & I1'Image);
+        end Show_Bounded_Error;```
+```
+
+The `.. code::` directive above includes the `no_button` parameter, so no
+button is available for this code block in the HTML output. Nevertheless,
+because of `ada-run` class, the code extracted from this code block is also
+run in the testing phase — in addition to being built. The relevant information
+from the test (e.g. compiler and runtime output) is displayed next to code
+block in the generated HTML or e-book output.
+
+The following classes are available for the testing phase:
+
+  - `ada-nocheck`: testing of this specific code block is completely skipped.
+
+  - `nosyntax-check`: code must not be checked for syntax errors. (Note that
+    the code block is still compiled in the testing phase.)
 
   - `ada-syntax-only`: compiler should only check for syntax errors (no
-    run).
+    compilation).
+
+If an error is expected during the testing phase, one of the following classes
+must be used:
 
   - `ada-expect-compile-error`: a compilation error is expected.
 
   - `ada-run-expect-failure`: a run-time error is expected.
+
+When the `no_button` parameter is used, the following classes are available to
+compile or run the code examples:
+
+  - `ada-compile` and `c-compile`: to compile Ada or C code, respectively.
+
+  - `ada-run` and `c-run`: to build and run Ada or C code, respectively.
+
+  - `ada-prove`, `ada-prove-flow`, `ada-prove-flow-report-all`,
+    `ada-prove-report-all`: to prove the code in various forms using gnatprove.
+
+These classes are useful to generate static output (such as compiler warnings
+and runtime output) that is included with a code example in the generated
+output.
+
+When the `run_button` parameter is used, the following classes are available:
+
+  - `ada-norun` and `c-norun`: to explicitly deactivate the run of Ada or C
+    code, respectively, during the testing phase.
+
+## Lab exercises
+
+Laboratory exercises (or labs) can be created by using an adapted version of
+the the `code::` directive. Readers use these labs to test their knowledge by
+interacting with the code widget and checking whether the resulting code is OK
+or not.
+
+In order to maintain consistency, the following guidelines should be followed:
+
+- Each section (or subsection) should contain only one lab.
+
+- The description of a lab should include the following topics:
+
+| Topic          | Description                                   |
+|----------------|-----------------------------------------------|
+| Goal           | The goal of the lab (ideally, in one phrase)  |
+| Steps          | The steps required to complete the lab        |
+| Requirements   | What the lab is supposed to do                |
+| Remarks        | Any remarks or hints that might be useful     |
+
+- After the description, the interactive code block for the lab should be
+  provided.
+
+  - Note that providing guiding hints in the lab source code — such as
+    "Implement the application here!" — is highly recommended.
+
+This is an example of a complete lab:
+
+```
+    Hello World
+    -----------
+
+    **Goal**: create a "Hello World!" application.
+
+    **Steps**:
+
+        #. Complete the :ada:`Main` procedure.
+
+    **Requirements**:
+
+        #. The application must display the message "Hello World!".
+
+    **Remarks**:
+
+        #. The part that you have to modify is indicated by the
+           :ada:`--  Implement the application here!` comment in the
+           source code.
+
+    .. code:: ada lab=Labs.Intro_To_Ada.Imperative_Language.Hello_World
+
+        --  START LAB IO BLOCK
+        in 0:
+        out 0:Hello World!
+        --  END LAB IO BLOCK
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Main is
+        begin
+           --  Implement the application here!
+           null;
+        end Main;
+```
+
+### Lab code block
+
+A code directive for a lab must use the lab parameter (with the `lab=` syntax)
+instead of the project parameter (`project=`).
+
+The lab code block includes an I/O block — which is placed before the actual
+Ada code —  describing the test cases. Each test case contains the input that
+is provided to the test application — which is built upon the lab source code
+— and the expected output for that input.
+
+In the I/O block, the input is indicated by the `in <number>:` entries, while
+the corresponding expected output is indicated by the `out <number>:` entries.
+For instance, for the first test case of a lab, `in 0:` and `out 0:` have to be
+provided; for the second test case, `in 1:` and `out 1:` have to be provided,
+and so on.
+
+This is an example of a complete lab I/O block:
+
+```
+    --  START LAB IO BLOCK
+    in 0:John
+    out 0:Hello John!
+    in 1:Joanna
+    out 1:Hello Joanna!
+    --  END LAB IO BLOCK
+```
+
+Newlines from the standard output must be replaced by whitespaces in the
+corresponding output entries. For example, if the expected output of a specific
+test case is the following:
+
+```
+    Months:
+    - January
+    - February
+```
+
+then the corresponding output entry in the I/O block is:
+
+```
+    out 0:Months: - January - February
+```
+
+In most cases, labs must process input data, which is provided to the test
+application in the standard input at runtime. Because of this dependency on
+input data, some sort of command-line parsing must be part of the Ada code of
+each lab — unless, of course, a specific lab doesn't require any input. For
+each test case, the actual output of the application is extracted by the test
+environment and compared to the expected output.
+
+As an example, this is the complete code for a lab:
+
+```
+    .. code:: ada lab=Labs.Intro_To_Ada.Imperative_Language.Greetings
+
+        --  START LAB IO BLOCK
+        in 0:John
+        out 0:Hello John!
+        in 1:Joanna
+        out 1:Hello Joanna!
+        --  END LAB IO BLOCK
+
+        with Ada.Command_Line; use Ada.Command_Line;
+        with Ada.Text_IO;      use Ada.Text_IO;
+
+        procedure Main is
+
+           procedure Greet (Name : String) is
+           begin
+              --  Implement the application here!
+              null;
+           end Greet;
+
+        begin
+           if Argument_Count < 1 then
+              Put_Line ("ERROR: missing arguments! Exiting...");
+              return;
+           elsif Argument_Count > 1 then
+              Put_Line ("Ignoring additional arguments...");
+           end if;
+
+           Greet (Argument (1));
+        end Main;
+```
+
+Note that using command-line arguments to indicate a specific test case is also
+a valid approach when creating labs. For example, you could declare a
+`Test_Case_Index` enumeration in the lab source code and let the command-line
+arguments trigger each test case at runtime:
+
+```
+    .. code:: ada lab=Labs.Intro_To_Ada.Modular_Programming.Monthly_Check
+
+        --  START LAB IO BLOCK
+        in 0:January_Chk
+        out 0:January
+        in 1:February_Chk
+        out 1:February
+        --  END LAB IO BLOCK
+
+        package Months is
+
+           --  type Month is...
+
+           procedure Display_Month (M : Month);
+
+        end Months;
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Months is
+
+           procedure Display_Month (M : Month);
+
+        end Months;
+
+        with Ada.Command_Line; use Ada.Command_Line;
+        with Ada.Text_IO;      use Ada.Text_IO;
+
+        with Months;           use Months;
+
+        procedure Main is
+
+           type Test_Case_Index is
+             (January_Chk, February_Chk);
+
+           procedure Check (TC : Test_Case_Index) is
+           begin
+              case TC is
+                 when January_Chk =>
+                    Display_Month (Jan);
+                 when February_Chk =>
+                    Display_Month (Feb);
+              end case;
+           end Check;
+
+        begin
+           if Argument_Count < 1 then
+              Put_Line ("ERROR: missing arguments! Exiting...");
+              return;
+           elsif Argument_Count > 1 then
+              Put_Line ("Ignoring additional arguments...");
+           end if;
+
+           Check (Test_Case_Index'Value (Argument (1)));
+        end Main;
+```
+
+In this case, `in 0:` and `in 1:` contain the enumeration name, which
+corresponds to a test case triggered by the `Check` procedure.
+
