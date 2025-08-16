@@ -1411,9 +1411,11 @@ Note that both real types and universal real types are implicitly derived from
 the :ref:`root real type <Adv_Ada_Root_Types>`, which we already discussed in
 another chapter.
 
-In this chapter, we discuss further details about
-floating-point and
-fixed-point types.
+.. todo::
+
+    In this chapter, we discuss further details about
+    floating-point and
+    fixed-point types.
 
 .. todo::
 
