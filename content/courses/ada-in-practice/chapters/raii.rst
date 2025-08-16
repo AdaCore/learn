@@ -305,7 +305,7 @@ a tagged limited private type with a discriminant designating a
 
 .. code-block:: ada
 
-      type Lock_Manager (Lock : access Mutual_Exclusion) is
+      type Lock_Manager (Lock : not null access Mutual_Exclusion) is
          tagged limited private;
 
 We make it a limited type because copying doesn't make sense semantically for
@@ -320,7 +320,7 @@ that the type will be controlled because we don't intend :ada:`Initialize` and
 
 .. code-block:: ada
 
-       type Lock_Manager (Lock : access Mutual_Exclusion) is
+       type Lock_Manager (Lock : not null access Mutual_Exclusion) is
           new Ada.Finalization.Limited_Controlled with null record;
 
 No additional record components are required, beyond the access discriminant.
@@ -348,12 +348,12 @@ The full package spec is as follows:
         (Initially_Available => True,
          Ceiling             => Default_Ceiling);
 
-       type Lock_Manager (Lock : access Mutual_Exclusion) is
+       type Lock_Manager (Lock : not null access Mutual_Exclusion) is
           tagged limited private;
 
     private
 
-       type Lock_Manager (Lock : access Mutual_Exclusion) is
+       type Lock_Manager (Lock : not null access Mutual_Exclusion) is
           new Ada.Finalization.Limited_Controlled with null record;
 
        overriding procedure Initialize (This : in out Lock_Manager);
