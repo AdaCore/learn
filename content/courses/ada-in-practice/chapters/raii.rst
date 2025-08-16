@@ -12,9 +12,9 @@ In order for the expected semantics to be obtained, some types require clients
 to follow a specific protocol when calling the type's operations. Furthermore,
 failing to follow the protocol can cause system-wide ill effects.
 
-For example, in the context of competing concurrent threads accessing shared
-resources, concurrency abstractions such as mutexes provide the mutually
-exclusive access necessary to prevent race conditions. These mutex objects must
+For example, concurrency abstractions such as mutexes provide the mutually
+exclusive access necessary to prevent the race conditions that arise when
+competing concurrent threads access shared resources. These mutex objects must
 be 1) both acquired and released, 2) by every thread accessing that shared
 resource, 3) at the right places in the source code, and 4) in the proper
 order. Failure to acquire the mutex prior to accessing the shared resource
@@ -325,7 +325,7 @@ that the type will be controlled because we don't intend :ada:`Initialize` and
 
 No additional record components are required, beyond the access discriminant.
 
-Immediately following the type declaration, we declare overridden versions of
+Immediately following the type declaration, we declare overriding versions of
 the inherited procedures :ada:`Initialize` and :ada:`Finalize`:
 
 .. code-block:: ada
@@ -444,7 +444,7 @@ Cons
 
 The lock is global, so all calls go through it. Hence all calls are sequential,
 even if some could run concurrently. In the above example that's exactly as
-required, but in other situations it might be too limiting.
+required, but in other situations it might be unnecessarily limiting.
 
 Compared to the manual call approach, the run-time cost for keeping track of
 objects to be finalized could be non-trivial. That's likely true in any
