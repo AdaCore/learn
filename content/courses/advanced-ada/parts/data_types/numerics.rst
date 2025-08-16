@@ -1342,7 +1342,7 @@ In the Introduction to Ada course, we've seen that Ada has two kinds of
 discrete numeric types: :ref:`signed integer <Intro_Ada_Integers>` and
 :ref:`modular <Intro_Ada_Unsigned_Types>` types. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Signed_Modular_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_And_Real_Numeric_Types.Signed_Modular_Types
 
     package Num_Types is
 
@@ -1372,7 +1372,7 @@ types*. In very simple terms, we could say that real types are the ones whose
 objects we could assign
 :ref:`real numeric literals <Adv_Ada_Numeric_Literals>` to. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_And_Real_Numeric_Types.Universal_And_Real_Numeric_Types
 
     procedure Show_Real_Numeric_Object is
         V : Float;
@@ -1387,7 +1387,7 @@ Note that we shouldn't confuse real numeric types with
 can assign a named number of universal real type to an object of a real type,
 these terms refer to very distinct concepts. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_And_Real_Numeric_Types.Universal_And_Real_Numeric_Types
 
     package Universal_And_Real_Numeric_Types is
 
@@ -1488,7 +1488,7 @@ least a 16-bit type, but it doesn't define its actual range for a specific
 compiler or target architecture. For example, :ada:`Integer` could be defined
 as a 32-bit type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Check_Integer_Type_Range
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Check_Integer_Type_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1541,7 +1541,7 @@ their availability or expected range.
 
     In C, you have a longer list of standard integer types:
 
-    .. code:: c run_button manual_chop project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Integer_Types_C
+    .. code:: c run_button manual_chop project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Integer_Types_C
 
         !main.c
         #include <stdio.h>
@@ -1576,7 +1576,7 @@ their availability or expected range.
     The GNAT compiler provides a couple of integer types in addition to the
     standard :ada:`Integer` type:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.GNAT_Integer_Types
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.GNAT_Integer_Types
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1646,7 +1646,7 @@ reach a clear understanding about the adequate range of each integer type
 For example, if some coefficients in your algorithm expected at least 32-bit
 precision, you may consider defining this type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Integer_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Custom_Integer_Type
 
     package Custom_Integer_Types is
 
@@ -1688,7 +1688,7 @@ If the specified range cannot be supported by the target machine, the Ada
 compiler will reject the source code containing the type declaration (and all
 clients of that code). For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Illegal_Custom_Integer_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Illegal_Custom_Integer_Type
     :class: ada-expect-compile-error
 
     package Custom_Integer_Types is
@@ -1730,7 +1730,7 @@ and :ada:`System.Max_Int` values. We discuss this topic
 
     As of 2025, GNAT supports 128-bit integers:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Custom_Integer_Type
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Max_Custom_Integer_Type
 
         package Custom_Integer_Types is
 
@@ -1784,7 +1784,7 @@ integer type is :ada:`System.Min_Int .. System.Max_Int`.
 The value of :ada:`System.Min_Int` and :ada:`System.Max_Int` depends on the
 target system. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.System_Int_Range
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.System_Int_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
     with System;
@@ -1806,7 +1806,7 @@ Because :ref:`custom integer types <Adv_Ada_Custom_Integer_Types>` are
 implicitly derived from the root integer type, we cannot declare a custom
 integer type outside of the :ada:`System.Min_Int .. System.Max_Int` range:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Int_Out_Of_Range
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Custom_Int_Out_Of_Range
     :class: ada-expect-compile-error
 
     with System;
@@ -1832,7 +1832,7 @@ integer type. The range of its :ref:`base type <Adv_Ada_Base_Types>`, however,
 is *not* derived from the root integer type, but rather determined by the range
 of the type specification. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Int_Base_Range
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Custom_Int_Base_Range
 
     with System;
 
@@ -1886,7 +1886,7 @@ course, modular types are the Ada version of *unsigned* integer types. We
 declare a modular type by specifying its modulo |mdash| by using the
 :ada:`mod` keyword:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Modular_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_Types
 
     package Modular_Types is
 
@@ -1915,7 +1915,7 @@ This example declares the 32-bit modular type :ada:`Modular`.
 Note that, different from other languages such as C, the modulus need not be a
 power of two. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Modular_Types_Not_Power_Of_Two
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_Types_Not_Power_Of_Two
 
     package Modular_Types is
 
@@ -1961,7 +1961,7 @@ could use in the type declaration is indicated by the
 numbers, the maximum value for the modulus is indicated by the
 :ada:`System.Max_Nonbinary_Modulus` constant:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus_Values
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Max_Binary_Nonbinary_Modulus_Values
 
     with System;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1987,7 +1987,7 @@ On a typical desktop PC, you might get the following values:
 
 As expected, we can simply use these constants in modular type declarations:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Max_Binary_Nonbinary_Modulus_Types
 
     with System;
 
