@@ -1338,8 +1338,8 @@ Discrete and Real Numeric Types
 Discrete Numeric Types
 ~~~~~~~~~~~~~~~~~~~~~~
 
-In the Introduction to Ada course, we've seen that Ada has two kinds of integer
-type: :ref:`signed integer <Intro_Ada_Integers>` and
+In the Introduction to Ada course, we've seen that Ada has two kinds of
+discrete numeric types: :ref:`signed integer <Intro_Ada_Integers>` and
 :ref:`modular <Intro_Ada_Unsigned_Types>` types. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Signed_Modular_Types
@@ -1354,7 +1354,7 @@ type: :ref:`signed integer <Intro_Ada_Integers>` and
 Remember that modular types are similar to *unsigned* integer types in other
 programming languages.
 
-In this section, we review these types and look into a couple of details that
+In this chapter, we review these types and look into a couple of details that
 haven't been covered yet. We start the discussion with
 :ref:`signed integer types <Adv_Ada_Integer_Types>`, and then move on to
 :ref:`modular types <Adv_Ada_Modular_Types>`.
@@ -1411,7 +1411,7 @@ Note that both real types and universal real types are implicitly derived from
 the :ref:`root real type <Adv_Ada_Root_Types>`, which we already discussed in
 another chapter.
 
-In the next two sections, we discuss further details about
+In this chapter, we discuss further details about
 floating-point and
 fixed-point types.
 
