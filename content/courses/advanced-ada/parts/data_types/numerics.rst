@@ -1330,10 +1330,13 @@ of the program before it's adapted to fit the constraints of the
 :ada:`One_To_Ten` subtype.
 
 
+Discrete and Real Numeric Types
+-------------------------------
+
 .. _Adv_Ada_Discrete_Numeric_Types:
 
 Discrete Numeric Types
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 In the Introduction to Ada course, we've seen that Ada has two kinds of integer
 type: :ref:`signed integer <Intro_Ada_Integers>` and
@@ -1430,7 +1433,7 @@ fixed-point types.
 .. _Adv_Ada_Integer_Types:
 
 Integer types
-~~~~~~~~~~~~~
+-------------
 
 In the :ref:`Introduction to Ada <Intro_Ada_Integers>` course, we mentioned
 that you can define your own integer types in Ada. In fact, typically you're
@@ -1448,7 +1451,7 @@ corresponding type definition.
     - :arm22:`3.5.4 Integer Types <3-5-4>`
 
 Predefined integer types
-^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ada only has a single predefined integer type (:ada:`Integer`) and two subtypes
 (:ada:`Natural` and :ada:`Positive`). Although the actual range of
@@ -1630,7 +1633,7 @@ their availability or expected range.
 .. _Adv_Ada_Custom_Integer_Types:
 
 Custom integer types
-^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~
 
 As we've mentioned before, for the language-defined numeric data types such as
 :ada:`Integer` or :ada:`Long_Integer`, the range selected by the compiler may
@@ -1679,7 +1682,7 @@ chapter.
 
 
 Illegal integer definitions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the specified range cannot be supported by the target machine, the Ada
 compiler will reject the source code containing the type declaration (and all
@@ -1772,7 +1775,7 @@ and :ada:`System.Max_Int` values. We discuss this topic
 .. _Adv_Ada_System_Min_Max_Int:
 
 System max. and min. values
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As we've just mentioned, a custom type definition is derived from the
 :ref:`root integer type <Adv_Ada_Root_Types>`. The base range of the root
@@ -1822,7 +1825,7 @@ below :ada:`System.Min_Int` and :ada:`Custom_Int'Last` is above
 
 
 Range of base type
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 As we've said before, a custom type definition is derived from the root
 integer type. The range of its :ref:`base type <Adv_Ada_Base_Types>`, however,
@@ -1876,7 +1879,7 @@ discussing :ref:`base types <Adv_Ada_Base_Types>`.)
 .. _Adv_Ada_Modular_Types:
 
 Modular Types
-~~~~~~~~~~~~~
+-------------
 
 As we've mentioned in the :ref:`Introduction to Ada <Intro_Ada_Unsigned_Types>`
 course, modular types are the Ada version of *unsigned* integer types. We
@@ -1950,7 +1953,7 @@ There are many attributes on modular types. We talk about them
 .. _Adv_Ada_System_Max_Modulus:
 
 System max. values for modulus
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When we use a power-of-two number as the modulus, the maximum value that we
 could use in the type declaration is indicated by the
