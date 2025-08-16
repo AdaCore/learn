@@ -1330,16 +1330,19 @@ of the program before it's adapted to fit the constraints of the
 :ada:`One_To_Ten` subtype.
 
 
+Discrete and Real Numeric Types
+-------------------------------
+
 .. _Adv_Ada_Discrete_Numeric_Types:
 
 Discrete Numeric Types
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
-In the Introduction to Ada course, we've seen that Ada has two kinds of integer
-type: :ref:`signed integer <Intro_Ada_Integers>` and
+In the Introduction to Ada course, we've seen that Ada has two kinds of
+discrete numeric types: :ref:`signed integer <Intro_Ada_Integers>` and
 :ref:`modular <Intro_Ada_Unsigned_Types>` types. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Signed_Modular_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_And_Real_Numeric_Types.Signed_Modular_Types
 
     package Num_Types is
 
@@ -1351,15 +1354,88 @@ type: :ref:`signed integer <Intro_Ada_Integers>` and
 Remember that modular types are similar to *unsigned* integer types in other
 programming languages.
 
-In this section, we review these types and look into a couple of details that
+In this chapter, we review these types and look into a couple of details that
 haven't been covered yet. We start the discussion with
 :ref:`signed integer types <Adv_Ada_Integer_Types>`, and then move on to
 :ref:`modular types <Adv_Ada_Modular_Types>`.
 
+.. _Adv_Ada_Real_Numeric_Types:
+
+Real Numeric Types
+~~~~~~~~~~~~~~~~~~
+
+In the Introduction to Ada course, we talked about
+:ref:`floating-point <Intro_Ada_Floating_Point_Types>` and
+:doc:`fixed-point </courses/intro-to-ada/chapters/fixed_point_types>` types.
+In Ada, these two categories of numeric types belong to the so-called *real
+types*. In very simple terms, we could say that real types are the ones whose
+objects we could assign
+:ref:`real numeric literals <Adv_Ada_Numeric_Literals>` to. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_And_Real_Numeric_Types.Universal_And_Real_Numeric_Types
+
+    procedure Show_Real_Numeric_Object is
+        V : Float;
+    begin
+       V := 2.3333333333;
+       --   ^^^^^^^^^^^^
+       --  real numeric literal
+    end Show_Real_Numeric_Object;
+
+Note that we shouldn't confuse real numeric types with
+:ref:`universal real types <Adv_Ada_Universal_Real_Integer>`. Even though we
+can assign a named number of universal real type to an object of a real type,
+these terms refer to very distinct concepts. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_And_Real_Numeric_Types.Universal_And_Real_Numeric_Types
+
+    package Universal_And_Real_Numeric_Types is
+
+       Pi : constant := 3.1415926535;
+       --               ^^^^^^^^^^^^
+       --            universal real type
+
+       V : Float     := Pi;
+       --  ^^^^^
+       --  real type
+       --  (floating-point type)
+       --
+
+    end Universal_And_Real_Numeric_Types;
+
+In this example, :ada:`Pi` is a named number of universal real type, while
+:ada:`V` is an object of real type |mdash| and of floating-point type, to be
+more precise.
+
+Note that both real types and universal real types are implicitly derived from
+the :ref:`root real type <Adv_Ada_Root_Types>`, which we already discussed in
+another chapter.
+
+.. todo::
+
+    In this chapter, we discuss further details about
+    floating-point and
+    fixed-point types.
+
+.. todo::
+
+    Add link to section on floating-point types <Adv_Ada_Floating_Point_Types>
+    when it has become available!
+
+.. todo::
+
+    Add link to section on fixed-point types <Adv_Ada_Fixed_Point_Types>
+    when it has become available!
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.5.6 Real Types <3-5-6>`
+
+
 .. _Adv_Ada_Integer_Types:
 
 Integer types
-~~~~~~~~~~~~~
+-------------
 
 In the :ref:`Introduction to Ada <Intro_Ada_Integers>` course, we mentioned
 that you can define your own integer types in Ada. In fact, typically you're
@@ -1377,7 +1453,7 @@ corresponding type definition.
     - :arm22:`3.5.4 Integer Types <3-5-4>`
 
 Predefined integer types
-^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ada only has a single predefined integer type (:ada:`Integer`) and two subtypes
 (:ada:`Natural` and :ada:`Positive`). Although the actual range of
@@ -1414,7 +1490,7 @@ least a 16-bit type, but it doesn't define its actual range for a specific
 compiler or target architecture. For example, :ada:`Integer` could be defined
 as a 32-bit type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Check_Integer_Type_Range
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Check_Integer_Type_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1467,7 +1543,7 @@ their availability or expected range.
 
     In C, you have a longer list of standard integer types:
 
-    .. code:: c run_button manual_chop project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Integer_Types_C
+    .. code:: c run_button manual_chop project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Integer_Types_C
 
         !main.c
         #include <stdio.h>
@@ -1502,7 +1578,7 @@ their availability or expected range.
     The GNAT compiler provides a couple of integer types in addition to the
     standard :ada:`Integer` type:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.GNAT_Integer_Types
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.GNAT_Integer_Types
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -1559,7 +1635,7 @@ their availability or expected range.
 .. _Adv_Ada_Custom_Integer_Types:
 
 Custom integer types
-^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~
 
 As we've mentioned before, for the language-defined numeric data types such as
 :ada:`Integer` or :ada:`Long_Integer`, the range selected by the compiler may
@@ -1572,7 +1648,7 @@ reach a clear understanding about the adequate range of each integer type
 For example, if some coefficients in your algorithm expected at least 32-bit
 precision, you may consider defining this type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Integer_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Custom_Integer_Type
 
     package Custom_Integer_Types is
 
@@ -1608,13 +1684,13 @@ chapter.
 
 
 Illegal integer definitions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the specified range cannot be supported by the target machine, the Ada
 compiler will reject the source code containing the type declaration (and all
 clients of that code). For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Illegal_Custom_Integer_Type
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Illegal_Custom_Integer_Type
     :class: ada-expect-compile-error
 
     package Custom_Integer_Types is
@@ -1656,7 +1732,7 @@ and :ada:`System.Max_Int` values. We discuss this topic
 
     As of 2025, GNAT supports 128-bit integers:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Custom_Integer_Type
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Max_Custom_Integer_Type
 
         package Custom_Integer_Types is
 
@@ -1701,7 +1777,7 @@ and :ada:`System.Max_Int` values. We discuss this topic
 .. _Adv_Ada_System_Min_Max_Int:
 
 System max. and min. values
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As we've just mentioned, a custom type definition is derived from the
 :ref:`root integer type <Adv_Ada_Root_Types>`. The base range of the root
@@ -1710,7 +1786,7 @@ integer type is :ada:`System.Min_Int .. System.Max_Int`.
 The value of :ada:`System.Min_Int` and :ada:`System.Max_Int` depends on the
 target system. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.System_Int_Range
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.System_Int_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
     with System;
@@ -1732,7 +1808,7 @@ Because :ref:`custom integer types <Adv_Ada_Custom_Integer_Types>` are
 implicitly derived from the root integer type, we cannot declare a custom
 integer type outside of the :ada:`System.Min_Int .. System.Max_Int` range:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Int_Out_Of_Range
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Custom_Int_Out_Of_Range
     :class: ada-expect-compile-error
 
     with System;
@@ -1751,14 +1827,14 @@ below :ada:`System.Min_Int` and :ada:`Custom_Int'Last` is above
 
 
 Range of base type
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 As we've said before, a custom type definition is derived from the root
 integer type. The range of its :ref:`base type <Adv_Ada_Base_Types>`, however,
 is *not* derived from the root integer type, but rather determined by the range
 of the type specification. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Custom_Int_Base_Range
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Integer_Types.Custom_Int_Base_Range
 
     with System;
 
@@ -1805,14 +1881,14 @@ discussing :ref:`base types <Adv_Ada_Base_Types>`.)
 .. _Adv_Ada_Modular_Types:
 
 Modular Types
-~~~~~~~~~~~~~
+-------------
 
 As we've mentioned in the :ref:`Introduction to Ada <Intro_Ada_Unsigned_Types>`
 course, modular types are the Ada version of *unsigned* integer types. We
 declare a modular type by specifying its modulo |mdash| by using the
 :ada:`mod` keyword:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Modular_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_Types
 
     package Modular_Types is
 
@@ -1841,7 +1917,7 @@ This example declares the 32-bit modular type :ada:`Modular`.
 Note that, different from other languages such as C, the modulus need not be a
 power of two. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Modular_Types_Not_Power_Of_Two
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Modular_Types_Not_Power_Of_Two
 
     package Modular_Types is
 
@@ -1879,7 +1955,7 @@ There are many attributes on modular types. We talk about them
 .. _Adv_Ada_System_Max_Modulus:
 
 System max. values for modulus
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When we use a power-of-two number as the modulus, the maximum value that we
 could use in the type declaration is indicated by the
@@ -1887,7 +1963,7 @@ could use in the type declaration is indicated by the
 numbers, the maximum value for the modulus is indicated by the
 :ada:`System.Max_Nonbinary_Modulus` constant:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus_Values
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Max_Binary_Nonbinary_Modulus_Values
 
     with System;
     with Ada.Text_IO; use Ada.Text_IO;
@@ -1913,7 +1989,7 @@ On a typical desktop PC, you might get the following values:
 
 As expected, we can simply use these constants in modular type declarations:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Discrete_Numeric_Types.Max_Binary_Nonbinary_Modulus_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Modular_Types.Max_Binary_Nonbinary_Modulus_Types
 
     with System;
 
@@ -1930,78 +2006,6 @@ As expected, we can simply use these constants in modular type declarations:
 In this example, we use :ada:`Max_Binary_Modulus` as the modulus of the
 :ada:`Modular_Max` type, and :ada:`Max_Nonbinary_Modulus` as the modulus of the
 :ada:`Modular_Max_Non_Power_Two` type.
-
-
-
-.. _Adv_Ada_Real_Numeric_Types:
-
-Real Numeric Types
-------------------
-
-In the Introduction to Ada course, we talked about
-:ref:`floating-point <Intro_Ada_Floating_Point_Types>` and
-:doc:`fixed-point </courses/intro-to-ada/chapters/fixed_point_types>` types.
-In Ada, these two categories of numeric types belong to the so-called *real
-types*. In very simple terms, we could say that real types are the ones whose
-objects we could assign
-:ref:`real numeric literals <Adv_Ada_Numeric_Literals>` to. For example:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
-
-    procedure Show_Real_Numeric_Object is
-        V : Float;
-    begin
-       V := 2.3333333333;
-       --   ^^^^^^^^^^^^
-       --  real numeric literal
-    end Show_Real_Numeric_Object;
-
-Note that we shouldn't confuse real numeric types with
-:ref:`universal real types <Adv_Ada_Universal_Real_Integer>`. Even though we
-can assign a named number of universal real type to an object of a real type,
-these terms refer to very distinct concepts. For example:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
-
-    package Universal_And_Real_Numeric_Types is
-
-       Pi : constant := 3.1415926535;
-       --               ^^^^^^^^^^^^
-       --            universal real type
-
-       V : Float     := Pi;
-       --  ^^^^^
-       --  real type
-       --  (floating-point type)
-       --
-
-    end Universal_And_Real_Numeric_Types;
-
-In this example, :ada:`Pi` is a named number of universal real type, while
-:ada:`V` is an object of real type |mdash| and of floating-point type, to be
-more precise.
-
-Note that both real types and universal real types are implicitly derived from
-the :ref:`root real type <Adv_Ada_Root_Types>`, which we already discussed in
-another chapter.
-
-In the next two sections, we discuss further details about
-floating-point and
-fixed-point types.
-
-.. todo::
-
-    Add link to section on floating-point types <Adv_Ada_Floating_Point_Types>
-    when it has become available!
-
-.. todo::
-
-    Add link to section on fixed-point types <Adv_Ada_Fixed_Point_Types>
-    when it has become available!
-
-.. admonition:: In the Ada Reference Manual
-
-    - :arm22:`3.5.6 Real Types <3-5-6>`
 
 
 .. ::
