@@ -1356,6 +1356,77 @@ haven't been covered yet. We start the discussion with
 :ref:`signed integer types <Adv_Ada_Integer_Types>`, and then move on to
 :ref:`modular types <Adv_Ada_Modular_Types>`.
 
+.. _Adv_Ada_Real_Numeric_Types:
+
+Real Numeric Types
+~~~~~~~~~~~~~~~~~~
+
+In the Introduction to Ada course, we talked about
+:ref:`floating-point <Intro_Ada_Floating_Point_Types>` and
+:doc:`fixed-point </courses/intro-to-ada/chapters/fixed_point_types>` types.
+In Ada, these two categories of numeric types belong to the so-called *real
+types*. In very simple terms, we could say that real types are the ones whose
+objects we could assign
+:ref:`real numeric literals <Adv_Ada_Numeric_Literals>` to. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
+
+    procedure Show_Real_Numeric_Object is
+        V : Float;
+    begin
+       V := 2.3333333333;
+       --   ^^^^^^^^^^^^
+       --  real numeric literal
+    end Show_Real_Numeric_Object;
+
+Note that we shouldn't confuse real numeric types with
+:ref:`universal real types <Adv_Ada_Universal_Real_Integer>`. Even though we
+can assign a named number of universal real type to an object of a real type,
+these terms refer to very distinct concepts. For example:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
+
+    package Universal_And_Real_Numeric_Types is
+
+       Pi : constant := 3.1415926535;
+       --               ^^^^^^^^^^^^
+       --            universal real type
+
+       V : Float     := Pi;
+       --  ^^^^^
+       --  real type
+       --  (floating-point type)
+       --
+
+    end Universal_And_Real_Numeric_Types;
+
+In this example, :ada:`Pi` is a named number of universal real type, while
+:ada:`V` is an object of real type |mdash| and of floating-point type, to be
+more precise.
+
+Note that both real types and universal real types are implicitly derived from
+the :ref:`root real type <Adv_Ada_Root_Types>`, which we already discussed in
+another chapter.
+
+In the next two sections, we discuss further details about
+floating-point and
+fixed-point types.
+
+.. todo::
+
+    Add link to section on floating-point types <Adv_Ada_Floating_Point_Types>
+    when it has become available!
+
+.. todo::
+
+    Add link to section on fixed-point types <Adv_Ada_Fixed_Point_Types>
+    when it has become available!
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`3.5.6 Real Types <3-5-6>`
+
+
 .. _Adv_Ada_Integer_Types:
 
 Integer types
@@ -1930,78 +2001,6 @@ As expected, we can simply use these constants in modular type declarations:
 In this example, we use :ada:`Max_Binary_Modulus` as the modulus of the
 :ada:`Modular_Max` type, and :ada:`Max_Nonbinary_Modulus` as the modulus of the
 :ada:`Modular_Max_Non_Power_Two` type.
-
-
-
-.. _Adv_Ada_Real_Numeric_Types:
-
-Real Numeric Types
-------------------
-
-In the Introduction to Ada course, we talked about
-:ref:`floating-point <Intro_Ada_Floating_Point_Types>` and
-:doc:`fixed-point </courses/intro-to-ada/chapters/fixed_point_types>` types.
-In Ada, these two categories of numeric types belong to the so-called *real
-types*. In very simple terms, we could say that real types are the ones whose
-objects we could assign
-:ref:`real numeric literals <Adv_Ada_Numeric_Literals>` to. For example:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
-
-    procedure Show_Real_Numeric_Object is
-        V : Float;
-    begin
-       V := 2.3333333333;
-       --   ^^^^^^^^^^^^
-       --  real numeric literal
-    end Show_Real_Numeric_Object;
-
-Note that we shouldn't confuse real numeric types with
-:ref:`universal real types <Adv_Ada_Universal_Real_Integer>`. Even though we
-can assign a named number of universal real type to an object of a real type,
-these terms refer to very distinct concepts. For example:
-
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Real_Numeric_Types.Universal_And_Real_Numeric_Types
-
-    package Universal_And_Real_Numeric_Types is
-
-       Pi : constant := 3.1415926535;
-       --               ^^^^^^^^^^^^
-       --            universal real type
-
-       V : Float     := Pi;
-       --  ^^^^^
-       --  real type
-       --  (floating-point type)
-       --
-
-    end Universal_And_Real_Numeric_Types;
-
-In this example, :ada:`Pi` is a named number of universal real type, while
-:ada:`V` is an object of real type |mdash| and of floating-point type, to be
-more precise.
-
-Note that both real types and universal real types are implicitly derived from
-the :ref:`root real type <Adv_Ada_Root_Types>`, which we already discussed in
-another chapter.
-
-In the next two sections, we discuss further details about
-floating-point and
-fixed-point types.
-
-.. todo::
-
-    Add link to section on floating-point types <Adv_Ada_Floating_Point_Types>
-    when it has become available!
-
-.. todo::
-
-    Add link to section on fixed-point types <Adv_Ada_Fixed_Point_Types>
-    when it has become available!
-
-.. admonition:: In the Ada Reference Manual
-
-    - :arm22:`3.5.6 Real Types <3-5-6>`
 
 
 .. ::
