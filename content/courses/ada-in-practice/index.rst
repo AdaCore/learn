@@ -118,3 +118,4 @@ Ada In Practice
     Providing Component Access to Enclosing Record Objects <chapters/component_access_to_rec_objs>
     Interrupt Handling <chapters/interrupt_handling>
     Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
+    Resource Acquisition Is Initialization (RAII) <chapters/raii>
