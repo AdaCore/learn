@@ -2010,30 +2010,6 @@ In this example, we use :ada:`Max_Binary_Modulus` as the modulus of the
 :ada:`Modular_Max_Non_Power_Two` type.
 
 
-.. ::
-
-    .. _Adv_Ada_Floating_Point_Types:
-
-    Floating-point types
-    --------------------
-
-    .. todo::
-
-        Complete section!
-
-
-.. ::
-
-    .. _Adv_Ada_Fixed_Point_Types:
-
-    Fixed-point types
-    -----------------
-
-    .. todo::
-
-        Complete section!
-
-
 .. _Adv_Ada_Floating_Point_Types:
 
 Floating-point types
@@ -3024,6 +3000,18 @@ for that declaration. For example:
 In this example, we're trying to declare the :ada:`Max_Float` type with a
 decimal precision greater than the maximum supported precision. Therefore,
 compilation fails for this example.
+
+
+.. ::
+
+    .. _Adv_Ada_Fixed_Point_Types:
+
+    Fixed-point types
+    -----------------
+
+    .. todo::
+
+        Complete section!
 
 
 .. _Adv_Ada_Big_Numbers:
