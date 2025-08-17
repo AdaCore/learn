@@ -32,12 +32,11 @@ contributions were reified in
 :wikipedia:`Concurrent Pascal <Concurrent_Pascal>`, a concrete programming
 language.), Ada defines a protected object (PO) as a concurrency construct that
 is higher-level and more robust than mutexes and semaphores. Those advantages
-accrue because the bodies of the protected operations implement only the
-functional requirements, with guaranteed mutually exclusive access to the
-protected data. The underlying implementation, i.e., the run-time library,
-provides the necessary exclusive access, and also thread management. As a
-result, the lock is guaranteed to be acquired, and likewise, guaranteed to be
-relinquished, even in the face of exceptions.
+accrue because the bodies of the protected operations are only responsible for
+implementing the functional requirements. The underlying run-time library is
+responsible for implementing the mutually exclusive access, and also thread
+management. As a result, the source code is much simpler and is robust even in
+the face of exceptions.
 
 However, a protected object is not always appropriate. Consider an existing
 sequential program that makes calls to visible procedures provided by a
@@ -154,7 +153,8 @@ protected procedure bodies both call a potentially blocking operation, in this
 case :ada:`Ada.Text_IO.Put_Line`. Erroneous execution is the result. It might
 work as intended when executed, or it might do something else, or, if detected,
 :ada:`Program_Error` will be raised. On a run-time library built on top of an
-operating system, it may work because the OS may provide thread locking
+operating system, it may work as intended because the OS may provide thread
+locking
 mechanisms that the run-time library can use. In that case a blocking operation
 just suspends the caller thread's execution temporarily without releasing the
 PO lock. Although the blocking operation would allow some other caller task to
@@ -172,7 +172,8 @@ only potentially blocking operation defined by the language.
 Note that moving the calls to :ada:`Put_Line` out of the PO procedure bodies,
 back to the regular procedure bodies that call those PO procedures, would solve
 the portability problem but would not work functionally. There would be no
-guarantee that a call to :ada:`Put_Line` would immediately follow the execution
+guarantee that, during execution, the call to :ada:`Put_Line` would immediately
+follow the execution
 of the protected procedure called immediately before it in the source code.
 Hence the printed text might not reflect the current value of the :ada:`State`
 variable.
