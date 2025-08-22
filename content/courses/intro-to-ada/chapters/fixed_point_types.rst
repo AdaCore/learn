@@ -39,6 +39,17 @@ Ordinary fixed-point types are similar to decimal fixed-point types in that the
 values are, in effect, scaled integers.  The difference between them is in the
 scale factor: for a decimal fixed-point type, the scaling, given explicitly by
 the type's :ada:`delta`, is always a power of ten.
+In contrast, for an ordinary fixed-point type, the :ada:`delta` isn't limited
+to power of 10 values, but it can have any arbitrary base.
+
+.. admonition:: For further reading...
+
+    When representing ordinary fixed-point types on the machine, the compiler
+    selects a scaling factor derived from the value of :ada:`delta` specified
+    in the type declaration. This compiler-selected scaling factor is, by
+    default, a power of two |mdash| even if the value provided for the
+    :ada:`delta` isn't a  power of two. Therefore, ordinary fixed-point types
+    are sometimes called binary fixed-point types.
 
 The syntax for an ordinary fixed-point type is
 
