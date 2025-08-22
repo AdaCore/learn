@@ -3,6 +3,14 @@ Fixed-point types
 
 .. include:: ../../global.txt
 
+In this chapter, we discuss fixed-point types, which can be classified in two
+categories:
+:ref:`decimal fixed-point types <Intro_Ada_Decimal_Fixed_Point_Types>` and
+:ref:`ordinary (binary) fixed-point types <Intro_Ada_Ordinary_Fixed_Point_Types>`.
+Afterward a brief overview of each category, we discuss some
+:ref:`differences between fixed-point and floating-point types <Intro_Ada_Fixed_Point_Vs_Floating_Point_Types>`.
+
+
 .. _Intro_Ada_Decimal_Fixed_Point_Types:
 
 Decimal fixed-point types
@@ -28,6 +36,174 @@ The syntax for a simple decimal fixed-point type is
 
 In this case, the :ada:`delta` and the :ada:`digits` will be used by the
 compiler to derive a range.
+
+
+Decimal delta
+^^^^^^^^^^^^^
+
+The delta determines the required decimal precision for the type. For example,
+if we want to be able to use two digits after the decimal point, we would write
+:ada:`delta 10.0 ** (-2)` |mdash| which is equivalent to :ada:`delta 0.01`.
+(You can use any of those definitions: both :ada:`delta 10.0 ** (-2)` and
+:ada:`delta 0.01` are correct.)
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Fixed_Point_Types is
+       type Decimal is
+         delta 10.0 ** (-1) digits 3;
+
+       --  Alternatively:
+       --  type Decimal is
+       --    delta 0.1 digits 3;
+    begin
+       Put_Line
+         ("The decimal precision of Decimal is "
+          & Decimal'Delta'Image);
+    end Decimal_Fixed_Point_Types;
+
+In this example, we declare the :ada:`Decimal` type, which has a decimal
+precision of 0.1. We use the :ada:`'Delta` attribute to show the decimal
+precision of the type.
+
+
+Decimal digits
+^^^^^^^^^^^^^^
+
+Unsurprisingly, the :ada:`digits` part of the type declaration determines
+the number of digits that a type is able to represent. For example, by writing
+:ada:`digits 3`, we're able to represent values with three digits ranging from
+-999 to 999. For example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Fixed_Point_Types is
+       type Decimal is
+         delta 10.0 ** (0) digits 3;
+    begin
+       Put_Line ("The minimum value of Decimal is "
+                 & Decimal'First'Image);
+       Put_Line ("The maximum value of Decimal is "
+                 & Decimal'Last'Image);
+    end Decimal_Fixed_Point_Types;
+
+In this example, we declare the :ada:`Decimal` type, which has a range from
+-999 to 999. We use the :ada:`'First` and :ada:`'Last` attributes to show
+the first and last value of the range, respectively.
+
+.. admonition:: For further reading...
+
+    When running the application above, we see that the first and last values
+    are -999.0 and 999.0, respectively |mdash| i.e. values with the decimal
+    point. Strictly speaking, however, the actual first and last values are
+    -999 and 999 because we selected a delta of 1.0. The decimal point
+    (``.0``) we see in the application output (in the values ``-999.0`` and
+    ``999.0``) is only there to indicate that this is not an integer value
+    |mdash| however, it doesn't indicate an extended decimal precision at all.
+
+    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Type_Precision_Error
+        :class: ada-expect-compile-error
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Decimal_Fixed_Point_Types is
+           type Decimal is
+             delta 10.0 ** (0) digits 3;
+
+           D : Decimal := 0.1;
+           --             ^^^
+           --  ERROR: value cannot be represented
+           --         by Decimal type.
+        begin
+           Put_Line (D'Image);
+        end Decimal_Fixed_Point_Types;
+
+    Assigning the value 0.1 to :ada:`D` is wrong because the :ada:`Decimal`
+    type cannot represent this value.
+
+.. admonition:: For further reading...
+
+    The :ada:`Decimal` type above is similar to |mdash| but far from being
+    equivalent with |mdash| the following floating-point type declaration:
+
+    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Floating_Point_Range_Equivalent
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Decimal_Fixed_Point_Types is
+           type Float_999 is
+             digits 3
+             range -999.0 .. 999.0;
+        begin
+           Put_Line ("The minimum value of Float_999 is "
+                     & Float_999'First'Image);
+           Put_Line ("The maximum value of Float_999 is "
+                     & Float_999'Last'Image);
+        end Decimal_Fixed_Point_Types;
+
+    The :ada:`Float_999` type from this example has (roughly) the same range as
+    the :ada:`Decimal` type that we declared in the previous example: -999 to
+    999. However, there are substantial
+    :ref:`differences between fixed-point and floating-point types <Intro_Ada_Fixed_Point_Vs_Floating_Point_Types>`,
+    so we cannot say that these type declarations are equivalent.
+
+
+Decimal delta and digits
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+By combining those three digits (i.e. :ada:`digits 3`) with a decimal precision
+of two digits after the decimal point (:ada:`delta 10.0 ** (-2)`), we get a
+range from -9.99 to 9.99. For example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Fixed_Point_Types is
+       type Decimal is
+         delta 10.0 ** (-2) digits 3;
+    begin
+       Put_Line ("The minimum value of Decimal is "
+                 & Decimal'First'Image);
+       Put_Line ("The maximum value of Decimal is "
+                 & Decimal'Last'Image);
+    end Decimal_Fixed_Point_Types;
+
+In this example, we declare the :ada:`Decimal` type, which has a range from
+-9.99 to 9.99 (as expected).
+
+
+Requirements for the delta
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Note that the delta expression for decimal fixed-point types must be a power
+of 10. Using a different value for the power leads to compilation errors. For
+example:
+
+.. code:: ada compile_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Type_Error
+    :class: ada-expect-compile-error
+
+    package Decimal_Fixed_Point_Type_Error is
+
+       type Decimal_Error_1 is
+         delta 2.0 ** (-1) digits 3;
+       --      ^^^^^^^^^^^
+       --  ERROR: not power of ten
+
+       type Decimal_Error_2 is
+         delta 0.125 digits 3;
+       --      ^^^^^
+       --  ERROR: not power of ten
+
+    end Decimal_Fixed_Point_Type_Error;
+
+In this example, the type declarations (of :ada:`Decimal_Error_1` and
+:ada:`Decimal_Error_2`) are wrong because the delta expression is not a power
+of 10.
 
 
 .. _Intro_Ada_Ordinary_Fixed_Point_Types:
