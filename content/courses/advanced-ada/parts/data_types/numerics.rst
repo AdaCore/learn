@@ -3008,16 +3008,13 @@ decimal precision greater than the maximum supported precision. Therefore,
 compilation fails for this example.
 
 
-.. ::
+.. _Adv_Ada_Fixed_Point_Types:
 
-    .. _Adv_Ada_Fixed_Point_Types:
+Fixed-point types
+-----------------
 
-    Fixed-point types
-    -----------------
 
-    .. todo::
 
-        Complete section!
 
 
 .. ::
