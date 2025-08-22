@@ -28,6 +28,8 @@ In this case, the :ada:`delta` and the :ada:`digits` will be used by the
 compiler to derive a range.
 
 
+.. _Intro_Ada_Ordinary_Fixed_Point_Types:
+
 Ordinary fixed-point types
 --------------------------
 
