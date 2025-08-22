@@ -48,7 +48,8 @@ The syntax for an ordinary fixed-point type is
       delta <delta-value>
       range <lower-bound> .. <upper-bound>;
 
-We may also use any other range. For example:
+For example, we can define an ordinary fixed-point type :ada:`T_Inv_Trig` for
+inverse trigonometric calculations:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Custom_Fixed_Point_Range
 
@@ -57,12 +58,9 @@ We may also use any other range. For example:
 
     procedure Custom_Fixed_Point_Range is
        type T_Inv_Trig is
-         delta 2.0 ** (-15) * Pi
+         delta 0.0005
          range -Pi / 2.0 .. Pi / 2.0;
     begin
-       Put_Line ("T_Inv_Trig requires "
-                 & Integer'Image (T_Inv_Trig'Size)
-                 & " bits");
        Put_Line ("Delta    value of T_Inv_Trig: "
                  & T_Inv_Trig'Image
                      (T_Inv_Trig'Delta));
@@ -74,5 +72,7 @@ We may also use any other range. For example:
                      (T_Inv_Trig'Last));
     end Custom_Fixed_Point_Range;
 
-In this example, we are defining a 16-bit type called :ada:`T_Inv_Trig`,
-which has a range from -π/2 to π/2.
+In this example, we are defining the :ada:`T_Inv_Trig` type with a range from
+-π/2 to π/2, and a delta of 0.0005. Note that, in this case, the delta is
+neither a power of ten nor a power of two. (In fact, this value corresponds to
+:ada:`2000.0 ** (-1)`.)
