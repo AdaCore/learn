@@ -263,3 +263,77 @@ In this example, we are defining the :ada:`T_Inv_Trig` type with a range from
 -π/2 to π/2, and a delta of 0.0005. Note that, in this case, the delta is
 neither a power of ten nor a power of two. (In fact, this value corresponds to
 :ada:`2000.0 ** (-1)`.)
+
+
+.. _Intro_Ada_Fixed_Point_Vs_Floating_Point_Types:
+
+Fixed-point vs. floating-point types
+------------------------------------
+
+The main difference between fixed-point and floating-point types is that
+fixed-point types don't have an exponent. This has an impact on calculations
+using small values: while they might still be representable with floating-point
+types, those small values might simply *disappear* (i.e. become zero) in the
+fixed-point representation. Let's see an example where we compare the decimal
+type :ada:`Decimal` to the floating-point type :ada:`Float_32`:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Vs_Floating_Point_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Vs_Floating_Point_Types is
+       type Decimal is
+         delta 10.0 ** (-2) digits 9;
+
+       type Float_32 is
+         digits 6
+         range -9999999.99 .. 9999999.99;
+
+       D : Decimal  := 0.01;
+       F : Float_32 := 0.01;
+    begin
+       Put_Line ("D = " &
+                 D'Image);
+       Put_Line ("F = " &
+                 F'Image);
+
+       D := D / 2.0;
+       --   ^^^^^^^
+       --  Value becomes zero.
+
+       F := F / 2.0;
+       --   ^^^^^^^
+       --  Exponent is used to
+       --  represent smaller
+       --  value.
+
+       Put_Line ("D = " &
+                 D'Image);
+       Put_Line ("F = " &
+                 F'Image);
+    end Decimal_Vs_Floating_Point_Types;
+
+Both types in this example have roughly the same size and range. However, the
+result of the divide-by-two operation isn't the same: because of the exponent,
+:ada:`F` has the expected value (0.005) after the operation. while the value of
+:ada:`D` is zero. The reason is that the resulting value 0.005 cannot be
+represented by the decimal precision of the :ada:`Decimal` type. In the case of
+:ada:`F`, however, the value can be represented due to a simple change in the
+exponent.
+
+This lack of precision we just described might seem like a drawback for
+fixed-point types. However, depending on the algorithm and its field of
+application, this is the exact behavior that we might be looking for. As
+mentioned in the beginning of this chapter, financial applications might
+benefit from decimal types, while using floating-point type for these
+applications can lead to unpredictable (or undesirable) behavior.
+
+Another major difference concerns the way fixed-point operations translate into
+machine operations. In most cases, operations on fixed-point types are modeled
+in a processor by using integer registers and instructions. Essentially,
+the compiler maps fixed-point types to integer types, but it uses slightly
+different numeric rules. This fact can be an advantage for specific embedded
+applications where a floating-point unit might be either non-existent or its
+usage might have a higher associated cost in terms of CPU cycles or power
+consumption. Therefore, for these specific applications, using fixed-point
+types could be considered as an alternative.
