@@ -23,7 +23,8 @@ The syntax for a simple decimal fixed-point type is
 
 .. code-block:: ada
 
-    type <type-name> is delta <delta-value> digits <digits-value>;
+    type <type-name> is
+      delta <delta-value> digits <digits-value>;
 
 In this case, the :ada:`delta` and the :ada:`digits` will be used by the
 compiler to derive a range.
