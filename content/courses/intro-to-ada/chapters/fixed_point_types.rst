@@ -8,7 +8,8 @@ Fixed-point types
 Decimal fixed-point types
 -------------------------
 
-We have already seen how to specify floating-point types.  However, in some
+We have already seen how to specify
+:ref:`floating-point types <Intro_Ada_Floating_Point_Types>`.  However, in some
 applications floating-point is not appropriate since, for example, the roundoff
 error from binary arithmetic may be unacceptable or perhaps the hardware does
 not support floating-point instructions.  Ada provides a category of types, the
