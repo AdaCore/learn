@@ -312,6 +312,11 @@ a tagged limited private type with a discriminant designating a
 We make it a limited type because copying doesn't make sense semantically for
 :ada:`Lock_Manager` objects.
 
+In addition, during optimization the compiler is allowed to remove unreferenced
+objects of non-limited types. As you saw above in procedure :ada:`Op`, there
+will be no explicit references to the object :ada:`LM`, so making the type
+limited prevents that unwanted optimization.
+
 Only *controlled* types support user-defined initialization and finalization
 operations (as of Ada 2022). Therefore, in the package private part the type is
 fully declared as a controlled type derived from
