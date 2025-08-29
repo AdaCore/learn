@@ -26,17 +26,19 @@ Although concurrency is a prime example, the issue is general in nature. We
 will continue with the concurrency context for the sake of discussion.
 
 Like the classic *monitor* concept (:footcite:p:`1977:hansen`,
-:footcite:p:`1973:hansen`, :footcite:p:`1974:hoare`) on which they are based.
-(In the works cited, Hoare's contribution was equally important, but Hansen's
-contributions were reified in
-:wikipedia:`Concurrent Pascal <Concurrent_Pascal>`, a concrete programming
-language.), Ada defines a protected object (PO) as a concurrency construct that
+:footcite:p:`1973:hansen`, :footcite:p:`1974:hoare`) on which they are based,
+Ada defines a protected object (PO) as a concurrency construct that
 is higher-level and more robust than mutexes and semaphores. Those advantages
 accrue because the bodies of the protected operations are only responsible for
 implementing the functional requirements. The underlying run-time library is
 responsible for implementing the mutually exclusive access, and also thread
 management. As a result, the source code is much simpler and is robust even in
 the face of exceptions.
+
+(In the works cited above, Hoare's contribution was equally important, but
+Hansen's contributions were reified in
+:wikipedia:`Concurrent Pascal <Concurrent_Pascal>`, a concrete programming
+language.)
 
 However, a protected object is not always appropriate. Consider an existing
 sequential program that makes calls to visible procedures provided by a
