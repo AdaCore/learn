@@ -5,6 +5,18 @@ CHANGELOG
 
 .. include:: ../global.txt
 
+Release 2025-08
+---------------
+
+- New sections:
+
+  - :ref:`Discrete and Real Numeric Types <Adv_Ada_Discrete_And_Real_Numeric_Types>`
+
+  - :ref:`Integer types <Adv_Ada_Integer_Types>`
+
+  - :ref:`Modular Types <Adv_Ada_Modular_Types>`
+
+
 Release 2025-07
 ---------------
 
