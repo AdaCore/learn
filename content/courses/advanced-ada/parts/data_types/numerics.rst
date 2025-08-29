@@ -1330,6 +1330,8 @@ of the program before it's adapted to fit the constraints of the
 :ada:`One_To_Ten` subtype.
 
 
+.. _Adv_Ada_Discrete_And_Real_Numeric_Types:
+
 Discrete and Real Numeric Types
 -------------------------------
 
