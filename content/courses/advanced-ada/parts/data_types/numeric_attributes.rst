@@ -396,6 +396,9 @@ the :ada:`Float` type on a typical PC:
     - In our target platform, this is
       2\ :sup:`128`  = 3.40282366920938463463 x 10\ :sup:`38`.
 
+
+.. _Adv_Ada_Digits_Attribute:
+
 Attribute: :ada:`Digits`
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
