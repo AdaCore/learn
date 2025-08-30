@@ -871,7 +871,7 @@ But suppose, instead of being declared in the same declarative part, that
 visible part of a package declaration. (Assume :ada:`X` is visible to clients
 for some good reason.) That package declaration can be, and usually will be,
 compiled independently of clients, with the result that :ada:`X` might be
-represented in some way that cannot supporting querying the address
+represented in some way that cannot support querying the address
 meaningfully.
 
 Therefore, the declaration of :ada:`X` in the package spec should be marked as
