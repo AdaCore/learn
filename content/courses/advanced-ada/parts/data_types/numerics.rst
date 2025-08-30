@@ -2037,7 +2037,7 @@ accuracy is guaranteed for the number of significant decimal digits defined for
 type :ada:`T`.
 
 For example, consider a number such as 0.123456123, which has 9 significant
-digits. If we want to store this number on an object with a decimal precision
+digits. If we want to store this number in an object with a decimal precision
 of 6 digits, the number will be *simplified* (actually, truncated) to 0.123456
 |mdash| which has 6 significant digits:
 
@@ -2089,8 +2089,8 @@ guarantees, no further digits are used when converting the number to a string
 However, the digits that we specify in the decimal precision of the type
 definition are the required *minimum* number of significant decimal digits.
 This means that the compiler is allowed to make use of a higher precision when
-storing floating-point values into registers and the memory. In fact, the
-compiler might select a data type that allows for a much higher precision that
+storing floating-point values into registers and memory. In fact, the
+compiler might select a data type that allows for a much higher precision than
 the one that would be theoretically needed for the decimal precision we
 requested.
 
@@ -2177,8 +2177,8 @@ precision.
 
 .. admonition:: In the GNAT toolchain
 
-    The GNAT compiler provides a couple of integer types in addition to the
-    standard :ada:`Float` type:
+    The GNAT compiler provides a couple of floating-point types in addition to
+    the standard :ada:`Float` type:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.GNAT_Floating_Point_Types
 
@@ -2205,8 +2205,9 @@ precision.
 
         end Show_GNAT_Float_Types;
 
-    The actual range of each of these integer types depends on the target
-    architecture. (Note that you may have different types with the same range.)
+    The actual precision of each of these floating-point types depends on the
+    target architecture. (Note that you may have different types with the same
+    precision.)
 
     Also, when interfacing with C code, GNAT guarantees the following type
     equivalence:
@@ -2978,8 +2979,8 @@ Here, we're declaring the range-constrained :ada:`Max_Float_Normalized` using
 the maximum precision possible on the target platform.
 
 
-Illegal floating-point definitions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Illegal floating-point type declarations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If a floating-point type declaration isn't supported by the Ada compiler or the
 target platform, it is considered illegal and, therefore, compilation will fail
