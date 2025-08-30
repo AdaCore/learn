@@ -119,3 +119,4 @@ Ada In Practice
     Interrupt Handling <chapters/interrupt_handling>
     Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
     Resource Acquisition Is Initialization (RAII) <chapters/raii>
+    Using Streams for Device Driver API Flexibility <chapters/streams_device_driver_api_flexibility>
