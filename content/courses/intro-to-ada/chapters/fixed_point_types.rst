@@ -128,7 +128,7 @@ the first and last value of the range, respectively.
 .. admonition:: For further reading...
 
     The :ada:`Decimal` type above is similar to |mdash| but far from being
-    equivalent with |mdash| the following floating-point type declaration:
+    equivalent to |mdash| the following floating-point type declaration:
 
     .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Floating_Point_Range_Equivalent
 
@@ -324,7 +324,7 @@ exponent.
 This lack of precision we just described might seem like a drawback for
 fixed-point types. However, depending on the algorithm and its field of
 application, this is the exact behavior that we might be looking for. As
-mentioned in the beginning of this chapter, financial applications might
+mentioned in the beginning of this chapter, financial applications
 benefit from decimal types, while using floating-point type for these
 applications can lead to unpredictable (or undesirable) behavior.
 
