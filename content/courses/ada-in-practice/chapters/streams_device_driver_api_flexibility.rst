@@ -11,7 +11,8 @@ Motivation
 Software interfaces for hardware devices usually support only primitive data
 types. Communications devices such as serial I/O ports and network adapters are
 good examples. Their device drivers provide an API for sending and receiving
-individual 8-bit or 9-bit numeric quantities. Software clients |mdash| either
+individual 8-bit or 9-bit numeric quantities, or sequences of these.
+Software clients |mdash| either
 the application, or higher-level layers of device interfaces |mdash| may want
 to send and receive more complex data types. If so, how can the device driver
 support them?
@@ -32,7 +33,7 @@ this interface, but it's a very unsafe / unrobust approach. Developers could
 pass the wrong starting address, or specify the wrong length, thus potentially
 transmitting only part of the intended value or including part of some wholly
 unrelated object. Moreover, developers could pass the address and length of
-some data that is not of the type expected on the other end of the connection.
+some object that is not of the type expected on the other end of the connection.
 After all, Ada allows us to take the address of just about anything. The effect
 on the receiver would be difficult to predict. These mistakes are very
 expensive to locate, and the compiler cannot help.
@@ -202,6 +203,8 @@ client to send and receive values of many different types is not typical.
 However, there is a more concise approach possible, for both the driver and
 client source code. This alternative approach leverages the flexibility of
 streams and stream attributes.
+Using streams allows the wrapper to support an unlimited number of distinct
+client types, with no additional source code required per type.
 
 Recall that the stream attributes are callable routines whose first parameter
 is an access value designating some stream object. The formal parameter type is
@@ -608,7 +611,7 @@ Cons
 Limited types do not support the stream I/O attributes by default, but
 developers can define them. Note that this is not a problem for the
 generic-based approach, because we declared the generic formal type as
-:ada:`limited` and don't need to do anything within the generic that would
+:ada:`limited` and wouldn't need to do anything within the generic that would
 contradict that.
 
 When multiple types are being sent and received, the sender and receiver must
