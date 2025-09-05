@@ -3069,9 +3069,45 @@ For example:
 In this example, we see the values for the compiler-selected *small* and the
 *delta* of type :ada:`Ordinary_Fixed_Point`. (Both are 0.25.)
 
+When we declare a fixed-point data type, we must specify the *delta*. In
+contrast, providing a *small* in the type declaration is optional. If we want
+to specify the *small*, we can use the :ada:`Small` aspect. (We'll see this
+aspect again later on.)
+However, we can only do so for ordinary fixed-point types: for decimal
+fixed-point types, the *small* is automatically selected by the compiler, and
+it's always equal to the *delta*.
+
+When the *small* isn't specified, it is automatically selected by the compiler.
+In this case, the actual value of the *small* is an implementation-defined
+power of ten for decimal fixed-point types and a power of two for ordinary
+fixed-point types. Again, the selected value always follows the rule that says
+that the *small* is smaller or equal to the delta. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Fixed_Small_Delta is
+
+       type Ordinary_Fixed_Point is
+         delta 0.2
+         range -2.0 .. 2.0;
+
+    begin
+       Put_Line ("Ordinary_Fixed_Point'Small: "
+                 & Ordinary_Fixed_Point'Small'Image);
+       Put_Line ("Ordinary_Fixed_Point'Delta: "
+                 & Ordinary_Fixed_Point'Delta'Image);
+       Put_Line ("Ordinary_Fixed_Point'Size: "
+                 & Ordinary_Fixed_Point'Size'Image);
+    end Show_Fixed_Small_Delta;
+
+In this example, the *delta* that we specifed for :ada:`Ordinary_Fixed_Point`
+is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
+
 .. admonition:: For further reading...
 
-    As we've just mentioned, the small and the delta need not actually be small
+    As we've mentioned, the small and the delta need not actually be small
     numbers.
     They can be arbitrarily large. For instance, they could be 1.0, or 1000.0.
     Consider the following example:
@@ -3115,42 +3151,6 @@ In this example, we see the values for the compiler-selected *small* and the
 
     In this case, if we assign 1 or 1,000 to a variable :ada:`F` of this type,
     the actual value stored in :ada:`F` is zero. Feel free to try this out!
-
-When we declare a fixed-point data type, we must specify the *delta*. In
-contrast, providing a *small* in the type declaration is optional. If we want
-to specify the *small*, we can use the :ada:`Small` aspect. (We'll see this
-aspect again later on.)
-However, we can only do so for ordinary fixed-point types: for decimal
-fixed-point types, the *small* is automatically selected by the compiler, and
-it's always equal to the *delta*.
-
-When the *small* isn't specified, it is automatically selected by the compiler.
-In this case, the actual value of the *small* is an implementation-defined
-power of ten for decimal fixed-point types and a power of two for ordinary
-fixed-point types. Again, the selected value always follows the rule that says
-that the *small* is smaller or equal to the delta. For example:
-
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
-
-    with Ada.Text_IO;       use Ada.Text_IO;
-
-    procedure Show_Fixed_Small_Delta is
-
-       type Ordinary_Fixed_Point is
-         delta 0.2
-         range -2.0 .. 2.0;
-
-    begin
-       Put_Line ("Ordinary_Fixed_Point'Small: "
-                 & Ordinary_Fixed_Point'Small'Image);
-       Put_Line ("Ordinary_Fixed_Point'Delta: "
-                 & Ordinary_Fixed_Point'Delta'Image);
-       Put_Line ("Ordinary_Fixed_Point'Size: "
-                 & Ordinary_Fixed_Point'Size'Image);
-    end Show_Fixed_Small_Delta;
-
-In this example, the *delta* that we specifed for :ada:`Ordinary_Fixed_Point`
-is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
 
 
 
