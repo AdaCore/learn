@@ -3016,6 +3016,11 @@ Fixed-point types
 
 
 
+.. _Adv_Ada_Fixed_Point_Types_Small_Delta:
+
+Small and delta
+~~~~~~~~~~~~~~~
+
 
 .. ::
 
