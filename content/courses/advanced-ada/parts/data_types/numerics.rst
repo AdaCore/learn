@@ -2029,6 +2029,8 @@ section, we will revise and expand on those topics.
     - :arm22:`3.5.7 Floating Point Types <3-5-7>`
 
 
+.. _Adv_Ada_Floating_Point_Types_Decimal_Precision:
+
 Decimal precision
 ~~~~~~~~~~~~~~~~~
 
