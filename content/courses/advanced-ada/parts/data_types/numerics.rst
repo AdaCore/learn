@@ -3021,26 +3021,58 @@ Fixed-point types
 Small and delta
 ~~~~~~~~~~~~~~~
 
-The :ada:`Small` and :ada:`Delta` attributes return numbers that indicate the
-numeric precision of a fixed-point type. In many cases, the :ada:`Small` of a
-type :ada:`T` is equal to the :ada:`Delta` of that type |mdash| i.e.
-:ada:`T'Small = T'Delta`. Let's discuss each attribute and how they distinguish
+The *small* and the *delta* of a fixed-point type indicate the numeric
+precision of that type. Let's discuss these concepts and how they distinguish
 from each other.
 
-The :ada:`Delta` attribute returns the value of the :ada:`delta` that was
-used in the type definition. For example, if we declare
-:ada:`type T3_D3 is delta 10.0 ** (-3) digits D`, then the value of
-:ada:`T3_D3'Delta` is the :ada:`10.0 ** (-3)` that we used in the type
-definition.
+The *delta* corresponds to the value used for the :ada:`delta` in the type
+definition. For example, if we declare
+:ada:`type T3_D3 is delta 10.0 ** (-3) digits D`, then the *delta* is equal to
+the 10.0\ :sup:`-3` that we used in the type definition.
 
-The :ada:`Small` attribute returns the "small" of a type, i.e. the smallest
-value used in the machine representation of the type. The *small* must be at
-least equal to or smaller than the *delta* |mdash| in other words, it must
-conform to the :ada:`T'Small <= T'Delta` rule.
+The *small* of a type :ada:`T` is the smallest positive value used in the
+machine representation  of the type. In other words, while the *delta* is
+primarily a user-selected value that (ideally) fits the requirements of the
+implementation, the *small* indicates how that *delta* is represented on the
+target machine.
+
+The *small* must be at least equal to or smaller than the *delta*. In many
+cases, however, the *small* of a type :ada:`T` is equal to the *delta* of that
+type.  In addition, note that these values aren't necessarily small numbers
+|mdash| in fact, they could be quite large.
+
+We can use the :ada:`T'Small` and :ada:`T'Delta` attributes to retrieve the
+actual values of the *small* and *delta* of a fixed-point type :ada:`T`. (We
+discuss more details about these attributes
+:ref:`in another chapter <Adv_Ada_Fixed_Point_Type_Small_Delta_Attributes>`.)
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Fixed_Small_Delta is
+
+       type Ordinary_Fixed_Point is
+         delta 0.25
+         range -2.0 .. 2.0;
+
+    begin
+       Put_Line ("Ordinary_Fixed_Point'Small: "
+                 & Ordinary_Fixed_Point'Small'Image);
+       Put_Line ("Ordinary_Fixed_Point'Delta: "
+                 & Ordinary_Fixed_Point'Delta'Image);
+       Put_Line ("Ordinary_Fixed_Point'Size: "
+                 & Ordinary_Fixed_Point'Size'Image);
+    end Show_Fixed_Small_Delta;
+
+In this example, we see the values for the compiler-selected *small* and the
+*delta* of type :ada:`Ordinary_Fixed_Point`. (Both are 0.25.)
 
 .. admonition:: For further reading...
 
-    The :ada:`Small` and the :ada:`Delta` need not actually be small numbers.
+    As we've just mentioned, the small and the delta need not actually be small
+    numbers.
     They can be arbitrarily large. For instance, they could be 1.0, or 1000.0.
     Consider the following example:
 
@@ -3084,20 +3116,45 @@ conform to the :ada:`T'Small <= T'Delta` rule.
     In this case, if we assign 1 or 1,000 to a variable :ada:`F` of this type,
     the actual value stored in :ada:`F` is zero. Feel free to try this out!
 
-When we declare an ordinary fixed-point data type, we must specify the *delta*.
-Specifying the *small*, however, is optional:
+When we declare a fixed-point data type, we must specify the *delta*. In
+contrast, providing a *small* in the type declaration is optional. If we want
+to specify the *small*, we can use the :ada:`Small` aspect. (We'll see this
+aspect again later on.)
+However, we can only do so for ordinary fixed-point types: for decimal
+fixed-point types, the *small* is automatically selected by the compiler, and
+it's always equal to the *delta*.
 
-- If the *small* isn't specified, it is automatically selected by the compiler.
-  In this case, the actual value of the *small* is an implementation-defined
-  power of two |mdash| always following the rule that says:
-  :ada:`T'Small <= T'Delta`.
+When the *small* isn't specified, it is automatically selected by the compiler.
+In this case, the actual value of the *small* is an implementation-defined
+power of ten for decimal fixed-point types and a power of two for ordinary
+fixed-point types. Again, the selected value always follows the rule that says
+that the *small* is smaller or equal to the delta. For example:
 
-- If we want, however, to specify the *small*, we can do that by using the
-  :ada:`Small` aspect. In this case, it doesn't need to be a power of two.
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
 
-For decimal fixed-point types, we cannot specify the *small*. In this case,
-it's automatically selected by the compiler, and it's always equal to the
-*delta*.
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Fixed_Small_Delta is
+
+       type Ordinary_Fixed_Point is
+         delta 0.2
+         range -2.0 .. 2.0;
+
+    begin
+       Put_Line ("Ordinary_Fixed_Point'Small: "
+                 & Ordinary_Fixed_Point'Small'Image);
+       Put_Line ("Ordinary_Fixed_Point'Delta: "
+                 & Ordinary_Fixed_Point'Delta'Image);
+       Put_Line ("Ordinary_Fixed_Point'Size: "
+                 & Ordinary_Fixed_Point'Size'Image);
+    end Show_Fixed_Small_Delta;
+
+In this example, the *delta* that we specifed for :ada:`Ordinary_Fixed_Point`
+is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
+
+
+
+
 
 .. ::
 
