@@ -3228,112 +3228,114 @@ is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
 
 
 
+
+Decimal fixed-point types
+-------------------------
+
+We have already seen how to specify
+:ref:`floating-point types <Intro_Ada_Floating_Point_Types>`.  However, in some
+applications floating-point is not appropriate since, for example, the roundoff
+error from binary arithmetic may be unacceptable or perhaps the hardware does
+not support floating-point instructions.  Ada provides a category of types, the
+decimal fixed-point types, that allows the programmer to specify the required
+decimal precision (number of digits) as well as the scaling factor (a power of
+ten) and, optionally, a range.  In effect the values will be represented as
+integers implicitly scaled by the specified power of 10. This is useful, for
+example, for financial applications.
+
+The syntax for a simple decimal fixed-point type is
+
+.. code-block:: ada
+
+    type <type-name> is delta <delta-value> digits <digits-value>;
+
+In this case, the :ada:`delta` and the :ada:`digits` will be used by the
+compiler to derive a range.
+
+Several attributes are useful for dealing with decimal types:
+
++------------------------+----------------------------------------------+
+| Attribute Name         | Meaning                                      |
++========================+==============================================+
+| First                  | The first value of the type                  |
++------------------------+----------------------------------------------+
+| Last                   | The last value of the type                   |
++------------------------+----------------------------------------------+
+| Delta                  | The delta value of the type                  |
++------------------------+----------------------------------------------+
+
+In the example below, we declare two data types: :ada:`T3_D3` and :ada:`T6_D3`.
+For both types, the delta value is the same: 0.001.
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Fixed_Point_Types is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+       type T6_D3 is delta 10.0 ** (-3) digits 6;
+    begin
+       Put_Line ("The delta    value of T3_D3 is "
+                 & T3_D3'Image (T3_D3'Delta));
+       Put_Line ("The minimum  value of T3_D3 is "
+                 & T3_D3'Image (T3_D3'First));
+       Put_Line ("The maximum  value of T3_D3 is "
+                 & T3_D3'Image (T3_D3'Last));
+       New_Line;
+
+       Put_Line ("The delta    value of T6_D3 is "
+                 & T6_D3'Image (T6_D3'Delta));
+       Put_Line ("The minimum  value of T6_D3 is "
+                 & T6_D3'Image (T6_D3'First));
+       Put_Line ("The maximum  value of T6_D3 is "
+                 & T6_D3'Image (T6_D3'Last));
+    end Decimal_Fixed_Point_Types;
+
+When running the application, we see that the delta value of both
+types is indeed the same: 0.001. However, because :ada:`T3_D3` is restricted
+to 3 digits, its range is -0.999 to 0.999. For the :ada:`T6_D3`, we have
+defined a precision of 6 digits, so the range is -999.999 to 999.999.
+
+Similar to the type definition using the :ada:`range` syntax, because we
+have an implicit range, the compiled code will check that the variables
+contain values that are not out-of-range. Also, if the result of a
+multiplication or division on decimal fixed-point types is smaller than
+the delta value required for the context, the actual result will be
+zero. For example:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Smaller
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Decimal_Fixed_Point_Smaller is
+       type T3_D3 is delta 10.0 ** (-3) digits 3;
+       type T6_D6 is delta 10.0 ** (-6) digits 6;
+       A : T3_D3 := T3_D3'Delta;
+       B : T3_D3 := 0.5;
+       C : T6_D6;
+    begin
+       Put_Line ("The value of A     is "
+                 & T3_D3'Image (A));
+
+       A := A * B;
+       Put_Line ("The value of A * B is "
+                 & T3_D3'Image (A));
+
+       A := T3_D3'Delta;
+       C := A * B;
+       Put_Line ("The value of A * B is "
+                 & T6_D6'Image (C));
+    end Decimal_Fixed_Point_Smaller;
+
+In this example, the result of the operation 0.001 * 0.5 is
+0.0005. Since this value is not representable for the :ada:`T3_D3` type
+because the delta value is 0.001, the actual value stored in variable
+:ada:`A` is zero. However, accuracy is preserved during the arithmetic
+operations if the target has sufficient precision, and the value
+displayed for C is 0.000500.
+
+
 .. ::
-
-    Decimal fixed-point types
-    -------------------------
-
-    We have already seen how to specify
-    :ref:`floating-point types <Intro_Ada_Floating_Point_Types>`.  However, in some
-    applications floating-point is not appropriate since, for example, the roundoff
-    error from binary arithmetic may be unacceptable or perhaps the hardware does
-    not support floating-point instructions.  Ada provides a category of types, the
-    decimal fixed-point types, that allows the programmer to specify the required
-    decimal precision (number of digits) as well as the scaling factor (a power of
-    ten) and, optionally, a range.  In effect the values will be represented as
-    integers implicitly scaled by the specified power of 10. This is useful, for
-    example, for financial applications.
-
-    The syntax for a simple decimal fixed-point type is
-
-    .. code-block:: ada
-
-        type <type-name> is delta <delta-value> digits <digits-value>;
-
-    In this case, the :ada:`delta` and the :ada:`digits` will be used by the
-    compiler to derive a range.
-
-    Several attributes are useful for dealing with decimal types:
-
-    +------------------------+----------------------------------------------+
-    | Attribute Name         | Meaning                                      |
-    +========================+==============================================+
-    | First                  | The first value of the type                  |
-    +------------------------+----------------------------------------------+
-    | Last                   | The last value of the type                   |
-    +------------------------+----------------------------------------------+
-    | Delta                  | The delta value of the type                  |
-    +------------------------+----------------------------------------------+
-
-    In the example below, we declare two data types: :ada:`T3_D3` and :ada:`T6_D3`.
-    For both types, the delta value is the same: 0.001.
-
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Types
-
-        with Ada.Text_IO; use Ada.Text_IO;
-
-        procedure Decimal_Fixed_Point_Types is
-           type T3_D3 is delta 10.0 ** (-3) digits 3;
-           type T6_D3 is delta 10.0 ** (-3) digits 6;
-        begin
-           Put_Line ("The delta    value of T3_D3 is "
-                     & T3_D3'Image (T3_D3'Delta));
-           Put_Line ("The minimum  value of T3_D3 is "
-                     & T3_D3'Image (T3_D3'First));
-           Put_Line ("The maximum  value of T3_D3 is "
-                     & T3_D3'Image (T3_D3'Last));
-           New_Line;
-
-           Put_Line ("The delta    value of T6_D3 is "
-                     & T6_D3'Image (T6_D3'Delta));
-           Put_Line ("The minimum  value of T6_D3 is "
-                     & T6_D3'Image (T6_D3'First));
-           Put_Line ("The maximum  value of T6_D3 is "
-                     & T6_D3'Image (T6_D3'Last));
-        end Decimal_Fixed_Point_Types;
-
-    When running the application, we see that the delta value of both
-    types is indeed the same: 0.001. However, because :ada:`T3_D3` is restricted
-    to 3 digits, its range is -0.999 to 0.999. For the :ada:`T6_D3`, we have
-    defined a precision of 6 digits, so the range is -999.999 to 999.999.
-
-    Similar to the type definition using the :ada:`range` syntax, because we
-    have an implicit range, the compiled code will check that the variables
-    contain values that are not out-of-range. Also, if the result of a
-    multiplication or division on decimal fixed-point types is smaller than
-    the delta value required for the context, the actual result will be
-    zero. For example:
-
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Smaller
-
-        with Ada.Text_IO; use Ada.Text_IO;
-
-        procedure Decimal_Fixed_Point_Smaller is
-           type T3_D3 is delta 10.0 ** (-3) digits 3;
-           type T6_D6 is delta 10.0 ** (-6) digits 6;
-           A : T3_D3 := T3_D3'Delta;
-           B : T3_D3 := 0.5;
-           C : T6_D6;
-        begin
-           Put_Line ("The value of A     is "
-                     & T3_D3'Image (A));
-
-           A := A * B;
-           Put_Line ("The value of A * B is "
-                     & T3_D3'Image (A));
-
-           A := T3_D3'Delta;
-           C := A * B;
-           Put_Line ("The value of A * B is "
-                     & T6_D6'Image (C));
-        end Decimal_Fixed_Point_Smaller;
-
-    In this example, the result of the operation 0.001 * 0.5 is
-    0.0005. Since this value is not representable for the :ada:`T3_D3` type
-    because the delta value is 0.001, the actual value stored in variable
-    :ada:`A` is zero. However, accuracy is preserved during the arithmetic
-    operations if the target has sufficient precision, and the value
-    displayed for C is 0.000500.
 
     .. _Intro_Ada_Ordinary_Fixed_Point_Types:
 
