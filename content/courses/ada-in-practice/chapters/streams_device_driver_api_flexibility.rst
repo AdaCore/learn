@@ -537,7 +537,7 @@ non-blocking, interrupt-based implementation with a stream-based client API.
 The function :ada:`Last_Index` is a convenience function called by procedure
 :ada:`Read`. It is used to compute :ada:`Read.Last`, the index of the last
 array component assigned in :ada:`Read.Buffer`. The function result is
-:ada:`Buffer'First` |mdash| when no components are assigned, except when that
+:ada:`Buffer'First - 1` when no components are assigned, except when that
 would be less than the lowest possible array index value.
 
 Here is a demonstration procedure to be run on the STM32 F4 Discovery Board:
