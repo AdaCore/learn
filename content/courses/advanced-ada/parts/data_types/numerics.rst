@@ -3234,25 +3234,56 @@ is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
 Decimal fixed-point types
 -------------------------
 
-We have already seen how to specify
-:ref:`floating-point types <Intro_Ada_Floating_Point_Types>`.  However, in some
-applications floating-point is not appropriate since, for example, the roundoff
-error from binary arithmetic may be unacceptable or perhaps the hardware does
-not support floating-point instructions.  Ada provides a category of types, the
-decimal fixed-point types, that allows the programmer to specify the required
-decimal precision (number of digits) as well as the scaling factor (a power of
-ten) and, optionally, a range.  In effect the values will be represented as
-integers implicitly scaled by the specified power of 10. This is useful, for
-example, for financial applications.
+We already introduced decimal fixed-point types in the
+:ref:`Introduction to Ada <Intro_Ada_Decimal_Fixed_Point_Types>` course.
+These types are useful, for example, for financial applications.
 
-The syntax for a simple decimal fixed-point type is
+This is the syntax of a simple decimal fixed-point type declaration:
 
 .. code-block:: ada
 
     type <type-name> is delta <delta-value> digits <digits-value>;
 
-In this case, the :ada:`delta` and the :ada:`digits` will be used by the
-compiler to derive a range.
+In this case, the :ada:`delta` and the :ada:`digits` specifications are used by
+the compiler to derive a range.
+
+Note that, unlike floating-point types, there are no predefined decimal
+fixed-point types: all decimal types are always custom types.
+
+In terms of syntax, the main difference between the declaration of a custom
+floating-point type and a decimal fixed-point type is the delta specification:
+
+.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Vs_Floating_Point_Type_Declarations
+
+    package Decimal_Vs_Float_Type_Decl is
+
+        --
+        --  Decimal type declaration
+        --
+        type Decimal_D3 is
+          delta 0.1 digits 3;
+
+        --
+        --  Floating-point type declaration
+        --
+        type Float_D3 is
+          digits 3;
+
+    end Decimal_Vs_Float_Type_Decl;
+
+In this example, we declare the decimal type :ada:`Decimal_D3` and the
+floating-point type :ada:`Float_D3`. In terms of syntax, the :ada:`delta`
+indicates that the type is fixed-point, while the :ada:`digits` specification
+is used in both floating-point and decimal fixed-point type declarations.
+Again, when both :ada:`delta` and :ada:`digits` keywords are combined in a
+type declaration, we have a decimal fixed-point type declaration.
+
+The *delta* is a scaling factor (a power of ten) that allows developers to
+specify the required decimal precision. On the target machine, decimal
+fixed-point types are represented as integers, which are implicitly scaled by
+the specified power of 10. (We discuss
+:ref:`machine representation of decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Machine_Representation>`
+later on.)
 
 Several attributes are useful for dealing with decimal types:
 
