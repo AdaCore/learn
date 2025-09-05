@@ -135,9 +135,7 @@ specific sequence of driver calls is required in order to set the individual
 parameters.
 
 Clients will call these procedures directly to set up the STM32 on-chip USART
-device. (We could have written this in terms of the HAL UART type, for the sake
-of device independence, but did not do so for the sake of keeping the example
-simple.)
+device.
 
 Our solution will consist of an ADT named :ada:`Serial_Port`, and a means for
 sending and receiving values of higher-level types via :ada:`Serial_Port`
@@ -594,10 +592,8 @@ verify that the type used to invoke a stream attribute is the same type as the
 value involved. In addition, the low-level implementation details are hidden
 inside the package body.
 
-Additionally, the approach is independent of other design considerations, such
-as whether callers wait for completion of the invoked I/O operation. The bodies
-of the :ada:`Read` and :ada:`Write` procedures can be implemented to provide
-the expected behavior.
+Furthermore, the approach is independent of other design considerations, such
+as whether callers wait for completion of the invoked I/O operation.
 
 Because it is maximally flexible and concise, we consider it the best solution
 to this idiom. The generic-based approach remains a good one, however.
@@ -613,6 +609,7 @@ developers can define them. Note that this is not a problem for the
 generic-based approach, because we declared the generic formal type as
 :ada:`limited` and wouldn't need to do anything within the generic that would
 contradict that.
+The client's generic actual type can then be either a limited type or not.
 
 When multiple types are being sent and received, the sender and receiver must
 be coordinated so that the next value consumed from the stream is of the type
