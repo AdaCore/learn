@@ -3229,6 +3229,8 @@ is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
 
 
 
+.. _Adv_Ada_Decimal_Fixed_Point_Types:
+
 Decimal fixed-point types
 -------------------------
 
