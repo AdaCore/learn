@@ -1,7 +1,7 @@
-.. _Ada_In_Practice_Using_Streams_Device_Driver_API_Flexibility:
+.. _Ada_In_Practice_Using_Streams_API_Flexibility:
 
-Using Streams for Device Driver API Flexibility
-================================================
+Using Streams for API Flexibility
+=================================
 
 .. include:: ../../global.txt
 
