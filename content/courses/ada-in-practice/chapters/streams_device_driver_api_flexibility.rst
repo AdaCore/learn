@@ -95,7 +95,7 @@ The type, named :ada:`Peripheral_Descriptor`, contains a component named
 driven. The other record components are required for connecting that device to
 the external world.
 
-Type :ada:`Peripheral_Descriptor` is a hardware-specific and is therefore not
+Type :ada:`Peripheral_Descriptor` is hardware-specific and is therefore not
 defined as an ADT. Instead, the package uses the
 :ref:`Groups of Related Program Units <Ada_In_Practice_Groups_Of_Related_Program_Units>`
 idiom.
