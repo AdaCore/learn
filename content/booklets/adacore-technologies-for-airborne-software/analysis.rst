@@ -1,4 +1,4 @@
-.. include:: ../../courses/global.txt
+.. include:: ../../global.txt
 
 .. index:: single: DO-178C/ED-12C; Compliance
 

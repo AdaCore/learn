@@ -1,4 +1,4 @@
-.. include:: ../../courses/global.txt
+.. include:: ../../global.txt
 
 Introduction
 ============

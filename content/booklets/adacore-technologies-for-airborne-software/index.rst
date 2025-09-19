@@ -11,7 +11,7 @@ AdaCore Technologies for Airborne Software
 
 	  Supporting certification and tool qualification for DO-178C:ED-12C
 
-.. include:: ../../courses/global.txt
+.. include:: ../../global.txt
 
 .. only:: no_hidden_books
 
