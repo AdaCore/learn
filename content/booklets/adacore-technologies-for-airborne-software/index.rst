@@ -52,11 +52,11 @@ AdaCore Technologies for Airborne Software
 
         .. raw:: html
 
-            <a class="ebook-download-button" href="/pdf_books/booklets/adacore-technologies-for-airborn-software.pdf">
+            <a class="ebook-download-button" href="/pdf_books/booklets/adacore-technologies-for-airborne-software.pdf">
                 Download PDF
             </a>
 
-            <a class="ebook-download-button" href="/epub_books/booklets/adacore-technologies-for-airborn-software.epub">
+            <a class="ebook-download-button" href="/epub_books/booklets/adacore-technologies-for-airborne-software.epub">
                 Download EPUB
             </a>
 
