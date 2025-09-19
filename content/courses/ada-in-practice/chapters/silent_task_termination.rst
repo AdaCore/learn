@@ -4,7 +4,7 @@ Dealing with Silent Task Termination
 ====================================
 
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 
 Motivation
