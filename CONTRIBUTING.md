@@ -270,7 +270,13 @@ The following language-related parameters are available for this directive:
 
   -  `ada`: indicates that the code is written in Ada or SPARK
 
-  -  `c`: indicates that the code is written in C or C++
+  -  `c`: indicates that the code is written in C
+
+  -  `cpp`: indicates that the code is written in C++
+
+  -  `java`: indicates that the code is written in Java
+
+  -  `assembly`: indicates that the code is written in Assembly
 
 ### Button-related parameters
 
