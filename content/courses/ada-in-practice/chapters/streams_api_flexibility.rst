@@ -620,10 +620,10 @@ consume that value from the stream. Arguably, this is not really a *con*
 because it's true for any stream when multiple types are involved. Even if we
 used the generic-based approach, developers could instantiate the generic multiple
 times with different types and send their values via the same port. With streams this
-approach is as type-safe as it can be. 
+approach is as type-safe as it can be.
 However, see
 :ref:`Note #2 <Ada_In_Practice_Using Streams_Note_Generic_Dispatching_Constructor>`
-below for a possible mitigation.  
+below for a possible mitigation.
 
 
 Relationship With Other Idioms

@@ -21,7 +21,7 @@ answer to how much money can be saved by transitioning, as this is highly
 dependent on specific project objectives and constraints. We're going to
 provide qualitative and quantitative arguments here, from the perspective of a
 project that has to reach a relatively high level of integrity, that is to say
-a system where the occurrence of a software failure is a relatively costly 
+a system where the occurrence of a software failure is a relatively costly
 event.
 
 From a qualitative standpoint, there are various times in the software

@@ -10,17 +10,17 @@ are everywhere today, including |mdash| just to name a few |mdash| the thermosta
 control a building's temperature, the power-steering controller in
 modern automobiles, and the control systems in charge of jet engines.
 
-Clearly, much can depend on these systems operating correctly. It might 
-be only a matter of comfort if the thermostat fails. But imagine what 
-might happen if one of the critical control systems in your car failed 
-when you're out on the freeway. When a jet engine controller is designed 
-to have absolute control, it is known as a Full Authority Digital Engine 
-Controller, or FADEC for short. If a FADEC fails, the result can make 
+Clearly, much can depend on these systems operating correctly. It might
+be only a matter of comfort if the thermostat fails. But imagine what
+might happen if one of the critical control systems in your car failed
+when you're out on the freeway. When a jet engine controller is designed
+to have absolute control, it is known as a Full Authority Digital Engine
+Controller, or FADEC for short. If a FADEC fails, the result can make
 international news.
 
-Using Ada can help you get it right, and for less cost than other languages, 
-if you use it well. Many industrial organizations developing critical 
-embedded software use Ada for that reason. Our goal is to get you started in 
+Using Ada can help you get it right, and for less cost than other languages,
+if you use it well. Many industrial organizations developing critical
+embedded software use Ada for that reason. Our goal is to get you started in
 using it well.
 
 The course is based on the assumption that you know some of the Ada
