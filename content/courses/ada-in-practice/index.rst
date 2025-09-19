@@ -127,3 +127,4 @@ Ada In Practice
     Reducing Object Code from Generic Package Instantiations <chapters/reducing_object_code_from_generic_package_instantiations>
     Resource Acquisition Is Initialization (RAII) <chapters/raii>
     Using Streams for API Flexibility <chapters/streams_api_flexibility>
+    Dealing with Silent Task Termination <chapters/silent_task_termination>
