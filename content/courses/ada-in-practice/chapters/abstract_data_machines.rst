@@ -3,7 +3,7 @@
 Abstract Data Machines
 ======================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

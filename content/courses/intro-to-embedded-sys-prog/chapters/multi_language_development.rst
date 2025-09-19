@@ -1,7 +1,7 @@
 Multi-Language Development
 ==========================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Software projects often involve more than one programming language. Typically
 that's because there is existing code that already does something we need done

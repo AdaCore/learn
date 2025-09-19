@@ -1,7 +1,7 @@
 Exceptions
 ------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Exceptions are a mechanism for dealing with run-time occurrences that are rare, that usually correspond to errors (such as improperly formed input data), and whose occurrence causes an unconditional transfer of control.
 

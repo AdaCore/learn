@@ -1,7 +1,7 @@
 Reducing Object Code from Generic Package Instantiations
 ========================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

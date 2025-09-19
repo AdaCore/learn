@@ -3,7 +3,7 @@
 Controlling Object Initialization and Creation
 ==============================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 
 Motivation

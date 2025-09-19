@@ -1,7 +1,7 @@
 Initializing Data Before Use
 ----------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 As with most programming languages, C does not require that variables be initialized at
 their declaration, which makes it possible to unintentionally read

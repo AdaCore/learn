@@ -1,7 +1,7 @@
 Interacting with Devices
 ========================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Interacting with hardware devices is one of the more frequent activities
 in embedded systems programming. It is also one of the most enjoyable

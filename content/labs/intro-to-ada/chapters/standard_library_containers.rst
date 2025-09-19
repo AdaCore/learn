@@ -1,7 +1,7 @@
 Standard library: Containers
 ============================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Simple todo list
 ----------------

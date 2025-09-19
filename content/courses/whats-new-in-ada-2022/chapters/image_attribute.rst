@@ -1,4 +1,4 @@
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 :ada:`'Image` attribute for any type
 ====================================

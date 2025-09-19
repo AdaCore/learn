@@ -3,7 +3,7 @@
 Privacy
 =======
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 One of the main principles of modular programming, as well as object oriented
 programming, is

@@ -3,7 +3,7 @@
 Object-oriented programming
 ===========================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Simple type extension
 ---------------------

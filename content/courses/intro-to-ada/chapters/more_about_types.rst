@@ -3,7 +3,7 @@ More about types
 
 .. _Intro_Ada_Aggregates:
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Aggregates: A primer
 --------------------

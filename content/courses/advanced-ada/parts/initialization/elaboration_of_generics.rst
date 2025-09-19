@@ -1,7 +1,7 @@
 Elaboration Of Generics
 =======================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Elaboration check
 -----------------

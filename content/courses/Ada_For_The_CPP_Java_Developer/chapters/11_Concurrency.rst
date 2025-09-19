@@ -1,7 +1,7 @@
 Concurrency
 -------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 .. todo::
 

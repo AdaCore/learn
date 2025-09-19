@@ -3,7 +3,7 @@
 Introduction
 ============
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This is a course about embedded systems programming. Embedded systems
 are everywhere today, including |mdash| just to name a few |mdash| the thermostats that

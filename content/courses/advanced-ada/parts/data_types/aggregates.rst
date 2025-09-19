@@ -1,7 +1,7 @@
 Aggregates
 ==========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Container_Aggregates:
 

@@ -1,7 +1,7 @@
 Contracts
 =========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Class-wide contracts
 --------------------

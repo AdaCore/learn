@@ -3,7 +3,7 @@
 Pragmas, Aspects and Attributes
 ===============================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. admonition:: Relevant topics
 

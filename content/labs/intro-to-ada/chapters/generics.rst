@@ -1,7 +1,7 @@
 Generics
 ========
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Display Array
 -------------

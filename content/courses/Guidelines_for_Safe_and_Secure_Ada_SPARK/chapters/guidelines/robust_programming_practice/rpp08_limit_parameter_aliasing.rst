@@ -2,7 +2,7 @@
 Limit Parameter Aliasing  (RPP08)
 -----------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Required
 

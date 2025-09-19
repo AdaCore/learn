@@ -3,7 +3,7 @@
 Introduction
 ============
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This course describes how to implement selected programming idioms in
 the Ada language.

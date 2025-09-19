@@ -2,7 +2,7 @@
 Use the Ravenscar Profile (CON01)
 -----------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

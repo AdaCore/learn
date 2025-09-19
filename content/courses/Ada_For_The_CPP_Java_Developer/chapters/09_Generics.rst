@@ -1,7 +1,7 @@
 Generics
 ----------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Ada, C++, and Java all have support for generics or templates, but on different sets of language entities. A C++ template can be applied to a class or a function. So can a Java generic. An Ada generic can be either a package or a subprogram.
 

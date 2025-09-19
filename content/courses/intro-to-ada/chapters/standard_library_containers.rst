@@ -3,7 +3,7 @@
 Standard library: Containers
 ============================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 In previous chapters, we've used arrays as the standard way to group multiple
 objects of a specific data type. In many cases, arrays are good enough for

@@ -1,7 +1,7 @@
 Restrictions and Profiles
 =========================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Pragmas
 -------

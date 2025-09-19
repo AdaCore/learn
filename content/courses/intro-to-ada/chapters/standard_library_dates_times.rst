@@ -1,7 +1,7 @@
 Standard library: Dates & Times
 ===============================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 The standard library supports processing of dates and times using two
 approaches:

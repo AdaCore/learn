@@ -3,7 +3,7 @@
 GNAT Tools
 ==========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 In chapter we present a brief overview of some of the tools included
 in the GNAT toolchain.

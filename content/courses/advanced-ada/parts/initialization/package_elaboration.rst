@@ -1,7 +1,7 @@
 Package Elaboration
 ===================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Preelaboration:
 

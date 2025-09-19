@@ -2,7 +2,7 @@
 Use SPARK Extensively (SWE01)
 -------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

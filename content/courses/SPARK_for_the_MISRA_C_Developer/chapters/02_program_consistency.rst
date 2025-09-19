@@ -1,7 +1,7 @@
 Enforcing Basic Program Consistency
 -----------------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Many consistency properties that are taken for granted in other languages are
 not enforced in C. The basic property that all uses of a variable or function

@@ -1,7 +1,7 @@
 Fixed-point types
 =================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 In this chapter, we discuss fixed-point types, which can be classified in two
 categories:

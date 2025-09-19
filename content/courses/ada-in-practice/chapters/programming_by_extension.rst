@@ -3,7 +3,7 @@
 Programming by Extension
 ========================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

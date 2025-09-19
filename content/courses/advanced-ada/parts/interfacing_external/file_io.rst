@@ -1,7 +1,7 @@
 File I/O
 ========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Efficient Stream I/O for Array Types
 ------------------------------------

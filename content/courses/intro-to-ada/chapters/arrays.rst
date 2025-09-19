@@ -1,7 +1,7 @@
 Arrays
 ======
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Arrays provide another fundamental family of composite types in Ada.
 

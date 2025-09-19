@@ -1,7 +1,7 @@
 Records
 =======
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 So far, all the types we have encountered have values that are not
 decomposable: each instance represents a single piece of data. Now we are going

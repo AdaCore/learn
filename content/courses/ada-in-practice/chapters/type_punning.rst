@@ -3,7 +3,7 @@
 Type Punning
 ============
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

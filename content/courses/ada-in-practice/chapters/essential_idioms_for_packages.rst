@@ -3,7 +3,7 @@
 Essential Design Idioms for Packages
 ====================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 
 Motivation

@@ -1,7 +1,7 @@
 Argumentation and Business Perspectives
 ==========================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 The technical benefits of a migration from C to Ada are usually relatively
 straightforward to demonstrate. Hopefully, this course provides a good basis

@@ -3,7 +3,7 @@
 Preface
 -------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 MISRA C appeared in 1998 as a coding standard for C; it focused on avoiding
 error-prone programming features of the C programming language rather than on

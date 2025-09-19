@@ -3,7 +3,7 @@
 Standard Packages
 =================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. admonition:: Relevant topics
 

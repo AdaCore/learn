@@ -1,7 +1,7 @@
 Types and Representation
 ========================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Enumeration_Representation_Clauses:
 

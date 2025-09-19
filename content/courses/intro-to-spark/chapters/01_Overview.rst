@@ -5,7 +5,7 @@
 SPARK Overview
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This tutorial is an introduction to the SPARK programming
 language and its formal verification tools. You need not know any specific

@@ -1,7 +1,7 @@
 Imperative language
 ===================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 For the exercises below (except for the first one), don't worry about the
 details of the :ada:`Main` procedure. You should just focus on implementing the

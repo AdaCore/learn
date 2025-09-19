@@ -1,7 +1,7 @@
 Standard Containers
 ===================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Linked lists
 ------------

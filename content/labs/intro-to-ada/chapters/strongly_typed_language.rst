@@ -1,7 +1,7 @@
 Strongly typed language
 =======================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Colors
 ------

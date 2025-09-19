@@ -5,4 +5,4 @@
 Appendices
 ==========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt

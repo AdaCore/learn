@@ -1,6 +1,6 @@
 :next_state: False
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Interfacing C variadic functions
 ================================

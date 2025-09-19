@@ -2,7 +2,7 @@
 Limited Use of "others" in Aggregates (RPP03)
 -----------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

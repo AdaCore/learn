@@ -4,7 +4,7 @@
 Bug Free Coding with SPARK Ada
 ===============================
 
-.. include:: ../../courses/global.txt
+.. include:: ../../global.txt
 
 .. only:: no_hidden_books
 

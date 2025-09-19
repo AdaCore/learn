@@ -3,7 +3,7 @@
 Constructor Functions For Abstract Data Types
 =============================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 
 Motivation

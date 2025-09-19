@@ -1,7 +1,7 @@
 Freezing
 ========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Freezing rules
 --------------

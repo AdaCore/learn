@@ -1,7 +1,7 @@
 Solutions
 =========
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 .. include:: ./solutions/imperative_language.rst
 

@@ -1,7 +1,7 @@
 Handling Interrupts
 ===================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Background
 ----------

@@ -1,7 +1,7 @@
 Design by contracts
 ===================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Contracts are used in programming to codify expectations. Parameter modes
 of a subprogram can be viewed as a simple form of contracts. When the

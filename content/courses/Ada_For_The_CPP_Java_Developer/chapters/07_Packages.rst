@@ -1,7 +1,7 @@
 Packages
 ----------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Declaration Protection
 ~~~~~~~~~~~~~~~~~~~~~~~

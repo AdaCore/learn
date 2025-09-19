@@ -10,7 +10,7 @@
 Advanced Journey With Ada: A Flight In Progress
 ===============================================
 
-.. include:: ../global.txt
+.. include:: ../../global.txt
 
 .. only:: no_hidden_books
 

@@ -1,4 +1,4 @@
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Redefining the :ada:`'Image` attribute
 ======================================

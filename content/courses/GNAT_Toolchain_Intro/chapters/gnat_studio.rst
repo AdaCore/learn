@@ -1,7 +1,7 @@
 GNAT Studio
 ===========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This chapter presents an introduction to the GNAT Studio, which provides an IDE
 to develop applications in Ada. For a detailed overview, please refer to the

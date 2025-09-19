@@ -1,7 +1,7 @@
 Subprogram Contracts
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Subprogram Contracts in Ada 2012 and SPARK 2014
 ---------------------------------------------------------------------

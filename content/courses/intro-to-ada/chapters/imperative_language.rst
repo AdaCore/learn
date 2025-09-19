@@ -1,7 +1,7 @@
 Imperative language
 ===================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Ada is a multi-paradigm language with support for object orientation
 and some elements of functional programming, but its core is a simple, coherent

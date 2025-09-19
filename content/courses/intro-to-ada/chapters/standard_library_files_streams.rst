@@ -1,7 +1,7 @@
 Standard library: Files and streams
 ===================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Ada provides different approaches for file input/output (I/O):
 

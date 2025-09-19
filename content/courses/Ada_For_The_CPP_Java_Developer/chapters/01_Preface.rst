@@ -3,7 +3,7 @@
 Preface
 ---------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Nowadays it seems like talking about programming languages is a bit passé. The technical wars of the past decade have subsided and today we see a variety of high-level and well-established languages offering functionality that can meet the needs of any programmer.
 

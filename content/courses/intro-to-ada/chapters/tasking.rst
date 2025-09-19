@@ -1,7 +1,7 @@
 Tasking
 =======
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Tasks and protected objects allow the implementation of concurrency in
 Ada. The following sections explain these concepts in more detail.

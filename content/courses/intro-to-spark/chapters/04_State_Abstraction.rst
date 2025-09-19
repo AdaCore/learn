@@ -1,7 +1,7 @@
 State Abstraction
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Abstraction is a key concept in programming that can drastically simplify
 both the implementation and maintenance of code. It's particularly well

@@ -1,7 +1,7 @@
 Standard library: Numerics
 ==========================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Decibel Factor
 --------------

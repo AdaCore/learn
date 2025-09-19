@@ -1,7 +1,7 @@
 Exceptions
 ==========
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Uninitialized Value
 -------------------

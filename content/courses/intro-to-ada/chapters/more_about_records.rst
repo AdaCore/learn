@@ -1,7 +1,7 @@
 More about records
 ==================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Dynamically sized record types
 ------------------------------

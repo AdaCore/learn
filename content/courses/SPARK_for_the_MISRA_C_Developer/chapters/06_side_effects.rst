@@ -1,7 +1,7 @@
 Controlling Side Effects
 ------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 As with most programming languages, C allows side effects in expressions. This
 leads to subtle issues about conflicting side effects, when subexpressions of

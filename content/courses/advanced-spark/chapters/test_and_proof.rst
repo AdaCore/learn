@@ -1,7 +1,7 @@
 Test and Proof
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Various Combinations of Tests and Proofs
 ---------------------------------------------------------------------

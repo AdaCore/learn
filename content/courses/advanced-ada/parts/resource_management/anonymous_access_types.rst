@@ -1,7 +1,7 @@
 Anonymous Access Types
 ======================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Anonymous_Access_Types:
 

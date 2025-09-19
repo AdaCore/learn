@@ -1,7 +1,7 @@
 More About Types
 ================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Aggregate Initialization
 ------------------------

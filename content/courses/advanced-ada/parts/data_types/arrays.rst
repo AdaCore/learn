@@ -1,7 +1,7 @@
 Arrays
 ======
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 
 .. _Adv_Ada_Array_Constraints:

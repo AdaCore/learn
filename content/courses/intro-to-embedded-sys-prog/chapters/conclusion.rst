@@ -3,7 +3,7 @@
 Conclusion
 ==========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 
 In the introduction to this course, we defined an "embedded system" as a

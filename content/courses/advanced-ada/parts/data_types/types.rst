@@ -1,7 +1,7 @@
 Types
 =====
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Names:
 

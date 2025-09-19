@@ -1,7 +1,7 @@
 Generics
 ========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Formal_Definite_Indefinite_Subtypes:
 

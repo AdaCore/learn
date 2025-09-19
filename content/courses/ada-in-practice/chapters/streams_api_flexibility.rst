@@ -3,7 +3,7 @@
 Using Streams for API Flexibility
 =================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

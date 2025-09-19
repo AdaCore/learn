@@ -2,7 +2,7 @@
 Only Reclaim Allocated Storage (RCL02)
 ----------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Mandatory
 

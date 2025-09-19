@@ -1,7 +1,7 @@
 Functions and Procedures
 -------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 General Form
 ~~~~~~~~~~~~~

@@ -1,7 +1,7 @@
 Expressions
 ===========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 
 .. _Adv_Ada_Expressions:

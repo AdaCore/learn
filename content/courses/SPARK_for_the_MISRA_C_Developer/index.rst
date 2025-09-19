@@ -3,7 +3,7 @@
 SPARK Ada for the MISRA C Developer
 ===================================
 
-.. include:: ../global.txt
+.. include:: ../../global.txt
 
 .. only:: no_hidden_books
 

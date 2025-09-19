@@ -1,7 +1,7 @@
 Handling Variability and Re-usability
 =======================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Understanding static and dynamic variability
 --------------------------------------------

@@ -1,7 +1,7 @@
 Arrays
 ======
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Constrained Array
 -----------------

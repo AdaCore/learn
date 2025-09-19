@@ -1,7 +1,7 @@
 Conclusion
 ============
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Although Ada's syntax might seem peculiar to C developers at first glance, it
 was designed to increase readability and maintainability, rather than making it

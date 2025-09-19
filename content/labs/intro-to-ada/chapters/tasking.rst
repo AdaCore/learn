@@ -1,7 +1,7 @@
 Tasking
 =======
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Display Service
 ---------------
