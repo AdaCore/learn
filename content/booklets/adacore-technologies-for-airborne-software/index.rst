@@ -1,5 +1,3 @@
-.. include:: ../../courses/global.txt
-
 :prev_state: False
 :next_state: False
 
