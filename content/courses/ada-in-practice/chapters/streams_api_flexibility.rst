@@ -18,7 +18,7 @@ to send and receive more complex data types. If so, how can the device driver
 support them?
 
 We certainly don't want the clients to do unchecked conversions everywhere.
-That's error-prone, because it prevents the compiler from checking the usage,
+That's error-prone, it prevents the compiler from checking the usage,
 and makes clients responsible for what should be an internal implementation
 detail.
 
@@ -608,8 +608,8 @@ Limited types do not support the stream I/O attributes by default, but
 developers can define them. Note that this is not a problem for the
 generic-based approach, because we declared the generic formal type as
 :ada:`limited` and wouldn't need to do anything within the generic that would
-contradict that.
-The client's generic actual type can then be either a limited type or not.
+contradict that. The client's generic actual type can then be either a limited
+type or not.
 
 When multiple types are being sent and received, the sender and receiver must
 be coordinated so that the next value consumed from the stream is of the type
@@ -617,10 +617,13 @@ expected by the receiver. For example, the next value in the stream might have
 been written by the sender as a floating-point value, via
 :ada:`Float'Write (...)`. The receiver must use :ada:`Float'Read(...)` to
 consume that value from the stream. Arguably, this is not really a *con*
-because it's true for any stream when multiple types are involved. It's even
-true across programming languages |mdash| see
+because it's true for any stream when multiple types are involved. Even if we
+used the generic-based approach, developers could instantiate the generic multiple
+times with different types and send their values via the same port. With streams this
+approach is as type-safe as it can be. 
+However, see
 :ref:`Note #2 <Ada_In_Practice_Using Streams_Note_Generic_Dispatching_Constructor>`
-below.
+below for a possible mitigation.  
 
 
 Relationship With Other Idioms
