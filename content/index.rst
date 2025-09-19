@@ -81,7 +81,7 @@
 
     .. toctree::
         :maxdepth: 1
-        :caption: Courses: Ada
+        :caption: Ada Courses
 
         Introduction to Ada <courses/intro-to-ada/index>
         Advanced Journey With Ada <courses/advanced-ada/index>
@@ -90,21 +90,21 @@
 
     .. toctree::
         :maxdepth: 1
-        :caption: Courses: SPARK
+        :caption: SPARK Courses
 
         Introduction to SPARK <courses/intro-to-spark/index>
         SPARK Ada for the MISRA C Developer <courses/SPARK_for_the_MISRA_C_Developer/index>
 
     .. toctree::
         :maxdepth: 1
-        :caption: Courses: Ada for Embedded
+        :caption: Ada for Embedded Courses
 
         Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
         Ada for the Embedded C Developer <courses/Ada_For_The_Embedded_C_Developer/index>
 
     .. toctree::
         :maxdepth: 1
-        :caption: General Ada/SPARK Material
+        :caption: Ada/SPARK: General Material
 
         Guidelines for Safe and Secure Ada/SPARK <courses/Guidelines_for_Safe_and_Secure_Ada_SPARK/index>
         What's New in Ada 2022 <courses/whats-new-in-ada-2022/index>
