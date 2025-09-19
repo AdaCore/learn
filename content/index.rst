@@ -81,19 +81,34 @@
 
     .. toctree::
         :maxdepth: 1
-        :caption: Courses
+        :caption: Ada Courses
 
         Introduction to Ada <courses/intro-to-ada/index>
         Advanced Journey With Ada <courses/advanced-ada/index>
         Ada In Practice <courses/ada-in-practice/index>
-        Introduction to SPARK <courses/intro-to-spark/index>
-        Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
-        What's New in Ada 2022 <courses/whats-new-in-ada-2022/index>
         Ada for the C++ or Java Developer <courses/Ada_For_The_CPP_Java_Developer/index>
-        Ada for the Embedded C Developer <courses/Ada_For_The_Embedded_C_Developer/index>
+
+    .. toctree::
+        :maxdepth: 1
+        :caption: SPARK Courses
+
+        Introduction to SPARK <courses/intro-to-spark/index>
         SPARK Ada for the MISRA C Developer <courses/SPARK_for_the_MISRA_C_Developer/index>
-        Introduction to the GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>
+
+    .. toctree::
+        :maxdepth: 1
+        :caption: Ada for Embedded Courses
+
+        Introduction to Embedded Systems Programming <courses/intro-to-embedded-sys-prog/index>
+        Ada for the Embedded C Developer <courses/Ada_For_The_Embedded_C_Developer/index>
+
+    .. toctree::
+        :maxdepth: 1
+        :caption: Ada/SPARK: General Material
+
         Guidelines for Safe and Secure Ada/SPARK <courses/Guidelines_for_Safe_and_Secure_Ada_SPARK/index>
+        What's New in Ada 2022 <courses/whats-new-in-ada-2022/index>
+        Introduction to the GNAT Toolchain <courses/GNAT_Toolchain_Intro/index>
 
     .. only:: no_hidden_books
 
@@ -165,25 +180,6 @@
                         </a>
                     </div>
 
-
-        .. container:: frontpage-ebook-and-buttons-block
-
-            .. image:: images/page-1-of-intro-to-ada-labs.jpeg
-                :alt: Introduction to Ada: Laboratories (e-book)
-                :target: /labs/intro-to-ada/index.html
-
-            .. raw:: html
-
-                    <div class="frontpage-ebook-download">
-                        <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
-                            PDF
-                        </a>
-
-                        <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
-                            EPUB
-                        </a>
-                    </div>
-
         .. container:: frontpage-ebook-and-buttons-block
 
             .. image:: images/page-1-of-advanced-ada-temp.jpeg
@@ -222,6 +218,24 @@
 
         .. container:: frontpage-ebook-and-buttons-block
 
+            .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
+                :alt: Ada for the C++ and Java Developer (e-book)
+                :target: /courses/Ada_For_The_CPP_Java_Developer/index.html
+
+            .. raw:: html
+
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
+                            PDF
+                        </a>
+
+                        <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
+                            EPUB
+                        </a>
+                    </div>
+
+        .. container:: frontpage-ebook-and-buttons-block
+
             .. image:: images/page-1-of-intro-to-spark.jpeg
                 :alt: Introduction to SPARK (e-book)
                 :target: courses/intro-to-spark/index.html
@@ -240,6 +254,24 @@
 
         .. container:: frontpage-ebook-and-buttons-block
 
+            .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
+                :alt: SPARK for the MISRA-C Developer (e-book)
+                :target: /courses/SPARK_for_the_MISRA_C_Developer/index.html
+
+            .. raw:: html
+
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                            PDF
+                        </a>
+
+                        <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
+                            EPUB
+                        </a>
+                    </div>
+
+        .. container:: frontpage-ebook-and-buttons-block
+
             .. image:: images/page-1-of-intro-to-embedded-sys-prog.jpeg
                 :alt: Introduction to Embedded Systems Programming (e-book)
                 :target: /courses/intro-to-embedded-sys-prog/index.html
@@ -252,43 +284,6 @@
                         </a>
 
                         <a class="ebook-download-button" href="/epub_books/courses/intro-to-embedded-sys-prog.epub">
-                            EPUB
-                        </a>
-                    </div>
-
-
-        .. container:: frontpage-ebook-and-buttons-block
-
-            .. image:: images/page-1-of-whats-new-in-ada-2022.jpeg
-                :alt: What's New in Ada 2022 (e-book)
-                :target: /courses/whats-new-in-ada-2022/index.html
-
-            .. raw:: html
-
-                    <div class="frontpage-ebook-download">
-                        <a class="ebook-download-button" href="/pdf_books/courses/whats-new-in-ada-2022.pdf">
-                            PDF
-                        </a>
-
-                        <a class="ebook-download-button" href="/epub_books/courses/whats-new-in-ada-2022.epub">
-                            EPUB
-                        </a>
-                    </div>
-
-        .. container:: frontpage-ebook-and-buttons-block
-
-            .. image:: images/page-1-of-Ada_For_The_CPP_Java_Developer.jpeg
-                :alt: Ada for the C++ and Java Developer (e-book)
-                :target: /courses/Ada_For_The_CPP_Java_Developer/index.html
-
-            .. raw:: html
-
-                    <div class="frontpage-ebook-download">
-                        <a class="ebook-download-button" href="/pdf_books/courses/Ada_For_The_CPP_Java_Developer.pdf">
-                            PDF
-                        </a>
-
-                        <a class="ebook-download-button" href="/epub_books/courses/Ada_For_The_CPP_Java_Developer.epub">
                             EPUB
                         </a>
                     </div>
@@ -313,22 +308,39 @@
 
         .. container:: frontpage-ebook-and-buttons-block
 
-            .. image:: images/page-1-of-SPARK_for_the_MISRA_C_Developer.jpeg
-                :alt: SPARK for the MISRA-C Developer (e-book)
-                :target: /courses/SPARK_for_the_MISRA_C_Developer/index.html
+            .. image:: images/page-1-of-Guidelines_for_Safe_and_Secure_Ada_SPARK.jpeg
+                :alt: Guidelines for Safe and Secure Ada/SPARK (e-book)
+                :target: courses/Guidelines_for_Safe_and_Secure_Ada_SPARK/index.html
 
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="ebook-download-button" href="/pdf_books/courses/SPARK_for_the_MISRA_C_Developer.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.pdf">
                             PDF
                         </a>
 
-                        <a class="ebook-download-button" href="/epub_books/courses/SPARK_for_the_MISRA_C_Developer.epub">
+                        <a class="ebook-download-button" href="/epub_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.epub">
                             EPUB
                         </a>
                     </div>
 
+        .. container:: frontpage-ebook-and-buttons-block
+
+            .. image:: images/page-1-of-whats-new-in-ada-2022.jpeg
+                :alt: What's New in Ada 2022 (e-book)
+                :target: /courses/whats-new-in-ada-2022/index.html
+
+            .. raw:: html
+
+                    <div class="frontpage-ebook-download">
+                        <a class="ebook-download-button" href="/pdf_books/courses/whats-new-in-ada-2022.pdf">
+                            PDF
+                        </a>
+
+                        <a class="ebook-download-button" href="/epub_books/courses/whats-new-in-ada-2022.epub">
+                            EPUB
+                        </a>
+                    </div>
 
         .. container:: frontpage-ebook-and-buttons-block
 
@@ -350,18 +362,18 @@
 
         .. container:: frontpage-ebook-and-buttons-block
 
-            .. image:: images/page-1-of-Guidelines_for_Safe_and_Secure_Ada_SPARK.jpeg
-                :alt: Guidelines for Safe and Secure Ada/SPARK (e-book)
-                :target: courses/Guidelines_for_Safe_and_Secure_Ada_SPARK/index.html
+            .. image:: images/page-1-of-intro-to-ada-labs.jpeg
+                :alt: Introduction to Ada: Laboratories (e-book)
+                :target: /labs/intro-to-ada/index.html
 
             .. raw:: html
 
                     <div class="frontpage-ebook-download">
-                        <a class="ebook-download-button" href="/pdf_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.pdf">
+                        <a class="ebook-download-button" href="/pdf_books/labs/intro-to-ada.pdf">
                             PDF
                         </a>
 
-                        <a class="ebook-download-button" href="/epub_books/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK.epub">
+                        <a class="ebook-download-button" href="/epub_books/labs/intro-to-ada.epub">
                             EPUB
                         </a>
                     </div>
