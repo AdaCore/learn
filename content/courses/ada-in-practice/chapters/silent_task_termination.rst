@@ -167,7 +167,7 @@ the first place.
 That works, but the state initialization requires some thought. As shown above,
 full initialization is performed again when the :ada:`Recovery` loop circles
 back around to the top of the loop. As a result, the *normal* processing in
-:ada:`Do_Normal_Work` must be prepared for suddenly encountering completely
+:ada:`Do_Actual_Work` must be prepared for suddenly encountering completely
 different state, i.e., a restart to the initial state. If that is not feasible
 the call to :ada:`Initialize_State` could be moved outside, prior to the start
 of the :ada:`Recovery` loop, so that it only executes once. Perhaps a different
