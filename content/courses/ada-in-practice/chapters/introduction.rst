@@ -32,7 +32,7 @@ Likewise, :wikipedia:`Resource Acquisition Is Allocation (RAII)
 :wikipedia:`implementation inheritance <Implementation_inheritance>` are
 not design patterns.
 
-Those are the kinds of situations and solutions we focus upon.
+Those are the kinds of situations and implementations we focus upon.
 
 That said, we may refer to a design pattern to illustrate an idiom's
 purpose and/or implementation. For example, in the idiom for controlling
@@ -40,7 +40,7 @@ object creation and initialization, the implementation approach happens
 to be the same as for expressing a Singleton :footcite:p:`1995:gamma`.
 
 In addition to language-independent situations, we also include
-solutions for situations specific to the Ada language. These idioms are
+implementations for situations specific to the Ada language. These idioms are
 *best practices* in situations that
 arise given the extensive capabilities of the language.
 
@@ -59,7 +59,7 @@ These are the well-known Abstract Data Types, something the Ada language
 directly supports but using *building blocks* instead of a single
 construct. For that same reason we include another idiom for defining
 abstractions that manage global data (Abstract Data Machines). Most of
-the idioms' solutions will be defined using these abstraction techniques
+the idioms' implementations will be defined using these abstraction techniques
 as their starting point.
 
 
@@ -67,7 +67,7 @@ Assumptions
 -----------
 
 We assume the reader knows Ada to some degree, including some advanced topics.
-For those lacking significant familiarity, we hope these solutions will at
+For those lacking significant familiarity, we hope these implementations will at
 least give a sense for how to apply the language. We direct such readers to the
 :ref:`online Learn courses dedicated to the Ada language itself <Advanced_Ada_Course_Index>`.
 

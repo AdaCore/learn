@@ -235,10 +235,10 @@ important here, but we must set them all if we set any of them.
 This design works, but the resulting code is clearly more complex and less
 robust than the PO approach.
 
-Solution
---------
+Implementation
+--------------
 
-Our solution uses an explicit global lock (a mutex), as above, but reintroduces
+Our implementation uses an explicit global lock (a mutex), as above, but reintroduces
 automatic lock acquisition and release.
 
 To achieve that automation, we leverage the language-defined object *lifetime*

@@ -345,8 +345,7 @@ fundamental to creating abstractions in class-oriented languages. Not every
 type can be private, as illustrated by the client expectation for array
 indexing in Ada prior to Ada 2012.
 Not every type should be private, for example those that are
-explicitly numeric. But the ADT should be the default design idiom when
-composing a solution.
+explicitly numeric. But the ADT should be the default design idiom expression.
 
 Cons
 ----
