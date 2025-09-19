@@ -231,6 +231,14 @@
   - When content is processed for publishing, those todo items are not
     included in the generated files.
 
+- When referring to the Ada compiler, never use the word "implementation" alone
+  (as it's done in the Ada Reference Manual). Instead, explicitly mention the
+  word *compiler* by writing "compiler implementation", "compiler version",
+  "compiler toochain", etc.
+
+  - Reason: readers may assume that the word "implementation" refers to a
+    source-code example.
+
 ## Interactive snippets
 
 Interactive code-blocks (snippets) are generated for any code inside the
