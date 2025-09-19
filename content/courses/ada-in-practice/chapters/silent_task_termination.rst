@@ -285,7 +285,8 @@ declares two protected procedures. Both match the profile specified by type
 :ada:`Termination_Handler`.  One such procedure would suffice, we just provide
 two for the sake of illustrating the flexibility of the dynamic approach.
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Obituary
+    :class: ada-syntax-only
 
     with Ada.Exceptions;          use Ada.Exceptions;
     with Ada.Task_Termination;    use Ada.Task_Termination;
@@ -296,15 +297,15 @@ two for the sake of illustrating the flexibility of the dynamic approach.
        protected Writer is
 
           procedure Note_Passing
-             (Cause    : in Cause_Of_Termination;
-              Departed : in Task_Id;
-              Event    : in Exception_Occurrence);
+             (Cause    : Cause_Of_Termination;
+              Departed : Task_Id;
+              Event    : Exception_Occurrence);
           --  Written by someone who's read too much English lit
 
           procedure Dissemble
-             (Cause    : in Cause_Of_Termination;
-              Departed : in Task_Id;
-              Event    : in Exception_Occurrence);
+             (Cause    : Cause_Of_Termination;
+              Departed : Task_Id;
+              Event    : Exception_Occurrence);
           --  Written by someone who may know more than they're saying
 
        end Writer;
@@ -359,46 +360,59 @@ The observant reader will note the with-clause for :ada:`Ada.Text_IO`,
 included for the sake of references to :ada:`Put_Line`. We'll address the
 ramifications momentarily. Here are the bodies for the two handlers:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Obituary
 
-    procedure Note_Passing
-      (Cause    : in Cause_Of_Termination;
-       Departed : in Task_Id;
-       Event    : in Exception_Occurrence)
-    is
-    begin
-       case Cause is
-          when Normal =>
-             Put_Line (Image (Departed) &
-                       " went gently into that good night");
-          when Abnormal =>
-             Put_Line (Image (Departed) & " was most fouly murdered!");
-          when Unhandled_Exception =>
-             Put_Line (Image (Departed) &
-                       " was unknit by the much unexpected " &
-                       Exception_Name (Event));
-       end case;
-    end Note_Passing;
+    with Ada.Text_IO;  use Ada.Text_IO;
 
-    procedure Dissemble
-      (Cause    : in Cause_Of_Termination;
-       Departed : in Task_Id;
-       Event    : in Exception_Occurrence)
-    is
-    begin
-       case Cause is
-          when Normal =>
-             Put_Line (Image (Departed) & " died, naturally.");
-             Put_Line ("We had nothing to do with it.");
-          when Abnormal =>
-             Put_Line (Image (Departed) & " had a tragic accident.");
-             Put_Line ("We're sorry it had to come to that.");
-          when Unhandled_Exception =>
-             Put_Line (Image (Departed) &
-                       " was apparently fatally allergic to " &
-                       Exception_Name (Event));
-       end case;
-    end Dissemble;
+    package body Obituary is
+
+       protected body Writer is
+
+          procedure Note_Passing
+            (Cause    : Cause_Of_Termination;
+             Departed : Task_Id;
+             Event    : Exception_Occurrence)
+          is
+          begin
+             case Cause is
+                when Normal =>
+                   Put_Line (Image (Departed) &
+                             " went gently into that good night");
+                when Abnormal =>
+                   Put_Line (Image (Departed) & " was most fouly murdered!");
+                when Unhandled_Exception =>
+                   Put_Line (Image (Departed) &
+                             " was unknit by the much unexpected " &
+                             Exception_Name (Event));
+             end case;
+          end Note_Passing;
+
+          procedure Dissemble
+            (Cause    : Cause_Of_Termination;
+             Departed : Task_Id;
+             Event    : Exception_Occurrence)
+          is
+          begin
+             case Cause is
+                when Normal =>
+                   Put_Line (Image (Departed) & " died, naturally.");
+                   Put_Line ("We had nothing to do with it.");
+                when Abnormal =>
+                   Put_Line (Image (Departed) & " had a tragic accident.");
+                   Put_Line ("We're sorry it had to come to that.");
+                when Unhandled_Exception =>
+                   Put_Line (Image (Departed) &
+                             " was apparently fatally allergic to " &
+                             Exception_Name (Event));
+             end case;
+          end Dissemble;
+
+       end Writer;
+
+    begin -- optional package executable part
+       Set_Dependents_Fallback_Handler (Writer.Note_Passing'Access);
+    end Obituary;
+
 
 Now, about those calls to :ada:`Ada.Text_IO.Put_Line`. Because of those calls,
 the bodies of procedures :ada:`Note_Passing` and :ada:`Dissemble` are not
@@ -422,7 +436,8 @@ to print the announcement with those values.
 
 Here's the updated :ada:`Obituary` package declaration:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Obituary_Updated
+    :class: ada-syntax-only
 
     with Ada.Exceptions;           use Ada.Exceptions;
     with Ada.Task_Termination;     use Ada.Task_Termination;
@@ -430,6 +445,7 @@ Here's the updated :ada:`Obituary` package declaration:
     with Ada.Containers.Vectors;
 
     package Obituary is
+
        pragma Elaborate_Body;
 
        Comment_On_Normal_Passing : Boolean := True;
@@ -447,9 +463,9 @@ Here's the updated :ada:`Obituary` package declaration:
        protected Writer is
 
           procedure Note_Passing
-             (Cause    : in Cause_Of_Termination;
-              Departed : in Task_Id;
-              Event    : in Exception_Occurrence);
+             (Cause    : Cause_Of_Termination;
+              Departed : Task_Id;
+              Event    : Exception_Occurrence);
 
           entry Get_Event (Next : out Termination_Event);
 
@@ -469,7 +485,7 @@ artifact.
 
 The updated package body is straightforward:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Obituary_Updated
 
     package body Obituary is
 
@@ -480,9 +496,9 @@ The updated package body is straightforward:
           ------------------
 
           procedure Note_Passing
-             (Cause    : in Cause_Of_Termination;
-              Departed : in Task_Id;
-              Event    : in Exception_Occurrence)
+             (Cause    : Cause_Of_Termination;
+              Departed : Task_Id;
+              Event    : Exception_Occurrence)
           is
           begin
              if Cause = Normal and then
@@ -518,7 +534,8 @@ The updated package body is straightforward:
 
 A new child package declares the task that prints the termination information:
 
-.. code-block:: ada
+.. code:: ada no_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Obituary_Updated
+    :class: ada-syntax-only
 
     package Obituary.Output is
        pragma Elaborate_Body;
@@ -532,7 +549,7 @@ In the package body, the task body iteratively suspends on the call to
 termination data available. Once it returns from the call, if ever, it simply
 prints the information and awaits further events:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Obituary_Updated
 
     with Ada.Text_IO;  use Ada.Text_IO;
 
@@ -549,15 +566,15 @@ prints the information and awaits further events:
              Writer. Get_Event (Next);
              case Next.Cause is
                 when Normal =>
-                    Put_Line (Image(Next.Departed) & " died, naturally.");
-                    -- What a difference that comma makes!
+                    Put_Line (Image (Next.Departed) & " died, naturally.");
+                    --  What a difference that comma makes!
                     Put_Line ("We had nothing to do with it.");
                 when Abnormal =>
-                   Put_Line (Image(Next.Departed) &
+                   Put_Line (Image (Next.Departed) &
                              " had a terrible accident.");
                    Put_Line ("We're sorry it had to come to that.");
                 when Unhandled_Exception =>
-                   Put_Line (Image(Next.Departed) &
+                   Put_Line (Image (Next.Departed) &
                              " reacted badly to " &
                              Exception_Name (Next.Event));
                    Put_Line ("Really, really badly.");
@@ -576,7 +593,8 @@ retrieve the information stored by the protected :ada:`Writer` object.
 Here is a sample demonstration main procedure, a simple test to ensure that
 termination due to task abort is captured and displayed:
 
-.. code-block:: ada
+.. code:: ada run_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Obituary_Updated
+    :class: ada-norun
 
     with Obituary.Output; pragma Unreferenced (Obituary.Output);
     --  otherwise neither package is in the executable
@@ -586,8 +604,8 @@ termination due to task abort is captured and displayed:
        task Worker;
        task body Worker is
        begin
-          loop -- ensure not already terminated when aborted
-             delay 0.0; -- yield the processor
+          loop  --  ensure not already terminated when aborted
+             delay 0.0;  --  yield the processor
           end loop;
        end Worker;
 
@@ -651,7 +669,7 @@ Notes
 If you did want to use a generic package to define a task type that is
 resilient to unhandled exceptions, you could do it like this:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Resilient_Workers
 
     with System;
     with Ada.Exceptions; use Ada.Exceptions;
@@ -671,7 +689,6 @@ resilient to unhandled exceptions, you could do it like this:
           Priority => Urgency;
 
     end Resilient_Workers;
-
 
     package body Resilient_Workers is
 
@@ -715,7 +732,9 @@ initialization, called only once with mode out for the state, and one for
 partial initialization, called on each iteration of the :ada:`Recovery` loop
 with mode in-out for the state:
 
-.. code-block:: ada
+.. code:: ada compile_button project=Courses.Ada_In_Practice.Silent_Task_Termination.Resilient_Workers
+
+    package body Resilient_Workers is
 
        task body Worker is
           State : Task_Local_State;
@@ -726,7 +745,7 @@ with mode in-out for the state:
              begin
                 Normal : loop
                    Update (State);
-                   --  The call above is expected to return, ie
+                   --  The call above is expected to return, i.e.
                    --  this loop is meant to iterate
                 end loop Normal;
              exception
@@ -737,6 +756,8 @@ with mode in-out for the state:
              Partially_Initialize (State);
           end loop Recovery;
        end Worker;
+
+    end Resilient_Workers;
 
 If both application initialization routines happen to do the same thing, we'd
 like the developer to be able to pass the same application procedure to both
