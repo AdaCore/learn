@@ -197,6 +197,15 @@
     for the directive, the indentation follows the GNAT code style — which
     makes use of a 3-character indentation in most cases.
 
+- For URLs, prefer using standard hyperlinks (with one trailing underscore)
+  instead of
+  [anonymous hyperlinks](https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#anonymous).
+  For example:
+
+    ```
+        `GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_
+    ```
+
 - For any images that are included in the content, the images in the generated
   HTML page must be visualized in a browser using both light and dark modes, as
   images might not be visible in one of those modes.
