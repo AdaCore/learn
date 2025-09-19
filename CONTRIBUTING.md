@@ -76,7 +76,7 @@
     - The global definitions are included with the following format:
 
       ```
-          .. include:: ../../global.txt
+          .. include:: ../../../global.txt
       ```
 
     - The global definitions file may be extended if needed.
