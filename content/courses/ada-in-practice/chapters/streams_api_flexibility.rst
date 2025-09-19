@@ -43,8 +43,8 @@ that the compiler can catch our mistakes. After all, preventing coding errors
 is much cheaper than fixing them later.
 
 
-Solution
---------
+Implementation
+--------------
 
 We will explore the possibilities using a concrete
 :wikipedia:`USART (Universal Synchronous/Asynchronous Receiver Transmitter) <Universal_synchronous_and_asynchronous_receiver-transmitter>`
@@ -86,10 +86,10 @@ Note the formal parameter data type for both :ada:`Receive` and
 might actually want to send and receive such values directly, that's probably
 not the case.
 
-Our solution is structured as a package hierarchy rooted at package
-:ada:`Serial_IO`. (This solution is part of an example in the ADL |mdash| see
+Our implementation is structured as a package hierarchy rooted at package
+:ada:`Serial_IO`. (This implementation is part of an example in the ADL |mdash| see
 :ref:`Note #1 <Ada_In_Practice_Using Streams_Note_ADL_Links>` below.) This root
-package declares a record type and routines that are common to any solution.
+package declares a record type and routines that are common to any implementation.
 The type, named :ada:`Peripheral_Descriptor`, contains a component named
 :ada:`Transceiver` that will designate the actual on-chip USART device being
 driven. The other record components are required for connecting that device to
@@ -137,7 +137,7 @@ parameters.
 Clients will call these procedures directly to set up the STM32 on-chip USART
 device.
 
-Our solution will consist of an ADT named :ada:`Serial_Port`, and a means for
+Our implementation will consist of an ADT named :ada:`Serial_Port`, and a means for
 sending and receiving values of higher-level types via :ada:`Serial_Port`
 objects. Type :ada:`Serial_Port` will be a wrapper for the device driver's
 USART type. Therefore, the type :ada:`Serial_Port` will have an access
@@ -595,8 +595,8 @@ inside the package body.
 Furthermore, the approach is independent of other design considerations, such
 as whether callers wait for completion of the invoked I/O operation.
 
-Because it is maximally flexible and concise, we consider it the best solution
-to this idiom. The generic-based approach remains a good one, however.
+Because it is maximally flexible and concise, we consider it the best implementation
+for this idiom. The generic-based approach remains a good one, however.
 
 
 .. _Ada_In_Practice_Using Streams_Cons:
