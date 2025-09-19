@@ -148,10 +148,10 @@ booklet.
 | Bedford, Massachusetts
 | July 2025
 
-	    
+
 .. toctree::
    :maxdepth: 4
-   :numbered:    
+   :numbered:
 
    Introduction<introduction>
    The DO-178C/ED-12C Standards Suite<standards>
