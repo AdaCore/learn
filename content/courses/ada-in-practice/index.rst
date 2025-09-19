@@ -43,12 +43,19 @@ Ada In Practice
 
 .. container:: content-description
 
-    This course describes how to implement selected programming idioms in
-    the Ada language. Prior knowledge of Ada is required, although some
+    This course explores how to use the Ada language in real-world scenarios
+    that extend beyond the complexity of lab exercises. The resulting solutions
+    to these scenarios are idioms and techniques, some common to various
+    programming languages and some specific to Ada. Multiple preliminary
+    solutions to a given scenario (when they exist) are presented and analyzed
+    for strengths and weaknesses, leading to the final preferred solution and
+    its analysis. As a result, readers – especially those relatively new to
+    the language – can learn how experienced Ada developers apply the
+    language in actual practice. Prior knowledge of Ada is required, although
     explanations of the underlying semantics are provided when appropriate.
 
     This document was written by Patrick Rogers and reviewed by
-    Gustavo A. Hoffmann, Richard Kenner, Robert A. Duff, and Tucker Taft.
+    Gustavo A. Hoffmann, Steven Baird, Richard Kenner, Robert A. Duff, and Tucker Taft.
 
     .. note::
 
