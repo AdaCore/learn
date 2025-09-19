@@ -1,7 +1,7 @@
 Enforcing Strong Typing
 -----------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Annex C of MISRA C:2012 summarizes the problem succinctly:
 

@@ -1,7 +1,7 @@
 Proof of Program Integrity
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This section presents the proof capability of GNATprove, a major tool for
 the SPARK language. We focus here on the simpler proofs that you'll need to

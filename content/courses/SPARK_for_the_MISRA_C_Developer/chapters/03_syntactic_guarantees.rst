@@ -1,7 +1,7 @@
 Enforcing Basic Syntactic Guarantees
 ------------------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 C's syntax is concise but also very permissive, which makes it easy
 to write programs whose effect is not what was intended.

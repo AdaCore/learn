@@ -6,7 +6,7 @@
 What's New in Ada 2022
 ======================
 
-.. include:: ../global.txt
+.. include:: ../../global.txt
 
 .. only:: no_hidden_books
 

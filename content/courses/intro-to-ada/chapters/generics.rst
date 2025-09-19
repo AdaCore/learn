@@ -1,7 +1,7 @@
 Generics
 ========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Introduction
 ------------

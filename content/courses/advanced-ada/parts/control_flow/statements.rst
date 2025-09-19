@@ -1,7 +1,7 @@
 Statements
 ==========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Simple and Compound Statements
 ------------------------------

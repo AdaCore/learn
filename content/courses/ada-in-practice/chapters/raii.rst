@@ -3,7 +3,7 @@
 Resource Acquisition Is Initialization (RAII)
 =============================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

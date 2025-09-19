@@ -1,7 +1,7 @@
 Conclusion
 ----------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 The C programming language is "close to the metal" and has
 emerged as a *lingua franca* for the majority of embedded platforms of all

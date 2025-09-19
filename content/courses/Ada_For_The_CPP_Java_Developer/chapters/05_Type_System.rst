@@ -1,7 +1,7 @@
 Type System
 -------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Strong Typing
 ~~~~~~~~~~~~~~

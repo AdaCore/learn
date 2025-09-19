@@ -1,7 +1,7 @@
 General-Purpose Code Generators
 ===============================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 In :doc:`another chapter <./multi_language_development>`,
 we mentioned that the best way to get a

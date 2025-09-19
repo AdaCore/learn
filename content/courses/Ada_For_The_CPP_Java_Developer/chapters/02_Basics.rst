@@ -1,7 +1,7 @@
 Basics
 --------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Ada implements the vast majority of programming concepts that you're accustomed to in C++ and Java: classes, inheritance, templates (generics), etc. Its syntax might seem peculiar, though. It's not derived from the popular C style of notation with its ample use of brackets; rather, it uses a more expository syntax coming from Pascal. In many ways, Ada is a simpler language |mdash| its syntax favors making it easier to conceptualize and read program code, rather than making it faster to write in a cleverly condensed manner. For example, full words like :ada:`begin` and :ada:`end` are used in place of curly braces. Conditions are written using :ada:`if`, :ada:`then`, :ada:`elsif`, :ada:`else`, and :ada:`end if`. Ada's assignment operator does not double as an expression, smoothly eliminating any frustration that could be caused by :cpp:`=` being used where :cpp:`==` should be.
 

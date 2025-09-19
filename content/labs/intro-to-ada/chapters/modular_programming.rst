@@ -1,7 +1,7 @@
 Modular Programming
 ===================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Months
 ------

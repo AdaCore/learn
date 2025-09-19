@@ -1,7 +1,7 @@
 Memory Management
 =================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Maximum allocation size and alignment
 -------------------------------------

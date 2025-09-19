@@ -1,7 +1,7 @@
 Interacting with Devices
 ========================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Interacting with hardware devices is one of the more frequent activities
 in embedded systems programming. It is also one of the most enjoyable
@@ -33,7 +33,7 @@ code, where :c:`temp` and :c:`temp2` are unsigned 32-bit integers:
 
 .. code-block:: c
 
-   temp = ((uint32_t)(GPIO_AF) << 
+   temp = ((uint32_t)(GPIO_AF) <<
              ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
    GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF <<
              ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
@@ -383,7 +383,7 @@ the complete code for the function body:
      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
      assert_param(IS_GPIO_AF(GPIO_AF));
 
-     temp = ((uint32_t)(GPIO_AF) << 
+     temp = ((uint32_t)(GPIO_AF) <<
                ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
      GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF <<
                ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
@@ -556,7 +556,7 @@ convenience:
      assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
      assert_param(IS_GPIO_AF(GPIO_AF));
 
-     temp = ((uint32_t)(GPIO_AF) << 
+     temp = ((uint32_t)(GPIO_AF) <<
                ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));
      GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF <<
                ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4));

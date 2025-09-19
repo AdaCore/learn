@@ -1,7 +1,7 @@
 The C Developer's Perspective on Ada
 ======================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 What we mean by Embedded Software
 ------------------------------------

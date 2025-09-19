@@ -1,7 +1,7 @@
 Interfacing with C
 ==================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Ada allows us to interface with code in many languages, including C
 and C++. This section discusses how to interface with C.

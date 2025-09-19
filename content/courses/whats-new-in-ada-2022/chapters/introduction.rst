@@ -1,7 +1,7 @@
 Introduction
 ============
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This is a collection of short code examples demonstrating new
 features of the :aarm22:`Ada 2022 Standard <TTL>` as they are implemented

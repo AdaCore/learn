@@ -3,7 +3,7 @@ Subprograms
 
 .. _Intro_Ada_Subprograms:
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Subprograms
 -----------

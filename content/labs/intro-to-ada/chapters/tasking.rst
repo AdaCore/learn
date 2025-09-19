@@ -1,7 +1,7 @@
 Tasking
 =======
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Display Service
 ---------------
@@ -228,7 +228,7 @@ Generic Protected Queue
 
         #. Entry :ada:`Push` stores an element in the queue.
 
-        #. Entry :ada:`Pop` removes an element from the queue and returns the 
+        #. Entry :ada:`Pop` removes an element from the queue and returns the
            element via output parameter.
 
 

@@ -3,7 +3,7 @@
 Proof of Functional Correctness
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This section is dedicated to the functional correctness of programs. It
 presents advanced proof features that you may need to use for the

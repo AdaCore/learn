@@ -1,7 +1,7 @@
 Strong typing
 =============
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 In this chapter, we discuss the advantages of strong typing and how it can
 be used to avoid common implementation and maintenance issues.

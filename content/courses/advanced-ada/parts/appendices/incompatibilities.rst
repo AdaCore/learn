@@ -3,7 +3,7 @@
 Incompatibilities between Ada standards
 =======================================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 ..
     REMOVED! TO BE RE-EVALUATED IN 2025:

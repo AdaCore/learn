@@ -1,7 +1,7 @@
 C to Ada Translation Patterns
 =================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Naming conventions and casing considerations
 --------------------------------------------

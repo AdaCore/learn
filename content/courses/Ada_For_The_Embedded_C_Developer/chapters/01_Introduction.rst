@@ -3,7 +3,7 @@
 Introduction
 ==============
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 So, what is this Ada thing anyway?
 -----------------------------------

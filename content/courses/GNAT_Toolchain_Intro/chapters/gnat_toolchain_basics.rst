@@ -3,7 +3,7 @@
 GNAT Toolchain Basics
 =====================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This chapter presents a couple of basic commands from the GNAT toolchain.
 

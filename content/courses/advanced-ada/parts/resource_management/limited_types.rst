@@ -1,7 +1,7 @@
 Limited Types
 =============
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 So far, we discussed nonlimited types in most cases. In this chapter, we
 discuss limited types.

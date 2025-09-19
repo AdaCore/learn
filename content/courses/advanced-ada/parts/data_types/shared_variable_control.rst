@@ -1,7 +1,7 @@
 Shared variable control
 =======================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Ada has built-in support for handling both volatile and atomic data. Let's
 start by discussing volatile objects.

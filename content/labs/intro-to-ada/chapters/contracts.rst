@@ -1,7 +1,7 @@
 Design by contracts
 ===================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Price Range
 -----------

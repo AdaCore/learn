@@ -1,7 +1,7 @@
 Concurrency and Real-Time
 ============================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Understanding the various options
 ---------------------------------

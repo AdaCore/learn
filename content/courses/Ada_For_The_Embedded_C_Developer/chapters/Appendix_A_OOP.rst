@@ -3,7 +3,7 @@
 Appendix A: Hands-On Object-Oriented Programming
 ================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 The goal of this appendix is to present a hands-on view on how to translate a
 system from C to Ada and improve it with object-oriented programming.

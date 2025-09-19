@@ -3,7 +3,7 @@
 Using Building Blocks to Express Inheritance Idioms
 ===================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

@@ -3,7 +3,7 @@
 Appendices
 ==========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 .. _Intro_Ada_Generic_Formal_Types:
 

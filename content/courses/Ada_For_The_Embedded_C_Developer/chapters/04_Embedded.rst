@@ -1,7 +1,7 @@
 Writing Ada on Embedded Systems
 =================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Understanding the Ada Run-Time
 ------------------------------

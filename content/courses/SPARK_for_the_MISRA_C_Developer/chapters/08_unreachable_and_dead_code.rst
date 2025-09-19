@@ -1,7 +1,7 @@
 Detecting Unreachable Code and Dead Code
 ----------------------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 MISRA C defines `unreachable code` as code that cannot be executed, and
 it defines `dead code` as code that can be executed

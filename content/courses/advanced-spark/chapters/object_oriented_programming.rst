@@ -1,7 +1,7 @@
 Object-oriented Programming
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 What is Object Oriented Programming?
 ---------------------------------------------------------------------

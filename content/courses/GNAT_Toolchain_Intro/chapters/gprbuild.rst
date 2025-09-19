@@ -1,7 +1,7 @@
 GPRbuild
 ========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This chapter presents a brief overview of :program:`GPRbuild`, the project
 manager of the GNAT toolchain.  It can be used to manage complex builds. In

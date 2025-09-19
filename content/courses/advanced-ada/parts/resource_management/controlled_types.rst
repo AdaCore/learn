@@ -1,7 +1,7 @@
 Controlled Types
 ================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Controlled_Types_Overview:
 

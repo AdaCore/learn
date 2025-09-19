@@ -1,7 +1,7 @@
 Modular programming
 ===================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 So far, our examples have been simple standalone subprograms.  Ada is helpful in
 that regard, since it allows arbitrary declarations in a declarative part. We

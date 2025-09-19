@@ -1,7 +1,7 @@
 Standard library: Numerics
 ==========================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 The standard library provides support for common numeric operations on
 floating-point types as well as on complex types and matrices. In the sections

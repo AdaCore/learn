@@ -1,7 +1,7 @@
 Interfacing with C and C++
 ==========================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 Interfacing with C
 ------------------

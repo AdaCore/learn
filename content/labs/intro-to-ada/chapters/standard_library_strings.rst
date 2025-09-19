@@ -1,7 +1,7 @@
 Standard library: Strings
 =========================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Concatenation
 -------------

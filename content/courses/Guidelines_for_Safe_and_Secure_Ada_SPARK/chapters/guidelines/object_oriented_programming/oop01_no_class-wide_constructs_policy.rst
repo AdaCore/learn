@@ -2,7 +2,7 @@
 No Class-wide Constructs Policy (OOP01)
 -----------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

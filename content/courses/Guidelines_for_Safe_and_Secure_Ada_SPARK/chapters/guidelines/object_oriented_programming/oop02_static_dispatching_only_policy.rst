@@ -2,7 +2,7 @@
 Static Dispatching Only Policy (OOP02)
 ----------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

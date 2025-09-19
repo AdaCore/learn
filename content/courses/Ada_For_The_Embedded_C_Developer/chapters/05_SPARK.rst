@@ -1,7 +1,7 @@
 Enhancing Verification with SPARK and Ada
 ============================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Understanding Exceptions and Dynamic Checks
 -------------------------------------------

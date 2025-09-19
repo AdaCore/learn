@@ -1,7 +1,7 @@
 Standard library: Strings
 =========================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 In previous chapters, we've seen source-code examples using the :ada:`String`
 type, which is a fixed-length string type |mdash| essentialy, it's an array

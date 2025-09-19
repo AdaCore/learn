@@ -7,7 +7,7 @@
 Let's Build a Stack
 =====================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 In this lab we will build a stack data structure and use the SPARK provers to
 find the errors in the below implementation.

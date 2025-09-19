@@ -1,7 +1,7 @@
 Statements, Declarations, and Control Structures
 ---------------------------------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Statements and Declarations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

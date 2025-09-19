@@ -1,7 +1,7 @@
 Interrupt Handling
 ==================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

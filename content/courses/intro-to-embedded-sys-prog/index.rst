@@ -6,7 +6,7 @@
 Introduction to Embedded Systems Programming
 ============================================
 
-.. include:: ../global.txt
+.. include:: ../../global.txt
 
 .. only:: no_hidden_books
 

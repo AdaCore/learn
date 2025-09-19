@@ -1,7 +1,7 @@
 Strings
 =======
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Character_String_Literals:
 

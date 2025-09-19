@@ -5,7 +5,7 @@
 SPARK Overview
 =====================================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This tutorial is an introduction to the SPARK programming
 language and its formal verification tools. You need not know any specific
@@ -64,7 +64,7 @@ various forms. They include tools that check types and enforce visibility
 rules, such as the compiler, in addition to those that perform more complex
 reasoning, such as abstract interpretation, as done by a tool like the
 `GNAT Static Analysis Suite <https://www.adacore.com/static-analysis-suite>`_
-from AdaCore. The tools that come with SPARK perform two different forms 
+from AdaCore. The tools that come with SPARK perform two different forms
 of static analysis:
 
 - `flow analysis` is the fastest form of analysis. It checks

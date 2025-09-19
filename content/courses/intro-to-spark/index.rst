@@ -4,7 +4,7 @@
 Introduction To SPARK
 =====================
 
-.. include:: ../global.txt
+.. include:: ../../global.txt
 
 .. only:: no_hidden_books
 

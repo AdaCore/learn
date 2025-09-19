@@ -2,7 +2,7 @@
 User-Defined Storage Pools Policy (DYN05)
 -------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

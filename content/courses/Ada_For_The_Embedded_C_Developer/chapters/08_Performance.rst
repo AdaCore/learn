@@ -1,7 +1,7 @@
 Performance considerations
 ==========================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Overall expectations
 --------------------

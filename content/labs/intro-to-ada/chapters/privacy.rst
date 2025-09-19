@@ -1,7 +1,7 @@
 Privacy
 =======
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Directions
 ----------

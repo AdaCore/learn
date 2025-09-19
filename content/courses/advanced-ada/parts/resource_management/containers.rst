@@ -1,7 +1,7 @@
 Containers
 ==========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Aggregate_Aspect:
 

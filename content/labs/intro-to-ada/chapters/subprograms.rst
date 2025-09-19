@@ -1,7 +1,7 @@
 Subprograms
 ===========
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Subtract procedure
 -------------------

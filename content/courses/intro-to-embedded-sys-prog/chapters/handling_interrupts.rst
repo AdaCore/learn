@@ -1,7 +1,7 @@
 Handling Interrupts
 ===================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Background
 ----------
@@ -853,7 +853,7 @@ compiler for an Arm Cortex M4 target:
 
    subtype Any_Priority       is Integer      range 0 .. 255;
    subtype Priority           is Any_Priority range Any_Priority'First .. 240;
-   subtype Interrupt_Priority is Any_Priority range 
+   subtype Interrupt_Priority is Any_Priority range
       Priority'Last + 1  .. Any_Priority'Last;
 
 Although the ranges are compiler-defined, when the Systems

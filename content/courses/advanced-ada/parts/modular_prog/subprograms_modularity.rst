@@ -1,7 +1,7 @@
 Subprograms and Modularity
 ==========================
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Private_Subprograms:
 

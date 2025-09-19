@@ -1,7 +1,7 @@
 Records
 =======
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Record_Component_Default_Initialization:
 

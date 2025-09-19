@@ -2,7 +2,7 @@
 Ensure Local Type Consistency (OOP07)
 ---------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Required
 

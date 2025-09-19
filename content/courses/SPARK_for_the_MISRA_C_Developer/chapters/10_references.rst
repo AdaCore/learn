@@ -3,7 +3,7 @@
 References
 ----------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 About MISRA C
 *************

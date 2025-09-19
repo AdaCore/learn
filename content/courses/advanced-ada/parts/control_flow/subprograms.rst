@@ -1,7 +1,7 @@
 Subprograms
 ===========
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 .. _Adv_Ada_Parameter_Modes_Associations:
 

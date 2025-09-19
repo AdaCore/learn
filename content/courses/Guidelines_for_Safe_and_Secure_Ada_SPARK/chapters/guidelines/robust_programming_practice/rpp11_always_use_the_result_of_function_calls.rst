@@ -2,7 +2,7 @@
 Always Use the Result of Function Calls (RPP11)
 -------------------------------------------------
 
-.. include:: ../../../../global.txt
+.. include:: ../../../../../global.txt
 
 **Level** :math:`\rightarrow` Advisory
 

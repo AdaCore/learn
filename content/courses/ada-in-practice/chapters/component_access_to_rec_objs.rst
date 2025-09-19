@@ -3,7 +3,7 @@
 Providing Component Access to Enclosing Record Objects
 ======================================================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Motivation
 ----------

@@ -1,7 +1,7 @@
 Exceptions
 ==========
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Ada uses exceptions for error handling.  Unlike many other languages,
 Ada speaks about *raising*, not *throwing*, an exception and

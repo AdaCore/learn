@@ -1,7 +1,7 @@
 Compilation Unit Structure
 ----------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 C++ programming style usually promotes the use of two distinct files: header files used to define specifications (.h*, *.hxx*, *.hpp*), and implementation files which contain the executable code (*.c*, *.cxx*, *.cpp*). However, the distinction between specification and implementation is not enforced by the compiler and may need to be worked around in order to implement, for example, inlining or templates.
 

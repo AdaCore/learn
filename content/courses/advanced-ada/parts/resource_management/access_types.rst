@@ -1,7 +1,7 @@
 Access Types
 ============
 
-.. include:: ../../../global.txt
+.. include:: ../../../../global.txt
 
 We discussed access types back in the
 :ref:`Introduction to Ada course <Intro_Ada_Access_Types_Overview>`. In

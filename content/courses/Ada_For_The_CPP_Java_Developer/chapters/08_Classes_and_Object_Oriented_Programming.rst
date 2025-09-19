@@ -1,7 +1,7 @@
 Classes and Object Oriented Programming
 -----------------------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Primitive Subprograms
 ~~~~~~~~~~~~~~~~~~~~~~

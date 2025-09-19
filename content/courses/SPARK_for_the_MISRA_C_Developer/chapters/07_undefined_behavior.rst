@@ -3,7 +3,7 @@
 Detecting Undefined Behavior
 ----------------------------
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Undefined behavior (and critical unspecified behavior, which we'll treat as
 undefined behavior) are the plague of C programs. Many

@@ -3,7 +3,7 @@
 CHANGELOG
 =========
 
-.. include:: ../global.txt
+.. include:: ../../global.txt
 
 Release 2025-08
 ---------------

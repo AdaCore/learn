@@ -3,7 +3,7 @@
 Low Level Programming
 =====================
 
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 This section introduces a number of topics in low-level programming, in
 which the hardware and the compiler's representation choices are much

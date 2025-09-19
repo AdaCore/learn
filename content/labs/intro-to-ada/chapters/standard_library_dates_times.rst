@@ -1,7 +1,7 @@
 Standard library: Dates & Times
 ===============================
 
-.. include:: ../../../courses/global.txt
+.. include:: ../../../global.txt
 
 Holocene calendar
 -----------------
