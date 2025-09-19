@@ -31,6 +31,9 @@ point. For example:
                  & Real_Literal'Image);
     end Real_Integer_Literals;
 
+In this example, :ada:`365` is an integer literal and :ada:`365.2564` is a
+real literal.
+
 Another classification takes the use of a base indicator into account.
 (Remember that, when writing a literal such as :ada:`2#1011#`, the base is the
 element before the first ``#`` sign.) So here we distinguish between decimal
@@ -431,6 +434,7 @@ is universal real:
        --                   ^
        --              universal integer type
        --
+       --                       3.1415926535
        --                       ^^^^^^^^^^^^
        --                 universal real type
        --
@@ -457,6 +461,7 @@ the result is of universal real type:
        --                   ^
        --              universal integer type
        --
+       --                       Pi
        --                       ^^
        --                 universal real type
        --
