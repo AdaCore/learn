@@ -27,8 +27,8 @@ that caused the termination. Assuming the developer is responsible for
 implementing it, how can the requirement best be met?
 
 
-Solution
---------
+Implementation
+--------------
 
 For unhandled exceptions, the simplest solution to silent termination is to
 define the announcement or logging response as an exception handler located in
