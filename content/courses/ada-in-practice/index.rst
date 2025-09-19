@@ -49,8 +49,8 @@ Ada In Practice
     programming languages and some specific to Ada. Multiple preliminary
     solutions to a given scenario (when they exist) are presented and analyzed
     for strengths and weaknesses, leading to the final preferred solution and
-    its analysis. As a result, readers – especially those relatively new to
-    the language – can learn how experienced Ada developers apply the
+    its analysis. As a result, readers |mdash| especially those relatively new to
+    the language |mdash| can learn how experienced Ada developers apply the
     language in actual practice. Prior knowledge of Ada is required, although
     explanations of the underlying semantics are provided when appropriate.
 
