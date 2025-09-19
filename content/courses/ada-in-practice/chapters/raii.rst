@@ -35,8 +35,9 @@ responsible for implementing the mutually exclusive access, and also thread
 management. As a result, the source code is much simpler and is robust even in
 the face of exceptions.
 
-(In the works cited above, Hoare's contribution was equally important, but
-Hansen's contributions were reified in
+(In the works cited above, Hoare's contribution :footcite:p:`1974:hoare` was
+equally important, but Hansen's contributions :footcite:p:`1977:hansen`,
+:footcite:p:`1973:hansen` were reified in
 :wikipedia:`Concurrent Pascal <Concurrent_Pascal>`, a concrete programming
 language.)
 
