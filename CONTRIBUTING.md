@@ -197,6 +197,15 @@
     for the directive, the indentation follows the GNAT code style — which
     makes use of a 3-character indentation in most cases.
 
+- For URLs, prefer using standard hyperlinks (with one trailing underscore)
+  instead of
+  [anonymous hyperlinks](https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#anonymous).
+  For example:
+
+    ```
+        `GNAT User’s Guide Supplement for Cross Platforms <https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx.html>`_
+    ```
+
 - For any images that are included in the content, the images in the generated
   HTML page must be visualized in a browser using both light and dark modes, as
   images might not be visible in one of those modes.
@@ -230,6 +239,14 @@
 
   - When content is processed for publishing, those todo items are not
     included in the generated files.
+
+- When referring to the Ada compiler, never use the word "implementation" alone
+  (as it's done in the Ada Reference Manual). Instead, explicitly mention the
+  word *compiler* by writing "compiler implementation", "compiler version",
+  "compiler toochain", etc.
+
+  - Reason: readers may assume that the word "implementation" refers to a
+    source-code example.
 
 ## Interactive snippets
 
@@ -270,7 +287,13 @@ The following language-related parameters are available for this directive:
 
   -  `ada`: indicates that the code is written in Ada or SPARK
 
-  -  `c`: indicates that the code is written in C or C++
+  -  `c`: indicates that the code is written in C
+
+  -  `cpp`: indicates that the code is written in C++
+
+  -  `java`: indicates that the code is written in Java
+
+  -  `assembly`: indicates that the code is written in Assembly
 
 ### Button-related parameters
 
