@@ -262,7 +262,7 @@ site-testing: cleantest                                                        #
 	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
         "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
-BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)
+BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)  $(wildcard $(CONTENT_DIR)/booklets/*/.)
 
 PDF_BOOKS_DIR := $(BUILDDIR)/pdf_books
 

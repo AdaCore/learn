@@ -184,6 +184,13 @@ show_authors = True
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+# Figures, tables and code-blocks are automatically numbered if they
+# have a caption.
+numfig = True
+# If set to 0, figures, tables, and code-blocks are continuously
+# numbered starting at 1.
+numfig_secnum_depth = 0
+
 nitpicky = True
 
 # sphinx.ext.extlinks: markup to shorten external links
@@ -322,6 +329,7 @@ latex_elements = {
     'preamble': r'''
 \usepackage{pmboxdraw} \usepackage{unicode-math}
 \usepackage{pdfpages}
+\usepackage{pdflscape}
 \usepackage{fontspec}
 \fvset{fontsize=\small}
 \makeatletter
