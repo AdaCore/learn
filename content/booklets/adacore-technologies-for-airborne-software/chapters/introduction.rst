@@ -1,4 +1,4 @@
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Introduction
 ============
@@ -33,7 +33,7 @@ annotations in :numref:`Airborn_SW_fig1` refer to the tables in
 |do-178c| and, when applicable, specific objectives in those tables.
 
 .. _Airborn_SW_fig1:
-.. figure:: images/introduction-fig1.png
+.. figure:: ../images/introduction-fig1.png
    :align: center
 
    AdaCore Technologies and |do-178c| Life Cycle Processes

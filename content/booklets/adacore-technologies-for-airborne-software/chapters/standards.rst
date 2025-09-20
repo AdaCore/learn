@@ -1,4 +1,4 @@
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 .. index:: DO-178C/ED-12C
 
@@ -266,7 +266,7 @@ Certification credit for using formal proofs is summarized in
 :numref:`Airborn_SW_fig2`:
 
 .. _Airborn_SW_fig2:
-.. figure:: images/standards-fig2.png
+.. figure:: ../images/standards-fig2.png
   :align: center
 
   SPARK contributions to verification objectives

@@ -1,4 +1,4 @@
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 AdaCore Tools and Technologies Overview
 =======================================

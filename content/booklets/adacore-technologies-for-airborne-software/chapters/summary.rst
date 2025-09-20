@@ -1,4 +1,4 @@
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 Summary of contributions to DO-178C/ED-12C objectives
 =====================================================

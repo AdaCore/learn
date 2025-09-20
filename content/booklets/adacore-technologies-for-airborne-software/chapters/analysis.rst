@@ -1,4 +1,4 @@
-.. include:: ../../global.txt
+.. include:: ../../../global.txt
 
 .. index:: single: DO-178C/ED-12C; Compliance
 
@@ -876,7 +876,7 @@ consistent with the target hardware.  For example,
 flag (F).
 
 .. _Airborn_SW_fig3:
-.. figure:: images/analysis-fig3.png
+.. figure:: ../images/analysis-fig3.png
     :align: center
     :scale: 30%
 
