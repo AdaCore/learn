@@ -34,7 +34,7 @@ language's expressiveness were introduced in Ada 2022 (see
 :cite:p:`Barnes_2014`, :cite:p:`ISO_IEC_2022` for information about
 Ada).
 
-The name "Ada" is not an acronym; it was chosen in honor of Augusta
+The name *Ada* is not an acronym; it was chosen in honor of Augusta
 Ada Lovelace (1815-1852), a mathematician who is regarded as the
 world's first programmer because of her work with Charles Babbage. She
 was also the daughter of the poet Lord Byron.
@@ -70,8 +70,8 @@ stack-based general-purpose language, not tied to any specific
 development methodology. It has a simple syntax, structured control
 statements, flexible data composition facilities, strong type
 checking, traditional features for code modularization
-("subprograms"), and a mechanism for detecting and responding to
-exceptional run-time conditions ("exception handling").  But it also
+(*subprograms*), and a mechanism for detecting and responding to
+exceptional run-time conditions (*exception handling*).  But it also
 includes much more:
 
 .. index:: single: Ada language; Scalar ranges
@@ -153,10 +153,10 @@ failure |mdash| i.e., the contract's Boolean expression evaluating to
 .. rubric:: Programming in the large
 
 The original Ada 83 design introduced the package construct, a feature
-that supports encapsulation ("information hiding") and modularization,
+that supports encapsulation (*information hiding*) and modularization,
 and which allows the developer to control the namespace that is
 accessible within a given compilation unit. Ada 95 introduced the
-concept of "child units," adding considerable flexibility and easing
+concept of *child units*, adding considerable flexibility and easing
 the design of very large systems. Ada 2005 extended the language's
 modularization facilities by allowing mutual references between
 package specifications, thus making it easier to interface with
@@ -169,7 +169,7 @@ languages such as Java.
 A key to reusable components is a mechanism for parameterizing modules
 with respect to data types and other program entities, for example a
 stack package for an arbitrary element type. Ada meets this
-requirement through a facility known as "generics"; since the
+requirement through a facility known as *generics*; since the
 parameterization is done at compile time, run-time performance is not
 penalized.
 
@@ -188,11 +188,11 @@ performance.
 However, large real-time systems often have components such as GUIs
 that do not have real-time constraints and that could be most
 effectively developed using OOP features. In part for this reason, Ada
-95 supplies comprehensive support for OOP, through its "tagged type"
+95 supplies comprehensive support for OOP, through its *tagged type*
 facility: classes, polymorphism, inheritance, and dynamic binding. Ada
 95 does not require automatic garbage collection but rather supplies
 definitional features allowing the developer to supply type-specific
-storage reclamation operations ("finalization"). Ada 2005 brought
+storage reclamation operations (*finalization*). Ada 2005 brought
 additional OOP features including Java-like interfaces and traditional
 `obj.op(...)` operation invocation notation.
 
@@ -206,10 +206,10 @@ See :cite:p:`Barnes_2014` or :cite:p:`AdaCore_2016` for more details.
 .. rubric:: Concurrent programming
 
 Ada supplies a structured, high-level facility for concurrency. The
-unit of concurrency is a program entity known as a "task." Tasks can
+unit of concurrency is a program entity known as a *task*. Tasks can
 communicate implicitly via shared data or explicitly via a synchronous
 control mechanism known as the rendezvous. A shared data item can be
-defined abstractly as a "protected object" (a feature introduced in
+defined abstractly as a *protected object* (a feature introduced in
 Ada 95), with operations executed under mutual exclusion when invoked
 from multiple tasks. Asynchronous task interactions are also supported
 for timeouts, software event notifications, and task termination. Such
@@ -222,7 +222,7 @@ architectures were introduced in Ada 2012.
 
 .. rubric:: Systems programming
 
-Both in the "core" language and the Systems Programming Annex, Ada
+Both in the *core* language and the Systems Programming Annex, Ada
 supplies the necessary features for hardware-specific processing.  For
 example, the programmer can specify the bit layout for fields in a
 record, define alignment and size properties, place data at specific
@@ -420,7 +420,7 @@ dynamically through classical run-time testing methods or statically
 .. index:: single: SPARK language; Hybrid verification
 .. index:: Hybrid verification
 
-SPARK supports "hybrid verification" that can mix testing with formal
+SPARK supports *hybrid verification* that can mix testing with formal
 proofs. For example, an existing project in Ada and C can adopt SPARK
 to implement new functionality for critical components. The SPARK
 units can be analyzed statically to achieve the desired level of
@@ -455,13 +455,13 @@ GNAT Pro Assurance
 ------------------
 
 GNAT Pro Assurance is an Ada and C development environment for
-projects requiring specialized support, such as bug fixes and "known
-problems" analyses, on a specific version of the toolchain. This
+projects requiring specialized support, such as bug fixes and *known problems*
+analyses, on a specific version of the toolchain. This
 product line is especially suitable for applications with long
 maintenance cycles or certification requirements, since critical
 updates to the compiler or other product components may become
 necessary years after the initial release. Such customized maintenance
-of a specific version of the product is known as a "sustained branch".
+of a specific version of the product is known as a *sustained branch*.
 
 .. index:: GNU GCC technology
 
@@ -480,8 +480,8 @@ set of libraries and bindings.
 Sustained Branches
 ~~~~~~~~~~~~~~~~~~
 
-Unique to GNAT Pro Assurance is a service known as a "sustained
-branch": customized support and maintenance for a specific version of
+Unique to GNAT Pro Assurance is a service known as a *sustained branch*:
+customized support and maintenance for a specific version of
 the product. A project on a sustained branch can monitor relevant
 known problems, analyze their impact and, if needed, update to a newer
 version of the product on the same development branch (i.e., not
@@ -827,7 +827,7 @@ GNATtest
 
 The GNATtest tool helps create and maintain a complete unit testing
 infrastructure for complex projects. Based on AUnit, it captures the
-simple idea that each public subprogram (these are known as "visible"
+simple idea that each public subprogram (these are known as *visible*
 subprograms in Ada) should have at least one corresponding unit
 test. GNATtest takes a project file as input, and produces two
 outputs:
@@ -1052,7 +1052,7 @@ Easy to learn, easy to use
 
 GNAT Studio is intuitive to new users thanks to its menu-driven
 interface with extensive online help (including documentation on all
-the menu selections) and "tool tips". The Project Wizard makes it
+the menu selections) and *tool tips*. The Project Wizard makes it
 simple to get started, supplying default values for almost all of the
 project properties. For experienced users, it offers the necessary
 level of control for advanced purposes; e.g., the ability to run

@@ -72,7 +72,7 @@ sections in |do-178c| or to one of the technology supplements. The
 references in the Use case columns are to sections in this document.
 
 Since AdaCore's tools mostly contribute to the bottom stages of the
-"V" cycle (design, coding, integration and related verification
+*V* cycle (design, coding, integration and related verification
 activities), verification of High-Level Requirements (and thus Table
 A-3) are outside the scope of AdaCore solutions.
 
@@ -112,7 +112,7 @@ Table A-2: Software Development Processes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 AdaCore tools mostly contribute to the bottom stages of the
-traditional "V" cycle (design, coding, integration, and the related
+traditional *V* cycle (design, coding, integration, and the related
 verification activities).
 
 .. csv-table::

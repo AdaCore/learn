@@ -27,7 +27,7 @@ the development and verification processes that it encompasses can be
 represented as a variation of the traditional
 :wikipedia:`"V-model"<V-model_(software_development)>`. As shown in
 :numref:`Airborn_SW_fig1`, AdaCore's products and the Ada and SPARK
-languages contribute principally to the bottom portions of the "V"
+languages contribute principally to the bottom portions of the *V*
 |mdash| coding and integration and their verification. The Table
 annotations in :numref:`Airborn_SW_fig1` refer to the tables in
 |do-178c| and, when applicable, specific objectives in those tables.
@@ -46,8 +46,8 @@ mixed-language applications can take advantage of Ada's interface
 checking that is performed during inter-module communication.
 
 AdaCore's Ada and C compilers can help developers produce reliable
-software, targeting embedded platforms with RTOSes as well as "bare
-metal" configurations. These are available with long term support,
+software, targeting embedded platforms with RTOSes as well as *bare metal*
+configurations. These are available with long term support,
 certifiable run-time libraries, and source-to-object traceability
 analyses as required for |do-178c| Level A. Supplementing the
 compilers are a comprehensive set of static and dynamic analysis

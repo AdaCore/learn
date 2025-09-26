@@ -44,11 +44,11 @@ EOC verification must itself be verified.
 
 .. index:: V software life cycle
 
-While it is not a |do-178c| concept, a "V" cycle is often used to
+While it is not a |do-178c| concept, a *V* cycle is often used to
 represent the complete software life cycle. A variation of the
-traditional "V" cycle, oriented around the |do-178c| processes, was
+traditional *V* cycle, oriented around the |do-178c| processes, was
 shown earlier in :numref:`Airborn_SW_fig1`. As is seen in that figure,
-AdaCore tools mostly apply towards the bottom stages of the "V" cycle:
+AdaCore tools mostly apply towards the bottom stages of the *V* cycle:
 
 * Design (architecture + LLR), coding and integration (EOC
   generation), for the development activities.
@@ -171,14 +171,14 @@ that help meet these goals.
 Modularization
 ^^^^^^^^^^^^^^
 
-Ada's package facility was designed for "programming in the large":
+Ada's package facility was designed for *programming in the large*:
 designing a system comprising millions of lines of code through
 modules (packages) that maximize reuse while making explicit the
 allowed inter-module dependencies.  Ada directly supports the software
-engineering principle of "information hiding", with a package
+engineering principle of *information hiding*, with a package
 comprising an interface (its specification) and an implementation (its
-body). A package specification itself is separated into a "visible
-part" that is accessible externally, and optionally a "private part"
+body). A package specification itself is separated into a *visible part*
+that is accessible externally, and optionally a *private part*
 that can only be accessed by the associated package body and by the
 private parts and bodies of child packages.  Packages support
 programming by composition (bottom-up design), programming by
@@ -209,7 +209,7 @@ Strong typing
 ^^^^^^^^^^^^^
 
 The emphasis on early error detection and program clarity is perhaps
-most clearly illustrated in the language's "strong typing". A type in
+most clearly illustrated in the language's *strong typing*. A type in
 Ada is a semantic entity that can embody static (and possibly also
 dynamic) constraints. For example:
 
@@ -232,7 +232,7 @@ constraints are specified:
   exception.
 
 Strong typing means an absence of implicit conversions (implicit
-"casts"), since such conversions can mask logical errors. For example:
+*casts*), since such conversions can mask logical errors. For example:
 
 .. code-block:: ada
 
@@ -377,7 +377,7 @@ explicitly or implicitly, to obtain by-reference passing if the actual
 parameter needs to be modified by the called subprogram.
 
 When pointers are absolutely required, Ada's approach is to supply a
-type-safe and high-level mechanism (known as "access types") to obtain
+type-safe and high-level mechanism (known as *access types*) to obtain
 the needed functionality while also providing low-level facilities
 that are potentially unsafe but whose usage is always explicitly
 indicated in the source text (thus alerting the human reader).
@@ -468,7 +468,7 @@ bounds. In addition to indexing, Ada provides various array operations
 (assignment, comparison, slicing, catenation, etc.) which allow
 manipulating arrays in an explicit and safe manner.
 
-Ada's arrays are "fixed size"; once an array object is created, its
+Ada's arrays are *fixed size*; once an array object is created, its
 bounds are established and cannot change. This simplifies the storage
 management (arrays in Ada can go on the stack and do not require
 hidden pointers). Additional flexibility (for example bounded-size
@@ -586,8 +586,8 @@ part |mdash| the software design.
 
 Ada, however, presents an exception to this advice. The language
 provides extensive facilities for capturing a program unit's
-specification (its "what") separately from the implementation (its
-"how"). An Ada package and an Ada subprogram each consists of a
+specification (its *what*) separately from the implementation (its
+*how*). An Ada package and an Ada subprogram each consists of a
 specification (the interface) and a body (the implementation) and a
 similar separation of interface from implementation is found in
 generic units, tasks, and encapsulated types.
@@ -615,7 +615,7 @@ hierarchical set of components, Ada may be directly used to identify
 the software components and define their interfaces. This is typically
 done via package specifications and subprogram specifications.
 
-A few comments on the term "interface" may be helpful. (It is not
+A few comments on the term *interface* may be helpful. (It is not
 referring to the OOP language feature here.) Informally, a component's
 interface is the collection of its properties that establish whether
 any given usage of the component is correct. These properties arise at
@@ -745,8 +745,8 @@ shown reflects the two properties that need to be met:
 .. index:: single: Ada language; Contract-based programming
 
 Preconditions and postconditions, and related features such as type
-invariants, are referred to collectively as "contract-based
-programming" and were introduced in the Ada 2012 version of the
+invariants, are referred to collectively as *contract-based programming*
+and were introduced in the Ada 2012 version of the
 language. Based on the assertion policy (as specified by a pragma),
 the contracts can be checked at run-time, raising an exception on
 failure. They also support (but do not require) formal analysis, since
@@ -869,7 +869,7 @@ meet this requirement. For example, the following can be defined:
 The compiler will check that the specified representation is
 consistent with the target hardware.  For example,
 :numref:`Airborn_SW_fig3` shows the required layout (on a
-"little-endian" machine) for a data object consisting of an unsigned
+*little-endian* machine) for a data object consisting of an unsigned
 16-bit integer (:ada:`Num`), a 4-bit enumeration value
 (:ada:`Urgency`) that is either :ada:`Low`, :ada:`Medium`, or
 :ada:`High`, with the respective values 2, 5, and 10), and a Boolean
@@ -884,9 +884,9 @@ flag (F).
 
 .. index:: single: Ada language; Endianness
 
-As with other entities, Ada separates the type's "interface" (its
+As with other entities, Ada separates the type's *interface* (its
 logical structure as a record type with named fields) from its
-"implementation" (its physical representation / layout including size,
+*implementation* (its physical representation / layout including size,
 alignment, and exact position of each field). The representation can
 be specified through a combination of aspects and representation
 clauses. Defining the :ada:`Bit_Order` and the
@@ -928,7 +928,7 @@ and the bit positions that are occupied. A field can overlap multiple
 storage units.
 
 When the program specifies these kinds of representational details,
-it's typical for the application to read a "raw" value from an
+it's typical for the application to read a *raw* value from an
 external source, and in such cases it is important to ensure that such
 data values are valid. In the above example, the :ada:`Urgency` field
 needs to have one of the values 2, 5, or 10. Any other value has to be
@@ -1122,11 +1122,11 @@ side effects.
 * "Correct behavior in case of incorrect input" is sometimes difficult
   to define, resulting in code that cannot be verified by requirements
   based tests. Additional test cases based on the code itself (called
-  "structural testing") are not acceptable from a |do-178c|
+  *structural testing*) are not acceptable from a |do-178c|
   perspective, since they are not appropriate for revealing errors.
 * Unexercised defensive code complicates structural coverage
-  analysis. It can't be classified as "extraneous" (since it does meet
-  a requirement), but neither can it be considered as "deactivated"
+  analysis. It can't be classified as *extraneous* (since it does meet
+  a requirement), but neither can it be considered as *deactivated*
   (since it is intended to be executed when the input is abnormal). As
   with any other non-exercised code, justification should be provided
   for defensive code, and this may entail difficult discussions with
@@ -1640,7 +1640,7 @@ not during the coding process).
 
 An alternative approach is to develop the test data separately from
 the Ada package specifications, while some test cases (effectively
-test case "classes") are still defined and used by GNATtest to develop
+test case *classes*) are still defined and used by GNATtest to develop
 the test harness. Here's an example:
 
 .. code-block:: ada
@@ -2071,7 +2071,7 @@ Then this is really an example of control coupling, and not data
 coupling. Using a global variable to effect this control flow is
 considered an implementation choice.
 
-In the software engineering literature, the term "coupling" generally
+In the software engineering literature, the term *coupling* generally
 has negative connotations since high coupling can interfere with a
 module's maintainability and reusability. In |do-178c| there is no
 such negative connotation; coupling simply indicates a relationship
@@ -2192,7 +2192,7 @@ Use case #1b: Coding with Ada using OOT features
 
 This use case is based on use case #1, taking advantage of Ada and the
 AdaCore ecosystem, but with a design that uses Object-Oriented
-Technologies. As a result, the following "vulnerabilities" identified
+Technologies. As a result, the following *vulnerabilities* identified
 in the technology supplement |do-332| need to be addressed:
 
 * Local type consistency
@@ -2273,7 +2273,7 @@ Coverage in the case of generics
      - - Parametric Polymorphism (OO.D.1.2)
        - Structural Coverage (OO.D.2.2)
 
-Genericity is one of the "related techniques" (not part of OOT) that
+Genericity is one of the *related techniques* (not part of OOT) that
 is covered by |do-332|. A generic unit is a template for a piece of
 code that can be instantiated with different parameters, including
 types and subprograms. A complication with respect to certification is
@@ -2384,7 +2384,7 @@ Dealing with dynamic dispatching and substitutability
            Related Techniques; Dynamic dispatching
 
 One of the major features of OOT is dynamic dispatching (also called
-"dynamic binding"), which adds considerable expressive power but also
+*dynamic binding*), which adds considerable expressive power but also
 presents challenges to verification. With dynamic dispatching, the
 subprogram to be invoked on a reference to a target object is not
 known statically but rather is resolved at run time based on which
@@ -2392,13 +2392,13 @@ class the target object belongs to. This differs from a call through
 an access-to-subprogram value in the sense that, with dynamic
 dispatching, the potential destination subprograms are constrained to
 a specific class hierarchy as determined by the type of the reference
-to the target object (the "controlling parameter", in Ada terms).
+to the target object (the *controlling parameter*, in Ada terms).
 
 .. index:: single: Ada language; Dynamic dispatching (primitive
            subprogram)
 
 In Ada, a subprogram that can be invoked through dynamic dispatching
-|mdash| this is known as a "primitive subprogram" |mdash| can never be
+|mdash| this is known as a *primitive subprogram* |mdash| can never be
 removed by a subclass; it is either inherited or overridden. Thus on a
 call that is dynamically dispatched, although it is not known at
 compile time which subclass's version of the subprogram will be
@@ -2419,8 +2419,8 @@ states that if an inheritance hierarchy is constructed so that each
 subclass specializes its superclass (i.e., wherever a superclass
 instance is permitted a subclass instance may be substituted) then
 dynamic dispatching is acceptable.  This substitutability property for
-a class inheritance hierarchy is known as the "Liskov Substitution
-Principle" (LSP).
+a class inheritance hierarchy is known as the *Liskov Substitution Principle*
+(LSP).
 
 If a hierarchy complies with LSP, then testing and other verification
 can be conducted based on properties defined at the class level, which
@@ -2641,7 +2641,7 @@ Hot_Air_Balloon. This is working around the difficulty of not knowing
 statically the potential target of a call: we just test all possible
 scenarios.
 
-This is particularly appropriate with "flat" hierarchies, which may be
+This is particularly appropriate with *flat* hierarchies, which may be
 broad but not deep. An example is an OOP design pattern for an
 abstract root type (such as a container data structure) with concrete
 specializations corresponding to different representational
@@ -2876,7 +2876,7 @@ In addition to local type consistency, which was described in the
 preceding section, |do-332| also introduced another new verification
 objective: *robustness of dynamic memory management*. This objective
 encompasses not only explicit use of dynamic memory, through either
-automatic reclamation ("garbage collection") or application-provided
+automatic reclamation (*garbage collection*) or application-provided
 allocation / deallocation, but also implicit uses through higher level
 data structures such as object collections of various kinds. |do-332|
 identifies a number of criteria that need to be met by any memory
@@ -3170,7 +3170,7 @@ intent. Here is an example:
 
 The above code is illegal in Ada due to the ambiguity: the literal 100
 could be interpreted as either a :ada:`Miles` or a :ada:`Kilometers`
-value.  A construct called "type qualification" can be used to make
+value.  A construct called *type qualification* can be used to make
 the type explicit and the call unambiguous:
 
 .. code-block:: ada
@@ -3548,8 +3548,8 @@ depending on the part of the design data formally defined:
 * Traceability: traceability is implicit, from the LLRs defined in the
   specification to the implementation
 
-The SPARK tool achieves proof in a local context; it's doing a "unit
-proof". The postcondition of a subprogram will be proven according to
+The SPARK tool achieves proof in a local context; it's doing a *unit proof*.
+The postcondition of a subprogram will be proven according to
 its code and its precondition, which makes the SPARK approach
 scalable. For example, consider the following function:
 
@@ -3699,7 +3699,7 @@ absence of unintended function. Further, and more significantly, with
 formal analysis it's the source code that is checked against
 requirements, not the object code. As a result, additional activities
 are required to demonstrate correct behavior of the object code. This
-is the so-called "property preservation" issue, discussed in
+is the so-called *property preservation* issue, discussed in
 :ref:`Airborn_SW_Property_preservation_between_source_code_and_object_code`.
 
 .. index:: Hybrid verification
@@ -3753,7 +3753,7 @@ test procedures.
 An efficient approach during the design process is to define an
 architecture that distinguishes between those components verified by
 formal proofs and those verified by testing. Mixing the two techniques
-is sometimes referred to as "hybrid verification".
+is sometimes referred to as *hybrid verification*.
 
 .. index:: single: SPARK language; Alternatives to code coverage when
            using proofs
@@ -3858,7 +3858,7 @@ confidence in the code generation chain.
 Running tests to verify this activity may seem to defeat the purpose
 of replacing testing by proof. However, this should not be considered
 as requirement-based testing (which is indeed replaced by proof). This
-"property preservation" verification is a confirmation of the formal
+*property preservation* verification is a confirmation of the formal
 analysis by executing the EOC with contract checking enabled.
 
 
