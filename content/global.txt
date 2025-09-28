@@ -30,7 +30,7 @@
 
 .. |blankcell| unicode:: U+0020
 .. |nbhyphen| unicode:: U+2011   .. non-breaking hyphen
-.. |gnata|    replace:: "|nbhyphen| gnata"
+.. |gnata|    replace:: ``-gnata``
 .. |do-160|   replace:: DO |nbhyphen| 160/ED  |nbhyphen| 14
 .. |do-178|   replace:: DO |nbhyphen| 178/ED  |nbhyphen| 12
 .. |do-178b|  replace:: DO |nbhyphen| 178B/ED |nbhyphen| 12B

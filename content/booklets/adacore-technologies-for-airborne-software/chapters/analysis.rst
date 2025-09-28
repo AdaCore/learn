@@ -2338,7 +2338,7 @@ each instance, while keeping a generic test procedure for all of them.
 .. index:: GNATcoverage
 
 GNATcoverage can separately report the coverage of each generic
-instance, based on the "|nbhyphen|\ S\ |nbsp|\ instance" switch.
+instance, based on the ``-S instance`` switch.
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and Related Techniques; Traceability
 
