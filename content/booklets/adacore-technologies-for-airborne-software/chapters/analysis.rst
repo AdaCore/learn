@@ -1968,7 +1968,7 @@ of one condition to :ada:`False`:
 
 
 Each condition thus has two associated tests, the one marked as
-baseline, and the one with an italicized *False* in that condition's
+baseline, and the one with :ada:`False` in that condition's
 column. These two tests show how that condition independently affects
 the outcome: The given condition is :ada:`True` in the baseline and :ada:`False`
 in the other, each other condition has the same value in both tests, and
