@@ -873,7 +873,7 @@ consistent with the target hardware.  For example,
 16-bit integer (:ada:`Num`), a 4-bit enumeration value
 (:ada:`Urgency`) that is either :ada:`Low`, :ada:`Medium`, or
 :ada:`High`, with the respective values 2, 5, and 10), and a Boolean
-flag (F).
+flag (:ada:`F`).
 
 .. _Airborn_SW_fig3:
 .. figure:: ../images/analysis-fig3.png
@@ -996,7 +996,7 @@ Similar constraints can be expressed for floating-point types:
     V : Temperature;
 
 At least 14 digits of decimal precision are required in the
-representation of Temperature values. The program would be accepted if
+representation of :ada:`Temperature` values. The program would be accepted if
 the target has a 64-bit floating point unit, and would be rejected
 otherwise.
 
