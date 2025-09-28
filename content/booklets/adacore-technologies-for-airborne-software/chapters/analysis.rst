@@ -697,7 +697,7 @@ the procedure:
 
 
 The :ada:`with Post` construct defines a postcondition for the
-procedure; i.e., a condition that is asserted to be True when the
+procedure; i.e., a condition that is asserted to be :ada:`True` when the
 procedure returns. Here it expresses, in Ada syntax, the low-level
 requirement that the procedure sort the array in ascending order: for
 each index :ada:`I` into the array, from the first position through
@@ -705,7 +705,7 @@ the next-to-last, the value of the element at position :ada:`I+1` is
 at least as large as the element at position :ada:`I`. In the
 degenerate case where the array is either empty or contains a single
 element (i.e., when the range of :ada:`I` is empty) the :ada:`for all`
-condition is considered to be True.
+condition is considered to be :ada:`True`.
 
 It's clear that the postcondition expression says nothing about how
 the procedure is implemented. It's not pseudo-code for an algorithm
@@ -721,7 +721,7 @@ returned by the function.
 
 A subprogram can also have a precondition (a Boolean expression),
 which is a requirement that the caller needs to satisfy and that is
-assumed to be True by the called subprogram. For example, a function
+assumed to be :ada:`True` by the called subprogram. For example, a function
 that returns the maximum value in an array of integers should have a
 precondition that the array is non-empty. The postcondition that is
 shown reflects the two properties that need to be met:
@@ -1806,14 +1806,14 @@ to open the aircraft doors:
 
 Note: the Ada short-circuit form :ada:`and then` is equivalent to the
 C shortcut boolean operator :ada:`&&`: the second operand is evaluated
-if and only if the first operand evaluates to True. If the first
-operand evaluates to False, then the expression's value is False.
+if and only if the first operand evaluates to :ada:`True`. If the first
+operand evaluates to :ada:`False`, then the expression's value is :ada:`False`.
 
 This code fragment consists of two statements:
 
 * The enclosing :ada:`if` statement
 * The enclosed :ada:`Open_Doors;` statement, which will be executed if
-  the decision in the :ada:`if` statement is True
+  the decision in the :ada:`if` statement is :ada:`True`
 
 The :ada:`if` statement in turn contains a single decision:
 
@@ -1831,11 +1831,11 @@ and this decision contains three conditions:
 
 At the statement level, both statements need to be executed during
 requirements-based tests. This criterion may be achieved with only one
-test, with all three conditions True.
+test, with all three conditions :ada:`True`.
 
 It's important to realize that this piece of code is the
 implementation of one or several requirements, and a single test with
-all three conditions True will almost certainly fail to satisfy the
+all three conditions :ada:`True` will almost certainly fail to satisfy the
 requirement coverage criterion. Further, this single test is probably
 not sufficient to detect implementation errors: the purpose of testing
 is to detect errors and to show that the software satisifes its
@@ -1845,9 +1845,9 @@ coverage analysis is mainly a test completeness activity.
 .. index:: single: Structural code coverage; Decision Coverage
 
 At the decision level, each decision must be exercised both with a
-True and False outcome. In the example above, this may be achieved
-with only two tests; one test with all three conditions True, and a
-second test with at least one False.
+:ada:`True` and :ada:`False` outcome. In the example above, this may be
+achieved with only two tests; one test with all three conditions :ada:`True`,
+and a second test with at least one :ada:`False`.
 
 .. index:: single: Structural code coverage; Modified Condition /
            Decision Coverage (MC/DC)
@@ -1871,45 +1871,45 @@ require eight tests, represented in the following table:
      - Plane_Landed
      - Result
 
-   * - True
-     - True
-     - True
-     - True
+   * - :ada:`True`
+     - :ada:`True`
+     - :ada:`True`
+     - :ada:`True`
 
-   * - True
-     - True
-     - False
-     - False
+   * - :ada:`True`
+     - :ada:`True`
+     - :ada:`False`
+     - :ada:`False`
 
-   * - True
-     - False
-     - True
-     - False
+   * - :ada:`True`
+     - :ada:`False`
+     - :ada:`True`
+     - :ada:`False`
 
-   * - True
-     - False
-     - False
-     - False
+   * - :ada:`True`
+     - :ada:`False`
+     - :ada:`False`
+     - :ada:`False`
 
-   * - False
-     - True
-     - True
-     - False
+   * - :ada:`False`
+     - :ada:`True`
+     - :ada:`True`
+     - :ada:`False`
 
-   * - False
-     - True
-     - False
-     - False
+   * - :ada:`False`
+     - :ada:`True`
+     - :ada:`False`
+     - :ada:`False`
 
-   * - False
-     - False
-     - True
-     - False
+   * - :ada:`False`
+     - :ada:`False`
+     - :ada:`True`
+     - :ada:`False`
 
-   * - False
-     - False
-     - False
-     - False
+   * - :ada:`False`
+     - :ada:`False`
+     - :ada:`False`
+     - :ada:`False`
 
 
 In the general case, 2\ :sup:`n` cases would be needed for a decision
@@ -1919,18 +1919,18 @@ demonstrating that each condition contributes to the outcome of the
 decision.
 
 With MC/DC, each condition in the decision must be exercised with both
-True and False values, and each condition must be shown to
+:ada:`True` and :ada:`False` values, and each condition must be shown to
 independently affect the result. That is, each condition must be
-exercised by two tests, one with that condition True and the other
-with the condition False, such that:
+exercised by two tests, one with that condition :ada:`True` and the other
+with the condition :ada:`False`, such that:
 
 * The result of the decision is different in the two tests, and
-* For each other condition, the condition is either True in both tests
-  or False in both tests
+* For each other condition, the condition is either :ada:`True` in both tests
+  or :ada:`False` in both tests
 
 Here the MC/DC criterion may be achieved with four tests: one test
-with all three conditions True, and each other test changing the value
-of one condition to False:
+with all three conditions :ada:`True`, and each other test changing the value
+of one condition to :ada:`False`:
 
 .. list-table::
    :header-rows: 1
@@ -1943,35 +1943,35 @@ of one condition to False:
      - Result
 
    * - Baseline
-     - True
-     - True
-     - True
-     - True
+     - :ada:`True`
+     - :ada:`True`
+     - :ada:`True`
+     - :ada:`True`
 
    * - Test 1
-     - False
-     - True
-     - True
-     - False
+     - :ada:`False`
+     - :ada:`True`
+     - :ada:`True`
+     - :ada:`False`
 
    * - Test 2
-     - True
-     - False
-     - True
-     - False
+     - :ada:`True`
+     - :ada:`False`
+     - :ada:`True`
+     - :ada:`False`
 
    * - Test 3
-     - True
-     - True
-     - False
-     - False
+     - :ada:`True`
+     - :ada:`True`
+     - :ada:`False`
+     - :ada:`False`
 
 
 Each condition thus has two associated tests, the one marked as
 baseline, and the one with an italicized *False* in that condition's
 column. These two tests show how that condition independently affects
-the outcome: The given condition is True in the baseline and False in
-the other, each other condition has the same value in both tests, and
+the outcome: The given condition is :ada:`True` in the baseline and :ada:`False`
+in the other, each other condition has the same value in both tests, and
 the outcome of the two tests is different.
 
 In the general case, the MC/DC criterion for a decision with n
@@ -3610,7 +3610,7 @@ occurrences of one value by the other:
 When :ada:`Search` is invoked, the only things that the prover knows
 are its pre- and postconditions. It will attempt to show that the
 precondition is satisfied, and will assume that the postcondition is
-True. Whether or not :ada:`Search` is proven doesn't matter at this
+:ada:`True`. Whether or not :ada:`Search` is proven doesn't matter at this
 stage. If it can't be proven with the SPARK tools, we may decide to
 verify it through other means, such as testing.
 
