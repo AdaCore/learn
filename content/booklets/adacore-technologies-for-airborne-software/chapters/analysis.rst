@@ -1805,7 +1805,7 @@ to open the aircraft doors:
     end if;
 
 Note: the Ada short-circuit form :ada:`and then` is equivalent to the
-C shortcut boolean operator :ada:`&&`: the second operand is evaluated
+C shortcut boolean operator :c:`&&`: the second operand is evaluated
 if and only if the first operand evaluates to :ada:`True`. If the first
 operand evaluates to :ada:`False`, then the expression's value is :ada:`False`.
 
