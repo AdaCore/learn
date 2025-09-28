@@ -1059,7 +1059,10 @@ level of control for advanced purposes; e.g., the ability to run
 command scripts. Anything that can be done on the command line is
 achievable through the menu interface.
 
-Remote Programming ^^^^^^^^^^^^^^^^^^ Integrated into GNAT Studio,
+Remote Programming
+^^^^^^^^^^^^^^^^^^
+
+Integrated into GNAT Studio,
 Remote Programming provides a secure and efficient way for programmers
 to access any number of remote servers on a wide variety of platforms
 while taking advantage of the power and familiarity of their local PC
