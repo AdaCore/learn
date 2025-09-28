@@ -47,7 +47,7 @@ principles, Ada is an excellent teaching language for both
 introductory and advanced computer science courses, and it has been
 the subject of significant university research especially in the area
 of real-time technologies. The so-called :index:`Ravenscar profile`
---- a subset of the language's concurrency features with deterministic
+|mdash| a subset of the language's concurrency features with deterministic
 semantics |mdash| broke new ground in supporting the use of concurrent
 programming in high assurance software.
 
