@@ -115,7 +115,7 @@ Software Tool Qualification Considerations: DO-330/ED-215
 A software tool needs to be qualified when a process is automated,
 eliminated, or reduced, but its outputs are not verified.  The
 systematic verification of the tool outputs is replaced by activities
-performed on the tool itself: the "tool qualification".  The
+performed on the tool itself: the *tool qualification*.  The
 qualification effort depends on the assurance level of the airborne
 software and the possible effect that an error in the tool may have on
 this software. The resulting combination, the Tool Qualification
@@ -133,10 +133,10 @@ have different processes or requirements, or develop software with
 different environment constraints. As a result, the qualifiability of
 a tool needs to be systematically assessed on a case-by-case basis.
 
-Although many references are made in the literature about "qualified"
+Although many references are made in the literature about *qualified*
 tools, strictly speaking this term should only be used in the context
 of a specific project. Tools provided by tool vendors, independently
-of any project, should be identified as "qualifiable" only. The tool
+of any project, should be identified as *qualifiable* only. The tool
 qualification document guidance |do-330| includes specific objectives
 that can only be satisfied in the context of a given project
 environment.
@@ -176,7 +176,7 @@ Although |do-332| is often referred as the "object oriented
 supplement", the "related techniques" mentioned in the title are
 equally relevant and are addressed in detail. They may be used in
 conjunction with Object-Oriented Technology (OOT) but are not
-necessarily related to OO features. Such "related techniques" include
+necessarily related to OO features. Such *related techniques* include
 virtualization, genericity (also known as templates), exceptions,
 overloading, and dynamic memory management.
 
