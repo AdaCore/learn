@@ -3013,7 +3013,63 @@ compilation fails for this example.
 Fixed-point types
 -----------------
 
+We already discussed :ref:`fixed-point types <Intro_Ada_Fixed_Point_Types>` in
+the Introduction to Ada course. Roughly speaking, fixed-point types can be
+thought as a way to mimic operations that look like floating-point types, but
+use discrete numeric types *in the background*. This has a big advantage for
+the implementation of certain numeric algorithms, as developers can use
+operations that look familiar because they resemble the ones they use with
+floating-point types.
 
+.. admonition:: In other languages
+
+    In many programming languages such as C, there's no built-in support for
+    fixed-point types. This forces developers that need fixed-point types to
+    circumvent this absence with sometimes cumbersome alternative. They could,
+    for example, use integer types and introduce additional operations to match
+    fixed-point operations. Alternatively, frameworks or non-portable,
+    compiler-specific extensions might be used in some cases. In contrast, the
+    fact that Ada has built-in support for fixed-point types means that using
+    these types is both portable and doesn't require extra efforts to
+    circumvent limitations |mdash| such as the ones that originate from using
+    integer types to emulate fixed-point operations.
+
+As mentioned in the Introduction to Ada course course, fixed-point types
+are classified in
+decimal fixed-point types and
+ordinary (binary).
+
+.. todo::
+
+    Add link to sections above once available.
+
+Decimal fixed-point types are based on power of tens and have the following
+syntax:
+
+.. code-block:: ada
+
+    type <type-name> is
+      delta <delta-value> digits <digits-value>;
+
+Decimal fixed-point types are useful, for example, in many financial
+applications, where round-off errors from arithmetic operations are considered
+unacceptable.
+
+Ordinary fixed-point types are based on power of twos (in their hardware
+implementation) and have the following syntax:
+
+.. code-block:: ada
+
+    type <type-name> is
+      delta <delta-value>
+      range <lower-bound> .. <upper-bound>;
+
+Ordinary fixed-point types can be found for example in some implementations for
+digital signal processing.
+
+In the next sections, we discuss further details about these specific types.
+Next in this section, we introduce the concept of *small* and *delta* of
+fixed-point types, which are common for both kinds of fixed-point types.
 
 
 .. _Adv_Ada_Fixed_Point_Types_Small_Delta:
