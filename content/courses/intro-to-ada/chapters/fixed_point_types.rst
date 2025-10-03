@@ -1,3 +1,5 @@
+.. _Intro_Ada_Fixed_Point_Types:
+
 Fixed-point types
 =================
 
