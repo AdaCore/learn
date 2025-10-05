@@ -3255,7 +3255,7 @@ fixed-point types: all decimal types are always custom types.
 In terms of syntax, the main difference between the declaration of a custom
 floating-point type and a decimal fixed-point type is the delta specification:
 
-.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Vs_Floating_Point_Type_Declarations
+.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Decimal_Vs_Floating_Point_Type_Declarations
 
     package Decimal_Vs_Float_Type_Decl is
 
@@ -3311,7 +3311,7 @@ precision.
 In the example below, we declare two data types: :ada:`T3_D3` and :ada:`T6_D3`.
 For both types, the *delta* is the same: 0.001.
 
-.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3351,7 +3351,7 @@ result of a multiplication or division using decimal fixed-point types is
 smaller than the delta value required for the context, the actual result will
 be zero. For example:
 
-.. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Decimal_Fixed_Point_Smaller
+.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Smaller
 
     with Ada.Text_IO; use Ada.Text_IO;
 
