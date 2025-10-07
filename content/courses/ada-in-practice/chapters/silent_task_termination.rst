@@ -18,7 +18,7 @@ task completes, again abnormally.
 
 Whatever the cause, once completed a task will (eventually) terminate, and it
 does this silently |mdash| there is no notification or logging of the
-termination to the external environment. A vendor could support notification by
+termination to the external environment. A vendor could support notification via
 their run-time library [#f1]_, but the language standard does not require it
 and most vendors |mdash| if not all |mdash| do not.
 
@@ -30,7 +30,7 @@ implementing it, how can the requirement best be met?
 Implementation
 --------------
 
-For unhandled exceptions, the simplest solution to silent termination is to
+For unhandled exceptions, the simplest approach to silent termination is to
 define the announcement or logging response as an exception handler located in
 the task body exception handler part:
 
@@ -44,12 +44,13 @@ the task body exception handler part:
           --  ...
        exception
           when Error : others => -- last wishes
-             Put_Line ("Task T terminated due to " & Exception_Name (Error));
+             Put_Line ("Task Worker terminated due to " & Exception_Name (Error));
        end Worker;
 
 A handler at this level expresses the task's *last wishes* prior to completion,
 in this case printing the names of the task and the active exception to
-:ada:`Standard_Output`. The :ada:`others` choice covers all exceptions not
+:ada:`Standard_Output`. (We could print the associated exception message too, if desired.)
+The :ada:`others` choice covers all exceptions not
 previously covered, so in the above it covers all exceptions. Specific
 exceptions also could be covered, but the :ada:`others` choice should be
 included (at the end) to ensure no exception occurrence can be missed.
@@ -87,7 +88,7 @@ handler:
        end loop Normal;
     exception
        when Error : others => -- last wishes
-          Put_Line ("Task T terminated due to " &
+          Put_Line ("Task Worker terminated due to " &
                     Exception_Name (Error));
     end Worker;
 
@@ -100,7 +101,7 @@ statements*). We want to prevent the thread of control reaching that end
 |mdash| which would happen if any handler there ever executed |mdash| because
 the task would then complete.
 
-Therefore, for the first additional construct, we first wrap the existing code
+Therefore, we first wrap the existing code
 inside a block statement. The task body's exception handler section becomes
 part of the block statement rather than at the top level of the task:
 
@@ -115,7 +116,7 @@ part of the block statement rather than at the top level of the task:
           end loop Normal;
        exception
           when Error : others =>  -- last wishes
-             Put_Line ("Task T terminated due to " &
+             Put_Line ("Task Worker terminated due to " &
                        Exception_Name (Error));
        end;
     end Worker;
@@ -127,7 +128,7 @@ semantically. The task will still complete because the block statement exits
 after the handler executes, and so far there's nothing after that block
 statement. We need to make one more addition.
 
-The second (final) addition prevents reaching the end of the sequence of
+The second (and final) addition prevents reaching the end of the sequence of
 statements after a handler executes, and hence the task from completing. This
 is accomplished by wrapping the new block statement inside a new loop
 statement. We name this outermost loop :ada:`Recovery`:
@@ -144,8 +145,7 @@ statement. We name this outermost loop :ada:`Recovery`:
              end loop Normal;
           exception
              when Error : others =>
-                Put_Line ("Task T terminated due to " &
-                          Exception_Name (Error));
+                Put_Line (Exception_Name (Error) & " handled in task Worker");
           end;
        end loop Recovery;
     end Worker;
@@ -156,26 +156,178 @@ The thread of control then continues at the top of the loop. Of course, absent
 an unhandled exception reaching this level, the :ada:`Normal` loop is never
 exited in the first place.
 
-These two additions ensure that :ada:`Worker` never terminates due to an
-unhandled exception raised during execution of the task's sequence of
-statements. Note that an exception raised during elaboration of the task
-body's declarative part is not handled by the approach, or any other approach
-at this level, because the exception is propagated immediately to the master
-of this task. Such a task never reaches the handled sequence of statements in
-the first place.
+These two additions ensure that |mdash| with one caveat |mdash| :ada:`Worker`
+never terminates due to an unhandled exception raised during execution of the
+task's sequence of statements.
 
-That works, but the state initialization requires some thought. As shown above,
-full initialization is performed again when the :ada:`Recovery` loop circles
-back around to the top of the loop. As a result, the *normal* processing in
-:ada:`Do_Actual_Work` must be prepared for suddenly encountering completely
-different state, i.e., a restart to the initial state. If that is not feasible
-the call to :ada:`Initialize_State` could be moved outside, prior to the start
-of the :ada:`Recovery` loop, so that it only executes once. Perhaps a different
-initialization procedure could be called after the exception handler to do
-partial initialization. Whether or not that will suffice depends on the
-application.
+Note that an exception raised during elaboration of the task body's
+declarative part is not handled by the approach, or any other approach at this
+level, because the exception is propagated immediately to the master of the
+task. Such a task never reaches the handled sequence of statements in the
+first place.
 
-However, these solutions do not address task termination due to task abort
+The caveat concerns the language-defined exception :ada:`Storage_Error`. This
+exception requires special consideration because the reasons for raising it
+include exhausting the storage required for execution itself.
+
+There are a couple of scenarios to consider.
+
+The first scenario is task activation, i.e., creation. Initial task activation
+involves execution (in the tasking part of the run-time library) before the
+sequence of steps is reached. Hence task activation for the :ada:`Worker` task
+could fail due to an insufficient initial storage allocation. But because that
+failure happens before the block statement is entered it doesn't really apply
+to the caveat above.
+
+The second scenario involves execution within the task's actual sequence of
+statements. Therefore it does apply to the caveat above. Here's why.
+
+When called, the execution of a given subprogram requires a representation in
+storage, often known as a "frame." Because subprogram calls and their returns
+can be seen as a series of stack pushes and pops, the representation for
+execution is typically via a stack of these frames. Calls cause stack frame
+pushes, creating new frames on the stack, and returns cause stack pops,
+reclaiming the frames. On exit, execution returns to the caller, so the
+previous top of the stack is now the active frame. Representation as a stack
+of frames works well so it is very common. (Functions returning values of
+unconstrained types are problematic because the size of the result isn't known
+at the point of the call, so the required frame size isn't known when the push
+occurs. Solutions vary, but that's a topic for another day.)
+
+Now, suppose the task's sequence of statements includes a long series of
+subprogram calls, in which one subprogram calls another, and that one calls
+another, and so on, and none of these calls has yet returned. Eventually, of
+course, the dynamic call chain will end because the calls will return, at
+least in normal code. But let's suppose that the call chain is long and the most
+recent call has not yet returned to the caller.
+
+In that case it is possible for one more call to exhaust the storage available
+for that task's execution. You can easily construct such a chain by calling an
+infinitely recursive procedure or function:
+
+.. code-block:: ada
+
+   procedure P;
+
+   procedure P is
+   begin
+      P;
+   end P;
+
+When executing on a host OS it might take a very long time for a call to
+:ada:`P` to exhaust available storage, maybe longer than you'd be willing to
+wait. But on an embedded system, where physical storage is limited and there's
+no virtual memory, it might not take long at all.
+
+Now, you might think that you don't use recursion, much less infinitely
+recursive routines, so this problem doesn't apply to you. But recursion is just an
+easy illustration. How long a call chain is too long? It depends on the memory
+resources available.
+
+Moreover, exhaustion is not due only to the storage required for the
+call/return semantics. Frames include the representation of the local objects
+declared within the subprograms' declarative parts, if any.
+
+.. code-block:: ada
+
+   procedure P;
+
+   procedure P is
+      Local : Integer;
+   begin
+      Local := 0;
+      P;
+   end P;
+
+Each execution of a call to :ada:`P` creates a semantically distinct instance
+of :ada:`Local`. A new frame containing the storage for each call's copy of
+:ada:`Local` implements that requirement nicely.
+
+Of course, different subprograms usually declare different local objects, if
+they declare any at all. Because the storage required for these declarations
+varies, the corresponding frame sizes vary.
+
+We can use that fact to reduce the length of the dynamic call chain required
+to illustrate storage exhaustion. The called subprograms will declare very large
+objects within their declarative parts. Hence each frame is
+correspondingly larger than if the subprogram declared nothing locally.
+Continuing the infinitely recursive subprogram example:
+
+.. code-block:: ada
+
+   procedure P;
+
+   procedure P is
+      type Huge_Component is array (Long_Long_Integer) of Long_Float;
+      type Huge_Array is array (Long_Long_Integer) of Huge_Component;
+      Local : Huge_Array;
+   begin
+      Local := (others => (others => 0.0));
+      P;
+   end P;
+
+The size of the frame for an individual call to :ada:`P` will be very large
+indeed, if it is representable at all. Fewer calls will be required before
+:ada:`Storage_Error` is raised.
+
+Now, with all that said, let's get back to this approach to silent termination.
+Here's the code again:
+
+.. code-block:: ada
+
+    task body Worker is
+    begin
+       Recovery : loop
+          begin
+             Initialize_State;
+             Normal : loop
+                Do_Actual_Work;
+             end loop Normal;
+          exception
+             when Error : others =>
+                Put_Line (Exception_Name (Error) & " handled in task Worker.");
+          end;
+       end loop Recovery;
+    end Worker;
+
+At this point you might be thinking that :ada:`Storage_Error` would be caught
+by the :ada:`others` choice anyway, so this (long-winded) talk about stack
+frames and dynamic call chains is irrelevant. That's where the caveat comes
+into play.
+
+Specifically, if there's insufficient storage remaining for execution to
+continue, how how do we know there's enough storage remaining to execute the
+exception handler? For that matter, how do we even know there's enough storage
+available for the run-time library to find the handler in the first place?
+Absent a storage analysis, we can't know with certainty.
+
+Therefore, if the application matters, perform a worst-case storage analysis
+per task, including the exception handlers, and explicitly specify the tasks'
+stacks accordingly. For example:
+
+.. code-block:: ada
+
+    task Worker with Storage_Size => System_Config.Worker_Storage;
+
+We've defined the value as a constant named :ada:`Worker_Storage` declared in
+an application-defined package :ada:`System_Config`. All such values are
+declared in that package, for the sake of centralizing all the application's
+configuration parameters. We'd declare all the tasks' priorities there too.
+
+Finally, although this approach works, the state initialization requires some
+thought.
+
+As shown above, full initialization is performed again when the
+:ada:`Recovery` loop circles back around to the top of the loop. As a result,
+the *normal* processing in :ada:`Do_Actual_Work` must be prepared for suddenly
+encountering completely different state, i.e., a restart to the initial state.
+If that is not feasible the call to :ada:`Initialize_State` could be moved
+outside, prior to the start of the :ada:`Recovery` loop, so that it only
+executes once. Perhaps a different initialization procedure could be called
+after the exception handler to do partial initialization. Whether or not that
+will suffice depends on the application.
+
+However, these approaches do not address task termination due to task abort
 statements.
 
 Aborting tasks is both messy and expensive at run-time. If a task is updating
@@ -250,7 +402,8 @@ any designated protected procedure matches the parameter profile.
 
 Termination handlers apply either to a specific task or to a group of related
 tasks, including potentially all tasks in the partition.  Each task has one,
-both, or neither kind of handler. By default none apply.
+both, or neither kind of handler. By default none apply. (Unless a partition
+is part of a distributed program, a single partition constitutes an entire Ada program.)
 
 Clients call procedure :ada:`Set_Specific_Handler` to apply the protected
 procedure designated by :ada:`Handler` to the task with the specific
@@ -346,10 +499,11 @@ convenient. This executable part calls procedure
 Because this call happens during library unit elaboration, it sets the
 fall-back handler for all the tasks in the partition (the program). The effect
 is global to the partition because library unit elaboration is invoked by the
-*environment task,* and the environment task is the master of all application
-tasks in the partition. Therefore, the fall-back handler is applied to the top
-of the task dependents hierarchy, and thus to all tasks. The application tasks
-need not do anything in their source code for the handler to apply to them.
+*environment task,* and the environment task is the ultimate master of all
+application tasks in a partition. Therefore, the fall-back handler is applied
+to the top of the task dependents hierarchy, and thus to all tasks. The
+application tasks need not do anything in their source code for the handler to
+apply to them.
 
 The call to :ada:`Set_Dependents_Fallback_Handler` need not occur in this
 particular package body, or even in a package body at all. But because we want
@@ -413,16 +567,16 @@ ramifications momentarily. Here are the bodies for the two handlers:
        Set_Dependents_Fallback_Handler (Writer.Note_Passing'Access);
     end Obituary;
 
-
-Now, about those calls to :ada:`Ada.Text_IO.Put_Line`. Because of those calls,
-the bodies of procedures :ada:`Note_Passing` and :ada:`Dissemble` are not
-portable. The :ada:`Put_Line` calls are useful for illustration and will likely
-work as expected on a native OS. However, their execution is a bounded error
-and may do something else on other targets, including raising
-:ada:`Program_Error` if detected.
+Now, about those calls to :ada:`Ada.Text_IO.Put_Line`. Procedure
+:ada:`Put_Line` is a "potentially blocking" operation. Consequently, a call
+within a protected operation is a bounded error (see RM 9.5.1(8)) and the
+resulting execution is not portable. For example, the :ada:`Put_Line` calls
+will likely work as expected on a native OS. However, their execution may do
+something else on other targets, including raising :ada:`Program_Error` if
+detected. The GNAT bare-metal targets, for example, raise :ada:`Program_Error`.
 
 For a portable approach, we move these two blocking calls to a new dedicated
-task and revise the protected object accordingly. That's a portable approach
+task and revise the protected object accordingly. That's portable
 because a task can make blocking calls.
 
 First, we change :ada:`Obituary.Writer` to have a single protected procedure
@@ -505,7 +659,7 @@ The updated package body is straightforward:
                 not Comment_On_Normal_Passing
              then
                 return;
-             else -- store all three causes and their info
+             else
                 Stored_Events.Append
                   (Termination_Event'(Cause,
                                       Departed,
@@ -531,6 +685,10 @@ The updated package body is straightforward:
     begin -- optional package executable part
        Set_Dependents_Fallback_Handler (Writer.Note_Passing'Access);
     end Obituary;
+
+In the body of :ada:`Note_Passing`, we store the :ada:`Exception_Id` for the
+exception occurrence indicated by :ada:`Event`. That exception occurrence need
+not be active by the time the task reads the Id for that occurrence.
 
 A new child package declares the task that prints the termination information:
 
@@ -775,11 +933,16 @@ external to the procedure body (for the :ada:`Time` variable used by the
 absolute delay statement).
 
 Finally, the single generic formal type used to represent the task's local
-state can be awkward. Having one type for a task's total state is unusual, and
-aggregating otherwise unrelated types into one isn't good software engineering
-and doesn't reflect the application domain. Furthermore, that awkwardness
-extends to the procedures that use that single object, in that every procedure
-except for :ada:`Initialize` will likely ignore parts of it.
+state can be awkward. Having one type for a task's total state is unusual,
+and aggregating otherwise unrelated types into one isn't good software
+engineering and doesn't reflect the application domain. Nor is it
+necessarily trivial to create one type representing a set of distinct
+variables. For example, some of these stand-alone variables could be
+objects of indefinite types. Different task objects of a given task type
+might not agree on those objects' constraints. Furthermore, that
+awkwardness extends to the procedures that use that single object, in that
+every procedure except for :ada:`Initialize` will likely ignore parts of
+it.
 
 In summary, the problems are likely more problematic than this generic is
 worth.
