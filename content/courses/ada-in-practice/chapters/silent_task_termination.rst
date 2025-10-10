@@ -183,7 +183,7 @@ The second scenario involves execution within the task's actual sequence of
 statements. Therefore it does apply to the caveat above. Here's why.
 
 When called, the execution of a given subprogram requires a representation in
-storage, often known as a "frame." Because subprogram calls and their returns
+storage, often known as a *frame*. Because subprogram calls and their returns
 can be seen as a series of stack pushes and pops, the representation for
 execution is typically via a stack of these frames. Calls cause stack frame
 pushes, creating new frames on the stack, and returns cause stack pops,
@@ -568,7 +568,7 @@ ramifications momentarily. Here are the bodies for the two handlers:
     end Obituary;
 
 Now, about those calls to :ada:`Ada.Text_IO.Put_Line`. Procedure
-:ada:`Put_Line` is a "potentially blocking" operation. Consequently, a call
+:ada:`Put_Line` is a *potentially blocking* operation. Consequently, a call
 within a protected operation is a bounded error (see RM 9.5.1(8)) and the
 resulting execution is not portable. For example, the :ada:`Put_Line` calls
 will likely work as expected on a native OS. However, their execution may do
