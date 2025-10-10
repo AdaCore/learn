@@ -1286,6 +1286,8 @@ indicating whether a feature is available or not in the target architecture:
     end Show_Boolean_Attributes;
 
 
+.. _Adv_Ada_Fixed_Point_Type_Small_Delta_Attributes:
+
 Attribute: :ada:`Small` and :ada:`Delta`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1294,63 +1296,6 @@ numeric precision of a fixed-point type. In many cases, the :ada:`Small` of a
 type :ada:`T` is equal to the :ada:`Delta` of that type |mdash| i.e.
 :ada:`T'Small = T'Delta`. Let's discuss each attribute and how they distinguish
 from each other.
-
-The :ada:`Delta` attribute returns the value of the :ada:`delta` that was
-used in the type definition. For example, if we declare
-:ada:`type T3_D3 is delta 10.0 ** (-3) digits D`, then the value of
-:ada:`T3_D3'Delta` is the :ada:`10.0 ** (-3)` that we used in the type
-definition.
-
-The :ada:`Small` attribute returns the "small" of a type, i.e. the smallest
-value used in the machine representation of the type. The *small* must be at
-least equal to or smaller than the *delta* |mdash| in other words, it must
-conform to the :ada:`T'Small <= T'Delta` rule.
-
-.. admonition:: For further reading...
-
-    The :ada:`Small` and the :ada:`Delta` need not actually be small numbers.
-    They can be arbitrarily large. For instance, they could be 1.0, or 1000.0.
-    Consider the following example:
-
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Large_Small_Attribute
-
-        package Fixed_Point_Defs is
-           S     : constant := 32;
-           Exp   : constant := 128;
-           D     : constant := 2.0 ** (-S + Exp + 1);
-
-           type Fixed is delta D
-             range -1.0 * 2.0 ** Exp ..
-                    1.0 * 2.0 ** Exp - D;
-
-           pragma Assert (Fixed'Size = S);
-        end Fixed_Point_Defs;
-
-        with Fixed_Point_Defs; use Fixed_Point_Defs;
-        with Ada.Text_IO;      use Ada.Text_IO;
-
-        procedure Show_Fixed_Type_Info is
-        begin
-           Put_Line ("Size : "
-                     & Fixed'Size'Image);
-           Put_Line ("Small : "
-                     & Fixed'Small'Image);
-           Put_Line ("Delta : "
-                     & Fixed'Delta'Image);
-           Put_Line ("First : "
-                     & Fixed'First'Image);
-           Put_Line ("Last : "
-                     & Fixed'Last'Image);
-        end Show_Fixed_Type_Info;
-
-    In this example, the *small* of the :ada:`Fixed` type is actually quite
-    large: 1.58456325028528675\ :sup:`29`. (Also, the first and the last values
-    are large: -340,282,366,920,938,463,463,374,607,431,768,211,456.0 and
-    340,282,366,762,482,138,434,845,932,244,680,310,784.0, or approximately
-    -3.4028\ :sup:`38` and 3.4028\ :sup:`38`.)
-
-    In this case, if we assign 1 or 1,000 to a variable :ada:`F` of this type,
-    the actual value stored in :ada:`F` is zero. Feel free to try this out!
 
 When we declare an ordinary fixed-point data type, we must specify the *delta*.
 Specifying the *small*, however, is optional:

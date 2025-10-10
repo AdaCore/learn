@@ -3008,16 +3008,214 @@ decimal precision greater than the maximum supported precision. Therefore,
 compilation fails for this example.
 
 
-.. ::
+.. _Adv_Ada_Fixed_Point_Types:
 
-    .. _Adv_Ada_Fixed_Point_Types:
+Fixed-point types
+-----------------
 
-    Fixed-point types
-    -----------------
+We already discussed :ref:`fixed-point types <Intro_Ada_Fixed_Point_Types>` in
+the Introduction to Ada course. Roughly speaking, fixed-point types can be
+thought as a way to mimic operations that look like floating-point types, but
+use discrete numeric types *in the background*. This has a big advantage for
+the implementation of certain numeric algorithms, as developers can use
+operations that look familiar because they resemble the ones they use with
+floating-point types.
 
-    .. todo::
+.. admonition:: In other languages
 
-        Complete section!
+    In many programming languages such as C, there's no built-in support for
+    fixed-point types. This forces developers that need fixed-point types to
+    circumvent this absence with sometimes cumbersome alternative. They could,
+    for example, use integer types and introduce additional operations to match
+    fixed-point operations. Alternatively, frameworks or non-portable,
+    compiler-specific extensions might be used in some cases. In contrast, the
+    fact that Ada has built-in support for fixed-point types means that using
+    these types is both portable and doesn't require extra efforts to
+    circumvent limitations |mdash| such as the ones that originate from using
+    integer types to emulate fixed-point operations.
+
+As mentioned in the Introduction to Ada course course, fixed-point types
+are classified in
+decimal fixed-point types and
+ordinary (binary).
+
+.. todo::
+
+    Add link to sections above once available.
+
+Decimal fixed-point types are based on powers of ten and have the following
+syntax:
+
+.. code-block:: ada
+
+    type <type-name> is
+      delta <delta-value> digits <digits-value>;
+
+Decimal fixed-point types are useful, for example, in many financial
+applications, where round-off errors from arithmetic operations are considered
+unacceptable.
+
+Ordinary fixed-point types are based on powers of two (in their hardware
+implementation) and have the following syntax:
+
+.. code-block:: ada
+
+    type <type-name> is
+      delta <delta-value>
+      range <lower-bound> .. <upper-bound>;
+
+Ordinary fixed-point types can be found for example in some implementations for
+digital signal processing.
+
+In the next sections, we discuss further details about these specific types.
+Next in this section, we introduce the concept of *small* and *delta* of
+fixed-point types, which are common for both kinds of fixed-point types.
+
+
+.. _Adv_Ada_Fixed_Point_Types_Small_Delta:
+
+Small and delta
+~~~~~~~~~~~~~~~
+
+The *small* and the *delta* of a fixed-point type indicate the numeric
+precision of that type. Let's discuss these concepts and how they differ
+from each other.
+
+The *delta* corresponds to the value used for the :ada:`delta` in the type
+definition. For example, if we declare
+:ada:`type T3_D3 is delta 10.0 ** (-3) digits D`, then the *delta* is equal to
+the 10.0\ :sup:`-3` that we used in the type definition.
+
+The *small* of a type :ada:`T` is the smallest positive value used in the
+machine representation  of the type. In other words, while the *delta* is
+primarily a user-selected value that (ideally) fits the requirements of the
+implementation, the *small* indicates how that *delta* is represented on the
+target machine.
+
+The *small* must be at least equal to or smaller than the *delta*. In many
+cases, however, the *small* of a type :ada:`T` is equal to the *delta* of that
+type.  In addition, note that these values aren't necessarily small numbers
+|mdash| in fact, they could be quite large.
+
+We can use the :ada:`T'Small` and :ada:`T'Delta` attributes to retrieve the
+actual values of the *small* and *delta* of a fixed-point type :ada:`T`. (We
+discuss more details about these attributes
+:ref:`in another chapter <Adv_Ada_Fixed_Point_Type_Small_Delta_Attributes>`.)
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Fixed_Small_Delta is
+
+       type Ordinary_Fixed_Point is
+         delta 0.25
+         range -2.0 .. 2.0;
+
+    begin
+       Put_Line ("Ordinary_Fixed_Point'Small: "
+                 & Ordinary_Fixed_Point'Small'Image);
+       Put_Line ("Ordinary_Fixed_Point'Delta: "
+                 & Ordinary_Fixed_Point'Delta'Image);
+       Put_Line ("Ordinary_Fixed_Point'Size: "
+                 & Ordinary_Fixed_Point'Size'Image);
+    end Show_Fixed_Small_Delta;
+
+In this example, we see the values for the compiler-selected *small* and the
+*delta* of type :ada:`Ordinary_Fixed_Point`. (Both are 0.25.)
+
+When we declare a fixed-point data type, we must specify the *delta*. In
+contrast, providing a *small* in the type declaration is optional.
+
+When the *small* isn't specified, it is automatically selected by the compiler.
+In this case, the actual value of the *small* is an implementation-defined
+power of ten for decimal fixed-point types and a power of two for ordinary
+fixed-point types. Again, the selected value always follows the rule that the
+*small* must be smaller or equal to the delta. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
+
+    with Ada.Text_IO;       use Ada.Text_IO;
+
+    procedure Show_Fixed_Small_Delta is
+
+       type Ordinary_Fixed_Point is
+         delta 0.2
+         range -2.0 .. 2.0;
+
+    begin
+       Put_Line ("Ordinary_Fixed_Point'Small: "
+                 & Ordinary_Fixed_Point'Small'Image);
+       Put_Line ("Ordinary_Fixed_Point'Delta: "
+                 & Ordinary_Fixed_Point'Delta'Image);
+       Put_Line ("Ordinary_Fixed_Point'Size: "
+                 & Ordinary_Fixed_Point'Size'Image);
+    end Show_Fixed_Small_Delta;
+
+In this example, the *delta* that we specifed for :ada:`Ordinary_Fixed_Point`
+is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
+
+If we want to specify the *small*, we can use the :ada:`Small` aspect. (we'll
+see this aspect again later on.)
+
+.. todo::
+
+    Add link to subsection on :ada:`Small` aspect once available.
+
+However, we can only do so for ordinary fixed-point types: for decimal
+fixed-point types, the *small* is automatically selected by the compiler, and
+it's always equal to the *delta*.
+
+.. admonition:: For further reading...
+
+    As we've mentioned, the small and the delta need not actually be small
+    numbers.
+    They can be arbitrarily large. For instance, they could be 1.0, or 1000.0.
+    Consider the following example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Large_Small_Attribute
+
+        package Fixed_Point_Defs is
+           S     : constant := 32;
+           Exp   : constant := 128;
+           D     : constant := 2.0 ** (-S + Exp + 1);
+
+           type Fixed is delta D
+             range -1.0 * 2.0 ** Exp ..
+                    1.0 * 2.0 ** Exp - D;
+
+           pragma Assert (Fixed'Size = S);
+        end Fixed_Point_Defs;
+
+        with Fixed_Point_Defs; use Fixed_Point_Defs;
+        with Ada.Text_IO;      use Ada.Text_IO;
+
+        procedure Show_Fixed_Type_Info is
+        begin
+           Put_Line ("Size : "
+                     & Fixed'Size'Image);
+           Put_Line ("Small : "
+                     & Fixed'Small'Image);
+           Put_Line ("Delta : "
+                     & Fixed'Delta'Image);
+           Put_Line ("First : "
+                     & Fixed'First'Image);
+           Put_Line ("Last : "
+                     & Fixed'Last'Image);
+        end Show_Fixed_Type_Info;
+
+    In this example, the *small* of the :ada:`Fixed` type is actually quite
+    large: 1.58456325028528675\ :sup:`29`. (Also, the first and the last values
+    are large: -340,282,366,920,938,463,463,374,607,431,768,211,456.0 and
+    340,282,366,762,482,138,434,845,932,244,680,310,784.0, or approximately
+    -3.4028\ :sup:`38` and 3.4028\ :sup:`38`.)
+
+    In this case, if we assign 1 or 1,000 to a variable :ada:`F` of this type,
+    the actual value stored in :ada:`F` is zero. Feel free to try this out!
+
+
+
 
 
 .. ::
