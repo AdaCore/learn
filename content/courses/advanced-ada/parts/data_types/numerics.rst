@@ -3043,7 +3043,7 @@ ordinary (binary).
 
     Add link to sections above once available.
 
-Decimal fixed-point types are based on power of tens and have the following
+Decimal fixed-point types are based on powers of ten and have the following
 syntax:
 
 .. code-block:: ada
@@ -3055,7 +3055,7 @@ Decimal fixed-point types are useful, for example, in many financial
 applications, where round-off errors from arithmetic operations are considered
 unacceptable.
 
-Ordinary fixed-point types are based on power of twos (in their hardware
+Ordinary fixed-point types are based on powers of two (in their hardware
 implementation) and have the following syntax:
 
 .. code-block:: ada
@@ -3078,7 +3078,7 @@ Small and delta
 ~~~~~~~~~~~~~~~
 
 The *small* and the *delta* of a fixed-point type indicate the numeric
-precision of that type. Let's discuss these concepts and how they distinguish
+precision of that type. Let's discuss these concepts and how they differ
 from each other.
 
 The *delta* corresponds to the value used for the :ada:`delta` in the type
