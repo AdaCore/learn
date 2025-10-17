@@ -435,6 +435,10 @@ a.ebook-download-button {
         content: v.$download-icon;
         margin-right: 3px;
     }
+
+    &:hover {
+        background-color: color.scale(v.$color-theme-bg-dark, $lightness: 30%);
+    }
 }
 
 div.frontpage-ebook-download {
