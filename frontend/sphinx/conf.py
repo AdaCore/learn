@@ -263,11 +263,20 @@ html_css_files = [
 #
 html_theme_options = {
     # furo options
-
-    # 'light_css_variables': {
-    # },
-    # 'dark_css_variables': {
-    # }
+    'light_css_variables': {
+        'color-brand-primary': '#fa5000',
+        'color-brand-content': '#fa5000',
+        'color-brand-visited': '#9f1b5e',
+        'color-admonition-title': '#fa5000',
+        'color-admonition-title-background': '#fac7af',
+    },
+    'dark_css_variables': {
+        'color-brand-primary': '#fa5000',
+        'color-brand-content': '#fa5000',
+        'color-brand-visited': '#9f1b5e',
+        'color-admonition-title': '#fa5000',
+        'color-admonition-title-background': '#272822',
+    },
     'sidebar_hide_name': True,
     'navigation_with_keys': True,
     'top_of_page_buttons': ["view", "edit"],
