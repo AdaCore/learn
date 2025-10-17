@@ -22,12 +22,12 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="11.438596"
-     inkscape:cx="61.93942"
-     inkscape:cy="21.375001"
+     inkscape:cx="51.536045"
+     inkscape:cy="21.462424"
      inkscape:window-width="3170"
      inkscape:window-height="1229"
-     inkscape:window-x="4097"
-     inkscape:window-y="41"
+     inkscape:window-x="3917"
+     inkscape:window-y="597"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg15" />
   <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
@@ -61,10 +61,10 @@
           <path
              d="M 6.4988223,1.4227197 H 12.922822 V 14.377431 h 8.492 v 3.293571 H 6.4988223 Z m 18.0399997,0 h 15.884 v 3.2447771 h -9.592 v 3.1715864 h 7.392 v 3.1227928 h -7.392 v 3.464349 h 9.636 v 3.244777 h -15.928 z m 32.868,16.2482823 -1.1,-2.927619 h -6.952 l -1.1,2.927619 h -5.94 l 6.864,-16.3214728 h 7.7 l 6.82,16.3214728 z m -4.576,-12.1252197 -2.42,6.4407607 h 4.884 l -2.376,-6.4407607 z m 20.064,6.2699827 v 5.855237 h -6.424 V 1.4227197 h 10.12 c 5.06,0 8.052,1.6589837 8.052,4.2694434 v 1.8541583 c 0,1.732174 -1.364,3.0496026 -3.696,3.7327136 l 4.356,6.391967 h -6.644 l -3.916,-5.855237 z m 0,-7.5386174 v 4.7085865 h 2.2 c 2.156,0 3.08,-0.6099208 3.08,-1.7077777 V 6.0093218 c 0,-1.1222537 -0.924,-1.7321742 -3.08,-1.7321742 z m 15.444,-2.8544279 h 6.38 l 7.127998,9.6123473 h 0.088 l -0.088,-9.6123473 h 5.588 V 17.671002 h -6.248 L 93.926822,7.9366705 h -0.088 l 0.088,9.7343315 h -5.588 z"
              id="LEARN"
-             style="fill:#8b2737;fill-opacity:1;stroke-width:0.74463" />
+             style="fill:#ffffff;fill-opacity:1;stroke-width:0.74463" />
           <text
              xml:space="preserve"
-             style="font-size:24.8119px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#af4f47;fill-opacity:1;stroke-width:1.43146"
+             style="font-size:24.8119px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke-width:1.43146"
              x="6.0766759"
              y="35.695484"
              id="text402"
@@ -74,7 +74,7 @@
                id="tspan400"
                x="6.0766759"
                y="35.695484"
-               style="fill:#af4f47;fill-opacity:1;stroke-width:1.43146">SANDBOX</tspan></text>
+               style="fill:#ffffff;fill-opacity:1;stroke-width:1.43146">SANDBOX</tspan></text>
         </g>
       </g>
     </g>
