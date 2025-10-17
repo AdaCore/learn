@@ -53,6 +53,12 @@
 }
 
 // theme overrides
+// furo
+.sidebar-brand {
+    background-color: v.$color-theme-bg-dark;
+}
+
+// theme overrides
 // widget
 pre.widget {
     white-space: normal;
