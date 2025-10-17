@@ -167,6 +167,11 @@ pre.widget {
                     background-color: #ddd;
                 }
             }
+
+            button {
+                background-color: v.$color-theme-bg-light;
+            }
+
         }
 
         &:hover {
@@ -200,12 +205,12 @@ div {
 }
 
 .compiler-switch-help-info {
-    background-color: v.$color-settingsbar-bg;
+    background-color: v.$color-theme-bg-light;
     font-size: 0.85em;
 }
 
 .compiler-switch-help-info-click-remove {
-    background-color: v.$color-settingsbar-bg;
+    background-color: v.$color-theme-bg-light;
     font-size: 0.70em;
 }
 
