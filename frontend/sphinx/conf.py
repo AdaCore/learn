@@ -284,7 +284,7 @@ html_theme_options = {
     # 'footer_icons': [],
 
     "source_repository": "https://github.com/AdaCore/learn",
-    "source_branch": "master",
+    "source_branch": "main",
     "source_directory": "content/",
 }
 
