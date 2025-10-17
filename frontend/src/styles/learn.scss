@@ -58,6 +58,10 @@
     background-color: v.$color-theme-bg-dark;
 }
 
+input[type="checkbox"] {
+    accent-color: v.$color-theme-bg-dark;
+}
+
 // theme overrides
 // widget
 pre.widget {
