@@ -7,7 +7,7 @@ on:
       - 'frontend/sphinx/widget/**'
   pull_request:
     branches:
-      - master
+      - main
 
 defaults:
   run:

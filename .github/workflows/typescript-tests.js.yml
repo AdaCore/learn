@@ -6,7 +6,7 @@ on:
       - 'frontend/**/*.ts'
   pull_request:
     branches:
-      - master
+      - main
 
 defaults:
   run:
