@@ -1,0 +1,27 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Boundary Value Analysis,D.4,R,HR,Yes,"GNAT SAS can compute boundary values \
+for variables and parameters from the source code. GNAT SAS and SPARK can \
+verify various properties by analyzing potential values and boundary values \
+of variables. This includes detecting errors such as dereferencing a pointer \
+that could be null, generating a value outside the bounds of an Ada type or \
+subtype, violating a memory safety constraint (`buffer overrun`), \
+generating a numeric overflow or wraparound, and dividing by zero. \
+GNAT SAS and SPARK also help to confirm expected boundary values of \
+variables and parameters coming from the design."
+ Checklists,D.7,R,R,No,
+ Control Flow Analysis,D.8,HR,HR,Yes,"GNAT SAS and SPARK can detect \
+suspicious and potentially incorrect control flows, such as unreachable \
+code, redundant conditionals, loops that either run forever or fail to \
+terminate normally, and subprograms that never return. GNATstack can analyze \
+control flow and compute the maximum amount of stack memory for each task. \
+More generally, GNAT Studio provides visualization for call graphs and \
+call trees."
+ Data Flow Analysis,D.10,HR,HR,Yes,"GNAT SAS and SPARK can detect suspicious \
+and potentially incorrect data flow, such as variables being read before \
+they are written (uninitialized variables), and values that are written to \
+variables without being read (redundant assignments)."
+ Error Guessing,D.20,R,R,Yes,"Although realized through dynamic rather than \
+static analysis, GNAT fuzz can automatically generate test cases to \
+support Error Guessing."
+ Walkthroughs/Design Reviews,D.56,HR,HR,Yes, "GNAT Studio can display \
+and navigate the code, supporting walkthrough activities."

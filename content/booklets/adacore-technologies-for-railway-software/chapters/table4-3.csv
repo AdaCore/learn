@@ -1,0 +1,21 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Formal Proof,D.29,R,HR,Yes,"When Ada pre- and post-conditions are used, \
+together with the SPARK subset of the language, formal methods can formally \
+verify compliance of the implementation with these contracts."
+ Static Analysis,Table A.19,HR,HR,Yes,See Table A.19
+ Dynamic Analysis and Testing,Table A.13,HR,HR,Yes,See Table A.13
+ Metrics,D.37,R,R,Yes,"GNATmetric can compute and report metrics, such as \
+code size, comment percentage, cyclomatic complexity, unit nesting, and \
+loop nesting. These can then be compared with standards."
+ Traceability,D.58,HR,M,No,
+ Software Error Effect Analysis,D.25,R,HR,Yes,"GNAT Studio supports code \
+display and navigation. GNAT SAS can identify likely error locations in the \
+code. This supports potential software error detection and analysis \
+throughout the code."
+ Test Coverage for code,Table A.21,HR,HR,Yes,See Table A.21
+ Functional / Black-Box Testing,Table A.14,HR,HR,Yes,See Table A.14
+ Performance Testing,Table A.18,HR,HR,No,
+ Interface Testing,D.34,HR,HR,Yes,"Ada's strong typing, together with \
+its contract-based programming support, provides increased assurance to \
+demonstrate that the software interfaces are correct. This can help \
+improve software-to-software integration testing."

@@ -1,0 +1,11 @@
+Technique/Measure,SIL 2,SIL 3/4,Covered,Comment
+Ada,HR,HR,Yes,GNAT Pro tools support all versions of the Ada language.
+MODULA-2,HR,HR,No,
+PASCAL,HR,HR,No,
+C or C++,R,R,Yes,GNAT Pro for C and GNAT Pro for C++ support these languages
+PL/M,R,NR,No,
+BASIC,NR,NR,No,
+Assembler,R,R,No,
+C#,R,R,No,
+Java,R,R,No,
+Statement List,R,R,No,

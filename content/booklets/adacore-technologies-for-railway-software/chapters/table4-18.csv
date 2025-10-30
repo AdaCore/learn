@@ -1,0 +1,11 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Statement,D.50,HR,HR,Yes,"GNATcoverage provides statement-level \
+coverage capabilities."
+ Branch,D.50,R,HR,Yes,"GNATcoverage provides branch-level \
+coverage capabilities."
+Compound Condition,D.50,R,HR,Yes,"GNATcoverage provides MC/DC \
+(Modified Condition/Decision Coverage) capabilities, which can be \
+used as an efficient alternative to Compound Condition coverage."
+ Data Flow,D.50,R,HR,No,
+ Path,D.50,R,NR,No,
+ 

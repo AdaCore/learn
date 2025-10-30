@@ -1,0 +1,13 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Test Case Execution from Boundary Value Analysis,D.4,HR,HR,Yes,"GNATtest can \
+generate and execute a testing framework for tests written by \
+developers from requirements."
+ Test Case Execution from Error Guessing,D.20,R,HR,Yes,"GNAT fuzz can automate \
+the generation of large numbers of test cases at a high frequency."
+ Test Case Execution from Error Seeding,D.21,R,HR,No,
+ Performance Modeling,D.39,R,HR,No,
+ Equivalence Classes and Input Partition Testing,D.18,R,HR,Yes,"Ada and SPARK \
+provide specific features for partitioning function input and verifying that \
+this partitioning is well formed (i.e., no overlap and no gaps)."
+ Structure-Base Testing,D.50,R,HR,Yes,See Table A.21
+ 

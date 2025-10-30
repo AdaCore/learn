@@ -1,0 +1,16 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Data Modeling,D.65,R,HR,Yes,"Ada allows modeling data constraints, \
+in the form of type predicates."
+ Data Flow Diagram,D.11,R,HR,Yes,"SPARK allows defining data flow \
+dependencies at subprogram specification."
+ Control Flow Diagram,D.66,R,HR,No,
+ Finite State Machine or State Transition Programs,D.27,HR,HR,No,
+ Time Petri Nets,D.55,R,HR,No,
+ Decision/Truth Tables,D.13,R,HR,No,
+ Formal Methods,D.28,R,HR,Yes,"SPARK allows defining formal \
+properties on the code that can be verified by the SPARK toolset."
+ Performance Modeling,D.39,R,HR,No,
+ Prototyping/Animation,D.43,R,R,No,
+ Structure Diagrams,D.51,R,HR,No,
+ Sequence Diagrams,D.67,R,HR,No,
+ 
