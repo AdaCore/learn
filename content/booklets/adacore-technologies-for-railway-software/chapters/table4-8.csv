@@ -1,0 +1,6 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Impact Analysis,D.32,HR,M,Yes,"GNAT SAS contributes to identifying the \
+impact of a code change between two baselines."
+ Data Recording and Analysis,D.12,HR,M,Yes,"AdaCore tools can be invoked \
+from the command line. They produce result files including the date and \
+version of the tool used."

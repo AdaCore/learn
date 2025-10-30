@@ -1,0 +1,40 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Defensive Programming,D.14,HR,HR,Yes,"Defensive programming is more a \
+component or a programming activity than an architecture activity per se, \
+but as it is recorded in this table, it's worth mentioning that the Ada \
+language provides several features addressing various objectives of \
+defensive programming techniques (e.g., exception handling). In addition, \
+the GNAT Static Analysis Suite and SPARK tools help identify pieces of code \
+that should be protected by defensive code."
+ Fault Detection & Diagnosis,D.26,R,R,No,
+ Error Correcting Codes,D.19,|mdash|,|mdash|,No,
+ Error Detecting Codes,D.19,R,HR,No,
+ Failure Assertion Programming,D.24,R,HR,Yes,"The Ada language allows formalizing \
+assertions and contracts in various places in the code."
+ Safety Bag Techniques,D.47,R,R,No,
+ Diverse Programming,D.16,R,HR,Yes,"Using Ada along with another language \
+and a different code generation technology can be used to contribute to the \
+diverse programming argument."
+ Recovery Block,D.44,R,R,No,
+ Backward Recovery,D.5,NR,NR,No,
+ Forward Recovery,D.30,NR,NR,No,
+ Retry Fault Recovery Mechanisms,D.46,R,R,No,
+ Memorising Executed Cases,D.36,R,HR,No,
+ Artificial Intelligence – Fault Correction,D.1,NR,NR,No,
+ Dynamic Reconfiguration of software,D.17,NR,NR,No,
+ Software Error Effect Analysis,D.25,R,HR,No,
+ Graceful Degradation,D.31,R,HR,No,
+ Information Hiding / Encapsulation,D.33,HR,HR,Yes,"The Ada language \
+provides the necessary features to separate the interface of a module \
+from its implementation and enforce this separation."
+ Fully Defined Interface,D.38,HR,M,Yes,"The Ada language provides the \
+necessary features to separate the interface of a module from its \
+implementation and enforce this separation."
+ Formal Methods,D.28,R,HR,Yes,"SPARK can be used to formally define \
+architectural properties, such as data flow, directly in the code and \
+provides the means to verify them."
+ Modeling,Table A.17,R,HR,Yes,"Ada and SPARK allow defining certain \
+modeling properties in the code and provide means to verify them."
+ Structured Methodology,D.52,HR,HR,Yes,"Structured Methodology designs \
+can be implemented with Ada."
+ Modeling supported by computer aided design and specification tools,Table A.17,R,HR,No,

@@ -1,0 +1,27 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Coding Standard,D.15,HR,M,Yes,"GNATcheck allows implementing and verifying \
+a coding standard."
+ Coding Style Guide,D.15,HR,HR,Yes,"GNATcheck allows implementing and verifying \
+a coding style guide."
+ No Dynamic Objects,D.15,R,HR,Yes,"GNATcheck can forbid the use of dynamic \
+objects."
+ No Dynamic Variables,D.15,R,HR,Yes,"GNATcheck can forbid the use of dynamic \
+variables."
+ Limited Use of Pointers,D.15,R,R,Yes,"GNATcheck can forbid the use of \
+pointers or force justification of their usage."
+ Limited Use of Recursion,D.15,R,HR,Yes,"GNATcheck can forbid the use of \
+recursion or force justification of their usage."
+ No Unconditional Jumps,D.15,HR,HR,Yes,"GNATcheck can forbid the use of \
+unconditional jumps."
+ "Limited size and complexity of Functions, Subroutines and \
+Methods",D.38,HR,HR,Yes,"GNATmetric can compute complexity measures, and \
+GNATcheck can report excessive complexity."
+ "Entry/Exit Point strategy for Functions, Subroutines and \
+Methods",D.38,HR,HR,Yes,"GNATcheck can verify rules related to exit points."
+ Limited number of subroutine parameters,D.38,R,R,Yes,"GNATcheck can limit \
+the number of parameters for subroutines and report when that number is \
+exceeded."
+ Limited use of Global Variables,D.38,HR,M,Yes,"GNATcheck can flag global \
+variable usage and enforce their justification. SPARK forbids function \
+side effects and enforces documentation and verification of uses of global \
+variables. GNAT Studio allows analyzing usage of global variables."

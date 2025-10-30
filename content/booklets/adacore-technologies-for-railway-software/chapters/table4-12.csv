@@ -1,0 +1,11 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Test Case Execution from Cause Consequence Diagrams,D6,|mdash|,R,No,
+ Prototyping/ Animation,D.43,|mdash|,R,No,
+ Boundary Value Analysis,D.4,R,HR,Yes,"GNATtest can be used to implement \
+tests coming from boundary value analysis."
+ Equivalence Classes and Input Partitioning Testing,D.18,R,HR,Yes,"Ada and \
+SPARK provide specific features for partitioning function input and \
+verifying that this partitioning is well formed (i.e., no overlap and \
+no gaps)."
+ Process Simulation,D.42 R,R,No,
+ 

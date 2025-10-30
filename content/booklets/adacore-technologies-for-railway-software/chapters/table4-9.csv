@@ -1,0 +1,16 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Tabular Specification Methods,D.68,R,R,Yes,"Tables of data \
+can be expressed using the Ada language, together with type-wide \
+contracts (predicates or invariants)."
+ Application specific language,D.69,R,R,No,
+ Simulation,D.42,HR,HR,No,
+ Functional testing,D.42,M,M,No,
+ Checklists,D.7,HR,M,No,
+ Fagan inspection,D.23,HR,HR,No,
+ Formal design reviews,D.56,HR,HR,Yes,"GNAT Studio can display code and \
+navigate through the code as a support for walkthrough activities."
+ Formal proof of correctness,D.29,|mdash|,HR,Yes,"When contracts are \
+expressed within the SPARK subset, their correctness can \
+be formally verified."
+ Walkthrough,D.56,R,HR,Yes,"GNAT Studio can display code and navigate through \
+the code as a support for walkthrough activities."

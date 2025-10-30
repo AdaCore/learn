@@ -1,0 +1,5 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Functional and Black-box testing,Table A.14,HR,HR,Yes,"GNATtest can generate \
+a framework for testing."
+ Performance Testing,Table A.18,R,HR,Yes,"Stack consumption can be statically \
+computed using the GNATstack tool."
