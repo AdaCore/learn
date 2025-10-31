@@ -104,7 +104,6 @@ extensions = [
     'sphinx.ext.graphviz',
     'sphinx.ext.extlinks',
     'widget_extension',
-    'sphinx_rtd_theme',
     'sphinx_reredirects',
     'sphinxcontrib.plantuml',
 ]
@@ -183,6 +182,7 @@ show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
+pygments_dark_style = "monokai"
 
 # Figures, tables and code-blocks are automatically numbered if they
 # have a caption.
@@ -239,8 +239,7 @@ extlinks_detect_hardcoded_links = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#html_theme = 'learn_theme'
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
 
 if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
     html_title = "learn.adacore.com"
@@ -252,24 +251,47 @@ smartquotes = False
 
 html_theme_path = ['.'] # make sphinx search for themes in current dir
 
+html_css_files = [
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css",
+]
+
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
 html_theme_options = {
-    'logo_only': True,
-    'flyout_display': 'hidden',
-    'version_selector': False,
-    'prev_next_buttons_location': 'bottom',
-    'style_external_links': False,
-    'vcs_pageview_mode': '',
-#    'style_nav_header_background': 'white',
-    # Toc options
-    'collapse_navigation': False,
-    'sticky_navigation': False,
-    'navigation_depth': 4,
-    'includehidden': True,
-    'titles_only': False
+    # furo options
+    'light_css_variables': {
+        'color-brand-primary': '#fa5000',
+        'color-brand-content': '#fa5000',
+        'color-brand-visited': '#9f1b5e',
+        'color-admonition-background': '#faf1ec',
+        'color-admonition-title': '#fa5000',
+        'color-admonition-title-background': '#fadfd2',
+        'color-admonition-title--note': 'var(--color-admonition-title)',
+        'color-admonition-title-background--note': 'var(--color-admonition-title-background)',
+    },
+    'dark_css_variables': {
+        'color-brand-primary': '#fa5000',
+        'color-brand-content': '#fa5000',
+        'color-brand-visited': '#9f1b5e',
+        'color-admonition-background': '#261d1a',
+        'color-admonition-title': '#fa5000',
+        'color-admonition-title-background': '#502000',
+        'color-admonition-title--note': 'var(--color-admonition-title)',
+        'color-admonition-title-background--note': 'var(--color-admonition-title-background)',
+    },
+    'sidebar_hide_name': True,
+    'navigation_with_keys': True,
+    'top_of_page_buttons': ["view", "edit"],
+    # 'announcement': "",
+    # 'footer_icons': [],
+
+    "source_repository": "https://github.com/AdaCore/learn",
+    "source_branch": "main",
+    "source_directory": "content/",
 }
 
 html_show_sphinx = False
@@ -278,6 +300,9 @@ if 'GEN_LEARN_SITE' in os.environ and os.environ['GEN_LEARN_SITE'] == "yes":
     html_logo = "img/logo.svg"
 else:
     html_logo = "img/logo_sandbox.svg"
+    html_theme_options["announcement"] = \
+        "<p>⚠️ This version of the website contains UNPUBLISHED contents. " \
+        "⚠️</p>"
 
 html_favicon = "img/favicon.ico"
 
