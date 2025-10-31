@@ -1,10 +1,10 @@
-coverage==7.10.7
+coverage==7.11.0
 docutils==0.21.2
 furo==2025.9.25
 graphviz==0.21
-ipython==9.5.0
+ipython==9.6.0
 pdf2image==1.17.0
-pillow==11.3.0
+pillow==12.0.0
 pydot-ng==2.0.0
 Pygments==2.19.2
 pyparsing==3.2.5
@@ -12,4 +12,4 @@ Sphinx==8.2.3
 sphinx-reredirects==1.0.0
 sphinxcontrib-bibtex==2.6.5
 sphinxcontrib-plantuml==0.31
-websocket-client==1.8.0
+websocket-client==1.9.0
