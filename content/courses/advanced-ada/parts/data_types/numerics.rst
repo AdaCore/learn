@@ -785,7 +785,7 @@ In this example, we get a compilation error because the range of the
 .. admonition:: For further reading...
 
     To circumvent the compilation error in the code example we've just seen,
-    the best alternative to use :ref:`big numbers <Adv_Ada_Big_Numbers>`
+    the best alternative is to use :ref:`big numbers <Adv_Ada_Big_Numbers>`
     |mdash| we discuss this topic later on in this chapter:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Conversion_To_Non_Universal_Types switches=Compiler(-gnat2022);
