@@ -2584,6 +2584,10 @@ floating-point data types on the target hardware. However, as you might recall
 from an earlier chapter, we can request specific sizes for custom types. We
 discuss this topic next.
 
+Note that, for the example above, the size of the type is equal to the size of
+its base type, i.e. :ada:`Float_1_Digits'Size = Float_1_Digits'Base'Size`,
+:ada:`Float_2_Digits'Size = Float_2_Digits'Base'Size`, and so on.
+
 
 .. _Adv_Ada_Floating_Point_Type_Size:
 
