@@ -2624,6 +2624,9 @@ bits to be represented |mdash| instead of the 32 bits that we would typically
 see on a desktop PC. (Also, remember that this code example won't compile if
 your target architecture doesn't support 128-bit floating-point data types.)
 
+.. todo::
+
+    Discuss :ada:`Float_6_Digits'Size` vs. :ada:`Float_6_Digits'Base'Size`.
 
 
 Range of custom floating-point types and subtypes
