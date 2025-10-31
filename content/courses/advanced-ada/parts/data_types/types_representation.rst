@@ -1403,7 +1403,7 @@ This is the code that implements that:
 
 When running the application above, we see that, due to the extra byte in the
 record representation, the sizes increase. On a typical 64-bit PC,
-:ada:`R'Size` is now 76 bits, which reflects the additional eight bits that we
+:ada:`R'Size` is now 72 bits, which reflects the additional eight bits that we
 introduced between components :ada:`A` and :ada:`B`. Depending on the target
 architecture, you may also see that :ada:`R'Object_Size` is now 96 bits, which
 is the size the compiler selects as the most appropriate for this record type.
