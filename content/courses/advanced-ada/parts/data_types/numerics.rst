@@ -2463,9 +2463,7 @@ still select a 32-bit floating-point type for the target platform. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Decimal_Precision
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Show_Decimal_Digits is
+    package Custom_Floating_Point_Types is
 
        type Float_1_Digits is
          digits 1;
@@ -2503,6 +2501,15 @@ still select a 32-bit floating-point type for the target platform. For example:
          digits 17;
        type Float_18_Digits is
          digits 18;
+
+    end Custom_Floating_Point_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Floating_Point_Types;
+    use  Custom_Floating_Point_Types;
+
+    procedure Show_Decimal_Digits is
     begin
        Put_Line ("Float_1_Digits'Size   :"
                  & Float_1_Digits'Size'Image
