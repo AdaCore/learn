@@ -43,7 +43,8 @@ chapter:
        Put_Line (Modulus_Value'Image);
     end Show_Modular;
 
-When we run this example, we get 4294967296, which is equal to :ada:`2**32`.
+When we run this example, we get 4,294,967,296 |mdash| which is equal to
+:ada:`2**32`.
 
 :ada:`Mod` Attribute
 ~~~~~~~~~~~~~~~~~~~~
