@@ -2315,7 +2315,7 @@ As expected, we can derive from any floating-point type. For example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Custom_Floating_Point_Types;
-    use Custom_Floating_Point_Types;
+    use  Custom_Floating_Point_Types;
 
     procedure Show_Derived_Floating_Point_Types is
        C  : Coefficient;
