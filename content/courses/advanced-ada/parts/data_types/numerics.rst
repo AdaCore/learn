@@ -3363,7 +3363,7 @@ it's always equal to the *delta*.
     For example, we may define a normalized range between -1.0 and 1.0 as
     following:
 
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Normalized_Fixed_Point_Type
+    .. code:: ada run_button project=Courses.Advanced_Ada.Fixed_Point_Types.Normalized_Fixed_Point_Type
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3390,7 +3390,7 @@ it's always equal to the *delta*.
 
     We may also rewrite this code with an exact type definition:
 
-    .. code:: ada compile_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Normalized_Adapted_Fixed_Point_Type
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Fixed_Point_Types.Normalized_Adapted_Fixed_Point_Type
 
         procedure Normalized_Adapted_Fixed_Point_Type is
            type TQ31 is
@@ -3402,7 +3402,7 @@ it's always equal to the *delta*.
 
     We may also use any other range. For example:
 
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Custom_Fixed_Point_Range
+    .. code:: ada run_button project=Courses.Advanced_Ada.Fixed_Point_Types.Custom_Fixed_Point_Range
 
         with Ada.Text_IO;  use Ada.Text_IO;
         with Ada.Numerics; use Ada.Numerics;
@@ -3431,7 +3431,7 @@ it's always equal to the *delta*.
 
     All standard operations are available for fixed-point types. For example:
 
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Fixed_Point_Op
+    .. code:: ada run_button project=Courses.Advanced_Ada.Fixed_Point_Types.Fixed_Point_Op
 
         with Ada.Text_IO; use Ada.Text_IO;
 
