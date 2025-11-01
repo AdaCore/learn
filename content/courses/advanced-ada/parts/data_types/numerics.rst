@@ -785,7 +785,7 @@ In this example, we get a compilation error because the range of the
 .. admonition:: For further reading...
 
     To circumvent the compilation error in the code example we've just seen,
-    the best alternative to use :ref:`big numbers <Adv_Ada_Big_Numbers>`
+    the best alternative is to use :ref:`big numbers <Adv_Ada_Big_Numbers>`
     |mdash| we discuss this topic later on in this chapter:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Numeric_Types.Conversion_To_Non_Universal_Types switches=Compiler(-gnat2022);
@@ -2315,7 +2315,7 @@ As expected, we can derive from any floating-point type. For example:
     with Ada.Text_IO; use Ada.Text_IO;
 
     with Custom_Floating_Point_Types;
-    use Custom_Floating_Point_Types;
+    use  Custom_Floating_Point_Types;
 
     procedure Show_Derived_Floating_Point_Types is
        C  : Coefficient;
@@ -2463,9 +2463,7 @@ still select a 32-bit floating-point type for the target platform. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Decimal_Precision
 
-    with Ada.Text_IO; use Ada.Text_IO;
-
-    procedure Show_Decimal_Digits is
+    package Custom_Floating_Point_Types is
 
        type Float_1_Digits is
          digits 1;
@@ -2503,6 +2501,15 @@ still select a 32-bit floating-point type for the target platform. For example:
          digits 17;
        type Float_18_Digits is
          digits 18;
+
+    end Custom_Floating_Point_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Floating_Point_Types;
+    use  Custom_Floating_Point_Types;
+
+    procedure Show_Decimal_Digits is
     begin
        Put_Line ("Float_1_Digits'Size   :"
                  & Float_1_Digits'Size'Image
@@ -2577,6 +2584,10 @@ floating-point data types on the target hardware. However, as you might recall
 from an earlier chapter, we can request specific sizes for custom types. We
 discuss this topic next.
 
+Note that, for the example above, the size of the type is equal to the size of
+its base type, i.e. :ada:`Float_1_Digits'Size = Float_1_Digits'Base'Size`,
+:ada:`Float_2_Digits'Size = Float_2_Digits'Base'Size`, and so on.
+
 
 .. _Adv_Ada_Floating_Point_Type_Size:
 
@@ -2613,6 +2624,9 @@ bits to be represented |mdash| instead of the 32 bits that we would typically
 see on a desktop PC. (Also, remember that this code example won't compile if
 your target architecture doesn't support 128-bit floating-point data types.)
 
+.. todo::
+
+    Discuss :ada:`Float_6_Digits'Size` vs. :ada:`Float_6_Digits'Base'Size`.
 
 
 Range of custom floating-point types and subtypes
@@ -3363,7 +3377,7 @@ it's always equal to the *delta*.
     For example, we may define a normalized range between -1.0 and 1.0 as
     following:
 
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Normalized_Fixed_Point_Type
+    .. code:: ada run_button project=Courses.Advanced_Ada.Fixed_Point_Types.Normalized_Fixed_Point_Type
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3390,7 +3404,7 @@ it's always equal to the *delta*.
 
     We may also rewrite this code with an exact type definition:
 
-    .. code:: ada compile_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Normalized_Adapted_Fixed_Point_Type
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Fixed_Point_Types.Normalized_Adapted_Fixed_Point_Type
 
         procedure Normalized_Adapted_Fixed_Point_Type is
            type TQ31 is
@@ -3402,7 +3416,7 @@ it's always equal to the *delta*.
 
     We may also use any other range. For example:
 
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Custom_Fixed_Point_Range
+    .. code:: ada run_button project=Courses.Advanced_Ada.Fixed_Point_Types.Custom_Fixed_Point_Range
 
         with Ada.Text_IO;  use Ada.Text_IO;
         with Ada.Numerics; use Ada.Numerics;
@@ -3431,7 +3445,7 @@ it's always equal to the *delta*.
 
     All standard operations are available for fixed-point types. For example:
 
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Fixed_Point_Types.Fixed_Point_Op
+    .. code:: ada run_button project=Courses.Advanced_Ada.Fixed_Point_Types.Fixed_Point_Op
 
         with Ada.Text_IO; use Ada.Text_IO;
 

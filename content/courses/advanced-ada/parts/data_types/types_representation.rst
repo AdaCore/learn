@@ -428,7 +428,7 @@ well as with actual objects of that data type. Therefore, we can write
 :ada:`UInt_7_Array'Component_Size` and :ada:`Arr_1'Component_Size`, for
 example.
 
-This big number (17179869176 bits) for :ada:`UInt_7_Array'Size` and
+This big number (17,179,869,176 bits) for :ada:`UInt_7_Array'Size` and
 :ada:`UInt_7_Array'Object_Size` might be surprising for you. This is due to the
 fact that Ada is reporting the size of the :ada:`UInt_7_Array` type for the
 case when the complete range is used. Considering that we specified a positive
@@ -1403,7 +1403,7 @@ This is the code that implements that:
 
 When running the application above, we see that, due to the extra byte in the
 record representation, the sizes increase. On a typical 64-bit PC,
-:ada:`R'Size` is now 76 bits, which reflects the additional eight bits that we
+:ada:`R'Size` is now 72 bits, which reflects the additional eight bits that we
 introduced between components :ada:`A` and :ada:`B`. Depending on the target
 architecture, you may also see that :ada:`R'Object_Size` is now 96 bits, which
 is the size the compiler selects as the most appropriate for this record type.
