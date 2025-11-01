@@ -5,6 +5,22 @@ CHANGELOG
 
 .. include:: ../../global.txt
 
+Release 2025-10
+---------------
+
+- New section:
+
+  - :ref:`Fixed-point types <Adv_Ada_Fixed_Point_Types>`
+
+
+Release 2025-09
+---------------
+
+- New section:
+
+  - :ref:`Floating-point types <Adv_Ada_Floating_Point_Types>`
+
+
 Release 2025-08
 ---------------
 
