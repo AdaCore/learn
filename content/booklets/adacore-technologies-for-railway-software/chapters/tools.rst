@@ -34,8 +34,10 @@ Additional features (including support for contract-based programming
 in the form of subprogram pre- and postconditions and type invariants)
 were added in the Ada 2012 version of the language standard, and a
 number of features to increase the language's expressiveness were
-introduced in Ada 2022 (see :cite:`ISO_IEC_2016`, :cite:`Barnes_Brosgol_2015`,
-:cite:`Barnes_2014`, :cite:`ISO_IEC_2022` for information about Ada).
+introduced in Ada 2022 (see :cite:`Railway_SW_ISO_IEC_2016`,
+:cite:`Railway_SW_Barnes_Brosgol_2015`,
+:cite:`Railway_SW_Barnes_2014`,
+:cite:`Railway_SW_ISO_IEC_2022` for information about Ada).
 
 .. index:: Lovelace (Augusta Ada), Babbage (Charles), Byron (Lord George)
 
@@ -207,7 +209,7 @@ traditional :ada:`obj.op(...)` operation invocation notation.
 Ada is methodologically neutral and does not impose a distributed overhead for
 OOP. If an application does not need OOP, then the OOP features do not have
 to be used, and there is no run-time penalty.
-See :cite:`Barnes_2014` or :cite:`AdaCore_2016` for more details..
+See :cite:`Railway_SW_Barnes_2014` or :cite:`Railway_SW_AdaCore_2016` for more details..
 
 .. index:: single: Ada language; Concurrent programming
 
@@ -274,8 +276,8 @@ High-Integrity Systems
 With its emphasis on sound software engineering principles, Ada supports the
 development of high-integrity applications, including those that need to be
 certified against safety standards such |en-50128| for rail systems,
-|do-178c| :cite:`RTCA_EUROCAE_2011a` for avionics, and security standards
-such as the Common Criteria :cite:`CCDB_2022`.
+|do-178c| :cite:`Railway_SW_RTCA_EUROCAE_2011a` for avionics, and security standards
+such as the Common Criteria :cite:`Railway_SW_CCDB_2022`.
 Key to Ada's support for high-assurance software is the language's
 memory safety; this is illustrated by a number of features, including:
 
@@ -377,7 +379,7 @@ software, and cross-domain solutions.
 
 The SPARK language has been stable over the years, with periodic
 enhancements. The 2014 version of SPARK represented a major revision
-:cite:`McCormick_Chapin_2015`, :cite:`AdaCore_Altran_2020`),
+:cite:`Railway_SW_McCormick_Chapin_2015`, :cite:`Railway_SW_AdaCore_Altran_2020`),
 incorporating contract-based programming
 syntax from Ada 2012, and subsequent upgrades included support for pointers
 (access types) based on the Rust ownership model.
@@ -419,7 +421,7 @@ Ease of Adoption
 
 User experience has shown that the language and the SPARK Pro toolset do not
 require a steep learning curve. Training material such as AdaCore's online
-AdaLearn course for SPARK :cite:`AdaCore_AdaLearn` can quickly bring
+AdaLearn course for SPARK :cite:`Railway_SW_AdaCore_AdaLearn` can quickly bring
 developers up to speed; users are assumed to be experts in their own
 application domain such as railway software and do not need to be familiar
 with formal methods or the proof technology implemented by the toolset.
@@ -520,10 +522,10 @@ It provides an Integrated Development Environment
 (see :ref:`Railway_SW_Integrated_Development_Environments`), a comprehensive toolsuite
 including a visual debugger, and an extensive set of libraries and bindings.
 Details on the GNAT Pro for Ada toolchain may be found in
-:cite:`AdaCore_Web_UG_Native`.
+:cite:`Railway_SW_AdaCore_Web_UG_Native`.
 AdaCore's GNAT project facility, based on a multi-language builder for
 systems organized into subsystems and libraries, is documented in
-:cite:`AdaCore_Web_GPR`.
+:cite:`Railway_SW_AdaCore_Web_GPR`.
 
 .. index:: single: GNAT Pro Assurance; Configurable Run-Time Libraries
 
@@ -538,7 +540,7 @@ Configurable Run-Time Libraries
 
 Two specific GNAT-defined run-time libraries have been designed with
 certification in mind and are known as the Certifiable Profiles
-(see :cite:`AdaCore_Web_UG_Cross`):
+(see :cite:`Railway_SW_AdaCore_Web_UG_Cross`):
 
 * *Light Profile*
 
@@ -821,9 +823,9 @@ GNATcheck provides:
 * Style checks that allow developers to control indentation, casing,
   comment style, and nesting level.
 
-AdaCore's :index:`GNATformat` tool :cite:`AdaCore_Web_GNATformat`, which
+AdaCore's :index:`GNATformat` tool :cite:`Railway_SW_AdaCore_Web_GNATformat`, which
 formats Ada source code according to the GNAT coding style
-:cite:`AdaCore_Coding_Style`, can help avoid having code that violates
+:cite:`Railway_SW_AdaCore_Coding_Style`, can help avoid having code that violates
 GNATcheck rules. GNATformat is included in the GNAT Pro for Ada toolchain.
 
 GNATcheck comes with a query language (LKQL, for Language Kit Query Language)

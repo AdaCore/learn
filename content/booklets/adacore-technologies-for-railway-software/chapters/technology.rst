@@ -1226,7 +1226,7 @@ here it will be a value from either :ada:`Base_Class` or :ada:`Subclass`.
 Storage for :ada:`X` is reserved on the stack, and the invocation :ada:`P (X)`
 will dispatch to the appropriate version of :ada:`P`.
 
-The booklet :cite:`AdaCore_2016` provides additional information on how to use
+The booklet :cite:`Railway_SW_AdaCore_2016` provides additional information on how to use
 object-oriented features in a certified context.
 
 .. index:: single: Annex D; Procedural Programming (D.60)
