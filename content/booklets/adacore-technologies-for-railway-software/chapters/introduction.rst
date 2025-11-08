@@ -89,6 +89,8 @@ relate to software's role in the safety of a railway system:
 .. figure:: ../images/fig-1.png
   :align: center
 
+  Relationships among the various standards
+
 .. index:: Safety Integrity Level (SIL)
 
 Safety Integrity Levels
@@ -239,3 +241,5 @@ The following technologies will be presented:
 .. _Railway_SW_fig2:
 .. figure:: ../images/fig-2.png
   :align: center
+
+  Contributions of AdaCore technology to the "V" Cycle
