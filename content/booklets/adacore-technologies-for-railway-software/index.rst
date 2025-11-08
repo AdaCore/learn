@@ -149,4 +149,3 @@ software, please visit :cite:`Railway_SW_AdaCore_Web_Rail`.
    AdaCore Contributions to The Software Quality Assurance Plan<chapters/contribution>
    Technology Usage Guide<chapters/technology>
    Technology Annex<chapters/annex>
-   Bibliography<chapters/bibliography>

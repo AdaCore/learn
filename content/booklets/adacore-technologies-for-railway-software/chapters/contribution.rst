@@ -251,3 +251,10 @@ Table A.23 |ndash| Object Oriented Detailed Design
    .. raw:: latex
 
       \end{landscape}
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::
