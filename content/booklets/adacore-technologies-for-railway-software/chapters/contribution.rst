@@ -36,7 +36,7 @@ guidance on how that can be done.
 
       \begin{landscape}
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-1.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -46,7 +46,7 @@ guidance on how that can be done.
 Table A.4 |ndash| Software Design and Implementation (7.4)
 ----------------------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-2.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -56,7 +56,7 @@ Table A.4 |ndash| Software Design and Implementation (7.4)
 Table A.5 |ndash| Verification and Testing (6.2 and 7.3)
 --------------------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-3.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -66,7 +66,7 @@ Table A.5 |ndash| Verification and Testing (6.2 and 7.3)
 Table A.6 |ndash| Integration (7.6)
 -----------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-4.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -76,7 +76,7 @@ Table A.6 |ndash| Integration (7.6)
 Table A.7 |ndash| Overall Software Testing (6.2 and 7.7)
 --------------------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-5.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -86,7 +86,7 @@ Table A.7 |ndash| Overall Software Testing (6.2 and 7.7)
 Table A.8 |ndash| Software Analysis Techniques (6.3)
 ----------------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-6.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -97,11 +97,11 @@ Table A.9 |ndash| Software Quality Assurance (6.5)
 --------------------------------------------------
 
 Although AdaCore doesn't directly provide services for ISO 9001
-or configuration management, it follows standards to enable 
-tool qualification and/or certification. The following table 
-only lists items that can be useful to third parties. 
+or configuration management, it follows standards to enable
+tool qualification and/or certification. The following table
+only lists items that can be useful to third parties.
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-7.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -111,7 +111,7 @@ only lists items that can be useful to third parties.
 Table A.10 |ndash| Software Maintenance (9.2)
 ---------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-8.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -121,7 +121,7 @@ Table A.10 |ndash| Software Maintenance (9.2)
 Table A.11 |ndash| Data Preparation Techniques (8.4)
 ----------------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-9.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -135,9 +135,9 @@ There are available references for coding standards. Their verification
 can be automated through different ways: the GNAT compiler can define
 base coding standard rules to be checked at compile time, and
 GNATcheck implements a wider range of rules and is tailorable to support
-project-specific coding standards.  
+project-specific coding standards.
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-10.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -147,7 +147,7 @@ project-specific coding standards.
 Table A.13 |ndash| Dynamic Analysis and Testing
 -----------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-11.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -160,7 +160,7 @@ Table A.14 |ndash| Functional/Black Box Test
 GNATtest can generate and execute a testing framework,
 with the actual tests being written by developers from requirements.
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-12.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -170,7 +170,7 @@ with the actual tests being written by developers from requirements.
 Table A.15 |ndash| Textual Programming Language
 -----------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-13.csv
    :widths: 30 20 20 20 70
    :header-rows: 1
@@ -180,7 +180,7 @@ Table A.15 |ndash| Textual Programming Language
 Table A.17 |ndash| Modeling
 ----------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-14.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -190,7 +190,7 @@ Table A.17 |ndash| Modeling
 Table A.18 |ndash| Performance Testing
 --------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-15.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -200,7 +200,7 @@ Table A.18 |ndash| Performance Testing
 Table A.19 |ndash| Static Analysis
 ----------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-16.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -210,7 +210,7 @@ Table A.19 |ndash| Static Analysis
 Table A.20 |ndash| Components
 -----------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-17.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -220,7 +220,7 @@ Table A.20 |ndash| Components
 Table A.21 |ndash| Test Coverage for Code
 -----------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-18.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -230,7 +230,7 @@ Table A.21 |ndash| Test Coverage for Code
 Table A.22 |ndash| Object Oriented Software Architecture
 --------------------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-19.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1
@@ -240,7 +240,7 @@ Table A.22 |ndash| Object Oriented Software Architecture
 Table A.23 |ndash| Object Oriented Detailed Design
 --------------------------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :file: table4-20.csv
    :widths: 28 13 17 22 10 70
    :header-rows: 1

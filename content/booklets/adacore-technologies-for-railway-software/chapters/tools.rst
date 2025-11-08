@@ -7,7 +7,7 @@ AdaCore Tools and Technologies Overview
 
 .. _Railway_SW_Ada:
 
-Ada 
+Ada
 ---
 
 .. _Railway_SW_Background:
@@ -18,7 +18,7 @@ Background
 .. index:: Ichbiah (Jean), Taft (Tucker)
 
 Ada is a modern programming language designed for large, long-lived
-applications |mdash| and embedded systems in particular |mdash| where 
+applications |mdash| and embedded systems in particular |mdash| where
 reliability, maintainability, and efficiency are essential.
 It was originally developed in the early 1980s (this version is
 generally known as Ada 83) by a team led by Jean Ichbiah at
@@ -40,14 +40,14 @@ introduced in Ada 2022 (see :cite:`ISO_IEC_2016`, :cite:`Barnes_Brosgol_2015`,
 .. index:: Lovelace (Augusta Ada), Babbage (Charles), Byron (Lord George)
 
 The name "Ada" is not an acronym; it was chosen in honor of
-Augusta Ada Lovelace (1815-1852), a mathematician who is 
+Augusta Ada Lovelace (1815-1852), a mathematician who is
 regarded as the world's first programmer because of her work with
 Charles Babbage. She was also the daughter of the poet Lord Byron.
 
 The Ada language is seeing significant usage worldwide in high-integrity /
 safety-critical / high-security domains including railway systems,
 commercial and military aircraft avionics, air traffic control, and
-medical devices. 
+medical devices.
 
 With its embodiment of modern software engineering principles, Ada
 is an excellent teaching language for both introductory and advanced
@@ -67,7 +67,7 @@ transitioning to Ada 95 from Ada 83 or other languages.
 
 .. _Railway_SW_Language_Overview:
 
-Language Overview 
+Language Overview
 ~~~~~~~~~~~~~~~~~
 
 Ada is multi-faceted. From one perspective it is a classical stack-based
@@ -80,7 +80,7 @@ But it also includes much more:
 
 .. index:: single: Ada language; Scalar ranges
 
-Scalar Ranges 
+Scalar Ranges
 ^^^^^^^^^^^^^
 
 Unlike languages based on C syntax (such as C++, Java, and C#), Ada allows the
@@ -116,13 +116,13 @@ Contract-Based Programming
 A feature introduced in Ada 2012 allows extending a subprogram specification
 or a type/subtype declaration with a contract (a Boolean assertion).
 Subprogram contracts take the form of preconditions and postconditions,
-type contracts are used for invariants, and subtype contracts provide 
+type contracts are used for invariants, and subtype contracts provide
 generalized constraints (predicates). Through contracts the developer can
-formalize the intended behavior of the application, and can 
+formalize the intended behavior of the application, and can
 verify this behavior by testing, static analysis or formal proof.
 
 Here's a skeletal example that illustrates contact-based programming; a
-:ada:`Table` object is a fixed-length container for distinct :ada:`Float` 
+:ada:`Table` object is a fixed-length container for distinct :ada:`Float`
 values.
 
 .. code-block:: ada
@@ -144,7 +144,7 @@ values.
     private
        ... -- Full declaration of type Table
     end Table_Pkg;
-   
+
     package body Table_Pkg is
        ... -- Implementation of Insert, Remove, Is_Full, and Contains
     end Table_Pkg;
@@ -152,7 +152,7 @@ values.
 A compiler option controls whether the pre- and postconditions
 are checked at run time. If checks are enabled,
 any pre- or postcondition failure |mdash| i.e., the contract's
-Boolean expression evaluating to :ada:`False` |mdash| raises the 
+Boolean expression evaluating to :ada:`False` |mdash| raises the
 :ada:`Assertion_Error` exception.
 
 .. index:: single: Ada language; Programming in the large
@@ -161,9 +161,9 @@ Programming in the large
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 The original Ada 83 design introduced the package construct,
-a feature that supports encapsulation ("information hiding") and 
+a feature that supports encapsulation ("information hiding") and
 modularization, and which allows the developer to control the
-namespace that is accessible within a given compilation unit. Ada 95 
+namespace that is accessible within a given compilation unit. Ada 95
 introduced the concept of "child units," adding considerable flexibility
 and easing the design of very large systems.
 Ada 2005 extended the language's modularization facilities by allowing
@@ -179,7 +179,7 @@ A key to reusable components is a mechanism for parameterizing modules
 with respect to data types and other program entities, for example a
 stack package for an arbitrary element type. Ada meets this requirement
 through a facility known as "generics"; since the parameterization is done
-at compile time, run-time performance is not penalized. 
+at compile time, run-time performance is not penalized.
 
 .. index:: single: Ada language; Object-Oriented Programming (OOP)
 
@@ -232,11 +232,11 @@ multi-core architectures were introduced in Ada 2012.
 
 .. index:: single: Ada language; Systems programming
 
-Systems Programming 
+Systems Programming
 ^^^^^^^^^^^^^^^^^^^
 
 Both in the "core" language and the Systems Programming Annex, Ada supplies
-the necessary features for hardware-specific processing. 
+the necessary features for hardware-specific processing.
 For example, the programmer can specify the bit layout for fields in a record,
 define alignment and size properties, place data at specific machine
 addresses, and express specialized code sequences in assembly language.
@@ -254,7 +254,7 @@ that uses priority ceilings; this has an especially efficient implementation
 in Ada (mutexes are not required) since protected operations are not allowed
 to block. Ada 95 defined a task dispatching policy that basically requires
 tasks to run until blocked or preempted. Subsequent versions of the language
-standard introduced several other policies, such as Earliest Deadline First. 
+standard introduced several other policies, such as Earliest Deadline First.
 
 .. index:: single: Ada language; High-integrity systems
 .. index:: single: Ada language; Prevention of vulnerabilities
@@ -284,7 +284,7 @@ memory safety; this is illustrated by a number of features, including:
   Data intended for one purpose will not be accessed via inappropriate
   operations; errors such as treating pointers as integers (or vice versa)
   are prevented.
-  
+
 * *Array bounds checking*
 
   A run-time check guarantees that an array index is within the bounds of
@@ -292,13 +292,13 @@ memory safety; this is illustrated by a number of features, including:
   This prevents buffer overflow vulnerabilities that are common in C and C++.
   In many cases a a compiler optimization can detect statically that the
   index is within bounds and thus eliminate any run-time code for the check.
-  
+
 * *Prevention of null pointer dereferences*
 
   As with array bounds, pointer dereferences are checked to make sure that
   the pointer is not null.
   Again, such checks can often be optimized out.
-  
+
 * *Prevention of dangling references*
 
   A scope accessibility checks ensures that a pointer cannot reference an
@@ -309,16 +309,16 @@ memory safety; this is illustrated by a number of features, including:
 .. index:: single: Ada language; pragma Restrictions
 
 However, the full language may be inappropriate in a safety-critical
-application, since the generality and flexibility could interfere 
+application, since the generality and flexibility could interfere
 with traceability / certification requirements. Ada addresses this issue by
-supplying a compiler directive, :ada:`pragma Restrictions`, that 
+supplying a compiler directive, :ada:`pragma Restrictions`, that
 allows constraining the language features to a well-defined subset
 (for example, excluding dynamic OOP facilities).
 
 The evolution of Ada has seen the continued increase in support for
-safety-critical and high-security applications. Ada 2005 
+safety-critical and high-security applications. Ada 2005
 standardized the :index:`Ravenscar Profile`, a collection of concurrency
-features that are powerful enough for real-time programming but 
+features that are powerful enough for real-time programming but
 simple enough to make certification and formal analysis practical.
 
 .. index:: Contract-based programming
@@ -326,7 +326,7 @@ simple enough to make certification and formal analysis practical.
 
 Ada 2012 introduced contract-based programming facilities, allowing the
 programmer to specify preconditions and/or postconditions for subprograms,
-and invariants for encapsulated (private) types. These can serve both 
+and invariants for encapsulated (private) types. These can serve both
 for run-time checking and as input to static analysis tools.
 
 The most recent version of the standard, Ada 2022, has added several
@@ -341,9 +341,9 @@ Summary
 ^^^^^^^
 
 In brief, Ada is an internationally standardized language combining
-object-oriented programming features, well-engineered concurrency 
+object-oriented programming features, well-engineered concurrency
 facilities, real-time support, and built-in reliability through both
-compile-time and run-time checks. As such it is an appropriate 
+compile-time and run-time checks. As such it is an appropriate
 language for addressing the real issues facing software developers
 today. Ada has a long and successful history and is used throughout
 a number of major industries to design software that protects
@@ -358,22 +358,22 @@ life and property.
 
 .. _Railway_SW_SPARK:
 
-SPARK 
+SPARK
 -----
 
 SPARK is a software development technology (programming language and
-verification toolset) specifically designed for engineering 
+verification toolset) specifically designed for engineering
 ultra-low defect level applications, for example where safety
-and/or security are key requirements. SPARK Pro is AdaCore's 
+and/or security are key requirements. SPARK Pro is AdaCore's
 commercial-grade offering of the SPARK technology. The main component
 in the toolset is GNATprove, which performs formal verification on
 SPARK code.
 
 SPARK has an extensive industrial track record. Since its inception
-in the late 1980s it has been used worldwide in a range of 
+in the late 1980s it has been used worldwide in a range of
 industrial applications such as railway signaling, civil and military
-avionics, air traffic management / control, cryptographic 
-software, and cross-domain solutions. 
+avionics, air traffic management / control, cryptographic
+software, and cross-domain solutions.
 
 The SPARK language has been stable over the years, with periodic
 enhancements. The 2014 version of SPARK represented a major revision
@@ -395,7 +395,7 @@ new systems can be built on and reuse legacy codebases.
 .. index:: single: SPARK language; Formal verification
 .. index:: single: SPARK technology; Absence of Run-Time Errors (AORTE)
 
-Powerful Static Verification 
+Powerful Static Verification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The SPARK language supports a wide range of static verification techniques.
@@ -414,7 +414,7 @@ from the absence of run-time errors ("AORTE"), to the enforcement of safety
 or security properties, to compliance with a formal specification of the
 program's required behavior.
 
-Ease of Adoption 
+Ease of Adoption
 ~~~~~~~~~~~~~~~~
 
 User experience has shown that the language and the SPARK Pro toolset do not
@@ -454,7 +454,7 @@ other languages.
 
 .. index:: single: SPARK language; Reduced cost of verification
 
-Reduced Cost and Improved Efficiency of Executable Object Code Verification 
+Reduced Cost and Improved Efficiency of Executable Object Code Verification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Software verification typically involves extensive testing, including unit
@@ -594,14 +594,14 @@ and where the costs of adapting the application without the additional
 run-time support are considered prohibitive.
 
 
-Full Implementation of Ada Standards 
+Full Implementation of Ada Standards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GNAT Pro provides a complete implementation of the Ada language from Ada 83
 to Ada 2012, and support for selected features from Ada 2022.
 Developers of safety-critical and high-security systems can thus take
 advantage of features such as contract-based programming, which effectively
-embed requirements in the source program text and simplify verification. 
+embed requirements in the source program text and simplify verification.
 
 .. index:: single: GNAT Pro Assurance; Source-to-object traceability
 
@@ -609,14 +609,14 @@ Source to Object Traceability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A compiler option can limit the use of language constructs that generate
-object code that is not directly traceable to the source code. 
+object code that is not directly traceable to the source code.
 As an add-on service, AdaCore can perform an analysis that demonstrates
 this traceability and justifies any remaining cases of non-traceable code.
 
 .. index:: single: AdaCore; Support services
 .. index:: single: AdaCore; Training and consulting services
 
-Safety-Critical Support and Expertise 
+Safety-Critical Support and Expertise
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 At the heart of every AdaCore subscription are the support services that
@@ -669,7 +669,7 @@ Typical libadalang applications include:
 
 .. _Railway_SW_GNATstack:
 
-GNATstack 
+GNATstack
 ~~~~~~~~~
 
 Included with GNAT Pro is GNATstack, a static analysis tool that enables an
@@ -705,7 +705,7 @@ calls, etc.). The user can assist the tool by specifying missing call graph
 and stack usage information.
 
 GNATstack's main output is the worst-case stack usage for every entry point,
-together with the paths that result in these stack sizes. 
+together with the paths that result in these stack sizes.
 The list of entry points can be automatically computed (all the tasks,
 including the environment task) or can be specified by the user (a list of
 entry points or all the subprograms matching a given regular expression).
@@ -845,11 +845,11 @@ GNAT Dynamic Analysis Suite (GNAT DAS)
 
 .. _Railway_SW_GNATtest:
 
-GNATtest 
+GNATtest
 ~~~~~~~~
 
 The GNATtest tool helps create and maintain a complete unit testing
-infrastructure for complex projects. It captures 
+infrastructure for complex projects. It captures
 the simple idea that each public subprogram (these are known as
 "visible" subprograms in Ada) should have at least one corresponding
 unit test. GNATtest takes a project file as input, and produces two outputs:
@@ -881,9 +881,9 @@ GNATemulator is an efficient and flexible tool that provides integrated,
 lightweight target emulation.
 
 Based on the QEMU technology, a generic and open-source machine emulator
-and virtualizer, GNATemulator allows software developers to 
+and virtualizer, GNATemulator allows software developers to
 compile code directly for their target architecture and run it on their
-host platform, through an approach that translates from the 
+host platform, through an approach that translates from the
 target object code to native instructions on the host. This avoids the
 inconvenience and cost of managing an actual board, while offering an
 efficient testing environment compatible with the final hardware.
@@ -1027,38 +1027,38 @@ most out of GNAT Pro technology.
 **Tools**
 
 GNAT Studio's extensive navigation and analysis tools can generate a variety
-of useful information including call graphs, source dependencies, 
+of useful information including call graphs, source dependencies,
 project organization, and complexity metrics, giving a thorough understanding
 of a program at multiple levels. It allows interfacing with third-party
 version control systems, easing both development and maintenance.
 
-**Robust, Flexible and Extensible** 
+**Robust, Flexible and Extensible**
 
 Especially suited for large, complex systems, GNAT Studio can import existing
-projects from other Ada implementations while adhering to their 
+projects from other Ada implementations while adhering to their
 file naming conventions and retaining the existing directory organization.
-Through the multi-language capabilities of GNAT Studio, components 
+Through the multi-language capabilities of GNAT Studio, components
 written in C and C++ can also be handled. The IDE is highly extensible;
-additional tools can be plugged in through a simple scripting 
+additional tools can be plugged in through a simple scripting
 approach. It is also tailorable, allowing various aspects of the program's
 appearance to be customized in the editor.
 
-**Easy to learn, easy to use** 
+**Easy to learn, easy to use**
 
 GNAT Studio is intuitive to new users thanks to its menu-driven interface
-with extensive online help (including documentation on all the 
+with extensive online help (including documentation on all the
 menu selections) and "tool tips". The Project Wizard makes it simple to get
 started, supplying default values for almost all of the project properties.
 For experienced users, it offers the necessary level of control for
 advanced purposes; e.g., the ability to run command scripts. Anything that
-can be done on the command line is achievable through the menu interface. 
+can be done on the command line is achievable through the menu interface.
 
-**Remote Programming** 
+**Remote Programming**
 
 Integrated into GNAT Studio, Remote Programming provides a secure and
-efficient way for programmers to access any number of remote servers 
+efficient way for programmers to access any number of remote servers
 on a wide variety of platforms while taking advantage of the power and
-familiarity of their local PC workstations. 
+familiarity of their local PC workstations.
 
 .. index:: single: Integrated Development Environments (IDEs); VS Code support
 .. index:: VS Code support
@@ -1084,7 +1084,7 @@ GNAT Studio IDE. Functionality includes:
 .. index:: Eclipse IDE
 .. index:: GNATbench IDE
 
-Eclipse Support |ndash| GNATbench 
+Eclipse Support |ndash| GNATbench
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GNATbench is an Ada development plug-in for Eclipse and Wind River's Workbench
@@ -1096,14 +1096,14 @@ cases the Ada tools are tightly integrated.
 .. index:: single: Integrated Development Environments (IDEs); GNATdashboard
 .. index:: GNATdashboard IDE
 
-GNATdashboard 
+GNATdashboard
 ~~~~~~~~~~~~~
 
 GNATdashboard serves as a one-stop control panel for monitoring and improving
 the quality of Ada software. It integrates and aggregates the results of
 AdaCore's various static and dynamic analysis tools (GNATmetric, GNATcheck,
 GNATcoverage, SPARK Pro, among others) within a common interface, helping
-quality assurance managers and project leaders understand or reduce 
+quality assurance managers and project leaders understand or reduce
 their software's technical debt, and eliminating the need for manual input.
 
 GNATdashboard fits naturally into a continuous integration environment,
