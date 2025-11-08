@@ -1,0 +1,14 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ "Class should have only one objective",|mdash|,R,HR,Yes,"It's possible in \
+Ada to write classes with a unique objective."
+ "Inheritance used only if the derived class is a refinement of its basic \
+class",|mdash|,HR,HR,Yes,"Ada and SPARK can enforce respecting the \
+:index:`Liskov Substitution Principle`, ensuring inheritance consistency."
+ "Depth of inheritance limited by coding standards",|mdash|,R,HR,Yes,"GNATcheck \
+can limit inheritance depth."
+ "Overriding of operations (methods) under strict control",|mdash|,R,HR,Yes,"Ada \
+can enforce explicit syntax for overriding methods."
+ "Multiple inheritance used only for interface classes",|mdash|,HR,HR,Yes,"Ada \
+only allows multiple inheritance from interfaces."
+ "Inheritance from unknown classes",|mdash|,|mdash|,NR,Yes,"Ada only allows \
+inheritance from known classes."

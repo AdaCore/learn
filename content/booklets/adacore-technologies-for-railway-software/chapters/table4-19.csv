@@ -1,0 +1,8 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ "Traceability of the concept of the application domain to the classes \
+of the architecture",|mdash|,R,HR,No,
+ "Use of suitable frames, commonly used combinations of classes and \
+design patterns",|mdash|,R,HR,Yes,"The conventional OO design patterns can be \
+implemented in Ada."
+ Object Oriented Detailed Design,Table A.23,R,HR,Yes,See Table A.23
+ 

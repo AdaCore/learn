@@ -133,6 +133,7 @@
             :caption: AdaCore Technologies Booklets
 
             AdaCore Technologies For Airborne Software <booklets/adacore-technologies-for-airborne-software/index>
+            AdaCore Technologies For Railway Software <booklets/adacore-technologies-for-railway-software/index>
 
 .. only:: builder_html
 

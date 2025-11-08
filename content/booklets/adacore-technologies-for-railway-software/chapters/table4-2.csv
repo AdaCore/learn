@@ -1,0 +1,49 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Formal Methods,D.28,R,HR,Yes,"Component requirements and interfaces \
+can be written in the form of formal boolean properties, using the \
+Ada or SPARK languages. These properties are verifiable."
+ Modeling,Table A.17,HR,HR,Yes,"Ada and SPARK allow defining certain \
+modeling properties in the code and provide means to verify them."
+ Structured methodology,D.52,HR,HR,Yes,"Structured Methodology designs \
+can be implemented with Ada."
+ Modular Approach,D.38,M,M,Yes,"A module can be represented as an Ada \
+package, with a cohesive and well-defined functionality, a clear \
+external interface in the visible part of the package spec, a private \
+part whose visibility is limited to to its child units, and a body \
+containing the implementation (which is only visible to its subunits)."
+ Components,Table A.20,HR,HR,Yes,"A component can be defined as a set \
+of Ada packages, which can clearly define the interface to access the \
+internal data, and the interfaces can be fully and unambiguously defined. \
+This set of packages is typically identified within a project file \
+(GPR file) and can be put into a version control system."
+  Design and Coding Standards,Table A.12,HR,M,Yes,"There are available \
+references for the coding standard. Verification can be automated in \
+different ways: the GNAT compiler can define base coding standard rules \
+to be checked at compile-time, with GNATcheck implementing a wider range of \
+rules."
+ Analyzable Programs,D.2,HR,HR,Yes,"The Ada language provide native \
+features to improve program analysis, such as type ranges, parameter modes, \
+and encapsulation. Tools such as GNATmetric and GNATcheck can help monitor \
+the complexity of the code and prevent the use of overly complex code. \
+GNAT SAS allows making an assessment of program analyzability during its \
+development. For higher SILs, the use of SPARK ensures that the subset \
+of the language used is suitable for most the rigorous analysis."
+ Strongly Typed Programming Language,D.49,HR,HR,Yes,"Ada is a strongly typed \
+language."
+ Structured Programming,D.53,HR,HR,Yes,"Ada supports all the usual paradigms \
+of structured programming. In addition, GNATcheck can control additional \
+design properties, such as explicit control flows, where subprograms have \
+single entry and single exit points, and structural complexity is reduced."
+ Programming Language,Table A.15,HR,HR,Yes,"Ada can be used for most of the \
+development, while facilitating interfacing to other languages such as \
+C or assembly."
+ Language Subset,D.35,|mdash|,HR,Yes,"Ada is designed to support \
+subsetting, possibly under the control of specific runtimes, GNATcheck, or \
+with SPARK. Another possibility is to follow the recommendations in \
+:cite:`Railway_SW_ISO_IEC_1998`."
+ Object-Oriented Programming,"Table A.22, D.57",R,R,Yes,"If needed, Ada \
+supports all the usual paradigms of object-oriented programming, in addition \
+to safety-related features such as the :index:`Liskov Substitution Principle`."
+ Procedural Programming,D.60,HR,HR,Yes,"Ada supports all the usual paradigms \
+of procedural programming."
+Metaprogramming,D.59,R,R,No,
