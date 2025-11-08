@@ -40,7 +40,7 @@ C or assembly."
  Language Subset,D.35,|mdash|,HR,Yes,"Ada is designed to support \
 subsetting, possibly under the control of specific runtimes, GNATcheck, or \
 with SPARK. Another possibility is to follow the recommendations in \
-:cite:`ISO_IEC_1998`."
+:cite:`Railway_SW_ISO_IEC_1998`."
  Object-Oriented Programming,"Table A.22, D.57",R,R,Yes,"If needed, Ada \
 supports all the usual paradigms of object-oriented programming, in addition \
 to safety-related features such as the :index:`Liskov Substitution Principle`."

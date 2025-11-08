@@ -13,11 +13,11 @@ and also a normative process based on certification standards.
 In Europe, these standards are issued and maintained by CENELEC
 (European Committee for Electrotechnical Standardization).
 This document explains the usage of AdaCore's technologies in conjunction
-with |en-50128|:2011 :cite:`CENELEC_2011` |mdash|
+with |en-50128|:2011 :cite:`Railway_SW_CENELEC_2011` |mdash|
 *Railway applications - Communication, signalling and processing systems
 - Software for railway control and protection systems* |mdash|
 as modified by amendments
-|en-50128|/A1 :cite:`CENELEC_2020a` and |en-50128|/A2 :cite:`CENELEC_2020b`.
+|en-50128|/A1 :cite:`Railway_SW_CENELEC_2020a` and |en-50128|/A2 :cite:`Railway_SW_CENELEC_2020b`.
 (For ease of exposition, the 2011 edition of the standard, as modified
 by the A1 and A2 amendments, will simply be referred to as |en-50128|.)
 
@@ -31,19 +31,19 @@ standards:
 
 .. index:: EN 50126
 
-* |en-50126|-1 :cite:`CENELEC_2017b`  |mdash|
+* |en-50126|-1 :cite:`Railway_SW_CENELEC_2017b`  |mdash|
   *Railway applications - The specification and demonstration of reliability,
   availability, maintainability and safety (RAMS) - Part 1: Generic RAMS
-  process* (subsequently modified by |en-50126|-1/A1 :cite:`CENELEC_2024`)
+  process* (subsequently modified by |en-50126|-1/A1 :cite:`Railway_SW_CENELEC_2024`)
 
-* |en-50126|-2 :cite:`CENELEC_2017c`  |mdash|
+* |en-50126|-2 :cite:`Railway_SW_CENELEC_2017c`  |mdash|
   *Railway applications - The specification and demonstration of reliability,
   availability, maintainability and safety (RAMS): Part 2: systems approach
   to safety*
 
 .. index:: EN 50129
 
-* |en-50129| :cite:`CENELEC_2018` |mdash|
+* |en-50129| :cite:`Railway_SW_CENELEC_2018` |mdash|
   *Railway applications - Communication, signalling and processing systems -
   Safety related electronic systems for signalling*
 
@@ -61,8 +61,8 @@ relate to software's role in the safety of a railway system:
 
 .. index:: EN 50657
 
-* |en-50657|:2017 :cite:`CENELEC_2017a` as modified by amendment
-  |en-50657|/A1 :cite:`CENELEC_2023a` |mdash|
+* |en-50657|:2017 :cite:`Railway_SW_CENELEC_2017a` as modified by amendment
+  |en-50657|/A1 :cite:`Railway_SW_CENELEC_2023a` |mdash|
   *Railways applications - Rolling stock applications - Software on Board
   Rolling Stock*
 
@@ -75,7 +75,7 @@ relate to software's role in the safety of a railway system:
 
 .. index:: EN 50716
 
-* |en-50716|:2023 :cite:`CENELEC_2023b` |mdash|
+* |en-50716|:2023 :cite:`Railway_SW_CENELEC_2023b` |mdash|
   *Railway Applications - Requirements for software development*
 
   This standard is a successor to |en-50128| and |en-50657|,
@@ -149,12 +149,12 @@ processes defined by the CENELEC railway standards.
 AdaCore's technologies can be used at all Safety Integrity Levels, from
 Basic Integrity to |sil4|. At lower levels, the full Ada language is suitable,
 independent of platform. At higher levels, specific subsets will be needed,
-for example the :index:`Ravenscar Profile` (:cite:`Burns_et_al_2004`,
-:cite:`McCormick_Chapin_2015`) for concurrency support with analyzable
+for example the :index:`Ravenscar Profile` (:cite:`Railway_SW_Burns_et_al_2004`,
+:cite:`Railway_SW_McCormick_Chapin_2015`) for concurrency support with analyzable
 semantics and a reduced footprint, or the :index:`Light Profile`
-:cite:`AdaCore_Web_UG_Cross` for a subset with no run-time library
+:cite:`Railway_SW_AdaCore_Web_UG_Cross` for a subset with no run-time library
 requirements. At the highest level (|sil4|) the SPARK language
-(:cite:`McCormick_Chapin_2015`, :cite:`AdaCore_Altran_2020`) and its
+(:cite:`Railway_SW_McCormick_Chapin_2015`, :cite:`Railway_SW_AdaCore_Altran_2020`) and its
 verification toolsuite enable mathematical proof of properties including
 correct information flow, absence of run-time exceptions, and, for the most
 critical code, correctness of the implementation against a formally

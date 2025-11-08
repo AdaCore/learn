@@ -149,7 +149,7 @@ and technologies:
 * Support tools and languages (sub-clause 6.7) |mdash| see
   :ref:`Railway_SW_tool-qualification` below.
 
-As shown in :cite:`Boulanger_Schön_2007`, for software applications the
+As shown in :cite:`Railway_SW_Boulanger_Schön_2007`, for software applications the
 assessment process involves demonstrating that the software application
 achieves its associated safety objectives.
 
@@ -340,7 +340,7 @@ referred to here as "tool qualification", and provides details on what
 needs to be performed and/or supplied.
 (The standard does not use a specific term for this process, but the
 "tool qualification" terminology from the airborne software standards
-|do-178c| :cite:`RTCA_EUROCAE_2011a` and |do-330| :cite:`RTCA_EUROCAE_2011b`
+|do-178c| :cite:`Railway_SW_RTCA_EUROCAE_2011a` and |do-330| :cite:`Railway_SW_RTCA_EUROCAE_2011b`
 is appropriate.)
 
 .. index:: Tool classes
@@ -388,7 +388,7 @@ standard by also specifying the lifecycle phase that is relevant for each
 sub-clause.
 The steps shown indicate the requirements to be met and reflect the additional
 effort needed as the tool level increases; for further information, please see
-:cite:`Boulanger_2015`, Chapter 9.
+:cite:`Railway_SW_Boulanger_2015`, Chapter 9.
 
 
 .. .. figure:: ../images/table1.png
