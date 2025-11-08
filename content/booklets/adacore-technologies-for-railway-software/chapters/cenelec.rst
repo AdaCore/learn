@@ -70,6 +70,8 @@ sub-sections within a chapter are sub-clauses).
 .. figure:: ../images/fig-3.png
     :align: center
 
+    Structure of CENELEC EN 50128
+
 Clauses 1, 2, and 3 |mdash| *Scope*, *Normative references*, and
 *Terms, definitions and abbreviations*, respectively |mdash|
 provide context and basic information.
