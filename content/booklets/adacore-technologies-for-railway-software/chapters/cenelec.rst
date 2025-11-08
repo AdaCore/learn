@@ -455,3 +455,10 @@ have access to:
 * Qualification material for |en-50128| and/or |do-330| tool assessment;
 * A formally verifiable language (SPARK) for high-integrity use cases; and
 * Lifecycle support aligned with the needs of long-term platform deployments
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::

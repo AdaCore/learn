@@ -243,3 +243,10 @@ The following technologies will be presented:
   :align: center
 
   Contributions of AdaCore technology to the "V" Cycle
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::
