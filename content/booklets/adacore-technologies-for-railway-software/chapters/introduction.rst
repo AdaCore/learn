@@ -13,7 +13,7 @@ and also a normative process based on certification standards.
 In Europe, these standards are issued and maintained by CENELEC
 (European Committee for Electrotechnical Standardization).
 This document explains the usage of AdaCore's technologies in conjunction
-with |en-50128|:2011 :cite:`CENELEC_2011` |mdash| 
+with |en-50128|:2011 :cite:`CENELEC_2011` |mdash|
 *Railway applications - Communication, signalling and processing systems
 - Software for railway control and protection systems* |mdash|
 as modified by amendments
@@ -22,29 +22,29 @@ as modified by amendments
 by the A1 and A2 amendments, will simply be referred to as |en-50128|.)
 
 |EN-50128| is concerned with the safety-related aspects of a railway
-system, down to the hardware and/or software elements used. 
+system, down to the hardware and/or software elements used.
 This document will cover where AdaCore's technologies fit best and how they
 can best be applied to meet various requirements in this standard.
 
 |en-50128| is based on fundamentals described in other CENELEC railway
-standards: 
+standards:
 
 .. index:: EN 50126
 
-* |en-50126|-1 :cite:`CENELEC_2017b`  |mdash| 
+* |en-50126|-1 :cite:`CENELEC_2017b`  |mdash|
   *Railway applications - The specification and demonstration of reliability,
   availability, maintainability and safety (RAMS) - Part 1: Generic RAMS
   process* (subsequently modified by |en-50126|-1/A1 :cite:`CENELEC_2024`)
 
-* |en-50126|-2 :cite:`CENELEC_2017c`  |mdash| 
+* |en-50126|-2 :cite:`CENELEC_2017c`  |mdash|
   *Railway applications - The specification and demonstration of reliability,
   availability, maintainability and safety (RAMS): Part 2: systems approach
   to safety*
 
 .. index:: EN 50129
 
-* |en-50129| :cite:`CENELEC_2018` |mdash| 
-  *Railway applications - Communication, signalling and processing systems - 
+* |en-50129| :cite:`CENELEC_2018` |mdash|
+  *Railway applications - Communication, signalling and processing systems -
   Safety related electronic systems for signalling*
 
 As noted in |en-50128|, page 7:
@@ -75,7 +75,7 @@ relate to software's role in the safety of a railway system:
 
 .. index:: EN 50716
 
-* |en-50716|:2023 :cite:`CENELEC_2023b` |mdash| 
+* |en-50716|:2023 :cite:`CENELEC_2023b` |mdash|
   *Railway Applications - Requirements for software development*
 
   This standard is a successor to |en-50128| and |en-50657|,
@@ -105,7 +105,7 @@ most critical; i.e., with the highest risk of a hazard in case of software
 failure.
 
 |en-50128| defines the techniques/measures that need to be used
-at various software life cycle stages, based on the applicable SIL. 
+at various software life cycle stages, based on the applicable SIL.
 
 AdaCore technologies for railway software
 -----------------------------------------
@@ -115,26 +115,26 @@ AdaCore technologies for railway software
 AdaCore's technologies revolve around programming activities, as well as the
 closely related design and verification activities. This is the bottom of the
 "V" cycle as defined in |en-50128|, sub-clause 5.3, Figure 4
-(see :numref:`Railway_SW_fig2` below). 
+(see :numref:`Railway_SW_fig2` below).
 The company's tools exploit the features of the Ada language (highly
 recommended by table A.15) and its formally verifiable SPARK subset.
 In particular, the 2012 version of the Ada standard includes some significant
-capabilities in terms of specification and verification. 
+capabilities in terms of specification and verification.
 
 AdaCore's technologies bring two main benefits to the software life cycle
 processes defined by the CENELEC railway standards.
 
 * *Expressing software interface specifications and software component
   specifications directly in the source code.*
-  
+
   Interfaces can be precisely expressed through standard syntax for features
-  such as strong typing, parameter constraints, and subprogram contracts. 
+  such as strong typing, parameter constraints, and subprogram contracts.
   These help to clarify interface documentation, to enforce program
   constraints and invariants, and to provide an extensive foundation for
-  software component and integration verification. 
+  software component and integration verification.
 
 * *Reducing the verification costs.*
-  
+
   Bringing additional specification at the language level allows verification
   activities to run earlier in the software life cycle, during the software
   component implementation itself. Tools provided by AdaCore support this
@@ -156,16 +156,16 @@ requirements. At the highest level (|sil4|) the SPARK language
 verification toolsuite enable mathematical proof of properties including
 correct information flow, absence of run-time exceptions, and, for the most
 critical code, correctness of the implementation against a formally
-defined specification. 
+defined specification.
 
-The following technologies will be presented: 
+The following technologies will be presented:
 
 .. index:: Ada language
 
 * *Ada*, a compilable programming language supporting imperative,
   object-oriented, and functional programming styles and offering strong
   specification and verification features. Unless otherwise indicated,
-  "Ada" denotes the 2012 version of the Ada language standard. 
+  "Ada" denotes the 2012 version of the Ada language standard.
 
 .. index:: SPARK technology
 
@@ -176,14 +176,14 @@ The following technologies will be presented:
 
 * *GNAT Pro Assurance*, a specialized edition of AdaCore's GNAT Pro
   language development environments that is oriented towards projects with
-  long maintenance cycles or certification requirements 
+  long maintenance cycles or certification requirements
 
 .. index:: GNAT Static Analysis Suite (GNAT SAS)
 .. index:: single: GNAT Static Analysis Suite (GNAT SAS); Defects and vulnerability analysis
 .. index:: GNATmetric
 .. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATmetric
 .. index:: GNATcheck
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATcheck 
+.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATcheck
 
 * The *GNAT Static Analysis Suite* ("GNAT SAS"), comprising several tools:
 
@@ -228,7 +228,7 @@ The following technologies will be presented:
 .. index:: single: Integrated Development Environments (IDEs); GNATbench
 .. index:: GNATdashboard IDE
 .. index:: single: Integrated Development Environments (IDEs); GNATdashboard
-  
+
 * Several *Integrated Development Environments* (IDEs):
 
   - GNAT Studio |mdash| a robust, flexible, and extensible IDE

@@ -7,7 +7,7 @@ Overview
 --------
 
 EN 50128 governs software used in railway control and protection applications,
-i.e., systems that ensure the safe and efficient movement of trains. 
+i.e., systems that ensure the safe and efficient movement of trains.
 Examples include:
 
 * *Automatic Train Protection (ATP)*, which ensure automatic braking to avoid
@@ -84,7 +84,7 @@ conformance to the standard:
    requirements has been satisfied to the software safety integrity
    level defined and therefore the objective of the sub-clause in question
    has been met.*
-   
+
 This clause also specifies the role of normative Annex A in the selection of
 techniques and measures for satisfying the requirements,
 and the means for verifying compliance (inspection of the required documents,
@@ -140,16 +140,16 @@ and technologies:
 * Software verification (sub-clause 6.2) |mdash| defined in sub-clause 3.1.48
   as |sphinx-hack-verification|;
 * Software validation (sub-clause 6.3) |mdash| defined in sub-clause 3.1.46
-  as |sphinx-hack-validation|; 
-* Software assessment (sub-clause 6.4); 
-* Software quality assurance (sub-clause 6.5); 
+  as |sphinx-hack-validation|;
+* Software assessment (sub-clause 6.4);
+* Software quality assurance (sub-clause 6.5);
 * Modification and change control (sub-clause 6.6); and
 * Support tools and languages (sub-clause 6.7) |mdash| see
-  :ref:`Railway_SW_tool-qualification` below. 
+  :ref:`Railway_SW_tool-qualification` below.
 
 As shown in :cite:`Boulanger_Schön_2007`, for software applications the
 assessment process involves demonstrating that the software application
-achieves its associated safety objectives. 
+achieves its associated safety objectives.
 
 |en-50128| makes a clear separation between the application software,
 referred to as the *generic software* (Clause 7),
@@ -173,7 +173,7 @@ Clause 7, *Generic software development*, has the following sub-clauses:
 Clause 8, *Development of application data or algorithms: systems configured
 by application data or algorithms*, ensures that the configuration parameters
 are verified and validated with the same degree of assurance, based on the
-relevant SIL, as is needed for the generic software that they configure. 
+relevant SIL, as is needed for the generic software that they configure.
 
 .. index:: single: EN 50128; Clause 9 (Software deployment and maintenance)
 
@@ -199,12 +199,12 @@ contains a set of tables that correlate the artifacts and practices
 (documentation, techniques, and measures) specified elsewhere in the
 standard, with an indication of whether, and how strongly, they are
 recommended based on the software's SIL:
- 
+
 *  **M**: Mandatory. Must be used
 *  **HR**: Highly Recommended. If not used, need to explain rationale
    for using alternative technique
 *  **R**: Recommended
-*  **--**: No recommendation either for or against usage 
+*  **--**: No recommendation either for or against usage
 *  **NR**: Not recommended. If used, need to explain rationale for decision
 
 Annex A consists of two sub-clauses:
@@ -223,7 +223,7 @@ Annex A consists of two sub-clauses:
    - Table A.9 |ndash| Software Quality Assurance (6.5)
    - Table A.10 |ndash| Software Maintenance (9.2)
    - Table A.11 |ndash| Data Preparation Techniques (8.4)
-  
+
 *  *Detailed tables (A.2)*; these are lower-level tables
    that expand on certain entries in the Clauses tables:
 
@@ -245,10 +245,10 @@ selection:
 
 .. csv-table::
    :widths: 30 15 15 10 10 10 10
- 
+
    **Technique/Measure**, **Ref**, **Basic Integrity**, **SIL 1**, **SIL 2**, **SIL 3**, **SIL 4**
    "...", "...", "...", "...", "...", "...", "..."
-   "10  Programming Language", "Table A.15", "R", "HR", "HR","HR","HR" 
+   "10  Programming Language", "Table A.15", "R", "HR", "HR","HR","HR"
    "...", "...", "...", "...", "...", "...", "..."
 
 Table A.15 contains a row for Ada:
@@ -257,7 +257,7 @@ Table A.15 contains a row for Ada:
    :widths: 30 15 15 10 10 10 10
 
    **Technique/Measure**, **Ref**, **Basic Integrity**, **SIL 1**, **SIL 2**, **SIL 3**, **SIL 4**
-   "ADA", "D.54", "R", "HR", "HR","HR","HR" 
+   "ADA", "D.54", "R", "HR", "HR","HR","HR"
    "...", "...", "...", "...", "...", "...", "..."
 
 
@@ -311,8 +311,8 @@ These are applicable at various lifecycle phases; for example:
   (sub-clause D.35) at the design and implementation phase,
 
 * Formal Methods and Formal Proof (sub-clauses D.28 and D.29) at the
-  implementation and verification phases, and 
-  
+  implementation and verification phases, and
+
 * Equivalence Classes and Input Partition Testing (sub-clause D.18) at the
   testing phase.
 
@@ -348,7 +348,7 @@ Tool classes
 
 Tool qualification is based on the recognition that different tools need
 different levels of confidence in their reliability, based on how a
-tool error affects the application software. This is formalized in the 
+tool error affects the application software. This is formalized in the
 concept of a "tool class". As stated in sub-clause 6.7.1:
 
    *The objective is to provide evidence that potential failures of tools
@@ -386,7 +386,7 @@ standard by also specifying the lifecycle phase that is relevant for each
 sub-clause.
 The steps shown indicate the requirements to be met and reflect the additional
 effort needed as the tool level increases; for further information, please see
-:cite:`Boulanger_2015`, Chapter 9. 
+:cite:`Boulanger_2015`, Chapter 9.
 
 
 .. .. figure:: ../images/table1.png
