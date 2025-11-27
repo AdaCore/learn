@@ -142,17 +142,21 @@ implementation of the following techniques:
 GNAT Static Analysis Suite
 --------------------------
 
-**This section will be completed after review of the content for the
-various GNAT SAS tools. CodePeer is no longer a branded tool, and
-in any event there is an issue with its qualification status
-since it is not sound.**
+.. todo::
+
+    **This section will be completed after review of the content for the
+    various GNAT SAS tools. CodePeer is no longer a branded tool, and
+    in any event there is an issue with its qualification status
+    since it is not sound.**
 
 See :ref:`Railway_SW_GNAT_Static_Analysis_Suite`.
 
 Defects and Vulnerability Analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**This section will be deleted (and re-titled), or else adapted as needed**
+.. todo::
+
+    **This section will be deleted (and re-titled), or else adapted as needed**
 
 .. index:: single: Defects and Vulnerability Analysis; Qualification
 .. index:: single: Tool qualification; Defects and Vulnerability Analysis
