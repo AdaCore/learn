@@ -554,7 +554,7 @@ application.
 
 These run-time libraries can also be customized directly to suit
 certification requirements: unneeded packages can be removed to allow for
-self-certification of the runtime, while the "|nbhyphen| nostdlib" linker
+self-certification of the runtime, while the ``-nostdlib`` linker
 switch can be used to prevent the use of the runtime. Even when the run-time
 library is suppressed, some run-time sources are still required to provide
 compile-time definitions. While this code produces no object code, the
