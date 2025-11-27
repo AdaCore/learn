@@ -1,0 +1,10 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Static Software Analysis,"D.13, D.37, Table A.19",HR,HR,Yes,"See Table A.19."
+ Dynamic Software Analysis,"Tables A.13, A.14",R,HR,Yes,"See Tables A.13 and \
+A.14."
+ Cause Consequence Diagrams,D.6,R,R,No,
+ Event Tree Analysis,D.22,R,R,No,
+ Software Error Effect Analysis,D.25,R,HR,Yes,"GNAT Studio supports code \
+display and navigation. GNAT SAS can identify likely error locations in the \
+code. These tools support both detection of potential software errors and \
+analysis throughout the code."

@@ -1,0 +1,10 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Information Hiding,D.33,|mdash|,|mdash|,Yes,"See Information Encapsulation below."
+ Information Encapsulation,D.33,HR,HR,Yes,"Ada provides the necessary features \
+to separate the interface of a module from its implementation, and enforce \
+this separation."
+ Parameter Number Limit,D.38,R,R,Yes,"GNATcheck can limit the number of \
+parameters for subroutines, and report violations."
+ Fully Defined Interface,D.38,HR,M,Yes,"Ada offers many features to support \
+interface definition, including behavior specification through pre- and \
+post-conditions."

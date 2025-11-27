@@ -1,0 +1,7 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Avalanche/Stress Testing,D.3,R,HR,No,"Ada allows modeling data constraints, \
+in the form of type predicates."
+ Response Timing and Memory Constraints,D.45,HR,HR,Yes,"GNATstack can \
+statically analyze stack usage."
+ Performance Requirements,D.40,HR,HR,No,
+ 

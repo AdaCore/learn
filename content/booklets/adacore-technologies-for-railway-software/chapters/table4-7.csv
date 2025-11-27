@@ -1,0 +1,10 @@
+ Technique/Measure,Ref,SIL 2,SIL 3/4,Covered,Comment
+ Accredited to EN ISO 9001,7.1,HR,HR,No,
+ Compliant with EN ISO 9001,7.1,M,M,No,
+ Compliant with ISO/IEC 90003,7.1,R,R,No,
+ Company Quality System,7.1,M,M,No,
+ Software Configuration Management,D.48,M,M,No,
+ Checklists,D.7,HR,M,No,
+ Traceability,D.58,HR,M,No,
+ Data Recording and Analysis,D.12,HR,M,Yes,"The data produced by tools \
+can be written to files and placed under configuration management."

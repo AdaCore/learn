@@ -30,6 +30,7 @@
 
 .. |blankcell| unicode:: U+0020
 .. |nbhyphen| unicode:: U+2011   .. non-breaking hyphen
+.. |rt-arrow| unicode:: U+2192   .. right-pointing arrow
 .. |gnata|    replace:: ``-gnata``
 .. |do-160|   replace:: DO |nbhyphen| 160/ED  |nbhyphen| 14
 .. |do-178|   replace:: DO |nbhyphen| 178/ED  |nbhyphen| 12
@@ -45,5 +46,23 @@
 .. |do-331|   replace:: DO |nbhyphen| 331/ED  |nbhyphen| 218
 .. |do-332|   replace:: DO |nbhyphen| 332/ED  |nbhyphen| 217
 .. |do-333|   replace:: DO |nbhyphen| 333/ED  |nbhyphen| 216
-.. |gnatsas|    replace:: GNAT SAS
-.. |gnatdas|    replace:: GNAT DAS
+.. |gnatsas|  replace:: GNAT SAS
+.. |gnatdas|  replace:: GNAT DAS
+.. |gnatpro|  replace:: GNAT\ |nbsp|\ Pro
+
+.. |en-50126|   replace:: EN\ |nbsp|\ 50126
+.. |en-50126-1| replace:: EN\ |nbsp|\ 50126\ |nbhyphen|\ 1
+.. |en-50126-2| replace:: EN\ |nbsp|\ 50126\ |nbhyphen|\ 2
+.. |en-50128|   replace:: EN\ |nbsp|\ 50128
+.. |en-50128a1| replace:: EN\ |nbsp|\ 50128/A1
+.. |en-50128a2| replace:: EN\ |nbsp|\ 50128/A2
+.. |en-50129|   replace:: EN\ |nbsp|\ 50129
+.. |en-50657|   replace:: EN\ |nbsp|\ 50657
+.. |en-50716|   replace:: EN\ |nbsp|\ 50716
+
+.. |sil0|  replace:: SIL\ |nbsp|\ 0
+.. |sil1|  replace:: SIL\ |nbsp|\ 1
+.. |sil4|  replace:: SIL\ |nbsp|\ 4
+.. |ssil0| replace:: SSIL\ |nbsp|\ 0
+.. |ssil4| replace:: SSIL\ |nbsp|\ 4
+
