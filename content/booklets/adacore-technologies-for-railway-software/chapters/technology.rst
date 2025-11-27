@@ -175,7 +175,7 @@ Data Flow Analysis (D.10)
 The GNAT Pro toolchain can be configured to detect uninitialized variables
 at run-time through the use of the pragma :ada:`Initialize_Scalars`.
 With this pragma, all scalars are automatically initialized to either an
-out-of-range value (if there is one) or to an "unusual" value (either
+out-of-range value (if there is one) or to an *unusual* value (either
 the largest or smallest).
 This significantly improves detection at test time.
 
@@ -637,7 +637,7 @@ of :ada:`X` and :ada:`Y`. Again, SPARK will analyze the code to check that
 the variable relationships specified are correct.
 
 In this example, an actual variable is used to define data flow.
-It's also possible to create an "abstract" state, implemented by a set of
+It's also possible to create an *abstract* state, implemented by a set of
 variables. Generally speaking, although these notations and verifications
 are quite useful on the lower levels of the architecture, they may not be
 that pertinent at higher levels. SPARK is flexible with regard to where
@@ -785,7 +785,7 @@ Here is an example:
     end Counters;
 
 As a variation on this example, Ada supports encapsulation through
-"getter" and "setter" subprograms.
+*getter* and *setter* subprograms.
 Rather than directly manipulating a global variable declared in a
 package specification, the program can be structured to enforce
 accesses through a procedural interface:
@@ -965,8 +965,8 @@ levels of coupling, through the notions of *child packages* and
 *private packages* as described below.
 In addition, the GNAT Pro technology provides the notion of a *project*,
 which defines a group of packages, possibly with a defined interface.
-These constructs can be used to define a tool-supported notion of "component"
-or "module" at the software level.
+These constructs can be used to define a tool-supported notion of *component*
+or *module* at the software level.
 
 .. index:: Ada language; Coupling between modules
 
@@ -1025,7 +1025,7 @@ GNATmetric has built-in support for retrieving these numbers.
 .. index:: Project (GNAT Pro); GPR files
 
 At a coarser granularity, packages can be grouped together into a
-GNAT Project file ("GPR"), with a clear interface.
+GNAT Project file (*GPR*), with a clear interface.
 An application architecture can be defined as a combination of project files.
 
 Collections of subprograms shall be built providing several level of modules
