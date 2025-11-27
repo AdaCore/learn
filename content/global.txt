@@ -28,7 +28,6 @@
 
 .. include:: <isonum.txt>
 
-.. |a-grave|  unicode:: U+00E0   .. lower case 'a' with grave accent
 .. |blankcell| unicode:: U+0020
 .. |nbhyphen| unicode:: U+2011   .. non-breaking hyphen
 .. |rt-arrow| unicode:: U+2192   .. right-pointing arrow

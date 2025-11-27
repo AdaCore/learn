@@ -585,7 +585,7 @@ materials. Thus the program will have a tailored run-time library supporting
 only those features that have been specified.
 
 More generally, the configurable run-time capability allows specifying support
-for Ada's dynamic features in an |a-grave| la carte fashion ranging from none
+for Ada's dynamic features in an à la carte fashion ranging from none
 at all to full Ada.
 The units included in the executable may be either a subset of
 the standard libraries provided with GNAT Pro, or specially tailored to the
