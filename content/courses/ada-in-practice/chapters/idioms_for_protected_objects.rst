@@ -5,6 +5,12 @@ Idioms for Protected Objects
 
 .. include:: ../../../global.txt
 
+.. note::
+
+    Parts of this chapter were originally published as the
+    `Blog Post: On the Benefits of Families ... (Entry Families) <https://www.adacore.com/blog/on-the-benefits-of-families>`_.
+
+
 First, a bit of background regarding synchronization in concurrent programming,
 protected objects, and the requeue statement. If you already know this
 material, feel free to skip ahead to the
