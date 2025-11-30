@@ -1898,7 +1898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ace@npm:0.0.52":
+"@types/ace@npm:^0.0.52":
   version: 0.0.52
   resolution: "@types/ace@npm:0.0.52"
   checksum: 10c0/10ec36811590fbee532b451881b116d03c0dac3ec47f65486b9b302c09d19be2f69e4fb8551a14fdabd45c64c88aeeec6c1bd80e3fa153d504871a3f9ea261e7
@@ -7443,7 +7443,7 @@ __metadata:
     "@babel/core": "npm:^7.28.5"
     "@babel/preset-env": "npm:^7.28.5"
     "@istanbuljs/nyc-config-typescript": "npm:^1.0.2"
-    "@types/ace": "npm:0.0.52"
+    "@types/ace": "npm:^0.0.52"
     "@types/chai": "npm:^5.2.3"
     "@types/chai-as-promised": "npm:^8.0.2"
     "@types/chai-dom": "npm:^1.11.3"
@@ -7483,7 +7483,7 @@ __metadata:
     jszip: "npm:^3.10.1"
     lato-font: "npm:^3.0.0"
     mini-css-extract-plugin: "npm:^2.9.4"
-    mocha: "npm:11.7.5"
+    mocha: "npm:^11.7.5"
     mock-socket: "npm:^9.3.1"
     node-fetch: "npm:^3.3.2"
     node-linker: "npm:^1.0.1"
@@ -8106,7 +8106,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:11.7.5":
+"mocha@npm:^11.7.5":
   version: 11.7.5
   resolution: "mocha@npm:11.7.5"
   dependencies:
