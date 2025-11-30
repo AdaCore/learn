@@ -303,9 +303,8 @@ protected operations provide automatically.
 System Implementation of PO Mutual Exclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The underlying run-time library or RTOS implements the mutual exclusion and
-thread management semantics for protected objects. Two approaches are known in
-the Ada context.
+The underlying run-time library implements the mutual exclusion and
+thread management semantics for protected objects. Two approaches are known.
 
 One implementation approach, typical when executing on an operating system,
 uses an explicit locking mechanism provided by the OS. The run-time library
@@ -530,7 +529,7 @@ There are issues unaddressed in the three-step client protocol illustrated by
 the code above, especially error cases. For example, even if an exception is
 raised in step two, we need to ensure that :ada:`Release` is called with
 exactly-once semantics. There are other abstractions that address these client
-usage issues, namely scope-based locking, but will ignore them here. See the
+usage issues, namely scope-based locking, but we'll ignore them here. See the
 :ref:`Resource Acquisition Is Initialization <Ada_In_Practice_RAII>` idiom for
 the :ada:`Scope_Lock` type.
 
@@ -662,7 +661,7 @@ other caller currently owns the PO.
 
 The examples so far exist primarily for providing mutual exclusion to code that
 includes potentially blocking operations. By no means, however, are these the
-most common. Much more powerful abstractions are possible.
+only examples. Much more powerful abstractions are possible.
 
 For example, let's say we want to have a notion of *events* that application
 tasks can await, suspending until the specified event is *signaled*. At some
@@ -760,7 +759,7 @@ Here's a task that waits for either event :ada:`A` or :ada:`B`, using a global
     end A_or_B_Processor;
 
 When the call to :ada:`Wait` returns, at least one of either :ada:`A` or
-:ada:`B` has been signaled. One of those signaled events is then selected and
+:ada:`B` has been signaled. One of those signaled events was selected and
 returned in the :ada:`Enabler` parameter. That selected event is no longer
 signaled when the call returns and will stay that way until another call to
 procedure :ada:`Signal` changes it. The other event in the list is not
@@ -893,7 +892,8 @@ compile-time visibility to the entry parameters, so the parameters cannot be
 referenced in the barriers. This situation calls for a requeue statement.
 
 Because :ada:`Wait` always takes a call, the entry barrier is just hard-coded
-to :ada:`True`. (That's always a strong indication that requeue is involved.)
+to :ada:`True`. (As mentioned earlier, that's always a strong indication that
+requeue is involved.)
 Even though this barrier always allows a call, much like a protected procedure,
 we must use an entry because only protected entries can requeue callers.
 
@@ -1420,9 +1420,9 @@ within a generic package, like so:
     with
        Priority => Ceiling
     is
-       --  ...
+       ...
     private
-       --  ...
+        ...
     end Bounded_Buffer;
 
 The two discriminants allow the type to be parameterized when clients declare
