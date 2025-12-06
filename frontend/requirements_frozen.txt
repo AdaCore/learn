@@ -53,6 +53,6 @@ sphinxcontrib-serializinghtml==2.0.0
 stack-data==0.6.3
 traitlets==5.14.3
 typing_extensions==4.15.0
-urllib3==2.5.0
+urllib3==2.6.0
 wcwidth==0.2.14
 websocket-client==1.9.0
