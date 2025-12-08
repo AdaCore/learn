@@ -1,3 +1,5 @@
+.. _Ada_In_Practice_Interrupt_Handling:
+
 Interrupt Handling
 ==================
 
