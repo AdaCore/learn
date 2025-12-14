@@ -3052,8 +3052,8 @@ floating-point types.
 
 As mentioned in the Introduction to Ada course course, fixed-point types
 are classified in
-decimal fixed-point types and
-ordinary (binary).
+:ref:`decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Types>` and
+ordinary (binary) types.
 
 .. todo::
 
