@@ -3390,6 +3390,2370 @@ is the case for the :ada:`C` variable of :ada:`T6_D6` type, it can store the
 0.0005 value.
 
 
+Scale and delta
+~~~~~~~~~~~~~~~
+
+The previous example purposefully used the form :ada:`10.0 ** (-3)` to declare
+the delta of decimal fixed-point types. Here, the variable :ada:`N` in the
+expression 10\ :sup:`-N` is the scale. In Ada terms, this corresponds to
+:ada:`Delta_Value : constant := 10.0 ** (-Scale_Value);`. (Note that the scale
+:ada:`N` has a minus sign. We talk more about that later on.)
+
+This terminology is important because, as we see later on, the
+:ref:`min. and max. values for the scale <Adv_Ada_Decimal_Fixed_Point_Min_Max_Scale_Delta>`
+depend on the compiler and target platform. In fact, the values of min. and
+max. delta are simply derived from the values of :ada:`Min_Scale` and
+:ada:`Max_Scale`, which are compiler-defined values that can vary according to
+the specific target platform.
+
+Although we might commonly see positive values or zero for the scale |mdash| in
+some cases, the :ada:`N` scale might even be negative. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Positive_Scale
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Positive_Scale is
+
+       type TP3_D3 is
+         delta 10.0 ** 3 digits 2;
+         --           ^^^
+         --  Scale N is -(-3), i.e.:
+         --  TP3_D3'Scale = -3
+
+    begin
+       Put_Line ("TP3_D3'Range : "
+                 & TP3_D3'First'Image
+                 & " .. "
+                 & TP3_D3'Last'Image);
+       Put_Line ("TP3_D3'Delta : "
+                 & TP3_D3'Delta'Image);
+    end Show_Positive_Scale;
+
+In this example, we have a scale of -3, so the corresponding delta of type
+:ada:`TP3_D3` is 10\ :sup:`-(-3)` (i.e. 10\ :sup:`3`, or 1000). This means that
+even a value such as 999.0 is too small to be represented by an object
+of this type. Accordingly, we see that this type has a range between -99,000
+and 99,000. (We discuss
+:ref:`ranges of decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Type_Ranges>`
+later on.)
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Derived_Types_Subtypes:
+
+Derived decimal fixed-point types and subtypes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we present a brief discussion about types derived from
+decimal fixed-point types, as well as subtypes of decimal fixed-point types.
+
+Derived decimal fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can of course derive from any decimal fixed-point types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Derived_Decimal_Fixed_Point_Types
+
+    package Custom_Decimal_Types is
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+
+       type Small_Money is new
+         T2_D6;
+
+    end Custom_Decimal_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Derived_Decimal_Types is
+       D  : T2_D6;
+       SM : Small_Money;
+    begin
+       D  := 231.53;
+       Put_Line ("D  = "
+                 & D'Image);
+
+       SM := Small_Money (D);
+       Put_Line ("SM = "
+                 & SM'Image);
+    end Show_Derived_Decimal_Types;
+
+In this example, we derive the :ada:`Small_Money` type from the :ada:`T2_D6`
+type. Also, :ada:`Small_Money (D)` performs a conversion between decimal
+fixed-point types (from the :ada:`T2_D6` type to the :ada:`Small_Money`
+type).
+
+We can also constrain the decimal precision of the derived type. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Derived_Decimal_Fixed_Point_Types
+    :class: ada-run-expect-failure
+
+    package Custom_Decimal_Types is
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+
+       type Small_Money is new
+         T2_D6;
+
+       type Smaller_Money is new
+         T2_D6 digits 2;
+
+    end Custom_Decimal_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Derived_Decimal_Types is
+       D  : T2_D6;
+       SM : Smaller_Money;
+    begin
+       Put_Line ("T2_D6'Range : "
+                 & T2_D6'First'Image
+                 & " .. "
+                 & T2_D6'Last'Image);
+       Put_Line ("T2_D6'Delta : "
+                 & T2_D6'Delta'Image);
+       Put_Line ("--------------------");
+
+       Put_Line ("Smaller_Money'Range : "
+                 & Smaller_Money'First'Image
+                 & " .. "
+                 & Smaller_Money'Last'Image);
+       Put_Line ("Smaller_Money'Delta : "
+                 & Smaller_Money'Delta'Image);
+       Put_Line ("--------------------");
+
+       D  := 231.53;
+       Put_Line ("D  = "
+                 & D'Image);
+
+       SM := Smaller_Money (D);
+       Put_Line ("SM = "
+                 & SM'Image);
+    end Show_Derived_Decimal_Types;
+
+In this example, we derive the :ada:`Smaller_Money` type from the
+:ada:`T2_D6` type and decrease the decimal precision from 6 to 2 digits.
+Because the *delta* of both types is the same, we see that the range of the
+:ada:`Smaller_Money` type (from -0.99 to 0.99) is smaller than the range of the
+:ada:`T2_D6` type (from 9999.99 to 9999.99).
+
+As expected, the type conversion :ada:`Smaller_Money (D)` in this example
+|mdash| from :ada:`T2_D6` to the :ada:`Smaller_Money` type |mdash| raises a
+:ada:`Constraint_Error` exception because the value of :ada:`D` (231.53) is
+beyond the range of the :ada:`Smaller_Money` type.
+
+
+Decimal fixed-point subtypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can also declare subtypes of decimal fixed-point types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Derived_Decimal_Fixed_Point_Types
+
+    package Custom_Decimal_Types is
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+
+       subtype Small_Money is T2_D6;
+
+    end Custom_Decimal_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use Custom_Decimal_Types;
+
+    procedure Show_Decimal_Subtypes is
+       C  : T2_D6;
+       FC : Small_Money;
+    begin
+       C  := 231.53;
+       Put_Line ("C  = "
+                 & C'Image);
+
+       FC := C;
+       Put_Line ("FC = "
+                 & FC'Image);
+    end Show_Decimal_Subtypes;
+
+In this example, we declare :ada:`Small_Money` as a subtype of the :ada:`T2_D6`
+type.
+
+
+Decimal precision of the base type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We discussed :ref:`base types <Adv_Ada_Base_Types>` earlier on. Also, we
+discussed the
+:ref:`decimal precision of the base type of floating-point types <Adv_Ada_Floating_Point_Base_Type_Decimal_Precision>`.
+
+We learned that the decimal precision of the base type of a floating-point
+type :ada:`FPT` might be higher than the decimal precision we've specified
+for type :ada:`FPT`. For decimal fixed-point types, however, the decimal
+precision of the base type of a decimal fixed-point type :ada:`DT` always
+matches the decimal precision of the :ada:`DT` type itself.
+
+.. todo::
+
+    Find specific ARM reference for matching decimal precision of DT and
+    DT'Base.
+
+For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Base_Type
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Base_Type_Precision is
+
+       type DT_6 is
+         delta 10.0 ** (-2) digits 6;
+
+       type DT_12 is
+         delta 10.0 ** (-2) digits 12;
+
+    begin
+       Put_Line
+         ("DT_6'Digits        :"
+          & DT_6'Digits'Image
+          & " digits");
+       Put_Line
+         ("DT_6'Base'Digits   :"
+          & DT_6'Base'Digits'Image
+          & " digits");
+       Put_Line
+         ("DT_12'Digits       :"
+          & DT_12'Digits'Image
+          & " digits");
+       Put_Line
+         ("DT_12'Base'Digits  :"
+          & DT_12'Base'Digits'Image
+          & " digits");
+    end Show_Base_Type_Precision;
+
+In this example, we see that the decimal precision of :ada:`DT_6` and
+:ada:`DT_6'Base` is 6, while the decimal precision of :ada:`DT_12` and
+:ada:`DT_12'Base` is 12.
+
+
+Size of decimal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Previously, we talked about the
+:ref:`size of floating-point types <Adv_Ada_Floating_Point_Size>` and how the
+number of digits might not have a direct impact on the type's size. In
+contrast, for decimal fixed-point types, each digit increases the type's size.
+Note, however, that the *delta* of the decimal type doesn't have an influence
+on the type's size. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+
+    package Decimal_Types is
+
+       type Decimal_1_Digits is
+         delta 10.0 ** (-2) digits 1;
+       type Decimal_2_Digits is
+         delta 10.0 ** (-2) digits 2;
+       type Decimal_3_Digits is
+         delta 10.0 ** (-2) digits 3;
+       type Decimal_4_Digits is
+         delta 10.0 ** (-2) digits 4;
+       type Decimal_5_Digits is
+         delta 10.0 ** (-2) digits 5;
+       type Decimal_6_Digits is
+         delta 10.0 ** (-2) digits 6;
+       type Decimal_7_Digits is
+         delta 10.0 ** (-2) digits 7;
+       type Decimal_8_Digits is
+         delta 10.0 ** (-2) digits 8;
+       type Decimal_9_Digits is
+         delta 10.0 ** (-2) digits 9;
+       type Decimal_10_Digits is
+         delta 10.0 ** (-2) digits 10;
+       type Decimal_11_Digits is
+         delta 10.0 ** (-2) digits 11;
+       type Decimal_12_Digits is
+         delta 10.0 ** (-2) digits 12;
+       type Decimal_13_Digits is
+         delta 10.0 ** (-2) digits 13;
+       type Decimal_14_Digits is
+         delta 10.0 ** (-2) digits 14;
+       type Decimal_15_Digits is
+         delta 10.0 ** (-2) digits 15;
+       type Decimal_16_Digits is
+         delta 10.0 ** (-2) digits 16;
+       type Decimal_17_Digits is
+         delta 10.0 ** (-2) digits 17;
+       type Decimal_18_Digits is
+         delta 10.0 ** (-2) digits 18;
+       type Decimal_19_Digits is
+         delta 10.0 ** (-2) digits 19;
+       type Decimal_20_Digits is
+         delta 10.0 ** (-2) digits 20;
+       type Decimal_21_Digits is
+         delta 10.0 ** (-2) digits 21;
+       type Decimal_22_Digits is
+         delta 10.0 ** (-2) digits 22;
+       type Decimal_23_Digits is
+         delta 10.0 ** (-2) digits 23;
+       type Decimal_24_Digits is
+         delta 10.0 ** (-2) digits 24;
+       type Decimal_25_Digits is
+         delta 10.0 ** (-2) digits 25;
+       type Decimal_26_Digits is
+         delta 10.0 ** (-2) digits 26;
+       type Decimal_27_Digits is
+         delta 10.0 ** (-2) digits 27;
+       type Decimal_28_Digits is
+         delta 10.0 ** (-2) digits 28;
+       type Decimal_29_Digits is
+         delta 10.0 ** (-2) digits 29;
+       type Decimal_30_Digits is
+         delta 10.0 ** (-2) digits 30;
+       type Decimal_31_Digits is
+         delta 10.0 ** (-2) digits 31;
+       type Decimal_32_Digits is
+         delta 10.0 ** (-2) digits 32;
+       type Decimal_33_Digits is
+         delta 10.0 ** (-2) digits 33;
+       type Decimal_34_Digits is
+         delta 10.0 ** (-2) digits 34;
+       type Decimal_35_Digits is
+         delta 10.0 ** (-2) digits 35;
+       type Decimal_36_Digits is
+         delta 10.0 ** (-2) digits 36;
+       type Decimal_37_Digits is
+         delta 10.0 ** (-2) digits 37;
+       type Decimal_38_Digits is
+         delta 10.0 ** (-2) digits 38;
+
+    end Decimal_Types;
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Decimal_Types; use Decimal_Types;
+
+    procedure Show_Decimal_Digits is
+    begin
+       Put_Line ("Decimal_1_Digits'Size   :"
+                 & Decimal_1_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_2_Digits'Size   :"
+                 & Decimal_2_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_3_Digits'Size   :"
+                 & Decimal_3_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_4_Digits'Size   :"
+                 & Decimal_4_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_5_Digits'Size   :"
+                 & Decimal_5_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_6_Digits'Size   :"
+                 & Decimal_6_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_7_Digits'Size   :"
+                 & Decimal_7_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_8_Digits'Size   :"
+                 & Decimal_8_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_9_Digits'Size   :"
+                 & Decimal_9_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_10_Digits'Size  :"
+                 & Decimal_10_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_11_Digits'Size  :"
+                 & Decimal_11_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_12_Digits'Size  :"
+                 & Decimal_12_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_13_Digits'Size  :"
+                 & Decimal_13_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_14_Digits'Size  :"
+                 & Decimal_14_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_15_Digits'Size  :"
+                 & Decimal_15_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_16_Digits'Size  :"
+                 & Decimal_16_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_17_Digits'Size  :"
+                 & Decimal_17_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_18_Digits'Size  :"
+                 & Decimal_18_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_19_Digits'Size  :"
+                 & Decimal_19_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_20_Digits'Size  :"
+                 & Decimal_20_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_21_Digits'Size  :"
+                 & Decimal_21_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_22_Digits'Size  :"
+                 & Decimal_22_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_23_Digits'Size  :"
+                 & Decimal_23_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_24_Digits'Size  :"
+                 & Decimal_24_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_25_Digits'Size  :"
+                 & Decimal_25_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_26_Digits'Size  :"
+                 & Decimal_26_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_27_Digits'Size  :"
+                 & Decimal_27_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_28_Digits'Size  :"
+                 & Decimal_28_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_29_Digits'Size  :"
+                 & Decimal_29_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_30_Digits'Size  :"
+                 & Decimal_30_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_31_Digits'Size  :"
+                 & Decimal_31_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_32_Digits'Size  :"
+                 & Decimal_32_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_33_Digits'Size  :"
+                 & Decimal_33_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_34_Digits'Size  :"
+                 & Decimal_34_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_35_Digits'Size  :"
+                 & Decimal_35_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_36_Digits'Size  :"
+                 & Decimal_36_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_37_Digits'Size  :"
+                 & Decimal_37_Digits'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_38_Digits'Size  :"
+                 & Decimal_38_Digits'Size'Image
+                 & " bits");
+    end Show_Decimal_Digits;
+
+When running the application above, we see that the number of bits increases
+for each digit that we *add* to our decimal type declaration. On a typical
+desktop PC, we may see the following results:
+
++-------------+-------------+
+| Digits      | Size (bits) |
++=============+=============+
+|           1 |           5 |
++-------------+-------------+
+|           2 |           8 |
++-------------+-------------+
+|           3 |          11 |
++-------------+-------------+
+|           4 |          15 |
++-------------+-------------+
+|           5 |          18 |
++-------------+-------------+
+|       [...] |       [...] |
++-------------+-------------+
+|          10 |          35 |
++-------------+-------------+
+|       [...] |       [...] |
++-------------+-------------+
+|          18 |          61 |
++-------------+-------------+
+|          19 |          65 |
++-------------+-------------+
+|       [...] |       [...] |
++-------------+-------------+
+|          38 |         128 |
++-------------+-------------+
+
+When we look at the base type of these decimal fixed-point types, we see that
+the actual size on hardware is usually bigger. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Decimal_Types; use Decimal_Types;
+
+    procedure Show_Decimal_Digits is
+    begin
+       Put_Line ("Decimal_1_Digits'Base'Size   :"
+                 & Decimal_1_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_2_Digits'Base'Size   :"
+                 & Decimal_2_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_3_Digits'Base'Size   :"
+                 & Decimal_3_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_4_Digits'Base'Size   :"
+                 & Decimal_4_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_5_Digits'Base'Size   :"
+                 & Decimal_5_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_6_Digits'Base'Size   :"
+                 & Decimal_6_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_7_Digits'Base'Size   :"
+                 & Decimal_7_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_8_Digits'Base'Size   :"
+                 & Decimal_8_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_9_Digits'Base'Size   :"
+                 & Decimal_9_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_10_Digits'Base'Size  :"
+                 & Decimal_10_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_11_Digits'Base'Size  :"
+                 & Decimal_11_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_12_Digits'Base'Size  :"
+                 & Decimal_12_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_13_Digits'Base'Size  :"
+                 & Decimal_13_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_14_Digits'Base'Size  :"
+                 & Decimal_14_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_15_Digits'Base'Size  :"
+                 & Decimal_15_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_16_Digits'Base'Size  :"
+                 & Decimal_16_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_17_Digits'Base'Size  :"
+                 & Decimal_17_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_18_Digits'Base'Size  :"
+                 & Decimal_18_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_19_Digits'Base'Size  :"
+                 & Decimal_19_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_20_Digits'Base'Size  :"
+                 & Decimal_20_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_21_Digits'Base'Size  :"
+                 & Decimal_21_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_22_Digits'Base'Size  :"
+                 & Decimal_22_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_23_Digits'Base'Size  :"
+                 & Decimal_23_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_24_Digits'Base'Size  :"
+                 & Decimal_24_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_25_Digits'Base'Size  :"
+                 & Decimal_25_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_26_Digits'Base'Size  :"
+                 & Decimal_26_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_27_Digits'Base'Size  :"
+                 & Decimal_27_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_28_Digits'Base'Size  :"
+                 & Decimal_28_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_29_Digits'Base'Size  :"
+                 & Decimal_29_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_30_Digits'Base'Size  :"
+                 & Decimal_30_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_31_Digits'Base'Size  :"
+                 & Decimal_31_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_32_Digits'Base'Size  :"
+                 & Decimal_32_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_33_Digits'Base'Size  :"
+                 & Decimal_33_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_34_Digits'Base'Size  :"
+                 & Decimal_34_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_35_Digits'Base'Size  :"
+                 & Decimal_35_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_36_Digits'Base'Size  :"
+                 & Decimal_36_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_37_Digits'Base'Size  :"
+                 & Decimal_37_Digits'Base'Size'Image
+                 & " bits");
+       Put_Line ("Decimal_38_Digits'Base'Size  :"
+                 & Decimal_38_Digits'Base'Size'Image
+                 & " bits");
+    end Show_Decimal_Digits;
+
+On a typical desktop PC, we may see the following results:
+
++---------------------------------------------------+-----------+
+| Decimal Type                                      | Base Type |
++-------------+-------------+-----------+-----------+-----------+
+| Min. digits | Max. digits | Min. Size | Max. Size | Size      |
+|             |             | (bits)    | (Bits)    | (bits)    |
++=============+=============+===========+===========+===========+
+|           1 |           2 |         5 |         8 |         8 |
++-------------+-------------+-----------+-----------+-----------+
+|           3 |           4 |        11 |        15 |        16 |
++-------------+-------------+-----------+-----------+-----------+
+|           5 |           9 |        18 |        31 |        32 |
++-------------+-------------+-----------+-----------+-----------+
+|          10 |          18 |        35 |        61 |        64 |
++-------------+-------------+-----------+-----------+-----------+
+|          19 |          38 |        65 |       128 |       128 |
++-------------+-------------+-----------+-----------+-----------+
+
+In other words, while the size of a decimal fixed-point type varies according
+to the number of digits, the size of the base type (on a typical desktop PC)
+corresponds to common power-of-two sizes such as 8, 16, 32, 64, and 128 bits.
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Size:
+
+Custom size of decimal fixed-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can explicitly require a certain size for a decimal fixed-point type |mdash|
+similar to what we can do with other types such as
+:ref:`floating-point types <Adv_Ada_Floating_Point_Type_Size>`. In order to do
+that, we add the :ref:`Size aspect <Adv_Ada_Size_Aspect>` to the type
+declaration. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type Decimal_6_Digits is
+         delta 10.0 ** (-2) digits 6
+           with Size => 128;
+
+    begin
+       Put_Line ("Decimal_6_Digits'Size      :"
+                 & Decimal_6_Digits'Size'Image
+                 & " bits");
+    end Show_Decimal_Digits;
+
+In this example, we require that :ada:`Decimal_6_Digits` has a size of 128
+bits on the target platform |mdash| instead of the 32 bits that we would
+typically see for that type on a desktop PC. (As a reminder, this code example
+won't compile if your target architecture doesn't support 128-bit data types.)
+
+.. todo::
+
+    Discuss :ada:`Decimal_6_Digits'Size` vs. :ada:`Decimal_6_Digits'Base'Size`.
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Ranges:
+
+Range of decimal fixed-point types and subtypes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we discuss how to retrieve the range information of decimal
+fixed-point types and subtypes. Also, we look at how we can use the
+:ada:`range` specification to restrict the range of derived types.
+
+
+Range of decimal fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As we've seen in the
+:ref:`Introduction to Ada course <Intro_Ada_Decimal_Fixed_Point_Types_Digits>`,
+the :ada:`digits` part of the type declaration determines the number of digits
+that the decimal fixed-point type is able to represent. For example, by writing
+:ada:`digits 3` and specifying a delta of 10\ :sup:`0` (1.0), we're able to
+represent values with three digits ranging from -999 to 999 |mdash| this
+corresponds to a range from -10\ :sup:`3` + 1 to 10\ :sup:`3` - 1. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type D1 is
+         delta 1.0 digits 1;
+       type D2 is
+         delta 1.0 digits 2;
+       type D3 is
+         delta 1.0 digits 3;
+       type D6 is
+         delta 1.0 digits 6;
+       type D38 is
+         delta 1.0 digits 38;
+
+    begin
+       Put_Line ("D1'Range : "
+                 & D1'First'Image
+                 & " .. "
+                 & D1'Last'Image);
+       Put_Line ("D2'Range : "
+                 & D2'First'Image
+                 & " .. "
+                 & D2'Last'Image);
+       Put_Line ("D3'Range : "
+                 & D3'First'Image
+                 & " .. "
+                 & D3'Last'Image);
+       Put_Line ("D6'Range : "
+                 & D6'First'Image
+                 & " .. "
+                 & D6'Last'Image);
+       Put_Line ("D38'Range : "
+                 & D38'First'Image
+                 & " .. "
+                 & D38'Last'Image);
+    end Show_Decimal_Digits;
+
+In this example, we declare multiple decimal types. This is the range of each
+one of them:
+
++------------+---------------------------------------------+------------------------------------------+
+| Type       | Min. value                                  | Max. value                               |
++============+=============================================+==========================================+
+| :ada:`D1`  |                                        -9.0 |                                      9.0 |
++------------+---------------------------------------------+------------------------------------------+
+| :ada:`D2`  |                                       -99.0 |                                     99.0 |
++------------+---------------------------------------------+------------------------------------------+
+| :ada:`D3`  |                                      -999.0 |                                    999.0 |
++------------+---------------------------------------------+------------------------------------------+
+| :ada:`D6`  |                                   -999999.0 |                                 999999.0 |
++------------+---------------------------------------------+------------------------------------------+
+| :ada:`D38` |   -99999999999999999999999999999999999999.0 | 99999999999999999999999999999999999999.0 |
++------------+---------------------------------------------+------------------------------------------+
+
+As mentioned earlier on, the range is derived from the :ada:`digits`:
+
++------------+------------------+--------------------+--------------------+
+| Type       | Type             | Min. value         | Max. value         |
++============+==================+====================+====================+
+| :ada:`D1`  | :ada:`digits 1`  |  -10\ :sup:`1` + 1 |   10\ :sup:`1` - 1 |
++------------+------------------+--------------------+--------------------+
+| :ada:`D2`  | :ada:`digits 2`  |  -10\ :sup:`2` + 1 |   10\ :sup:`2` - 1 |
++------------+------------------+--------------------+--------------------+
+| :ada:`D3`  | :ada:`digits 3`  |  -10\ :sup:`3` + 1 |   10\ :sup:`3` - 1 |
++------------+------------------+--------------------+--------------------+
+| :ada:`D6`  | :ada:`digits 6`  |  -10\ :sup:`6` + 1 |   10\ :sup:`6` - 1 |
++------------+------------------+--------------------+--------------------+
+| :ada:`D38` | :ada:`digits 38` | -10\ :sup:`38` + 1 |  10\ :sup:`38` - 1 |
++------------+------------------+--------------------+--------------------+
+
+
+Custom range of decimal fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Similar to floating-point types, we can define custom ranges for decimal
+fixed-point types by using the :ada:`range` keyword. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type D6 is
+         delta 1.0 digits 6;
+       type D6_R100 is
+         delta 1.0 digits 6
+           range -100_000.0 .. 100_000.0;
+
+    begin
+       Put_Line ("D6'Range      : "
+                 & D6'First'Image
+                 & " .. "
+                 & D6'Last'Image);
+       Put_Line ("D6_R100'Range : "
+                 & D6_R100'First'Image
+                 & " .. "
+                 & D6_R100'Last'Image);
+    end Show_Decimal_Digits;
+
+In this example, we declare the :ada:`D6` type with :ada:`digits 6`, which
+has a range between -999,999.0 and 999,999.0. In addition, we declare the
+:ada:`D6_R100` type, which has the same number of significant digits, but is
+constrained to the range between -100,000.0 and 100,000.0.
+
+
+Range of derived decimal fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We can also derive from decimal fixed-point types and limit the range at the
+same time |mdash| as we can do with floating-point types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type D6 is
+         delta 1.0 digits 6;
+       type D6_RD3 is new D6
+         range -999.0 .. 999.0;
+       type D6_R5 is new D6
+         range -5.0 .. 5.0;
+
+    begin
+       Put_Line ("D6'Range     : "
+                 & D6'First'Image
+                 & " .. "
+                 & D6'Last'Image);
+       Put_Line ("D6_RD3'Range : "
+                 & D6_RD3'First'Image
+                 & " .. "
+                 & D6_RD3'Last'Image);
+       Put_Line ("D6_R5'Range  : "
+                 & D6_R5'First'Image
+                 & " .. "
+                 & D6_R5'Last'Image);
+    end Show_Decimal_Digits;
+
+Here, :ada:`D6_RD3` and :ada:`D6_R5` types are both derived from the :ada:`D6`
+type, which ranges from -999,999.0 to 999,999.0. For the derived type
+:ada:`D6_RD3`, we constrain the original range to an interval between -999.0
+and 999.0. For :ada:`D6_R5`, we constrain the type's range to an interval
+between -5.0 and 5.0.
+
+
+
+Range of decimal fixed-point subtypes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Similarly, we can declare subtypes of decimal fixed-point types and limit the
+range at the same time. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type D6 is
+         delta 1.0 digits 6;
+       subtype D6_RD3 is D6
+         range -999.0 .. 999.0;
+       subtype D6_R5 is D6
+         range -5.0 .. 5.0;
+    begin
+       Put_Line ("D6'Range     : "
+                 & D6'First'Image
+                 & " .. "
+                 & D6'Last'Image);
+       Put_Line ("D6_RD3'Range : "
+                 & D6_RD3'First'Image
+                 & " .. "
+                 & D6_RD3'Last'Image);
+       Put_Line ("D6_R5'Range  : "
+                 & D6_R5'First'Image
+                 & " .. "
+                 & D6_R5'Last'Image);
+    end Show_Decimal_Digits;
+
+Now, :ada:`D6_RD3` and :ada:`D6_R5` are subtypes of the :ada:`D6` type, which
+has a range between -999,999.0 to 999,999.0. For these subtypes, we use the
+same ranges as in the previous code example |mdash| i.e. the range of the
+:ada:`D6_RD3` type goes from -999.0 to 999.0, while the range of the
+:ada:`D6_R5` type goes from -5.0 to 5.0.
+
+
+Range of the base type
+^^^^^^^^^^^^^^^^^^^^^^
+
+Note that the range of a decimal fixed-point type might be smaller than the
+range of its :ref:`base type <Adv_Ada_Base_Types>`. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    procedure Show_Decimal_Digits is
+
+       type D6 is
+         delta 1.0 digits 6;
+
+    begin
+       Put_Line ("D6'Range      : "
+                 & D6'First'Image
+                 & " .. "
+                 & D6'Last'Image);
+       Put_Line ("D6'Base'Range : "
+                 & D6'Base'First'Image
+                 & " .. "
+                 & D6'Base'Last'Image);
+    end Show_Decimal_Digits;
+
+In this example, we see that the range of the :ada:`D6` goes from -999,999 to
+999,999. The range of the base type, however, can be wider. On a desktop PC, it
+might go from -2,147,483,648 to 2,147,483,647 |mdash| which corresponds to
+-2\ :sup:`31` to 2\ :sup:`31` - 1. (The actual hardware representation has a
+range based on powers of two in this case, while the range of decimal
+fixed-point types is based on powers of ten.)
+
+
+Type conversion using decimal types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we briefly discuss type conversion using decimal types |mdash|
+this includes the
+:ref:`conversion between decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Type_Conversion>`
+and the
+:ref:`conversion to other types <Adv_Ada_Decimal_Fixed_Point_Type_Conversion_Other_Types>`
+such as floating-point types.
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Conversion:
+
+Decimal type conversions
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+We've already seen a couple of examples of
+:ref:`type conversion <Adv_Ada_Type_Conversion>` between decimal fixed-point
+types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Type_Conversions
+
+    package Custom_Decimal_Types is
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+
+       type T2_D38 is
+         delta 10.0 ** (-2) digits 38;
+
+    end Custom_Decimal_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Decimal_Type_Conversions is
+       D6  : T2_D6;
+       D38 : T2_D38;
+    begin
+       D6  := T2_D6'Last;
+       D38 := T2_D38 (D6);
+
+       Put_Line ("D6  = "
+                 & D6'Image);
+       Put_Line ("D38 = "
+                 & D38'Image);
+    end Show_Decimal_Type_Conversions;
+
+In this example, we convert the value of :ada:`D6` |mdash| from the
+:ada:`T2_D6` to the :ada:`T2_D38` type |mdash| by writing :ada:`T2_D38 (D6)`.
+This conversion is cannot is safe |mdash| i.e. it cannot raise an exception
+|mdash| because the range of the target type is wider.
+
+Of course, type conversions may fail when the ranges of two types don't
+match |mdash| more specifically, when the value of an object is out of the
+range of the type we're converting to. However, as expected, we can safely
+convert to a decimal fixed-point type with a wider range.
+
+We can also safely convert between decimal fixed-point types that have roughly
+the same range |mdash| if we disconsider, of course, the truncation that
+happens during the conversion. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Type_Conversions
+
+    package Custom_Decimal_Types is
+
+       type T4_D8 is
+         delta 10.0 ** (-4) digits 8;
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+
+       type T0_D4 is
+         delta 10.0 ** (0) digits 4;
+
+    end Custom_Decimal_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Decimal_Type_Conversions is
+       D8 : T4_D8;
+       D6 : T2_D6;
+       D4 : T0_D4;
+    begin
+       D8 := T4_D8'Last;
+       D6 := T2_D6 (D8);
+       D4 := T0_D4 (D6);
+
+       Put_Line ("D8  = "
+                 & D8'Image);
+       Put_Line ("D6  = "
+                 & D6'Image);
+       Put_Line ("D4  = "
+                 & D4'Image);
+    end Show_Decimal_Type_Conversions;
+
+In this example, the value of :ada:`D8` is 9999.9999. When assigning the value
+of :ada:`D8` to :ada:`D6`, the conversion from :ada:`T4_D8` to :ada:`T2_D6`
+simply *removes* the last two digits (i.e. it truncates the value as expected),
+so that the value becomes 9999.99. Similarly, the value becomes 9999.0 in the
+conversion to the :ada:`T0_D4` type.
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Conversion_Other_Types:
+
+Conversion to other types
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Similarly, we can convert from and to decimal fixed-point types when using
+other numeric types such as integer and floating-point types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Type_Conversions_Other_Types
+
+    package Custom_Types is
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+       --  Decimal type
+
+       type TD18 is
+         digits 18;
+       --  Floating-point type
+
+    end Custom_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Types;
+    use  Custom_Types;
+
+    procedure Show_Decimal_Type_Conversions is
+       D6  : T2_D6;
+       D18 : TD18;
+    begin
+       D6  := T2_D6'Last;
+       D18 := TD18 (D6);
+       --     ^^^^^^^^^
+       --  Conversion from
+       --  decimal fixed-point
+
+       Put_Line ("D6  = "
+                 & D6'Image);
+       Put_Line ("D18 = "
+                 & D18'Image);
+
+       D18 := TD18 (T2_D6'Last);
+       D6  := T2_D6 (D18);
+       --     ^^^^^^^^^^
+       --  Conversion to
+       --  decimal fixed-point
+
+       Put_Line ("D6  = "
+                 & D6'Image);
+       Put_Line ("D18 = "
+                 & D18'Image);
+
+    end Show_Decimal_Type_Conversions;
+
+In this example, we declare the decimal fixed-point type :ada:`T2_D6` and the
+floating-point type :ada:`TD18`. Conversion between these two types works as
+expected: we use :ada:`TD18 (D6)` to convert from a decimal fixed-point type
+and :ada:`T2_D6 (D18)` to convert to a decimal fixed-point type. Of course,
+when converting to a decimal fixed-point type, we have to ensure that the
+floating-point value is in the range that is suitable for the target type.
+
+
+.. _Adv_Ada_Package_Decimal:
+
+Package Decimal
+~~~~~~~~~~~~~~~
+
+The standard :ada:`Decimal` package contains information about the
+:ref:`min. and max. values for the scale and delta <Adv_Ada_Decimal_Fixed_Point_Min_Max_Scale_Delta>`
+of decimal fixed-point types. In addition, it contains the declaration of the
+:ref:`generic Divide procedure <Adv_Ada_Decimal_Fixed_Point_Generic_Divide_Proc>`.
+
+
+.. admonition:: In the Ada Reference Manual
+
+    - :arm22:`F.2 The Package Decimal <F-2>`
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Min_Max_Scale_Delta:
+
+Min. and max. scale and delta
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :ada:`Min_Scale` and :ada:`Max_Scale` values are the smallest and largest
+values we can use for a scale :ada:`N` in the formula
+:ada:`delta 10.0 ** (-N)`. Because the formula uses a negative exponent
+(:ada:`-N`), this means that the minimum delta :ada:`Min_Delta` is calculated
+with the :ada:`Max_Scale`, while the :ada:`Max_Delta` is calculated with the
+:ada:`Min_Scale`. In fact, this is declaration of those constants in the
+:ada:`Decimal` package:
+
+.. code-block:: ada
+
+    package Ada.Decimal is
+
+       -- [...]
+
+       Min_Delta : constant := 10.0 ** (-Max_Scale);
+       Max_Delta : constant := 10.0 ** (-Min_Scale);
+
+       --  [...]
+
+    end Ada.Decimal.
+
+Let's inspect the value of all these constants:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Min_Max_Scale
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Decimal; use Ada.Decimal;
+
+    procedure Show_Min_Max_Scale is
+    begin
+       Put_Line ("Min_Scale : "
+                 & Min_Scale'Image);
+       Put_Line ("Max_Scale : "
+                 & Max_Scale'Image);
+       Put_Line ("--------------------");
+       Put_Line ("Min_Delta : "
+                 & Min_Delta'Image);
+       Put_Line ("Max_Delta : "
+                 & Max_Delta'Image);
+    end Show_Min_Max_Scale;
+
+On a desktop PC, you may see that the :ada:`Min_Scale` is -38, while the
+:ada:`Max_Scale` is 38. Therefore, the :ada:`Min_Delta` is 10\ :sup:`-38` and
+the :ada:`Max_Delta` is  10\ :sup:`38`.
+
+The values of these constants depend on the compiler implementation and the
+target platform. However, the standard requires that :ada:`Min_Scale` shall be
+at most 0, while :ada:`Max_Scale` shall be at least 18. This means that the
+smallest delta supported by an Ada compiler (:ada:`Min_Delta`) is at most
+10\ :sup:`-18` (or smaller than that), while the largest delta supported by an
+Ada compiler (:ada:`Max_Delta`) is at least 1.0 or more.
+
+.. admonition:: For further reading...
+
+    The :ada:`Scale` attribute gives us the scale :ada:`N` of a decimal
+    fixed-point type. (We discuss the
+    :ref:`Scale attribute <Adv_Ada_Decimal_Fixed_Point_Type_Scale_Attribute>`
+    in the next chapter.) For example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Scale_Attribute
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Scale_Attribute is
+           type T4_D8 is
+             delta 10.0 ** (-4) digits 8;
+        begin
+           Put_Line ("T4_D8'Scale : "
+                     & T4_D8'Scale'Image);
+        end Show_Scale_Attribute;
+
+    By using the :ada:`Scale` attribute with the :ada:`T4_D8` type, we retrieve
+    its scale, which is 4.
+
+
+Max. decimal digits
+^^^^^^^^^^^^^^^^^^^
+
+The :ada:`Max_Decimal_Digits` defines the maximum value for the number of
+significant decimal digits:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Max_Decimal_Digits
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Decimal; use Ada.Decimal;
+
+    procedure Show_Max_Decimal_Digits is
+    begin
+       Put_Line ("Max_Decimal_Digits : "
+                 & Max_Decimal_Digits'Image);
+    end Show_Max_Decimal_Digits;
+
+On a typical desktop PC, we may see that the value of :ada:`Max_Decimal_Digits`
+is 38. The Ada standard requires that :ada:`Max_Decimal_Digits` must be at
+least 18.
+
+Note that there's no corresponding :ada:`Min_Decimal_Digits`. The minimum value
+for the number of significant decimal digits is one.
+
+.. admonition:: For further reading...
+
+    The :ada:`Digits` attribute gives us the number of significant decimal
+    digits of a decimal fixed-point type. (We discuss the
+    :ref:`Digits attribute <Adv_Ada_Decimal_Fixed_Point_Type_Digits_Attribute>`
+    in the next chapter.) For example:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Digits_Attribute
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        procedure Show_Digits_Attribute is
+           type T4_D8 is
+             delta 10.0 ** (-4) digits 8;
+        begin
+           Put_Line ("T4_D8'Digits : "
+                     & T4_D8'Digits'Image);
+        end Show_Digits_Attribute;
+
+    By using the :ada:`Digits` attribute of the :ada:`T4_D8` type, we retrieve
+    its scale, which is 8.
+
+If we consider a delta of 0.01, which we might typically encounter in financial
+applications, we can calculate the corresponding largest range:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Max_Decimal_Digits_Financial
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Ada.Decimal; use Ada.Decimal;
+
+    procedure Max_Decimal_Digits_Financial is
+
+       type Max_Fin_Decimal is
+         delta 0.01
+         digits Max_Decimal_Digits;
+
+    begin
+       Put_Line ("Max_Fin_Decimal'Range : "
+                 & Max_Fin_Decimal'First'Image
+                 & " .. "
+                 & Max_Fin_Decimal'Last'Image);
+       Put_Line ("Max_Fin_Decimal'Delta : "
+                 & Max_Fin_Decimal'Delta'Image);
+       Put_Line ("Max_Fin_Decimal'Size  : "
+                 & Max_Fin_Decimal'Size'Image);
+    end Max_Decimal_Digits_Financial;
+
+In this example, the :ada:`Max_Fin_Decimal` type uses a delta of 0.01 and the
+number of significant decimal digits based on the value of
+:ada:`Max_Decimal_Digits`. On a typical desktop PC, this gives us (almost) a
+range between -10\ :sup:`36` and 10\ :sup:`36` |mdash|  actually, it's a
+range between -999,999,999,999,999,999,999,999,999,999,999,999.99 and
+999,999,999,999,999,999,999,999,999,999,999,999.99, to be more precise. (Note
+that, in this case, :ada:`Max_Fin_Decimal` is a 128-bit data type.)
+
+.. admonition:: For further reading...
+
+    By combining the values of :ada:`Min_Scale` and :ada:`Max_Decimal_Digits`,
+    we get the largest possible numbers we can represent with decimal
+    fixed-point types:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Max_Decimal_Digits_Min_Scale
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with Ada.Decimal; use Ada.Decimal;
+
+        procedure Show_Max_Decimal_Digits_Min_Scale is
+
+           type Max_Decimal is
+             delta 10.0 ** (-Min_Scale)
+             digits Max_Decimal_Digits;
+
+        begin
+           Put_Line ("Max_Decimal'Range : "
+                     & Max_Decimal'First'Image
+                     & " .. "
+                     & Max_Decimal'Last'Image);
+           Put_Line ("Max_Decimal'Delta : "
+                     & Max_Decimal'Delta'Image);
+           Put_Line ("Max_Decimal'Size  : "
+                     & Max_Decimal'Size'Image);
+        end Show_Max_Decimal_Digits_Min_Scale;
+
+    In this example, we declare the :ada:`Max_Decimal` type, which allows for
+    representing the largest possible numbers for decimal fixed-point types. In
+    fact, the range of :ada:`Max_Decimal` goes from -10\ :sup:`76` to
+    10\ :sup:`76`.
+    Note, however, that the delta is quite large as well: 10\ :sup:`38` is the
+    smallest value we can represent.
+
+    By combining the values of :ada:`Max_Scale` and :ada:`Max_Decimal_Digits`,
+    we get the smallest possible number we can represent with decimal
+    fixed-point types:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Max_Decimal_Digits_Max_Scale
+
+        with Ada.Text_IO; use Ada.Text_IO;
+        with Ada.Decimal; use Ada.Decimal;
+
+        procedure Show_Max_Decimal_Digits_Max_Scale is
+
+           type Smallest_Decimal is
+             delta 10.0 ** (-Max_Scale)
+             digits Max_Decimal_Digits;
+
+        begin
+           Put_Line ("Smallest_Decimal'Range : "
+                     & Smallest_Decimal'First'Image
+                     & " .. "
+                     & Smallest_Decimal'Last'Image);
+           Put_Line ("Smallest_Decimal'Delta : "
+                     & Smallest_Decimal'Delta'Image);
+           Put_Line ("Smallest_Decimal'Size  : "
+                     & Smallest_Decimal'Size'Image);
+        end Show_Max_Decimal_Digits_Max_Scale;
+
+    In this example, we declare the :ada:`Smallest_Decimal` type, which allows
+    for representing the smallest possible number for decimal fixed-point
+    types |mdash| in this case, it's -10\ :sup:`-38`. The range of this type
+    is the normalized interval (-1.0, 1.0).
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Generic_Divide_Proc:
+
+Generic Divide procedure
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this section, we look into the generic :ada:`Divide` procedure. Before we do
+so, however, let's look at an example of the division operator (:ada:`/`)
+applied to objects of decimal fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Divide_Procedure
+
+    package Custom_Decimal_Types is
+
+       type T0_D4 is
+         delta 10.0 ** (-0) digits 4;
+
+    end Custom_Decimal_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Divide_Procedure is
+
+       Dividend  : T0_D4;
+       Divisor   : T0_D4;
+       Result    : T0_D4;
+    begin
+       Dividend := 501.0;
+       Divisor  := 2.0;
+
+       Result   := Dividend / Divisor;
+
+       Put_Line ("Dividend           : "
+                 & Dividend'Image);
+       Put_Line ("Divisor            : "
+                 & Divisor'Image);
+       Put_Line ("Dividend / Divisor : "
+                 & Result'Image);
+    end Show_Divide_Procedure;
+
+In this example, we calculate the result of the operation :ada:`501.0 / 2.0`
+using objects of :ada:`T0_D4` type. As expected, due to the delta of this type
+(1.0), the result is not 250.5, but instead 250.0. (In other words, we *lose*
+0.5 in this operation because of the delta.)
+
+However, we might want to get the quotient and remainder of the division
+operation |mdash| so that we can keep track of errors, for example. For that,
+we have to instantiate the generic :ada:`Divide` procedure for this type. Let's
+look at a code example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Divide_Procedure
+
+    with Ada.Decimal;
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Divide_Procedure is
+
+       procedure Div is new
+         Ada.Decimal.Divide
+           (Dividend_Type  => T0_D4,
+            Divisor_Type   => T0_D4,
+            Quotient_Type  => T0_D4,
+            Remainder_Type => T0_D4);
+
+       Dividend  : T0_D4;
+       Divisor   : T0_D4;
+       Quotient  : T0_D4;
+       Remainder : T0_D4;
+    begin
+       Dividend := 501.0;
+       Divisor  := 2.0;
+
+       Div (Dividend, Divisor, Quotient, Remainder);
+
+       Put_Line ("Dividend  : "
+                 & Dividend'Image);
+       Put_Line ("Divisor   : "
+                 & Divisor'Image);
+       Put_Line ("Quotient  : "
+                 & Quotient'Image);
+       Put_Line ("Remainder : "
+                 & Remainder'Image);
+    end Show_Divide_Procedure;
+
+In this example, we declare the :ada:`Div` procedure as an instance of the
+:ada:`Divide` procedure. Now, the result of the operation :ada:`501.0 / 2.0` is
+a quotient of 250.0 (as we had before) with a remainder of 1.00.
+
+Note that, in this particular case, we're using the :ada:`T0_D4` type for all
+parameters (:ada:`Dividend_Type`, :ada:`Divisor_Type` :ada:`Quotient_Type` and
+:ada:`Remainder_Type`) in the instantiation of the :ada:`Divide` procedure. We
+could, however, have used different decimal fixed-point types as well.
+
+
+Illegal decimal fixed-point type declarations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we've seen before, we can declare
+:ref:`custom ranges for decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Type_Ranges>`.
+However, as expected, if the range we're specifying is outside the maximum
+range possible for that type, it is considered illegal:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Illegal_Decimal_Types
+
+    package Illegal_Decimal_Types is
+
+       type T0_D4 is
+         delta 10.0 ** (-0) digits 4
+           range -10_000.0 .. 10_000.0;
+           --    ^^^^^^^^^^^^^^^^^^^^^
+           --  ERROR: outside the maximum range
+           --         9_999.0 .. 9_999.0
+
+    end Illegal_Decimal_Types;
+
+In this example, the range we declare for the :ada:`T0_D4` type
+(from -10,000 to 10,000) is outside the maximum range that the type allows
+(from 9,999 to 9,999).
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Machine_Representation:
+
+Machine representation of decimal types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we discuss how decimal fixed-point types are typically
+represented in actual hardware. Consider the following decimal types from the
+:ada:`Custom_Decimal_Types` package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Machine_Implementation
+
+    package Custom_Decimal_Types is
+
+       type T0_D4 is
+         delta 10.0 ** (-0) digits 4;
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+       type T2_D12 is
+         delta 10.0 ** (-2) digits 12;
+
+       type Int_T0_D4 is
+         range -2 ** (T0_D4'Size - 1) ..
+                2 ** (T0_D4'Size - 1) - 1;
+       type Int_T2_D6 is
+         range -2 ** (T2_D6'Size - 1) ..
+                2 ** (T2_D6'Size - 1) - 1;
+
+    end Custom_Decimal_Types;
+
+We can use an :ref:`overlay <Adv_Ada_Address_Aspect_Overlay>` to uncover the
+actual integer values stored on the machine when assigning values to objects of
+decimal type. For example:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Machine_Implementation
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Machine_Implementation is
+       V_T0_D4     : T0_D4;
+       V_Int_T0_D4 : Int_T0_D4
+         with Address => V_T0_D4'Address,
+              Import, Volatile;
+
+       V_T2_D6     : T2_D6;
+       V_Int_T2_D6 : Int_T2_D6
+         with Address => V_T2_D6'Address,
+              Import, Volatile;
+    begin
+       V_T0_D4 := 1.0;
+       Put_Line ("1.0 (T0_D4)        : "
+                 & V_T0_D4'Image);
+       Put_Line ("1.0 (Int_T0_D4)    : "
+                 & V_Int_T0_D4'Image);
+
+       V_T2_D6 := 1.55;
+       V_T0_D4 := T0_D4 (V_T2_D6);
+       Put_Line ("1.55 (T0_D4)       : "
+                 & V_T0_D4'Image);
+       Put_Line ("1.55 (Int_T0_D4)   : "
+                 & V_Int_T0_D4'Image);
+
+       V_T0_D4 := 2.0;
+       Put_Line ("2.0 (T0_D4)        : "
+                 & V_T0_D4'Image);
+       Put_Line ("2.0 (Int_T0_D4)    : "
+                 & V_Int_T0_D4'Image);
+
+       Put_Line ("-----------------------------");
+
+       V_T2_D6 := 1.0;
+       Put_Line ("1.00 (T2_D6)        : "
+                 & V_T2_D6'Image);
+       Put_Line ("1.00 (Int_T2_D6)    : "
+                 & V_Int_T2_D6'Image);
+
+       V_T2_D6 := 1.55;
+       Put_Line ("1.55 (T2_D6)        : "
+                 & V_T2_D6'Image);
+       Put_Line ("1.55 (Int_T2_D6)    : "
+                 & V_Int_T2_D6'Image);
+
+       V_T2_D6 := 2.0;
+       Put_Line ("2.00 (T2_D6)        : "
+                 & V_T2_D6'Image);
+       Put_Line ("2.00 (Int_T2_D6)    : "
+                 & V_Int_T2_D6'Image);
+
+       Put_Line ("-----------------------------");
+    end Show_Machine_Implementation;
+
+In this example, we use the overlays :ada:`Int_T0_D4` and :ada:`Int_T2_D6` to
+retrieve the integer representation of the decimal fixed-point types
+:ada:`T0_D4` and :ada:`T2_D6`. In the output of this example, we might see the
+following integer representation of the real values for the :ada:`T0_D4` and
+:ada:`T2_D6` types:
+
++-------------+-----------------------------+
+| Real value  | Integer representation      |
+|             +--------------+--------------+
+|             | :ada:`T0_D4` | :ada:`T2_D6` |
+|             | type         | type         |
++=============+==============+==============+
+|        1.00 |            1 |          100 |
++-------------+--------------+--------------+
+|        1.55 |            1 |          155 |
++-------------+--------------+--------------+
+|        2.00 |            2 |          200 |
++-------------+--------------+--------------+
+
+In other words, integer values are being used |mdash| with an associated
+scalefactor based on powers of ten |mdash| to represent decimal fixed-point
+types on the target machine.
+
+The scalefactor is 1 (or 10\ :sup:`0`) for the :ada:`T0_D4` type and 0.01
+(or 10\ :sup:`-2`) for the :ada:`T2_D6` type. As you have certainly noticed,
+this scalefactor corresponds to the *delta* we've used in the type declaration.
+For example, if we multiple the integer representation of the real value by the
+*delta*, we get the real value:
+
++-------------+-------------------------------+
+| Real value  | :ada:`T2_D6`                  |
+|             +-------------------------------+
+|             | Integer representation        |
+|             | multiplied by *delta*         |
++=============+===============================+
+|        1.00 |                  = 100 * 0.01 |
++-------------+-------------------------------+
+|        1.55 |                  = 155 * 0.01 |
++-------------+-------------------------------+
+|        2.00 |                  = 200 * 0.01 |
++-------------+-------------------------------+
+
+
+Operations on decimal types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we discuss some aspects of operations using objects of decimal
+fixed-point types.
+
+Mixing decimal types
+^^^^^^^^^^^^^^^^^^^^
+
+First, let's look at how we can mix decimal fixed-point types in operation such
+as additions and subtractions.
+
+Consider the following package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Mixing_Decimal_Types
+
+    package Custom_Decimal_Types is
+
+       type T0_D4 is
+         delta 10.0 ** (-0) digits 4;
+        --  range -9_999.0 .. 9_999.0;
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+        --  range -9_999.99 .. 9_999.99;
+
+    end Custom_Decimal_Types;
+
+The range of the :ada:`T0_D4` and :ada:`T2_D6` types from this example is quite
+close: the range of :ada:`T0_D4` goes from -9,999.0 to 9,999.0, while the range
+of :ada:`T2_D6` goes from -9,999.99 to 9,999.99. In other words, when comparing
+the ranges, we see a small difference of 0.99 in the first and last values of
+the ranges.
+
+Let's look at simple operations such as :ada:`1000 + 500.25` and
+:ada:`1000 - 500.25` when mixing these two decimal types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Mixing_Decimal_Types
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Mixing_Decimal_Types is
+       A : T0_D4;
+       B : T2_D6;
+    begin
+       A := 1000.0;
+       B := 500.25;
+       Put_Line ("A = " &
+                 A'Image);
+       Put_Line ("B = " &
+                 B'Image);
+
+       Put_Line ("--------------");
+       Put_Line ("A := A + B");
+       A := A + T0_D4 (B);
+       Put_Line ("A = " &
+                 A'Image);
+
+       Put_Line ("--------------");
+       A := 1000.0;
+       B := 500.25;
+       Put_Line ("A := A - B");
+       A := A - T0_D4 (B);
+       Put_Line ("A = " &
+                 A'Image);
+    end Show_Mixing_Decimal_Types;
+
+In this example, during to the :ada:`T0_D4 (B)` conversion, we get the value
+500.0 instead of 500.25 to the delta of the :ada:`T0_D4` type. (This is of
+course the expected behavior for this type.) Therefore, the result of the
+operation is 500.0.
+
+
+Using universal fixed types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's look at how decimal fixed-point types behave in the case of operations
+that make use of :ref:`universal fixed types <Adv_Ada_Universal_Fixed>`.
+
+When mixing objects of different decimal types, as usual, we can use
+:ref:`type conversions <Adv_Ada_Decimal_Fixed_Point_Type_Conversion>`, e.g.
+when  assigning the result to an object of a different type. As we've mentioned
+before, type conversions between fixed-point types make use of universal
+fixed-point types.
+
+.. ::
+
+    Consider the following package from a previous section:
+
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+
+        package Custom_Decimal_Types is
+
+           type T0_D4 is
+             delta 10.0 ** (-0) digits 4;
+            --  range -9_999.0 .. 9_999.0;
+
+           type T2_D6 is
+             delta 10.0 ** (-2) digits 6;
+            --  range -9_999.99 .. 9_999.99;
+
+        end Custom_Decimal_Types;
+
+    Let's look at a simple example of type conversions between these types:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Custom_Decimal_Types;
+        use  Custom_Decimal_Types;
+
+        procedure Show_Mixing_Decimal_Types is
+           A : T0_D4;
+           B : T2_D6;
+        begin
+           A := T0_D4'Last;     --  9_999.0
+           B := T2_D6 (A);
+           Put_Line ("A =     " &
+                     A'Image);
+           Put_Line ("B = A = " &
+                     B'Image);
+
+           Put_Line ("--------------");
+           B := 9_999.0;
+           A := T0_D4 (B);
+           Put_Line ("B =     " &
+                     B'Image);
+           Put_Line ("A = B = " &
+                     A'Image);
+
+        end Show_Mixing_Decimal_Types;
+
+    Here, we use :ada:`T2_D6 (A)` and :ada:`T0_D4 (B)` to convert to :ada:`T2_D6`
+    and :ada:`T0_D4`, respectively.
+
+    Note that, if we had assigned :ada:`9_999.99` (or :ada:`T2_D6`) to :ada:`B` in
+    the code above, the :ada:`T0_D4 (B)` would raise a :ada:`Constraint_Error`
+    exception due the small difference in the range that we mentioned previously.
+
+In addition, the multiplication and division operations also make use of
+universal fixed types. Consider the following package from a previous section:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+
+    package Custom_Decimal_Types is
+
+       type T0_D4 is
+         delta 10.0 ** (-0) digits 4;
+        --  range -9_999.0 .. 9_999.0;
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+        --  range -9_999.99 .. 9_999.99;
+
+    end Custom_Decimal_Types;
+
+Let's look at a code example using the multiplication operation applied to two
+objects of different decimal types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Mixing_Decimal_Types is
+       A : T0_D4;
+       B : T2_D6;
+    begin
+       A := 1000.0;
+       B := 0.19;
+       Put_Line ("A = " &
+                 A'Image);
+       Put_Line ("B = " &
+                 B'Image);
+       Put_Line ("----------");
+
+       A := A * B;
+       Put_Line ("A := A * B");
+       Put_Line ("A = " &
+                 A'Image);
+    end Show_Mixing_Decimal_Types;
+
+In this example, the :ada:`A * B` expression makes use of universal fixed
+types. If this wasn't the case, :ada:`B` would have to be first convert to the
+:ada:`T0_D4` type, and the result of the operation would be zero:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Mixing_Decimal_Types is
+       A : T0_D4;
+       B : T2_D6;
+    begin
+       A := 1000.0;
+       B := 0.19;
+       Put_Line ("A = " &
+                 A'Image);
+       Put_Line ("B = " &
+                 B'Image);
+       Put_Line ("----------");
+
+       A := A * T0_D4 (B);
+       Put_Line ("A := A * B");
+       Put_Line ("A = " &
+                 A'Image);
+    end Show_Mixing_Decimal_Types;
+
+Because universal fixed types are used for the :ada:`A * B` operation, we
+don't have to perform type conversion before the multiplication, and the result
+of the operation has a meaningful value.
+
+Note that, after the :ada:`A * B` operation, the result of the operation is
+converted from universal fixed to the actual type we're using in the assignment
+|mdash| :ada:`T0_D4` in this case.
+
+For the division operation, universal fixed types are used as well:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Show_Mixing_Decimal_Types is
+       A : T0_D4;
+       B : T2_D6;
+    begin
+       A := 1000.0;
+       B := 0.19;
+       Put_Line ("A = " &
+                 A'Image);
+       Put_Line ("B = " &
+                 B'Image);
+       Put_Line ("----------");
+
+       A := A / B;
+       Put_Line ("A := A / B");
+       Put_Line ("A = " &
+                 A'Image);
+    end Show_Mixing_Decimal_Types;
+
+Similar to the previous example, objects :ada:`A` and :ada:`B` have different
+types, and the :ada:`A / B` expression makes use of universal fixed types.
+
+.. admonition:: For further reading...
+
+    Note that we can use *explicit* type conversions, and the results is still
+    the same:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        with Custom_Decimal_Types;
+        use  Custom_Decimal_Types;
+
+        procedure Show_Mixing_Decimal_Types is
+           A : T0_D4;
+           B : T2_D6;
+        begin
+           A := 1000.0;
+           B := 0.19;
+           Put_Line ("A = " &
+                     A'Image);
+           Put_Line ("B = " &
+                     B'Image);
+           Put_Line ("----------");
+
+           A := T0_D4 (T2_D6 (A) / B);
+           Put_Line ("A := A / B");
+           Put_Line ("A = " &
+                     A'Image);
+        end Show_Mixing_Decimal_Types;
+
+    Here, we convert :ada:`A` from the :ada:`T0_D4` to the :ada:`T2_D6`
+    type before performing the division operation. After the division operation
+    is finished, we convert the resulting value back to the :ada:`T0_D4` type,
+    and then assign the converted value to :ada:`A`. Note, however, that the
+    division operation itself is still performed using universal fixed types.
+    (Also, keep in mind that the type conversion is also performed using
+    universal fixed types, too.)
+
+
+Decimal vs. floating-point types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we present two simplified, yet practical examples that benefit
+from using decimal fixed-point types instead of floating-point types.
+
+Prices after tax
+^^^^^^^^^^^^^^^^
+
+Let's look at a simplified example of an application that calculates the price
+of products including sales tax. First, let's start with the definition of the
+:ada:`Price` and :ada:`Rate` types that we're going to use in the application:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Price_After_Tax
+
+    package Custom_Decimal_Types is
+
+       type Price is
+         delta 0.01 digits 16;
+
+       type Price_Array is
+         array (Positive range <>) of
+           Price;
+
+       type Rate is
+         delta 0.0001 digits 18;
+
+    end Custom_Decimal_Types;
+
+This is the simple test application that calculates the gross price (i.e. after
+tax) for items whose net price is stored in an array (see :ada:`Prices` in
+the code):
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Price_After_Tax
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Price_After_Tax is
+
+       Prices        : Price_Array :=
+                         (8.40, 5.03, 1.67);
+       P_After_Tax : Price;
+       Tax_Rate      : Rate;
+
+       procedure Show_Prices (Before,
+                              After : Price) is
+       begin
+          Put_Line (Before'Image
+                    & " => "
+                    & After'Image);
+       end Show_Prices;
+    begin
+       Tax_Rate := 1.19;
+
+       Put_Line ("Price BEFORE => AFTER Tax");
+       for P of Prices loop
+          P_After_Tax := P * Tax_Rate;
+          Show_Prices (P, P_After_Tax);
+       end loop;
+
+    end Price_After_Tax;
+
+In this example, we apply a tax rate of 19% to the original net prices, so that
+we get the following gross prices:
+
++--------------+---------+--------------+
+| Price before | Tax (%) | Price after  |
+| tax          |         | tax          |
++==============+=========+==============+
+|         8.40 |    19.0 |         9.99 |
++--------------+---------+--------------+
+|         5.03 |    19.0 |         5.98 |
++--------------+---------+--------------+
+|         1.67 |    19.0 |         1.98 |
++--------------+---------+--------------+
+
+Now, let's replace the definition of the :ada:`Price` and :ada:`Rate` types
+with floating-point types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Price_After_Tax_Float
+
+    package Custom_Float_Types is
+
+       type Price is
+         digits 16;
+
+       type Price_Array is
+         array (Positive range <>) of
+           Price;
+
+       type Rate is
+         digits 18;
+
+    end Custom_Float_Types;
+
+We can reuse the previous code with small adaptations:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Price_After_Tax_Float
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Float_Types;
+    use  Custom_Float_Types;
+
+    procedure Price_After_Tax is
+
+       Prices        : Price_Array :=
+                         (8.40, 5.03, 1.67);
+       P_After_Tax : Price;
+       Tax_Rate      : Rate;
+
+       procedure Show_Prices (Before,
+                              After : Price) is
+       begin
+          Put_Line (Before'Image
+                    & " => "
+                    & After'Image);
+       end Show_Prices;
+    begin
+       Tax_Rate := 1.19;
+
+       Put_Line ("Price BEFORE => AFTER Tax");
+       for P of Prices loop
+          P_After_Tax :=
+            Price (Rate (P) * Tax_Rate);
+          Show_Prices (P, P_After_Tax);
+       end loop;
+    end Price_After_Tax;
+
+In this example, we again apply a tax rate of 19% to the net prices to get the
+following net prices |mdash| this time, however, using floating-point types.
+This is the result:
+
++--------------+---------+--------------+
+| Price before | Tax (%) | Price after  |
+| tax          |         | tax          |
++==============+=========+==============+
+|         8.40 |    19.0 |       9.996  |
++--------------+---------+--------------+
+|         5.03 |    19.0 |       5.9857 |
++--------------+---------+--------------+
+|         1.67 |    19.0 |       1.9873 |
++--------------+---------+--------------+
+
+As we can see, some of the prices that we get have four digits after the dot,
+which cannot be used for the total price |mdash| as we typically don't use
+values smaller than one cent in prices. We could, of course, apply rounding
+after these operations and calculate the value with two digits after the dot.
+However, this would require additional operations for each price we're
+calculating, thereby delivering worse performance than the previous example
+with decimal fixed-point types.
+
+
+Total price calculation
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Let's now focus on a second simplified example. This time, we look at an
+application that calculates the total price (e.g. of an invoice) when buying
+multiple products.
+
+Again, let's start with the definition of the decimal data types that we're
+going to use in the application:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Total_Price
+
+    package Custom_Decimal_Types is
+
+       type Price is
+         delta 0.01 digits 16;
+
+       type Price_Array is
+         array (Positive range <>) of
+           Price;
+
+       type Price_Accum is
+          delta 0.0001 digits 18;
+
+       type Rate is
+         delta 0.0001 digits 18;
+
+    end Custom_Decimal_Types;
+
+There are basically two methods for the calculation of the total price. We can
+either use the net price of each item and apply the sales tax rate once we have
+the subtotal, or we can use the gross price |mdash| which already includes
+sales tax  |mdash| of each item to calculate the total price.
+
+The test application calculates the total price of each item considering the
+prices stored in the :ada:`Prices` array, the quantities stored in the
+:ada:`Quantities` array, and a sales tax rate of 19.0%.
+
+In the first version of the test application, we use the net price of each item
+to calculate the subtotal, and apply the sales tax to that value:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Total_Price
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Total_Price is
+
+       type Quantities_Array is
+         array (Positive range <>) of
+           Natural;
+
+       Prices        : constant Price_Array :=
+                         (8.40, 5.04, 1.68);
+       Quantities    : constant Quantities_Array :=
+                         (1, 8, 9);
+       Total_Item    : Price_Accum;
+       Total_Sum     : Price_Accum;
+       Tax_Rate      : constant Rate := 1.19;
+    begin
+       Total_Sum := 0.0;
+
+       Put_Line ("Sum Per Item");
+       Put_Line ("Item #    Price Quant     Total");
+       for I in Prices'Range loop
+          Total_Item := Price_Accum (Prices (I) *
+                                     Quantities (I));
+          Total_Sum  := Total_Sum + Total_Item;
+          Put_Line ("    " & I'Image
+                    & "    " & Prices (I)'Image
+                    & "    " & Quantities (I)'Image
+                    & "    "
+                    & Price (Total_Item)'Image);
+       end loop;
+
+       Put_Line ("SUBTOTAL:                "
+                 & Price (Total_Sum)'Image);
+       Put_Line ("TAX RATE (%):            "
+                 & Rate'Image (
+                     (Tax_Rate - 1.0) * 100.0));
+
+       Total_Sum := Total_Sum * Tax_Rate;
+       Put_Line ("TOTAL WITH TAX:        "
+                 & Price (Total_Sum)'Image);
+    end Total_Price;
+
+In this example, we calculate the total price for each item (:ada:`Total_Item`)
+and accumulate it in :ada:`Total_Sum`. After the loop, we calculate the total
+price by multiplying the subtotal stored in :ada:`Total_Sum` by the value of
+:ada:`Tax_Rate`.
+
+For the specific invoice calculated in this test application, we get a subtotal
+|mdash| i.e. total price without sales tax |mdash| of 63.84 and a total price
+(with sales tax) of 75.96.
+
+In the second version of the test application, we use the gross price of each
+item and, after calculating the total price, we derive the total net price
+(without sales tax) from that:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Total_Price
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    procedure Total_Price is
+       type Quantities_Array is
+         array (Positive range <>) of
+           Natural;
+
+       Prices         : constant Price_Array :=
+                          (8.40, 5.04, 1.68);
+       Quantities     : constant Quantities_Array :=
+                          (1, 8, 9);
+       Adjusted_Price : Price_Accum;
+       Total_Item     : Price_Accum;
+       Total_Sum      : Price_Accum;
+       Tax_Rate       : constant Rate := 1.19;
+    begin
+       Total_Sum := 0.0;
+
+       Put_Line ("Sum Per Item");
+       Put_Line ("Item #    Price Quant     Total");
+       for I in Prices'Range loop
+          Adjusted_Price := Price_Accum (Prices (I) *
+                                         Tax_Rate);
+          Total_Item := Adjusted_Price *
+                        Quantities (I);
+          Total_Sum  := Total_Sum + Total_Item;
+          Put_Line ("    " & I'Image
+                    & "    "
+                    & Price (Adjusted_Price)'Image
+                    & "    " & Quantities (I)'Image
+                    & "    "
+                    & Price (Total_Item)'Image);
+       end loop;
+
+       Put_Line ("TOTAL WITH TAX:        "
+                 & Price (Total_Sum)'Image);
+       Put_Line ("TAX RATE (%):            "
+                 & Rate'Image (
+                     (Tax_Rate - 1.0) * 100.0));
+
+       Total_Sum := Total_Sum / Tax_Rate;
+       Put_Line ("VALUE BEFORE TAX       "
+                 & Price (Total_Sum)'Image);
+    end Total_Price;
+
+In this example, we calculate the gross price of each item
+(:ada:`Adjusted_Price`), and then the total price of each item
+(:ada:`Total_Item`), which we accumulate in :ada:`Total_Sum`. After the loop,
+we calculate the net price by dividing the subtotal stored in :ada:`Total_Sum`
+by the value of :ada:`Tax_Rate`.
+
+For the specific invoice calculated in this test application, we get a total
+price of 75.96 and a net price of 63.84. (This information matches the prices
+we calculated in the previous version of the test application.)
+
+Now, let's replace the definition of the :ada:`Price`, :ada:`Price_Accum` and
+:ada:`Rate` types with floating-point types:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Total_Price_Float
+
+    package Custom_Float_Types  is
+
+       type Price is
+         digits 16;
+
+       type Price_Array is
+         array (Positive range <>) of
+           Price;
+
+       type Price_Accum is
+         digits 18;
+
+       type Rate is
+         digits 18;
+
+    end Custom_Float_Types;
+
+This is the first version of the test application after a couple of small
+adaptations:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Total_Price_Float
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Float_Types;
+    use  Custom_Float_Types;
+
+    procedure Total_Price is
+
+       type Quantities_Array is
+         array (Positive range <>) of
+           Natural;
+
+       Prices        : constant Price_Array :=
+                         (8.40, 5.04, 1.68);
+       Quantities    : constant Quantities_Array :=
+                         (1, 8, 9);
+       Total_Item    : Price_Accum;
+       Total_Sum     : Price_Accum;
+       Tax_Rate      : constant Rate := 1.19;
+    begin
+       Total_Sum := 0.0;
+
+       Put_Line ("Sum Per Item");
+       Put_Line ("Item #    Price                  "
+                 & "Quant     Total");
+       for I in Prices'Range loop
+          Total_Item := Price_Accum (Prices (I)) *
+                        Price_Accum (Quantities (I));
+          Total_Sum  := Total_Sum + Total_Item;
+          Put_Line ("    " & I'Image
+                    & "    " & Prices (I)'Image
+                    & "    " & Quantities (I)'Image
+                    & "    "
+                    & Price (Total_Item)'Image);
+       end loop;
+
+       Put_Line ("SUBTOTAL:                "
+                 & Price (Total_Sum)'Image);
+       Put_Line ("TAX RATE (%):            "
+                 & Rate'Image (
+                     (Tax_Rate - 1.0) * 100.0));
+
+       Total_Sum := Total_Sum *
+                    Price_Accum (Tax_Rate);
+       Put_Line ("TOTAL WITH TAX:        "
+                 & Price (Total_Sum)'Image);
+    end Total_Price;
+
+In this case, the subtotal is 63.84 and the total price is 75.9696. As we can
+see, the total price has four digits after the dot. If we applied rounding to
+those extra digits, we would get a total price of 75.97 |mdash| instead of the
+value of 75.96 that we calculated using decimal fixed-point types.
+
+Let's adapt the second version of the test application to floating-point
+types, too:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Total_Price_Float
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Float_Types;
+    use  Custom_Float_Types;
+
+    procedure Total_Price is
+       type Quantities_Array is
+         array (Positive range <>) of
+           Natural;
+
+       Prices         : constant Price_Array :=
+                          (8.40, 5.04, 1.68);
+       Quantities     : constant Quantities_Array :=
+                          (1, 8, 9);
+       Adjusted_Price : Price_Accum;
+       Total_Item     : Price_Accum;
+       Total_Sum      : Price_Accum;
+       Tax_Rate       : constant Rate := 1.19;
+    begin
+       Total_Sum := 0.0;
+
+       Put_Line ("Sum Per Item");
+       Put_Line ("Item #    Price Quant     Total");
+       for I in Prices'Range loop
+          Adjusted_Price := Price_Accum (Prices (I)) *
+                            Price_Accum (Tax_Rate);
+          Total_Item := Adjusted_Price *
+                        Price_Accum (Quantities (I));
+          Total_Sum  := Total_Sum + Total_Item;
+          Put_Line ("    " & I'Image
+                    & "    "
+                    & Price (Adjusted_Price)'Image
+                    & "    " & Quantities (I)'Image
+                    & "    "
+                    & Price (Total_Item)'Image);
+       end loop;
+
+       Put_Line ("TOTAL WITH TAX:        "
+                 & Price (Total_Sum)'Image);
+       Put_Line ("TAX RATE (%):            "
+                 & Rate'Image (
+                     (Tax_Rate - 1.0) * 100.0));
+
+       Total_Sum := Total_Sum /
+                    Price_Accum (Tax_Rate);
+       Put_Line ("VALUE BEFORE TAX       "
+                 & Price (Total_Sum)'Image);
+    end Total_Price;
+
+In this case, the total price is 75.9696 and the price without sales tax is
+63.84. Again, if we round the total price to get two digits after the dot, we
+get 75.97 instead 75.96.
+
+A 0.01 error might be consider small, but the accumulation of such errors in
+a complex financial application can be significant and, therefore, it might be
+considered undesirable. As we've seen in this example, we can use decimal
+fixed-point types to avoid such unwanted side effects.
+
 .. ::
 
     .. _Intro_Ada_Ordinary_Fixed_Point_Types:
