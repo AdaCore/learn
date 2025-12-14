@@ -3254,7 +3254,7 @@ fixed-point types: all decimal types are always custom types.
 In terms of syntax, the main difference between the declaration of a custom
 floating-point type and a decimal fixed-point type is the delta specification:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Decimal_Vs_Floating_Point_Type_Declarations
+.. code:: ada compile_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Decimal_Vs_Floating_Point_Type_Declarations
 
     package Decimal_Vs_Float_Type_Decl is
 
@@ -4845,6 +4845,7 @@ However, as expected, if the range we're specifying is outside the maximum
 range possible for that type, it is considered illegal:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Illegal_Decimal_Types
+    :class: ada-expect-compile-error
 
     package Illegal_Decimal_Types is
 
