@@ -2513,6 +2513,8 @@ example:
                       (I_Mapped'Address));
     end Show_Address;
 
+.. _Adv_Ada_Address_Aspect_Overlay:
+
 This approach allows us to create an overlay. For example:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Simple_Overlay
