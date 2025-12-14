@@ -3230,10 +3230,6 @@ is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
     the actual value stored in :ada:`F` is zero. Feel free to try this out!
 
 
-
-
-
-
 .. _Adv_Ada_Decimal_Fixed_Point_Types:
 
 Decimal fixed-point types
@@ -4252,7 +4248,6 @@ type, which ranges from -999,999.0 to 999,999.0. For the derived type
 :ada:`D6_RD3`, we constrain the original range to an interval between -999.0
 and 999.0. For :ada:`D6_R5`, we constrain the type's range to an interval
 between -5.0 and 5.0.
-
 
 
 Range of decimal fixed-point subtypes
