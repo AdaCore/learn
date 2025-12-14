@@ -2419,6 +2419,8 @@ In this example, we declare :ada:`Filter_Coefficient` as a subtype of the
 :ada:`Coefficient` type.
 
 
+.. _Adv_Ada_Floating_Point_Base_Type_Decimal_Precision:
+
 Decimal precision of base type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -2452,6 +2454,7 @@ On a typical desktop PC, you may see that the base type of
 :ada:`Float_3_Digits` has 6 digits, while the :ada:`Float_3_Digits` type itself
 has only 3 digits |mdash| as requested in its type declaration.
 
+.. _Adv_Ada_Floating_Point_Size:
 
 Size of floating-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
