@@ -70,6 +70,7 @@ In this example, we declare the :ada:`Decimal` type, which has a decimal
 precision of 0.1. We use the :ada:`'Delta` attribute to show the decimal
 precision of the type.
 
+.. _Intro_Ada_Decimal_Fixed_Point_Types_Digits:
 
 Decimal digits
 ^^^^^^^^^^^^^^
