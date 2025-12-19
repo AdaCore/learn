@@ -1611,7 +1611,7 @@ Full Code for :ada:`Event_Management` Generic Package
 The full implementation of the approach that works regardless of whether the
 queues are FIFO ordered is provided below. Note that it includes some defensive
 code that we did not mention above, for the sake of simplicity. See in
-particular procedures Signal and Wait that take an Event_List as inputs.
+particular procedures :ada:`Signal` and :ada:`Wait` that take an :ada:`Event_List` as inputs.
 
 When compiling this generic package, you may get warnings indicating that the
 use of parentheses for aggregates is an obsolete feature and that square
