@@ -3140,13 +3140,20 @@ In this example, we see the values for the compiler-selected *small* and the
 *delta* of type :ada:`Ordinary_Fixed_Point`. (Both are 0.25.)
 
 When we declare a fixed-point data type, we must specify the *delta*. In
-contrast, providing a *small* in the type declaration is optional.
+contrast, providing a *small* in the type declaration is optional for
+ordinary fixed-point data types, but forbidden for decimal fixed-point types.
 
-When the *small* isn't specified, it is automatically selected by the compiler.
-In this case, the actual value of the *small* is an implementation-defined
+By default, the compiler automatically selects the *small*: this value is a
 power of ten for decimal fixed-point types and a power of two for ordinary
-fixed-point types. Again, the selected value always follows the rule that the
-*small* must be smaller or equal to the delta. For example:
+fixed-point types. Also, for ordinary fixed-point types, we can specify the
+*small* by using the :ada:`Small` aspect.
+
+.. todo::
+
+    Add link to subsection on :ada:`Small` aspect once available.
+
+As we mentioned before, the selected value for the *small* always follows the
+rule that it must be smaller or equal to the *delta*. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Small_Delta
 
@@ -3169,17 +3176,6 @@ fixed-point types. Again, the selected value always follows the rule that the
 
 In this example, the *delta* that we specifed for :ada:`Ordinary_Fixed_Point`
 is 0.2, while the compiler-selected *small* is 2.0\ :sup:`-3`.
-
-If we want to specify the *small*, we can use the :ada:`Small` aspect. (we'll
-see this aspect again later on.)
-
-.. todo::
-
-    Add link to subsection on :ada:`Small` aspect once available.
-
-However, we can only do so for ordinary fixed-point types: for decimal
-fixed-point types, the *small* is automatically selected by the compiler, and
-it's always equal to the *delta*.
 
 .. admonition:: For further reading...
 
