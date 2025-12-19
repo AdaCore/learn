@@ -973,7 +973,7 @@ are universal fixed types.
 
     It's possible to implement custom :ada:`*` and :ada:`/` operators for
     fixed-point types. However, those operators do **not** override the
-    corresponding operators for universal fixed-point types. For example:
+    corresponding operators for universal fixed types. For example:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Universal_Types.Fixed_Point_Custom_Multiplication
 
@@ -1060,7 +1060,7 @@ are universal fixed types.
     operator, we're indeed overriding the default :ada:`+` operator of the
     :ada:`TQ31` type in the :ada:`Normalized_Fixed_Point_Types` because the
     addition operator is associated with its corresponding fixed-point type,
-    not with the universal fixed-point type. In the
+    not with the universal fixed type. In the
     :ada:`Q31_A := Q31_A * Q31_B` statement, we see at runtime (through the
     "=> Custom non-overriding '*'" message) that the custom
     multiplication is being used.
