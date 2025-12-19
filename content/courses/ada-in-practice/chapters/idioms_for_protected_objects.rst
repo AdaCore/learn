@@ -17,20 +17,88 @@ material, feel free to skip ahead to the
 :ref:`Motivation <Ada_In_Practice_Idioms_For_Protected_Objects_Motivation>`
 section for this chapter.
 
-Interacting threads require two capabilities: communication and
-synchronization. There are two forms of this synchronization: mutual exclusion
-and condition synchronization.
+Concurrent programming is more complex (and more fun) than purely sequential
+programming. The cause of this complexity is two-fold: 1) the executing
+threads' statements are likely interleaved at the assembly language level, and
+2) the order of that interleaving is unpredictable. As a result, developers
+cannot know, in general, where in its sequence of statements any given thread is
+executing. Developers can only assume that the threads are making finite
+progress when they execute.
+
+A consequence of unpredictable interleaving is that the bugs specific to this
+type of programming are timing-dependent. Such bugs are said to be
+*Heisenbugs* because they "go away when you look at them," i.e., changing the
+code |mdash| adding debugging statements or inserting debugger breakpoints
+|mdash| changes the timing. The bug might then disappear entirely, or simply
+appear elsewhere in time. We developers must reason about the possible effects
+of interleaving and design our code to prevent the resulting bugs. (That's why
+this is fun.) Such bugs are really design errors.
+
+One of these errors is known as a *race condition*. A race condition is
+possible when multiple threads access some shared resource that requires
+mutually exclusive access. If we accidentally forget the finite progress
+assumption we may incorrectly assume that the threads sharing that resource
+will access it serially. Unpredictable execution interleaving cannot support
+that assumption.
+
+Race conditions on memory locations are the most common, but the issue is
+general in nature, including for example hardware devices and OS files. Hence
+the term "resource."
+
+For example, suppose multiple threads concurrently access an output display
+device. This device can be ordered to move its cursor to arbitrary points on
+the display by writing a specific sequence of bytes to it, including the
+numeric values for X and Y coordinates. A common use is to send the "move
+cursor to X, Y" sequence and then send the text intended to appear at coordinates
+X and Y.
+
+Clearly, this device requires each client thread to have mutually exclusive
+access to the device while sending those two byte sequences. Otherwise,
+uncoordinated interleaving could result in one thread preempting another
+thread in the middle of sending those two sequences. The result would be an
+intermingled sequence of bytes sent to the device. (On a graphics display the
+chaotic output can be entertaining to observe.)
+
+Memory races on variables are less obvious. Imagine two threads, Thread1 and
+Thread2, that both increment a variable visible to both (an integer, let's
+say).
+
+Suppose that the shared integer variable has a value of zero. Both threads
+increment the variable, so after they do so the new value should be two. The
+compiler will use a hardware register to hold and manipulate the variable's
+value because of the increased performance over memory accesses. Each thread
+has an independent copy of the registers, and will perform the same assembly
+instructions:
+
+#. load a register's value from the memory location containing the variable's value
+#. increment the register's value
+#. store the register's new value back to the variable's memory location.
+
+The two threads' executions may be interleaved in these three steps. It is
+therefore possible that Thread1 will execute step 1 and step 2, and then be
+preempted by the execution of Thread2. Thread2 also executes those two steps.
+As a result, both threads' registers have the new value of 1. Finally, Thread1
+and Thread2 perform the third step, both storing a value of 1 to the
+variable's memory location. The resulting value of the shared variable will be
+1, rather than 2.
+
+Another common design bug is assuming that some required program state has been
+achieved. For example, for a thread to retrieve some data from a shared
+buffer, the buffer must not be empty. Some other thread must already have
+inserted data. Likewise, for a thread to insert some data, the buffer must not
+be full. Again, the finite progress assumption means that we cannot know
+whether either of those two states are achieved.
+
+Therefore, interacting threads require two forms of synchronization: *mutual
+exclusion* and *condition synchronization*. These two kinds of synchronization
+enable developers to reason rigorously about the execution of their code in the
+context of the finite progress assumption.
 
 Mutual exclusion synchronization prevents threads that access some shared
-resource from doing so at the same time. The resource is said to require
-mutually exclusive access. Without that access control, race conditions are
-possible, wherein the effect of the statements executed by the threads depends
-upon the order in which those statements are executed. In a concurrent
-programming context, the threads' statements are likely interleaved at the
-assembly language level, in an order that is unpredictable. That interleaving,
-therefore, must be prevented during the code that accesses the shared resource.
-Memory race conditions are the most common, but the issue is general, including
-for example hardware devices and OS files, hence the term "resource."
+resource from doing so at the same time, i.e., it provides mutually exclusive
+access to that resource. The effect is achieved by ensuring that, while any
+given thread is accessing the resource, that execution will not be interleaved
+with the execution of any other thread's access to that shared resource.
 
 Condition synchronization suspends a thread until the condition |mdash| an
 arbitrary Boolean expression |mdash| is :ada:`True`. Only when the expression
@@ -44,8 +112,13 @@ require mutually exclusive access for both producers and consumers.
 Furthermore, producers must be blocked (suspended) as long as the given buffer
 is full, and consumers must be blocked as long as the given buffer is empty.
 
+Concurrent programming languages support mechanisms providing the two forms
+of synchronization. In some languages these are explicit constructs; other
+languages take different approaches. In any case, developers can apply these
+mechanisms to enforce assumptions more specific than simple finite progress.
+
 Ada uses the term :ada:`task` rather than thread so we will use that term from
-here on. The concept is much the same.
+here on.
 
 The protected procedures and protected entries declared by a protected object
 (PO) automatically execute with mutually exclusive access to the entire
@@ -53,7 +126,7 @@ protected object. No other caller task can be executing these operations at the
 same time, so execution of the procedure or entry body statements will not be
 interleaved. (Functions are special because they have read-only access to the
 data in the PO.) Therefore, there can be no race conditions on the data
-encapsulated within it. Even if no data are declared inside, these operations
+encapsulated within it. Even if the protected object has no encapsulated data, these operations
 always execute with mutually exclusive access. During such execution we can say
 that the PO is locked, speaking informally, because all other caller tasks are
 held pending.
@@ -75,7 +148,7 @@ from the caller task's point of view there is only one call being made.
 The requeue statement may not be familiar to many readers. To explain
 its semantics we first need to provide its rationale.
 
-Ada synchronization constructs are based on avoidance synchronization, meaning
+Ada synchronization constructs are based on *avoidance synchronization*, meaning
 that:
 
 #. the user-written controls that enable/disable the execution of protected
@@ -96,7 +169,7 @@ sufficient, but not always. If we can't know precisely what the operations will
 do when we write the code, avoidance synchronization won't suffice.
 
 The :ada:`requeue` statement is employed when avoidance synchronization is
-insufficient. A task calling an entry that executes a requeue statement is much
+not sufficient. A task calling an entry that executes a requeue statement is much
 like a person calling a large company on the telephone. Calling the main number
 connects you to a receptionist (if you're lucky and don't get an annoying
 menu). If the receptionist can answer your question, they do so and then you
@@ -117,8 +190,8 @@ requeue target, i.e., the second entry.
 
 A requeue statement is not required in all cases but, as you will see,
 sometimes it is essential. Note that protected procedures cannot execute
-requeue statements, only protected entries can do so.
-
+requeue statements, only protected entries can do so. Protected procedures
+are appropriate when only mutual exclusion is required (to update encapsulated data).
 
 .. _Ada_In_Practice_Idioms_For_Protected_Objects_Motivation:
 
@@ -138,7 +211,7 @@ itself. If the application requires what amounts to an atomic action with two
 task participants, then the rendezvous meets this requirement nicely.
 
 But, as a synchronous mechanism, the rendezvous is far too expensive when only
-an asynchronous mechanism is required. Older mechanisms used for asynchronous
+an asynchronous mechanism (involving only one task) is required. Older mechanisms used for asynchronous
 interactions, such as semaphores, mutexes, and condition variables, are nowhere
 near as simple and robust for clients, but are much faster.
 
@@ -243,6 +316,17 @@ to the formal parameter and then incremented. Once the procedure returns, the
 caller task can continue execution with their unique serial number copy. No
 race conditions are possible and the shared serial number value increments
 safely each time :ada:`Get_Next` is called.
+
+Note the robust nature of a protected object's procedural interface: clients
+simply call the protected procedures, entries, or functions. The called
+procedure or entry body, when it executes, will always do so with mutually
+exclusive access. (Functions can have some additional semantics that we can
+ignore here.) There is no explicit lower level synchronization mechanism for
+the client to acquire and release. The semantics of protected objects are
+implemented by the underlying Ada run-time library, hence all error cases are
+also covered. This procedural interface, with automatic implementation for
+mutual exclusion, is one of the significant benefits of the monitor construct
+on which protected objects are based.
 
 
 Second Idiom Category: Developer-Defined Concurrency Abstractions
@@ -536,7 +620,7 @@ the :ada:`Scope_Lock` type.
 The implementation of type :ada:`Mutex` above doesn't have quite the full
 canonical semantics. So far it is really just that of a binary semaphore. In
 particular, a mutex should only be released by the same task that previously
-acquired it, i.e., the current owner. We can implement that as a fuller
+acquired it, i.e., the current owner. We can implement that consistency check in a fuller
 illustration of this example, one that raises an exception if the caller to
 :ada:`Release` is not the current owner of the :ada:`Mutex` object.
 
@@ -655,13 +739,13 @@ The barrier for entry :ada:`Acquire` is always set to :ada:`True` because the
 test for availability is not possible until the body begins to execute. If the
 PO is not available, the caller task is requeued onto the :ada:`Retry` entry.
 (A barrier set to :ada:`True` like this is a strong indicator of a requeue
-operation.) The :ada:`Retry` entry will allow a caller to return |mdash| in the
-caller's point of view, from the call to :ada:`Acquire` |mdash| only when no
+operation.) The :ada:`Retry` entry will allow a caller to return |mdash| from the
+caller's point of view, a return from the call to :ada:`Acquire` |mdash| only when no
 other caller currently owns the PO.
 
 The examples so far exist primarily for providing mutual exclusion to code that
 includes potentially blocking operations. By no means, however, are these the
-only examples. Much more powerful abstractions are possible.
+only examples. Much more sophisticated abstractions are possible.
 
 For example, let's say we want to have a notion of *events* that application
 tasks can await, suspending until the specified event is *signaled*. At some
@@ -837,7 +921,7 @@ signaling multiple events. Here then is the visible part:
 
 Both the entry and the procedure take an argument of the array type, indicating
 one or more client events. The entry, called by waiting tasks, also has an
-output argument, :ada:`Enabler`, indicating which specific entry enabled the
+output argument, :ada:`Enabler`, indicating which specific event enabled the
 task to resume, i.e., which event was found signaled and was selected to
 unblock the task. We need that parameter because the task may have specified
 that any one of several events would suffice, and more than one could have been
@@ -1248,7 +1332,7 @@ Because we did not make the implementation visible to the package's clients,
 our internal changes will not require users to change any of their code.
 
 Note that both the Ravenscar and Jorvik profiles allow entry families, but
-Ravenscar only allows one member per family because only one entry is allowed
+Ravenscar allows only one member per family because only one entry is allowed
 per protected object. Such an entry family doesn't provide any benefit over a
 single entry declaration. Jorvik allows multiple entry family members because
 it allows multiple entries per protected object. However, neither profile
@@ -1382,9 +1466,8 @@ to kill it manually.
 Each task writes to :ada:`Standard_Output`. Strictly speaking, this tasking
 structure allows race conditions on that shared (logical) file, but this is
 just a simple demo of the event facility so it is not worth bothering to
-prevent them. For the same reason, for the tasks that await a single event we
-didn't declare a task type parameterized with a discriminant to specify that
-event.
+prevent them. For the same reason, we didn't declare a task type parameterized
+with a discriminant for those tasks that await a single event.
 
 
 Concurrent Programming
@@ -1527,7 +1610,8 @@ Full Code for :ada:`Event_Management` Generic Package
 
 The full implementation of the approach that works regardless of whether the
 queues are FIFO ordered is provided below. Note that it includes some defensive
-code that we did not mention above, for the sake of simplicity.
+code that we did not mention above, for the sake of simplicity. See in
+particular procedures :ada:`Signal` and :ada:`Wait` that take an :ada:`Event_List` as inputs.
 
 When compiling this generic package, you may get warnings indicating that the
 use of parentheses for aggregates is an obsolete feature and that square
@@ -1556,14 +1640,20 @@ even required, but those situations don't appear here.
        procedure Wait
          (This         : in out Manager;
           Any_Of_These :        Event_List;
-          Enabler      :    out Event);
+          Enabler      :    out Event)
+       with
+         Pre => Any_Of_These'Length > 0;
        --  Block until/unless any one of the events in Any_Of_These has
        --  been signaled. The one enabling event will be returned in the
        --  Enabler parameter, and is cleared internally as Wait exits.
        --  Any other signaled events remain signaled. Note that,
        --  when Signal is called, the events within the aggregate
        --  Any_of_These are checked (for whether they are signaled)
-       --  in the order they appear in the aggregate.
+       --  in the order they appear in the aggregate. We use a precondition
+       --  on Wait because the formal parameter Enabler is mode out, and type
+       --  Event is a discrete type. As such, if there was nothing in the list
+       --  to await, the call would return immediately, leaving Enabler's value
+       --  undefined.
 
        procedure Wait
          (This     : in out Manager;
@@ -1577,6 +1667,9 @@ even required, but those situations don't appear here.
           All_Of_These : Event_List);
        --  Indicate that all of the events in All_Of_These are now
        --  signaled. The events remain signaled until cleared by Wait.
+       --  We don't use a similar precondition like that of procedure
+       --  Wait because, for Signal, doing nothing is what the empty
+       --  list requests.
 
        procedure Signal
          (This     : in out Manager;
@@ -1626,9 +1719,7 @@ And the generic package body:
           Enabler      :    out Event)
        is
        begin
-          if Any_Of_These'Length > 0 then
-             This.Wait (Any_Of_These, Enabler);
-          end if;
+          This.Wait (Any_Of_These, Enabler);
        end Wait;
 
        ----------
@@ -1653,6 +1744,8 @@ And the generic package body:
           All_Of_These : Event_List)
        is
        begin
+           --  Calling Manager.Signal has an effect even when the list
+           --  is empty, albeit minor, so we don't call it in that case
           if All_Of_These'Length > 0 then
              This.Signal (All_Of_These);
           end if;
