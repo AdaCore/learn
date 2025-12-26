@@ -524,7 +524,7 @@ embedded systems; and Ada's low-level facilities, which allow the
 programmer to specify target-specific representations for data types
 (including the bit layout of fields in a record, and the values for
 enumeration elements). Further information on features that contribute
-to safe software may be found in :cite:p:`Barnes_Brosgol_2015`.
+to safe software may be found in :footcite:p:`Barnes_Brosgol_2015`.
 
 In summary, Ada's benefits stem from its expressive power, allowing
 the developer to specify the needed functionality or to constrain the
@@ -1076,7 +1076,7 @@ AdaCore tools and the Ada language.
 * A project using a C codebase can incrementally introduce Ada or
   SPARK. Ada has standard support for interfacing with C, SPARK can be
   combined with C (with checks at the interfaces)
-  :cite:p:`Kanig_Ochem_Comar_2016`, and AdaCore's :index:`GNAT Pro Common
+  :footcite:p:`Kanig_Ochem_Comar_2016`, and AdaCore's :index:`GNAT Pro Common
   Code Generator` compiles a SPARK-like subset of Ada into C (for use
   on processors lacking an Ada compiler). C projects can thus
   progressively adopt higher-tier languages without losing the
@@ -1470,7 +1470,7 @@ VxWorks 6 Cert, Lynx178, PikeOS) as well as bare metal configurations,
 for a wide range of processors (such as PowerPC and ARM).
 
 The Ada language helps reduce the risk of introducing errors during
-software development (see :cite:p:`Black_et_al_2011`). This is
+software development (see :footcite:p:`Black_et_al_2011`). This is
 achieved through a combination of specific programming constructs
 together with static and dynamic checks. As a result, Ada code
 standards tend to be shorter and simpler than C code standards, since
@@ -1976,7 +1976,7 @@ the outcome of the two tests is different.
 
 In the general case, the MC/DC criterion for a decision with n
 conditions requires n+1 tests, instead of 2\ :sup:`n`. For more
-information about MC/DC, see :cite:p:`Hayhurst_et_al_2001`.
+information about MC/DC, see :footcite:p:`Hayhurst_et_al_2001`.
 
 .. index:: GNATcoverage
 .. index:: single: Structural code coverage; GNATcoverage
@@ -3326,7 +3326,7 @@ requirements, and this may be appropriate for some critical kernel
 modules. (A description of how SPARK may be introduced into a project
 at various levels, depending on the system's assurance requirements,
 may be found in a booklet co-authored by AdaCore and Thales
-:cite:p:`AdaCore_Thales_2020`.) Since subprogram pre- and postcondition
+:footcite:p:`AdaCore_Thales_2020`.) Since subprogram pre- and postcondition
 contracts often express low-level requirements, some low-level
 requirements-based testing may be replaced by formal proofs as
 described in the |do-333| Formal Methods supplement to |do-178c|.
@@ -4162,3 +4162,10 @@ in this manner, completeness of verification is ensured.
 
 The only remaining activity is to check that the PDI instance value
 complies with the system configuration.
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::

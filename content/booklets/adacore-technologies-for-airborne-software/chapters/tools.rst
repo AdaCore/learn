@@ -30,8 +30,8 @@ for contract-based programming in the form of subprogram pre- and
 postconditions and type invariants) were added in the Ada 2012 version
 of the language standard, and a number of features to increase the
 language's expressiveness were introduced in Ada 2022 (see
-:cite:p:`ISO_IEC_2012`, :cite:p:`Barnes_Brosgol_2015`,
-:cite:p:`Barnes_2014`, :cite:p:`ISO_IEC_2022` for information about
+:footcite:p:`ISO_IEC_2012`, :footcite:p:`Barnes_Brosgol_2015`,
+:footcite:p:`Barnes_2014`, :footcite:p:`ISO_IEC_2022` for information about
 Ada).
 
 The name *Ada* is not an acronym; it was chosen in honor of Augusta
@@ -199,7 +199,7 @@ additional OOP features including Java-like interfaces and traditional
 Ada is methodologically neutral and does not impose a distributed
 overhead for OOP. If an application does not need OOP, then the OOP
 features do not have to be used, and there is no run-time penalty.
-See :cite:p:`Barnes_2014` or :cite:p:`AdaCore_2016` for more details.
+See :footcite:p:`Barnes_2014` or :footcite:p:`AdaCore_2016` for more details.
 
 .. index:: single: Ada language; Concurrent programming
 
@@ -264,7 +264,7 @@ With its emphasis on sound software engineering principles, Ada
 supports the development of high-integrity applications, including
 those that need to be certified against safety standards such
 |do-178c| for avionics, CENELEC EN 50716:2023 for rail systems, and
-security standards such as the Common Criteria :cite:p:`CCDB_2022`.
+security standards such as the Common Criteria :footcite:p:`CCDB_2022`.
 Key to Ada's support for high-assurance software is the language's
 memory safety; this is illustrated by a number of features, including:
 
@@ -358,7 +358,7 @@ cross-domain solutions.
 
 The SPARK language has been stable over the years, with periodic
 enhancements.  The 2014 version of SPARK represented a major revision
-(see :cite:p:`McCormick_Chapin_2015`), incorporating contract-based
+(see :footcite:p:`McCormick_Chapin_2015`), incorporating contract-based
 programming syntax from Ada 2012, and subsequent upgrades included
 support for pointers (access types) based on the Rust ownership model.
 
@@ -399,7 +399,7 @@ Ease of Adoption
 
 User experience has shown that the language and the SPARK Pro toolset
 do not require a steep learning curve. Training material such as
-AdaCore's online AdaLearn course for SPARK :cite:p:`Learn` can
+AdaCore's online AdaLearn course for SPARK :footcite:p:`Learn` can
 quickly bring developers up to speed; users are assumed to be experts
 in their own application domain such as avionics software and do not
 need to be familiar with formal methods or the proof technology
@@ -1122,3 +1122,10 @@ eliminating the need for manual input.
 GNATdashboard fits naturally into a continuous integration
 environment, providing users with metrics on code complexity, code
 coverage, conformance to coding standards, and more.
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::
