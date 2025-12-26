@@ -34,10 +34,10 @@ Additional features (including support for contract-based programming
 in the form of subprogram pre- and postconditions and type invariants)
 were added in the Ada 2012 version of the language standard, and a
 number of features to increase the language's expressiveness were
-introduced in Ada 2022 (see :cite:`Railway_SW_ISO_IEC_2016`,
-:cite:`Railway_SW_Barnes_Brosgol_2015`,
-:cite:`Railway_SW_Barnes_2014`,
-:cite:`Railway_SW_ISO_IEC_2022` for information about Ada).
+introduced in Ada 2022 (see :footcite:p:`Railway_SW_ISO_IEC_2016`,
+:footcite:p:`Railway_SW_Barnes_Brosgol_2015`,
+:footcite:p:`Railway_SW_Barnes_2014`,
+:footcite:p:`Railway_SW_ISO_IEC_2022` for information about Ada).
 
 .. index:: Lovelace (Augusta Ada), Babbage (Charles), Byron (Lord George)
 
@@ -209,7 +209,8 @@ traditional :ada:`obj.op(...)` operation invocation notation.
 Ada is methodologically neutral and does not impose a distributed overhead for
 OOP. If an application does not need OOP, then the OOP features do not have
 to be used, and there is no run-time penalty.
-See :cite:`Railway_SW_Barnes_2014` or :cite:`Railway_SW_AdaCore_2016` for more details..
+See :footcite:p:`Railway_SW_Barnes_2014` or
+:footcite:p:`Railway_SW_AdaCore_2016` for more details.
 
 .. index:: single: Ada language; Concurrent programming
 
@@ -276,8 +277,9 @@ High-Integrity Systems
 With its emphasis on sound software engineering principles, Ada supports the
 development of high-integrity applications, including those that need to be
 certified against safety standards such |en-50128| for rail systems,
-|do-178c| :cite:`Railway_SW_RTCA_EUROCAE_2011a` for avionics, and security standards
-such as the Common Criteria :cite:`Railway_SW_CCDB_2022`.
+|do-178c| :footcite:p:`Railway_SW_RTCA_EUROCAE_2011a`
+for avionics, and security standards
+such as the Common Criteria :footcite:p:`Railway_SW_CCDB_2022`.
 Key to Ada's support for high-assurance software is the language's
 memory safety; this is illustrated by a number of features, including:
 
@@ -379,7 +381,8 @@ software, and cross-domain solutions.
 
 The SPARK language has been stable over the years, with periodic
 enhancements. The 2014 version of SPARK represented a major revision
-:cite:`Railway_SW_McCormick_Chapin_2015`, :cite:`Railway_SW_AdaCore_Altran_2020`),
+:footcite:p:`Railway_SW_McCormick_Chapin_2015`,
+:footcite:p:`Railway_SW_AdaCore_Altran_2020`),
 incorporating contract-based programming
 syntax from Ada 2012, and subsequent upgrades included support for pointers
 (access types) based on the Rust ownership model.
@@ -421,7 +424,8 @@ Ease of Adoption
 
 User experience has shown that the language and the SPARK Pro toolset do not
 require a steep learning curve. Training material such as AdaCore's online
-AdaLearn course for SPARK :cite:`Railway_SW_AdaCore_AdaLearn` can quickly bring
+AdaLearn course for SPARK
+:footcite:p:`Railway_SW_AdaCore_AdaLearn` can quickly bring
 developers up to speed; users are assumed to be experts in their own
 application domain such as railway software and do not need to be familiar
 with formal methods or the proof technology implemented by the toolset.
@@ -519,13 +523,14 @@ Language and Tool Support
 GNAT Pro Assurance for Ada supports all versions of the Ada
 language standard as well as multiple versions of C (C89, C99, and C11).
 It provides an Integrated Development Environment
-(see :ref:`Railway_SW_Integrated_Development_Environments`), a comprehensive toolsuite
+(see :ref:`Railway_SW_Integrated_Development_Environments`),
+a comprehensive toolsuite
 including a visual debugger, and an extensive set of libraries and bindings.
 Details on the GNAT Pro for Ada toolchain may be found in
-:cite:`Railway_SW_AdaCore_Web_UG_Native`.
+:footcite:p:`Railway_SW_AdaCore_Web_UG_Native`.
 AdaCore's GNAT project facility, based on a multi-language builder for
 systems organized into subsystems and libraries, is documented in
-:cite:`Railway_SW_AdaCore_Web_GPR`.
+:footcite:p:`Railway_SW_AdaCore_Web_GPR`.
 
 .. index:: single: GNAT Pro Assurance; Configurable Run-Time Libraries
 
@@ -540,7 +545,7 @@ Configurable Run-Time Libraries
 
 Two specific GNAT-defined run-time libraries have been designed with
 certification in mind and are known as the Certifiable Profiles
-(see :cite:`Railway_SW_AdaCore_Web_UG_Cross`):
+(see :footcite:p:`Railway_SW_AdaCore_Web_UG_Cross`):
 
 * *Light Profile*
 
@@ -823,9 +828,11 @@ GNATcheck provides:
 * Style checks that allow developers to control indentation, casing,
   comment style, and nesting level.
 
-AdaCore's :index:`GNATformat` tool :cite:`Railway_SW_AdaCore_Web_GNATformat`, which
+AdaCore's :index:`GNATformat` tool
+:footcite:p:`Railway_SW_AdaCore_Web_GNATformat`, which
 formats Ada source code according to the GNAT coding style
-:cite:`Railway_SW_AdaCore_Coding_Style`, can help avoid having code that violates
+:footcite:p:`Railway_SW_AdaCore_Coding_Style`,
+can help avoid having code that violates
 GNATcheck rules. GNATformat is included in the GNAT Pro for Ada toolchain.
 
 GNATcheck comes with a query language (LKQL, for Language Kit Query Language)
@@ -869,7 +876,8 @@ Principle) that can be used to demonstrate consistency of class hierarchies.
 Testing a private subprogram is outside the scope of GNATtest but can be
 implemented by defining the relevant testing code in a private child of the
 package that declares the private subprogram.
-Additionally, hybrid verification can help (see :ref:`Railway_SW_Hybrid_Verification`):
+Additionally, hybrid verification can help (see
+:ref:`Railway_SW_Hybrid_Verification`):
 augmenting testing with the use of SPARK to formally prove relevant properties
 of the private subprogram.
 
@@ -1005,7 +1013,8 @@ Critical fixes to GNAT Pro for Rust are upstreamed to the Rust community,
 and critical fixes made by the community to upstream Rust tools are backported
 as needed to the GNAT Pro for Rust code base.
 Additionally, the Assurance edition of GNAT Pro for Rust includes the
-"sustained branch" service (see :ref:`Railway_SW_Sustained_Branches`) that strikes the
+"sustained branch" service (see :ref:`Railway_SW_Sustained_Branches`) that
+strikes the
 balance between tool stability and project flexibility.
 
 .. index:: Integrated Development Environments (IDEs)
@@ -1111,3 +1120,10 @@ their software's technical debt, and eliminating the need for manual input.
 GNATdashboard fits naturally into a continuous integration environment,
 providing users with metrics on code complexity, code coverage,
 conformance to coding standards, and more.
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::
