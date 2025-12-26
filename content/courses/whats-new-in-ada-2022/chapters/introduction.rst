@@ -16,8 +16,6 @@ References
 ----------
 
 * Draft :aarm22:`Ada 2022 Standard <TTL>`
-* `Ada 202x support in GNAT`_ blog post
 
 .. _`GNAT Community Edition 2021`: https://blog.adacore.com/gnat-community-2021-is-here
 .. _`GCC 11`: https://gcc.gnu.org/gcc-11/
-.. _`Ada 202x support in GNAT`: https://blog.adacore.com/ada-202x-support-in-gnat
