@@ -3286,6 +3286,60 @@ the specified power of 10. (We discuss
 :ref:`machine representation of decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Machine_Representation>`
 later on.)
 
+Let's look at a small, practical example showing the conversion between two
+currencies |mdash| in this case, between euros and yens:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Currency_Conversion
+
+    package Currencies is
+
+       type EUR is
+         delta 0.01 digits 12;
+
+       type Yen is
+         delta 1.0 digits 12;
+
+       --  Exchange rates as of
+       --  2025-12-26:
+       EUR_Yen : constant := 184.365_5;
+       Yen_EUR : constant := 0.005_42;
+
+       function To_EUR (Y : Yen)
+                       return EUR is
+         (Y * Yen_EUR);
+
+       function To_Yen (E : EUR)
+                       return Yen is
+         (E * EUR_Yen);
+
+    end Currencies;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+    with Currencies;  use Currencies;
+
+    procedure Show_Currency_Conversion is
+       E : EUR;
+       Y : Yen;
+    begin
+       Y := 1000.0;
+       Put_Line (Y'Image
+                 & " JPY = "
+                 & To_EUR (Y)'Image
+                 & " EUR");
+
+       E := 10.0;
+       Put_Line (E'Image
+                 & " EUR = "
+                 & To_Yen (E)'Image
+                 & " JPY");
+    end Show_Currency_Conversion;
+
+In this example, we see the conversion from 1000 yens to euros, as well as 10
+euros to yens. We have two decimal fixed-point data types for the currencies:
+:ada:`EUR` and :ada:`Yen`. As the function names imply, we use the
+:ada:`To_EUR` function to convert to the :ada:`EUR` type and the :ada:`To_Yen`
+function to convert to the :ada:`Yen` type.
+
 .. admonition:: In the Ada Reference Manual
 
     - :arm22:`3.5.9 Fixed Point Types <3-5-9>`
