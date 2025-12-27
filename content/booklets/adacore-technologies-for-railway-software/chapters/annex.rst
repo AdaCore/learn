@@ -235,10 +235,3 @@ Annex D References
 ~~~~~~~~~~~~~~~~~~
 
 * D.50 Structure Based Testing
-
-
-.. only:: builder_html
-
-    .. rubric:: Bibliography
-
-.. footbibliography::

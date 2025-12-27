@@ -134,7 +134,7 @@ As editor of this revised edition, I would like to thank Vasiliy Fofanov
 (AdaCore) for his detailed and helpful review and suggestions.
 
 For up-to-date information on AdaCore support for developers of rail
-software, please visit :cite:`Railway_SW_AdaCore_Web_Rail`.
+software, please visit :footcite:`Railway_SW_AdaCore_Web_Rail`.
 
 | Ben Brosgol, AdaCore
 | September 2025

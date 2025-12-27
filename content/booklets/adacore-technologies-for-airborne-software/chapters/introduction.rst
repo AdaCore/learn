@@ -13,9 +13,9 @@ satisfy various objectives of the standards.  Many of the advantages
 of AdaCore's products stem from the software engineering support found
 in the Ada programming language, including features (such as
 contract-based programming) introduced in Ada\ |nbsp|\ 2012
-:cite:p:`ISO_IEC_2012`.  Other advantages draw directly from the
-formally analyzable SPARK subset of Ada :cite:p:`AdaCore_Altran_2020`,
-:cite:p:`Dross_2022`, :cite:p:`Chapman_et_al_2024`.  As a result, this
+:footcite:p:`ISO_IEC_2012`.  Other advantages draw directly from the
+formally analyzable SPARK subset of Ada :footcite:p:`AdaCore_Altran_2020`,
+:footcite:p:`Dross_2022`, :footcite:p:`Chapman_et_al_2024`.  As a result, this
 document identifies how Ada and SPARK contribute toward the
 development of reliable software. AdaCore personnel have played key
 roles in the design and implementation of both of these languages.
@@ -105,3 +105,10 @@ or technique is introduced, it's important to open a discussion with
 AdaCore and the designated authority to confirm its acceptability. The
 level of detail in the process description provided in the project
 plans and standard is a key factor in gaining acceptance.
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::

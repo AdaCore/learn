@@ -1226,7 +1226,8 @@ here it will be a value from either :ada:`Base_Class` or :ada:`Subclass`.
 Storage for :ada:`X` is reserved on the stack, and the invocation :ada:`P (X)`
 will dispatch to the appropriate version of :ada:`P`.
 
-The booklet :cite:`Railway_SW_AdaCore_2016` provides additional information on how to use
+The booklet :footcite:p:`Railway_SW_AdaCore_2016` provides additional information
+on how to use
 object-oriented features in a certified context.
 
 .. index:: single: Annex D; Procedural Programming (D.60)
@@ -1239,3 +1240,10 @@ Procedural Programming (D.60)
 Ada implements all the usual features of procedural programming languages,
 with a general-purpose data type facility and a comprehensive set of control
 constructs.
+
+
+.. only:: builder_html
+
+    .. rubric:: Bibliography
+
+.. footbibliography::
