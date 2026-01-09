@@ -272,6 +272,7 @@ html_theme_options = {
         'color-admonition-title-background': '#fadfd2',
         'color-admonition-title--note': 'var(--color-admonition-title)',
         'color-admonition-title-background--note': 'var(--color-admonition-title-background)',
+        'color-highlight-on-target': '#faede0',
     },
     'dark_css_variables': {
         'color-brand-primary': '#fa5000',
@@ -282,6 +283,7 @@ html_theme_options = {
         'color-admonition-title-background': '#502000',
         'color-admonition-title--note': 'var(--color-admonition-title)',
         'color-admonition-title-background--note': 'var(--color-admonition-title-background)',
+        'color-highlight-on-target': '#402525',
     },
     'sidebar_hide_name': True,
     'navigation_with_keys': True,
