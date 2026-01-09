@@ -1,6 +1,10 @@
 // colors
 @use 'sass:color';
 
+//
+// NOTE: some colors for the furo-theme are overridden in the conf.py file
+//
+
 $color-theme-bg-dark:           #fa5000;
 $color-theme-bg-light:          rgb(252, 252, 252);
 
