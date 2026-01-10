@@ -56,7 +56,7 @@ def get_file_from_conf_ini(path_to_file):
 # -- Project information -----------------------------------------------------
 
 project = u'learn.adacore.com'
-copyright = u'2018 – 2025, AdaCore. All rights reserved'
+copyright = u'2018 – 2026, AdaCore. All rights reserved'
 author = u'AdaCore' if not config.has_option('', 'author') else \
     config['DEFAULT']['author']
 title = u'Learn Ada (Complete)' if not config.has_option('', 'title') else \
@@ -272,6 +272,7 @@ html_theme_options = {
         'color-admonition-title-background': '#fadfd2',
         'color-admonition-title--note': 'var(--color-admonition-title)',
         'color-admonition-title-background--note': 'var(--color-admonition-title-background)',
+        'color-highlight-on-target': '#faede0',
     },
     'dark_css_variables': {
         'color-brand-primary': '#fa5000',
@@ -282,6 +283,7 @@ html_theme_options = {
         'color-admonition-title-background': '#502000',
         'color-admonition-title--note': 'var(--color-admonition-title)',
         'color-admonition-title-background--note': 'var(--color-admonition-title-background)',
+        'color-highlight-on-target': '#402525',
     },
     'sidebar_hide_name': True,
     'navigation_with_keys': True,
