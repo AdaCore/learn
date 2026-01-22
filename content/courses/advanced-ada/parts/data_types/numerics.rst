@@ -3054,8 +3054,8 @@ floating-point types.
     integer types to emulate fixed-point operations.
 
 As mentioned in the Introduction to Ada course course, fixed-point types
-are classified in
-:ref:`decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Types>` and
+are classified as either
+:ref:`decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Types>` or
 ordinary (binary) types.
 
 .. todo::
