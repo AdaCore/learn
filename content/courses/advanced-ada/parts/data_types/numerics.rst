@@ -3285,6 +3285,9 @@ fixed-point types are represented as integers, which are implicitly scaled by
 the specified power of 10. (We discuss
 :ref:`machine representation of decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Machine_Representation>`
 later on.)
+Also, as mentioned :ref:`earlier on <Adv_Ada_Fixed_Point_Types_Small_Delta>`,
+for decimal fixed-point types, the *small* is automatically selected by the
+compiler, and it's always equal to the *delta*.
 
 Let's look at a small, practical example showing the conversion between two
 currencies |mdash| in this case, between euros and yen:
