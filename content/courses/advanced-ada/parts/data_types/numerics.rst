@@ -4637,9 +4637,9 @@ Let's inspect the value of all these constants:
                  & Max_Delta'Image);
     end Show_Min_Max_Scale;
 
-On a desktop PC, you may see that the :ada:`Min_Scale` is -38, while the
-:ada:`Max_Scale` is 38. Therefore, the :ada:`Min_Delta` is 10\ :sup:`-38` and
-the :ada:`Max_Delta` is  10\ :sup:`38`.
+On a typical desktop PC, you may see that the :ada:`Min_Scale` is -38, while
+the :ada:`Max_Scale` is 38. Therefore, the :ada:`Min_Delta` is 10\ :sup:`-38`
+and the :ada:`Max_Delta` is  10\ :sup:`38`.
 
 The values of these constants depend on the compiler implementation and the
 target platform. However, the standard requires that :ada:`Min_Scale` shall be
