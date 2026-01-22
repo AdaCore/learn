@@ -3249,7 +3249,8 @@ In this case, the :ada:`delta` and the :ada:`digits` specifications are used by
 the compiler to derive a range.
 
 Note that, unlike floating-point types, there are no predefined decimal
-fixed-point types: all decimal types are always custom types.
+fixed-point types such as :ada:`Decimal`, :ada:`Long_Decimal`, and
+:ada:`Long_Long_Decimal`. In fact, all decimal types are always custom types.
 
 In terms of syntax, the main difference between the declaration of a custom
 floating-point type and a decimal fixed-point type is the delta specification:
