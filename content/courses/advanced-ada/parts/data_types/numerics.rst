@@ -4509,6 +4509,12 @@ other numeric types such as integer and floating-point types. For example:
          digits 18;
        --  Floating-point type
 
+       type TD18_1000 is
+         digits 18
+           range -1_000.0 .. 1_000.0;
+       --  Range-constrained
+       --  floating-point type
+
     end Custom_Types;
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -4519,6 +4525,7 @@ other numeric types such as integer and floating-point types. For example:
     procedure Show_Decimal_Type_Conversions is
        D6  : T2_D6;
        D18 : TD18;
+       D18_1000 : TD18_1000;
     begin
        D6  := T2_D6'Last;
        D18 := TD18 (D6);
@@ -4526,9 +4533,9 @@ other numeric types such as integer and floating-point types. For example:
        --  Conversion from
        --  decimal fixed-point
 
-       Put_Line ("D6  = "
+       Put_Line ("D6       = "
                  & D6'Image);
-       Put_Line ("D18 = "
+       Put_Line ("D18      = "
                  & D18'Image);
 
        D18 := TD18 (T2_D6'Last);
@@ -4537,19 +4544,35 @@ other numeric types such as integer and floating-point types. For example:
        --  Conversion to
        --  decimal fixed-point
 
-       Put_Line ("D6  = "
+       Put_Line ("D6       = "
                  & D6'Image);
-       Put_Line ("D18 = "
+       Put_Line ("D18      = "
                  & D18'Image);
+
+       D6       := 800.0;
+       D18_1000 := TD18_1000 (D6);
+       --          ^^^^^^^^^^^^^^
+       --  Conversion from
+       --  decimal fixed-point
+
+       Put_Line ("D6       = "
+                 & D6'Image);
+       Put_Line ("D18_1000 = "
+                 & D18_1000'Image);
 
     end Show_Decimal_Type_Conversions;
 
 In this example, we declare the decimal fixed-point type :ada:`T2_D6` and the
 floating-point type :ada:`TD18`. Conversion between these two types works as
 expected: we use :ada:`TD18 (D6)` to convert from a decimal fixed-point type
-and :ada:`T2_D6 (D18)` to convert to a decimal fixed-point type. Of course,
-when converting to a decimal fixed-point type, we have to ensure that the
-floating-point value is in the range that is suitable for the target type.
+and :ada:`T2_D6 (D18)` to convert to a decimal fixed-point type.
+
+Of course, when converting to a decimal fixed-point type, we have to ensure
+that the floating-point value is in the range that is suitable for the target
+type. Likewise, the same applies when converting from a decimal fixed-point
+type to a floating-point type |mdash| if we had assigned 2000.0 to :ada:`D6`
+instead of 800.0, for example, the conversion :ada:`TD18_1000 (D6)` would have
+raised a :ada:`Constraint_Error` because of the failed range check.
 
 
 .. _Adv_Ada_Package_Decimal:
