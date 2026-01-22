@@ -3301,16 +3301,16 @@ currencies |mdash| in this case, between euros and yen:
 
        --  Exchange rates as of
        --  2025-12-26:
-       EUR_Yen : constant := 184.365_5;
-       Yen_EUR : constant := 0.005_42;
+       EUR_Per_Yen : constant := 184.365_5;
+       Yen_Per_EUR : constant := 0.005_42;
 
        function To_EUR (Y : Yen)
                        return EUR is
-         (Y * Yen_EUR);
+         (Y * Yen_Per_EUR);
 
        function To_Yen (E : EUR)
                        return Yen is
-         (E * EUR_Yen);
+         (E * EUR_Per_Yen);
 
     end Currencies;
 
