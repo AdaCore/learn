@@ -3287,7 +3287,7 @@ the specified power of 10. (We discuss
 later on.)
 
 Let's look at a small, practical example showing the conversion between two
-currencies |mdash| in this case, between euros and yens:
+currencies |mdash| in this case, between euros and yen:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Currency_Conversion
 
@@ -3334,8 +3334,8 @@ currencies |mdash| in this case, between euros and yens:
                  & " JPY");
     end Show_Currency_Conversion;
 
-In this example, we see the conversion from 1000 yens to euros, as well as 10
-euros to yens. We have two decimal fixed-point data types for the currencies:
+In this example, we see the conversion from 1000 yen to euros, as well as 10
+euros to yen. We have two decimal fixed-point data types for the currencies:
 :ada:`EUR` and :ada:`Yen`. As the function names imply, we use the
 :ada:`To_EUR` function to convert to the :ada:`EUR` type and the :ada:`To_Yen`
 function to convert to the :ada:`Yen` type.
