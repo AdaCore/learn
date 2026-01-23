@@ -1477,6 +1477,8 @@ Attributes of decimal fixed-point types
 The attributes presented in this subsection are only available for decimal
 fixed-point types.
 
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Digits_Attribute:
+
 Attribute: :ada:`Digits`
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1506,6 +1508,8 @@ applies for subtypes, as we can see in the value of :ada:`T3_D2'Digits`. Here,
 the value is two, which was used in the declaration of the :ada:`T3_D2`
 subtype.
 
+
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Scale_Attribute:
 
 Attribute: :ada:`Scale`
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1554,6 +1558,7 @@ In this example, we get the following values for the scales:
 As you can see, the value of :ada:`Scale` is directly related to the *delta*
 of the corresponding type declaration.
 
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Round_Attribute:
 
 Attribute: :ada:`Round`
 ^^^^^^^^^^^^^^^^^^^^^^^^

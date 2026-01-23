@@ -2552,6 +2552,12 @@ procedure.
 Formal fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. todo::
+
+    Discuss how attributes such as Digits, Delta, and Scale can be usefully
+    applied to generic formal fixed point types.
+
+
 Simple generic package
 ^^^^^^^^^^^^^^^^^^^^^^
 

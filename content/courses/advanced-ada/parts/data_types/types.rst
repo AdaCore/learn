@@ -583,6 +583,11 @@ we know, we can classify them as follows:
 | Real        | No       | Yes      |
 +-------------+----------+----------+
 
+.. _Adv_Ada_Scalar_Type_Attributes:
+
+Attributes
+~~~~~~~~~~
+
 Many attributes exist for scalar types. For example, we can use the
 :ada:`Image` and :ada:`Value` attributes to convert between a given type and a
 string type. The following table presents the main attributes for scalar types:
