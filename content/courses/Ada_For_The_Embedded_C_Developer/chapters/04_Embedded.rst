@@ -180,8 +180,8 @@ assembler as well as source-level variables to be used for input and output:
     begin
        Asm ("rdtsc",
             Outputs =>
-              (Unsigned_32'Asm_Output ("=a", High),
-               Unsigned_32'Asm_Output ("=d", Low)),
+              (Unsigned_32'Asm_Output ("=a", Low),
+               Unsigned_32'Asm_Output ("=d", High)),
             Volatile => True);
 
        Counter :=
