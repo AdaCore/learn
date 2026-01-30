@@ -440,8 +440,6 @@
     AdaCore offers advanced courses in Ada and GNAT Pro/GNAT Studio designed to
     help developers get the most out of the technology.
 
-    --------------
-
     GNAT Academic Program
     ------------------------
 
