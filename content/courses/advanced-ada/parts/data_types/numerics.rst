@@ -4006,11 +4006,11 @@ precision.
 In the example below, we declare two data types: :ada:`T3_D3` and :ada:`T6_D3`.
 For both types, the *delta* is the same: 0.001.
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Decimal_Fixed_Point_Types.Decimal_Precision
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Decimal_Fixed_Point_Types is
+    procedure Show_Decimal_Precision is
        type T3_D3 is delta 10.0 ** (-3) digits 3;
        type T6_D3 is delta 10.0 ** (-3) digits 6;
     begin
@@ -4028,7 +4028,7 @@ For both types, the *delta* is the same: 0.001.
                  & T6_D3'Image (T6_D3'First));
        Put_Line ("The maximum  value of T6_D3 is "
                  & T6_D3'Image (T6_D3'Last));
-    end Decimal_Fixed_Point_Types;
+    end Show_Decimal_Precision;
 
 When running the application, we confirm that the delta value of both
 types is indeed the same: 0.001. However, because :ada:`T3_D3` is restricted
@@ -4277,7 +4277,7 @@ contrast, for decimal fixed-point types, each digit increases the type's size.
 Note, however, that the *delta* of the decimal type doesn't have an influence
 on the type's size. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Size
 
     package Decimal_Types is
 
@@ -4364,7 +4364,7 @@ on the type's size. For example:
 
     with Decimal_Types; use Decimal_Types;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Decimal_Digits_Size is
     begin
        Put_Line ("Decimal_1_Digits'Size   :"
                  & Decimal_1_Digits'Size'Image
@@ -4480,7 +4480,7 @@ on the type's size. For example:
        Put_Line ("Decimal_38_Digits'Size  :"
                  & Decimal_38_Digits'Size'Image
                  & " bits");
-    end Show_Decimal_Digits;
+    end Show_Decimal_Digits_Size;
 
 When running the application above, we see that the number of bits increases
 for each digit that we *add* to our decimal type declaration. On a typical
@@ -4517,13 +4517,13 @@ desktop PC, we may see the following results:
 When we look at the base type of these decimal fixed-point types, we see that
 the actual size on hardware is usually bigger. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Size
 
     with Ada.Text_IO;   use Ada.Text_IO;
 
     with Decimal_Types; use Decimal_Types;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Decimal_Digits_Size is
     begin
        Put_Line ("Decimal_1_Digits'Base'Size   :"
                  & Decimal_1_Digits'Base'Size'Image
@@ -4639,7 +4639,7 @@ the actual size on hardware is usually bigger. For example:
        Put_Line ("Decimal_38_Digits'Base'Size  :"
                  & Decimal_38_Digits'Base'Size'Image
                  & " bits");
-    end Show_Decimal_Digits;
+    end Show_Decimal_Digits_Size;
 
 On a typical desktop PC, we may see the following results:
 
@@ -4696,11 +4696,11 @@ that the decimal fixed-point type is able to represent. For example, by writing
 represent values with three digits ranging from -999 to 999 |mdash| this
 corresponds to a range from -10\ :sup:`3` + 1 to 10\ :sup:`3` - 1. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Decimal_Range is
 
        type D1 is
          delta 1.0 digits 1;
@@ -4734,7 +4734,7 @@ corresponds to a range from -10\ :sup:`3` + 1 to 10\ :sup:`3` - 1. For example:
                  & D38'First'Image
                  & " .. "
                  & D38'Last'Image);
-    end Show_Decimal_Digits;
+    end Show_Decimal_Range;
 
 In this example, we declare multiple decimal types. This is the range of each
 one of them:
@@ -4776,11 +4776,11 @@ Custom range of decimal fixed-point types
 Similar to floating-point types, we can define custom ranges for decimal
 fixed-point types by using the :ada:`range` keyword. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Custom_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Decimal_Custom_Range is
 
        type D6 is
          delta 1.0 digits 6;
@@ -4797,7 +4797,7 @@ fixed-point types by using the :ada:`range` keyword. For example:
                  & D6_R100'First'Image
                  & " .. "
                  & D6_R100'Last'Image);
-    end Show_Decimal_Digits;
+    end Show_Decimal_Custom_Range;
 
 In this example, we declare the :ada:`D6` type with :ada:`digits 6`, which
 has a range between -999,999.0 and 999,999.0. In addition, we declare the
@@ -4811,11 +4811,11 @@ Range of derived decimal fixed-point types
 We can also derive from decimal fixed-point types and limit the range at the
 same time |mdash| as we can do with floating-point types. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Derived_Decimal_Fixed_Point_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Derived_Decimal_Range is
 
        type D6 is
          delta 1.0 digits 6;
@@ -4837,7 +4837,7 @@ same time |mdash| as we can do with floating-point types. For example:
                  & D6_R5'First'Image
                  & " .. "
                  & D6_R5'Last'Image);
-    end Show_Decimal_Digits;
+    end Show_Derived_Decimal_Range;
 
 Here, :ada:`D6_RD3` and :ada:`D6_R5` types are both derived from the :ada:`D6`
 type, which ranges from -999,999.0 to 999,999.0. For the derived type
@@ -4852,11 +4852,11 @@ Range of decimal fixed-point subtypes
 Similarly, we can declare subtypes of decimal fixed-point types and limit the
 range at the same time. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Subtype_Range
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Decimal_Fixed_Point_Subtype_Range is
 
        type D6 is
          delta 1.0 digits 6;
@@ -4877,7 +4877,7 @@ range at the same time. For example:
                  & D6_R5'First'Image
                  & " .. "
                  & D6_R5'Last'Image);
-    end Show_Decimal_Digits;
+    end Show_Decimal_Fixed_Point_Subtype_Range;
 
 Now, :ada:`D6_RD3` and :ada:`D6_R5` are subtypes of the :ada:`D6` type, which
 has a range between -999,999.0 to 999,999.0. For these subtypes, we use the
@@ -4892,11 +4892,11 @@ Range of the base type
 Note that the range of a decimal fixed-point type might be smaller than the
 range of its :ref:`base type <Adv_Ada_Base_Types>`. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Base_Range
 
     with Ada.Text_IO;   use Ada.Text_IO;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Decimal_Fixed_Point_Base_Range is
 
        type D6 is
          delta 1.0 digits 6;
@@ -4910,7 +4910,7 @@ range of its :ref:`base type <Adv_Ada_Base_Types>`. For example:
                  & D6'Base'First'Image
                  & " .. "
                  & D6'Base'Last'Image);
-    end Show_Decimal_Digits;
+    end Show_Decimal_Fixed_Point_Base_Range;
 
 In this example, we see that the range of the :ada:`D6` goes from -999,999 to
 999,999. The range of the base type, however, can be wider. On a desktop PC, it
