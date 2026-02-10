@@ -4819,8 +4819,10 @@ same time |mdash| as we can do with floating-point types. For example:
 
        type D6 is
          delta 1.0 digits 6;
+
        type D6_RD3 is new D6
          range -999.0 .. 999.0;
+
        type D6_R5 is new D6
          range -5.0 .. 5.0;
 
@@ -4860,10 +4862,13 @@ range at the same time. For example:
 
        type D6 is
          delta 1.0 digits 6;
+
        subtype D6_RD3 is D6
          range -999.0 .. 999.0;
+
        subtype D6_R5 is D6
          range -5.0 .. 5.0;
+
     begin
        Put_Line ("D6'Range     : "
                  & D6'First'Image
