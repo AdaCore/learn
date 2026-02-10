@@ -3083,8 +3083,8 @@ implementation) and have the following syntax:
       delta <delta-value>
       range <lower-bound> .. <upper-bound>;
 
-Ordinary fixed-point types can be found for example in some implementations for
-digital signal processing.
+Ordinary fixed-point types can be found in some implementations for digital
+signal processing, for example.
 
 In the next sections, we discuss further details about these specific types.
 Next in this section, we introduce the concept of *small* and *delta* of
@@ -3557,8 +3557,8 @@ types:
 In this example, we convert the value of :ada:`D` |mdash| from the
 :ada:`Decimal` to the :ada:`Long_Long_Decimal` type |mdash| by writing
 :ada:`Long_Long_Decimal (D)`. Similarly, we convert the value of
-:ada:`Acc` |mdash| from the :ada:`Long_Long_Decimal` to the :ada:`Decimal`
-type |mdash| by writing :ada:`Decimal (Acc)`.
+:ada:`Acc` by writing :ada:`Decimal (Acc)`, which converts it from the
+:ada:`Long_Long_Decimal` to the :ada:`Decimal` type.
 
 
 .. _Adv_Ada_Fixed_Point_Type_Conversion_Other_Types:
