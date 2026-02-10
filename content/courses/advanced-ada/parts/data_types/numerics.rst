@@ -3244,7 +3244,7 @@ Derived fixed-point types
 We can of course derive from any fixed-point types. Let's see an example for
 decimal fixed-point types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Derived_Decimal_Fixed_Point_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Derived_Decimal_Fixed_Point_Types
 
     package Custom_Decimal_Types is
 
@@ -3286,7 +3286,7 @@ Fixed-point subtypes
 We can also declare subtypes of fixed-point types. Let's see an example using
 decimal fixed-point types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Derived_Decimal_Fixed_Point_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Decimal_Fixed_Point_Subtypes
 
     package Custom_Decimal_Types is
 
@@ -3332,7 +3332,7 @@ declaration.
 
 Let's see an example using a decimal fixed-point type:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Floating_Point_Types.Floating_Point_Decimal_Precision
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Custom_Size_Decimal_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3373,7 +3373,7 @@ Machine representation of decimal types
 Let's start with decimal fixed-ppint types. Consider the following types from
 the :ada:`Custom_Decimal_Types` package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Machine_Implementation
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
 
     package Custom_Decimal_Types is
 
@@ -3396,7 +3396,7 @@ the :ada:`Custom_Decimal_Types` package:
 We can use an overlay to uncover the actual integer values stored on the
 machine when assigning values to objects of decimal type. For example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Machine_Implementation
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -3520,7 +3520,7 @@ Type conversion between fixed-point types
 Let's start with an example of type conversion between decimal fixed-point
 types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Type_Conversions
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Decimal_Type_Conversions
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3570,7 +3570,7 @@ other numeric types such as integer and floating-point types.
 
 Let's see an example for decimal fixed-point types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Decimal_Type_Conversions_Other_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Decimal_Type_Conversions_Other_Types
 
     package Custom_Types is
 
@@ -3719,7 +3719,7 @@ In addition, the multiplication and division operations also make use of
 universal fixed types. Consider the following package with decimal fixed-point
 types:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_Decimal
 
     package Custom_Decimal_Types is
 
@@ -3736,7 +3736,7 @@ types:
 Let's look at a code example using the multiplication operation applied to two
 objects of different decimal types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_Decimal
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3765,7 +3765,7 @@ In this example, the :ada:`A * B` expression makes use of universal fixed
 types. If this wasn't the case, :ada:`B` would have to be first convert to the
 :ada:`Short_Decimal` type, and the result of the operation would be zero:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_Decimal
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3800,7 +3800,7 @@ converted from universal fixed to the actual type we're using in the assignment
 
 For the division operation, universal fixed types are used as well:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_Decimal
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3833,7 +3833,7 @@ types, and the :ada:`A / B` expression makes use of universal fixed types.
     Note that we can use *explicit* type conversions, and the results is still
     the same:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_Decimal
 
         with Ada.Text_IO; use Ada.Text_IO;
 
