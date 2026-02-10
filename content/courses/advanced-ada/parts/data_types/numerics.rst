@@ -4858,7 +4858,7 @@ range at the same time. For example:
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Decimal_Fixed_Point_Subtype_Range is
+    procedure Show_Decimal_Subtype_Range is
 
        type D6 is
          delta 1.0 digits 6;
@@ -4882,7 +4882,7 @@ range at the same time. For example:
                  & D6_R5'First'Image
                  & " .. "
                  & D6_R5'Last'Image);
-    end Show_Decimal_Fixed_Point_Subtype_Range;
+    end Show_Decimal_Subtype_Range;
 
 Now, :ada:`D6_RD3` and :ada:`D6_R5` are subtypes of the :ada:`D6` type, which
 has a range between -999,999.0 to 999,999.0. For these subtypes, we use the
