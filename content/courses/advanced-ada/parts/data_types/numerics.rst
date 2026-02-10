@@ -116,9 +116,9 @@ Features and Flexibility
 Ada provides a simple and elegant way of expressing numeric literals. One of
 those simple, yet powerful aspects is the ability to use underscores to
 separate groups of digits. For example,
-:ada:`3.14159_26535_89793_23846_26433_83279_50288_41971_69399_37510` is more
+:ada:`3.14159_26535_89793_23846_26433_83279_50288` is more
 readable and less error prone to type than
-:ada:`3.14159265358979323846264338327950288419716939937510`. Here's the
+:ada:`3.14159265358979323846264338327950288`. Here's the
 complete code:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Numeric_Literals.Pi_Literals
@@ -128,10 +128,10 @@ complete code:
 
     procedure Ada_Numeric_Literals is
        Pi   : constant :=
-         3.14159_26535_89793_23846_26433_83279_50288_41971_69399_37510;
+         3.14159_26535_89793_23846_26433_83279_50288;
 
        Pi2  : constant :=
-         3.14159265358979323846264338327950288419716939937510;
+         3.14159265358979323846264338327950288;
 
        Z    : constant := Pi - Pi2;
        pragma Assert (Z = 0.0);
