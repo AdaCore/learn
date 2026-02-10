@@ -3336,7 +3336,7 @@ Let's see an example using a decimal fixed-point type:
 
     with Ada.Text_IO; use Ada.Text_IO;
 
-    procedure Show_Decimal_Digits is
+    procedure Show_Custom_Size_Decimal is
 
        type Decimal_6_Digits is
          delta 10.0 ** (-2) digits 6
@@ -3346,7 +3346,7 @@ Let's see an example using a decimal fixed-point type:
        Put_Line ("Decimal_6_Digits'Size      :"
                  & Decimal_6_Digits'Size'Image
                  & " bits");
-    end Show_Decimal_Digits;
+    end Show_Custom_Size_Decimal;
 
 In this example, we require that :ada:`Decimal_6_Digits` has a size of 128
 bits on the target platform |mdash| instead of the 32 bits that we would
