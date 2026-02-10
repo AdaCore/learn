@@ -3665,7 +3665,7 @@ fixed-point types.
 
     Consider the following package from a previous section:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_2
 
         package Custom_Decimal_Types is
 
@@ -3681,7 +3681,7 @@ fixed-point types.
 
     Let's look at a simple example of type conversions between these types:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_2
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5469,7 +5469,7 @@ operation is 500.0.
 
     Consider the following package from a previous section:
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed_2
 
         package Custom_Decimal_Types is
 
@@ -5485,7 +5485,7 @@ operation is 500.0.
 
     Let's look at a simple example of type conversions between these types:
 
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Decimal_Fixed_Point_Types.Universal_Fixed_2
 
         with Ada.Text_IO; use Ada.Text_IO;
 
