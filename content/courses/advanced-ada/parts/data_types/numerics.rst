@@ -3506,7 +3506,8 @@ Type conversion using fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section, we briefly discuss
-:ref:`type conversion <Adv_Ada_Type_Conversion>` using fixed-point types: this includes the conversion between
+:ref:`type conversion <Adv_Ada_Type_Conversion>` using fixed-point types: this
+includes the conversion between
 :ref:`fixed-point types <Adv_Ada_Fixed_Point_Type_Conversion>` and the
 :ref:`conversion to other types <Adv_Ada_Fixed_Point_Type_Conversion_Other_Types>`
 such as floating-point types.
@@ -3538,7 +3539,7 @@ types:
        D   := 2.0;
        Acc := Long_Long_Decimal (D);
 
-       Put_Line ("D  = "
+       Put_Line ("D   = "
                  & D'Image);
        Put_Line ("Acc = "
                  & Acc'Image);
@@ -3547,7 +3548,7 @@ types:
        Acc := 10.0;
        D   := Decimal (Acc);
 
-       Put_Line ("D  = "
+       Put_Line ("D   = "
                  & D'Image);
        Put_Line ("Acc = "
                  & Acc'Image);
