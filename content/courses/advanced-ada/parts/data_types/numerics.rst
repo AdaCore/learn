@@ -3460,11 +3460,11 @@ machine when assigning values to objects of decimal type. For example:
        Put_Line ("-----------------------------");
     end Show_Machine_Implementation;
 
-In this example, we use the overlays :ada:`Int_T0_D4` and :ada:`Int_T2_D6` to
-retrieve the integer representation of the decimal fixed-point types
-:ada:`T0_D4` and :ada:`T2_D6`. In the output of this example, we might see the
-following integer representation of the real values for the :ada:`T0_D4` and
-:ada:`T2_D6` types:
+In this example, we use the overlays :ada:`V_Int_T0_D4` and :ada:`V_Int_T2_D6`
+to retrieve the integer representation of the decimal variables :ada:`V_T0_D4`
+and :ada:`V_T2_D6`. By doing this, we retrieve the machine representation of
+the real values for the :ada:`T0_D4` and :ada:`T2_D6` types. The table shows
+the values that we get by running the test application:
 
 +-------------+-----------------------------+
 | Real value  | Integer representation      |
