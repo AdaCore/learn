@@ -3364,8 +3364,8 @@ Machine representation of fixed-point types
 
 In this section, we discuss how fixed-point types are represented in actual
 hardware. Typically, the machine representation of objects of fixed-point type
-consists of integer values scaled by the *small* of the type. To retrieve
-the actual integer representation, we can use
+consists of integer values implicitly scaled by the *small* of the type. To
+retrieve the actual integer representation, we can use
 :ref:`overlays <Adv_Ada_Address_Aspect_Overlay>`.
 
 
