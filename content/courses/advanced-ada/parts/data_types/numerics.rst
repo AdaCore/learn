@@ -3113,8 +3113,11 @@ target machine.
 
 The *small* must be at least equal to or smaller than the *delta*. In many
 cases, however, the *small* of a type :ada:`T` is equal to the *delta* of that
-type.  In addition, note that these values aren't necessarily small numbers
-|mdash| in fact, they could be quite large.
+type. In addition, for decimal fixed-point types specifically, the *small* is
+**always** equal to its *delta*.
+
+Note that *small* of a type isn't necessarily a small number |mdash| in fact,
+it could be quite large. We'll see examples of that later on in this chapter.
 
 We can use the :ada:`T'Small` and :ada:`T'Delta` attributes to retrieve the
 actual values of the *small* and *delta* of a fixed-point type :ada:`T`. (We
