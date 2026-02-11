@@ -3341,17 +3341,17 @@ Let's see an example using a decimal fixed-point type:
 
     procedure Show_Custom_Size_Decimal is
 
-       type Decimal_6_Digits is
+       type Decimal_128_Bits is
          delta 10.0 ** (-2) digits 6
            with Size => 128;
 
     begin
-       Put_Line ("Decimal_6_Digits'Size      :"
-                 & Decimal_6_Digits'Size'Image
+       Put_Line ("Decimal_128_Bits'Size      :"
+                 & Decimal_128_Bits'Size'Image
                  & " bits");
     end Show_Custom_Size_Decimal;
 
-In this example, we require that :ada:`Decimal_6_Digits` has a size of 128
+In this example, we require that :ada:`Decimal_128_Bits` has a size of 128
 bits on the target platform |mdash| instead of the 32 bits that we would
 typically see for that type on a desktop PC. (As a reminder, this code example
 won't compile if your target architecture doesn't support 128-bit data types.)
