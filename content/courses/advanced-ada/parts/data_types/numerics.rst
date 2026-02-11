@@ -3485,15 +3485,20 @@ types on the target machine.
 
 The scalefactor is 1 (or 10\ :sup:`0`) for the :ada:`T0_D4` type and 0.01
 (or 10\ :sup:`-2`) for the :ada:`T2_D6` type. As you have might have noticed,
-this scalefactor corresponds to the *delta* we've used in the type declaration.
+this scalefactor is equal to the *delta* we've used in the type declaration.
+In actuality, however, the scalefactor is the *small* of the type |mdash|
+which, as we've seen before, is equal to the *delta* for decimal fixed-point
+types. (Later on, we see that this *detail* makes a difference for ordinary
+fixed-point types.)
+
 For example, if we multiple the integer representation of the real value by the
-*delta*, we get the real value:
+*small*, we get the real value:
 
 +-------------+-------------------------------+
 | Real value  | :ada:`T2_D6` type             |
 |             +-------------------------------+
 |             | Integer representation        |
-|             | multiplied by *delta*         |
+|             | multiplied by the *small*     |
 +=============+===============================+
 |        1.00 |                  = 100 * 0.01 |
 +-------------+-------------------------------+
