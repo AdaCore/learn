@@ -3490,7 +3490,7 @@ For example, if we multiple the integer representation of the real value by the
 *delta*, we get the real value:
 
 +-------------+-------------------------------+
-| Real value  | :ada:`T2_D6`                  |
+| Real value  | :ada:`T2_D6` type             |
 |             +-------------------------------+
 |             | Integer representation        |
 |             | multiplied by *delta*         |
