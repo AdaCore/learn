@@ -3113,8 +3113,11 @@ target machine.
 
 The *small* must be at least equal to or smaller than the *delta*. In many
 cases, however, the *small* of a type :ada:`T` is equal to the *delta* of that
-type.  In addition, note that these values aren't necessarily small numbers
-|mdash| in fact, they could be quite large.
+type. In addition, for decimal fixed-point types specifically, the *small* is
+**always** equal to its *delta*.
+
+Note that *small* of a type isn't necessarily a small number |mdash| in fact,
+it could be quite large. We'll see examples of that later on in this chapter.
 
 We can use the :ada:`T'Small` and :ada:`T'Delta` attributes to retrieve the
 actual values of the *small* and *delta* of a fixed-point type :ada:`T`. (We
@@ -3338,17 +3341,17 @@ Let's see an example using a decimal fixed-point type:
 
     procedure Show_Custom_Size_Decimal is
 
-       type Decimal_6_Digits is
+       type Decimal_128_Bits is
          delta 10.0 ** (-2) digits 6
            with Size => 128;
 
     begin
-       Put_Line ("Decimal_6_Digits'Size      :"
-                 & Decimal_6_Digits'Size'Image
+       Put_Line ("Decimal_128_Bits'Size      :"
+                 & Decimal_128_Bits'Size'Image
                  & " bits");
     end Show_Custom_Size_Decimal;
 
-In this example, we require that :ada:`Decimal_6_Digits` has a size of 128
+In this example, we require that :ada:`Decimal_128_Bits` has a size of 128
 bits on the target platform |mdash| instead of the 32 bits that we would
 typically see for that type on a desktop PC. (As a reminder, this code example
 won't compile if your target architecture doesn't support 128-bit data types.)
@@ -3359,10 +3362,11 @@ won't compile if your target architecture doesn't support 128-bit data types.)
 Machine representation of fixed-point types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this section, we discuss how fixed-point types are typically
-represented in actual hardware. For that, we can use
-:ref:`overlays <Adv_Ada_Address_Aspect_Overlay>` to retrieve the actual integer
-representation on the machine of objects of the fixed-point type.
+In this section, we discuss how fixed-point types are represented in actual
+hardware. Typically, the machine representation of objects of fixed-point type
+consists of integer values implicitly scaled by the *small* of the type. To
+retrieve the actual integer representation, we can use
+:ref:`overlays <Adv_Ada_Address_Aspect_Overlay>`.
 
 
 .. _Adv_Ada_Decimal_Fixed_Point_Machine_Representation:
@@ -3457,11 +3461,11 @@ machine when assigning values to objects of decimal type. For example:
        Put_Line ("-----------------------------");
     end Show_Machine_Implementation;
 
-In this example, we use the overlays :ada:`Int_T0_D4` and :ada:`Int_T2_D6` to
-retrieve the integer representation of the decimal fixed-point types
-:ada:`T0_D4` and :ada:`T2_D6`. In the output of this example, we might see the
-following integer representation of the real values for the :ada:`T0_D4` and
-:ada:`T2_D6` types:
+In this example, we use the overlays :ada:`V_Int_T0_D4` and :ada:`V_Int_T2_D6`
+to retrieve the integer representation of the decimal variables :ada:`V_T0_D4`
+and :ada:`V_T2_D6`. By doing this, we retrieve the machine representation of
+the real values for the :ada:`T0_D4` and :ada:`T2_D6` types. The table shows
+the values that we get by running the test application:
 
 +-------------+-----------------------------+
 | Real value  | Integer representation      |
@@ -3482,15 +3486,20 @@ types on the target machine.
 
 The scalefactor is 1 (or 10\ :sup:`0`) for the :ada:`T0_D4` type and 0.01
 (or 10\ :sup:`-2`) for the :ada:`T2_D6` type. As you have might have noticed,
-this scalefactor corresponds to the *delta* we've used in the type declaration.
+this scalefactor is equal to the *delta* we've used in the type declaration.
+In actuality, however, the scalefactor is the *small* of the type |mdash|
+which, as we've seen before, is equal to the *delta* for decimal fixed-point
+types. (Later on, we see that this *detail* makes a difference for ordinary
+fixed-point types.)
+
 For example, if we multiple the integer representation of the real value by the
-*delta*, we get the real value:
+*small*, we get the real value:
 
 +-------------+-------------------------------+
-| Real value  | :ada:`T2_D6`                  |
+| Real value  | :ada:`T2_D6` type             |
 |             +-------------------------------+
 |             | Integer representation        |
-|             | multiplied by *delta*         |
+|             | multiplied by the *small*     |
 +=============+===============================+
 |        1.00 |                  = 100 * 0.01 |
 +-------------+-------------------------------+
