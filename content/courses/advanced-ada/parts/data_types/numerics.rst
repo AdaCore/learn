@@ -3461,57 +3461,21 @@ machine when assigning values to objects of decimal type. For example:
     with Custom_Decimal_Types;
     use  Custom_Decimal_Types;
 
+    with Custom_Decimal_Types.Show_Info_Procs;
+    use  Custom_Decimal_Types.Show_Info_Procs;
+
     procedure Show_Machine_Implementation is
-       V_T0_D4     : T0_D4;
-       V_Int_T0_D4 : Int_T0_D4
-         with Address => V_T0_D4'Address,
-              Import, Volatile;
-
-       V_T2_D6     : T2_D6;
-       V_Int_T2_D6 : Int_T2_D6
-         with Address => V_T2_D6'Address,
-              Import, Volatile;
     begin
-       V_T0_D4 := 1.0;
-       Put_Line ("1.0 (T0_D4)        : "
-                 & V_T0_D4'Image);
-       Put_Line ("1.0 (Int_T0_D4)    : "
-                 & V_Int_T0_D4'Image);
 
-       V_T2_D6 := 1.55;
-       V_T0_D4 := T0_D4 (V_T2_D6);
-       Put_Line ("1.55 (T0_D4)       : "
-                 & V_T0_D4'Image);
-       Put_Line ("1.55 (Int_T0_D4)   : "
-                 & V_Int_T0_D4'Image);
+       Show_Info (T0_D4'(1.0), "1.0     ");
+       Show_Info (T0_D4 (T2_D6'(1.55)),
+                  "1.55    ");
+       Show_Info (T0_D4'(2.0), "2.0     ");
 
-       V_T0_D4 := 2.0;
-       Put_Line ("2.0 (T0_D4)        : "
-                 & V_T0_D4'Image);
-       Put_Line ("2.0 (Int_T0_D4)    : "
-                 & V_Int_T0_D4'Image);
 
-       Put_Line ("-----------------------------");
-
-       V_T2_D6 := 1.0;
-       Put_Line ("1.00 (T2_D6)        : "
-                 & V_T2_D6'Image);
-       Put_Line ("1.00 (Int_T2_D6)    : "
-                 & V_Int_T2_D6'Image);
-
-       V_T2_D6 := 1.55;
-       Put_Line ("1.55 (T2_D6)        : "
-                 & V_T2_D6'Image);
-       Put_Line ("1.55 (Int_T2_D6)    : "
-                 & V_Int_T2_D6'Image);
-
-       V_T2_D6 := 2.0;
-       Put_Line ("2.00 (T2_D6)        : "
-                 & V_T2_D6'Image);
-       Put_Line ("2.00 (Int_T2_D6)    : "
-                 & V_Int_T2_D6'Image);
-
-       Put_Line ("-----------------------------");
+       Show_Info (T2_D6'(1.0),  "1.0     ");
+       Show_Info (T2_D6'(1.55), "1.55    ");
+       Show_Info (T2_D6'(2.0),  "2.0     ");
     end Show_Machine_Implementation;
 
 In this example, we use the overlays :ada:`V_Int_T0_D4` and :ada:`V_Int_T2_D6`
