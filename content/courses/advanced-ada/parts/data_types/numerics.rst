@@ -3466,12 +3466,18 @@ machine when assigning values to objects of decimal type. For example:
 
     procedure Show_Machine_Implementation is
     begin
+       Put_Line ("=============================");
+       Put_Line ("T0_D4");
+       Put_Line ("=============================");
 
        Show_Info (T0_D4'(1.0), "1.0     ");
        Show_Info (T0_D4 (T2_D6'(1.55)),
                   "1.55    ");
        Show_Info (T0_D4'(2.0), "2.0     ");
 
+       Put_Line ("=============================");
+       Put_Line ("T2_D6");
+       Put_Line ("=============================");
 
        Show_Info (T2_D6'(1.0),  "1.0     ");
        Show_Info (T2_D6'(1.55), "1.55    ");
