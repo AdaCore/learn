@@ -3377,7 +3377,7 @@ Machine representation of decimal types
 Let's start with decimal fixed-ppint types. Consider the following types from
 the :ada:`Custom_Decimal_Types` package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
 
     package Custom_Decimal_Types is
 
@@ -3403,7 +3403,7 @@ the :ada:`Custom_Decimal_Types` package:
 We can use an overlay to uncover the actual integer values stored on the
 machine for objects of decimal type. For example:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
 
     generic
        type T_Decimal     is delta <> digits <>;
@@ -3461,7 +3461,7 @@ generic procedure for the :ada:`T0_D4` and :ada:`T2_D6` types (see
 We can then call :ada:`Show_Info` for a few values. By doing so, we see
 the machine representation of those decimal values. For example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -3472,7 +3472,7 @@ the machine representation of those decimal values. For example:
     with Custom_Decimal_Types.Show_Info_Procs;
     use  Custom_Decimal_Types.Show_Info_Procs;
 
-    procedure Show_Machine_Implementation is
+    procedure Show_Machine_Representation is
     begin
        Put_Line ("=============================");
        Put_Line ("T0_D4");
@@ -3490,7 +3490,7 @@ the machine representation of those decimal values. For example:
        Show_Info (T2_D6'(1.0),  "1.0     ");
        Show_Info (T2_D6'(1.55), "1.55    ");
        Show_Info (T2_D6'(2.0),  "2.0     ");
-    end Show_Machine_Implementation;
+    end Show_Machine_Representation;
 
 The table shows the values that we get by running the test application:
 
