@@ -3401,7 +3401,7 @@ the :ada:`Custom_Decimal_Types` package:
     end Custom_Decimal_Types;
 
 We can use an overlay to uncover the actual integer values stored on the
-machine when assigning values to objects of decimal type. For example:
+machine for objects of decimal type. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
 
@@ -3452,6 +3452,14 @@ machine when assigning values to objects of decimal type. For example:
 
     end Custom_Decimal_Types.Show_Info_Procs;
 
+In this example, we use the overlays :ada:`V_Int_Overlay` in the generic
+procedure :ada:`Gen_Show_Info`. This allows us to retrieve the integer
+representation of the decimal input variable :ada:`V`. We instantiate this
+generic procedure for the :ada:`T0_D4` and :ada:`T2_D6` types (see
+:ada:`Show_Info` procedures).
+
+We can then call :ada:`Show_Info` for a few values. By doing so, we see
+the machine representation of those decimal values. For example:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
     :class: ada-run
@@ -3484,11 +3492,7 @@ machine when assigning values to objects of decimal type. For example:
        Show_Info (T2_D6'(2.0),  "2.0     ");
     end Show_Machine_Implementation;
 
-In this example, we use the overlays :ada:`V_Int_T0_D4` and :ada:`V_Int_T2_D6`
-to retrieve the integer representation of the decimal variables :ada:`V_T0_D4`
-and :ada:`V_T2_D6`. By doing this, we retrieve the machine representation of
-the real values for the :ada:`T0_D4` and :ada:`T2_D6` types. The table shows
-the values that we get by running the test application:
+The table shows the values that we get by running the test application:
 
 +-------------+-----------------------------+
 | Real value  | Integer representation      |
