@@ -3377,7 +3377,7 @@ Machine representation of decimal types
 Let's start with decimal fixed-ppint types. Consider the following types from
 the :ada:`Custom_Decimal_Types` package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
 
     package Custom_Decimal_Types is
 
@@ -3394,13 +3394,74 @@ the :ada:`Custom_Decimal_Types` package:
        type Int_T2_D6 is
          range -2 ** (T2_D6'Size - 1) ..
                 2 ** (T2_D6'Size - 1) - 1;
+       type Int_T2_D12 is
+         range -2 ** (T2_D12'Size - 1) ..
+                2 ** (T2_D12'Size - 1) - 1;
 
     end Custom_Decimal_Types;
 
 We can use an overlay to uncover the actual integer values stored on the
-machine when assigning values to objects of decimal type. For example:
+machine for objects of decimal type. For example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
+
+    generic
+       type T_Decimal     is delta <> digits <>;
+       type T_Int_Decimal is range <>;
+    procedure Gen_Show_Info (V     : T_Decimal;
+                             V_Str : String);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Gen_Show_Info (V     : T_Decimal;
+                             V_Str : String)
+    is
+       V_Int_Overlay : T_Int_Decimal
+         with Address => V'Address,
+              Import, Volatile;
+       V_Real        : Float;
+    begin
+       V_Real  := Float (V_Int_Overlay) *
+         T_Decimal'Small;
+
+       Put_Line (V_Str
+                 & " (fixed-point) : "
+                 & V'Image);
+       Put_Line (V_Str
+                 & " (integer)     : "
+                 & V_Int_Overlay'Image);
+       Put_Line (V_Str
+                 & " (floating-p.) : "
+                 & V_Real'Image);
+       Put_Line ("----------");
+    end Gen_Show_Info;
+
+    with Gen_Show_Info;
+
+    package Custom_Decimal_Types.Show_Info_Procs is
+
+       procedure Show_Info is new
+         Gen_Show_Info (T_Decimal     => T0_D4,
+                        T_Int_Decimal => Int_T0_D4);
+       procedure Show_Info is new
+         Gen_Show_Info (T_Decimal     => T2_D6,
+                        T_Int_Decimal => Int_T2_D6);
+       procedure Show_Info is new
+         Gen_Show_Info (T_Decimal     => T2_D12,
+                        T_Int_Decimal => Int_T2_D12);
+
+    end Custom_Decimal_Types.Show_Info_Procs;
+
+In this example, we use the overlays :ada:`V_Int_Overlay` in the generic
+procedure :ada:`Gen_Show_Info`. This allows us to retrieve the integer
+representation of the decimal input variable :ada:`V`. We instantiate this
+generic procedure for the :ada:`T0_D4` and :ada:`T2_D6` types (see
+:ada:`Show_Info` procedures).
+
+We can then call :ada:`Show_Info` for a few values. By doing so, we see
+the machine representation of those decimal values. For example:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
     :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
@@ -3408,64 +3469,30 @@ machine when assigning values to objects of decimal type. For example:
     with Custom_Decimal_Types;
     use  Custom_Decimal_Types;
 
-    procedure Show_Machine_Implementation is
-       V_T0_D4     : T0_D4;
-       V_Int_T0_D4 : Int_T0_D4
-         with Address => V_T0_D4'Address,
-              Import, Volatile;
+    with Custom_Decimal_Types.Show_Info_Procs;
+    use  Custom_Decimal_Types.Show_Info_Procs;
 
-       V_T2_D6     : T2_D6;
-       V_Int_T2_D6 : Int_T2_D6
-         with Address => V_T2_D6'Address,
-              Import, Volatile;
+    procedure Show_Machine_Representation is
     begin
-       V_T0_D4 := 1.0;
-       Put_Line ("1.0 (T0_D4)        : "
-                 & V_T0_D4'Image);
-       Put_Line ("1.0 (Int_T0_D4)    : "
-                 & V_Int_T0_D4'Image);
+       Put_Line ("=============================");
+       Put_Line ("T0_D4");
+       Put_Line ("=============================");
 
-       V_T2_D6 := 1.55;
-       V_T0_D4 := T0_D4 (V_T2_D6);
-       Put_Line ("1.55 (T0_D4)       : "
-                 & V_T0_D4'Image);
-       Put_Line ("1.55 (Int_T0_D4)   : "
-                 & V_Int_T0_D4'Image);
+       Show_Info (T0_D4'(1.0), "1.0     ");
+       Show_Info (T0_D4 (T2_D6'(1.55)),
+                  "1.55    ");
+       Show_Info (T0_D4'(2.0), "2.0     ");
 
-       V_T0_D4 := 2.0;
-       Put_Line ("2.0 (T0_D4)        : "
-                 & V_T0_D4'Image);
-       Put_Line ("2.0 (Int_T0_D4)    : "
-                 & V_Int_T0_D4'Image);
+       Put_Line ("=============================");
+       Put_Line ("T2_D6");
+       Put_Line ("=============================");
 
-       Put_Line ("-----------------------------");
+       Show_Info (T2_D6'(1.0),  "1.0     ");
+       Show_Info (T2_D6'(1.55), "1.55    ");
+       Show_Info (T2_D6'(2.0),  "2.0     ");
+    end Show_Machine_Representation;
 
-       V_T2_D6 := 1.0;
-       Put_Line ("1.00 (T2_D6)        : "
-                 & V_T2_D6'Image);
-       Put_Line ("1.00 (Int_T2_D6)    : "
-                 & V_Int_T2_D6'Image);
-
-       V_T2_D6 := 1.55;
-       Put_Line ("1.55 (T2_D6)        : "
-                 & V_T2_D6'Image);
-       Put_Line ("1.55 (Int_T2_D6)    : "
-                 & V_Int_T2_D6'Image);
-
-       V_T2_D6 := 2.0;
-       Put_Line ("2.00 (T2_D6)        : "
-                 & V_T2_D6'Image);
-       Put_Line ("2.00 (Int_T2_D6)    : "
-                 & V_Int_T2_D6'Image);
-
-       Put_Line ("-----------------------------");
-    end Show_Machine_Implementation;
-
-In this example, we use the overlays :ada:`V_Int_T0_D4` and :ada:`V_Int_T2_D6`
-to retrieve the integer representation of the decimal variables :ada:`V_T0_D4`
-and :ada:`V_T2_D6`. By doing this, we retrieve the machine representation of
-the real values for the :ada:`T0_D4` and :ada:`T2_D6` types. The table shows
-the values that we get by running the test application:
+The table shows the values that we get by running the test application:
 
 +-------------+-----------------------------+
 | Real value  | Integer representation      |
