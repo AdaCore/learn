@@ -3403,6 +3403,56 @@ the :ada:`Custom_Decimal_Types` package:
 We can use an overlay to uncover the actual integer values stored on the
 machine when assigning values to objects of decimal type. For example:
 
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
+
+    generic
+       type T_Decimal     is delta <> digits <>;
+       type T_Int_Decimal is range <>;
+    procedure Gen_Show_Info (V     : T_Decimal;
+                             V_Str : String);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Gen_Show_Info (V     : T_Decimal;
+                             V_Str : String)
+    is
+       V_Int_Overlay : T_Int_Decimal
+         with Address => V'Address,
+              Import, Volatile;
+       V_Real        : Float;
+    begin
+       V_Real  := Float (V_Int_Overlay) *
+         T_Decimal'Small;
+
+       Put_Line (V_Str
+                 & " (fixed-point) : "
+                 & V'Image);
+       Put_Line (V_Str
+                 & " (integer)     : "
+                 & V_Int_Overlay'Image);
+       Put_Line (V_Str
+                 & " (floating-p.) : "
+                 & V_Real'Image);
+       Put_Line ("----------");
+    end Gen_Show_Info;
+
+    with Gen_Show_Info;
+
+    package Custom_Decimal_Types.Show_Info_Procs is
+
+       procedure Show_Info is new
+         Gen_Show_Info (T_Decimal     => T0_D4,
+                        T_Int_Decimal => Int_T0_D4);
+       procedure Show_Info is new
+         Gen_Show_Info (T_Decimal     => T2_D6,
+                        T_Int_Decimal => Int_T2_D6);
+       procedure Show_Info is new
+         Gen_Show_Info (T_Decimal     => T2_D12,
+                        T_Int_Decimal => Int_T2_D12);
+
+    end Custom_Decimal_Types.Show_Info_Procs;
+
+
 .. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Implementation_Decimal_Types
     :class: ada-run
 
