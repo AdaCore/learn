@@ -4634,6 +4634,9 @@ Operations using universal fixed types
 Let's look at how fixed-point types behave in the case of operations
 that make use of :ref:`universal fixed types <Adv_Ada_Universal_Fixed>`.
 
+Type conversions
+^^^^^^^^^^^^^^^^
+
 When mixing objects of different fixed-point types, as usual, we can use
 :ref:`type conversions <Adv_Ada_Fixed_Point_Type_Conversion>`, e.g.
 when  assigning the result to an object of a different type. As we've mentioned
