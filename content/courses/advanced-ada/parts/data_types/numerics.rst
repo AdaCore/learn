@@ -3646,6 +3646,267 @@ For example, if we multiply the integer representation of the real value by the
 +-------------+-------------------------------+
 
 
+.. _Adv_Ada_Ordinary_Fixed_Point_Machine_Representation:
+
+Machine representation of ordinary fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now let's look into how ordinary fixed-point types are typically represented in
+actual hardware. Consider the types from the :ada:`Angles` package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+
+    package Angles is
+
+       D : constant := 0.2;
+       type Angle is
+         delta D
+           range 0.0 .. 360.0 - D;
+
+       type Int_Angle is
+         range -2 ** (Angle'Size - 1) ..
+                2 ** (Angle'Size - 1) - 1;
+
+       type Angle_Adj is
+         delta D
+           range 0.0 .. 360.0 - D
+         with Small => D;
+
+       type Int_Angle_Adj is
+         range -2 ** (Angle_Adj'Size - 1) ..
+                2 ** (Angle_Adj'Size - 1) - 1;
+
+    end Angles;
+
+As we've done before, we can use
+:ref:`overlays <Adv_Ada_Address_Aspect_Overlay>` to uncover the actual integer
+values stored on the machine when assigning values to objects of fixed-point
+type. We do this in the generic :ada:`Gen_Show_Info` procedure:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    generic
+       type T_Fixed     is delta <>;
+       type T_Int_Fixed is range <>;
+    procedure Gen_Show_Info (V     : T_Fixed;
+                             V_Str : String);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Gen_Show_Info (V     : T_Fixed;
+                             V_Str : String)
+    is
+       V_Local       : T_Fixed;
+
+       V_Int_Overlay : T_Int_Fixed
+         with Address => V_Local'Address,
+              Import, Volatile;
+
+       V_Real        : Float;
+    begin
+       V_Local := V;
+       V_Real  := Float (V_Int_Overlay) *
+         T_Fixed'Small;
+
+       Put_Line (V_Str
+                 & " (fixed-point) : "
+                 & Float (V_Local)'Image);
+       Put_Line (V_Str
+                 & " (integer)     : "
+                 & V_Int_Overlay'Image);
+       Put_Line (V_Str
+                 & " (floating-p.) : "
+                 & V_Real'Image);
+       Put_Line ("----------");
+    end Gen_Show_Info;
+
+    with Gen_Show_Info;
+
+    package Angles.Show_Info_Procs is
+
+       procedure Show_Info is new
+         Gen_Show_Info (T_Fixed     => Angle,
+                        T_Int_Fixed => Int_Angle);
+       procedure Show_Info is new
+         Gen_Show_Info (T_Fixed     => Angle_Adj,
+                        T_Int_Fixed => Int_Angle_Adj);
+
+    end Angles.Show_Info_Procs;
+
+With all these packages and procedures in place, let's write a test application
+that displays a couple of values:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Angles;        use  Angles;
+
+    with Angles.Show_Info_Procs;
+    use  Angles.Show_Info_Procs;
+
+    procedure Show_Machine_Representation is
+    begin
+       Put_Line ("=============================");
+       Put_Line ("Angle");
+       Put_Line ("=============================");
+
+       Show_Info (Angle'First,  "Angle'First ");
+       Show_Info (Angle'(0.25), "0.25        ");
+       Show_Info (Angle'(0.50), "0.50        ");
+       Show_Info (Angle'(0.75), "0.75        ");
+       Show_Info (Angle'(0.80), "0.80        ");
+       Show_Info (Angle'Last,   "Angle'Last  ");
+
+       Put_Line ("=============================");
+       Put_Line ("Angle_Adj");
+       Put_Line ("=============================");
+
+       Show_Info (Angle_Adj'First,
+                  "Angle_Adj'First ");
+       Show_Info (Angle_Adj'(0.25),
+                  "0.25            ");
+       Show_Info (Angle_Adj'(0.50),
+                  "0.50            ");
+       Show_Info (Angle_Adj'(0.75),
+                  "0.75            ");
+       Show_Info (Angle_Adj'(0.80),
+                  "0.80            ");
+       Show_Info (Angle_Adj'Last,
+                  "Angle_Adj'Last  ");
+
+    end Show_Machine_Representation;
+
+The table below shows some of the values that we get by running the test
+application:
+
++-------------+---------------------------------+
+| Real value  | Integer representation          |
+|             +--------------+------------------+
+|             | :ada:`Angle` | :ada:`Angle_Adj` |
+|             | type         | type             |
++=============+==============+==================+
+|        0.25 |            2 |                1 |
++-------------+--------------+------------------+
+|        0.50 |            4 |                2 |
++-------------+--------------+------------------+
+|        0.75 |            6 |                3 |
++-------------+--------------+------------------+
+|        0.80 |            6 |                4 |
++-------------+--------------+------------------+
+
+Before we calculate the actual real value stored in the fixed-point objects,
+we have to retrieve the *small* of these fixed-point types. The generic
+:ada:`Gen_Show_Type_Info` procedure below provides us with some type
+information:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+
+    generic
+       type T_Fixed is delta <>;
+    procedure Gen_Show_Type_Info
+      (Dummy        : T_Fixed;
+       T_Fixed_Name : String);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Gen_Show_Type_Info
+      (Dummy        : T_Fixed;
+       T_Fixed_Name : String) is
+    begin
+       Put_Line ("The size           of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Size'Image
+                 & " bits");
+       Put_Line ("The small          of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Small'Image);
+       Put_Line ("The delta    value of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Delta'Image);
+       Put_Line ("The minimum  value of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'First'Image);
+       Put_Line ("The maximum  value of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Last'Image);
+       Put_Line ("-----------------------------");
+    end Gen_Show_Type_Info;
+
+We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
+:ada:`Angle` and :ada:`Angle_Adj` types to retrieve the *small* of each type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Angles;      use  Angles;
+
+    with Gen_Show_Type_Info;
+
+    procedure Show_Machine_Representation is
+       procedure Show_Type_Info is new
+         Gen_Show_Type_Info (T_Fixed => Angle);
+       procedure Show_Type_Info is new
+         Gen_Show_Type_Info (T_Fixed => Angle_Adj);
+    begin
+       Show_Type_Info (Angle'(0.0),
+                       "Angle     ");
+       Show_Type_Info (Angle_Adj'(0.0),
+                       "Angle_Adj ");
+    end Show_Machine_Representation;
+
+Now, for each value, we multiply the integer representation of that value by
+the corresponding *small* of the type, so that we get the actual stored value.
+These are the results for the :ada:`Angle` type |mdash| including the
+difference between the original real value and the actual real value stored in
+the fixed-point object:
+
++-------------+------------------------------------------------------------+
+| Real value  | :ada:`Angle` type                                          |
+|             +---------------+-------------------------------+------------+
+|             | Actual stored | Integer representation        | Difference |
+|             | value         | multiplied by the *small*     |            |
++=============+===============+===============================+============+
+|        0.25 |          0.25 |                   = 2 * 0.125 |          0 |
++-------------+---------------+-------------------------------+------------+
+|        0.50 |          0.50 |                   = 4 * 0.125 |          0 |
++-------------+---------------+-------------------------------+------------+
+|        0.75 |          0.75 |                   = 6 * 0.125 |          0 |
++-------------+---------------+-------------------------------+------------+
+|        0.80 |          0.75 |                   = 6 * 0.125 |       0.05 |
++-------------+---------------+-------------------------------+------------+
+
+And these are the results for the :ada:`Angle_Adj` type:
+
++-------------+------------------------------------------------------------+
+| Real value  | :ada:`Angle_Adj` type                                      |
+|             +---------------+-------------------------------+------------+
+|             | Actual stored | Integer representation        | Difference |
+|             | value         | multiplied by the *small*     |            |
++=============+===============+===============================+============+
+|        0.25 |           0.2 |                     = 1 * 0.2 |       0.05 |
++-------------+---------------+-------------------------------+------------+
+|        0.50 |           0.4 |                     = 2 * 0.2 |       0.10 |
++-------------+---------------+-------------------------------+------------+
+|        0.75 |           0.6 |                     = 3 * 0.2 |       0.15 |
++-------------+---------------+-------------------------------+------------+
+|        0.80 |           0.8 |                     = 4 * 0.2 |          0 |
++-------------+---------------+-------------------------------+------------+
+
+As we can see in the table, there might be numeric differences between the
+values that we intend to store in the object and the values that actually
+get stored there. These differences are directly related to the *small*
+associated with the ordinary fixed-point type. In the end, the *small* defines
+how accurate a given real value can be represented in the fixed-point object.
+
+
 .. _Adv_Ada_Fixed_Point_Types_Conversions:
 
 Type conversion using fixed-point types
