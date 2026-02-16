@@ -4643,60 +4643,6 @@ when  assigning the result to an object of a different type. As we've mentioned
 before, type conversions between fixed-point types make use of universal
 fixed-point types.
 
-.. ::
-
-    Consider the following package from a previous section:
-
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_2
-
-        package Custom_Decimal_Types is
-
-           type Short_Decimal is
-             delta 10.0 ** (-0) digits 4;
-            --  range -9_999.0 .. 9_999.0;
-
-           type Decimal is
-             delta 10.0 ** (-2) digits 6;
-            --  range -9_999.99 .. 9_999.99;
-
-        end Custom_Decimal_Types;
-
-    Let's look at a simple example of type conversions between these types:
-
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_2
-
-        with Ada.Text_IO; use Ada.Text_IO;
-
-        with Custom_Decimal_Types;
-        use  Custom_Decimal_Types;
-
-        procedure Show_Mixing_Decimal_Types is
-           A : Short_Decimal;
-           B : Decimal;
-        begin
-           A := Short_Decimal'Last;     --  9_999.0
-           B := Decimal (A);
-           Put_Line ("A =     " &
-                     A'Image);
-           Put_Line ("B = A = " &
-                     B'Image);
-
-           Put_Line ("--------------");
-           B := 9_999.0;
-           A := Short_Decimal (B);
-           Put_Line ("B =     " &
-                     B'Image);
-           Put_Line ("A = B = " &
-                     A'Image);
-
-        end Show_Mixing_Decimal_Types;
-
-    Here, we use :ada:`Decimal (A)` and :ada:`Short_Decimal (B)` to convert to :ada:`Decimal`
-    and :ada:`Short_Decimal`, respectively.
-
-    Note that, if we had assigned :ada:`9_999.99` (or :ada:`Decimal`) to :ada:`B` in
-    the code above, the :ada:`Short_Decimal (B)` would raise a :ada:`Constraint_Error`
-    exception due the small difference in the range that we mentioned previously.
 
 Multiplication and division operations with decimal types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
