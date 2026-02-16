@@ -3967,6 +3967,218 @@ In this example, we convert the value of :ada:`D` |mdash| from the
 :ada:`Acc` by writing :ada:`Decimal (Acc)`, which converts it from the
 :ada:`Long_Long_Decimal` to the :ada:`Decimal` type.
 
+Let's continue with the conversion between ordinary fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Ordinary_Fixed_Type_Conversions
+
+    package Custom_Fixed_Point is
+       D_15 : constant := 2.0 ** (-15);
+       D_31 : constant := 2.0 ** (-31);
+
+       type TQ15 is
+         delta D_15
+         range -1.0 .. 1.0 - D_15;
+
+       type TQ31 is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Conversions is
+       V_31 : TQ31;
+       V_15 : TQ15;
+
+       procedure Show_Vars is
+       begin
+          Put_Line ("V_31 = "
+                    & V_31'Image);
+          Put_Line ("V_15 = "
+                    & V_15'Image);
+          Put_Line ("--------------");
+       end Show_Vars;
+    begin
+       V_15 := 0.81182861328125;
+       V_31 := TQ31 (V_15);
+       Show_Vars;
+
+       V_31 := 0.81182861328125;
+       V_15 := TQ15 (V_31);
+       Show_Vars;
+    end Show_Fixed_Point_Conversions;
+
+Here, we write :ada:`TQ31 (V_15)` to convert the value of :ada:`V_15` from the
+:ada:`TQ15` to the :ada:`TQ31` type. Likewise, we write :ada:`TQ15 (V_31)` to
+convert the value of :ada:`V_31` from the :ada:`TQ31` to the :ada:`TQ15` type.
+
+Finally, let's look into the conversion between ordinary and decimal
+fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Type_Conversions
+
+    package Custom_Fixed_Point is
+
+       type Decimal is
+         delta 10.0 ** (-9) digits 9;
+
+       D_31 : constant :=  2.0 ** (-31);
+       type Fixed_Point is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Conversions is
+       FP : Fixed_Point;
+       D  : Decimal;
+    begin
+       FP := 0.5;
+       D  := Decimal (FP);
+
+       Put_Line ("FP = "
+                 & FP'Image);
+       Put_Line ("D  = "
+                 & D'Image);
+       Put_Line ("------------------------------");
+
+       D  := 0.25;
+       FP := Fixed_Point (D);
+
+       Put_Line ("FP = "
+                 & FP'Image);
+       Put_Line ("D  = "
+                 & D'Image);
+    end Show_Fixed_Point_Conversions;
+
+We see two conversions in the :ada:`Show_Fixed_Point_Conversions` procedure:
+the conversion to a decimal type via :ada:`Decimal (FP)` and the conversion to
+an ordinary fixed-point type via :ada:`Fixed_Point (D)`.
+
+.. admonition:: For further reading...
+
+    Note that these two types aren't completely equivalent in terms of range or
+    size, but close enough for illustration. Let's look at the information for
+    each type:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Type_Conversions
+
+        package Fixed_Point_Type_Info is
+
+           generic
+              type T_Fixed is delta <>;
+           procedure Gen_Show_Fixed_Type_Info
+             (Dummy        : T_Fixed;
+              T_Fixed_Name : String);
+
+           generic
+              type T_Decimal is delta <> digits <>;
+           procedure Gen_Show_Decimal_Type_Info
+             (Dummy          : T_Decimal;
+              T_Decimal_Name : String);
+
+        end Fixed_Point_Type_Info;
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Fixed_Point_Type_Info is
+
+           procedure Gen_Show_Fixed_Type_Info
+             (Dummy        : T_Fixed;
+              T_Fixed_Name : String) is
+           begin
+              Put_Line ("The size           of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Size'Image
+                        & " bits");
+              Put_Line ("The small          of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Small'Image);
+              Put_Line ("The delta    value of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Delta'Image);
+              Put_Line ("The minimum  value of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'First'Image);
+              Put_Line ("The maximum  value of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Last'Image);
+              Put_Line ("-----------------------------");
+           end Gen_Show_Fixed_Type_Info;
+
+           procedure Gen_Show_Decimal_Type_Info
+             (Dummy        : T_Decimal;
+              T_Decimal_Name : String) is
+           begin
+              Put_Line ("The size           of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Size'Image
+                        & " bits");
+              Put_Line ("The small          of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Small'Image);
+              Put_Line ("The delta    value of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Delta'Image);
+              Put_Line ("The minimum  value of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'First'Image);
+              Put_Line ("The maximum  value of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Last'Image);
+              Put_Line ("-----------------------------");
+           end Gen_Show_Decimal_Type_Info;
+
+        end Fixed_Point_Type_Info;
+
+        with Custom_Fixed_Point;
+        use  Custom_Fixed_Point;
+
+        with Fixed_Point_Type_Info;
+        use  Fixed_Point_Type_Info;
+
+        procedure Show_Fixed_Point_Conversions is
+           procedure Show_Type_Info is new
+             Gen_Show_Fixed_Type_Info
+               (T_Fixed => Fixed_Point);
+
+           procedure Show_Type_Info is new
+             Gen_Show_Decimal_Type_Info
+               (T_Decimal => Decimal);
+        begin
+           Show_Type_Info (Decimal'(0.0),
+                           "Decimal     ");
+           Show_Type_Info (Fixed_Point'(0.0),
+                           "Fixed_Point ");
+        end Show_Fixed_Point_Conversions;
+
+    By running this test application, we see that the the size of
+    :ada:`Decimal` is 31 bits, while size of :ada:`Fixed_Point` is 32 bits.
+    Also, the *small* of :ada:`Decimal` is 1.0e-09 (10.0\ :sup:`-9`), while the
+    *small* of :ada:`Fixed_Point` is a bit smaller: 4.65661287307739258e-10
+    (2.0\ :sup:`-31`).
+    In addition, the range of both types is very close, but not equivalent to
+    each other |mdash| from -0.999999999 to 0.999999999 for :ada:`Decimal` and
+    from -1.0 to 0.9999999995 for :ada:`Fixed_Point`.
+
 
 .. _Adv_Ada_Fixed_Point_Type_Conversion_Other_Types:
 
