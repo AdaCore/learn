@@ -3360,6 +3360,42 @@ decimal fixed-point types:
 In this example, we declare :ada:`Small_Money` as a subtype of the
 :ada:`Decimal` type.
 
+Let's now focus on subtypes of ordinary fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Derived_Ordinary_Fixed_Point_Types
+
+    package Custom_Fixed_Point is
+
+       D : constant := 2.0 ** (-15);
+       type Short_Fixed is
+         delta D
+         range -1.0 .. 1.0 - D;
+
+       subtype Coefficient is Short_Fixed;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Subtypes is
+       SF : Short_Fixed;
+       C  : Coefficient;
+    begin
+       SF := 0.25;
+       Put_Line ("SF = "
+                 & SF'Image);
+
+       C := SF;
+       Put_Line ("C  = "
+                 & C'Image);
+    end Show_Fixed_Point_Subtypes;
+
+In the :ada:`Show_Fixed_Point_Subtypes` procedure, we declare
+:ada:`Coefficient` as a subtype of the :ada:`Short_Fixed` type.
+
 
 .. _Adv_Ada_Fixed_Point_Type_Size:
 
