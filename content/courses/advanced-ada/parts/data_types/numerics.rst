@@ -4853,6 +4853,108 @@ types, and the :ada:`A / B` expression makes use of universal fixed types.
     universal fixed types, too.)
 
 
+Multiplication and division operations with ordinary fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now, let's see how ordinary fixed-point types also make use of universal
+fixed types for multiplication and division operations. Consider the following
+package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Universal_Fixed
+
+    package Custom_Fixed_Point is
+       D_15 : constant := 2.0 ** (-15);
+       D_24 : constant := 2.0 ** (-24);
+       D_31 : constant := 2.0 ** (-31);
+
+       type TQ15 is
+         delta D_15
+         range -1.0 .. 1.0 - D_15;
+
+       type TQ31 is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+       type TQ7_24 is
+         delta  D_24
+         range -2.0 ** 7 ..
+                2.0 ** 7   - D_24;
+
+    end Custom_Fixed_Point;
+
+The :ada:`Show_Universal_Fixed` procedure show a couple of multiplications
+using universal fixed types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Universal_Fixed
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Universal_Fixed is
+       Acc  : TQ7_24;
+       A, B : TQ31;
+    begin
+       Acc := 1.0;
+       A   := 0.75;
+       B   := 0.75;
+       Put_Line ("A    = " & A'Image);
+       Put_Line ("B    = " & B'Image);
+       Put_Line ("Acc  = " & Acc'Image);
+       Put_Line ("--------------");
+
+       Put_Line ("Acc := Acc * A * 2");
+       Acc := Acc * A * 2;
+       --     ^^^^^^^^^^^
+       --  Using universal fixed point
+
+       Put_Line ("Acc  = " & Acc'Image);
+
+       Put_Line ("--------------");
+       Put_Line ("A   := Acc / 2 * B");
+       A := Acc / 2 * B;
+       --   ^^^^^^^^^^^
+       --  Using universal fixed point
+       Put_Line ("A    = " & A'Image);
+
+    end Show_Universal_Fixed;
+
+Because universal fixed types are used for the :ada:`Acc * A * 2`
+or the :ada:`Acc / 2 * B` operation, we don't have to perform type conversion
+before the multiplication, and the result of the operation has a meaningful
+value.
+
+For the division operation, universal fixed types are used as well:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Universal_Fixed
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Universal_Fixed is
+       Acc : TQ7_24;
+       A   : TQ31;
+    begin
+       Acc := 1.0;
+       A   := 0.75;
+       Put_Line ("A    = " & A'Image);
+       Put_Line ("Acc  = " & Acc'Image);
+       Put_Line ("--------------");
+
+       Put_Line ("Acc := Acc / A");
+       Acc := Acc / A;
+       --     ^^^^^^^
+       --  Using universal fixed point
+
+       Put_Line ("Acc  = " & Acc'Image);
+    end Show_Universal_Fixed;
+
+Here, the :ada:`Acc / A` operation makes use of universal fixed types.
+
+
 .. _Adv_Ada_Decimal_Fixed_Point_Types:
 
 Decimal fixed-point types
