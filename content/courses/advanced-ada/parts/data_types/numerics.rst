@@ -4955,6 +4955,201 @@ For the division operation, universal fixed types are used as well:
 Here, the :ada:`Acc / A` operation makes use of universal fixed types.
 
 
+.. _Adv_Ada_Fixed_Point_Integer_Multiplication_Division:
+
+Integer multiplication and division
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An interesting feature that exists for fixed-point types is the *direct*
+multiplication or division by integers. This isn't possible with
+floating-point types, though. For instance, if we have a fixed-point object
+:ada:`A`, we can write a statement such as :ada:`A := A * 2;`. For a
+floating-point object :ada:`F`, we would have to write :ada:`F := F * 2.0;`.
+Similarly, if we had an object of integer type :ada:`I`, we could write
+:ada:`A := A * I;` without having to convert :ada:`I` to the fixed-point type
+of :ada:`A`.
+
+Let's look at the operations of the following code snippet:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Integer_Multiplication_Division
+
+    package Custom_Fixed_Point is
+
+       type Decimal is
+         delta  10.0 ** (-9) digits 9;
+
+       D_31 : constant :=  2.0 ** (-31);
+       type Fixed_Point is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Integer_Mult_Div is
+       FP : Fixed_Point;
+       D  : Decimal;
+
+       procedure Show_Vars is
+       begin
+          Put_Line ("FP = "
+                    & FP'Image);
+          Put_Line ("D  = "
+                    & D'Image);
+          Put_Line ("------------------------------");
+       end Show_Vars;
+
+       I : Integer := 8;
+    begin
+       FP := 0.25;
+       D  := 0.25;
+       Show_Vars;
+
+       FP := FP * 2;
+       D  := D  * 2;
+       Show_Vars;
+
+       FP := FP / 4;
+       D  := D  / 4;
+       Show_Vars;
+
+       FP := FP / I;
+       D  := D  / I;
+       Show_Vars;
+    end Show_Fixed_Point_Integer_Mult_Div;
+
+Because :ada:`FP` and :ada:`D` are fixed-point types, we can write :ada:`* 2`,
+:ada:`/ 4` or :ada:`/ I` for objects of that type.
+
+If we look at the
+:ref:`machine representation <Adv_Ada_Fixed_Point_Machine_Representation>` of
+fixed-point types, it becomes clear that any integer operations we write for
+objects of fixed-point types become integer operations on the corresponding
+integer representation of those objects. In other words, in the *background*,
+we're basically performing integer operations.
+
+Let's start with a code example for decimal types:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    with Custom_Decimal_Types.Show_Info_Procs;
+    use  Custom_Decimal_Types.Show_Info_Procs;
+
+    procedure Show_Machine_Representation is
+       V_T0_D4   : T0_D4;
+       V_T2_D6   : T2_D6;
+       V_T2_D12  : T2_D12;
+    begin
+       Put_Line ("-----------------------------");
+       Put_Line ("---- 152.0");
+       Put_Line ("-----------------------------");
+
+       V_T0_D4  := 152.0;
+       V_T2_D6  := 152.0;
+       V_T2_D12 := 152.0;
+
+       Show_Info (V_T0_D4,  "V_T0_D4  ");
+       Show_Info (V_T2_D6,  "V_T2_D6  ");
+       Show_Info (V_T2_D12, "V_T2_D12 ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("---- V := V * 2");
+       Put_Line ("-----------------------------");
+
+       V_T0_D4  := V_T0_D4  * 2;
+       V_T2_D6  := V_T2_D6  * 2;
+       V_T2_D12 := V_T2_D12 * 2;
+
+       Show_Info (V_T0_D4,  "V_T0_D4  ");
+       Show_Info (V_T2_D6,  "V_T2_D6  ");
+       Show_Info (V_T2_D12, "V_T2_D12 ");
+    end Show_Machine_Representation;
+
+The following table presents the values we get when we run the test
+application:
+
++--------+----------------------------------------+--------------------+-------------------+
+| Real   | Original                               | Operation          | Result            |
+| value  +--------------------+---------+---------+                    +---------+---------+
+|        | Type               | Actual  | Actual  |                    | Actual  | Actual  |
+|        |                    | integer | real    |                    | integer | real    |
+|        |                    | value   | value   |                    | value   | value   |
++========+====================+=========+=========+====================+=========+=========+
+|  152.0 |       :ada:`T0_D4` |     152 |   152.0 |  :ada:`V := V * 2` |     304 |   304.0 |
++--------+--------------------+---------+---------+                    +---------+---------+
+|  152.0 |       :ada:`T2_D6` |   15200 |   152.0 |                    |   30400 |   304.0 |
++--------+--------------------+---------+---------+                    +---------+---------+
+|  152.0 |      :ada:`T2_D12` |   15200 |   152.0 |                    |   30400 |   304.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+
+As we can see, the integer :ada:`* 2` operation is simply a multiplication by
+two of the integer representation of the fixed-point objects.
+
+Now, let's look at an example for ordinary fixed-point types:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Angles;        use  Angles;
+
+    with Angles.Show_Info_Procs;
+    use  Angles.Show_Info_Procs;
+
+    procedure Show_Machine_Representation
+    is
+       V_Angle     : Angle;
+       V_Angle_Adj : Angle_Adj;
+    begin
+       Put_Line ("-----------------------------");
+       Put_Line ("---- 90.0");
+       Put_Line ("-----------------------------");
+
+       V_Angle     := 90.0;
+       V_Angle_Adj := 90.0;
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("---- V := V * 2");
+       Put_Line ("-----------------------------");
+       V_Angle     := V_Angle     * 2;
+       V_Angle_Adj := V_Angle_Adj * 2;
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+    end Show_Machine_Representation;
+
+The table presents the values we get when we run the test application:
+
++--------+----------------------------------------+--------------------+-------------------+
+| Real   | Original                               | Operation          | Result            |
+| value  +--------------------+---------+---------+                    +---------+---------+
+|        | Type               | Actual  | Actual  |                    | Actual  | Actual  |
+|        |                    | integer | real    |                    | integer | real    |
+|        |                    | value   | value   |                    | value   | value   |
++========+====================+=========+=========+====================+=========+=========+
+|   90.0 |       :ada:`Angle` |     720 |    90.0 |  :ada:`V := V * 2` |    1440 |   180.0 |
++--------+--------------------+---------+---------+                    +---------+---------+
+|   90.0 |   :ada:`Angle_Adj` |     450 |    90.0 |                    |     900 |   180.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+
+Again, the integer :ada:`* 2` operation is simply a multiplication by two of
+the integer representation of the fixed-point objects.
+
+
 .. _Adv_Ada_Decimal_Fixed_Point_Types:
 
 Decimal fixed-point types
