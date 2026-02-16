@@ -4380,6 +4380,254 @@ using :ada:`TQ15_48 (V_D18)`, :ada:`TQ15_48 (V_2_D6)`, or
 object :ada:`V_Q15_48` by writing :ada:`T2_D6 (V_Q15_48)`,
 :ada:`TD18 (V_Q15_48)`  or :ada:`Int15 (V_Q15_48)`.
 
+
+Type conversions and machine representation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's combine what we learned in the sections about
+:ref:`type conversion of fixed-point types <Adv_Ada_Fixed_Point_Type_Conversion>`
+and
+:ref:`machine representation <Adv_Ada_Fixed_Point_Machine_Representation>`
+and see the effect of type conversion to the machine representation of
+fixed-point types.
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Conversion_Machine_Representation:
+
+Type conversions and machine representation of decimal types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To understand the machine representation of decimal types, let's reuse the
+:ada:`T0_D4`, :ada:`T2_D6` and :ada:`T2_D12` types from the
+:ada:`Custom_Decimal_Types` package. We can use the :ada:`Show_Info` procedure
+we've created before to uncover the integer representation of the decimal
+objects (:ada:`V_T0_D4`, :ada:`V_T2_D6` and :ada:`V_T2_D12`) after the type
+conversion:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    with Custom_Decimal_Types.Show_Info_Procs;
+    use  Custom_Decimal_Types.Show_Info_Procs;
+
+    procedure Show_Machine_Representation is
+       V_T0_D4   : T0_D4;
+       V_T2_D6   : T2_D6;
+       V_T2_D12  : T2_D12;
+    begin
+       Put_Line ("=============================");
+       Put_Line ("T2_D6 <-- T0_D4");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T0_D4 (152.0)");
+       Put_Line ("-----------------------------");
+
+       V_T0_D4 := 152.0;
+       V_T2_D6 := T2_D6 (V_T0_D4);
+
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T0_D4 (1.0)");
+       Put_Line ("-----------------------------");
+       V_T0_D4 := 1.0;
+       V_T2_D6 := T2_D6 (V_T0_D4);
+
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+
+       Put_Line ("=============================");
+       Put_Line ("T0_D4 <-- T2_D6");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T2_D6 (225.0)");
+       Put_Line ("-----------------------------");
+       V_T2_D6 := 225.0;
+       V_T0_D4 := T0_D4 (V_T2_D6);
+
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T2_D6 (1.55)");
+       Put_Line ("-----------------------------");
+       V_T2_D6 := 1.55;
+       V_T0_D4 := T0_D4 (V_T2_D6);
+
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+
+       Put_Line ("=============================");
+       Put_Line ("T2_D12 <-- T2_D6");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T2_D6 (225.0)");
+       Put_Line ("-----------------------------");
+       V_T2_D6  := 225.0;
+       V_T2_D12 := T2_D12 (V_T2_D6);
+
+       Show_Info (V_T2_D6,  "V_T2_D6 ");
+       Show_Info (V_T2_D12, "V_T2_D12 ");
+    end Show_Machine_Representation;
+
+As we can see, the integer values are scaled to match the appropriate
+representation required for each type. For instance, the value 152.0 is
+represented as the integer value 152 for the :ada:`T0_D4` type. When converting
+it to :ada:`T2_D6`, the integer value is scaled to that type, so it becomes
+15200. The following table presents all values that show up when running the
+test application:
+
++--------+-----------------------------------+-----------------------------------+
+| Real   | Original / source                 | Target                            |
+| value  +---------------+---------+---------+---------------+---------+---------+
+|        | Type          | Actual  | Actual  | Type          | Actual  | Actual  |
+|        |               | integer | real    |               | integer | real    |
+|        |               | value   | value   |               | value   | value   |
++========+===============+=========+=========+===============+=========+=========+
+|  152.0 |  :ada:`T0_D4` |     152 |   152.0 |  :ada:`T2_D6` |   15200 |   152.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+|    1.0 |  :ada:`T0_D4` |       1 |     1.0 |  :ada:`T2_D6` |     100 |     1.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+| 225.00 |  :ada:`T2_D6` |   22500 |   225.0 |  :ada:`T0_D4` |     225 |   225.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+|   1.55 |  :ada:`T2_D6` |     155 |    1.55 |  :ada:`T0_D4` |       1 |     1.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+| 225.00 |  :ada:`T2_D6` |   22500 |   225.0 | :ada:`T2_D12` |   22500 |   225.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+
+As expected, when converting to a type with less accuracy |mdash| i.e. whose
+*small* is greater than the *small* of the type we're converting from |mdash|
+the integer representation might lose digits. For instance, when the value 1.55
+is converted from :ada:`T2_D6` type to the :ada:`T0_D4` type, the value becomes
+1.00 |mdash| here, the corresponding integer representation 155 (for the
+:ada:`T2_D6` type) is scaled down to 1 (for the :ada:`T0_D4` type). Naturally,
+if we had converted this value back to original :ada:`T2_D6` type, the integer
+representation would then be 100 instead of the previous 155.
+
+Also, when two types have the same *small*, the type conversion doesn't change
+the machine representation. For example, when the value 225.0 is converted from
+the :ada:`T2_D6` type to the :ada:`T2_D12` type, its integer representation
+(22500) doesn't change, although these two types have different sizes and
+different ranges.
+
+
+.. _Adv_Ada_Ordinary_Fixed_Point_Type_Conversion_Machine_Representation:
+
+Type conversion and machine representation of ordinary fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now, we discuss the machine representation of ordinary fixed-point types. For
+that, let's reuse the :ada:`Angle` and  :ada:`Angle_Adj` types from the
+:ada:`Angles` package. Again, we use the :ada:`Show_Info` procedure we've
+created before to uncover the integer representation of the fixed-point
+objects (:ada:`V_Angle` and :ada:`V_Angle_Adj`) after the type conversion:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Angles;        use  Angles;
+
+    with Angles.Show_Info_Procs;
+    use  Angles.Show_Info_Procs;
+
+    procedure Show_Machine_Representation
+    is
+       V_Angle     : Angle;
+       V_Angle_Adj : Angle_Adj;
+    begin
+       Put_Line ("=============================");
+       Put_Line ("Angle_Adj <-- Angle");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle (90.0)");
+       Put_Line ("-----------------------------");
+       V_Angle     := 90.0;
+       V_Angle_Adj := Angle_Adj (V_Angle);
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle (0.5)");
+       Put_Line ("-----------------------------");
+       V_Angle     := 0.5;
+       V_Angle_Adj := Angle_Adj (V_Angle);
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+
+       Put_Line ("=============================");
+       Put_Line ("Angle <-- Angle_Adj");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle_Adj (95.0)");
+       Put_Line ("-----------------------------");
+       V_Angle_Adj := 95.0;
+       V_Angle     := Angle (V_Angle_Adj);
+
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+       Show_Info (V_Angle,     "V_Angle     ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle_Adj (0.5)");
+       Put_Line ("-----------------------------");
+       V_Angle_Adj := 0.5;
+       V_Angle     := Angle (V_Angle_Adj);
+
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+       Show_Info (V_Angle,     "V_Angle     ");
+    end Show_Machine_Representation;
+
+As expected, the integer values are scaled to match the appropriate
+representation for each type. For instance, the value 90.0 is represented as
+the integer value 720 for the :ada:`Angle` type. When converting to
+:ada:`Angle_Adj`, the integer value becomes 450. The following table presents
+all values that show up when running the test application:
+
++--------+----------------------------------------+----------------------------------------+
+| Real   | Original / source                      | Target                                 |
+| value  +--------------------+---------+---------+--------------------+---------+---------+
+|        | Type               | Actual  | Actual  | Type               | Actual  | Actual  |
+|        |                    | integer | real    |                    | integer | real    |
+|        |                    | value   | value   |                    | value   | value   |
++========+====================+=========+=========+====================+=========+=========+
+|   90.0 |       :ada:`Angle` |     720 |    90.0 |   :ada:`Angle_Adj` |     450 |    90.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+|    0.5 |       :ada:`Angle` |       4 |     0.5 |   :ada:`Angle_Adj` |       2 |     0.4 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+|   95.0 |   :ada:`Angle_Adj` |     475 |    95.0 |       :ada:`Angle` |     760 |    95.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+|    0.5 |   :ada:`Angle_Adj` |       2 |     0.4 |       :ada:`Angle` |       3 |   0.375 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+
+We've seen :ref:`before <Adv_Ada_Ordinary_Fixed_Point_Machine_Representation>`
+that we might see inaccuracies for values close to the *small* of the ordinary
+fixed-point type. Similarly, when converting to another fixed-point type,
+further inaccuracies may be introduced. For example, the value 0.5 becomes 0.4
+when assigned it to an object of :ada:`Angle_Adj` type. When converting it to
+the :ada:`Angle` type, the value becomes 0.375 |mdash| even though the original
+value 0.5 could be perfectly represented with the :ada:`Angle` type.
+
+Note that, even though these inaccuracies become clear when we analyze
+individual values to such a degree of detail, they're not restricted to
+fixed-point types. In fact, inaccuracies might show up with floating-point
+types as well because the mantissa of those types has a limited accuracy as
+well.
+
+
 Operations using universal fixed types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
