@@ -3431,6 +3431,30 @@ bits on the target platform |mdash| instead of the 32 bits that we would
 typically see for that type on a desktop PC. (As a reminder, this code example
 won't compile if your target architecture doesn't support 128-bit data types.)
 
+Likewise, we can use the :ada:`Size` aspect with ordinary fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Base_Type_Q47
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Full_Range_Base_Type is
+       D : constant := 2.0 ** (-31);
+
+       type Fixed_128_Bits is
+         delta D
+         range -1.0 .. 1.0 - D
+         with Size => 128;
+    begin
+       Put_Line ("The size of "
+                 & "Fixed_128_Bits is "
+                 & Fixed_128_Bits'Size'Image
+                 & " bits");
+    end Show_Full_Range_Base_Type;
+
+In this example, we require that :ada:`Fixed_128_Bits` has a size of 128
+bits on the target platform |mdash| instead of the 32 bits that we would
+typically see for that type on a desktop PC.
+
 
 .. _Adv_Ada_Fixed_Point_Machine_Representation:
 
