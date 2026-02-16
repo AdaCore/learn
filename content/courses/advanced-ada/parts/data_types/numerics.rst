@@ -3684,7 +3684,6 @@ values stored on the machine when assigning values to objects of fixed-point
 type. We do this in the generic :ada:`Gen_Show_Info` procedure:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
-    :class: ada-run
 
     generic
        type T_Fixed     is delta <>;
