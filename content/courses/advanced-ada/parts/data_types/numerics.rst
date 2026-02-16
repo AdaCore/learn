@@ -4273,6 +4273,112 @@ type to a floating-point type |mdash| if we had assigned 2000.0 to :ada:`D6`
 instead of 800.0, for example, the conversion :ada:`TD18_1000 (D6)` would have
 raised a :ada:`Constraint_Error` because of the failed range check.
 
+Similarly, we can convert from and to ordinary fixed-point types when using
+other numeric types such as integer and floating-point types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Decimal_Type_Conversions_Other_Types
+
+    package Custom_Types is
+       D_48 : constant := 2.0 ** (-48);
+
+       type TQ15_48 is
+         delta  D_48
+         range -2.0 ** 15 ..
+                2.0 ** 15 - D_48;
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+       --  Decimal type
+
+       type TD18 is
+         digits 18;
+       --  Floating-point type
+
+       type Int15 is
+         range -2 ** 15 ..
+                2 ** 15;
+       --  Integer type
+
+    end Custom_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Types;
+    use  Custom_Types;
+
+    procedure Show_Decimal_Type_Conversions is
+       V_2_D6   : T2_D6;
+       V_D18    : TD18;
+       V_Q15_48 : TQ15_48;
+       V_Int15  : Int15;
+    begin
+       V_Q15_48 := 1.0;
+
+       V_2_D6   := T2_D6 (V_Q15_48);
+       V_D18    := TD18 (V_Q15_48);
+       V_Int15  := Int15 (V_Q15_48);
+       --          ^^^^^^^^^^^^^^^^
+       --  Conversions from
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_2_D6   = "
+                 & V_2_D6'Image);
+       Put_Line ("V_D18    = "
+                 & V_D18'Image);
+       Put_Line ("V_Int15  = "
+                 & V_Int15'Image);
+       Put_Line ("-----------------------------");
+
+       V_D18    := TD18 (TQ15_48'Last);
+
+       V_Q15_48 := TQ15_48 (V_D18);
+       --          ^^^^^^^^^^^^^
+       --  Conversion to
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_D18    = "
+                 & V_D18'Image);
+       Put_Line ("-----------------------------");
+
+       V_2_D6   := 2.0;
+
+       V_Q15_48 := TQ15_48 (V_2_D6);
+       --          ^^^^^^^^^^^^^^^
+       --  Conversion to
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_2_D6   = "
+                 & V_2_D6'Image);
+       Put_Line ("-----------------------------");
+
+       V_Int15  := 4;
+
+       V_Q15_48 := TQ15_48 (V_Int15);
+       --          ^^^^^^^^^^^^^^^^^
+       --  Conversion to
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_Int15  = "
+                 & V_Int15'Image);
+       Put_Line ("-----------------------------");
+
+    end Show_Decimal_Type_Conversions;
+
+In the :ada:`Custom_Types` package, we declare the ordinary fixed-point type
+:ada:`TQ15_48`, the decimal type :ada:`T2_D6` and the floating-point type
+:ada:`TD18`. We convert to the ordinary fixed-point type :ada:`TQ15_48` by
+using :ada:`TQ15_48 (V_D18)`, :ada:`TQ15_48 (V_2_D6)`, or
+:ada:`TQ15_48 (V_Int15)` for instance. We convert from the ordinary fixed-point
+object :ada:`V_Q15_48` by writing :ada:`T2_D6 (V_Q15_48)`,
+:ada:`TD18 (V_Q15_48)`  or :ada:`Int15 (V_Q15_48)`.
 
 Operations using universal fixed types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
