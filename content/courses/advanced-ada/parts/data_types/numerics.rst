@@ -3613,7 +3613,7 @@ In this example, we convert the value of :ada:`D` |mdash| from the
 Conversion to other types
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Similarly, we can convert from and to fixed-point types when using
+As expected, we can convert from and to fixed-point types when using
 other numeric types such as integer and floating-point types.
 
 Let's see an example for decimal fixed-point types:
