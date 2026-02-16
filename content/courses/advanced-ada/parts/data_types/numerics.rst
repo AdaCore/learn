@@ -3685,10 +3685,14 @@ Let's see an example for decimal fixed-point types:
 
     end Show_Decimal_Type_Conversions;
 
-In this example, we declare the decimal fixed-point type :ada:`Decimal` and the
-floating-point type :ada:`TD18`. Conversion between these two types works as
-expected: we use :ada:`TD18 (D6)` to convert from a decimal fixed-point type
-and :ada:`Decimal (D18)` to convert to a decimal fixed-point type.
+In the :ada:`Custom_Types` package, we declare the decimal fixed-point type
+:ada:`Decimal`, the floating-point type :ada:`TD18` and the range-constrained
+floating-point type :ada:`TD18_1000`.
+
+Conversion between these three types works as expected, as we see in the
+:ada:`Show_Decimal_Type_Conversions` procedure. We use :ada:`TD18 (D6)` and
+:ada:`TD18_1000 (D6)` to convert from a decimal fixed-point type,
+:ada:`Decimal (D18)` to convert to a decimal fixed-point type.
 
 Of course, when converting to a fixed-point type, we have to ensure
 that the floating-point value is in the range that is suitable for the target
