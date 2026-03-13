@@ -3421,6 +3421,9 @@ decimal type. For example:
          with Address => V'Address,
               Import, Volatile;
 
+       pragma Assert
+         (T_Decimal'Size = T_Int_Decimal'Size);
+
        V_Real        : Float;
     begin
        V_Real  := Float (V_Int_Overlay) *
