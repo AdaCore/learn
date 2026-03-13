@@ -3401,7 +3401,7 @@ the :ada:`Custom_Decimal_Types` package:
     end Custom_Decimal_Types;
 
 We can use an overlay in the body of the generic :ada:`Gen_Show_Info` procedure
-to uncover the actual integer values stored on the machine for objects of
+to uncover the actual integer values stored on the machine for objects of a
 decimal type. For example:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
