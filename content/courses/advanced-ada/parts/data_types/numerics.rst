@@ -3426,6 +3426,9 @@ decimal type. For example:
 
        pragma Assert
          (T_Int_Decimal'Size = T_Decimal'Size);
+       pragma Assert
+         (T_Int_Decimal'Alignment =
+            T_Decimal'Alignment);
 
        V_Real        : Float;
     begin
