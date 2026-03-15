@@ -3422,7 +3422,7 @@ decimal type. For example:
               Import, Volatile;
 
        pragma Assert
-         (T_Decimal'Size = T_Int_Decimal'Size);
+         (T_Int_Decimal'Size = T_Decimal'Size);
 
        V_Real        : Float;
     begin
