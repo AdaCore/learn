@@ -66,3 +66,19 @@
 .. |ssil0| replace:: SSIL\ |nbsp|\ 0
 .. |ssil4| replace:: SSIL\ |nbsp|\ 4
 
+.. |ISO-26262|     replace:: ISO\ |nbsp|\ 26262
+
+.. |E-ST-40C|      replace:: ECSS\ |nbhyphen|\ E\ |nbhyphen|\ ST\ |nbhyphen|\ 40C
+.. |Q-ST-80C|      replace:: ECSS\ |nbhyphen|\ Q\ |nbhyphen|\ ST\ |nbhyphen|\ 80C
+.. |E-HB-40A|      replace:: ECSS\ |nbhyphen|\ E\ |nbhyphen|\ HB\ |nbhyphen|\ 40A
+.. |E-HB-40-01A|   replace:: ECSS\ |nbhyphen|\ E\ |nbhyphen|\ HB\ |nbhyphen|\ 40\ |nbhyphen|\ 01A
+.. |E-HB-40-02A|   replace:: ECSS\ |nbhyphen|\ E\ |nbhyphen|\ HB\ |nbhyphen|\ 40\ |nbhyphen|\ 02A
+.. |Q-HB-80-01A|   replace:: ECSS\ |nbhyphen|\ Q\ |nbhyphen|\ HB\ |nbhyphen|\ 80\ |nbhyphen|\ 01A
+.. |Q-HB-80-03A-1| replace:: ECSS\ |nbhyphen|\ Q\ |nbhyphen|\ HB\ |nbhyphen|\ 80\ |nbhyphen|\ 03A\ |nbsp|\ Rev.\ |nbsp|\ 1
+.. |Q-HB-80-04A|   replace:: ECSS\ |nbhyphen|\ Q\ |nbhyphen|\ HB\ |nbhyphen|\ 80\ |nbhyphen|\ 04A
+
+.. |ada-83|        replace:: Ada\ |nbsp|\ 83
+.. |ada-95|        replace:: Ada\ |nbsp|\ 95
+.. |ada-2005|      replace:: Ada\ |nbsp|\ 2005
+.. |ada-2012|      replace:: Ada\ |nbsp|\ 2012
+.. |ada-2022|      replace:: Ada\ |nbsp|\ 2022

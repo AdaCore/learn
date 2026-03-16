@@ -1,0 +1,22 @@
+CWE Weakness,Description
+"CWE 119, 120, 123, 124, 125, 126, 127, 129, 130, 131",Buffer overflow/underflow
+"CWE 136, 137","Variant record field violation, Use of incorrect type in inheritance hierarchy"
+CWE 188,Reliance on data layout
+"CWE 190, 191",Numeric overflow/underflow
+CWE 193,Off-by-one error
+CWE 194,Unexpected sign extension
+CWE 197,Numeric truncation error
+"CWE 252, 253",Unchecked or incorrectly checked return value
+CWE 366,Race Condition
+CWE 369,Division by zero
+"CWE 456, 457",Use of uninitialized variable
+"CWE 466, 468, 469",Pointer errors
+CWE 476,Null pointer dereference
+CWE 562,Return of stack variable address
+CWE 563,Unused or redundant assignment
+CWE 682,Range constraint violation
+"CWE 786, 787, 788, 805",Buffer access errors
+CWE 820,Missing synchronization
+CWE 821,Incorrect synchronization
+"CWE 822, 823, 824, 825",Pointer errors
+CWE 835,Infinite loop

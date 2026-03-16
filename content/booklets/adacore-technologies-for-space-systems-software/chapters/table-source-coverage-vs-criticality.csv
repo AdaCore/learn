@@ -1,0 +1,4 @@
+Code coverage versus criticality category,A,B,C,D
+Source code statement coverage,100.00%,100.00%,TBA,TBA
+Source code decision coverage,100.00%,100.00%,TBA,TBA
+Source code modified condition and decision coverage,100.00%,TBA,TBA,TBA

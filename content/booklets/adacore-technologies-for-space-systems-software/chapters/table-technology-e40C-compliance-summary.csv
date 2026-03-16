@@ -1,0 +1,10 @@
+.. csv-table:: Technology Support for ECSS-E-ST-40C Compliance
+
+   Technology,         |sect|\ 5.4, |sect|\5.5, |sect|\ 5.6, |sect|\ 5.7, |sect|\ 5.8, |sect|\ 5.9, |sect|\ 5.10, |sect|\ 5.11, Annex U
+   Ada language,       |check|    , |check|   , |blankcell|, |blankcell|, |check|    , |blankcell|, |check|     , |check|     , |check|
+   SPARK language,     |check|    , |check|   , |blankcell|, |blankcell|, |check|    , |blankcell|, |check|     , |check|     , |check|
+   GNAT Pro for Ada,   |check|    , |check|   , |check|    , |check|    , |check|    , |blankcell|, |check|     , |check|     , |check|
+   SPARK Pro,          |check|    , |check|   , |check|    , |blankcell|, |check|    , |blankcell|, |check|     , |check|     , |check|
+   GNAT SAS,           |blankcell|, |check|   , |check|    , |blankcell|, |check|    , |blankcell|, |check|     , |check|     , |check|
+   GNAT DAS,           |blankcell|, |check|   , |check|    , |blankcell|, |check|    , |blankcell|, |check|     , |check|     , |blankcell|
+   GNAT Pro Assurance, |check|    , |check|   , |check|    , |check|    , |check|    , |check|    , |check|     , |check|     , |check|

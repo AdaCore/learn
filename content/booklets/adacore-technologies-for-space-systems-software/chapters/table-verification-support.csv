@@ -1,0 +1,32 @@
+.. Not needed, it was converted to a grid table
+
+.. csv-table:: 
+   :header-rows: 1
+   :widths: 23, 37, 40
+
+   Verification check #,Technology,Explanation
+   1,Ada language,Run-time check\ :superscript:`*`
+   1,SPARK language,Static check
+   1,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   2,Ada language,Run-time check\ :superscript:`*`
+   2,SPARK language,Static check
+   2,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   3,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   3,GNATcheck (in GNAT Static Analysis Suite),User-defined rule
+   4,Ada and SPARK languages, Static check
+   5,Ada and SPARK languages, Static check
+   5,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   6,Ada and SPARK languages, Static check
+   7,Ada and SPARK languages, Static check
+   8,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   9,Ada language,Run-time check\ :superscript:`*`
+   9,SPARK language,Static check
+   9,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   10,SPARK language,Static check
+   10,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   11,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   12,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+   12,Ada Language,Run-time check\ :superscript:`***`
+   13,Ada and SPARK languages, Static check
+   14,Defects and Vulnerability Analyzer (in GNAT Static Analysis Suite),Static check\ :superscript:`**`
+
