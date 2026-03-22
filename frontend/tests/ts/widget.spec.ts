@@ -767,6 +767,28 @@ describe('Widget', () => {
     });
   });
 
+  describe('Code Block Info Widget', () => {
+    before(() => {
+      fillDOM('code_block_info.html');
+      inTest = getElemsByClass(document, 'widget');
+      widgetFactory(inTest as Array<HTMLDivElement>);
+      root = inTest[0];
+    });
+
+    after(() => {
+      clearDOM();
+    });
+
+    it('should have a single widget on the page', () => {
+      expect(inTest).to.have.length(1);
+    });
+
+    it('should populate the code-block-info output element', () => {
+      const cbiContents = getElemById(root.id + '.code_block_info.run info.contents');
+      expect(cbiContents.innerText).to.include('Hello from run output!');
+    });
+  });
+
   describe('Multi Widget', () => {
     let multiWidgets: Array<HTMLElement>;
 
