@@ -71,7 +71,7 @@ def check_block(block : blocks.CodeBlock,
             gnat_version = run("gnat", "--version").partition('\n')[0]
             gnat_prove_version = run("gnatprove", "--version").partition('\n')[0]
             gprbuild_version = run("gprbuild", "--version").partition('\n')[0]
-        except:
+        except Exception:
             gcc_version = "<unknown>" if gcc_version is None else gcc_version
             gnat_version = "<unknown>" if gnat_version is None else gnat_version
             gnat_prove_version = "<unknown>" if gnat_prove_version is None else gnat_prove_version
@@ -153,7 +153,7 @@ def check_block(block : blocks.CodeBlock,
 
         try:
             ref_block_check = checks.BlockCheck.from_json_file()
-        except:
+        except Exception:
             pass
 
         if ref_block_check is not None and not force_checks:
