@@ -91,7 +91,12 @@ export function getLanguages(files: ResourceList): string {
  * @returns {UnparsedSwitches} switches.
  */
 export function getUnparsedSwitches(rawSwitches: string): UnparsedSwitches {
-  const parsed = JSON.parse(rawSwitches);
+  let parsed;
+  try {
+    parsed = JSON.parse(rawSwitches);
+  } catch {
+    throw new Error(`Failed to parse switches JSON: ${rawSwitches}`);
+  }
   const switches: UnparsedSwitches = {Builder: [], Compiler: []};
   for (const k in switches) {
     if (k in parsed) {

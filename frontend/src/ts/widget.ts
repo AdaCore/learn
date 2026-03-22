@@ -220,7 +220,13 @@ class Widget {
     dlButton.addEventListener('click', async () => {
       this.outputArea.reset();
       const files = this.collectResources();
-      const switches = JSON.parse(this.container.dataset.switches as string);
+      let switches;
+      try {
+        switches = JSON.parse(this.container.dataset.switches as string);
+      } catch {
+        this.outputArea.addError(Strings.INTERNAL_ERROR_MESSAGE);
+        return;
+      }
       const activeSwitches: UnparsedSwitches = {
         Builder: switches['Builder'],
         Compiler: this.getActiveCompilerSwitches()};
@@ -474,7 +480,14 @@ class Widget {
 
     const files = this.collectResources();
 
-    const switches = JSON.parse(this.container.dataset.switches as string);
+    let switches;
+    try {
+      switches = JSON.parse(this.container.dataset.switches as string);
+    } catch {
+      this.outputArea.addError(Strings.INTERNAL_ERROR_MESSAGE);
+      this.outputArea.showSpinner(false);
+      return;
+    }
     switches['Compiler'] = this.getActiveCompilerSwitches();
 
     const serverData: RunProgram.TSData = {
