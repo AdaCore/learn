@@ -723,5 +723,73 @@ describe('Widget', () => {
         });
       });
     });
+
+    describe('Reset', () => {
+      it('should reset output area and lab container', () => {
+        const resetBtn = getElemById(root.id + '.settings-bar.reset-btn') as
+          HTMLButtonElement;
+        const outputDiv = getElemById(root.id + '.output-area');
+        const labArea = getElemById(root.id + '.lab-area');
+        window.confirm = (): boolean => true;
+        resetBtn.click();
+        expect(outputDiv.innerHTML).to.equal('');
+        expect(labArea.innerHTML).to.equal('');
+      });
+    });
+  });
+
+  describe('Malformed Widget', () => {
+    let malformedElem: HTMLDivElement;
+
+    before(() => {
+      global.document = window.document;
+      document.documentElement.innerHTML = '<head></head><body></body>';
+      malformedElem = document.createElement('div') as HTMLDivElement;
+      malformedElem.id = 'malformed-widget-test';
+      malformedElem.dataset.url = baseURL;
+      malformedElem.dataset.name = 'Test.Malformed';
+      malformedElem.dataset.lab = 'False';
+      malformedElem.dataset.main = '';
+      malformedElem.dataset.switches = '{"Builder":["-g"],"Compiler":[]}';
+      const editorDiv = document.createElement('div');
+      editorDiv.id = 'malformed-widget-test.editors.editor';
+      malformedElem.appendChild(editorDiv);
+      document.body.appendChild(malformedElem);
+    });
+
+    after(() => {
+      clearDOM();
+    });
+
+    it('should show an error message for a widget with no files', () => {
+      widgetFactory([malformedElem] as Array<HTMLDivElement>);
+      const errorP = malformedElem.querySelector('p');
+      expect(errorP).to.not.be.null;
+      expect(errorP!.textContent).to.include('An error has occured');
+    });
+  });
+
+  describe('Multi Widget', () => {
+    let multiWidgets: Array<HTMLElement>;
+
+    before(() => {
+      fillDOM('multi.html');
+      multiWidgets = getElemsByClass(document, 'widget');
+      widgetFactory(multiWidgets as Array<HTMLDivElement>);
+    });
+
+    after(() => {
+      clearDOM();
+    });
+
+    it('should have two widgets on the page', () => {
+      expect(multiWidgets).to.have.length(2);
+    });
+
+    it('should create both widgets without errors', () => {
+      multiWidgets.forEach((w) => {
+        expect(w.querySelector('p')).to.be.null;
+      });
+    });
   });
 });
