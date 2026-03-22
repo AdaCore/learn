@@ -38,6 +38,26 @@ describe('Editor', () => {
       const session = editor.getSession();
       expect(session.getValue()).to.equal(resource.contents);
     });
+
+    it('should set C_CPP mode for a .c file', () => {
+      const cResource: Resource = {basename: 'main.c', contents: 'int main() { return 0; }'};
+      inTest.addSession(cResource.basename, cResource.contents);
+      inTest.setSession(cResource.basename);
+      const session = editor.getSession();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((session.getMode() as any).$id).to.equal('ace/mode/c_cpp');
+    });
+  });
+
+  describe('#addNonTabbedEditor(), #refresh()', () => {
+    it('should resize non-tabbed editors when refresh(false) is called', () => {
+      const elem = document.createElement('div');
+      document.body.appendChild(elem);
+      inTest.addNonTabbedEditor(resource.basename, elem);
+      // Should not throw
+      expect(() => inTest.refresh(false)).not.to.throw();
+      document.body.removeChild(elem);
+    });
   });
 
   describe('#getSessionContent()', () => {
