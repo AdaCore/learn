@@ -391,7 +391,8 @@ class Widget {
         d.appendChild(document.createElement('br'));
         const helpDiv = document.createElement('div');
         helpDiv.classList.add('compiler-switch-help-info-click-remove');
-        helpDiv.textContent = '(' + Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE + ')';
+        helpDiv.textContent =
+          '(' + Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE + ')';
         d.appendChild(helpDiv);
         d.classList.remove('disabled');
       });

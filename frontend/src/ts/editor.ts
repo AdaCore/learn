@@ -6,7 +6,6 @@ import 'ace-builds/src-noconflict/theme-tomorrow';
 import 'ace-builds/src-noconflict/theme-tomorrow_night';
 
 
-/* eslint-disable no-unused-vars */
 export enum EditorTheme {
   Light = 'ace/theme/tomorrow',
   Dark = 'ace/theme/tomorrow_night'
@@ -16,7 +15,6 @@ export enum EditorLanguage {
   Ada = 'ace/mode/ada',
   C_CPP = 'ace/mode/c_cpp'
 }
-/* eslint-enable no-unused-vars */
 
 interface SessionData {
   initialContents: string;
