@@ -259,7 +259,8 @@ site-sandbox: cleanall test_content webpack-sandbox sphinx-sandbox all_books com
 	@echo Building $@
 
 site-testing: cleantest                                                        ## Build a testing version of the learn website.
-	FRONTEND_TESTING=true $(SPHINXBUILD) -M html $(TEST_CONTENT) \
+	FRONTEND_TESTING=true SRC_TEST_DIR=$(MKFILE_DIR)tests/src_test_data \
+        $(SPHINXBUILD) -M html $(TEST_CONTENT) \
         "$(TEST_BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 BOOKS = $(wildcard $(CONTENT_DIR)/courses/*/.) $(wildcard $(CONTENT_DIR)/labs/*/.)  $(wildcard $(CONTENT_DIR)/booklets/*/.)
