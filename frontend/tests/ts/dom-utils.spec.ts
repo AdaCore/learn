@@ -59,7 +59,7 @@ describe('getElemsByTag', () => {
   c.classList.add('diff-class');
   parent.appendChild(c);
 
-  it('should return an array with the elems that have the class', () => {
+  it('should return an array with the elems that have the tag', () => {
     const elems = getElemsByTag(parent, 'button');
     expect(elems).to.have.length(2);
   });

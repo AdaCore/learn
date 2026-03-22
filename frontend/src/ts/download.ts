@@ -91,7 +91,12 @@ export function getLanguages(files: ResourceList): string {
  * @returns {UnparsedSwitches} switches.
  */
 export function getUnparsedSwitches(rawSwitches: string): UnparsedSwitches {
-  const parsed = JSON.parse(rawSwitches);
+  let parsed;
+  try {
+    parsed = JSON.parse(rawSwitches);
+  } catch {
+    throw new Error(`Failed to parse switches JSON: ${rawSwitches}`);
+  }
   const switches: UnparsedSwitches = {Builder: [], Compiler: []};
   for (const k in switches) {
     if (k in parsed) {
@@ -131,7 +136,7 @@ export function parseSwitches(switches: UnparsedSwitches): ParsedSwitches {
  * @returns {Array<string>} the filenames of each potential 'main' file.
  */
 export function findMains(files: ResourceList): Array<string> {
-  if (files.length == 1) return [files[0].basename];
+  if (files.length === 1) return [files[0].basename];
   const mains: Array<string> = [];
   const fileNames = new Set(files.map((f) => f.basename));
   for (const f of files) {
@@ -158,7 +163,7 @@ export function findMains(files: ResourceList): Array<string> {
  *                  file extension removed.
  */
 export function getMain(files: ResourceList, main: string): string {
-  if (main == '') {
+  if (main === '') {
     const potentialMains = findMains(files);
     if (potentialMains.length == 1) {
       main = potentialMains[0];
@@ -168,7 +173,7 @@ export function getMain(files: ResourceList, main: string): string {
     }
   }
   main = main.split('.')[0];
-  if (main == '') return '';
+  if (main === '') return '';
   return `for Main use ("${main}");`;
 }
 

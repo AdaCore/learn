@@ -76,7 +76,7 @@ class Widget {
     // Parse files
     const files = getElemsByClass(this.container, 'file');
     // Check to make sure we have files in the widget
-    if (files.length == 0) {
+    if (files.length === 0) {
       throw Error('Malformed widget: No files present.');
     }
     for (const file of files) {
@@ -148,7 +148,7 @@ class Widget {
 
     // Get tabbed view status from cookie
     const cookieTabbedView = cookies.get('tabbed_view') as string;
-    const tabbedView = (cookieTabbedView != 'false');
+    const tabbedView = (cookieTabbedView !== 'false');
 
     // attach handlers to the settings bar items
     const tabSetting =
@@ -184,7 +184,7 @@ class Widget {
     const themeSetting =
       this.getElem('settings-bar', 'theme-setting') as HTMLInputElement;
     // Set checkbox according to value from cookie
-    themeSetting.checked = (cookieTheme == 'dark');
+    themeSetting.checked = (cookieTheme === 'dark');
     this.setTheme(cookieTheme);
 
     themeSetting.addEventListener('change', () => {
@@ -220,7 +220,13 @@ class Widget {
     dlButton.addEventListener('click', async () => {
       this.outputArea.reset();
       const files = this.collectResources();
-      const switches = JSON.parse(this.container.dataset.switches as string);
+      let switches;
+      try {
+        switches = JSON.parse(this.container.dataset.switches as string);
+      } catch {
+        this.outputArea.addError(Strings.INTERNAL_ERROR_MESSAGE);
+        return;
+      }
       const activeSwitches: UnparsedSwitches = {
         Builder: switches['Builder'],
         Compiler: this.getActiveCompilerSwitches()};
@@ -380,18 +386,22 @@ class Widget {
             'compiler-switch-help-info')[0];
       d.addEventListener('click', () => {
         if (! d.classList.contains('disabled')) {
-          d.innerHTML = '';
+          d.textContent = '';
           d.classList.add('disabled');
         }
       });
 
       b.addEventListener('click', () => {
-        d.innerHTML = '<b>' + switchName + '</b>: ' +
-            b.title + '<br/>' +
-            '<div class="compiler-switch-help-info-click-remove">(' +
-            Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE +
-            ')</div>';
-
+        d.textContent = '';
+        const bold = document.createElement('b');
+        bold.textContent = switchName;
+        d.appendChild(bold);
+        d.appendChild(document.createTextNode(': ' + b.title));
+        d.appendChild(document.createElement('br'));
+        const helpDiv = document.createElement('div');
+        helpDiv.classList.add('compiler-switch-help-info-click-remove');
+        helpDiv.textContent = '(' + Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE + ')';
+        d.appendChild(helpDiv);
         d.classList.remove('disabled');
       });
     }
@@ -403,7 +413,7 @@ class Widget {
    */
   private setTheme(themeStr : string) : void {
     let theme = EditorTheme.Light;
-    if (themeStr == 'dark') {
+    if (themeStr === 'dark') {
       theme = EditorTheme.Dark;
     }
 
@@ -474,7 +484,14 @@ class Widget {
 
     const files = this.collectResources();
 
-    const switches = JSON.parse(this.container.dataset.switches as string);
+    let switches;
+    try {
+      switches = JSON.parse(this.container.dataset.switches as string);
+    } catch {
+      this.outputArea.addError(Strings.INTERNAL_ERROR_MESSAGE);
+      this.outputArea.showSpinner(false);
+      return;
+    }
     switches['Compiler'] = this.getActiveCompilerSwitches();
 
     const serverData: RunProgram.TSData = {
@@ -555,7 +572,7 @@ class Widget {
 
           // Lines that contain a sloc are clickable:
           const cb = (): void => {
-            if (window.getSelection()?.toString() == '') {
+            if (window.getSelection()?.toString() === '') {
               view.header.scrollIntoView(true);
               view.header.click();
               // Jump to corresponding line
@@ -567,7 +584,7 @@ class Widget {
 
           // If the message if of type info, addInfo
           // Otherwise, addMsg
-          if (msgType == 'info') {
+          if (msgType === 'info') {
             homeArea.addInfo(outMsg, cb);
           } else {
             homeArea.addMsg(outMsg, cb);
@@ -594,7 +611,7 @@ class Widget {
     }
 
     if (data.completed) {
-      if (data.status != 0) {
+      if (data.status !== 0) {
         this.outputArea.addError(Strings.EXIT_STATUS_LABEL +
             ': ' + data.status);
       }
@@ -716,13 +733,14 @@ export function widgetFactory(widgets: Array<HTMLDivElement>): void {
       console.error('Error:', error);
 
       // clear the offending element to remove any processing that was done
-      element.innerHTML = '';
+      element.textContent = '';
 
       // add an error message to the page in its place
       const errorDiv = document.createElement('div');
-      errorDiv.innerHTML = '<p>An error has occured processing this widget.' +
-      Strings.INTERNAL_ERROR_MESSAGE + '</p>';
-
+      const errorP = document.createElement('p');
+      errorP.textContent = 'An error has occured processing this widget.' +
+        Strings.INTERNAL_ERROR_MESSAGE;
+      errorDiv.appendChild(errorP);
       element.appendChild(errorDiv);
     }
   }

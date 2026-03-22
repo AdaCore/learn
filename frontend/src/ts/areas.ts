@@ -174,8 +174,8 @@ export class LabArea extends Area {
 
     this.button.addEventListener('click', () => {
       this.button.classList.toggle('active');
-      if (this.container.style.display == '' ||
-          this.container.style.display == 'block') {
+      if (this.container.style.display === '' ||
+          this.container.style.display === 'block') {
         this.container.style.display = 'none';
       } else {
         this.container.style.display = 'block';

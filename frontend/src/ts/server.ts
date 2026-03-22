@@ -84,7 +84,7 @@ export class ServerWorker {
 
   /**
    * Delay function
-   * @param {number} ms - Number of milliseconds to delay-+
+   * @param {number} ms - Number of milliseconds to delay
    * @returns {Promise<unknown>} - A promise to await
    */
   public static delay(ms: number): Promise<unknown> {

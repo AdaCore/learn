@@ -15,10 +15,10 @@ export function sandboxRedirect(): void {
   const cookieValue = cookies.get(cookieName) as string;
   const cookieReferenceValue = "true";
 
-  if (cookieValue != cookieReferenceValue) {
+  if (cookieValue !== cookieReferenceValue) {
     const passw = prompt("Enter site password:")
 
-    if (passw != "Ada") {
+    if (passw !== "Ada") {
       const msg = 'You have reached learn-sandbox, the learn testing site. ' +
       'This is reserved for testers only. You will be directed to the main ' +
       'learn.adacore.com site after pressing OK.';
