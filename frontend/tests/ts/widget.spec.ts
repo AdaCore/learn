@@ -3,6 +3,7 @@ import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import chaiDom from 'chai-dom';
 import {Client, Server, WebSocket} from 'mock-socket';
+import FileSaver from 'file-saver';
 
 // const chai = use(chaiDom);
 const chai = use(chaiAsPromised);
@@ -458,6 +459,135 @@ describe('Widget', () => {
         btn.click();
 
         expect(session.getValue()).to.equal(origContent);
+      });
+
+      it('should revert tab setting when user cancels', () => {
+        const tabSetting = getElemById(root.id + '.settings-bar.tab-setting') as
+          HTMLInputElement;
+        window.confirm = (): boolean => false;
+        const originalChecked = tabSetting.checked;
+        tabSetting.checked = !originalChecked;
+        triggerEvent(tabSetting, 'change');
+        expect(tabSetting.checked).to.equal(originalChecked);
+      });
+
+      it('should apply tab setting and reload when user confirms', () => {
+        const tabSetting = getElemById(root.id + '.settings-bar.tab-setting') as
+          HTMLInputElement;
+        const origReload = window.location.reload;
+        (window.location as any).reload = (): void => {};
+        window.confirm = (): boolean => true;
+        tabSetting.checked = false;
+        triggerEvent(tabSetting, 'change');
+        (window.location as any).reload = origReload;
+        const editorContainer = getElemById(root.id + '.editors.editor');
+        expect(editorContainer.hidden).to.be.true;
+      });
+
+      it('should revert theme setting when user cancels', () => {
+        const themeSetting = getElemById(root.id + '.settings-bar.theme-setting') as
+          HTMLInputElement;
+        window.confirm = (): boolean => false;
+        const originalChecked = themeSetting.checked;
+        themeSetting.checked = !originalChecked;
+        triggerEvent(themeSetting, 'change');
+        expect(themeSetting.checked).to.equal(originalChecked);
+      });
+
+      it('should apply dark theme and reload when user confirms', () => {
+        const themeSetting = getElemById(root.id + '.settings-bar.theme-setting') as
+          HTMLInputElement;
+        const origReload = window.location.reload;
+        (window.location as any).reload = (): void => {};
+        window.confirm = (): boolean => true;
+        themeSetting.checked = true;
+        triggerEvent(themeSetting, 'change');
+        (window.location as any).reload = origReload;
+        expect(themeSetting.checked).to.be.true;
+      });
+    });
+
+    describe('Compiler Switches', () => {
+      let compilerSwitchesSetting: HTMLElement;
+
+      before(() => {
+        compilerSwitchesSetting =
+          getElemById(root.id + '.settings-bar.compiler-switches');
+      });
+
+      it('should deactivate mutually exclusive switches when one is checked', () => {
+        const gnato = document.getElementById(
+            root.id + '.settings-bar.compiler-switches.-gnato') as HTMLInputElement;
+        const gnato0 = document.getElementById(
+            root.id + '.settings-bar.compiler-switches.-gnato0') as HTMLInputElement;
+        gnato.checked = true;
+        gnato0.checked = true;
+        triggerEvent(gnato0, 'change');
+        expect(gnato.checked).to.be.false;
+        expect(gnato0.checked).to.be.true;
+      });
+
+      it('should clear help info when clicked if not disabled', () => {
+        const d = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-help-info')[0] as HTMLElement;
+        d.classList.remove('disabled');
+        d.textContent = 'some content';
+        d.click();
+        expect(d.textContent).to.equal('');
+        expect(d.classList.contains('disabled')).to.be.true;
+      });
+
+      it('should not clear help info when clicked if disabled', () => {
+        const d = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-help-info')[0] as HTMLElement;
+        d.classList.add('disabled');
+        d.textContent = 'some content';
+        d.click();
+        expect(d.textContent).to.equal('some content');
+      });
+
+      it('should populate help info when help button is clicked', () => {
+        const d = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-help-info')[0] as HTMLElement;
+        const firstEntry = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-entry')[0] as HTMLElement;
+        const b = firstEntry.getElementsByTagName('button')[0] as HTMLButtonElement;
+        b.click();
+        expect(d.classList.contains('disabled')).to.be.false;
+        expect(d.querySelector('b')).to.not.be.null;
+      });
+    });
+
+    describe('Download Button', () => {
+      let dlButton: HTMLElement;
+      let savedFilename: string | undefined;
+
+      before(() => {
+        dlButton = getElemById(root.id + '.settings-bar.download-btn');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (FileSaver as any).saveAs = (_blob: Blob, name: string): void => {
+          savedFilename = name;
+        };
+      });
+
+      beforeEach(() => {
+        savedFilename = undefined;
+      });
+
+      it('should trigger a download when clicked', async () => {
+        dlButton.click();
+        await ServerWorker.delay(300);
+        expect(savedFilename).to.equal('Test.Single.zip');
+      });
+
+      it('should show an error if switches JSON is invalid', async () => {
+        const originalSwitches = root.dataset.switches;
+        root.dataset.switches = 'invalid json';
+        const outputDiv = getElemById(root.id + '.output-area');
+        dlButton.click();
+        await ServerWorker.delay(100);
+        expect(outputDiv.textContent).to.include(Strings.INTERNAL_ERROR_MESSAGE);
+        root.dataset.switches = originalSwitches as string;
       });
     });
   });
