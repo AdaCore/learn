@@ -6,6 +6,7 @@ const chai = use(chaiDom);
 
 import {
   getLanguages,
+  getUnparsedSwitches,
   parseSwitches,
   findMains,
   getMain,
@@ -67,6 +68,28 @@ describe('Download', () => {
       const languagesRegex =
         /for Languages use \((?=.*"Ada",?)(?=.*"c",?)(?=.*"c\+\+",?).*\);/;
       expect(languagesRegex.test(languages)).to.equals(true);
+    });
+  });
+
+  describe('#getUnparsedSwitches()', () => {
+    it('should parse valid switches JSON', () => {
+      const raw = JSON.stringify({Builder: ['-g'], Compiler: ['-O2']});
+      const result = getUnparsedSwitches(raw);
+      expect(result.Builder).to.deep.equal(['-g']);
+      expect(result.Compiler).to.deep.equal(['-O2']);
+    });
+
+    it('should return empty arrays for missing keys', () => {
+      const raw = JSON.stringify({});
+      const result = getUnparsedSwitches(raw);
+      expect(result.Builder).to.deep.equal([]);
+      expect(result.Compiler).to.deep.equal([]);
+    });
+
+    it('should throw on invalid JSON', () => {
+      expect(() => getUnparsedSwitches('not json')).to.throw(
+        'Failed to parse switches JSON: not json'
+      );
     });
   });
 
