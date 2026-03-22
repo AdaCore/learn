@@ -46,6 +46,7 @@ describe('Editor', () => {
       const session = editor.getSession();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((session.getMode() as any).$id).to.equal('ace/mode/c_cpp');
+      inTest.setSession(resource.basename);
     });
   });
 

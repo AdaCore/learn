@@ -275,8 +275,10 @@ describe('Download', () => {
   });
 
   describe('#downloadProject()', () => {
-    let savedBlob: Blob | undefined;
+    let capturedFileNames: string[] = [];
     let savedFilename: string | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let origGenerateAsync: any;
 
     const files: ResourceList = [
       {basename: 'main.adb', contents: 'procedure Main is begin null; end Main;'},
@@ -284,15 +286,24 @@ describe('Download', () => {
     const switches: UnparsedSwitches = {Builder: [], Compiler: []};
 
     before(() => {
+      origGenerateAsync = JSZip.prototype.generateAsync;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (FileSaver as any).saveAs = (blob: Blob, name: string): void => {
-        savedBlob = blob;
+      (JSZip.prototype as any).generateAsync = function(options: any) {
+        capturedFileNames = Object.keys((this as JSZip).files);
+        return origGenerateAsync.call(this, options);
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (FileSaver as any).saveAs = (_blob: unknown, name: string): void => {
         savedFilename = name;
       };
     });
 
+    after(() => {
+      (JSZip.prototype as any).generateAsync = origGenerateAsync;
+    });
+
     beforeEach(() => {
-      savedBlob = undefined;
+      capturedFileNames = [];
       savedFilename = undefined;
     });
 
@@ -305,24 +316,20 @@ describe('Download', () => {
     it('should include source, main.gpr, and main.adc in non-SPARK mode', async () => {
       downloadProject(files, switches, 'main.adb', 'Test', false);
       await new Promise((r) => setTimeout(r, 200));
-      const zip = await JSZip.loadAsync(savedBlob!);
-      const names = Object.keys(zip.files);
-      expect(names).to.include('main.adb');
-      expect(names).to.include('main.gpr');
-      expect(names).to.include('main.adc');
-      expect(names).not.to.include('main_spark.gpr');
-      expect(names).not.to.include('main_spark.adc');
+      expect(capturedFileNames).to.include('main.adb');
+      expect(capturedFileNames).to.include('main.gpr');
+      expect(capturedFileNames).to.include('main.adc');
+      expect(capturedFileNames).not.to.include('main_spark.gpr');
+      expect(capturedFileNames).not.to.include('main_spark.adc');
     });
 
     it('should also include main_spark.gpr and main_spark.adc in SPARK mode', async () => {
       downloadProject(files, switches, 'main.adb', 'Test', true);
       await new Promise((r) => setTimeout(r, 200));
-      const zip = await JSZip.loadAsync(savedBlob!);
-      const names = Object.keys(zip.files);
-      expect(names).to.include('main.gpr');
-      expect(names).to.include('main.adc');
-      expect(names).to.include('main_spark.gpr');
-      expect(names).to.include('main_spark.adc');
+      expect(capturedFileNames).to.include('main.gpr');
+      expect(capturedFileNames).to.include('main.adc');
+      expect(capturedFileNames).to.include('main_spark.gpr');
+      expect(capturedFileNames).to.include('main_spark.adc');
     });
   });
 });
