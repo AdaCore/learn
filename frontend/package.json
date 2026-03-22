@@ -142,7 +142,10 @@
       "text"
     ],
     "exclude": [
-      "src/index.ts"
+      "src/index.ts",
+      "src/ts/resource.ts",
+      "src/ts/server-types.ts",
+      "src/ts/sandbox-redirect.ts"
     ]
   },
   "packageManager": "yarn@4.12.0"
