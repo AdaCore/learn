@@ -131,7 +131,7 @@ export function parseSwitches(switches: UnparsedSwitches): ParsedSwitches {
  * @returns {Array<string>} the filenames of each potential 'main' file.
  */
 export function findMains(files: ResourceList): Array<string> {
-  if (files.length == 1) return [files[0].basename];
+  if (files.length === 1) return [files[0].basename];
   const mains: Array<string> = [];
   const fileNames = new Set(files.map((f) => f.basename));
   for (const f of files) {
@@ -158,7 +158,7 @@ export function findMains(files: ResourceList): Array<string> {
  *                  file extension removed.
  */
 export function getMain(files: ResourceList, main: string): string {
-  if (main == '') {
+  if (main === '') {
     const potentialMains = findMains(files);
     if (potentialMains.length == 1) {
       main = potentialMains[0];
@@ -168,7 +168,7 @@ export function getMain(files: ResourceList, main: string): string {
     }
   }
   main = main.split('.')[0];
-  if (main == '') return '';
+  if (main === '') return '';
   return `for Main use ("${main}");`;
 }
 

@@ -76,7 +76,7 @@ class Widget {
     // Parse files
     const files = getElemsByClass(this.container, 'file');
     // Check to make sure we have files in the widget
-    if (files.length == 0) {
+    if (files.length === 0) {
       throw Error('Malformed widget: No files present.');
     }
     for (const file of files) {
@@ -148,7 +148,7 @@ class Widget {
 
     // Get tabbed view status from cookie
     const cookieTabbedView = cookies.get('tabbed_view') as string;
-    const tabbedView = (cookieTabbedView != 'false');
+    const tabbedView = (cookieTabbedView !== 'false');
 
     // attach handlers to the settings bar items
     const tabSetting =
@@ -184,7 +184,7 @@ class Widget {
     const themeSetting =
       this.getElem('settings-bar', 'theme-setting') as HTMLInputElement;
     // Set checkbox according to value from cookie
-    themeSetting.checked = (cookieTheme == 'dark');
+    themeSetting.checked = (cookieTheme === 'dark');
     this.setTheme(cookieTheme);
 
     themeSetting.addEventListener('change', () => {
@@ -403,7 +403,7 @@ class Widget {
    */
   private setTheme(themeStr : string) : void {
     let theme = EditorTheme.Light;
-    if (themeStr == 'dark') {
+    if (themeStr === 'dark') {
       theme = EditorTheme.Dark;
     }
 
@@ -555,7 +555,7 @@ class Widget {
 
           // Lines that contain a sloc are clickable:
           const cb = (): void => {
-            if (window.getSelection()?.toString() == '') {
+            if (window.getSelection()?.toString() === '') {
               view.header.scrollIntoView(true);
               view.header.click();
               // Jump to corresponding line
@@ -567,7 +567,7 @@ class Widget {
 
           // If the message if of type info, addInfo
           // Otherwise, addMsg
-          if (msgType == 'info') {
+          if (msgType === 'info') {
             homeArea.addInfo(outMsg, cb);
           } else {
             homeArea.addMsg(outMsg, cb);
@@ -594,7 +594,7 @@ class Widget {
     }
 
     if (data.completed) {
-      if (data.status != 0) {
+      if (data.status !== 0) {
         this.outputArea.addError(Strings.EXIT_STATUS_LABEL +
             ': ' + data.status);
       }
