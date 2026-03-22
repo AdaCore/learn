@@ -399,6 +399,37 @@ describe('Widget', () => {
           expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
           removeListeners(server);
         });
+
+        it('should show error if switches JSON is invalid on run', async () => {
+          const originalSwitches = root.dataset.switches;
+          root.dataset.switches = 'invalid json';
+          runButton.click();
+          await ServerWorker.delay(250);
+          expect(realDiv.textContent).to.include(Strings.INTERNAL_ERROR_MESSAGE);
+          root.dataset.switches = originalSwitches as string;
+        });
+
+        it('should add output line for stdout from a file not in viewMap', async () => {
+          const serverResponse: CheckOutput.FS = {
+            output: [
+              {type: 'stdout', data: 'unknown.adb:1:2: error: test error'},
+            ],
+            status: 0,
+            completed: true,
+            message: 'SUCCESS',
+          };
+          server.on('connection', (socket) => {
+            socket.on('message', (_event) => {
+              socket.send(JSON.stringify(serverResponse));
+            });
+          });
+
+          runButton.click();
+          await ServerWorker.delay(250);
+
+          expect(realDiv.innerHTML).to.not.be.empty;
+          removeListeners(server);
+        });
       });
     });
 
