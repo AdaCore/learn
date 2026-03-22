@@ -386,18 +386,22 @@ class Widget {
             'compiler-switch-help-info')[0];
       d.addEventListener('click', () => {
         if (! d.classList.contains('disabled')) {
-          d.innerHTML = '';
+          d.textContent = '';
           d.classList.add('disabled');
         }
       });
 
       b.addEventListener('click', () => {
-        d.innerHTML = '<b>' + switchName + '</b>: ' +
-            b.title + '<br/>' +
-            '<div class="compiler-switch-help-info-click-remove">(' +
-            Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE +
-            ')</div>';
-
+        d.textContent = '';
+        const bold = document.createElement('b');
+        bold.textContent = switchName;
+        d.appendChild(bold);
+        d.appendChild(document.createTextNode(': ' + b.title));
+        d.appendChild(document.createElement('br'));
+        const helpDiv = document.createElement('div');
+        helpDiv.classList.add('compiler-switch-help-info-click-remove');
+        helpDiv.textContent = '(' + Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE + ')';
+        d.appendChild(helpDiv);
         d.classList.remove('disabled');
       });
     }
@@ -729,13 +733,14 @@ export function widgetFactory(widgets: Array<HTMLDivElement>): void {
       console.error('Error:', error);
 
       // clear the offending element to remove any processing that was done
-      element.innerHTML = '';
+      element.textContent = '';
 
       // add an error message to the page in its place
       const errorDiv = document.createElement('div');
-      errorDiv.innerHTML = '<p>An error has occured processing this widget.' +
-      Strings.INTERNAL_ERROR_MESSAGE + '</p>';
-
+      const errorP = document.createElement('p');
+      errorP.textContent = 'An error has occured processing this widget.' +
+        Strings.INTERNAL_ERROR_MESSAGE;
+      errorDiv.appendChild(errorP);
       element.appendChild(errorDiv);
     }
   }
