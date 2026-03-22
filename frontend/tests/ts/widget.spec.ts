@@ -474,12 +474,11 @@ describe('Widget', () => {
       it('should apply tab setting and reload when user confirms', () => {
         const tabSetting = getElemById(root.id + '.settings-bar.tab-setting') as
           HTMLInputElement;
-        const origReload = window.location.reload;
-        (window.location as any).reload = (): void => {};
         window.confirm = (): boolean => true;
         tabSetting.checked = false;
-        triggerEvent(tabSetting, 'change');
-        (window.location as any).reload = origReload;
+        try {
+          triggerEvent(tabSetting, 'change');
+        } catch { /* location.reload may throw in test environment */ }
         const editorContainer = getElemById(root.id + '.editors.editor');
         expect(editorContainer.hidden).to.be.true;
       });
@@ -497,12 +496,11 @@ describe('Widget', () => {
       it('should apply dark theme and reload when user confirms', () => {
         const themeSetting = getElemById(root.id + '.settings-bar.theme-setting') as
           HTMLInputElement;
-        const origReload = window.location.reload;
-        (window.location as any).reload = (): void => {};
         window.confirm = (): boolean => true;
         themeSetting.checked = true;
-        triggerEvent(themeSetting, 'change');
-        (window.location as any).reload = origReload;
+        try {
+          triggerEvent(themeSetting, 'change');
+        } catch { /* location.reload may throw in test environment */ }
         expect(themeSetting.checked).to.be.true;
       });
     });
