@@ -271,15 +271,6 @@ class Widget {
     return ret;
   }
 
-  /**
-   * Construct the server address string
-   * @param {string} url - the url suffix
-   * @returns {string} - the full constructed url
-   */
-  private serverAddress(url: string): string {
-    return this.server + '/' + url + '/';
-  }
-
 
   /**
    * Gets default compiler switches set on widget.
