@@ -17,10 +17,10 @@ Software product assurance programme implementation {§5}
 --------------------------------------------------------
 
 Software product assurance programme management {§5.2}
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Quality requirements and quality models {§5.2.7}
-''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "Quality models shall be used to specify the software quality
   requirements" {§5.2.7.1a}
@@ -34,10 +34,10 @@ Quality requirements and quality models {§5.2.7}
      quality data.
 
 Tools and supporting environment {§5.6}
-+++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Methods and tools {§5.6.1}
-''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "Methods and tools to be used for all activities of the development cycle
    ... shall be identified by the supplier and agreed by the customer"
@@ -77,7 +77,7 @@ Methods and tools {§5.6.1}
      levels, compliance with formally specified requirements.
 
 Development environment selection {§5.6.2}
-''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The software development environment shall be selected according to the
   following criteria: 1. availability; 2. compatibility; 3. performance;
@@ -110,10 +110,10 @@ Software process assurance {§6}
 -------------------------------
 
 Requirements applicable to all software engineering processes {§6.2}
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Handling of critical software {§6.2.3}
-''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall define, justify and apply measures to assure the
   dependability and safety of critical software.... These measures can
@@ -147,7 +147,8 @@ Handling of critical software {§6.2.3}
      thus facilitate dynamic code verification.
 
 Verification {§6.2.6}
-'''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^
+
 * "The completion of actions related to software problem reports generated
   during verification shall be verified and recorded." {§6.2.6.4a}
 
@@ -162,7 +163,7 @@ Verification {§6.2.6}
      can detect unreachable code, including deactivated code.
 
 Software security {§6.2.9}
-''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall identify the methods and techniques for the software
   security analysis." {|sect| 6.2.9.3a}
@@ -184,7 +185,7 @@ Software security {§6.2.9}
 
 
 Handling of security sensitive software {|sect| 6.2.10}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall define and implement measures to avoid propagation
   of failures, including the ones caused by deliberate action, between
@@ -209,10 +210,10 @@ Handling of security sensitive software {|sect| 6.2.10}
 
 
 Requirements applicable to individual software engineering processes or activities {§6.3}
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Coding {§6.3.4}
-'''''''''''''''
+^^^^^^^^^^^^^^^
 
 * "Coding standards (including security, consistent naming conventions and
   adequate commentary rules) shall be specified and observed." {§6.3.4.1a}
@@ -244,7 +245,7 @@ Coding {§6.3.4}
      used to synthesize and summarize code quality metrics.
 
 Testing and validation {§6.3.5}
-'''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "Testing shall be performed in accordance with a strategy for each testing
   level (i.e. unit, integration, validation against the technical
@@ -299,7 +300,7 @@ Testing and validation {§6.3.5}
      during code generation.
 
 Maintenance {§6.3.9}
-''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^
 
 * "The maintenance plans and procedures shall include the following as a
   minimum: 1. scope of maintenance; 2. identification of the first version of the
@@ -327,10 +328,10 @@ Software product quality assurance {§7}
 ---------------------------------------
 
 Product quality objectives and metrication {§7.1}
-+++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Assurance activities for product quality requirements {§7.1.3}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall define assurance activities to ensure that the product
   meets the quality requirements as specified in the technical
@@ -345,7 +346,7 @@ Assurance activities for product quality requirements {§7.1.3}
      runtime errors, support this requirement.
 
 Basic metrics {§7.1.5}
-''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^
 
 * "The following basic products metrics shall be used: size (code); complexity
   (design, code); fault density and failure intensity; test coverage; number
@@ -355,10 +356,10 @@ Basic metrics {§7.1.5}
      Suite directly help to meet this requirement.
 
 Product quality requirements {§7.2}
-+++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Design and related documentation {§7.2.2}
-'''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The software shall be designed to facilitate testing." {§7.2.2.2a}
 
@@ -381,7 +382,7 @@ Design and related documentation {§7.2.2}
      with minimal or no source code changes needed.
 
 Test and validation documentation {§7.2.3}
-''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "Test procedures, data and expected results shall be specified."
   {|sect| 7.2.3.4a}

@@ -1,15 +1,16 @@
 .. include:: ../../../global.txt
 
 Introduction
-===============
-Software for space applications must meet unique and formidable requirements.
-Hard real-time deadlines, a constrained target execution environment with
-limited storage capacity, and distributed functionality between ground and
-on-board systems are some of the challenges, with little margin for error.
-The software needs to work correctly from the outset, without safety or
-security defects, and the source code needs to be amenable to maintenance
-over the system’s lifetime (which may extend over decades) as requirements
-evolve.
+============
+
+Software for space applications must meet unique and formidable
+requirements.  Hard real-time deadlines, a constrained target
+execution environment with limited storage capacity, and distributed
+functionality between ground and on-board systems are some of the
+challenges, with little margin for error.  The software needs to work
+correctly from the outset, without safety or security defects, and the
+source code needs to be amenable to maintenance over the system’s
+lifetime (which may extend over decades) as requirements evolve.
 
 .. index:: European Cooperation for Space Standardization (ECSS)
 .. index:: European Space Agency (ESA)

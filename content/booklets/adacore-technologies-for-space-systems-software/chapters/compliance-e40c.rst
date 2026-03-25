@@ -24,10 +24,10 @@ Software requirements and architecture engineering process {§5.4}
 -----------------------------------------------------------------
 
 Software architecture design {§5.4.3}
-+++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Transformation of software requirements into a software architecture {§5.4.3.1}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall transform the requirements for the software into an
   architecture that describes the top-level structure; identifies the software
@@ -50,7 +50,7 @@ Transformation of software requirements into a software architecture {§5.4.3.1}
      top-level API (package specs).
 
 Software design method {§5.4.3.2}
-'''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall use a method (e.g., object oriented or functional) to
   produce the static and dynamic architecture including: software elements,
@@ -60,7 +60,7 @@ Software design method {§5.4.3.2}
      object-oriented and functional styles.
 
 Selection of a computational model for real-time software {§5.4.3.3}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The dynamic architecture design shall be described according to an
   analytical computational model." {§5.4.3.3a}
@@ -70,7 +70,7 @@ Selection of a computational model for real-time software {§5.4.3.3}
      verification that real-time deadlines will be met.
 
 Description of software behavior {§5.4.3.4}
-'''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The software design shall also describe the behaviour of the software,
   by means of description techniques using automata and scenarios."
@@ -80,7 +80,7 @@ Description of software behavior {§5.4.3.4}
      such techniques.
 
 Development and documentation of the software interfaces {§5.4.3.5}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall develop and document a software preliminary design for
   the interfaces external to the software item and between the software
@@ -92,7 +92,7 @@ Development and documentation of the software interfaces {§5.4.3.5}
      of pre- and postconditions for the subprograms comprising an interface.
 
 Definition of methods and tools for software intended for reuse {§5.4.3.6}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall define procedures, methods and tools for reuse, and
   apply these to the software engineering processes to comply with the
@@ -122,10 +122,10 @@ Software design and implementation engineering process {§5.5}
 -------------------------------------------------------------
 
 Design of software items {§5.5.2}
-+++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Detailed design of each software component {§5.5.2.1}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall develop a detailed design for each component of the
   software and document it." {§5.5.2.1a}
@@ -144,7 +144,7 @@ Detailed design of each software component {§5.5.2.1}
      subunits.
 
 Development and documentation of the software interfaces detailed design {§5.5.2.2}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall develop and document a detailed design for the interfaces
   external to the software items, between the software components, and between
@@ -158,7 +158,7 @@ Development and documentation of the software interfaces detailed design {§5.5.
      part of the interfaces, facilitating the implementation of algorithms.
 
 Production of the detailed design model {§5.5.2.3}
-''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall produce the detailed design model of the software
   components defined during the software architectural design, including their
@@ -169,7 +169,7 @@ Production of the detailed design model {§5.5.2.3}
      requirement.
 
 Software detail design method {§5.5.2.4}
-''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall use a design method (e.g. object oriented or functional
   method) to produce the detailed design including: software units, their
@@ -179,7 +179,7 @@ Software detail design method {§5.5.2.4}
      object-oriented and functional styles.
 
 Detailed design of real-time software {§5.5.2.5}
-''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The dynamic design model shall be compatible with the computational model
   selected during the software architectural design model" {§5.5.2.5a}
@@ -231,7 +231,7 @@ Detailed design of real-time software {§5.5.2.5}
       will never fail.
 
 Utilization of description techniques for the software behaviour {§5.5.2.6}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The behavioural design of the software units shall be described by means
   of techniques using automata and scenarios." {§5.5.2.6a}
@@ -240,10 +240,10 @@ Utilization of description techniques for the software behaviour {§5.5.2.6}
      such techniques.
 
 Coding and testing {§5.5.3}
-+++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Development and documentation of the software units {§5.5.3.1}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall develop and document the following: the coding of each
   software unit; the build procedures to compile and link software units"
@@ -253,7 +253,7 @@ Development and documentation of the software units {§5.5.3.1}
      and prevent "version skew".
 
 Software unit testing {§5.5.3.2}
-''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall develop and document the test procedures and data
   for testing each software unit" {§5.5.3.2a}
@@ -282,10 +282,10 @@ Software unit testing {§5.5.3.2}
      assist in this process.
 
 Integration {§5.5.4}
-++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~
 
 Software units and software component integration and testing {§5.5.4.2}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall integrate the software units and software components,
   and test them, as the aggregates are developed, in accordance with the
@@ -302,10 +302,10 @@ Software units and software component integration and testing {§5.5.4.2}
 
 
 Validation activities with respect to the technical specification {§5.6.3}
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Development and documentation of a software validation specification with respect to the technical specification {§5.6.3.1}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall develop and document, for each requirement of the
   software item in TS [Technical Specification] (including ICD [Interface
@@ -334,10 +334,10 @@ Development and documentation of a software validation specification with respec
      case will trigger a failure.
 
 Validation activities with respect to the requirements baseline {§5.6.4}
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Development and documentation of a software validation specification with respect to the requirements baseline {§5.6.4.1}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall develop and document, for each requirement of the
   software item in RB [Requirements Baseline] (including IRD [Interface
@@ -370,10 +370,10 @@ Software delivery and acceptance process {§5.7}
 -----------------------------------------------
 
 Software acceptance {§5.7.3}
-++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Executable code generation and installation {§5.7.3.3}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The acceptance shall include generation of the executable code from
   configuration managed source code components and its installation on
@@ -388,10 +388,10 @@ Software verification process {§5.8}
 ------------------------------------
 
 Verification activities {§5.8.3}
-++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Verification of the software detailed design {§5.8.3.4}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall verify the software detailed design ensuring that:
   ... 5. testing is feasible, by assessing that: (a) controllability
@@ -408,7 +408,7 @@ Verification of the software detailed design {§5.8.3.4}
   * SPARK (and GNATprove) help meet criteria 5, 7, and 8.
 
 Verification of code {§5.8.3.5}
-'''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The supplier shall verify the software code ensuring at least that:
   1. the code is externally consistent with the requirements and design
@@ -522,7 +522,8 @@ Verification of code {§5.8.3.5}
      sufficient stack space for program execution and prevent stack overflow.
 
 Schedulability analysis for real-time software {§5.8.3.11}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. index:: Ravenscar profile
 
 * "As part of the verification of the software requirements and architectural
@@ -539,10 +540,10 @@ Software operation process {§5.9}
 ---------------------------------
 
 Process implementation {§5.9.2}
-+++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem handling procedures definition {§5.9.2.3}
-'''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The SOS [Software Operation Support] entity shall establish procedures for
   receiving, recording, resolving, tracking problems, and providing feedback."
@@ -562,10 +563,10 @@ Problem handling procedures definition {§5.9.2.3}
      this criterion.
 
 Software operation support {§5.9.4}
-+++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem handling {§5.9.4.2}
-'''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "Encountered problems shall be recorded and handled in accordance with the
   applicable procedures." {§5.9.4.2a}
@@ -576,7 +577,7 @@ Problem handling {§5.9.4.2}
      requirement when an issue arises that is due to an AdaCore tool.
 
 Vulnerabilities in operations {§5.9.4.3}
-''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "During operations, security vulnerabilities, threats and exploits shall be:
   1. continuously monitored; 2. subject to further security analysis when
@@ -589,10 +590,10 @@ Vulnerabilities in operations {§5.9.4.3}
      criterion 1.
 
 User support §5.9.5
-+++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~
 
 Provisions of work-around solutions {§5.9.5.3}
-''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "If a reported problem has a temporary work-around solution before a
   permanent solution can be released, the SOS entity shall give to the
@@ -608,10 +609,10 @@ Software maintenance process {§5.10}
 ------------------------------------
 
 Process implementation {§5.10.2}
-++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Long term maintenance for flight software {§5.10.2.2}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The maintainer shall propose
   solutions to be able to implement and upload modifications to the spacecraft
@@ -622,10 +623,10 @@ Long term maintenance for flight software {§5.10.2.2}
      will receive support and not become obsolescent.
 
 Modification implementation {§5.10.4}
-+++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Invoking of software engineering processes for modification implementation {§5.10.4.3}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The maintainer shall apply the software engineering processes specified
   in clauses 5.3 to 5.8 and 5.11 that are relevant to the scope of the
@@ -649,7 +650,7 @@ Software security process {|sect| 5.11}
 ---------------------------------------
 
 Process implementation {|sect| 5.11.2}
-++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * "A software security management plan shall be produced documenting: ...
   7. the tools, methods and procedures to be used...." {|sect| 5.11.2a}
@@ -661,7 +662,7 @@ Process implementation {|sect| 5.11.2}
 .. _Space_Systems_SW_Software_security_analysis:
 
 Software security analysis {|sect| 5.11.3}
-++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * "The methods to be used for the security analysis shall be identified
   as part of the planning of the project." {|sect| 5.11.3b}
@@ -685,10 +686,10 @@ Software security analysis {|sect| 5.11.3}
       input values.
 
 Security activities in the software life cycle {|sect| 5.11.5}
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Security in the requirements baseline {|sect| 5.11.5.1}
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The security assurance requirements shall determine the type and extent
   of security verification and validation activities, including testing,
@@ -700,7 +701,7 @@ Security in the requirements baseline {|sect| 5.11.5.1}
     requirement.
 
 Security in the detailed design and implementation engineering {|sect| 5.11.5.3}
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * "The software security analysis shall be used during verification and
   validation activities to evaluate iteratively residual vulnerabilities and
