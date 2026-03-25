@@ -79,34 +79,38 @@ reduce the effort in demonstrating security properties in space software.
 The remainder of this chapter summarizes the |E-ST-40C| and |Q-ST-80C|
 standards, and the subsequent chapters have the following content:
 
-* :ref:`Programming_Languages_for_Space_Software`
+* :ref:`Space_Systems_SW_Programming_Languages_for_Space_Software`
   describes the Ada and SPARK programming languages and relates their software
   engineering support to the relevant sections / requirements in the two
   standards.
 
-* Analogously, :ref:`Tools_for_Space_Software_Development` presents AdaCore's
-  various software development and verification toolsuites and relates their
-  functionality to the relevant sections / requirements in the two standards.
+* Analogously,
+  :ref:`Space_Systems_SW_Tools_for_Space_Software_Development`
+  presents AdaCore's various software development and verification
+  toolsuites and relates their functionality to the relevant sections
+  / requirements in the two standards.
 
-* In the other direction, :ref:`Compliance_with_ECSS-E-ST-40C`
-  surveys the individual requirements in |E-ST-40C| and shows how a large
-  number of them can be met by a software supplier through Ada, SPARK,
-  and/or specific AdaCore products.
+* In the other direction,
+  :ref:`Space_Systems_SW_Compliance_with_ECSS-E-ST-40C` surveys the
+  individual requirements in |E-ST-40C| and shows how a large number
+  of them can be met by a software supplier through Ada, SPARK, and/or
+  specific AdaCore products.
 
-* :ref:`Compliance_with_ECSS-Q-ST-80C` does likewise for the requirements in
-  |Q-ST-80C|.
+* :ref:`Space_Systems_SW_Compliance_with_ECSS-Q-ST-80C` does likewise
+  for the requirements in |Q-ST-80C|.
 
-* For ease of reference, the :ref:`Abbreviations` chapter contains a table of
-  acronyms and initialisms used in this document, and bibliography lists
-  the various resources cited.
+* For ease of reference, the :ref:`Space_Systems_SW_Abbreviations`
+  chapter contains a table of acronyms and initialisms used in this
+  document, and bibliography lists the various resources cited.
 
 Although this document is focused on specific ECSS standards, the
-:ref:`Programming_Languages_for_Space_Software` and
-:ref:`Tools_for_Space_Software_Development` chapters
-explain how the Ada and SPARK languages / technologies and AdaCore's products
-benefit software development in general for large-scale safety-critical
-systems. These chapters may thus be applicable to software that has to comply
-with regulatory standards in other domains.
+:ref:`Space_Systems_SW_Programming_Languages_for_Space_Software` and
+:ref:`Space_Systems_SW_Tools_for_Space_Software_Development` chapters
+explain how the Ada and SPARK languages / technologies and AdaCore's
+products benefit software development in general for large-scale
+safety-critical systems. These chapters may thus be applicable to
+software that has to comply with regulatory standards in other
+domains.
 
 .. index:: single: ECSS-E-ST-40C; Summary
 

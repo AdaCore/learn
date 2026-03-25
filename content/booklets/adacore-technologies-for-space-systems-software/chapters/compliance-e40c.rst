@@ -1,6 +1,6 @@
 .. include:: ../../../global.txt
 
-.. _Compliance_with_ECSS-E-ST-40C:
+.. _Space_Systems_SW_Compliance_with_ECSS-E-ST-40C:
 
 Compliance with ECSS-E-ST-40C
 =============================
@@ -258,16 +258,16 @@ Software unit testing {§5.5.3.2}
 * "The supplier shall develop and document the test procedures and data
   for testing each software unit" {§5.5.3.2a}
 
-   * AdaCore's GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can assist in
-     this process.
+   * AdaCore's GNAT Dynamic Analysis Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     assist in this process.
 
 * "The supplier shall test each software unit ensuring that it satisfies its
   requirements and document the test results." {§5.5.3.2b}
 
-   * AdaCore's GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can assist in
-     this process.
+   * AdaCore's GNAT Dynamic Analysis Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     assist in this process.
 
 * "The unit test shall exercise: code using boundaries at *n-1*, *n*, *n+1*
   including looping instructions *while*, *for* and tests that use
@@ -277,9 +277,9 @@ Software unit testing {§5.5.3.2}
   cause erroneous results in mathematical functions; the software at the
   limits of its requirements (stress testing)." {§5.5.3.2c}
 
-   * AdaCore's GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can assist in
-     this process.
+   * AdaCore's GNAT Dynamic Analysis Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     assist in this process.
 
 Integration {§5.5.4}
 ++++++++++++++++++++
@@ -293,9 +293,10 @@ Software units and software component integration and testing {§5.5.4.2}
   the software item and that the software item is integrated at the conclusion
   of the integration activity." {§5.5.4.2a}
 
-   * AdaCore's GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can assist in
-     this process, supplementing the GNAT Pro for Ada compilation facilities.
+   * AdaCore's GNAT Dynamic Analysis Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     assist in this process, supplementing the GNAT Pro for Ada
+     compilation facilities.
 
 .. index:: single: ECSS-E-ST-40C compliance; §5.6 Software validation process
 
@@ -311,25 +312,26 @@ Development and documentation of a software validation specification with respec
   Control Document]), a set of tests, test cases (inputs, outputs, test
   criteria) and test procedures ...." {§5.6.3.1a}
 
-   * AdaCore's GNAT Pro Ada environment and GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can support
-     this process.
+   * AdaCore's GNAT Pro Ada environment and GNAT Dynamic Analysis
+     Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     support this process.
 
 * "Validation shall be performed by test." {§5.6.3.1b}
 
-   * AdaCore's GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can assist in
-     this process.
+   * AdaCore's GNAT Dynamic Analysis Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     assist in this process.
 
 * "If it can be justified that validation by test cannot be performed,
   validation shall be performed by either analysis, inspection or review
   of design" {§5.6.3.1c}
 
-   * The Defects and Vulnerability Analyzer
-     (see :ref:`Defects_and_Vulnerability_Analyzer`) in the GNAT Static
-     Analysis Suite and/or SPARK Pro may be able to
-     show that a run-time check will always succeed and that no test case
-     will trigger a failure.
+   * The Defects and Vulnerability Analyzer (see
+     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
+     the GNAT Static Analysis Suite and/or SPARK Pro may be able to
+     show that a run-time check will always succeed and that no test
+     case will trigger a failure.
 
 Validation activities with respect to the requirements baseline {§5.6.4}
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -342,25 +344,25 @@ Development and documentation of a software validation specification with respec
   Requirements Document]), a set of tests, test cases (inputs, outputs,
   test criteria) and test procedures ...." {§5.6.4.1a}
 
-   * AdaCore's GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can assist in
-     this process.
+   * AdaCore's GNAT Dynamic Analysis Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     assist in this process.
 
 * "Validation shall be performed by test." {§5.6.4.1b}
 
-   * AdaCore's GNAT Dynamic Analysis Suite
-     (see :ref:`GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can assist in
-     this process.
+   * AdaCore's GNAT Dynamic Analysis Suite (see
+     :ref:`Space_Systems_SW_GNAT_Dynamic_Analysis_Suite_GNAT_DAS`) can
+     assist in this process.
 
 * "If it can be justified that validation by test cannot be performed,
   validation shall be performed by either analysis, inspection or review
   of design” {§5.6.4.1c}
 
-   * The Defects and Vulnerability Analyzer
-     (see :ref:`Defects_and_Vulnerability_Analyzer`) in the GNAT Static
-     Analysis Suite and/or SPARK Pro may be able to
-     show that a run-time check will always succeed and that no test case
-     will trigger a failure.
+   * The Defects and Vulnerability Analyzer (see
+     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
+     the GNAT Static Analysis Suite and/or SPARK Pro may be able to
+     show that a run-time check will always succeed and that no test
+     case will trigger a failure.
 
 .. index:: single: ECSS-E-ST-40C compliance; §5.7 Software delivery and acceptance process
 
@@ -425,19 +427,20 @@ Verification of code {§5.8.3.5}
    * SPARK (and GNATprove) help meet criterion 1.
    * Ada's strong typing and interface checks (and thus GNAT Pro for Ada)
      help meet criterion 2.
-   * For criterion 3, the Defects and Vulnerability Analyzer
-     (see :ref:`Defects_and_Vulnerability_Analyzer`) in the GNAT Static
-     Analysis Suite and/or SPARK Pro can help verify correctness,
-     and the GNATcheck utility included in the GNAT Static Analysis Suite
-     (see :ref:`GNATcheck`) can enforce conformance with a coding standard.
+   * For criterion 3, the Defects and Vulnerability Analyzer (see
+     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
+     the GNAT Static Analysis Suite and/or SPARK Pro can help verify
+     correctness, and the GNATcheck utility included in the GNAT
+     Static Analysis Suite (see :ref:`Space_Systems_SW_GNATcheck`)
+     can enforce conformance with a coding standard.
    * For criterion 5, Ada's strong typing and interface checks,as well as
      SPARK and GNATprove, can help show consistent interfaces and correct
      data flow.
-   * The Defects and Vulnerability Analyzer
-     (see :ref:`Defects_and_Vulnerability_Analyzer`) in the GNAT Static
-     Analysis Suite, SPARK Pro, and the
-     standard semantic checks performed by the GNAT Pro compiler can help
-     meet criterion 6.
+   * The Defects and Vulnerability Analyzer (see
+     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
+     the GNAT Static Analysis Suite, SPARK Pro, and the standard
+     semantic checks performed by the GNAT Pro compiler can help meet
+     criterion 6.
    * The GNAT Static Analysis Suite and SPARK / GNATprove can statically
      detect potential run-time errors and thereby help meet criterion 7.
    * Ada's exception handling facility can help meet criterion 8.
@@ -452,21 +455,24 @@ Verification of code {§5.8.3.5}
    Note: 'TBA' means that the value is to be agreed with the customer and
    measured as per |Q-ST-80C| clause 6.3.5.2." {§5.8.3.5b}
 
-   * The GNATcoverage tool (see :ref:`GNATcoverage`) in the GNAT Dynamic
-     Analysis Suite can help meet this requirement.
+   * The GNATcoverage tool (see :ref:`Space_Systems_SW_GNATcoverage`)
+     in the GNAT Dynamic Analysis Suite can help meet this
+     requirement.
 
 * "The supplier shall measure code coverage by analysis of the results of
   the execution of tests." {§5.8.3.5c}
 
-   * The GNATcoverage tool (see :ref:`GNATcoverage`) in the GNAT Dynamic
-     Analysis Suite can help meet this requirement.
+   * The GNATcoverage tool (see :ref:`Space_Systems_SW_GNATcoverage`)
+     in the GNAT Dynamic Analysis Suite can help meet this
+     requirement.
 
 * "If it can be justfied that the required percentage cannot be achieved
   by test execution, then analysis, inspection or review of design shall be
   applied to the non-covered code." {§5.8.3.5d}
 
-   * The GNATcoverage tool (see :ref:`GNATcoverage`) in the GNAT Dynamic
-     Analysis Suite can help meet this requirement.
+   * The GNATcoverage tool (see :ref:`Space_Systems_SW_GNATcoverage`)
+     in the GNAT Dynamic Analysis Suite can help meet this
+     requirement.
 
 * "In case the traceability between source code and object code cannot be
   verified, the supplier shall perform
@@ -482,8 +488,9 @@ Verification of code {§5.8.3.5}
    Note: The use of some compiler optimization options can make the
    traceability between source code and object code not possible." {§5.8.3.5e}
 
-   * The GNATcoverage tool (see :ref:`GNATcoverage`) in the GNAT Dynamic
-     Analysis Suite can help meet this requirement.
+   * The GNATcoverage tool (see :ref:`Space_Systems_SW_GNATcoverage`)
+     in the GNAT Dynamic Analysis Suite can help meet this
+     requirement.
 
    * AdaCore can prepare an analysis of traceability between source and object
      code; the company has provided this to customers in connection with
@@ -500,11 +507,11 @@ Verification of code {§5.8.3.5}
      or through sufficient testing that the run-time checks are not needed,
      disable the checks in the final code for maximal efficiency.
 
-   * The Defects and Vulnerability Analyzer
-     (see :ref:`Defects_and_Vulnerability_Analyzer`) in the GNAT Static
-     Analysis Suite will detect such errors as well as
-     many others, including suspicious constructs that, although legitimate
-     Ada, are likely logic errors.
+   * The Defects and Vulnerability Analyzer (see
+     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
+     the GNAT Static Analysis Suite will detect such errors as well as
+     many others, including suspicious constructs that, although
+     legitimate Ada, are likely logic errors.
 
    * SPARK Pro will enforce the SPARK subset and can be used to
      demonstrate absence of run-time errors.
@@ -651,7 +658,7 @@ Process implementation {|sect| 5.11.2}
     Dynamic Analysis Suites, and the SPARK Pro toolset support the
     software security management plan.
 
-.. _Software_security_analysis:
+.. _Space_Systems_SW_Software_security_analysis:
 
 Software security analysis {|sect| 5.11.3}
 ++++++++++++++++++++++++++++++++++++++++++
@@ -701,7 +708,7 @@ Security in the detailed design and implementation engineering {|sect| 5.11.5.3}
 
   * The Ada and SPARK languages, the GNAT Static and Dynamic Analysis
     Suites, and the SPARK Pro toolset help meet this requirement. For
-    examples, see :ref:`Software_security_analysis`.
+    examples, see :ref:`Space_Systems_SW_Software_security_analysis`.
 
 .. index:: single: ECSS-E-ST-40C compliance; Annex U: Software code verification
 
@@ -747,10 +754,10 @@ Software code verification {Annex U (informative)}
 
   14. the code does not lead to race conditions." {|sect| U.2}
 
-:numref:`Verification-Support` shows how AdaCore's technologies help meet these
-requirements:
+:numref:`Space_Systems_SW_Verification-Support` shows how AdaCore's
+technologies help meet these requirements:
 
-.. _Verification-Support:
+.. _Space_Systems_SW_Verification-Support:
 
 .. table:: Verification Support
    :align: center
@@ -857,10 +864,10 @@ leaks:
 Compliance Summary
 ------------------
 
-:numref:`ECSS-E-ST-40C-Compliance-Support` shows how AdaCore's technologies support the
-requirements in ECSS-E-ST-40C:
+:numref:`Space_Systems_SW_ECSS-E-ST-40C-Compliance-Support` shows how
+AdaCore's technologies support the requirements in ECSS-E-ST-40C:
 
-.. _ECSS-E-ST-40C-Compliance-Support:
+.. _Space_Systems_SW_ECSS-E-ST-40C-Compliance-Support:
 
 .. table:: Technology Support for ECSS-E-ST-40C Compliance
    :align: left

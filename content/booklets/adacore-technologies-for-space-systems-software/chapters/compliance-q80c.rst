@@ -1,6 +1,6 @@
 .. include:: ../../../global.txt
 
-.. _Compliance_with_ECSS-Q-ST-80C:
+.. _Space_Systems_SW_Compliance_with_ECSS-Q-ST-80C:
 
 Compliance with ECSS-Q-ST-80C
 ==============================
@@ -25,11 +25,13 @@ Quality requirements and quality models {§5.2.7}
 * "Quality models shall be used to specify the software quality
   requirements" {§5.2.7.1a}
 
-   * The GNATmetric tool (see :ref:`GNATmetric`) in the GNAT Static Analysis
-     Suite can show quality metrics related to the source code structure.
+   * The GNATmetric tool (see :ref:`Space_Systems_SW_GNATmetric`) in
+     the GNAT Static Analysis Suite can show quality metrics related
+     to the source code structure.
 
-   * The GNATdashboard IDE tool (see :ref:`GNATdashboard`) can
-     display software quality data.
+   * The GNATdashboard IDE tool (see
+     :ref:`Space_Systems_SW_GNATdashboard`) can display software
+     quality data.
 
 Tools and supporting environment {§5.6}
 +++++++++++++++++++++++++++++++++++++++
@@ -63,14 +65,16 @@ Methods and tools {§5.6.1}
      :footcite:p:`Space_SW_RTCA_EUROCAE_2011a` and |en-50128|
      :footcite:p:`Space_SW_CENELEC_2020b`.
 
-   * AdaCore's "sustained branch" service for its GNAT Pro for Ada Assurance
-     product (see :ref:`Sustained_Branches`) can guarantee that the toolchain
-     is maintained throughout the product lifetime.
+   * AdaCore's "sustained branch" service for its GNAT Pro for Ada
+     Assurance product (see
+     :ref:`Space_Systems_SW_Sustained_Branches`) can guarantee that
+     the toolchain is maintained throughout the product lifetime.
 
-   * AdaCore's SPARK Pro environment (see :ref:`Static_Verification_SPARK_Pro`)
-     can be used to demonstrate security properties such as correct information
-     flows and, for software at the highest security levels, compliance with
-     formally specified requirements.
+   * AdaCore's SPARK Pro environment (see
+     :ref:`Space_Systems_SW_Static_Verification_SPARK_Pro`) can be
+     used to demonstrate security properties such as correct
+     information flows and, for software at the highest security
+     levels, compliance with formally specified requirements.
 
 Development environment selection {§5.6.2}
 ''''''''''''''''''''''''''''''''''''''''''
@@ -121,10 +125,11 @@ Handling of critical software {§6.2.3}
   use of dynamic code verification techniques."
   {§6.2.3.2a}
 
-   * Ada's pragma :ada:`Restrictions` and pragma :ada:`Profile`, together
-     with the GNAT Static Analysis Suite tool GNATcheck, can enforce a coding
-     standard for Ada (in effect a 'safe subset'). See
-     :ref:`GNAT_Pro_Enterprise` and :ref:`GNATcheck`.
+   * Ada's pragma :ada:`Restrictions` and pragma :ada:`Profile`,
+     together with the GNAT Static Analysis Suite tool GNATcheck, can
+     enforce a coding standard for Ada (in effect a 'safe
+     subset'). See :ref:`Space_Systems_SW_GNAT_Pro_Enterprise` and
+     :ref:`Space_Systems_SW_GNATcheck`.
 
    * The SPARK language serves as a safe subset of full Ada, and a formal
      design language for formal proof.
@@ -212,9 +217,10 @@ Coding {§6.3.4}
 * "Coding standards (including security, consistent naming conventions and
   adequate commentary rules) shall be specified and observed." {§6.3.4.1a}
 
-   * Ada's :ada:`Restrictions` and :ada:`Profile` pragmas, together with
-     AdaCore’s GNATcheck tool (see section :ref:`GNATcheck`), can define and
-     enforce a coding standard.
+   * Ada's :ada:`Restrictions` and :ada:`Profile` pragmas, together
+     with AdaCore’s GNATcheck tool (see section
+     :ref:`Space_Systems_SW_GNATcheck`), can define and enforce a
+     coding standard.
 
    * The SPARK language can serve as a coding standard.
 
@@ -227,14 +233,15 @@ Coding {§6.3.4}
 * "The supplier shall define measurements, criteria and tools to ensure that
   the software code meets the quality and security requirements." {§6.3.4.6a}
 
-   * The GNATmetric tool (see :ref:`GNATmetric`) can be used to report quality
-     data related to the source code structure.
+   * The GNATmetric tool (see :ref:`Space_Systems_SW_GNATmetric`) can
+     be used to report quality data related to the source code
+     structure.
 
 * "Synthesis of the code analysis results and corrective actions implemented
   shall be described in the software product assurance reports." {§6.3.4.7a}
 
-   * GNATdashboard (see :ref:`GNATdashboard`) can be used to synthesize and
-     summarize code quality metrics.
+   * GNATdashboard (see :ref:`Space_Systems_SW_GNATdashboard`) can be
+     used to synthesize and summarize code quality metrics.
 
 Testing and validation {§6.3.5}
 '''''''''''''''''''''''''''''''
@@ -396,10 +403,10 @@ Test and validation documentation {§7.2.3}
 Compliance Summary
 ------------------
 
-:numref:`ECSS-Q-ST-80C-Compliance-Support` shows how AdaCore's technologies support the
-requirements in ECSS-Q-ST-80C:
+:numref:`Space_Systems_SW_ECSS-Q-ST-80C-Compliance-Support` shows how
+AdaCore's technologies support the requirements in ECSS-Q-ST-80C:
 
-.. _ECSS-Q-ST-80C-Compliance-Support:
+.. _Space_Systems_SW_ECSS-Q-ST-80C-Compliance-Support:
 
 .. table:: Technology Support for ECSS-Q-ST-80C Compliance
    :align: left

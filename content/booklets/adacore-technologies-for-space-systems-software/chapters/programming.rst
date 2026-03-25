@@ -1,6 +1,6 @@
 .. include:: ../../../global.txt
 
-.. _Programming_Languages_for_Space_Software:
+.. _Space_Systems_SW_Programming_Languages_for_Space_Software:
 
 Programming Languages for Space Software
 ========================================
@@ -454,7 +454,7 @@ standard arguments :ada:`No_Allocators` and
 :ada:`No_Implicit_Heap_Allocations`. This will completely prevent heap usage,
 thus reducing memory usage analysis to a worst-case computation of stack usage
 for each task in a system. Stack size analysis is implemented directly in
-AdaCore's GNATstack tool, as described in :ref:`GNATstack`.
+AdaCore's GNATstack tool, as described in :ref:`Space_Systems_SW_GNATstack`.
 
 .. index:: single: Ada language; High-integrity systems
 .. index:: single: Ada language; Memory safety
@@ -569,27 +569,28 @@ problematic features. Several techniques are available:
 * Static analysis tool (coding standard enforcer)
 
   Other restrictions on Ada features can be detected by AdaCore's
-  automated GNATcheck tool (see :ref:`GNATcheck`) that is included
-  with the GNAT Pro Ada Static Analysis Suite. The developer can
-  configure this rule-based and tailorable tool to flag violations
-  of the project's coding standard, such as usage of specific
-  prohibited types or subprograms defined in otherwise-permitted
-  packages.
+  automated GNATcheck tool (see :ref:`Space_Systems_SW_GNATcheck`)
+  that is included with the GNAT Pro Ada Static Analysis Suite. The
+  developer can configure this rule-based and tailorable tool to flag
+  violations of the project's coding standard, such as usage of
+  specific prohibited types or subprograms defined in
+  otherwise-permitted packages.
 
 .. index:: single: Ada language; ECSS standards support
 
-.. _Ada_and_the_ECSS_Standards:
+.. _Space_Systems_SW_Ada_and_the_ECSS_Standards:
 
 Ada and the ECSS Standards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 |E-ST-40C| covers software engineering practice, and |Q-ST-80C| covers
 software product assurance, and both of these areas are "sweet spots"
-that match Ada's strengths. Please see :ref:`Compliance_with_ECSS-E-ST-40C`
-and :ref:`Compliance_with_ECSS-Q-ST-80C` to learn how
+that match Ada's strengths. Please see
+:ref:`Space_Systems_SW_Compliance_with_ECSS-E-ST-40C` and
+:ref:`Space_Systems_SW_Compliance_with_ECSS-Q-ST-80C` to learn how
 specific clauses in these standards relate to individual Ada features.
-In summary, the use of Ada can help the software supplier meet
-the requirements in the following sections:
+In summary, the use of Ada can help the software supplier meet the
+requirements in the following sections:
 
 * |E-ST-40C|
 
@@ -665,9 +666,9 @@ defect level, for example where safety and/or security are key
 requirements. SPARK Pro is the commercial-grade offering of the SPARK
 technology developed by AdaCore, Capgemini Engineering (formerly
 Altran), and Inria. As will be described in
-:ref:`Static_Verification_SPARK_Pro`, the main component in the
-toolset is GNATprove, which performs formal verification on SPARK
-code.
+:ref:`Space_Systems_SW_Static_Verification_SPARK_Pro`, the main
+component in the toolset is GNATprove, which performs formal
+verification on SPARK code.
 
 SPARK has an extensive industrial track record. Since its inception in the
 late 1980s it has been used worldwide in a wide variety of applications,
@@ -805,7 +806,7 @@ automated tools.
 
 .. index:: single: SPARK language; Levels of adoption
 
-.. _Levels_of_Adoption_of_Formal_Methods:
+.. _Space_Systems_SW_Levels_of_Adoption_of_Formal_Methods:
 
 Levels of Adoption of Formal Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -882,7 +883,7 @@ where formal methods can provide the needed confidence.
 
 .. index:: single: SPARK language; Hybrid verification
 
-.. _Hybrid_Verification:
+.. _Space_Systems_SW_Hybrid_Verification:
 
 Hybrid Verification
 ~~~~~~~~~~~~~~~~~~~
@@ -948,17 +949,18 @@ performed.
 
 .. index:: single: SPARK language; ECSS standards support
 
-.. _SPARK_and_the_ECSS_Standards:
+.. _Space_Systems_SW_SPARK_and_the_ECSS_Standards:
 
 SPARK and the ECSS Standards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In summary, the qualities that make Ada an appropriate choice for space
-software also apply to SPARK (see :ref:`Ada_and_the_ECSS_Standards`).
-And specific to SPARK, the static determination that the code is free
-from run-time errors ("Silver" level of SPARK adoption) can significantly
-reduce the effort in showing that the application is sufficiently safe
-and secure.
+In summary, the qualities that make Ada an appropriate choice for
+space software also apply to SPARK (see
+:ref:`Space_Systems_SW_Ada_and_the_ECSS_Standards`).  And specific to
+SPARK, the static determination that the code is free from run-time
+errors ("Silver" level of SPARK adoption) can significantly reduce the
+effort in showing that the application is sufficiently safe and
+secure.
 
 The use of SPARK can help the software supplier meet the requirements in the
 following sections of |E-ST-40C| and |Q-ST-80C|:
@@ -1016,9 +1018,10 @@ in |Q-ST-80C| requirement 6.2.3.2a:
 * "use of a 'safe subset' of programming language"
 * "use of formal design language for formal proof"
 
-Further details on how SPARK and SPARK Pro can contribute to compliance
-with the ECSS standards are presented in :ref:`Compliance_with_ECSS-E-ST-40C`
-and :ref:`Compliance_with_ECSS-Q-ST-80C`.
+Further details on how SPARK and SPARK Pro can contribute to
+compliance with the ECSS standards are presented in
+:ref:`Space_Systems_SW_Compliance_with_ECSS-E-ST-40C` and
+:ref:`Space_Systems_SW_Compliance_with_ECSS-Q-ST-80C`.
 
 
 .. only:: builder_html
