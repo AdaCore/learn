@@ -56,53 +56,53 @@ general-purpose language (unlike languages like Java, it does not require
 garbage collection), and it is not tied to any specific development
 methodology. It offers:
 
-    * a simple syntax designed for human readability;
-    * structured control statements;
-    * flexible data composition facilities;
-    * strong type checking;
-    * traditional features for code modularization (“sub­programs”);
-    * standard support for "programming in the large" and module reuse,
-      including packages, Object-Oriented Programming, hierarchical
-      package namespace ("child libraries"), and generic templates;
-    * a mechanism for detecting and responding to exceptional run-time
-      conditions ("exception handling"); and
-    * high-level concurrency support ("tasking") along with a deterministic
-      subset (the Ravenscar profile) appropriate in applications that need
-      to meet high-assurance certification / qualification requirements
-      and/or small footprint constraints.
+* a simple syntax designed for human readability;
+* structured control statements;
+* flexible data composition facilities;
+* strong type checking;
+* traditional features for code modularization (“sub­programs”);
+* standard support for "programming in the large" and module reuse,
+  including packages, Object-Oriented Programming, hierarchical
+  package namespace ("child libraries"), and generic templates;
+* a mechanism for detecting and responding to exceptional run-time
+  conditions ("exception handling"); and
+* high-level concurrency support ("tasking") along with a deterministic
+  subset (the Ravenscar profile) appropriate in applications that need
+  to meet high-assurance certification / qualification requirements
+  and/or small footprint constraints.
 
 The language standard also includes:
 
-    * an extensive predefined environment with support for I/O, string
-      handling, math functions, containers, and more;
-    * a standard mechanism for interfacing with other programming languages
-      (such as C and C++); and
-    * specialized needs annexes for functionality in several domains (Systems
-      Programming, Real-Time Systems, Distributed Systems, Numerics,
-      Information Systems, and High-Integrity Systems).
+* an extensive predefined environment with support for I/O, string
+  handling, math functions, containers, and more;
+* a standard mechanism for interfacing with other programming languages
+  (such as C and C++); and
+* specialized needs annexes for functionality in several domains (Systems
+  Programming, Real-Time Systems, Distributed Systems, Numerics,
+  Information Systems, and High-Integrity Systems).
 
 Source code portability was a key goal for Ada. The challenge for a
 programming language is to define the semantics in a platform-independent
 manner but not sacrifice run-time efficiency. Ada achieves this in several
 ways.
 
-    * Ada provides a high-level model for concurrency (tasking), memory
-      management, and exception handling, with standard semantics across
-      all platforms. The language's dynamic semantics can be mapped to the
-      most efficient services provided by the target environment.
-    * The developer can express the logical properties of a type (such as
-      integer range, floating-point precision, and record fields/types)
-      in a machine-independent fashion, which the compiler can then map
-      to an efficient underlying representation.
-    * The physical representation of data structures (layout, alignment,
-      and addresses) is sometimes specified by system requirements. Ada
-      allows this to be defined in the program logic but separated from
-      target-independent properties for ease of maintenance.
-    * Platform-specific characteristics such as machine word size are
-      encapsulated in an API, so that references to these values are through
-      a standard syntax. Likewise, Ada defines a standard type :ada:`Address`
-      and associated operations, again facilitating the portability of
-      low-level code.
+* Ada provides a high-level model for concurrency (tasking), memory
+  management, and exception handling, with standard semantics across
+  all platforms. The language's dynamic semantics can be mapped to the
+  most efficient services provided by the target environment.
+* The developer can express the logical properties of a type (such as
+  integer range, floating-point precision, and record fields/types)
+  in a machine-independent fashion, which the compiler can then map
+  to an efficient underlying representation.
+* The physical representation of data structures (layout, alignment,
+  and addresses) is sometimes specified by system requirements. Ada
+  allows this to be defined in the program logic but separated from
+  target-independent properties for ease of maintenance.
+* Platform-specific characteristics such as machine word size are
+  encapsulated in an API, so that references to these values are through
+  a standard syntax. Likewise, Ada defines a standard type :ada:`Address`
+  and associated operations, again facilitating the portability of
+  low-level code.
 
 .. index:: single: Ada language; Background
 

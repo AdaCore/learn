@@ -192,66 +192,66 @@ the SPARK language, together with the following:
 
 * |E-ST-40C|
 
-   * §5.4 Software requirements and architecture engineering process
+  * §5.4 Software requirements and architecture engineering process
 
-      * §5.4.3 Software architecture design
+    * §5.4.3 Software architecture design
 
-   * §5.5 Software design and implementation engineering process
+  * §5.5 Software design and implementation engineering process
 
-     * §5.5.2 Design of software items
+    * §5.5.2 Design of software items
 
-   * §5.6 Software validation process
+  * §5.6 Software validation process
 
-      * §5.6.3 Validation activities with respect to the technical
-        specification
-      * §5.6.4 Validation activities with respect to the requirements
-        baseline
+    * §5.6.3 Validation activities with respect to the technical
+      specification
+    * §5.6.4 Validation activities with respect to the requirements
+      baseline
 
-   * §5.8 Software verification process
+  * §5.8 Software verification process
 
-      * §5.8.3 Verification activities
+    * §5.8.3 Verification activities
 
-   * §5.10 Software maintenance process
+  * §5.10 Software maintenance process
 
-      * §5.10.4 Modification implementation
+    * §5.10.4 Modification implementation
 
-   * §5.11 Software security process
+  * §5.11 Software security process
 
-      * §5.11.2 Process implementation
+    * §5.11.2 Process implementation
 
-      * §5.11.3 Software security analysis
+    * §5.11.3 Software security analysis
 
-      * §5.11.5 Security activities in the software life cycle
+    * §5.11.5 Security activities in the software life cycle
 
   * Annex U - Software code verification
 
 * ECSS-Q-ST-80C
 
-   * §5.6 Tools and supporting environment
+  * §5.6 Tools and supporting environment
 
-      * §5.6.1 Methods and tools
+    * §5.6.1 Methods and tools
 
-      * §5.6.2 Development environment selection
+    * §5.6.2 Development environment selection
 
-   * §6.2 Requirements applicable to all software engineering processes
+  * §6.2 Requirements applicable to all software engineering processes
 
-      * §6.2.3 Handling of critical software
+    * §6.2.3 Handling of critical software
 
-      * §6.2.9 Software security
+    * §6.2.9 Software security
 
-      * §6.2.10 Handling of security sensitive software
+    * §6.2.10 Handling of security sensitive software
 
-   * §6.3 Requirements applicable to individual software engineering processes or activities
+  * §6.3 Requirements applicable to individual software engineering processes or activities
 
-     * §6.3.4 Coding
+    * §6.3.4 Coding
 
-   * §7.1 Product quality objectives and metrication
+  * §7.1 Product quality objectives and metrication
 
-      * §7.1.3 Assurance activities for product quality requirements
+    * §7.1.3 Assurance activities for product quality requirements
 
-   * §7.2 Product quality requirements
+  * §7.2 Product quality requirements
 
-      * §7.2.3 Test and validation documentation
+    * §7.2.3 Test and validation documentation
 
 Details are provided in chapters
 :ref:`Space_Systems_SW_Compliance_with_ECSS-E-ST-40C` and
@@ -585,9 +585,9 @@ these are the relevant sections of the two standards:
 
 * ECSS-Q-ST-80C
 
-   * §5.6 Tools and supporting environment
+  * §5.6 Tools and supporting environment
 
-     * §5.6.2 Development environment selection
+    * §5.6.2 Development environment selection
 
 
 .. index:: GNAT Pro for Rust
@@ -741,71 +741,71 @@ these are the relevant sections of the two standards:
 
 * |E-ST-40C|
 
-   * §5.4 Software requirements and architecture engineering process
+  * §5.4 Software requirements and architecture engineering process
 
-      * §5.4.3 Software architecture design
+    * §5.4.3 Software architecture design
 
-   * §5.5 Software design and implementation engineering process
+  * §5.5 Software design and implementation engineering process
 
-      * §5.5.2 Design of software items
-      * §5.5.3 Coding and testing
-      * §5.5.4 Integration
+    * §5.5.2 Design of software items
+    * §5.5.3 Coding and testing
+    * §5.5.4 Integration
 
-   * §5.7 Software delivery and acceptance process
+  * §5.7 Software delivery and acceptance process
 
-      * §5.7.3 Software acceptance
+    * §5.7.3 Software acceptance
 
-   * §5.8 Software verification process
+  * §5.8 Software verification process
 
-      * §5.8.3 Verification activities
+    * §5.8.3 Verification activities
 
-   * §5.9 Software operation process
+  * §5.9 Software operation process
 
-      * §5.9.2 Process implementation
+    * §5.9.2 Process implementation
 
-   * §5.10 Software maintenance process
+  * §5.10 Software maintenance process
 
-      * §5.10.2 Process implementation
-      * §5.10.4 Modification implementation
+    * §5.10.2 Process implementation
+    * §5.10.4 Modification implementation
 
-   * §5.11 Software security process
+  * §5.11 Software security process
 
-      * §5.11.2 Process implementation
+    * §5.11.2 Process implementation
 
-      * §5.11.3 Software security analysis
+    * §5.11.3 Software security analysis
 
-      * §5.11.5 Security analysis in the software lifecycle
+    * §5.11.5 Security analysis in the software lifecycle
 
-      * Annex U - Source code verification
+    * Annex U - Source code verification
 
-         * Verification check 12 (memory leaks)
+      * Verification check 12 (memory leaks)
 
 * |Q-ST-80C|
 
-   * §5.2 Software product assurance programme management
+  * §5.2 Software product assurance programme management
 
-      * §5.2.7 Quality requirements and quality models
+    * §5.2.7 Quality requirements and quality models
 
-   * §5.6 Tools and supporting environments
+  * §5.6 Tools and supporting environments
 
-      * §5.6.1 Methods and tools
-      * §5.6.2 Development environment selection
+    * §5.6.1 Methods and tools
+    * §5.6.2 Development environment selection
 
-   * §6.2 Requirements applicable to all software engineering processes
+  * §6.2 Requirements applicable to all software engineering processes
 
-      * §6.2.3 Handling of critical software
-      * §6.2.6 Verification
-      * §6.2.9 Software security
+    * §6.2.3 Handling of critical software
+    * §6.2.6 Verification
+    * §6.2.9 Software security
 
-   * §6.3 Requirements applicable to individual processes or activities
+  * §6.3 Requirements applicable to individual processes or activities
 
-      * §6.3.4 Coding
-      * §6.3.9 Maintenance
+    * §6.3.4 Coding
+    * §6.3.9 Maintenance
 
-   * §7.1 Product quality objectives and metrication
+  * §7.1 Product quality objectives and metrication
 
-      * §7.1.3 Assurance objectives for product quality requirements
-      * §7.1.5 Basic metrics
+    * §7.1.3 Assurance objectives for product quality requirements
+    * §7.1.5 Basic metrics
 
 AdaCore's ZFP (Zero Footprint) minimal run-time library (superseded by
 the Light run-time in current |gnatpro| releases) on LEON2 ELF has
@@ -885,47 +885,47 @@ these are the relevant sections of the two standards:
 
 * ECSS-E-ST-40C
 
-   * §5.5 Software design and implementation engineering process
+  * §5.5 Software design and implementation engineering process
 
-      * §5.5.2 Design of software items
+    * §5.5.2 Design of software items
 
-   * §5.6 Software validation process
+  * §5.6 Software validation process
 
-      * §5.6.3 Validation activities with respect to the technical specification
-      * §5.6.4 Validation activities with respect to the requirements baseline
+    * §5.6.3 Validation activities with respect to the technical specification
+    * §5.6.4 Validation activities with respect to the requirements baseline
 
-   * §5.8 Software verification process
+  * §5.8 Software verification process
 
-      * §5.8.3 Verification activities
+    * §5.8.3 Verification activities
 
-   * §5.10 Software maintenance process
+  * §5.10 Software maintenance process
 
-      * §5.10.4 Modification implementation
+    * §5.10.4 Modification implementation
 
-   * §5.11 Software security process
+  * §5.11 Software security process
 
-      * §5.11.2 Process implementation
-      * §5.11.3 Software security analysis
-      * §5.11.5 Software analysis in the software life cycle
+    * §5.11.2 Process implementation
+    * §5.11.3 Software security analysis
+    * §5.11.5 Software analysis in the software life cycle
 
-   * Annex U - Software code verification
+  * Annex U - Software code verification
 
 * ECSS-Q-ST-80C
 
-   * §5.6. Tools and supporting environment
+  * §5.6. Tools and supporting environment
 
-      * §5.6.1 Methods and tools
-      * §5.6.2 Development environment selection
+    * §5.6.1 Methods and tools
+    * §5.6.2 Development environment selection
 
-   * §6.2 Requirements applicable to all software engineering processes
+  * §6.2 Requirements applicable to all software engineering processes
 
-      * §6.2.3 Handling of critical software
-      * §6.2.6 Verification
-      * §6.2.9 Software security
+    * §6.2.3 Handling of critical software
+    * §6.2.6 Verification
+    * §6.2.9 Software security
 
-   * §7.1 Product quality objectives and metrication
+  * §7.1 Product quality objectives and metrication
 
-      * §7.1.3 Assurance activities for product quality requirements
+    * §7.1.3 Assurance activities for product quality requirements
 
 .. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATmetric
 .. index:: GNATmetric
@@ -953,25 +953,25 @@ summary:
 
 * ECSS-E-ST-40C
 
-   * §5.10 Software maintenance process
+  * §5.10 Software maintenance process
 
-      * §5.10.4 Modification implementation
+    * §5.10.4 Modification implementation
 
 * ECSS-Q-ST-80C
 
-   * §5.2 Software product assurance programme management
+  * §5.2 Software product assurance programme management
 
-     * §5.2.7 Quality requirements and quality models
+    * §5.2.7 Quality requirements and quality models
 
-   * §6.3 Requirements applicable to individual software engineering processes or activities
+  * §6.3 Requirements applicable to individual software engineering processes or activities
 
-     * §6.3.4 Coding
+    * §6.3.4 Coding
 
-   * §7.1 Product quality objectives and metrication
+  * §7.1 Product quality objectives and metrication
 
-     * §7.1.3 Assurance activities for product quality requirements
+    * §7.1.3 Assurance activities for product quality requirements
 
-     * §7.1.5 Basic metrics
+    * §7.1.5 Basic metrics
 
 .. index:: GNATcheck
 .. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATcheck
@@ -1048,39 +1048,39 @@ these are the relevant sections of the two standards:
 
       * §5.8.3.4 Verification of the software detailed design
 
-   * §5.10 Software maintenance process
+  * §5.10 Software maintenance process
 
-      * §5.10.4 Modification implementation
+    * §5.10.4 Modification implementation
 
-   * §5.11 Software security process
+  * §5.11 Software security process
 
-      * §5.11.2 Process implementation
-      * §5.11.3 Software security analysis
-      * §5.11.5 Software analysis in the software life cycle
+    * §5.11.2 Process implementation
+    * §5.11.3 Software security analysis
+    * §5.11.5 Software analysis in the software life cycle
 
   * Annex U - Software code verification
 
-     * Verification check 3 (infinite loops)
-     * Verification check 4 (misuse of arithmetic and logical operators)
+    * Verification check 3 (infinite loops)
+    * Verification check 4 (misuse of arithmetic and logical operators)
 
 * ECSS-Q-ST-80C
 
-   * §5.6 Tools and supporting environment
+  * §5.6 Tools and supporting environment
 
-     * §5.6.2 Development environment selection
+    * §5.6.2 Development environment selection
 
-   * §6.2 Requirements applicable to all software engineering processes
+  * §6.2 Requirements applicable to all software engineering processes
 
-     * §6.2.3 Handling of critical software
+    * §6.2.3 Handling of critical software
 
 
-   * §6.3 Requirements applicable to individual software engineering processes or activities
+  * §6.3 Requirements applicable to individual software engineering processes or activities
 
-     * §6.3.4 Coding
+    * §6.3.4 Coding
 
-   * §7.1 Product quality objectives and metrication
+  * §7.1 Product quality objectives and metrication
 
-      * §7.1.3 Assurance activities for product quality requirements
+    * §7.1.3 Assurance activities for product quality requirements
 
 
 .. index:: GNAT Dynamic Analysis Suite (GNAT DAS)
@@ -1250,57 +1250,57 @@ these are the relevant sections of the two standards:
 
 * ECSS-E-ST-40C
 
-   * §5.5 Software design and implementation engineering process
+  * §5.5 Software design and implementation engineering process
 
-      * §5.5.3 Coding and testing
-      * §5.5.4 Integration
+    * §5.5.3 Coding and testing
+    * §5.5.4 Integration
 
-   * §5.6 Software validation process
+  * §5.6 Software validation process
 
-      * §5.6.3 Validation activities with respect to the technical
-        specification
-      * §5.6.4 Validation activities with respect to the requirements
-        baseline
+    * §5.6.3 Validation activities with respect to the technical
+      specification
+    * §5.6.4 Validation activities with respect to the requirements
+      baseline
 
-   * §5.8 Software verification process
+  * §5.8 Software verification process
 
-      * §5.8.3 Verification activities
+    * §5.8.3 Verification activities
 
-   * §5.10 Software maintenance process
+  * §5.10 Software maintenance process
 
-      * §5.10.4 Modification implementation
+    * §5.10.4 Modification implementation
 
-   * §5.11 Software security process
+  * §5.11 Software security process
 
-      * §5.11.2 Process implementation
-      * §5.11.3 Software security analysis
-      * §5.11.5 Security analysis in the software lifecycle
+    * §5.11.2 Process implementation
+    * §5.11.3 Software security analysis
+    * §5.11.5 Security analysis in the software lifecycle
 
 * ECSS-Q-ST-80C
 
-   * §5.6 Tools and supporting environment
+  * §5.6 Tools and supporting environment
 
-      * §5.6.1 Methods and tools
-      * §5.6.2 Development environment selection
+    * §5.6.1 Methods and tools
+    * §5.6.2 Development environment selection
 
-   * §6.2 Requirements applicable to all software engineering processes
+  * §6.2 Requirements applicable to all software engineering processes
 
-      * §6.2.3 Handling of critical software
-      * §6.2.9 Software security
+    * §6.2.3 Handling of critical software
+    * §6.2.9 Software security
 
-   * §6.3 Requirements applicable to individual software engineering processes
-     or activities
+  * §6.3 Requirements applicable to individual software engineering processes
+    or activities
 
-      * §6.3.5 Testing and validation
+    * §6.3.5 Testing and validation
 
-   * §7.1 Product quality objectives and metrication
+  * §7.1 Product quality objectives and metrication
 
-      * §7.1.3 Assurance activities for product quality requirements
-      * §7.1.5 Basic metrics
+    * §7.1.3 Assurance activities for product quality requirements
+    * §7.1.5 Basic metrics
 
-   * §7.2 Product quality requirements
+  * §7.2 Product quality requirements
 
-      * §7.2.3 Test and validation documents
+    * §7.2.3 Test and validation documents
 
 .. index:: single: AdaCore; Support and expertise
 
