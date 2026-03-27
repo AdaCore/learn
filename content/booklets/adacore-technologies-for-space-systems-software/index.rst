@@ -198,8 +198,8 @@ software, please visit :footcite:p:`Space_SW_AdaCore_Web_Space`.
 | December 2025
 
 .. toctree::
-   :maxdepth: 4
-   :numbered:
+    :maxdepth: 4
+    :numbered:
 
    Introduction<chapters/introduction>
    Programming Languages for Space Software<chapters/programming>

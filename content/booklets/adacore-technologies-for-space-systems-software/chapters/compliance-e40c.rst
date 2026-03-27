@@ -761,8 +761,8 @@ technologies help meet these requirements:
 .. _Space_Systems_SW_Verification-Support:
 
 .. table:: Verification Support
-   :align: center
-   :widths: 17 65 18
+    :align: center
+    :widths: 17 65 18
 
    +-------------------------+---------------------------------------------------------------+----------------------------------------+
    | Verification check #    | Technology                                                    | Explanation                            |
@@ -871,7 +871,7 @@ AdaCore's technologies support the requirements in ECSS-E-ST-40C:
 .. _Space_Systems_SW_ECSS-E-ST-40C-Compliance-Support:
 
 .. table:: Technology Support for ECSS-E-ST-40C Compliance
-   :align: left
+    :align: left
 
    +-----------------------------+-------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+---------+
    | Technology                  | |sect|\ 5.4 | |sect|\5.5 | |sect|\ 5.6 | |sect|\ 5.7 | |sect|\ 5.8 | |sect|\ 5.9 | |sect|\ 5.10 | |sect|\ 5.11 | Annex U |

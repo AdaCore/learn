@@ -410,7 +410,7 @@ AdaCore's technologies support the requirements in ECSS-Q-ST-80C:
 .. _Space_Systems_SW_ECSS-Q-ST-80C-Compliance-Support:
 
 .. table:: Technology Support for ECSS-Q-ST-80C Compliance
-   :align: left
+    :align: left
 
    +-----------------------------+-------------+-------------+-------------+-------------+-------------+-------------+
    | Technology                  | |sect|\ 5.2 | |sect|\5.6  | |sect|\ 6.2 | |sect|\ 6.3 | |sect|\ 7.1 | |sect|\ 7.2 |

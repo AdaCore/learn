@@ -156,9 +156,9 @@ certified by the MITRE Corporation as a "CWE-Compatible" product
 The table below lists the CWE weaknesses detected by SPARK Pro:
 
 .. csv-table:: SPARK Pro and the CWE
-   :file: table-spark-cwe.csv
-   :widths: 20, 70
-   :header-rows: 1
+    :file: table-spark-cwe.csv
+    :widths: 20, 70
+    :header-rows: 1
 
 .. index:: single: SPARK Pro; ECSS standards support
 
@@ -868,9 +868,9 @@ as a "CWE-Compatible" product :footcite:p:`Space_SW_MITRE_Web`.
 Here are the weaknesses that are detected:
 
 .. csv-table:: Defects and Vulnerability Analyzer and the CWE
-   :header-rows: 1
-   :widths: 20, 70
-   :file: table-dva-cwe.csv
+    :header-rows: 1
+    :widths: 20, 70
+    :file: table-dva-cwe.csv
 
 .. index:: single: Defects and Vulnerability Analyzer; ECSS standards support
 

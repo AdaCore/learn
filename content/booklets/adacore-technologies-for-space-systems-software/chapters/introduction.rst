@@ -236,27 +236,27 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
 .. For example: See :numref:`RB table`
 
 .. csv-table:: **Relationship between RB (Requirements Baseline), DRL items, and reviews**
-   :name:   RB table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   RB table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Software System Specification","E",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
    "Interface requirements document (IRD)","E",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
    "Safety and dependability analysis results for lower level suppliers", "E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between TS (Technical Specification), DRL items, and reviews**
-   :name:   TS table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   TS table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Software requirements specification (SRS)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
    "Software interface control document (ICD)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
 
 
 .. csv-table:: **Relationship between DDF (Design Definition File), DRL items, and reviews**
-   :name:   DDF table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   DDF table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Software design document (SDD)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
    "Software configuration file (SCF)",|blankcell|,E,E,"E Q",E,"E Q"
@@ -267,9 +267,9 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
    "Training material",|blankcell|,|blankcell|,|blankcell|,E,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between DJF (Design Justification File), DRL items, and reviews**
-   :name:   DJF table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   DJF table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Software verification plan (SVerP)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
    "Software validation plan (SValP)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
@@ -289,9 +289,9 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
    "Justification of selection of operational ground equipment and support services","E Q","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between MGT (Management File), DRL items, and reviews**
-   :name:   MGT table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   MGT table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Software development plan (SDP)",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
    "Software review plan (SRP)",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
@@ -302,9 +302,9 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
    "Procurement data","E Q","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between MF (Maintenance File), DRL items, and reviews**
-   :name:   MF table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   MF table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Maintenance plan",|blankcell|,|blankcell|,|blankcell|,E,E,E
    "Maintenance records",Q,Q,Q,"E Q","E Q","E Q"
@@ -313,18 +313,18 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
    "Retirement plan and notification",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between OP (Operational Plan), DRL items, and reviews**
-   :name:   OP table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   OP table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Software operation support plan",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
    "Operational testing results",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
    "SPR and NCR- User's request record- Post operation review report",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
 
 .. csv-table:: **Relationship between PAF (Product Assurance File), DRL items, and reviews**
-   :name:   PAF table
-   :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 58, 7, 7, 7, 7, 7, 7
+    :name:   PAF table
+    :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 58, 7, 7, 7, 7, 7, 7
 
    "Software product assurance plan (SPAP)","E Q","E Q","E Q","E Q","E Q","E Q"
    "Software product assurance requirements for suppliers","E Q",Q,Q,Q,Q,Q
@@ -348,8 +348,8 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
    "Input to product assurance plan for systems operation",Q,Q,Q,Q,Q,"E Q"
 
 .. csv-table:: **ECSS-E-ST-40 and ECSS-Q-ST-80 Document requirements list (DRL)**
-   :header: File,"DRL Item",SRR,PDR,CDR,QR,AR,ORR
-   :widths: 10, 48, 7, 7, 7, 7, 7, 7
+    :header: File,"DRL Item",SRR,PDR,CDR,QR,AR,ORR
+    :widths: 10, 48, 7, 7, 7, 7, 7, 7
 
    RB,  "Software system specification (SSS)",                                                                                                                  E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
    RB,  "Interface requirements document (IRD)",                                                                                                                E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
