@@ -197,15 +197,15 @@ Here's an example of an integer scalar range and an associated run-time check:
 
 .. code-block:: ada
 
-   declare
-      My_Score : Integer range 1..100;
-      N        : Integer;
-   begin
-      ...  -- Code that assigns an integer value to N
-      My_Score := N;
-      -- A run-time check verifies that N is within the range 1 through 100, inclusive
-      -- If this check fails, the Constraint_Error exception is raised
-   end;
+    declare
+       My_Score : Integer range 1..100;
+       N        : Integer;
+    begin
+       ...  -- Code that assigns an integer value to N
+       My_Score := N;
+       -- A run-time check verifies that N is within the range 1 through 100, inclusive
+       -- If this check fails, the Constraint_Error exception is raised
+    end;
 
 The run-time check can be optimized out if the compiler can guarantee that
 the value of :ada:`N` is within the range 1 through 100 when control reaches
@@ -234,30 +234,30 @@ values.
 
 .. code-block:: ada
 
-  package Table_Pkg is
-     type Table is private;  -- Encapsulated type
+    package Table_Pkg is
+       type Table is private;  -- Encapsulated type
 
-     function Is_Full  (T    : in Table) return Boolean;
+       function Is_Full  (T    : in Table) return Boolean;
 
-     function Contains (T    : in Table;
-                        Item : in Float) return Boolean;
+       function Contains (T    : in Table;
+                          Item : in Float) return Boolean;
 
-     procedure Insert (T : in out Table; Item: in Float)
-       with Pre  => not Is_Full(T) and
-                    not Contains(T, Item),
-            Post => Contains(T, Item);
+       procedure Insert (T : in out Table; Item: in Float)
+         with Pre  => not Is_Full(T) and
+                      not Contains(T, Item),
+              Post => Contains(T, Item);
 
-     procedure Remove (T : in out Table; Item: in Float);
-       with Pre  => Contains(T, Item),
-            Post => not Contains(T, Item);
-     ...
-  private
-     ... -- Full declaration of Table
-  end Table_Pkg;
+       procedure Remove (T : in out Table; Item: in Float);
+         with Pre  => Contains(T, Item),
+              Post => not Contains(T, Item);
+       ...
+    private
+       ... -- Full declaration of Table
+    end Table_Pkg;
 
-  package body Table_Pkg is
-     ... -- Implementation of Is_Full, Contains, Insert, Remove
-  end Table_Pkg;
+    package body Table_Pkg is
+       ... -- Implementation of Is_Full, Contains, Insert, Remove
+    end Table_Pkg;
 
 A compiler option controls whether the pre- and postconditions are checked
 at run time. If checks are enabled, any pre- or postcondition failure |mdash|
@@ -279,16 +279,16 @@ the constraints on the individual fields:
 
 .. code-block:: ada
 
-  subtype Meter  is Float range 0.0 .. 200.0;
-  subtype Radian is Float range 0.0 .. 2.0 * Pi;
+    subtype Meter  is Float range 0.0 .. 200.0;
+    subtype Radian is Float range 0.0 .. 2.0 * Pi;
 
-  type Launching_Pad is
-     record
-        D, H      : Meter;
-        Max_Angle : Radian;
-     end record
-  with
-     Predicate => Arctan (H, D) <= Max_Angle;
+    type Launching_Pad is
+       record
+          D, H      : Meter;
+          Max_Angle : Radian;
+       end record
+    with
+       Predicate => Arctan (H, D) <= Max_Angle;
 
 Further information about type invariants and type / subtype predicates
 may be found in the *Design by contracts* chapter of the *Introduction to Ada*
@@ -741,22 +741,22 @@ Here is an example of SPARK code:
 
 .. code-block:: ada
 
-   package Example is
-      N : Positive := 100; -- N constrained to 1 .. Integer'Last
+    package Example is
+       N : Positive := 100; -- N constrained to 1 .. Integer'Last
 
-      procedure Decrement (X in out Integer)
-         with Global => (Input => N),
-              Depends => (X => (X, N)),
-              Pre     => X >= Integer'First + N,
-              Post    => X = X'Old - N;
-   end Example;
+       procedure Decrement (X in out Integer)
+          with Global => (Input => N),
+               Depends => (X => (X, N)),
+               Pre     => X >= Integer'First + N,
+               Post    => X = X'Old - N;
+    end Example;
 
-   package body Example is
-      procedure Decrement (X in out Integer) is
-      begin
-         X := X - N;
-      end Decrement;
-   end Example;
+    package body Example is
+       procedure Decrement (X in out Integer) is
+       begin
+          X := X - N;
+       end Decrement;
+    end Example;
 
 The :ada:`with` constructs, known as "aspects", here define the
 :ada:`Decrement` procedure's contracts:
@@ -903,19 +903,19 @@ corresponding to the imported function; here is an example.
 
 .. code-block:: ada
 
-   function getascii return Interfaces.C.unsigned_char
-      with Post => getascii'Result in 0..127;
+    function getascii return Interfaces.C.unsigned_char
+       with Post => getascii'Result in 0..127;
 
-   pragma Import (C, getascii);
-   -- Interfaces.C.unsigned_char is a modular (unsigned)
-   -- integer type, typically ranging from 0 through 255
+    pragma Import (C, getascii);
+    -- Interfaces.C.unsigned_char is a modular (unsigned)
+    -- integer type, typically ranging from 0 through 255
 
-   procedure Example is
-      N : Interfaces.C.unsigned_char range 0 .. 127;
-   begin
-      N := getascii;
-      -- SPARK can prove that no range check is needed
-   end Example;
+    procedure Example is
+       N : Interfaces.C.unsigned_char range 0 .. 127;
+    begin
+       N := getascii;
+       -- SPARK can prove that no range check is needed
+    end Example;
 
 The verification activity depends on whether the formally verified code
 invokes the tested code or vice versa.
