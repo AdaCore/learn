@@ -204,7 +204,7 @@ Detailed design of real-time software {§5.5.2.5}
      cannot change between the time that a task evaluates the state
      condition and when it executes the code based on that state.
      Other race conditions can be detected by the Defects and Vulnerability
-     Analyszer in the GNAT Static Analysis Suite.
+     Analyzer in the GNAT Static Analysis Suite.
 
 * "The supplier shall document and justify the use of dynamic allocation
   of resources." {§5.5.2.5d}
@@ -433,7 +433,7 @@ Verification of code {§5.8.3.5}
      correctness, and the GNATcheck utility included in the GNAT
      Static Analysis Suite (see :ref:`Space_Systems_SW_GNATcheck`)
      can enforce conformance with a coding standard.
-   * For criterion 5, Ada's strong typing and interface checks,as well as
+   * For criterion 5, Ada's strong typing and interface checks, as well as
      SPARK and GNATprove, can help show consistent interfaces and correct
      data flow.
    * The Defects and Vulnerability Analyzer (see
@@ -466,7 +466,7 @@ Verification of code {§5.8.3.5}
      in the GNAT Dynamic Analysis Suite can help meet this
      requirement.
 
-* "If it can be justfied that the required percentage cannot be achieved
+* "If it can be justified that the required percentage cannot be achieved
   by test execution, then analysis, inspection or review of design shall be
   applied to the non-covered code." {§5.8.3.5d}
 
