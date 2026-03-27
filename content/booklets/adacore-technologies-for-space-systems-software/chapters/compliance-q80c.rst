@@ -65,7 +65,7 @@ Methods and tools {§5.6.1}
     :footcite:p:`Space_SW_RTCA_EUROCAE_2011a` and |en-50128|
     :footcite:p:`Space_SW_CENELEC_2020b`.
 
-  * AdaCore's "sustained branch" service for its GNAT Pro for Ada
+  * AdaCore's *sustained branch* service for its GNAT Pro for Ada
     Assurance product (see
     :ref:`Space_Systems_SW_Sustained_Branches`) can guarantee that
     the toolchain is maintained throughout the product lifetime.
@@ -97,7 +97,7 @@ Development environment selection {§5.6.2}
   * AdaCore tools directly satisfy these criteria. The availability of
     qualification material for specific tools (GNATcheck,
     GNATprove, GNATstack) contributes to criterion 6, and the
-    "sustained branch" service for GNAT Pro for Ada Assurance supports
+    *sustained branch* service for GNAT Pro for Ada Assurance supports
     criteria 4, 7 and 10. AdaCore tools come with source code and
     flexible licensing, mitigating the issues noted in criteria 11 and 12.
     The GNAT Static Analysis Suite, SPARK, and the GNATfuzz tool in
@@ -310,7 +310,7 @@ Maintenance {§6.3.9}
   maintenance. 8. maintenance records and reports."
   {§6.3.9.4a}
 
-  * The "sustained branch" service of AdaCore's GNAT Pro Assurance product
+  * The *sustained branch* service of AdaCore's GNAT Pro Assurance product
     can help meet this requirement.
 
 * "Maintenance records shall be established for each software product ...."
@@ -319,7 +319,7 @@ Maintenance {§6.3.9}
   * AdaCore's ticket system, which is part of the standard support in all
     product subscriptions, provides an audit trail for problem reports /
     resolution.
-  * The "sustained branch" service includes special maintenance
+  * The *sustained branch* service includes special maintenance
     accommodation for dealing with problems that relate to software safety.
 
 .. index:: single: ECSS-Q-ST-80C compliance; §7 Software product quality assurance

@@ -61,12 +61,12 @@ methodology. It offers:
 * flexible data composition facilities;
 * strong type checking;
 * traditional features for code modularization (“sub­programs”);
-* standard support for "programming in the large" and module reuse,
+* standard support for *programming in the large* and module reuse,
   including packages, Object-Oriented Programming, hierarchical
-  package namespace ("child libraries"), and generic templates;
+  package namespace (*child libraries*), and generic templates;
 * a mechanism for detecting and responding to exceptional run-time
-  conditions ("exception handling"); and
-* high-level concurrency support ("tasking") along with a deterministic
+  conditions (*exception handling*); and
+* high-level concurrency support (*tasking*) along with a deterministic
   subset (the Ravenscar profile) appropriate in applications that need
   to meet high-assurance certification / qualification requirements
   and/or small footprint constraints.
@@ -160,7 +160,7 @@ computer science courses, and it has also been the subject of
 significant research, especially in the area of real-time
 technologies.  Throughout much of Ada's history, a worldwide group of
 experts from industry, academia, and government convened a biannual
-meeting |mdash| the *International Real-Time Ada Workshop* ("IRTAW")
+meeting |mdash| the *International Real-Time Ada Workshop* (*IRTAW*)
 |mdash| to focus on Ada's support for real-time software.  The 1997
 IRTAW in Ravenscar, UK, led directly to the definition of a subset of
 Ada's concurrency features with deterministic semantics |mdash| the
@@ -300,10 +300,10 @@ Programming in the large
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The original |ada-83| design introduced the package construct, a feature
-that supports encapsulation ("information hiding") and modularization, and
+that supports encapsulation (*information hiding*) and modularization, and
 which allows the developer to control the namespace that is accessible
 within a given compilation unit. |ada-95| introduced the concept of
-"child units", which provides a hierarchical and extensible namespace
+*child units*, which provides a hierarchical and extensible namespace
 for library units and thus eases the design and maintenance of very large
 systems.
 
@@ -322,7 +322,7 @@ A typical example is a data structure (e.g., a stack, FIFO queue, or
 varying-length array) for an arbitrary element type :ada:`T`, where each element
 of the data structure is of type :ada:`T`.
 For safety and efficiency, compile-time checks should enforce type safety
-both within the parameterized module, and at each use ("instantiation").
+both within the parameterized module, and at each use (*instantiation*).
 Conceptually an
 instantiation can be regarded as an expansion of the parameterized module,
 with actual parameters replacing the formal parameters. However, the expansion
@@ -359,11 +359,11 @@ would have interfered with predictable and efficient performance.
 However, large real-time systems often have components such as graphical user
 interfaces (GUIs) that do not have hard real-time constraints and that can be
 most effectively developed using OOP features. In part for this reason,
-|ada-95| added comprehensive support for OOP, through its "tagged type"
+|ada-95| added comprehensive support for OOP, through its *tagged type*
 facility: classes, polymorphism, inheritance, and dynamic binding.
 These features do not require automatic garbage collection; instead,
 definitional features introduced by |ada-95| allow the developer to supply
-type-specific storage reclamation operations ("finalization").
+type-specific storage reclamation operations (*finalization*).
 
 |ada-2005| brought additional OOP features, including Java-like interfaces
 and traditional :ada:`X.P(...)` notation for invoking operation :ada:`P(...)`
@@ -382,10 +382,10 @@ Concurrent programming
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Ada supplies a structured, high-level facility for concurrency. The unit of
-concurrency is a program entity known as a "task". Tasks can communicate
+concurrency is a program entity known as a *task*. Tasks can communicate
 implicitly via shared data or explicitly via a synchronous control
 mechanism known as the rendezvous. A shared data item can be defined
-abstractly as a "protected object" (a feature introduced in |ada-95|),
+abstractly as a *protected object* (a feature introduced in |ada-95|),
 with operations executed under mutual exclusion when invoked from multiple
 tasks. Protected objects provide the functionality of semaphores and
 condition variables but more clearly and reliably (e.g., avoiding subtle
@@ -481,7 +481,7 @@ this is illustrated by a number of features, including:
   Data intended for one purpose will only be accessed via operations that are
   legal for that data item's type, so errors such as treating pointers as
   integers (or vice versa) are prevented. (Low-level code sometimes needs to
-  defeat the language's type checking; e.g., by treating "raw bits" as a
+  defeat the language's type checking; e.g., by treating *raw bits* as a
   value of a specific type. As a language that supports systems programming,
   Ada allows such usages but requires explicit syntax that makes the intent
   clear.)
@@ -584,7 +584,7 @@ Ada and the ECSS Standards
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 |E-ST-40C| covers software engineering practice, and |Q-ST-80C| covers
-software product assurance, and both of these areas are "sweet spots"
+software product assurance, and both of these areas are *sweet spots*
 that match Ada's strengths. Please see
 :ref:`Space_Systems_SW_Compliance_with_ECSS-E-ST-40C` and
 :ref:`Space_Systems_SW_Compliance_with_ECSS-Q-ST-80C` to learn how
@@ -704,14 +704,14 @@ that may be unsafe, and most tasking features.
 A legal SPARK program has unambiguous semantics: its effect is precisely
 defined and does not depend on the implementation. This property helps
 ensure the soundness of static verification; i.e., the
-absence of "false negatives". If the SPARK tools report that a program does
+absence of *false negatives*. If the SPARK tools report that a program does
 not have a specific vulnerability, such as a reference to an uninitialized
 variable, then that conclusion can be trusted with mathematical certainty.
 Soundness builds confidence in the tools, provides evidence-based assurance,
 completely removes many classes of dangerous defects, and significantly
 simplifies subsequent verification effort (e.g., testing), owing to less
 rework. Moreover, the SPARK tools achieve soundness while keeping
-"false positives" manageable.
+*false positives* manageable.
 
 SPARK offers the flexibility of configuring the language on a per-project
 basis. Restrictions can be fine-tuned based on the relevant coding standards
@@ -758,7 +758,7 @@ Here is an example of SPARK code:
        end Decrement;
     end Example;
 
-The :ada:`with` constructs, known as "aspects", here define the
+The :ada:`with` constructs, known as *aspects*, here define the
 :ada:`Decrement` procedure's contracts:
 
 * :ada:`Global`: the only access to non-local data is to read the value of
@@ -811,7 +811,7 @@ automated tools.
 Levels of Adoption of Formal Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Formal methods are not an "all or nothing" technique. It is possible and
+Formal methods are not an *all or nothing* technique. It is possible and
 in fact advisable for an organization to introduce the methodology in a
 stepwise manner, with the ultimate level depending on the assurance
 requirements for the software. This approach is documented in
@@ -843,7 +843,7 @@ uninitialized variables, no interference between parameters and global
 objects, no unintended access to global variables, and no race conditions
 on accesses to shared data. The costs include a conservative analysis of
 arrays (since indices may be computed at run time) and potential
-"false alarms" that need to be inspected.
+*false alarms* that need to be inspected.
 
 .. index:: single: SPARK language; Absence of run-time errors (AORTE)
 
@@ -866,7 +866,7 @@ Gold level: Proof of key integrity properties
 At the Gold level, the proof tool will verify properties such as correctness
 of critical data invariants or safe transitions between program states.
 Subprogram pre- and postconditions and subtype predicates are especially
-useful here, as is "ghost" code that serves only for verification and is not
+useful here, as is *ghost* code that serves only for verification and is not
 part of the executable. A benefit is that the proofs can be used for safety
 case rationale, to replace certain kinds of testing. The cost is increased
 time for tool execution, and the possibility that some properties may be

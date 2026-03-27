@@ -46,7 +46,7 @@ Transformation of software requirements into a software architecture {§5.4.3.1}
     features include packages, child libraries, subunits, private types,
     tasking, and object-oriented programming (tagged types). The
     :index:`GNATstub` utility (included with GNAT Pro Ada) is useful here;
-    it generates empty package bodies ("stubs") from a software design's
+    it generates empty package bodies (*stubs*) from a software design's
     top-level API (package specs).
 
 Software design method {§5.4.3.2}
@@ -99,7 +99,7 @@ Definition of methods and tools for software intended for reuse {§5.4.3.6}
   reusability requirements for the software development." {§5.4.3.6a}
 
   * Ada and SPARK facilitate reuse via the separate compilation semantics
-    (which allows "bottom-up" development by reusing existing libraries)
+    (which allows *bottom-up* development by reusing existing libraries)
     and the generic facility (which, for example, allows a module to be
     defined in a general and type-independent fashion and then instantiated
     with specific types as needed). The semantics for these features
@@ -108,7 +108,7 @@ Definition of methods and tools for software intended for reuse {§5.4.3.6}
     * All checks that are performed within a single compilation unit are
       also enforced across separate compilation boundaries.
 
-    * A post-compilation pre-link check detects and prevents "version skew"
+    * A post-compilation pre-link check detects and prevents *version skew*
       (building an executable where some compilation unit depends on an
       obsolescent version of another unit).
 
@@ -250,7 +250,7 @@ Development and documentation of the software units {§5.5.3.1}
   {§5.5.3.1a}
 
   * The GNAT Pro project and gprbuild facility automate the build process
-    and prevent "version skew".
+    and prevent *version skew*.
 
 Software unit testing {§5.5.3.2}
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -551,7 +551,7 @@ Problem handling procedures definition {§5.9.2.3}
 
   * In the event that a product problem is due to a defect in an AdaCore tool
     (e.g., a code generation bug), AdaCore has a rigorous QA process for
-    responding to and resolving such issues. The "sustained branch" service,
+    responding to and resolving such issues. The *sustained branch* service,
     which is included with a GNAT Pro Assurance subscription, helps by
     ensuring that a specific version of the toolchain is maintained over
     the lifetime of the supplier's project.
@@ -618,7 +618,7 @@ Long term maintenance for flight software {§5.10.2.2}
   solutions to be able to implement and upload modifications to the spacecraft
   up to its end of life." {§5.10.2.2a}
 
-  * AdaCore's "sustained branch" service, which is included with a GNAT Pro
+  * AdaCore's *sustained branch* service, which is included with a GNAT Pro
     Assurance subscription, in effect means that the compilation environment
     will receive support and not become obsolescent.
 
@@ -842,7 +842,7 @@ technologies help meet these requirements:
    generating run-time code to detect violations.
 
 .. [#stcheck] The static checks can result in false alarms
-   ("false positives"), but the user can calibrate the tool to control the
+   (*false positives*), but the user can calibrate the tool to control the
    tradeoff between soundness (no false negatives) and precision (minimization
    of false positives).
 
@@ -852,11 +852,11 @@ technologies help meet these requirements:
    leaks:
 
    * Ensure, through analysis or testing, that dynamic allocations occur only
-     during startup ("elaboration time") and not thereafter.
+     during startup (*elaboration time*) and not thereafter.
    * Reclaim storage explicitly through Ada's :ada:`Unchecked_Deallocation`
      and ensure, through analysis or testing, that this does not create
      dangling references.
-   * Define a memory pool for a pointer type ("access type") so that allocations
+   * Define a memory pool for a pointer type (*access type*) so that allocations
      of objects for that type only use that storage area, and through analysis
      or testing demonstrate that the pool is never exhausted. Ada's memory pool
      facility can be used to implement a reference counting strategy (for

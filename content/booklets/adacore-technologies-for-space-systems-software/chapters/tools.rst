@@ -17,18 +17,18 @@ in |E-ST-40C| and |Q-ST-80C|.
 AdaCore Tools and the Software Life Cycle
 -----------------------------------------
 
-The software life cycle is often depicted as a "V" diagram, and the figure below
+The software life cycle is often depicted as a *V* diagram, and the figure below
 shows how AdaCore's major products fit into the various stages. Although the
 stages are rarely performed as a single sequential process |mdash| the phases
 typically involve feedback / iteration, and requirements often evolve as a
-project unfolds |mdash| the "V" chart is useful in characterizing the various
+project unfolds |mdash| the *V* chart is useful in characterizing the various
 kinds of activities that occur.
 
 .. figure:: ../images/v-diagram.png
   :align: center
 
 As can be seen in the figure, AdaCore's toolsuites apply towards the bottom
-of the "V". In summary:
+of the *V*. In summary:
 
 .. index:: single: SPARK Pro; Software life cycle
 .. index:: single: Software life cycle; SPARK Pro
@@ -84,7 +84,7 @@ SPARK Pro is an advanced static analysis toolsuite for the SPARK subset of
 Ada, bringing mathematics-based confidence to the verification of critical
 code. Built around the GNATprove formal analysis and proof tool, SPARK Pro
 combines speed, flexibility, depth and soundness, while minimizing the
-generation of "false alarms". It can be used for new high-assurance code
+generation of *false alarms*. It can be used for new high-assurance code
 (including enhancements to or hardening of existing codebases at lower
 assurance levels, written in full Ada or other languages such as C) or
 projects where the existing high-assurance coding standard is sufficiently
@@ -128,7 +128,7 @@ system is used: how are these to be evaluated or verified without the close
 (and probably expensive) cooperation of the COTS vendor?
 
 For the most critical embedded systems, SPARK supports the so-called
-"Bare-Metal" development style, where SPARK code is running directly on a
+*Bare-Metal* development style, where SPARK code is running directly on a
 target processor with little or no COTS libraries or operating system at all.
 SPARK is also designed to be compatible with GNAT Pro's Light run-time
 library. In a Bare-Metal / light run-time development, every byte of object
@@ -396,7 +396,7 @@ GNAT Pro Assurance
 ~~~~~~~~~~~~~~~~~~
 
 *GNAT Pro Assurance* extends GNAT Pro Enterprise with specialized support,
-including bug fixes and "known problems" analyses, on a specific version of
+including bug fixes and *known problems* analyses, on a specific version of
 the toolchain. This product edition is especially suitable for applications
 with long-lived maintenance cycles or assurance requirements, since critical
 updates to the compiler or other product components may become necessary
@@ -410,7 +410,7 @@ years after the initial release.
 Sustained Branches
 ^^^^^^^^^^^^^^^^^^
 
-Unique to GNAT Pro Assurance is a service known as a "sustained branch":
+Unique to GNAT Pro Assurance is a service known as a *sustained branch*:
 customized support and maintenance for a specific version of the product.
 A project on a sustained branch can monitor relevant known problems,
 analyze their impact and, if needed, update to a newer version of the
@@ -613,7 +613,7 @@ professional and high-integrity Rust projects.  Critical fixes to GNAT
 Pro for Rust are upstreamed to the Rust community, and critical fixes
 made by the community to upstream Rust tools are backported as needed
 to the GNAT Pro for Rust code base.  Additionally, the Assurance
-edition of GNAT Pro for Rust includes the "sustained branch" service
+edition of GNAT Pro for Rust includes the *sustained branch* service
 (see :ref:`Space_Systems_SW_Sustained_Branches`) that strikes the
 balance between tool stability and project flexibility.
 
@@ -661,7 +661,7 @@ appearance to be customized in the editor.
 
 GNAT Studio is intuitive to new users thanks to its menu-driven interface
 with extensive online help (including documentation on all the
-menu selections) and "tool tips". The Project Wizard makes it simple to get
+menu selections) and *tool tips*. The Project Wizard makes it simple to get
 started, supplying default values for almost all of the project properties.
 For experienced users, it offers the necessary level of control for
 advanced purposes; e.g., the ability to run command scripts. Anything that
@@ -1101,7 +1101,7 @@ GNATtest
 The GNATtest tool helps create and maintain a complete unit testing
 infrastructure for complex projects. It captures
 the simple idea that each public subprogram (these are known as
-"visible" subprograms in Ada) should have at least one corresponding
+*visible* subprograms in Ada) should have at least one corresponding
 unit test. GNATtest takes a project file as input, and produces two outputs:
 
 * The complete harnessing code for executing all the unit tests under
