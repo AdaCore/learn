@@ -1219,8 +1219,8 @@ TGen
 ~~~~
 
 TGen is an experimental run-time library / marshalling technology that
-can be used by :index:`Space_Systems_SW_GNATtest` and/or
-:index:`Space_Systems_SW_GNATfuzz` to automate the production of test
+can be used by :ref:`GNATtest <Space_Systems_SW_GNATtest>` and/or
+:ref:`GNATfuzz <Space_Systems_SW_GNATfuzz>` to automate the production of test
 cases for Ada code. It performs type-specific low-level processing to
 generate test vectors for subprogram parameters, such as uniform value
 distribution for scalar types and analogous strategies for
