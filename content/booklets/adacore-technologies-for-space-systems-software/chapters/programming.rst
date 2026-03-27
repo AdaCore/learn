@@ -228,7 +228,7 @@ generalized constraints (predicates). Through contracts the developer can
 formalize the intended behavior of the application, and can
 verify this behavior by testing, static analysis or formal proof.
 
-Here's a skeletal example that illustrates contact-based programming; a
+Here's a skeletal example that illustrates contract-based programming; a
 :ada:`Table` object is a fixed-length container for distinct :ada:`Float`
 values.
 
@@ -261,7 +261,7 @@ values.
 
 A compiler option controls whether the pre- and postconditions are checked
 at run time. If checks are enabled, any pre- or postcondition failure |mdash|
-i.e., the contact's Boolean expression evaluating to :ada:`False` |mdash|
+i.e., the contract's Boolean expression evaluating to :ada:`False` |mdash|
 raises the :ada:`Assertion_Error` exception.
 
 .. index:: single: Ada language; Type invariants
