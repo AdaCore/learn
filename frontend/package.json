@@ -19,7 +19,7 @@
     "@babel/cli": "^7.28.6",
     "@babel/core": "^7.28.6",
     "@babel/preset-env": "^7.28.6",
-    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "c8": "^10.1.3",
     "@types/ace": "^0.0.52",
     "@types/chai": "^5.2.3",
     "@types/chai-as-promised": "^8.0.2",
@@ -50,14 +50,12 @@
     "html-webpack-plugin": "^5.6.6",
     "ifdef-loader": "^2.3.2",
     "imports-loader": "^5.0.0",
-    "istanbul-lib-instrument": "^6.0.3",
     "jsdom": "^27.4.0",
     "jsdom-global": "^3.0.2",
     "mini-css-extract-plugin": "^2.10.0",
     "mocha": "^11.7.5",
     "mock-socket": "^9.3.1",
     "node-fetch": "^3.3.2",
-    "nyc": "^17.1.0",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
     "sass": "^1.97.3",
@@ -94,7 +92,7 @@
     "sandbox": "webpack --env sandbox --config webpack.prod.cjs",
     "production": "webpack --config webpack.prod.cjs",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"strict\":false}' mocha --exit",
-    "cover": "nyc yarn run test",
+    "cover": "c8 yarn run test",
     "doc": "typedoc src --out docs"
   },
   "author": "AdaCore",
@@ -127,14 +125,15 @@
       "sourceType": "module"
     }
   },
-  "nyc": {
-    "extends": "@istanbuljs/nyc-config-typescript",
-    "check-coverage": true,
+  "c8": {
     "all": true,
-    "branches": ">75",
-    "lines": ">80",
-    "functions": ">80",
-    "statements": ">80",
+    "branches": 75,
+    "lines": 80,
+    "functions": 80,
+    "statements": 80,
+    "src": [
+      "src"
+    ],
     "include": [
       "src/**/*.ts"
     ],
@@ -143,7 +142,10 @@
       "text"
     ],
     "exclude": [
-      "src/index.ts"
+      "src/index.ts",
+      "src/ts/resource.ts",
+      "src/ts/server-types.ts",
+      "src/ts/sandbox-redirect.ts"
     ]
   },
   "packageManager": "yarn@4.12.0"

@@ -10,7 +10,6 @@ const cookies = new Cookies({
  * Redirects the user to main learn site if not authenticated
  */
 export function sandboxRedirect(): void {
-  /* istanbul ignore next */
   const cookieName = "Learn_Sandbox_Authenticated";
   const cookieValue = cookies.get(cookieName) as string;
   const cookieReferenceValue = "true";

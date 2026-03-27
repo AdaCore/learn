@@ -4,12 +4,18 @@ import chaiAsPromised from 'chai-as-promised';
 
 const chai = use(chaiDom);
 
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
+
 import {
   getLanguages,
+  getUnparsedSwitches,
   parseSwitches,
   findMains,
   getMain,
   getGprContents,
+  downloadProject,
+  UnparsedSwitches,
 } from '../../src/ts/download';
 import {ResourceList} from '../../src/ts/resource';
 
@@ -67,6 +73,28 @@ describe('Download', () => {
       const languagesRegex =
         /for Languages use \((?=.*"Ada",?)(?=.*"c",?)(?=.*"c\+\+",?).*\);/;
       expect(languagesRegex.test(languages)).to.equals(true);
+    });
+  });
+
+  describe('#getUnparsedSwitches()', () => {
+    it('should parse valid switches JSON', () => {
+      const raw = JSON.stringify({Builder: ['-g'], Compiler: ['-O2']});
+      const result = getUnparsedSwitches(raw);
+      expect(result.Builder).to.deep.equal(['-g']);
+      expect(result.Compiler).to.deep.equal(['-O2']);
+    });
+
+    it('should return empty arrays for missing keys', () => {
+      const raw = JSON.stringify({});
+      const result = getUnparsedSwitches(raw);
+      expect(result.Builder).to.deep.equal([]);
+      expect(result.Compiler).to.deep.equal([]);
+    });
+
+    it('should throw on invalid JSON', () => {
+      expect(() => getUnparsedSwitches('not json')).to.throw(
+        'Failed to parse switches JSON: not json'
+      );
     });
   });
 
@@ -243,6 +271,65 @@ describe('Download', () => {
       expect(gpr_spark).to.not.contain('--COMPILER_SWITCHES_PLACEHOLDER--');
       expect(gpr_spark).to.not.contain('--BUILDER_SWITCHES_PLACEHOLDER--');
       expect(gpr_spark).to.not.contain('--');
+    });
+  });
+
+  describe('#downloadProject()', () => {
+    let capturedFileNames: string[] = [];
+    let savedFilename: string | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let origGenerateAsync: any;
+
+    const files: ResourceList = [
+      {basename: 'main.adb', contents: 'procedure Main is begin null; end Main;'},
+    ];
+    const switches: UnparsedSwitches = {Builder: [], Compiler: []};
+
+    before(() => {
+      origGenerateAsync = JSZip.prototype.generateAsync;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (JSZip.prototype as any).generateAsync = function(options: any) {
+        capturedFileNames = Object.keys((this as JSZip).files);
+        return origGenerateAsync.call(this, options);
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (FileSaver as any).saveAs = (_blob: unknown, name: string): void => {
+        savedFilename = name;
+      };
+    });
+
+    after(() => {
+      (JSZip.prototype as any).generateAsync = origGenerateAsync;
+    });
+
+    beforeEach(() => {
+      capturedFileNames = [];
+      savedFilename = undefined;
+    });
+
+    it('should name the zip after the project', async () => {
+      downloadProject(files, switches, '', 'MyProject', false);
+      await new Promise((r) => setTimeout(r, 200));
+      expect(savedFilename).to.equal('MyProject.zip');
+    });
+
+    it('should include source, main.gpr, and main.adc in non-SPARK mode', async () => {
+      downloadProject(files, switches, 'main.adb', 'Test', false);
+      await new Promise((r) => setTimeout(r, 200));
+      expect(capturedFileNames).to.include('main.adb');
+      expect(capturedFileNames).to.include('main.gpr');
+      expect(capturedFileNames).to.include('main.adc');
+      expect(capturedFileNames).not.to.include('main_spark.gpr');
+      expect(capturedFileNames).not.to.include('main_spark.adc');
+    });
+
+    it('should also include main_spark.gpr and main_spark.adc in SPARK mode', async () => {
+      downloadProject(files, switches, 'main.adb', 'Test', true);
+      await new Promise((r) => setTimeout(r, 200));
+      expect(capturedFileNames).to.include('main.gpr');
+      expect(capturedFileNames).to.include('main.adc');
+      expect(capturedFileNames).to.include('main_spark.gpr');
+      expect(capturedFileNames).to.include('main_spark.adc');
     });
   });
 });

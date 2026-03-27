@@ -1,7 +1,9 @@
 // Import testing libs
 import { expect, use } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import chaiDom from 'chai-dom';
 
+use(chaiAsPromised);
 const chai = use(chaiDom);
 
 import {Server, WebSocket} from 'mock-socket';
@@ -104,7 +106,7 @@ describe('ServerWorker', () => {
     });
 
     it('should throw an exception when AWS rejects the request', async () => {
-      expect(client.execute(tsData, 2000)).to.be.rejectedWith(expectedErrorMsg);
+      await expect(client.execute(tsData, 2000)).to.be.rejectedWith(expectedErrorMsg);
     });
   });
 
@@ -124,7 +126,7 @@ describe('ServerWorker', () => {
     });
 
     it('should timeout if no response is recieved', async () => {
-      expect(client.execute(tsData, timeout)).to.be.rejectedWith(expectedErrorMsg);
+      await expect(client.execute(tsData, timeout)).to.be.rejectedWith(expectedErrorMsg);
     });
   });
 });

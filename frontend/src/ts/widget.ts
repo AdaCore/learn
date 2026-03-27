@@ -271,15 +271,6 @@ class Widget {
     return ret;
   }
 
-  /**
-   * Construct the server address string
-   * @param {string} url - the url suffix
-   * @returns {string} - the full constructed url
-   */
-  private serverAddress(url: string): string {
-    return this.server + '/' + url + '/';
-  }
-
 
   /**
    * Gets default compiler switches set on widget.
@@ -400,7 +391,8 @@ class Widget {
         d.appendChild(document.createElement('br'));
         const helpDiv = document.createElement('div');
         helpDiv.classList.add('compiler-switch-help-info-click-remove');
-        helpDiv.textContent = '(' + Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE + ')';
+        helpDiv.textContent =
+          '(' + Strings.COMPILER_SWITCH_REMOVE_HELP_MESSAGE + ')';
         d.appendChild(helpDiv);
         d.classList.remove('disabled');
       });

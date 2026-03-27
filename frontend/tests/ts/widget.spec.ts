@@ -3,6 +3,7 @@ import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import chaiDom from 'chai-dom';
 import {Client, Server, WebSocket} from 'mock-socket';
+import FileSaver from 'file-saver';
 
 // const chai = use(chaiDom);
 const chai = use(chaiAsPromised);
@@ -399,6 +400,37 @@ describe('Widget', () => {
           expect(fakeDiv.innerHTML).to.equal(realDiv.innerHTML);
           removeListeners(server);
         });
+
+        it('should show error if switches JSON is invalid on run', async () => {
+          const originalSwitches = root.dataset.switches;
+          root.dataset.switches = 'invalid json';
+          runButton.click();
+          await ServerWorker.delay(250);
+          expect(realDiv.textContent).to.include(Strings.INTERNAL_ERROR_MESSAGE);
+          root.dataset.switches = originalSwitches as string;
+        });
+
+        it('should add output line for stdout from a file not in viewMap', async () => {
+          const serverResponse: CheckOutput.FS = {
+            output: [
+              {type: 'stdout', data: 'unknown.adb:1:2: error: test error'},
+            ],
+            status: 0,
+            completed: true,
+            message: 'SUCCESS',
+          };
+          server.on('connection', (socket) => {
+            socket.on('message', (_event) => {
+              socket.send(JSON.stringify(serverResponse));
+            });
+          });
+
+          runButton.click();
+          await ServerWorker.delay(250);
+
+          expect(realDiv.innerHTML).to.not.be.empty;
+          removeListeners(server);
+        });
       });
     });
 
@@ -427,6 +459,133 @@ describe('Widget', () => {
         btn.click();
 
         expect(session.getValue()).to.equal(origContent);
+      });
+
+      it('should revert tab setting when user cancels', () => {
+        const tabSetting = getElemById(root.id + '.settings-bar.tab-setting') as
+          HTMLInputElement;
+        window.confirm = (): boolean => false;
+        const originalChecked = tabSetting.checked;
+        tabSetting.checked = !originalChecked;
+        triggerEvent(tabSetting, 'change');
+        expect(tabSetting.checked).to.equal(originalChecked);
+      });
+
+      it('should apply tab setting and reload when user confirms', () => {
+        const tabSetting = getElemById(root.id + '.settings-bar.tab-setting') as
+          HTMLInputElement;
+        window.confirm = (): boolean => true;
+        tabSetting.checked = false;
+        try {
+          triggerEvent(tabSetting, 'change');
+        } catch { /* location.reload may throw in test environment */ }
+        const editorContainer = getElemById(root.id + '.editors.editor');
+        expect(editorContainer.hidden).to.be.true;
+      });
+
+      it('should revert theme setting when user cancels', () => {
+        const themeSetting = getElemById(root.id + '.settings-bar.theme-setting') as
+          HTMLInputElement;
+        window.confirm = (): boolean => false;
+        const originalChecked = themeSetting.checked;
+        themeSetting.checked = !originalChecked;
+        triggerEvent(themeSetting, 'change');
+        expect(themeSetting.checked).to.equal(originalChecked);
+      });
+
+      it('should apply dark theme and reload when user confirms', () => {
+        const themeSetting = getElemById(root.id + '.settings-bar.theme-setting') as
+          HTMLInputElement;
+        window.confirm = (): boolean => true;
+        themeSetting.checked = true;
+        try {
+          triggerEvent(themeSetting, 'change');
+        } catch { /* location.reload may throw in test environment */ }
+        expect(themeSetting.checked).to.be.true;
+      });
+    });
+
+    describe('Compiler Switches', () => {
+      let compilerSwitchesSetting: HTMLElement;
+
+      before(() => {
+        compilerSwitchesSetting =
+          getElemById(root.id + '.settings-bar.compiler-switches');
+      });
+
+      it('should deactivate mutually exclusive switches when one is checked', () => {
+        const gnato = document.getElementById(
+            root.id + '.settings-bar.compiler-switches.-gnato') as HTMLInputElement;
+        const gnato0 = document.getElementById(
+            root.id + '.settings-bar.compiler-switches.-gnato0') as HTMLInputElement;
+        gnato.checked = true;
+        gnato0.checked = true;
+        triggerEvent(gnato0, 'change');
+        expect(gnato.checked).to.be.false;
+        expect(gnato0.checked).to.be.true;
+      });
+
+      it('should clear help info when clicked if not disabled', () => {
+        const d = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-help-info')[0] as HTMLElement;
+        d.classList.remove('disabled');
+        d.textContent = 'some content';
+        d.click();
+        expect(d.textContent).to.equal('');
+        expect(d.classList.contains('disabled')).to.be.true;
+      });
+
+      it('should not clear help info when clicked if disabled', () => {
+        const d = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-help-info')[0] as HTMLElement;
+        d.classList.add('disabled');
+        d.textContent = 'some content';
+        d.click();
+        expect(d.textContent).to.equal('some content');
+      });
+
+      it('should populate help info when help button is clicked', () => {
+        const d = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-help-info')[0] as HTMLElement;
+        const firstEntry = compilerSwitchesSetting.getElementsByClassName(
+            'compiler-switch-entry')[0] as HTMLElement;
+        const b = firstEntry.getElementsByTagName('button')[0] as HTMLButtonElement;
+        b.click();
+        expect(d.classList.contains('disabled')).to.be.false;
+        expect(d.querySelector('b')).to.not.be.null;
+      });
+    });
+
+    describe('Download Button', () => {
+      let dlButton: HTMLElement;
+      let savedFilename: string | undefined;
+
+      before(() => {
+        dlButton = getElemById(root.id + '.settings-bar.download-btn');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (FileSaver as any).saveAs = (_blob: Blob, name: string): void => {
+          savedFilename = name;
+        };
+      });
+
+      beforeEach(() => {
+        savedFilename = undefined;
+      });
+
+      it('should trigger a download when clicked', async () => {
+        dlButton.click();
+        await ServerWorker.delay(300);
+        expect(savedFilename).to.equal('Test.Single.zip');
+      });
+
+      it('should show an error if switches JSON is invalid', async () => {
+        const originalSwitches = root.dataset.switches;
+        root.dataset.switches = 'invalid json';
+        const outputDiv = getElemById(root.id + '.output-area');
+        dlButton.click();
+        await ServerWorker.delay(100);
+        expect(outputDiv.textContent).to.include(Strings.INTERNAL_ERROR_MESSAGE);
+        root.dataset.switches = originalSwitches as string;
       });
     });
   });
@@ -560,6 +719,96 @@ describe('Widget', () => {
 
           expect(outputDiv).to.have.html(fakeOutputAreaDiv.innerHTML);
         });
+      });
+    });
+
+    describe('Reset', () => {
+      it('should reset output area and lab container', () => {
+        const resetBtn = getElemById(root.id + '.settings-bar.reset-btn') as
+          HTMLButtonElement;
+        const outputDiv = getElemById(root.id + '.output-area');
+        const labArea = getElemById(root.id + '.lab-area');
+        window.confirm = (): boolean => true;
+        resetBtn.click();
+        expect(outputDiv.innerHTML).to.equal('');
+        expect(labArea.innerHTML).to.equal('');
+      });
+    });
+  });
+
+  describe('Malformed Widget', () => {
+    let malformedElem: HTMLDivElement;
+
+    before(() => {
+      global.document = window.document;
+      document.documentElement.innerHTML = '<head></head><body></body>';
+      malformedElem = document.createElement('div') as HTMLDivElement;
+      malformedElem.id = 'malformed-widget-test';
+      malformedElem.dataset.url = baseURL;
+      malformedElem.dataset.name = 'Test.Malformed';
+      malformedElem.dataset.lab = 'False';
+      malformedElem.dataset.main = '';
+      malformedElem.dataset.switches = '{"Builder":["-g"],"Compiler":[]}';
+      const editorDiv = document.createElement('div');
+      editorDiv.id = 'malformed-widget-test.editors.editor';
+      malformedElem.appendChild(editorDiv);
+      document.body.appendChild(malformedElem);
+    });
+
+    after(() => {
+      clearDOM();
+    });
+
+    it('should show an error message for a widget with no files', () => {
+      widgetFactory([malformedElem] as Array<HTMLDivElement>);
+      const errorP = malformedElem.querySelector('p');
+      expect(errorP).to.not.be.null;
+      expect(errorP!.textContent).to.include('An error has occured');
+    });
+  });
+
+  describe('Code Block Info Widget', () => {
+    before(() => {
+      fillDOM('code_block_info.html');
+      inTest = getElemsByClass(document, 'widget');
+      widgetFactory(inTest as Array<HTMLDivElement>);
+      root = inTest[0];
+    });
+
+    after(() => {
+      clearDOM();
+    });
+
+    it('should have a single widget on the page', () => {
+      expect(inTest).to.have.length(1);
+    });
+
+    it('should populate the code-block-info output element', () => {
+      const cbiContents = getElemById(root.id + '.code_block_info.run info.contents');
+      expect(cbiContents.innerText).to.include('Hello from run output!');
+    });
+  });
+
+  describe('Multi Widget', () => {
+    let multiWidgets: Array<HTMLElement>;
+
+    before(() => {
+      fillDOM('multi.html');
+      multiWidgets = getElemsByClass(document, 'widget');
+      widgetFactory(multiWidgets as Array<HTMLDivElement>);
+    });
+
+    after(() => {
+      clearDOM();
+    });
+
+    it('should have two widgets on the page', () => {
+      expect(multiWidgets).to.have.length(2);
+    });
+
+    it('should create both widgets without errors', () => {
+      multiWidgets.forEach((w) => {
+        expect(w.querySelector('p')).to.be.null;
       });
     });
   });
