@@ -767,21 +767,21 @@ technologies help meet these requirements:
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | Verification check #    | Technology                                                    | Explanation                            |
     +=========================+===============================================================+========================================+
-    | 1                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check\ :superscript:`*`       |
+    | 1                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check [#rtcheck]_             |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
-    | 2                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check\ :superscript:`*`       |
+    | 2                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check [#rtcheck]_             |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
-    | 3                       | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    | 3                       | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | GNATcheck (in GNAT Static Analysis Suite)                     | User-defined rule                      |
@@ -796,7 +796,7 @@ technologies help meet these requirements:
     | 5                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Static check                           |
     |                         | SPARK language, SPARK Pro                                     |                                        |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 6                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Static check                           |
@@ -805,62 +805,62 @@ technologies help meet these requirements:
     | 7                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Static check                           |
     |                         | SPARK language, SPARK Pro                                     |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
-    | 8                       | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    | 8                       | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
-    | 9                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check\ :superscript:`*`       |
+    | 9                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check [#rtcheck]_             |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 10                      | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
-    | 11                      | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    | 11                      | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
-    | 12                      | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    | 12                      | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | Ada Language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check\ :superscript:`***`     |
+    |                         | Ada Language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check [#memleak]_             |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | GNATstack (for preventing stack overflow)                     | Static check                           |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 13                      | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Static check                           |
     |                         | SPARK language, SPARK Pro                                     |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
-    | 14                      | Defects and Vulnerability Analyzer                            | Static check\ :superscript:`**`        |
+    | 14                      | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
     |                         | (in GNAT Static Analysis Suite)                               |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
 
-:superscript:`*` Depending on the source code, the GNAT Pro compiler may be
-able to guarantee that the check will always succeed and can thus avoid
-generating run-time code to detect violations.
+.. [#rtcheck] Depending on the source code, the GNAT Pro compiler may be
+   able to guarantee that the check will always succeed and can thus avoid
+   generating run-time code to detect violations.
 
-:superscript:`**` The static checks can result in false alarms
-("false positives"), but the user can calibrate the tool to control the
-tradeoff between soundness (no false negatives) and precision (minimization
-of false positives).
+.. [#stcheck] The static checks can result in false alarms
+   ("false positives"), but the user can calibrate the tool to control the
+   tradeoff between soundness (no false negatives) and precision (minimization
+   of false positives).
 
-:superscript:`***` Exhausting dynamic memory raises the :ada:`Storage_Error`
-exception at run time. Ada does not require a general garbage collector for
-storage reclamation, but several techniques can be used to prevent storage
-leaks:
+.. [#memleak] Exhausting dynamic memory raises the :ada:`Storage_Error`
+   exception at run time. Ada does not require a general garbage collector for
+   storage reclamation, but several techniques can be used to prevent storage
+   leaks:
 
-* Ensure, through analysis or testing, that dynamic allocations occur only
-  during startup ("elaboration time") and not thereafter.
-* Reclaim storage explicitly through Ada's :ada:`Unchecked_Deallocation`
-  and ensure, through analysis or testing, that this does not create
-  dangling references.
-* Define a memory pool for a pointer type ("access type") so that allocations
-  of objects for that type only use that storage area, and through analysis
-  or testing demonstrate that the pool is never exhausted. Ada's memory pool
-  facility can be used to implement a reference counting strategy (for
-  non-cyclic data structures) with automatic reclamation.
+   * Ensure, through analysis or testing, that dynamic allocations occur only
+     during startup ("elaboration time") and not thereafter.
+   * Reclaim storage explicitly through Ada's :ada:`Unchecked_Deallocation`
+     and ensure, through analysis or testing, that this does not create
+     dangling references.
+   * Define a memory pool for a pointer type ("access type") so that allocations
+     of objects for that type only use that storage area, and through analysis
+     or testing demonstrate that the pool is never exhausted. Ada's memory pool
+     facility can be used to implement a reference counting strategy (for
+     non-cyclic data structures) with automatic reclamation.
 
 Compliance Summary
 ------------------
