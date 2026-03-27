@@ -240,17 +240,17 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Software System Specification","E",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Interface requirements document (IRD)","E",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Safety and dependability analysis results for lower level suppliers", "E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software System Specification","E",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Interface requirements document (IRD)","E",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Safety and dependability analysis results for lower level suppliers", "E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between TS (Technical Specification), DRL items, and reviews**
     :name:   TS table
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Software requirements specification (SRS)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Software interface control document (ICD)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
+    "Software requirements specification (SRS)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software interface control document (ICD)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
 
 
 .. csv-table:: **Relationship between DDF (Design Definition File), DRL items, and reviews**
@@ -258,166 +258,166 @@ requirements from |E-ST-40C|, and cells with "Q" are the contributions from
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Software design document (SDD)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
-   "Software configuration file (SCF)",|blankcell|,E,E,"E Q",E,"E Q"
-   "Software release document (SRelD)",|blankcell|,|blankcell|,|blankcell|,E,E,|blankcell|
-   "Software user manual (SUM)",|blankcell|,|blankcell|,E,E,E,|blankcell|
-   "Software source code and media labels",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
-   "Software product and media labels",|blankcell|,|blankcell|,|blankcell|,E,E,E
-   "Training material",|blankcell|,|blankcell|,|blankcell|,E,|blankcell|,|blankcell|
+    "Software design document (SDD)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
+    "Software configuration file (SCF)",|blankcell|,E,E,"E Q",E,"E Q"
+    "Software release document (SRelD)",|blankcell|,|blankcell|,|blankcell|,E,E,|blankcell|
+    "Software user manual (SUM)",|blankcell|,|blankcell|,E,E,E,|blankcell|
+    "Software source code and media labels",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
+    "Software product and media labels",|blankcell|,|blankcell|,|blankcell|,E,E,E
+    "Training material",|blankcell|,|blankcell|,|blankcell|,E,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between DJF (Design Justification File), DRL items, and reviews**
     :name:   DJF table
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Software verification plan (SVerP)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Software validation plan (SValP)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Independent software verification and validation plan","E Q",E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Software integration test plan (SITP)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
-   "Software unit test plan (SUTP)",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
-   "Software validation specification (SVS) with respect to TS",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
-   "Software validation specification (SVS) with respect to RB",|blankcell|,|blankcell|,|blankcell|,E,E,|blankcell|
-   "Acceptance test plan",|blankcell|,|blankcell|,|blankcell|,E,E,|blankcell|
-   "Acceptance test report",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
-   "Installation report",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
-   "Software verification report (SVR)",E,E,E,E,E,"E Q"
-   "Independent software verification and validation report",|blankcell|,"E Q","E Q","E Q","E Q",E
-   "Software reuse file (SRF)","E Q",E,E,|blankcell|,|blankcell|,|blankcell|
-   "Software problems reports and nonconformance reports","E Q","E Q","E Q","E Q","E Q","E Q"
-   "Joint review reports",E,E,E,E,E,|blankcell|
-   "Justification of selection of operational ground equipment and support services","E Q","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software verification plan (SVerP)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software validation plan (SValP)",|blankcell|,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Independent software verification and validation plan","E Q",E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software integration test plan (SITP)",|blankcell|,E,E,|blankcell|,|blankcell|,|blankcell|
+    "Software unit test plan (SUTP)",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
+    "Software validation specification (SVS) with respect to TS",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
+    "Software validation specification (SVS) with respect to RB",|blankcell|,|blankcell|,|blankcell|,E,E,|blankcell|
+    "Acceptance test plan",|blankcell|,|blankcell|,|blankcell|,E,E,|blankcell|
+    "Acceptance test report",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
+    "Installation report",|blankcell|,|blankcell|,E,|blankcell|,|blankcell|,|blankcell|
+    "Software verification report (SVR)",E,E,E,E,E,"E Q"
+    "Independent software verification and validation report",|blankcell|,"E Q","E Q","E Q","E Q",E
+    "Software reuse file (SRF)","E Q",E,E,|blankcell|,|blankcell|,|blankcell|
+    "Software problems reports and nonconformance reports","E Q","E Q","E Q","E Q","E Q","E Q"
+    "Joint review reports",E,E,E,E,E,|blankcell|
+    "Justification of selection of operational ground equipment and support services","E Q","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between MGT (Management File), DRL items, and reviews**
     :name:   MGT table
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Software development plan (SDP)",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Software review plan (SRP)",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Software configuration management plan",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Training plan","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Interface management procedures",E,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Identification of NRB SW and members","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Procurement data","E Q","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software development plan (SDP)",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software review plan (SRP)",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Software configuration management plan",E,E,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Training plan","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Interface management procedures",E,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Identification of NRB SW and members","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Procurement data","E Q","E Q",|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between MF (Maintenance File), DRL items, and reviews**
     :name:   MF table
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Maintenance plan",|blankcell|,|blankcell|,|blankcell|,E,E,E
-   "Maintenance records",Q,Q,Q,"E Q","E Q","E Q"
-   "SPR and NCR- Modification analysis report- Problem analysis report- Modification documentation- Baseline for change - Joint review reports",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Migration plan and notification",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
-   "Retirement plan and notification",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Maintenance plan",|blankcell|,|blankcell|,|blankcell|,E,E,E
+    "Maintenance records",Q,Q,Q,"E Q","E Q","E Q"
+    "SPR and NCR- Modification analysis report- Problem analysis report- Modification documentation- Baseline for change - Joint review reports",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Migration plan and notification",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
+    "Retirement plan and notification",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|
 
 .. csv-table:: **Relationship between OP (Operational Plan), DRL items, and reviews**
     :name:   OP table
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Software operation support plan",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
-   "Operational testing results",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
-   "SPR and NCR- User's request record- Post operation review report",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
+    "Software operation support plan",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
+    "Operational testing results",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
+    "SPR and NCR- User's request record- Post operation review report",|blankcell|,|blankcell|,|blankcell|,|blankcell|,|blankcell|,E
 
 .. csv-table:: **Relationship between PAF (Product Assurance File), DRL items, and reviews**
     :name:   PAF table
     :header: "DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 58, 7, 7, 7, 7, 7, 7
 
-   "Software product assurance plan (SPAP)","E Q","E Q","E Q","E Q","E Q","E Q"
-   "Software product assurance requirements for suppliers","E Q",Q,Q,Q,Q,Q
-   "Audit plan and schedule","E Q",Q,Q,Q,Q,Q
-   "Review and inspection plans or procedures",Q,Q,Q,Q,Q,Q
-   "Procedures and standards",Q,"E Q",Q,Q,Q,Q
-   "Modelling and design standards","E Q","E Q",Q,Q,Q,Q
-   "Coding standards and description of tools",Q,"E Q",Q,Q,Q,Q
-   "Software problem reporting procedure",Q,"E Q",Q,Q,Q,Q
-   "Software dependability and safety analysis report- Criticality classification of software components",Q,"E Q","E Q","E Q","E Q",Q
-   "Software product assurance report",Q,Q,Q,Q,Q,Q
-   "Software product assurance milestone report (SPAMR)","E Q","E Q","E Q","E Q","E Q","E Q"
-   "Statement of compliance with test plans and procedures",Q,Q,"E Q","E Q","E Q","E Q"
-   "Records of training and experience",Q,Q,Q,Q,Q,Q
-   "(Preliminary) alert information",Q,Q,Q,Q,Q,Q
-   "Results of preaward audits and assessments, and of procurement sources",Q,Q,Q,Q,Q,Q
-   "Software process assessment plan",Q,Q,Q,Q,Q,Q
-   "Software process assessment records",Q,Q,Q,Q,Q,Q
-   "Review and inspection reports",Q,Q,Q,Q,Q,Q
-   "Receiving inspection report","E Q","E Q","E Q","E Q",Q,Q
-   "Input to product assurance plan for systems operation",Q,Q,Q,Q,Q,"E Q"
+    "Software product assurance plan (SPAP)","E Q","E Q","E Q","E Q","E Q","E Q"
+    "Software product assurance requirements for suppliers","E Q",Q,Q,Q,Q,Q
+    "Audit plan and schedule","E Q",Q,Q,Q,Q,Q
+    "Review and inspection plans or procedures",Q,Q,Q,Q,Q,Q
+    "Procedures and standards",Q,"E Q",Q,Q,Q,Q
+    "Modelling and design standards","E Q","E Q",Q,Q,Q,Q
+    "Coding standards and description of tools",Q,"E Q",Q,Q,Q,Q
+    "Software problem reporting procedure",Q,"E Q",Q,Q,Q,Q
+    "Software dependability and safety analysis report- Criticality classification of software components",Q,"E Q","E Q","E Q","E Q",Q
+    "Software product assurance report",Q,Q,Q,Q,Q,Q
+    "Software product assurance milestone report (SPAMR)","E Q","E Q","E Q","E Q","E Q","E Q"
+    "Statement of compliance with test plans and procedures",Q,Q,"E Q","E Q","E Q","E Q"
+    "Records of training and experience",Q,Q,Q,Q,Q,Q
+    "(Preliminary) alert information",Q,Q,Q,Q,Q,Q
+    "Results of preaward audits and assessments, and of procurement sources",Q,Q,Q,Q,Q,Q
+    "Software process assessment plan",Q,Q,Q,Q,Q,Q
+    "Software process assessment records",Q,Q,Q,Q,Q,Q
+    "Review and inspection reports",Q,Q,Q,Q,Q,Q
+    "Receiving inspection report","E Q","E Q","E Q","E Q",Q,Q
+    "Input to product assurance plan for systems operation",Q,Q,Q,Q,Q,"E Q"
 
 .. csv-table:: **ECSS-E-ST-40 and ECSS-Q-ST-80 Document requirements list (DRL)**
     :header: File,"DRL Item",SRR,PDR,CDR,QR,AR,ORR
     :widths: 10, 48, 7, 7, 7, 7, 7, 7
 
-   RB,  "Software system specification (SSS)",                                                                                                                  E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   RB,  "Interface requirements document (IRD)",                                                                                                                E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   RB,  "Safety and dependability analysis results for lower level suppliers",                                                                              "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   TS,  "Software requirements specification (SRS)",                                                                                                  |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   TS,  "Software interface control document (ICD)",                                                                                                  |blankcell|,           E,           E, |blankcell|, |blankcell|, |blankcell|
-   DDF, "Software design document (SDD)",                                                                                                             |blankcell|,           E,           E, |blankcell|, |blankcell|, |blankcell|
-   DDF, "Software configuration file (SCF)",                                                                                                          |blankcell|,           E,           E,       "E Q",           E, "E Q"
-   DDF, "Software release document (SRelD)",                                                                                                          |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
-   DDF, "Software user manual (SUM)",                                                                                                                 |blankcell|, |blankcell|,           E,           E,           E, |blankcell|
-   DDF, "Software source code and media labels",                                                                                                      |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
-   DDF, "Software product and media labels",                                                                                                          |blankcell|, |blankcell|, |blankcell|,           E,            E, E
-   DDF, "Training material",                                                                                                                          |blankcell|, |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|
-   DJF, "Software verification plan (SVerP)",                                                                                                         |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software validation plan (SValP)",                                                                                                           |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Independent software verification and validation plan",                                                                                            "E Q",           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software integration test plan (SUITP)",                                                                                                     |blankcell|,           E,           E, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software unit test plan (SUITP)",                                                                                                            |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software validation specification (SVS) with respect to TS",                                                                                 |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software validation specification (SVS) with respect to RB",                                                                                 |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
-   DJF, "Acceptance test plan",                                                                                                                       |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
-   DJF, "Software unit test report",                                                                                                                  |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software integration test report",                                                                                                           |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software validation report with respect to TS",                                                                                              |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software validation report with respect to RB",                                                                                              |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
-   DJF, "Acceptance test report",                                                                                                                     |blankcell|, |blankcell|, |blankcell|, |blankcell|,           E, |blankcell|
-   DJF, "Installation report",                                                                                                                        |blankcell|, |blankcell|, |blankcell|, |blankcell|,           E, |blankcell|
-   DJF, "Software verification report (SVR)",                                                                                                                   E,           E,           E,           E,           E, "E Q"
-   DJF, "Independent software verification and validation report",                                                                                    |blankcell|,       "E Q",       "E Q",       "E Q",       "E Q", E
-   DJF, "Software reuse file (SRF)",                                                                                                                        "E Q",           E,           E, |blankcell|, |blankcell|, |blankcell|
-   DJF, "Software problems reports and nonconformance reports",                                                                                             "E Q",       "E Q",       "E Q",       "E Q",       "E Q", "E Q"
-   DJF, "Joint review reports",                                                                                                                                 E,           E,           E,         E  ,         E  , |blankcell|
-   DJF, "Justification of selection of operational ground equipment and support services",                                                                  "E Q",       "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MGT, "Software development plan (SDP)",                                                                                                                      E,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MGT, "Software review plan (SRevP)",                                                                                                                         E,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MGT, "Software configuration management plan",                                                                                                               E,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MGT, "Training plan",                                                                                                                                    "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MGT, "Interface management procedures",                                                                                                                      E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MGT, "Identification of NRB SW and members",                                                                                                             "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MGT, "Procurement data",                                                                                                                                 "E Q",       "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MF,  "Maintenance plan",                                                                                                                           |blankcell|,            , |blankcell|,           E,           E, E
-   MF,  "Maintenance records",                                                                                                                                  Q,           Q,           Q,       "E Q",       "E Q", "E Q"
-   MF,  "SPR and NCR- Modification analysis report- Problem analysis report- Modification documentation- Baseline for change - Joint review reports", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MF,  "Migration plan and notification",                                                                                                            |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   MF,  "Retirement plan and notification",                                                                                                           |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
-   OP,  "Software operation support plan",                                                                                                            |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, E
-   OP,  "Operational testing results",                                                                                                                |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, E
-   OP,  "SPR and NCR- User’s request record- Post operation review report",                                                                           |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, E
-   PAF, "Software product assurance plan (SPAP)",                                                                                                           "E Q",       "E Q",       "E Q",       "E Q",       "E Q", "E Q"
-   PAF, "Software product assurance requirements for suppliers",                                                                                            "E Q",           Q,           Q,           Q,           Q,    Q
-   PAF, "Audit plan and schedule",                                                                                                                          "E Q",           Q,           Q,           Q,           Q,    Q
-   PAF, "Review and inspection plans or procedures",                                                                                                            Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "Procedures and standards",                                                                                                                             Q,       "E Q",           Q,           Q,           Q,    Q
-   PAF, "Modelling and design standards",                                                                                                                   "E Q",       "E Q",           Q,           Q,           Q,    Q
-   PAF, "Coding standards and description of tools",                                                                                                            Q,       "E Q",           Q,           Q,           Q,    Q
-   PAF, "Software problem reporting procedure",                                                                                                                 Q,       "E Q",           Q,           Q,           Q,    Q
-   PAF, "Software dependability and safety analysis report- Criticality classification of software components",                                                 Q,       "E Q",       "E Q",       "E Q",       "E Q",    Q
-   PAF, "Software product assurance report",                                                                                                                    Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "Software product assurance milestone report (SPAMR)",                                                                                              "E Q",       "E Q",       "E Q",       "E Q",       "E Q", "E Q"
-   PAF, "Statement of compliance with test plans and procedures",                                                                                               Q,           Q,       "E Q",       "E Q",       "E Q", "E Q"
-   PAF, "Records of training and experience",                                                                                                                   Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "(Preliminary) alert information",                                                                                                                      Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "Results of preaward audits and assessments, and of procurement sources",                                                                               Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "Software process assessment plan",                                                                                                                     Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "Software process assessment records",                                                                                                                  Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "Review and inspection reports",                                                                                                                        Q,           Q,           Q,           Q,           Q,    Q
-   PAF, "Receiving inspection report",                                                                                                                      "E Q",       "E Q",       "E Q",       "E Q",           Q,    Q
-   PAF, "Input to product assurance plan for systems operation",                                                                                                Q,           Q,           Q,           Q,           Q, "E Q"
+    RB,  "Software system specification (SSS)",                                                                                                                  E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    RB,  "Interface requirements document (IRD)",                                                                                                                E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    RB,  "Safety and dependability analysis results for lower level suppliers",                                                                              "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    TS,  "Software requirements specification (SRS)",                                                                                                  |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    TS,  "Software interface control document (ICD)",                                                                                                  |blankcell|,           E,           E, |blankcell|, |blankcell|, |blankcell|
+    DDF, "Software design document (SDD)",                                                                                                             |blankcell|,           E,           E, |blankcell|, |blankcell|, |blankcell|
+    DDF, "Software configuration file (SCF)",                                                                                                          |blankcell|,           E,           E,       "E Q",           E, "E Q"
+    DDF, "Software release document (SRelD)",                                                                                                          |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
+    DDF, "Software user manual (SUM)",                                                                                                                 |blankcell|, |blankcell|,           E,           E,           E, |blankcell|
+    DDF, "Software source code and media labels",                                                                                                      |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
+    DDF, "Software product and media labels",                                                                                                          |blankcell|, |blankcell|, |blankcell|,           E,            E, E
+    DDF, "Training material",                                                                                                                          |blankcell|, |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|
+    DJF, "Software verification plan (SVerP)",                                                                                                         |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software validation plan (SValP)",                                                                                                           |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Independent software verification and validation plan",                                                                                            "E Q",           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software integration test plan (SUITP)",                                                                                                     |blankcell|,           E,           E, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software unit test plan (SUITP)",                                                                                                            |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software validation specification (SVS) with respect to TS",                                                                                 |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software validation specification (SVS) with respect to RB",                                                                                 |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
+    DJF, "Acceptance test plan",                                                                                                                       |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
+    DJF, "Software unit test report",                                                                                                                  |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software integration test report",                                                                                                           |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software validation report with respect to TS",                                                                                              |blankcell|, |blankcell|,           E, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software validation report with respect to RB",                                                                                              |blankcell|, |blankcell|, |blankcell|,           E,           E, |blankcell|
+    DJF, "Acceptance test report",                                                                                                                     |blankcell|, |blankcell|, |blankcell|, |blankcell|,           E, |blankcell|
+    DJF, "Installation report",                                                                                                                        |blankcell|, |blankcell|, |blankcell|, |blankcell|,           E, |blankcell|
+    DJF, "Software verification report (SVR)",                                                                                                                   E,           E,           E,           E,           E, "E Q"
+    DJF, "Independent software verification and validation report",                                                                                    |blankcell|,       "E Q",       "E Q",       "E Q",       "E Q", E
+    DJF, "Software reuse file (SRF)",                                                                                                                        "E Q",           E,           E, |blankcell|, |blankcell|, |blankcell|
+    DJF, "Software problems reports and nonconformance reports",                                                                                             "E Q",       "E Q",       "E Q",       "E Q",       "E Q", "E Q"
+    DJF, "Joint review reports",                                                                                                                                 E,           E,           E,         E  ,         E  , |blankcell|
+    DJF, "Justification of selection of operational ground equipment and support services",                                                                  "E Q",       "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MGT, "Software development plan (SDP)",                                                                                                                      E,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MGT, "Software review plan (SRevP)",                                                                                                                         E,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MGT, "Software configuration management plan",                                                                                                               E,           E, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MGT, "Training plan",                                                                                                                                    "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MGT, "Interface management procedures",                                                                                                                      E, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MGT, "Identification of NRB SW and members",                                                                                                             "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MGT, "Procurement data",                                                                                                                                 "E Q",       "E Q", |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MF,  "Maintenance plan",                                                                                                                           |blankcell|,            , |blankcell|,           E,           E, E
+    MF,  "Maintenance records",                                                                                                                                  Q,           Q,           Q,       "E Q",       "E Q", "E Q"
+    MF,  "SPR and NCR- Modification analysis report- Problem analysis report- Modification documentation- Baseline for change - Joint review reports", |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MF,  "Migration plan and notification",                                                                                                            |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    MF,  "Retirement plan and notification",                                                                                                           |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|
+    OP,  "Software operation support plan",                                                                                                            |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, E
+    OP,  "Operational testing results",                                                                                                                |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, E
+    OP,  "SPR and NCR- User’s request record- Post operation review report",                                                                           |blankcell|, |blankcell|, |blankcell|, |blankcell|, |blankcell|, E
+    PAF, "Software product assurance plan (SPAP)",                                                                                                           "E Q",       "E Q",       "E Q",       "E Q",       "E Q", "E Q"
+    PAF, "Software product assurance requirements for suppliers",                                                                                            "E Q",           Q,           Q,           Q,           Q,    Q
+    PAF, "Audit plan and schedule",                                                                                                                          "E Q",           Q,           Q,           Q,           Q,    Q
+    PAF, "Review and inspection plans or procedures",                                                                                                            Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "Procedures and standards",                                                                                                                             Q,       "E Q",           Q,           Q,           Q,    Q
+    PAF, "Modelling and design standards",                                                                                                                   "E Q",       "E Q",           Q,           Q,           Q,    Q
+    PAF, "Coding standards and description of tools",                                                                                                            Q,       "E Q",           Q,           Q,           Q,    Q
+    PAF, "Software problem reporting procedure",                                                                                                                 Q,       "E Q",           Q,           Q,           Q,    Q
+    PAF, "Software dependability and safety analysis report- Criticality classification of software components",                                                 Q,       "E Q",       "E Q",       "E Q",       "E Q",    Q
+    PAF, "Software product assurance report",                                                                                                                    Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "Software product assurance milestone report (SPAMR)",                                                                                              "E Q",       "E Q",       "E Q",       "E Q",       "E Q", "E Q"
+    PAF, "Statement of compliance with test plans and procedures",                                                                                               Q,           Q,       "E Q",       "E Q",       "E Q", "E Q"
+    PAF, "Records of training and experience",                                                                                                                   Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "(Preliminary) alert information",                                                                                                                      Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "Results of preaward audits and assessments, and of procurement sources",                                                                               Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "Software process assessment plan",                                                                                                                     Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "Software process assessment records",                                                                                                                  Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "Review and inspection reports",                                                                                                                        Q,           Q,           Q,           Q,           Q,    Q
+    PAF, "Receiving inspection report",                                                                                                                      "E Q",       "E Q",       "E Q",       "E Q",           Q,    Q
+    PAF, "Input to product assurance plan for systems operation",                                                                                                Q,           Q,           Q,           Q,           Q, "E Q"
 
 .. index:: single: ECSS-Q-ST-80C; Summary
 

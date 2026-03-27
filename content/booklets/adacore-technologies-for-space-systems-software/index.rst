@@ -201,12 +201,12 @@ software, please visit :footcite:p:`Space_SW_AdaCore_Web_Space`.
     :maxdepth: 4
     :numbered:
 
-   Introduction<chapters/introduction>
-   Programming Languages for Space Software<chapters/programming>
-   Tools for Space Software Development<chapters/tools>
-   Compliance with ECSS-E-ST-40C<chapters/compliance-e40c>
-   Compliance with ECSS-Q-ST-80C<chapters/compliance-q80c>
-   Abbreviations<chapters/abbreviations>
+    Introduction<chapters/introduction>
+    Programming Languages for Space Software<chapters/programming>
+    Tools for Space Software Development<chapters/tools>
+    Compliance with ECSS-E-ST-40C<chapters/compliance-e40c>
+    Compliance with ECSS-Q-ST-80C<chapters/compliance-q80c>
+    Abbreviations<chapters/abbreviations>
 
 
 .. only:: builder_html
