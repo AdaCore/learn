@@ -1,0 +1,11 @@
+.. csv-table:: Technology Support for ECSS-Q-ST-80C Compliance
+
+   Technology,         |sect|\ 5  ,  |sect|\6 , |sect|\ 7
+   Ada language,       |blankcell|,  |check|  , |check|
+   SPARK language,     |blankcell|,  |check|  , |check|
+   GNAT Pro for Ada,   |check|    ,  |check|  , |check|
+   SPARK Pro,          |check|    ,  |check|  , |check|
+   GNAT SAS,           |check|    ,  |check|  , |check|
+   GNAT DAS,           |check|    ,  |check|  , |check|
+   GNAT Pro Assurance, |check|    ,  |check|  , |check|
+   IDE,                |check|    ,  |check|  , |check|
