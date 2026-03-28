@@ -51,7 +51,7 @@ kind of programming Ada is good at.
 In terms of modern languages, the closest in terms of targets and level
 of abstraction are probably
 :wikipedia:`C++ <C%2B%2B>` and
-`Rust <https://www.rust-lang.org/en-US/>`_.
+`Rust <https://www.rust-lang.org/>`_.
 
 Philosophy
 ----------
