@@ -64,8 +64,8 @@ $frontend = <<-SHELL
 
   chown -R vagrant:vagrant ${path_ada_toolchain_root}
 
-  echo "export PATH=\\"${path_ada_toolchain_selected}/gnat/bin:${path_ada_toolchain_default}/gnat/bin:${PATH}\\"" >> /home/vagrant/.bashrc
-  source /home/vagrant/.bashrc
+  echo "export PATH=\\"${path_ada_toolchain_selected}/gnat/bin:${path_ada_toolchain_default}/gnat/bin:${PATH}\\"" >> /home/vagrant/.profile
+  source /home/vagrant/.profile
 
   # Install learn deps
   python3 -m venv /vagrant/venv
@@ -200,8 +200,8 @@ $epub = <<-SHELL
 
   chown -R vagrant:vagrant ${path_ada_toolchain_root}
 
-  echo "export PATH=\\"${path_ada_toolchain_selected}/gnat/bin:${path_ada_toolchain_selected}/gprbuild/bin:${path_ada_toolchain_selected}/gnatprove/bin:${path_ada_toolchain_default}/gnat/bin:${path_ada_toolchain_default}/gprbuild/bin:${path_ada_toolchain_default}/gnatprove/bin:${PATH}\\"" >> /home/vagrant/.bashrc
-  source /home/vagrant/.bashrc
+  echo "export PATH=\\"${path_ada_toolchain_selected}/gnat/bin:${path_ada_toolchain_selected}/gprbuild/bin:${path_ada_toolchain_selected}/gnatprove/bin:${path_ada_toolchain_default}/gnat/bin:${path_ada_toolchain_default}/gprbuild/bin:${path_ada_toolchain_default}/gnatprove/bin:${PATH}\\"" >> /home/vagrant/.profile
+  source /home/vagrant/.profile
 
   # Install learn deps
   python3 -m venv /vagrant/venv
