@@ -6,6 +6,8 @@ The default behavior is to:
 - Split the block with ``gnatchop``
 """
 
+from __future__ import annotations
+
 import os
 import shutil
 import re
@@ -328,7 +330,7 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
                 for source_file in source_files:
                     block.source_files.append(source_file.basename)
             except Exception as e:
-                print(e.message)
+                print(str(e))
                 print("Error while updating code for the block, continuing with next one!")
                 block.to_json_file()
                 toolchain_setup.reset_toolchain()
@@ -378,7 +380,6 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
                                                                       spark_mode=True)
                 else:
                     print_error(loc, "Wrong language selected for prove button")
-                    print(e.output)
                     has_error = True
 
             if len(block.buttons) == 0:
@@ -391,7 +392,7 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
 
         os.chdir(work_dir)
 
-        if extr_prjs is not None:
+        if extr_prjs is not None and extracted_projects_list_file is not None:
             extr_prjs.to_json_file(extracted_projects_list_file)
 
     return analysis_error

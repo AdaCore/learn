@@ -204,6 +204,7 @@ def check_block(block: blocks.CodeBlock,
         for source_file in block.source_files:
 
             try:
+                out: str = ""
                 if block.language == "ada":
                     commands = ["gcc", "-c", "-gnats", "-gnatyg0-s"]
                     if max_columns > 0:
@@ -284,6 +285,7 @@ def check_block(block: blocks.CodeBlock,
         elif block.language == "c":
             cmdline = None
             try:
+                assert block.project_main_file is not None
                 cmdline = ["gcc", "-o",
                            P.splitext(block.project_main_file)[0]] + glob.glob('*.c')
                 out = run(*cmdline)
@@ -314,6 +316,7 @@ def check_block(block: blocks.CodeBlock,
 
             if block.language == "ada":
                 try:
+                    assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
                     out = run(*cmdline)
 
@@ -338,6 +341,7 @@ def check_block(block: blocks.CodeBlock,
 
             elif block.language == "c":
                 try:
+                    assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
                     out = run(*cmdline)
 
@@ -460,7 +464,6 @@ def check_block(block: blocks.CodeBlock,
 
         else:
             print_error(loc, "Wrong language selected for prove button")
-            print(e.output)
             check_error = True
 
             code_check = checks.CodeCheck(status_ok=(not check_error))
@@ -538,6 +541,10 @@ def check_block(block: blocks.CodeBlock,
 def check_code_block_json(json_file: str) -> bool:
 
     b = blocks.CodeBlock.from_json_file(json_file)
+
+    if b is None:
+        print("ERROR: Could not load block info from {}".format(json_file))
+        return True
 
     if not b.active:
         print("WARNING: Block is deactivated. Checking it nevertheless...")

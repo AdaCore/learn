@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import os
 import re
 import hashlib
 import json
+from typing import Any
 
 import colors as C
 import toolchain_info
@@ -66,6 +69,9 @@ class Block(object):
                 text = ("\n".join(l[cb_indent:] for l in lines[cb_start:i]))
                 text = text[1:]     # Remove first newline
 
+                assert gnat_version is not None
+                assert gnatprove_version is not None
+                assert gprbuild_version is not None
                 blocks.append(CodeBlock(
                     rst_file,
                     cb_start,
@@ -96,18 +102,15 @@ class Block(object):
                      buttons, compiler_switches, \
                      gnat_version, gnatprove_version, gprbuild_version
 
-            cb_start, lang = (
-                i + 1,
-                lang_re.match(line).groups()[0]
-            )
-            project = project_re.match(line)
-            if project is not None:
-                project = project.groups()[0]
+            lang_match = lang_re.match(line)
+            assert lang_match is not None
+            cb_start, lang = (i + 1, lang_match.groups()[0])
+            project_match = project_re.match(line)
+            project = project_match.groups()[0] if project_match is not None else None
 
-            main_file = main_re.match(line)
-            if main_file is not None:
-                # Retrieve actual main filename
-                main_file = main_file.groups()[0]
+            main_file_match = main_re.match(line)
+            # Retrieve actual main filename
+            main_file = main_file_match.groups()[0] if main_file_match is not None else None
             if lang == "c":
                 manual_chop = True
             else:
@@ -135,11 +138,11 @@ class Block(object):
 
             compiler_switches = []
             if all_switches is not None:
-                all_switches = all_switches.groups()[0]
-                compiler_switches = compiler_switches_re.match(all_switches)
-                if compiler_switches is not None:
+                all_switches_str = all_switches.groups()[0]
+                compiler_switches_match = compiler_switches_re.match(all_switches_str)
+                if compiler_switches_match is not None:
                     compiler_switches = [str.strip(l)
-                        for l in compiler_switches.groups()[0].split(",")]
+                        for l in compiler_switches_match.groups()[0].split(",")]
 
             # Add default switches
             default_switches = {
@@ -156,7 +159,8 @@ class Block(object):
 
 
         def start_config_block(i, line, indent):
-            blocks.append(ConfigBlock(rst_file,
+            blocks.append(ConfigBlock(
+                rst_file,
                 **dict(
                     kv.split('=')
                     for kv in code_config_re.findall(line)[0].split(";"))
@@ -296,8 +300,11 @@ class CodeBlock(Block):
 
 
 class ConfigBlock(Block):
-    def __init__(self, **opts: str) -> None:
-        self._opts: dict[str, str] = opts
+    def __init__(self,
+                 rst_file: str | None = None,
+                 **opts: Any) -> None:
+        self.rst_file: str | None = rst_file
+        self._opts: dict[str, Any] = opts
         for k, v in opts.items():
             setattr(self, k, False if v == "False" else True)
 

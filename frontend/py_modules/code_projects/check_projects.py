@@ -27,6 +27,14 @@ def get_blocks(json_files_regex_list: list[str]) -> dict[str, list[tuple[blocks.
             json_file_path = os.path.abspath(json_file)
             b = blocks.CodeBlock.from_json_file(json_file_path)
 
+            if b is None:
+                print("ERROR: Could not load block info from {}".format(json_file_path))
+                continue
+
+            if b.project is None:
+                print("ERROR: Block has no project in {}".format(json_file_path))
+                continue
+
             if not b.project in projects:
                 projects[b.project] = list()
             projects[b.project].append((b, json_file_path))
