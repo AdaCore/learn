@@ -28,4 +28,5 @@ jobs:
     - name: Install pyright
       run: pip install pyright
     - name: Run pyright on code_projects
-      run: pyright frontend/py_modules/code_projects
+      working-directory: frontend/py_modules/code_projects
+      run: pyright .
