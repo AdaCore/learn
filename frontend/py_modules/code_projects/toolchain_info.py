@@ -6,11 +6,11 @@ import configparser
 
 TOOLCHAIN_CONFIG = os.path.dirname(os.path.realpath(__file__))  + "/" + "toolchain.ini"
 
-TOOLCHAIN_PATH = {}
-TOOLCHAINS = {}
-DEFAULT_VERSION = {}
+TOOLCHAIN_PATH: dict[str, str] = {}
+TOOLCHAINS: dict[str, list[str]] = {}
+DEFAULT_VERSION: dict[str, str] = {}
 
-def init_toolchain_info():
+def init_toolchain_info() -> None:
     config = configparser.ConfigParser()
 
     config.read(TOOLCHAIN_CONFIG)
@@ -23,15 +23,15 @@ def init_toolchain_info():
     TOOLCHAIN_PATH['selected']   = config['toolchain_path']['selected']
     TOOLCHAIN_PATH['default']    = config['toolchain_path']['default']
 
-    TOOLCHAINS['gnat']      = str(config['toolchains']['gnat'])
-    TOOLCHAINS['gnatprove'] = str(config['toolchains']['gnatprove'])
-    TOOLCHAINS['gprbuild']  = str(config['toolchains']['gprbuild'])
+    gnat_str      = str(config['toolchains']['gnat'])
+    gnatprove_str = str(config['toolchains']['gnatprove'])
+    gprbuild_str  = str(config['toolchains']['gprbuild'])
 
-    TOOLCHAINS['gnat']      = re.split(r'\s+',TOOLCHAINS['gnat'])
-    TOOLCHAINS['gnatprove'] = re.split(r'\s+',TOOLCHAINS['gnatprove'])
-    TOOLCHAINS['gprbuild']  = re.split(r'\s+',TOOLCHAINS['gprbuild'])
+    TOOLCHAINS['gnat']      = re.split(r'\s+', gnat_str)
+    TOOLCHAINS['gnatprove'] = re.split(r'\s+', gnatprove_str)
+    TOOLCHAINS['gprbuild']  = re.split(r'\s+', gprbuild_str)
 
-def get_toolchain_default_version(tool):
+def get_toolchain_default_version(tool: str) -> str:
     # Force initialization if info isn't available
     if not tool in DEFAULT_VERSION:
         init_toolchain_info()

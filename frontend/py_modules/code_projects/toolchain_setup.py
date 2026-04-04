@@ -6,7 +6,7 @@ import re
 import blocks
 import toolchain_info as info
 
-def set_toolchain(block : blocks.CodeBlock):
+def set_toolchain(block: blocks.CodeBlock) -> None:
 
     # Init toolchain info if not initialized
     if not 'root' in info.TOOLCHAIN_PATH:
@@ -39,7 +39,7 @@ def set_toolchain(block : blocks.CodeBlock):
         os.symlink(info.TOOLCHAIN_PATH['root']     + '/gprbuild/' + ver,
                    info.TOOLCHAIN_PATH['selected'] + '/gprbuild')
 
-def reset_toolchain():
+def reset_toolchain() -> None:
     selected_folders = [info.TOOLCHAIN_PATH['selected'] + '/gnat',
                         info.TOOLCHAIN_PATH['selected'] + '/gnatprove',
                         info.TOOLCHAIN_PATH['selected'] + '/gprbuild']
