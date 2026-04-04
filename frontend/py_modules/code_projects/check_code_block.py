@@ -25,29 +25,33 @@ import toolchain_setup
 
 LOOK_FOR_PREVIOUS_CHECKS = True
 
-verbose = False
-all_diagnostics = False
-max_columns = 0 # no check for max. columns
-force_checks = False
+verbose: bool = False
+all_diagnostics: bool = False
+max_columns: int = 0 # no check for max. columns
+force_checks: bool = False
 
 
 class Diag(object):
-    def __init__(self, file, line, col, msg):
-        self.file = file
-        self.line = line
-        self.col = col
-        self.msg = msg
+    def __init__(self,
+                 file: str,
+                 line: int,
+                 col: int,
+                 msg: str) -> None:
+        self.file: str = file
+        self.line: int = line
+        self.col: int = col
+        self.msg: str = msg
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "{}:{}:{}: {}".format(self.file, self.line, self.col, self.msg)
 
 
-def check_block(block : blocks.CodeBlock,
-                json_file : str,
-                verbose : bool = verbose,
-                all_diagnostics : bool = all_diagnostics,
-                max_columns : int = max_columns,
-                force_checks : bool = force_checks):
+def check_block(block: blocks.CodeBlock,
+                json_file: str,
+                verbose: bool = verbose,
+                all_diagnostics: bool = all_diagnostics,
+                max_columns: int = max_columns,
+                force_checks: bool = force_checks) -> bool:
 
     def run(*run_args):
         if verbose:
@@ -531,7 +535,7 @@ def check_block(block : blocks.CodeBlock,
     return has_error
 
 
-def check_code_block_json(json_file):
+def check_code_block_json(json_file: str) -> bool:
 
     b = blocks.CodeBlock.from_json_file(json_file)
 

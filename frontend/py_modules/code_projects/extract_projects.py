@@ -24,22 +24,26 @@ current_config = blocks.ConfigBlock(
 
 
 class Diag(object):
-    def __init__(self, file, line, col, msg):
-        self.file = file
-        self.line = line
-        self.col = col
-        self.msg = msg
+    def __init__(self,
+                 file: str,
+                 line: int,
+                 col: int,
+                 msg: str) -> None:
+        self.file: str = file
+        self.line: int = line
+        self.col: int = col
+        self.msg: str = msg
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "{}:{}:{}: {}".format(self.file, self.line, self.col, self.msg)
 
 
-verbose = False
-code_block_at = None
+verbose: bool = False
+code_block_at: int | None = None
 
 BASE_PROJECT_DIR = "projects"
 
-def get_project_dir(project):
+def get_project_dir(project: str) -> str:
     return BASE_PROJECT_DIR + "/" + project.replace(".", "/")
 
 
@@ -97,7 +101,9 @@ project Main_Spark is
 end Main_Spark;
 """
 
-def write_project_file(main_file, compiler_switches, spark_mode):
+def write_project_file(main_file: str | None,
+                       compiler_switches: list[str],
+                       spark_mode: bool) -> str:
     gpr_filename = "main.gpr"
     adc_filename = "main.adc"
     main_gpr = MAIN_GPR
@@ -139,7 +145,7 @@ def write_project_file(main_file, compiler_switches, spark_mode):
 
 class ProjectsList(object):
     @staticmethod
-    def from_json_file(json_filename):
+    def from_json_file(json_filename: str) -> ProjectsList | None:
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:
@@ -148,21 +154,21 @@ class ProjectsList(object):
 
         return None
 
-    def __init__(self, projects=None):
-        self.projects = projects if projects is not None else \
+    def __init__(self, projects: dict[str, bool] | None = None) -> None:
+        self.projects: dict[str, bool] = projects if projects is not None else \
             dict()
 
-    def to_json_file(self, json_filename):
+    def to_json_file(self, json_filename: str) -> None:
         projects_info = vars(self)
 
         with open(json_filename, u'w') as f:
             json.dump(projects_info, f, indent=4)
 
-    def add(self, project):
+    def add(self, project: str) -> None:
         self.projects[project] = True
 
 
-def analyze_file(rst_file, extracted_projects_list_file=None):
+def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None) -> bool:
 
     analysis_error = False
 

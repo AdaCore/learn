@@ -6,11 +6,11 @@ import configparser
 
 TOOLCHAIN_CONFIG = os.path.dirname(os.path.realpath(__file__))  + "/" + "toolchain.ini"
 
-TOOLCHAIN_PATH = {}
-TOOLCHAINS = {}
-DEFAULT_VERSION = {}
+TOOLCHAIN_PATH: dict[str, str] = {}
+TOOLCHAINS: dict[str, list[str]] = {}
+DEFAULT_VERSION: dict[str, str] = {}
 
-def init_toolchain_info():
+def init_toolchain_info() -> None:
     config = configparser.ConfigParser()
 
     config.read(TOOLCHAIN_CONFIG)
@@ -31,7 +31,7 @@ def init_toolchain_info():
     TOOLCHAINS['gnatprove'] = re.split(r'\s+',TOOLCHAINS['gnatprove'])
     TOOLCHAINS['gprbuild']  = re.split(r'\s+',TOOLCHAINS['gprbuild'])
 
-def get_toolchain_default_version(tool):
+def get_toolchain_default_version(tool: str) -> str:
     # Force initialization if info isn't available
     if not tool in DEFAULT_VERSION:
         init_toolchain_info()

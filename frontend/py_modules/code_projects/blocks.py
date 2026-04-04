@@ -8,7 +8,7 @@ import toolchain_info
 
 class Block(object):
     @staticmethod
-    def get_blocks_from_rst(rst_file, input_text):
+    def get_blocks_from_rst(rst_file: str, input_text: str) -> list[Block]:
         lang_re = re.compile(r"\s*.. code::\s*(\w+)?\s*")
         project_re = re.compile(r"\s*.. code::.*project=(\S+)?")
         main_re = re.compile(r"\s*.. code::.*main=(\S+)?")
@@ -22,7 +22,7 @@ class Block(object):
         gnatprove_version_re=re.compile(r"\s*.. code::.*gnatprove=(\S+)?")
         gprbuild_version_re=re.compile(r"\s*.. code::.*gprbuild=(\S+)?")
 
-        blocks = []
+        blocks: list[Block] = []
         lines = input_text.splitlines()
 
         def first_nonws(line):
@@ -33,18 +33,18 @@ class Block(object):
 
         indents = map(first_nonws, lines)
 
-        classes = []
-        compiler_switches = []
-        buttons = []
+        classes: list[str] = []
+        compiler_switches: list[str] = []
+        buttons: list[str] = []
         cb_start = -1
         cb_indent = -1
         lang = ""
-        project = None
-        main_file = None
-        manual_chop = None
-        gnat_version = None
-        gnatprove_version = None
-        gprbuild_version = None
+        project: str | None = None
+        main_file: str | None = None
+        manual_chop: bool | None = None
+        gnat_version: list[str] | None = None
+        gnatprove_version: list[str] | None = None
+        gprbuild_version: list[str] | None = None
         last_line_number = -1
 
         def is_empty(line):
@@ -189,7 +189,7 @@ class Block(object):
 
         return blocks
 
-    def to_json_file(self, json_filename=None):
+    def to_json_file(self, json_filename: str | None = None) -> None:
         block_info = vars(self)
 
         if json_filename is None:
@@ -199,7 +199,7 @@ class Block(object):
 
 class CodeBlock(Block):
     @staticmethod
-    def from_json_file(json_filename=None):
+    def from_json_file(json_filename: str | None = None) -> CodeBlock | None:
 
         if json_filename is None:
             json_filename = "block_info.json"
@@ -211,16 +211,33 @@ class CodeBlock(Block):
 
         return None
 
-    def __init__(self, rst_file, line_start, line_end, text, language, project,
-                 main_file,
-                 gnat_version,gnatprove_version,gprbuild_version,
-                 compiler_switches, classes, manual_chop, buttons,
-                 active=None,no_check=None,syntax_only=None,run_it=None,
-                 compile_it=None,prove_it=None,
-                 source_files=None,
-                 project_filename=None,spark_project_filename=None,
-                 project_main_file=None,
-                 text_hash=None,text_hash_short=None):
+    def __init__(self,
+                 rst_file: str,
+                 line_start: int,
+                 line_end: int,
+                 text: str,
+                 language: str,
+                 project: str | None,
+                 main_file: str | None,
+                 gnat_version: list[str],
+                 gnatprove_version: list[str],
+                 gprbuild_version: list[str],
+                 compiler_switches: list[str],
+                 classes: list[str],
+                 manual_chop: bool | None,
+                 buttons: list[str],
+                 active: bool | None = None,
+                 no_check: bool | None = None,
+                 syntax_only: bool | None = None,
+                 run_it: bool | None = None,
+                 compile_it: bool | None = None,
+                 prove_it: bool | None = None,
+                 source_files: list[str] | None = None,
+                 project_filename: str | None = None,
+                 spark_project_filename: str | None = None,
+                 project_main_file: str | None = None,
+                 text_hash: str | None = None,
+                 text_hash_short: str | None = None) -> None:
         self.rst_file = rst_file
         self.line_start = line_start
         self.line_end = line_end
@@ -235,36 +252,36 @@ class CodeBlock(Block):
         self.classes = classes
         self.manual_chop = manual_chop
         self.buttons = buttons
-        self.active = active if active is not None else True
+        self.active: bool = active if active is not None else True
 
-        self.no_check = no_check if no_check is not None else \
+        self.no_check: bool = no_check if no_check is not None else \
             any(sphinx_class in ["ada-nocheck", "c-nocheck"]
                 for sphinx_class in self.classes)
 
-        self.syntax_only = syntax_only if syntax_only is not None else \
+        self.syntax_only: bool = syntax_only if syntax_only is not None else \
             'ada-syntax-only' in self.classes
 
-        self.run_it = run_it if run_it is not None else \
+        self.run_it: bool = run_it if run_it is not None else \
             (('ada-run' in self.classes
               or 'ada-run-expect-failure' in self.classes
               or 'run' in self.buttons)
               and not 'ada-norun' in self.classes)
-        self.compile_it = compile_it if compile_it is not None else \
+        self.compile_it: bool = compile_it if compile_it is not None else \
             self.run_it or \
             (('ada-compile' in self.classes and self.language == 'ada')
              or ('c-compile' in self.classes and self.language == 'c')
              or 'compile' in self.buttons)
 
-        prove_buttons = ["prove", "prove_flow", "prove_flow_report_all",
+        prove_buttons: list[str] = ["prove", "prove_flow", "prove_flow_report_all",
                          "prove_report_all"]
-        prove_classes = ["ada-prove", "ada-prove-flow", "ada-prove-flow-report-all",
+        prove_classes: list[str] = ["ada-prove", "ada-prove-flow", "ada-prove-flow-report-all",
                          "ada-prove-report-all"]
 
-        self.prove_it = prove_it if prove_it is not None else \
+        self.prove_it: bool = prove_it if prove_it is not None else \
             (any(b in prove_classes for b in self.classes)
              or any(b in prove_buttons for b in self.buttons))
 
-        self.source_files = source_files if source_files is not None else \
+        self.source_files: list[str] = source_files if source_files is not None else \
             list()
         self.project_filename = project_filename
         self.spark_project_filename = spark_project_filename
@@ -279,10 +296,10 @@ class CodeBlock(Block):
 
 
 class ConfigBlock(Block):
-    def __init__(self, **opts):
-        self._opts = opts
+    def __init__(self, **opts: str) -> None:
+        self._opts: dict[str, str] = opts
         for k, v in opts.items():
             setattr(self, k, False if v == "False" else True)
 
-    def update(self, other_config):
+    def update(self, other_config: ConfigBlock) -> None:
         self.__init__(**other_config._opts)

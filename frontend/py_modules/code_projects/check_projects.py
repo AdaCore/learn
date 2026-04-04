@@ -13,14 +13,14 @@ import check_code_block
 import extract_projects
 import fmt_utils
 
-verbose = False
-all_diagnostics = False
-max_columns = 0 # no check for max. columns
-force_checks = False
+verbose: bool = False
+all_diagnostics: bool = False
+max_columns: int = 0 # no check for max. columns
+force_checks: bool = False
 
 
-def get_blocks(json_files_regex_list):
-    projects = dict()
+def get_blocks(json_files_regex_list: list[str]) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
+    projects: dict[str, list[tuple[blocks.CodeBlock, str]]] = dict()
 
     for json_regex in json_files_regex_list:
         for json_file in glob.iglob(json_regex, recursive=True):
@@ -34,8 +34,8 @@ def get_blocks(json_files_regex_list):
     return projects
 
 
-def get_projects(build_dir, projects_list_file=None):
-    json_files_regex_list = list()
+def get_projects(build_dir: str, projects_list_file: str | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
+    json_files_regex_list: list[str] = list()
 
     os.chdir(build_dir)
 
@@ -57,7 +57,7 @@ def get_projects(build_dir, projects_list_file=None):
     return projects
 
 
-def check_block(block, json_file):
+def check_block(block: blocks.CodeBlock, json_file: str) -> bool:
     has_error = check_code_block.check_block(
         block, json_file, verbose, all_diagnostics, max_columns,
         force_checks)
@@ -65,7 +65,7 @@ def check_block(block, json_file):
     return has_error
 
 
-def check_projects(build_dir, projects_list_file=None):
+def check_projects(build_dir: str, projects_list_file: str | None = None) -> bool:
 
     check_error = False
 
