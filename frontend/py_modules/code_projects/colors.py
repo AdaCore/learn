@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
+from collections.abc import Iterator
 from contextlib import contextmanager
 import sys
 
@@ -28,7 +29,7 @@ class Colors(object):
     _enabled = True
 
     @classmethod
-    def disable_colors(cls):
+    def disable_colors(cls) -> None:
         """
         Disable the use of colors in col/printcol.
         """
@@ -42,7 +43,7 @@ if not sys.stdout.isatty() or not sys.stderr.isatty():
 
 
 @contextmanager
-def no_colors():
+def no_colors() -> Iterator[None]:
     """
     Context manager to disable colors for a given scope.
     """
@@ -51,7 +52,7 @@ def no_colors():
     Colors._enabled = old_val
 
 
-def col(msg, color):
+def col(msg: str, color: str) -> str:
     """
     Utility function that return a string colored with the proper escape
     sequences, for VT100 compatible terminals.
@@ -67,7 +68,7 @@ def col(msg, color):
         return msg
 
 
-def printcol(msg, color):
+def printcol(msg: str, color: str) -> None:
     """
     Utility print function that will print `msg` in color `color`.
     :param basestring msg: The message to print.

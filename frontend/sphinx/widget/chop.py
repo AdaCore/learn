@@ -93,7 +93,7 @@ def cheapo_gnatchop(lines: List[str]) -> List[Resource]:
     return results
 
 
-def real_gnatchop(lines: List[str], compiler_switches: Optional[dict] = None) -> List[Resource]:
+def real_gnatchop(lines: List[str], compiler_switches: Optional[List[str]] = None) -> List[Resource]:
     """Uses gnatchop to chop the text into files
 
     Args:

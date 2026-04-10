@@ -20,7 +20,9 @@ Jinja2==3.1.6
 latexcodec==3.0.1
 MarkupSafe==3.0.3
 matplotlib-inline==0.2.1
+nodeenv==1.10.0
 packaging==26.0
+pyright==1.1.408
 parso==0.8.6
 pdf2image==1.17.0
 pexpect==4.9.0
