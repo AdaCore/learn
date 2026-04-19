@@ -3284,7 +3284,7 @@ type).
 
 Let's now focus on deriving from ordinary fixed-point types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Derived_Ordinary_Fixed_Point_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Derived_Ordinary_Fixed_Point_Types
 
     package Custom_Fixed_Point is
 
@@ -3362,7 +3362,7 @@ In the example above, we declare :ada:`Small_Money` as a subtype of the
 
 Let's now focus on subtypes of ordinary fixed-point types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Derived_Ordinary_Fixed_Point_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Ordinary_Fixed_Point_Subtypes
 
     package Custom_Fixed_Point is
 
@@ -3449,7 +3449,7 @@ won't compile if your target architecture doesn't support 128-bit data types.)
 
 Likewise, we can use the :ada:`Size` aspect with ordinary fixed-point types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Base_Type_Q47
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Base_Type_Q47
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4317,7 +4317,7 @@ raised a :ada:`Constraint_Error` because of the failed range check.
 Similarly, we can convert from and to ordinary fixed-point types when using
 other numeric types such as integer and floating-point types. For example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Decimal_Type_Conversions_Other_Types
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Ordinary_Fixed_Type_Conversions_Other_Types
 
     package Custom_Types is
        D_48 : constant := 2.0 ** (-48);
@@ -4847,7 +4847,7 @@ Now, let's see how ordinary fixed-point types also make use of universal
 fixed types for multiplication and division operations. Consider the following
 package:
 
-.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Universal_Fixed
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed
 
     package Custom_Fixed_Point is
        D_15 : constant := 2.0 ** (-15);
@@ -4872,7 +4872,7 @@ package:
 The :ada:`Show_Universal_Fixed` procedure show a couple of multiplications
 using universal fixed types:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Universal_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4914,7 +4914,7 @@ value.
 
 For the division operation, universal fixed types are used as well:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Ordinary_Fixed_Point_Types.Universal_Fixed
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed
 
     with Ada.Text_IO; use Ada.Text_IO;
 
