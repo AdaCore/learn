@@ -3357,7 +3357,7 @@ decimal fixed-point types:
                  & FC'Image);
     end Show_Decimal_Subtypes;
 
-In this example, we declare :ada:`Small_Money` as a subtype of the
+In the example above, we declare :ada:`Small_Money` as a subtype of the
 :ada:`Decimal` type.
 
 Let's now focus on subtypes of ordinary fixed-point types:
