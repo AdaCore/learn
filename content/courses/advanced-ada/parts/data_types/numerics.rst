@@ -4710,6 +4710,25 @@ when  assigning the result to an object of a different type. As we've mentioned
 before, type conversions between fixed-point types make use of universal
 fixed-point types.
 
+.. admonition:: For further reading...
+
+    When the operand of a type conversion is a call to a universal-fixed
+    operator (such as :ada:`*` or :ada:`/`), the conversion and the operation
+    are evaluated together as a single step, rather than the usual two steps of
+    first evaluating the operand and then converting the result. This means
+    that all the :ada:`Small` values involved |mdash| one for each fixed-point
+    type |mdash| contribute to the final result.
+
+    For example, in an expression such as:
+
+    .. code-block:: ada
+
+        Fx1 (Fx2'(X) * Fx3'(Y))
+
+    the result depends on the :ada:`Small` values of all three types
+    (:ada:`Fx1`, :ada:`Fx2`, and :ada:`Fx3`), as well as the integer values
+    of :ada:`X` and :ada:`Y`.
+
 
 Multiplication and division operations with decimal types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
