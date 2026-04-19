@@ -3720,6 +3720,12 @@ type. We do this in the generic :ada:`Gen_Show_Info` procedure:
          with Address => V_Local'Address,
               Import, Volatile;
 
+       pragma Assert
+         (T_Int_Fixed'Size = T_Fixed'Size);
+       pragma Assert
+         (T_Int_Fixed'Alignment =
+            T_Fixed'Alignment);
+
        V_Real        : Float;
     begin
        V_Local := V;
