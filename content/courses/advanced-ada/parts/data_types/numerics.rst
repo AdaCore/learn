@@ -3371,7 +3371,8 @@ Let's now focus on subtypes of ordinary fixed-point types:
          delta D
          range -1.0 .. 1.0 - D;
 
-       subtype Coefficient is Short_Fixed;
+       subtype Coefficient is Short_Fixed
+         range 0.0 .. 1.0 - D;
 
     end Custom_Fixed_Point;
 
@@ -3391,10 +3392,25 @@ Let's now focus on subtypes of ordinary fixed-point types:
        C := SF;
        Put_Line ("C  = "
                  & C'Image);
+       Put_Line ("---------");
+
+       SF := -0.25;
+       Put_Line
+         ("SF in Short_Fixed: "
+          & Boolean'Image
+              (SF in Short_Fixed));
+       Put_Line
+         ("SF in Coefficient: "
+          & Boolean'Image
+              (SF in Coefficient));
     end Show_Fixed_Point_Subtypes;
 
 In the :ada:`Show_Fixed_Point_Subtypes` procedure, we declare
-:ada:`Coefficient` as a subtype of the :ada:`Short_Fixed` type.
+:ada:`Coefficient` as a constrained subtype of :ada:`Short_Fixed` and we
+restrict its range to :ada:`0.0 .. 1.0 - D` (i.e., non-negative values only).
+Since :ada:`Short_Fixed` covers negative values as well, the value :ada:`-0.25`
+belongs to :ada:`Short_Fixed` but not to :ada:`Coefficient` |mdash| as the
+membership tests confirm.
 
 
 .. _Adv_Ada_Fixed_Point_Type_Size:
