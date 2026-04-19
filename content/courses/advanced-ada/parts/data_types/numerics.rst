@@ -4570,6 +4570,15 @@ the :ada:`T2_D6` type to the :ada:`T2_D12` type, its integer representation
 (22500) doesn't change, although these two types have different sizes and
 different ranges.
 
+In this example, the *small* values of :ada:`T0_D4`, :ada:`T2_D6`, and
+:ada:`T2_D12` are integer multiples of each other, so any value representable
+by the less-precise type is also representable by the more-precise type. Note
+that this isn't always true: as we'll see in the
+:ref:`next section <Adv_Ada_Ordinary_Fixed_Point_Type_Conversion_Machine_Representation>`,
+when the *small* values are not integer multiples of each other, a value
+exactly representable in the less-precise type may not be representable in the
+more-precise type.
+
 
 .. _Adv_Ada_Ordinary_Fixed_Point_Type_Conversion_Machine_Representation:
 
@@ -4671,6 +4680,13 @@ further inaccuracies may be introduced. For example, the value 0.5 becomes 0.4
 when assigned it to an object of :ada:`Angle_Adj` type. When converting it to
 the :ada:`Angle` type, the value becomes 0.375 |mdash| even though the original
 value 0.5 could be perfectly represented with the :ada:`Angle` type.
+
+This also illustrates the point made at the end of the
+:ref:`previous section <Adv_Ada_Decimal_Fixed_Point_Type_Conversion_Machine_Representation>`:
+0.4 is exactly representable in the less-precise :ada:`Angle_Adj` type
+(as 2 * 0.2), but not in the more-precise :ada:`Angle` type (because
+0.4 / 0.125 = 3.2, so the integer representation is 3), so converting from
+:ada:`Angle_Adj` to :ada:`Angle` still introduces an inaccuracy.
 
 Note that, even though these inaccuracies become clear when we analyze
 individual values to such a degree of detail, they're not restricted to
