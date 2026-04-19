@@ -3945,7 +3945,7 @@ As we can see in the table, there might be numeric differences between the
 values that we intend to store in the object and the values that actually
 get stored there. These differences are directly related to the *small*
 associated with the ordinary fixed-point type. In the end, the *small* defines
-how accurate a given real value can be represented in the fixed-point object.
+how accurately a given real value can be represented in the fixed-point object.
 
 
 .. _Adv_Ada_Fixed_Point_Types_Conversions:
