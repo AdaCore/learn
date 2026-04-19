@@ -4528,10 +4528,10 @@ it to :ada:`T2_D6`, the integer value is scaled to that type, so it becomes
 test application:
 
 +--------+-----------------------------------+-----------------------------------+
-| Real   | Original / source                 | Target                            |
+| Input  | Original / source                 | Target                            |
 | value  +---------------+---------+---------+---------------+---------+---------+
-|        | Type          | Actual  | Actual  | Type          | Actual  | Actual  |
-|        |               | integer | real    |               | integer | real    |
+|        | Type          | Actual  | Exact   | Type          | Actual  | Exact   |
+|        |               | integer | stored  |               | integer | stored  |
 |        |               | value   | value   |               | value   | value   |
 +========+===============+=========+=========+===============+=========+=========+
 |  152.0 |  :ada:`T0_D4` |     152 |   152.0 |  :ada:`T2_D6` |   15200 |   152.0 |
@@ -4639,10 +4639,10 @@ the integer value 720 for the :ada:`Angle` type. When converting to
 all values that show up when running the test application:
 
 +--------+----------------------------------------+----------------------------------------+
-| Real   | Original / source                      | Target                                 |
+| Input  | Original / source                      | Target                                 |
 | value  +--------------------+---------+---------+--------------------+---------+---------+
-|        | Type               | Actual  | Actual  | Type               | Actual  | Actual  |
-|        |                    | integer | real    |                    | integer | real    |
+|        | Type               | Actual  | Exact   | Type               | Actual  | Exact   |
+|        |                    | integer | stored  |                    | integer | stored  |
 |        |                    | value   | value   |                    | value   | value   |
 +========+====================+=========+=========+====================+=========+=========+
 |   90.0 |       :ada:`Angle` |     720 |    90.0 |   :ada:`Angle_Adj` |     450 |    90.0 |
@@ -5068,8 +5068,8 @@ application:
 +--------+----------------------------------------+--------------------+-------------------+
 | Real   | Original                               | Operation          | Result            |
 | value  +--------------------+---------+---------+                    +---------+---------+
-|        | Type               | Actual  | Actual  |                    | Actual  | Actual  |
-|        |                    | integer | real    |                    | integer | real    |
+|        | Type               | Actual  | Exact   |                    | Actual  | Exact   |
+|        |                    | integer | stored  |                    | integer | stored  |
 |        |                    | value   | value   |                    | value   | value   |
 +========+====================+=========+=========+====================+=========+=========+
 |  152.0 |       :ada:`T0_D4` |     152 |   152.0 |  :ada:`V := V * 2` |     304 |   304.0 |
@@ -5124,8 +5124,8 @@ The table presents the values we get when we run the test application:
 +--------+----------------------------------------+--------------------+-------------------+
 | Real   | Original                               | Operation          | Result            |
 | value  +--------------------+---------+---------+                    +---------+---------+
-|        | Type               | Actual  | Actual  |                    | Actual  | Actual  |
-|        |                    | integer | real    |                    | integer | real    |
+|        | Type               | Actual  | Exact   |                    | Actual  | Exact   |
+|        |                    | integer | stored  |                    | integer | stored  |
 |        |                    | value   | value   |                    | value   | value   |
 +========+====================+=========+=========+====================+=========+=========+
 |   90.0 |       :ada:`Angle` |     720 |    90.0 |  :ada:`V := V * 2` |    1440 |   180.0 |
