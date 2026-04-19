@@ -3820,7 +3820,7 @@ application:
 |        0.80 |            6 |                4 |
 +-------------+--------------+------------------+
 
-Before we calculate the actual real value stored in the fixed-point objects,
+Before we calculate the exact value stored in the fixed-point objects,
 we have to retrieve the *small* of these fixed-point types. The generic
 :ada:`Gen_Show_Type_Info` procedure below provides us with some type
 information:
@@ -3886,9 +3886,9 @@ We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
     end Show_Machine_Representation;
 
 Now, for each value, we multiply the integer representation of that value by
-the corresponding *small* of the type, so that we get the actual stored value.
+the corresponding *small* of the type, so that we get the exact stored value.
 These are the results for the :ada:`Angle` type |mdash| including the
-difference between the original real value and the actual real value stored in
+difference between the original real value and the exact real value stored in
 the fixed-point object:
 
 +-------------+------------------------------------------------------------+
