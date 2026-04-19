@@ -3885,6 +3885,20 @@ We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
                        "Angle_Adj ");
     end Show_Machine_Representation;
 
+Note that, as this output shows, :ada:`Angle'Small` (= 0.125) is not equal
+to :ada:`Angle'Delta` (= 0.2). This is because, when the :ada:`Small`
+aspect is not explicitly specified, the Ada compiler selects the largest power
+of two not exceeding the *delta* value. Since 0.2 is not a power of two, we get
+0.125 (= 2\ :sup:`-3`) as the *small* for the :ada:`Angle` type. In contrast,
+:ada:`Angle_Adj` explicitly sets :ada:`Small => D`, so that
+:ada:`Angle_Adj'Small` = :ada:`Angle_Adj'Delta` = 0.2. (We discuss this topic
+in more details later on.)
+
+.. todo::
+
+    Add link to subsection on "delta vs. small" for ordinary fixed-point types
+    once available.
+
 Now, for each value, we multiply the integer representation of that value by
 the corresponding *small* of the type, so that we get the exact stored value.
 These are the results for the :ada:`Angle` type |mdash| including the
