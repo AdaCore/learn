@@ -3675,6 +3675,8 @@ actual hardware. Consider the types from the :ada:`Angles` package:
     package Angles is
 
        D : constant := 0.2;
+       --  Note: D is not a power of two.
+
        type Angle is
          delta D
            range 0.0 .. 360.0 - D;
