@@ -4057,6 +4057,16 @@ Here, we write :ada:`TQ31 (V_15)` to convert the value of :ada:`V_15` from the
 :ada:`TQ15` to the :ada:`TQ31` type. Likewise, we write :ada:`TQ15 (V_31)` to
 convert the value of :ada:`V_31` from the :ada:`TQ31` to the :ada:`TQ15` type.
 
+Note that the output is identical in both cases. In the first case,
+0.81182861328125 is stored in :ada:`V_15` (of type :ada:`TQ15`), which rounds
+it to the nearest :ada:`TQ15` value (shown as 0.81183). That stored value is
+then converted to :ada:`TQ31` without loss, which results in 0.8118286133.
+In the second case, 0.81182861328125 is stored in :ada:`V_31` (of type
+:ada:`TQ31`) as 0.8118286133. We then convert it back to :ada:`TQ15`, which
+rounds it to 0.81183. As we can see, when converting from a less-precise type
+to a more-precise type, the operation is always lossless. However, the reverse
+conversion may lose precision.
+
 Finally, let's look into the conversion between ordinary and decimal
 fixed-point types:
 
