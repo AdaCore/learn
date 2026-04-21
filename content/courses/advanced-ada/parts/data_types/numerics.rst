@@ -3830,14 +3830,12 @@ information:
     generic
        type T_Fixed is delta <>;
     procedure Gen_Show_Type_Info
-      (Dummy        : T_Fixed;
-       T_Fixed_Name : String);
+      (T_Fixed_Name : String);
 
     with Ada.Text_IO; use Ada.Text_IO;
 
     procedure Gen_Show_Type_Info
-      (Dummy        : T_Fixed;
-       T_Fixed_Name : String) is
+      (T_Fixed_Name : String) is
     begin
        Put_Line ("The size           of "
                  & T_Fixed_Name
@@ -3874,15 +3872,13 @@ We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
     with Gen_Show_Type_Info;
 
     procedure Show_Machine_Representation is
-       procedure Show_Type_Info is new
+       procedure Show_Angle_Type_Info is new
          Gen_Show_Type_Info (T_Fixed => Angle);
-       procedure Show_Type_Info is new
+       procedure Show_Angle_Adj_Type_Info is new
          Gen_Show_Type_Info (T_Fixed => Angle_Adj);
     begin
-       Show_Type_Info (Angle'(0.0),
-                       "Angle     ");
-       Show_Type_Info (Angle_Adj'(0.0),
-                       "Angle_Adj ");
+       Show_Angle_Type_Info ("Angle     ");
+       Show_Angle_Adj_Type_Info ("Angle_Adj ");
     end Show_Machine_Representation;
 
 Note that, as this output shows, :ada:`Angle'Small` (= 0.125) is not equal
@@ -4128,14 +4124,12 @@ an ordinary fixed-point type via :ada:`Fixed_Point (D)`.
            generic
               type T_Fixed is delta <>;
            procedure Gen_Show_Fixed_Type_Info
-             (Dummy        : T_Fixed;
-              T_Fixed_Name : String);
+             (T_Fixed_Name : String);
 
            generic
               type T_Decimal is delta <> digits <>;
            procedure Gen_Show_Decimal_Type_Info
-             (Dummy          : T_Decimal;
-              T_Decimal_Name : String);
+             (T_Decimal_Name : String);
 
         end Fixed_Point_Type_Info;
         with Ada.Text_IO; use Ada.Text_IO;
@@ -4143,8 +4137,7 @@ an ordinary fixed-point type via :ada:`Fixed_Point (D)`.
         package body Fixed_Point_Type_Info is
 
            procedure Gen_Show_Fixed_Type_Info
-             (Dummy        : T_Fixed;
-              T_Fixed_Name : String) is
+             (T_Fixed_Name : String) is
            begin
               Put_Line ("The size           of "
                         & T_Fixed_Name
@@ -4171,8 +4164,7 @@ an ordinary fixed-point type via :ada:`Fixed_Point (D)`.
            end Gen_Show_Fixed_Type_Info;
 
            procedure Gen_Show_Decimal_Type_Info
-             (Dummy        : T_Decimal;
-              T_Decimal_Name : String) is
+             (T_Decimal_Name : String) is
            begin
               Put_Line ("The size           of "
                         & T_Decimal_Name
@@ -4207,18 +4199,16 @@ an ordinary fixed-point type via :ada:`Fixed_Point (D)`.
         use  Fixed_Point_Type_Info;
 
         procedure Show_Fixed_Point_Conversions is
-           procedure Show_Type_Info is new
+           procedure Show_Fixed_Point_Type_Info is new
              Gen_Show_Fixed_Type_Info
                (T_Fixed => Fixed_Point);
 
-           procedure Show_Type_Info is new
+           procedure Show_Decimal_Type_Info is new
              Gen_Show_Decimal_Type_Info
                (T_Decimal => Decimal);
         begin
-           Show_Type_Info (Decimal'(0.0),
-                           "Decimal     ");
-           Show_Type_Info (Fixed_Point'(0.0),
-                           "Fixed_Point ");
+           Show_Decimal_Type_Info ("Decimal     ");
+           Show_Fixed_Point_Type_Info ("Fixed_Point ");
         end Show_Fixed_Point_Conversions;
 
     By running this test application, we see that the the size of
