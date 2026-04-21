@@ -3282,6 +3282,45 @@ type. Also, :ada:`Small_Money (D)` performs a conversion between decimal
 fixed-point types (from the :ada:`Decimal` type to the :ada:`Small_Money`
 type).
 
+Let's now focus on deriving from ordinary fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Derived_Ordinary_Fixed_Point_Types
+
+    package Custom_Fixed_Point is
+
+       D : constant := 2.0 ** (-15);
+       type Short_Fixed is
+         delta D
+         range -1.0 .. 1.0 - D;
+
+       type Coefficient is new
+         Short_Fixed;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Derived_Fixed_Point_Types is
+       SF : Short_Fixed;
+       C  : Coefficient;
+    begin
+       SF  := 0.25;
+       Put_Line ("SF = "
+                 & SF'Image);
+
+       C := Coefficient (SF);
+       Put_Line ("C  = "
+                 & C'Image);
+    end Show_Derived_Fixed_Point_Types;
+
+In the :ada:`Show_Derived_Fixed_Point_Types` procedure, we derive the
+:ada:`Coefficient` type from the :ada:`Short_Fixed` type. We use
+:ada:`Coefficient (SF)` to convert from the :ada:`Short_Fixed` type to the
+:ada:`Coefficient` type.
+
 
 Fixed-point subtypes
 ^^^^^^^^^^^^^^^^^^^^
@@ -3318,8 +3357,60 @@ decimal fixed-point types:
                  & FC'Image);
     end Show_Decimal_Subtypes;
 
-In this example, we declare :ada:`Small_Money` as a subtype of the
+In the example above, we declare :ada:`Small_Money` as a subtype of the
 :ada:`Decimal` type.
+
+Let's now focus on subtypes of ordinary fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Ordinary_Fixed_Point_Subtypes
+
+    package Custom_Fixed_Point is
+
+       D : constant := 2.0 ** (-15);
+       type Short_Fixed is
+         delta D
+         range -1.0 .. 1.0 - D;
+
+       subtype Coefficient is Short_Fixed
+         range 0.0 .. 1.0 - D;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Subtypes is
+       SF : Short_Fixed;
+       C  : Coefficient;
+    begin
+       SF := 0.25;
+       Put_Line ("SF = "
+                 & SF'Image);
+
+       C := SF;
+       Put_Line ("C  = "
+                 & C'Image);
+       Put_Line ("---------");
+
+       SF := -0.25;
+       Put_Line
+         ("SF in Short_Fixed: "
+          & Boolean'Image
+              (SF in Short_Fixed));
+       Put_Line
+         ("SF in Coefficient: "
+          & Boolean'Image
+              (SF in Coefficient));
+    end Show_Fixed_Point_Subtypes;
+
+In the :ada:`Show_Fixed_Point_Subtypes` procedure, we declare
+:ada:`Coefficient` as a constrained subtype of :ada:`Short_Fixed` and we
+restrict its range to :ada:`0.0 .. 1.0 - D` (i.e., non-negative values only).
+Since :ada:`Short_Fixed` covers negative values as well, the value :ada:`-0.25`
+belongs to :ada:`Short_Fixed` but not to :ada:`Coefficient` |mdash| as the
+membership tests confirm.
 
 
 .. _Adv_Ada_Fixed_Point_Type_Size:
@@ -3355,6 +3446,30 @@ In this example, we require that :ada:`Decimal_128_Bits` has a size of 128
 bits on the target platform |mdash| instead of the 32 bits that we would
 typically see for that type on a desktop PC. (As a reminder, this code example
 won't compile if your target architecture doesn't support 128-bit data types.)
+
+Likewise, we can use the :ada:`Size` aspect with ordinary fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Base_Type_Q47
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Show_Full_Range_Base_Type is
+       D : constant := 2.0 ** (-31);
+
+       type Fixed_128_Bits is
+         delta D
+         range -1.0 .. 1.0 - D
+         with Size => 128;
+    begin
+       Put_Line ("The size of "
+                 & "Fixed_128_Bits is "
+                 & Fixed_128_Bits'Size'Image
+                 & " bits");
+    end Show_Full_Range_Base_Type;
+
+In this example, we require that :ada:`Fixed_128_Bits` has a size of 128
+bits on the target platform |mdash| instead of the 32 bits that we would
+typically see for that type on a desktop PC.
 
 
 .. _Adv_Ada_Fixed_Point_Machine_Representation:
@@ -3483,7 +3598,7 @@ the machine representation of those decimal values. For example:
     with Custom_Decimal_Types.Show_Info_Procs;
     use  Custom_Decimal_Types.Show_Info_Procs;
 
-    procedure Show_Machine_Representation is
+    procedure Show_Decimal_Types_Machine_Repr is
     begin
        Put_Line ("=============================");
        Put_Line ("T0_D4");
@@ -3501,7 +3616,7 @@ the machine representation of those decimal values. For example:
        Show_Info (T2_D6'(1.0),  "1.0     ");
        Show_Info (T2_D6'(1.55), "1.55    ");
        Show_Info (T2_D6'(2.0),  "2.0     ");
-    end Show_Machine_Representation;
+    end Show_Decimal_Types_Machine_Repr;
 
 The table shows the values that we get by running the test application:
 
@@ -3545,6 +3660,288 @@ For example, if we multiply the integer representation of the real value by the
 +-------------+-------------------------------+
 |        2.00 |                  = 200 * 0.01 |
 +-------------+-------------------------------+
+
+
+.. _Adv_Ada_Ordinary_Fixed_Point_Machine_Representation:
+
+Machine representation of ordinary fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now let's look into how ordinary fixed-point types are typically represented in
+actual hardware. Consider the types from the :ada:`Angles` package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+
+    package Angles is
+
+       D : constant := 0.2;
+       --  Note: D is not a power of two.
+
+       type Angle is
+         delta D
+           range 0.0 .. 360.0 - D;
+
+       type Int_Angle is
+         range -2 ** (Angle'Size - 1) ..
+                2 ** (Angle'Size - 1) - 1;
+
+       type Angle_Adj is
+         delta D
+           range 0.0 .. 360.0 - D
+         with Small => D;
+
+       type Int_Angle_Adj is
+         range -2 ** (Angle_Adj'Size - 1) ..
+                2 ** (Angle_Adj'Size - 1) - 1;
+
+    end Angles;
+
+As we've done before, we can use
+:ref:`overlays <Adv_Ada_Address_Aspect_Overlay>` to uncover the actual integer
+values stored on the machine when assigning values to objects of fixed-point
+type. We do this in the generic :ada:`Gen_Show_Info` procedure:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+
+    generic
+       type T_Fixed     is delta <>;
+       type T_Int_Fixed is range <>;
+    procedure Gen_Show_Info (V     : T_Fixed;
+                             V_Str : String);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Gen_Show_Info (V     : T_Fixed;
+                             V_Str : String)
+    is
+       V_Local       : T_Fixed;
+
+       V_Int_Overlay : T_Int_Fixed
+         with Address => V_Local'Address,
+              Import, Volatile;
+
+       pragma Assert
+         (T_Int_Fixed'Size = T_Fixed'Size);
+       pragma Assert
+         (T_Int_Fixed'Alignment =
+            T_Fixed'Alignment);
+
+       V_Real        : Float;
+    begin
+       V_Local := V;
+       V_Real  := Float (V_Int_Overlay) *
+         T_Fixed'Small;
+
+       Put_Line (V_Str
+                 & " (fixed-point) : "
+                 & Float (V_Local)'Image);
+       Put_Line (V_Str
+                 & " (integer)     : "
+                 & V_Int_Overlay'Image);
+       Put_Line (V_Str
+                 & " (floating-p.) : "
+                 & V_Real'Image);
+       Put_Line ("----------");
+    end Gen_Show_Info;
+
+    with Gen_Show_Info;
+
+    package Angles.Show_Info_Procs is
+
+       procedure Show_Info is new
+         Gen_Show_Info (T_Fixed     => Angle,
+                        T_Int_Fixed => Int_Angle);
+       procedure Show_Info is new
+         Gen_Show_Info (T_Fixed     => Angle_Adj,
+                        T_Int_Fixed => Int_Angle_Adj);
+
+    end Angles.Show_Info_Procs;
+
+With all these packages and procedures in place, let's write a test application
+that displays a couple of values:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Angles;        use  Angles;
+
+    with Angles.Show_Info_Procs;
+    use  Angles.Show_Info_Procs;
+
+    procedure Show_Ordinary_Fixed_Machine_Repr is
+    begin
+       Put_Line ("=============================");
+       Put_Line ("Angle");
+       Put_Line ("=============================");
+
+       Show_Info (Angle'First,  "Angle'First ");
+       Show_Info (Angle'(0.25), "0.25        ");
+       Show_Info (Angle'(0.50), "0.50        ");
+       Show_Info (Angle'(0.75), "0.75        ");
+       Show_Info (Angle'(0.80), "0.80        ");
+       Show_Info (Angle'Last,   "Angle'Last  ");
+
+       Put_Line ("=============================");
+       Put_Line ("Angle_Adj");
+       Put_Line ("=============================");
+
+       Show_Info (Angle_Adj'First,
+                  "Angle_Adj'First ");
+       Show_Info (Angle_Adj'(0.25),
+                  "0.25            ");
+       Show_Info (Angle_Adj'(0.50),
+                  "0.50            ");
+       Show_Info (Angle_Adj'(0.75),
+                  "0.75            ");
+       Show_Info (Angle_Adj'(0.80),
+                  "0.80            ");
+       Show_Info (Angle_Adj'Last,
+                  "Angle_Adj'Last  ");
+
+    end Show_Ordinary_Fixed_Machine_Repr;
+
+The table below shows some of the values that we get by running the test
+application:
+
++-------------+---------------------------------+
+| Real value  | Integer representation          |
+|             +--------------+------------------+
+|             | :ada:`Angle` | :ada:`Angle_Adj` |
+|             | type         | type             |
++=============+==============+==================+
+|        0.25 |            2 |                1 |
++-------------+--------------+------------------+
+|        0.50 |            4 |                2 |
++-------------+--------------+------------------+
+|        0.75 |            6 |                3 |
++-------------+--------------+------------------+
+|        0.80 |            6 |                4 |
++-------------+--------------+------------------+
+
+Before we calculate the exact value stored in the fixed-point objects,
+we have to retrieve the *small* of these fixed-point types. The generic
+:ada:`Gen_Show_Type_Info` procedure below provides us with some type
+information:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+
+    generic
+       type T_Fixed is delta <>;
+    procedure Gen_Show_Type_Info
+      (T_Fixed_Name : String);
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    procedure Gen_Show_Type_Info
+      (T_Fixed_Name : String) is
+    begin
+       Put_Line ("The size           of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Size'Image
+                 & " bits");
+       Put_Line ("The small          of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Small'Image);
+       Put_Line ("The delta    value of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Delta'Image);
+       Put_Line ("The minimum  value of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'First'Image);
+       Put_Line ("The maximum  value of "
+                 & T_Fixed_Name
+                 & " is "
+                 & T_Fixed'Last'Image);
+       Put_Line ("-----------------------------");
+    end Gen_Show_Type_Info;
+
+We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
+:ada:`Angle` and :ada:`Angle_Adj` types to retrieve the *small* of each type:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Angles;      use  Angles;
+
+    with Gen_Show_Type_Info;
+
+    procedure Show_Fixed_Point_Types_Info is
+       procedure Show_Angle_Type_Info is new
+         Gen_Show_Type_Info (T_Fixed => Angle);
+       procedure Show_Angle_Adj_Type_Info is new
+         Gen_Show_Type_Info (T_Fixed => Angle_Adj);
+    begin
+       Show_Angle_Type_Info ("Angle     ");
+       Show_Angle_Adj_Type_Info ("Angle_Adj ");
+    end Show_Fixed_Point_Types_Info;
+
+Note that, as this output shows, :ada:`Angle'Small` (= 0.125) is not equal
+to :ada:`Angle'Delta` (= 0.2). This is because, when the :ada:`Small`
+aspect is not explicitly specified, the Ada compiler selects the largest power
+of two not exceeding the *delta* value. Since 0.2 is not a power of two, we get
+0.125 (= 2\ :sup:`-3`) as the *small* for the :ada:`Angle` type. In contrast,
+:ada:`Angle_Adj` explicitly sets :ada:`Small => D`, so that
+:ada:`Angle_Adj'Small` = :ada:`Angle_Adj'Delta` = 0.2. (We discuss this topic
+in more details later on.)
+
+.. todo::
+
+    Add link to subsection on "delta vs. small" for ordinary fixed-point types
+    once available.
+
+Now, for each value, we multiply the integer representation of that value by
+the corresponding *small* of the type, so that we get the exact stored value.
+These are the results for the :ada:`Angle` type |mdash| including the
+difference between the original real value and the exact real value stored in
+the fixed-point object:
+
++-------------+------------------------------------------------------------+
+| Real value  | :ada:`Angle` type                                          |
+|             +-----------------------------------------------+------------+
+|             | Exact stored value                            | Difference |
+|             |                                               |            |
+|             | (integer representation                       |            |
+|             | multiplied by the *small*)                    |            |
++=============+===============================================+============+
+|        0.25 |          0.25                     = 2 * 0.125 |          0 |
++-------------+-----------------------------------------------+------------+
+|        0.50 |          0.50                     = 4 * 0.125 |          0 |
++-------------+-----------------------------------------------+------------+
+|        0.75 |          0.75                     = 6 * 0.125 |          0 |
++-------------+-----------------------------------------------+------------+
+|        0.80 |          0.75                     = 6 * 0.125 |       0.05 |
++-------------+-----------------------------------------------+------------+
+
+And these are the results for the :ada:`Angle_Adj` type:
+
++-------------+------------------------------------------------------------+
+| Real value  | :ada:`Angle_Adj` type                                      |
+|             +-----------------------------------------------+------------+
+|             | Exact stored value                            | Difference |
+|             |                                               |            |
+|             | (integer representation                       |            |
+|             | multiplied by the *small*)                    |            |
++=============+===============================================+============+
+|        0.25 |           0.2                       = 1 * 0.2 |       0.05 |
++-------------+-----------------------------------------------+------------+
+|        0.50 |           0.4                       = 2 * 0.2 |       0.10 |
++-------------+-----------------------------------------------+------------+
+|        0.75 |           0.6                       = 3 * 0.2 |       0.15 |
++-------------+-----------------------------------------------+------------+
+|        0.80 |           0.8                       = 4 * 0.2 |          0 |
++-------------+-----------------------------------------------+------------+
+
+As we can see in the table, there might be numeric differences between the
+values that we intend to store in the object and the values that actually
+get stored there. These differences are directly related to the *small*
+associated with the ordinary fixed-point type. In the end, the *small* defines
+how accurately a given real value can be represented in the fixed-point object.
 
 
 .. _Adv_Ada_Fixed_Point_Types_Conversions:
@@ -3607,13 +4004,229 @@ In this example, we convert the value of :ada:`D` |mdash| from the
 :ada:`Acc` by writing :ada:`Decimal (Acc)`, which converts it from the
 :ada:`Long_Long_Decimal` to the :ada:`Decimal` type.
 
+Let's continue with the conversion between ordinary fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Ordinary_Fixed_Type_Conversions
+
+    package Custom_Fixed_Point is
+       D_15 : constant := 2.0 ** (-15);
+       D_31 : constant := 2.0 ** (-31);
+
+       type TQ15 is
+         delta D_15
+         range -1.0 .. 1.0 - D_15;
+
+       type TQ31 is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Conversions is
+       V_31 : TQ31;
+       V_15 : TQ15;
+
+       procedure Show_Vars is
+       begin
+          Put_Line ("V_31 = "
+                    & V_31'Image);
+          Put_Line ("V_15 = "
+                    & V_15'Image);
+          Put_Line ("--------------");
+       end Show_Vars;
+    begin
+       V_15 := 0.81182861328125;
+       V_31 := TQ31 (V_15);
+       Show_Vars;
+
+       V_31 := 0.81182861328125;
+       V_15 := TQ15 (V_31);
+       Show_Vars;
+    end Show_Fixed_Point_Conversions;
+
+Here, we write :ada:`TQ31 (V_15)` to convert the value of :ada:`V_15` from the
+:ada:`TQ15` to the :ada:`TQ31` type. Likewise, we write :ada:`TQ15 (V_31)` to
+convert the value of :ada:`V_31` from the :ada:`TQ31` to the :ada:`TQ15` type.
+
+Note that the output is identical in both cases. In the first case,
+0.81182861328125 is stored in :ada:`V_15` (of type :ada:`TQ15`), which rounds
+it to the nearest :ada:`TQ15` value (shown as 0.81183). That stored value is
+then converted to :ada:`TQ31` without loss, which results in 0.8118286133.
+In the second case, 0.81182861328125 is stored in :ada:`V_31` (of type
+:ada:`TQ31`) as 0.8118286133. We then convert it back to :ada:`TQ15`, which
+rounds it to 0.81183. As we can see, when converting from a less-precise type
+to a more-precise type, the operation is always lossless. However, the reverse
+conversion may lose precision.
+
+Finally, let's look into the conversion between ordinary and decimal
+fixed-point types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Type_Conversions
+
+    package Custom_Fixed_Point is
+
+       type Decimal is
+         delta 10.0 ** (-9) digits 9;
+
+       D_31 : constant :=  2.0 ** (-31);
+       type Fixed_Point is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Conversions is
+       FP : Fixed_Point;
+       D  : Decimal;
+    begin
+       FP := 0.5;
+       D  := Decimal (FP);
+
+       Put_Line ("FP = "
+                 & FP'Image);
+       Put_Line ("D  = "
+                 & D'Image);
+       Put_Line ("------------------------------");
+
+       D  := 0.25;
+       FP := Fixed_Point (D);
+
+       Put_Line ("FP = "
+                 & FP'Image);
+       Put_Line ("D  = "
+                 & D'Image);
+    end Show_Fixed_Point_Conversions;
+
+We see two conversions in the :ada:`Show_Fixed_Point_Conversions` procedure:
+the conversion to a decimal type via :ada:`Decimal (FP)` and the conversion to
+an ordinary fixed-point type via :ada:`Fixed_Point (D)`.
+
+.. admonition:: For further reading...
+
+    Note that these two types aren't completely equivalent in terms of range or
+    size, but close enough for illustration. Let's look at the information for
+    each type:
+
+    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Type_Conversions
+
+        package Fixed_Point_Type_Info is
+
+           generic
+              type T_Fixed is delta <>;
+           procedure Gen_Show_Fixed_Type_Info
+             (T_Fixed_Name : String);
+
+           generic
+              type T_Decimal is delta <> digits <>;
+           procedure Gen_Show_Decimal_Type_Info
+             (T_Decimal_Name : String);
+
+        end Fixed_Point_Type_Info;
+        with Ada.Text_IO; use Ada.Text_IO;
+
+        package body Fixed_Point_Type_Info is
+
+           procedure Gen_Show_Fixed_Type_Info
+             (T_Fixed_Name : String) is
+           begin
+              Put_Line ("The size           of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Size'Image
+                        & " bits");
+              Put_Line ("The small          of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Small'Image);
+              Put_Line ("The delta    value of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Delta'Image);
+              Put_Line ("The minimum  value of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'First'Image);
+              Put_Line ("The maximum  value of "
+                        & T_Fixed_Name
+                        & " is "
+                        & T_Fixed'Last'Image);
+              Put_Line ("-----------------------------");
+           end Gen_Show_Fixed_Type_Info;
+
+           procedure Gen_Show_Decimal_Type_Info
+             (T_Decimal_Name : String) is
+           begin
+              Put_Line ("The size           of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Size'Image
+                        & " bits");
+              Put_Line ("The small          of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Small'Image);
+              Put_Line ("The delta    value of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Delta'Image);
+              Put_Line ("The minimum  value of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'First'Image);
+              Put_Line ("The maximum  value of "
+                        & T_Decimal_Name
+                        & " is "
+                        & T_Decimal'Last'Image);
+              Put_Line ("-----------------------------");
+           end Gen_Show_Decimal_Type_Info;
+
+        end Fixed_Point_Type_Info;
+
+        with Custom_Fixed_Point;
+        use  Custom_Fixed_Point;
+
+        with Fixed_Point_Type_Info;
+        use  Fixed_Point_Type_Info;
+
+        procedure Show_Fixed_Point_Conversions is
+           procedure Show_Fixed_Point_Type_Info is new
+             Gen_Show_Fixed_Type_Info
+               (T_Fixed => Fixed_Point);
+
+           procedure Show_Decimal_Type_Info is new
+             Gen_Show_Decimal_Type_Info
+               (T_Decimal => Decimal);
+        begin
+           Show_Decimal_Type_Info ("Decimal     ");
+           Show_Fixed_Point_Type_Info ("Fixed_Point ");
+        end Show_Fixed_Point_Conversions;
+
+    By running this test application, we see that the the size of
+    :ada:`Decimal` is 31 bits, while size of :ada:`Fixed_Point` is 32 bits.
+    Also, the *small* of :ada:`Decimal` is 1.0e-09 (10.0\ :sup:`-9`), while the
+    *small* of :ada:`Fixed_Point` is a bit smaller: 4.65661287307739258e-10
+    (2.0\ :sup:`-31`).
+    In addition, the range of both types is very close, but not equivalent to
+    each other |mdash| from -0.999999999 to 0.999999999 for :ada:`Decimal` and
+    from -1.0 to 0.9999999995 for :ada:`Fixed_Point`.
+
 
 .. _Adv_Ada_Fixed_Point_Type_Conversion_Other_Types:
 
 Conversion to other types
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Similarly, we can convert from and to fixed-point types when using
+As expected, we can convert from and to fixed-point types when using
 other numeric types such as integer and floating-point types.
 
 Let's see an example for decimal fixed-point types:
@@ -3658,6 +4271,7 @@ Let's see an example for decimal fixed-point types:
                  & D6'Image);
        Put_Line ("D18      = "
                  & D18'Image);
+       Put_Line ("-----------------------------");
 
        D18 := TD18 (Decimal'Last);
        D6  := Decimal (D18);
@@ -3669,6 +4283,7 @@ Let's see an example for decimal fixed-point types:
                  & D6'Image);
        Put_Line ("D18      = "
                  & D18'Image);
+       Put_Line ("-----------------------------");
 
        D6       := 800.0;
        D18_1000 := TD18_1000 (D6);
@@ -3683,10 +4298,14 @@ Let's see an example for decimal fixed-point types:
 
     end Show_Decimal_Type_Conversions;
 
-In this example, we declare the decimal fixed-point type :ada:`Decimal` and the
-floating-point type :ada:`TD18`. Conversion between these two types works as
-expected: we use :ada:`TD18 (D6)` to convert from a decimal fixed-point type
-and :ada:`Decimal (D18)` to convert to a decimal fixed-point type.
+In the :ada:`Custom_Types` package, we declare the decimal fixed-point type
+:ada:`Decimal`, the floating-point type :ada:`TD18` and the range-constrained
+floating-point type :ada:`TD18_1000`.
+
+Conversion between these three types works as expected, as we see in the
+:ada:`Show_Decimal_Type_Conversions` procedure. We use :ada:`TD18 (D6)` and
+:ada:`TD18_1000 (D6)` to convert from a decimal fixed-point type,
+:ada:`Decimal (D18)` to convert to a decimal fixed-point type.
 
 Of course, when converting to a fixed-point type, we have to ensure
 that the floating-point value is in the range that is suitable for the target
@@ -3695,6 +4314,376 @@ type to a floating-point type |mdash| if we had assigned 2000.0 to :ada:`D6`
 instead of 800.0, for example, the conversion :ada:`TD18_1000 (D6)` would have
 raised a :ada:`Constraint_Error` because of the failed range check.
 
+Similarly, we can convert from and to ordinary fixed-point types when using
+other numeric types such as integer and floating-point types. For example:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Ordinary_Fixed_Type_Conversions_Other_Types
+
+    package Custom_Types is
+       D_48 : constant := 2.0 ** (-48);
+
+       type TQ15_48 is
+         delta  D_48
+         range -2.0 ** 15 ..
+                2.0 ** 15 - D_48;
+
+       type T2_D6 is
+         delta 10.0 ** (-2) digits 6;
+       --  Decimal type
+
+       type TD18 is
+         digits 18;
+       --  Floating-point type
+
+       type Int15 is
+         range -2 ** 15 ..
+                2 ** 15;
+       --  Integer type
+
+    end Custom_Types;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Types;
+    use  Custom_Types;
+
+    procedure Show_Decimal_Type_Conversions is
+       V_2_D6   : T2_D6;
+       V_D18    : TD18;
+       V_Q15_48 : TQ15_48;
+       V_Int15  : Int15;
+    begin
+       V_Q15_48 := 1.0;
+
+       V_2_D6   := T2_D6 (V_Q15_48);
+       V_D18    := TD18 (V_Q15_48);
+       V_Int15  := Int15 (V_Q15_48);
+       --          ^^^^^^^^^^^^^^^^
+       --  Conversions from
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_2_D6   = "
+                 & V_2_D6'Image);
+       Put_Line ("V_D18    = "
+                 & V_D18'Image);
+       Put_Line ("V_Int15  = "
+                 & V_Int15'Image);
+       Put_Line ("-----------------------------");
+
+       V_D18    := TD18 (TQ15_48'Last);
+
+       V_Q15_48 := TQ15_48 (V_D18);
+       --          ^^^^^^^^^^^^^
+       --  Conversion to
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_D18    = "
+                 & V_D18'Image);
+       Put_Line ("-----------------------------");
+
+       V_2_D6   := 2.0;
+
+       V_Q15_48 := TQ15_48 (V_2_D6);
+       --          ^^^^^^^^^^^^^^^
+       --  Conversion to
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_2_D6   = "
+                 & V_2_D6'Image);
+       Put_Line ("-----------------------------");
+
+       V_Int15  := 4;
+
+       V_Q15_48 := TQ15_48 (V_Int15);
+       --          ^^^^^^^^^^^^^^^^^
+       --  Conversion to
+       --  ordinary fixed-point
+
+       Put_Line ("V_Q15_48 = "
+                 & V_Q15_48'Image);
+       Put_Line ("V_Int15  = "
+                 & V_Int15'Image);
+       Put_Line ("-----------------------------");
+
+    end Show_Decimal_Type_Conversions;
+
+In the :ada:`Custom_Types` package, we declare the ordinary fixed-point type
+:ada:`TQ15_48`, the decimal type :ada:`T2_D6` and the floating-point type
+:ada:`TD18`. We convert to the ordinary fixed-point type :ada:`TQ15_48` by
+using :ada:`TQ15_48 (V_D18)`, :ada:`TQ15_48 (V_2_D6)`, or
+:ada:`TQ15_48 (V_Int15)` for instance. We convert from the ordinary fixed-point
+object :ada:`V_Q15_48` by writing :ada:`T2_D6 (V_Q15_48)`,
+:ada:`TD18 (V_Q15_48)`  or :ada:`Int15 (V_Q15_48)`.
+
+
+Type conversions and machine representation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's combine what we learned in the sections about
+:ref:`type conversion of fixed-point types <Adv_Ada_Fixed_Point_Type_Conversion>`
+and
+:ref:`machine representation <Adv_Ada_Fixed_Point_Machine_Representation>`
+and see the effect of type conversion to the machine representation of
+fixed-point types.
+
+
+.. _Adv_Ada_Decimal_Fixed_Point_Type_Conversion_Machine_Representation:
+
+Type conversions and machine representation of decimal types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To understand the machine representation of decimal types, let's reuse the
+:ada:`T0_D4`, :ada:`T2_D6` and :ada:`T2_D12` types from the
+:ada:`Custom_Decimal_Types` package. We can use the :ada:`Show_Info` procedure
+we've created before to uncover the integer representation of the decimal
+objects (:ada:`V_T0_D4`, :ada:`V_T2_D6` and :ada:`V_T2_D12`) after the type
+conversion:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    with Custom_Decimal_Types.Show_Info_Procs;
+    use  Custom_Decimal_Types.Show_Info_Procs;
+
+    procedure Show_Decimal_Conversion_Repr is
+       V_T0_D4   : T0_D4;
+       V_T2_D6   : T2_D6;
+       V_T2_D12  : T2_D12;
+    begin
+       Put_Line ("=============================");
+       Put_Line ("T2_D6 <-- T0_D4");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T0_D4 (152.0)");
+       Put_Line ("-----------------------------");
+
+       V_T0_D4 := 152.0;
+       V_T2_D6 := T2_D6 (V_T0_D4);
+
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T0_D4 (1.0)");
+       Put_Line ("-----------------------------");
+       V_T0_D4 := 1.0;
+       V_T2_D6 := T2_D6 (V_T0_D4);
+
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+
+       Put_Line ("=============================");
+       Put_Line ("T0_D4 <-- T2_D6");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T2_D6 (225.0)");
+       Put_Line ("-----------------------------");
+       V_T2_D6 := 225.0;
+       V_T0_D4 := T0_D4 (V_T2_D6);
+
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T2_D6 (1.55)");
+       Put_Line ("-----------------------------");
+       V_T2_D6 := 1.55;
+       V_T0_D4 := T0_D4 (V_T2_D6);
+
+       Show_Info (V_T2_D6, "V_T2_D6 ");
+       Show_Info (V_T0_D4, "V_T0_D4 ");
+
+       Put_Line ("=============================");
+       Put_Line ("T2_D12 <-- T2_D6");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- T2_D6 (225.0)");
+       Put_Line ("-----------------------------");
+       V_T2_D6  := 225.0;
+       V_T2_D12 := T2_D12 (V_T2_D6);
+
+       Show_Info (V_T2_D6,  "V_T2_D6 ");
+       Show_Info (V_T2_D12, "V_T2_D12 ");
+    end Show_Decimal_Conversion_Repr;
+
+As we can see, the integer values are scaled to match the appropriate
+representation required for each type. For instance, the value 152.0 is
+represented as the integer value 152 for the :ada:`T0_D4` type. When converting
+it to :ada:`T2_D6`, the integer value is scaled to that type, so it becomes
+15200. The following table presents all values that show up when running the
+test application:
+
++--------+-----------------------------------+-----------------------------------+
+| Input  | Original / source                 | Target                            |
+| value  +---------------+---------+---------+---------------+---------+---------+
+|        | Type          | Actual  | Exact   | Type          | Actual  | Exact   |
+|        |               | integer | stored  |               | integer | stored  |
+|        |               | value   | value   |               | value   | value   |
++========+===============+=========+=========+===============+=========+=========+
+|  152.0 |  :ada:`T0_D4` |     152 |   152.0 |  :ada:`T2_D6` |   15200 |   152.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+|    1.0 |  :ada:`T0_D4` |       1 |     1.0 |  :ada:`T2_D6` |     100 |     1.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+| 225.00 |  :ada:`T2_D6` |   22500 |   225.0 |  :ada:`T0_D4` |     225 |   225.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+|   1.55 |  :ada:`T2_D6` |     155 |    1.55 |  :ada:`T0_D4` |       1 |     1.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+| 225.00 |  :ada:`T2_D6` |   22500 |   225.0 | :ada:`T2_D12` |   22500 |   225.0 |
++--------+---------------+---------+---------+---------------+---------+---------+
+
+As expected, when converting to a type with less accuracy |mdash| i.e. whose
+*small* is greater than the *small* of the type we're converting from |mdash|
+the integer representation might lose digits. For instance, when the value 1.55
+is converted from :ada:`T2_D6` type to the :ada:`T0_D4` type, the value becomes
+1.00 |mdash| here, the corresponding integer representation 155 (for the
+:ada:`T2_D6` type) is scaled down to 1 (for the :ada:`T0_D4` type). Naturally,
+if we had converted this value back to original :ada:`T2_D6` type, the integer
+representation would then be 100 instead of the previous 155.
+
+Also, when two types have the same *small*, the type conversion doesn't change
+the machine representation. For example, when the value 225.0 is converted from
+the :ada:`T2_D6` type to the :ada:`T2_D12` type, its integer representation
+(22500) doesn't change, although these two types have different sizes and
+different ranges.
+
+In this example, the *small* values of :ada:`T0_D4`, :ada:`T2_D6`, and
+:ada:`T2_D12` are integer multiples of each other, so any value representable
+by the less-precise type is also representable by the more-precise type. Note
+that this isn't always true: as we'll see in the
+:ref:`next section <Adv_Ada_Ordinary_Fixed_Point_Type_Conversion_Machine_Representation>`,
+when the *small* values are not integer multiples of each other, a value
+exactly representable in the less-precise type may not be representable in the
+more-precise type.
+
+
+.. _Adv_Ada_Ordinary_Fixed_Point_Type_Conversion_Machine_Representation:
+
+Type conversion and machine representation of ordinary fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now, we discuss the machine representation of ordinary fixed-point types. For
+that, let's reuse the :ada:`Angle` and  :ada:`Angle_Adj` types from the
+:ada:`Angles` package. Again, we use the :ada:`Show_Info` procedure we've
+created before to uncover the integer representation of the fixed-point
+objects (:ada:`V_Angle` and :ada:`V_Angle_Adj`) after the type conversion:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Angles;        use  Angles;
+
+    with Angles.Show_Info_Procs;
+    use  Angles.Show_Info_Procs;
+
+    procedure Show_Fixed_Conversion_Repr
+    is
+       V_Angle     : Angle;
+       V_Angle_Adj : Angle_Adj;
+    begin
+       Put_Line ("=============================");
+       Put_Line ("Angle_Adj <-- Angle");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle (90.0)");
+       Put_Line ("-----------------------------");
+       V_Angle     := 90.0;
+       V_Angle_Adj := Angle_Adj (V_Angle);
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle (0.5)");
+       Put_Line ("-----------------------------");
+       V_Angle     := 0.5;
+       V_Angle_Adj := Angle_Adj (V_Angle);
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+
+       Put_Line ("=============================");
+       Put_Line ("Angle <-- Angle_Adj");
+       Put_Line ("=============================");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle_Adj (95.0)");
+       Put_Line ("-----------------------------");
+       V_Angle_Adj := 95.0;
+       V_Angle     := Angle (V_Angle_Adj);
+
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+       Show_Info (V_Angle,     "V_Angle     ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("----- Angle_Adj (0.5)");
+       Put_Line ("-----------------------------");
+       V_Angle_Adj := 0.5;
+       V_Angle     := Angle (V_Angle_Adj);
+
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+       Show_Info (V_Angle,     "V_Angle     ");
+    end Show_Fixed_Conversion_Repr;
+
+As expected, the integer values are scaled to match the appropriate
+representation for each type. For instance, the value 90.0 is represented as
+the integer value 720 for the :ada:`Angle` type. When converting to
+:ada:`Angle_Adj`, the integer value becomes 450. The following table presents
+all values that show up when running the test application:
+
++--------+----------------------------------------+----------------------------------------+
+| Input  | Original / source                      | Target                                 |
+| value  +--------------------+---------+---------+--------------------+---------+---------+
+|        | Type               | Actual  | Exact   | Type               | Actual  | Exact   |
+|        |                    | integer | stored  |                    | integer | stored  |
+|        |                    | value   | value   |                    | value   | value   |
++========+====================+=========+=========+====================+=========+=========+
+|   90.0 |       :ada:`Angle` |     720 |    90.0 |   :ada:`Angle_Adj` |     450 |    90.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+|    0.5 |       :ada:`Angle` |       4 |     0.5 |   :ada:`Angle_Adj` |       2 |     0.4 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+|   95.0 |   :ada:`Angle_Adj` |     475 |    95.0 |       :ada:`Angle` |     760 |    95.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+|    0.5 |   :ada:`Angle_Adj` |       2 |     0.4 |       :ada:`Angle` |       3 |   0.375 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+
+We've seen :ref:`before <Adv_Ada_Ordinary_Fixed_Point_Machine_Representation>`
+that we might see inaccuracies for values close to the *small* of the ordinary
+fixed-point type. Similarly, when converting to another fixed-point type,
+further inaccuracies may be introduced. For example, the value 0.5 becomes 0.4
+when assigned it to an object of :ada:`Angle_Adj` type. When converting it to
+the :ada:`Angle` type, the value becomes 0.375 |mdash| even though the original
+value 0.5 could be perfectly represented with the :ada:`Angle` type.
+
+This also illustrates the point made at the end of the
+:ref:`previous section <Adv_Ada_Decimal_Fixed_Point_Type_Conversion_Machine_Representation>`:
+0.4 is exactly representable in the less-precise :ada:`Angle_Adj` type
+(as 2 * 0.2), but not in the more-precise :ada:`Angle` type (because
+0.4 / 0.125 = 3.2, so the integer representation is 3), so converting from
+:ada:`Angle_Adj` to :ada:`Angle` still introduces an inaccuracy.
+
+Note that, even though these inaccuracies become clear when we analyze
+individual values to such a degree of detail, they're not restricted to
+fixed-point types. In fact, inaccuracies might show up with floating-point
+types as well because the mantissa of those types has a limited accuracy as
+well.
+
 
 Operations using universal fixed types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3702,66 +4691,37 @@ Operations using universal fixed types
 Let's look at how fixed-point types behave in the case of operations
 that make use of :ref:`universal fixed types <Adv_Ada_Universal_Fixed>`.
 
+Type conversions
+^^^^^^^^^^^^^^^^
+
 When mixing objects of different fixed-point types, as usual, we can use
 :ref:`type conversions <Adv_Ada_Fixed_Point_Type_Conversion>`, e.g.
 when  assigning the result to an object of a different type. As we've mentioned
 before, type conversions between fixed-point types make use of universal
 fixed-point types.
 
-.. ::
+.. admonition:: For further reading...
 
-    Consider the following package from a previous section:
+    When the operand of a type conversion is a call to a universal-fixed
+    operator (such as :ada:`*` or :ada:`/`), the conversion and the operation
+    are evaluated together as a single step, rather than the usual two steps of
+    first evaluating the operand and then converting the result. This means
+    that all the :ada:`Small` values involved |mdash| one for each fixed-point
+    type |mdash| contribute to the final result.
 
-    .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_2
+    For example, in an expression such as:
 
-        package Custom_Decimal_Types is
+    .. code-block:: ada
 
-           type Short_Decimal is
-             delta 10.0 ** (-0) digits 4;
-            --  range -9_999.0 .. 9_999.0;
+        Fx1 (Fx2'(X) * Fx3'(Y))
 
-           type Decimal is
-             delta 10.0 ** (-2) digits 6;
-            --  range -9_999.99 .. 9_999.99;
+    the result depends on the :ada:`Small` values of all three types
+    (:ada:`Fx1`, :ada:`Fx2`, and :ada:`Fx3`), as well as the integer values
+    of :ada:`X` and :ada:`Y`.
 
-        end Custom_Decimal_Types;
 
-    Let's look at a simple example of type conversions between these types:
-
-    .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_2
-
-        with Ada.Text_IO; use Ada.Text_IO;
-
-        with Custom_Decimal_Types;
-        use  Custom_Decimal_Types;
-
-        procedure Show_Mixing_Decimal_Types is
-           A : Short_Decimal;
-           B : Decimal;
-        begin
-           A := Short_Decimal'Last;     --  9_999.0
-           B := Decimal (A);
-           Put_Line ("A =     " &
-                     A'Image);
-           Put_Line ("B = A = " &
-                     B'Image);
-
-           Put_Line ("--------------");
-           B := 9_999.0;
-           A := Short_Decimal (B);
-           Put_Line ("B =     " &
-                     B'Image);
-           Put_Line ("A = B = " &
-                     A'Image);
-
-        end Show_Mixing_Decimal_Types;
-
-    Here, we use :ada:`Decimal (A)` and :ada:`Short_Decimal (B)` to convert to :ada:`Decimal`
-    and :ada:`Short_Decimal`, respectively.
-
-    Note that, if we had assigned :ada:`9_999.99` (or :ada:`Decimal`) to :ada:`B` in
-    the code above, the :ada:`Short_Decimal (B)` would raise a :ada:`Constraint_Error`
-    exception due the small difference in the range that we mentioned previously.
+Multiplication and division operations with decimal types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In addition, the multiplication and division operations also make use of
 universal fixed types. Consider the following package with decimal fixed-point
@@ -3913,6 +4873,303 @@ types, and the :ada:`A / B` expression makes use of universal fixed types.
     division operation itself is still performed using universal fixed types.
     (Also, keep in mind that the type conversion is also performed using
     universal fixed types, too.)
+
+
+Multiplication and division operations with ordinary fixed-point types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now, let's see how ordinary fixed-point types also make use of universal
+fixed types for multiplication and division operations. Consider the following
+package:
+
+.. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed
+
+    package Custom_Fixed_Point is
+       D_15 : constant := 2.0 ** (-15);
+       D_24 : constant := 2.0 ** (-24);
+       D_31 : constant := 2.0 ** (-31);
+
+       type TQ15 is
+         delta D_15
+         range -1.0 .. 1.0 - D_15;
+
+       type TQ31 is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+       type TQ7_24 is
+         delta  D_24
+         range -2.0 ** 7 ..
+                2.0 ** 7   - D_24;
+
+    end Custom_Fixed_Point;
+
+The :ada:`Show_Universal_Fixed` procedure show a couple of multiplications
+using universal fixed types:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Universal_Fixed is
+       Acc  : TQ7_24;
+       A, B : TQ31;
+    begin
+       Acc := 1.0;
+       A   := 0.75;
+       B   := 0.75;
+       Put_Line ("A    = " & A'Image);
+       Put_Line ("B    = " & B'Image);
+       Put_Line ("Acc  = " & Acc'Image);
+       Put_Line ("--------------");
+
+       Put_Line ("Acc := Acc * A * 2");
+       Acc := Acc * A * 2;
+       --     ^^^^^^^^^^^
+       --  Using universal fixed point
+
+       Put_Line ("Acc  = " & Acc'Image);
+
+       Put_Line ("--------------");
+       Put_Line ("A   := Acc / 2 * B");
+       A := Acc / 2 * B;
+       --   ^^^^^^^^^^^
+       --  Using universal fixed point
+       Put_Line ("A    = " & A'Image);
+
+    end Show_Universal_Fixed;
+
+Because universal fixed types are used for the :ada:`Acc * A * 2`
+or the :ada:`Acc / 2 * B` operation, we don't have to perform type conversion
+before the multiplication, and the result of the operation has a meaningful
+value.
+
+For the division operation, universal fixed types are used as well:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Universal_Fixed is
+       Acc : TQ7_24;
+       A   : TQ31;
+    begin
+       Acc := 1.0;
+       A   := 0.75;
+       Put_Line ("A    = " & A'Image);
+       Put_Line ("Acc  = " & Acc'Image);
+       Put_Line ("--------------");
+
+       Put_Line ("Acc := Acc / A");
+       Acc := Acc / A;
+       --     ^^^^^^^
+       --  Using universal fixed point
+
+       Put_Line ("Acc  = " & Acc'Image);
+    end Show_Universal_Fixed;
+
+Here, the :ada:`Acc / A` operation makes use of universal fixed types.
+
+
+.. _Adv_Ada_Fixed_Point_Integer_Multiplication_Division:
+
+Integer multiplication and division
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An interesting feature that exists for fixed-point types is the *direct*
+multiplication or division by integers. This isn't possible with
+floating-point types, though. For instance, if we have a fixed-point object
+:ada:`A`, we can write a statement such as :ada:`A := A * 2;`. For a
+floating-point object :ada:`F`, we would have to write :ada:`F := F * 2.0;`.
+Similarly, if we had an object of integer type :ada:`I`, we could write
+:ada:`A := A * I;` without having to convert :ada:`I` to the fixed-point type
+of :ada:`A`.
+
+Let's look at the operations of the following code snippet:
+
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Fixed_Integer_Multiplication_Division
+
+    package Custom_Fixed_Point is
+
+       type Decimal is
+         delta  10.0 ** (-9) digits 9;
+
+       D_31 : constant :=  2.0 ** (-31);
+       type Fixed_Point is
+         delta D_31
+         range -1.0 .. 1.0 - D_31;
+
+    end Custom_Fixed_Point;
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Fixed_Point;
+    use  Custom_Fixed_Point;
+
+    procedure Show_Fixed_Point_Integer_Mult_Div is
+       FP : Fixed_Point;
+       D  : Decimal;
+
+       procedure Show_Vars is
+       begin
+          Put_Line ("FP = "
+                    & FP'Image);
+          Put_Line ("D  = "
+                    & D'Image);
+          Put_Line ("------------------------------");
+       end Show_Vars;
+
+       I : Integer := 8;
+    begin
+       FP := 0.25;
+       D  := 0.25;
+       Show_Vars;
+
+       FP := FP * 2;
+       D  := D  * 2;
+       Show_Vars;
+
+       FP := FP / 4;
+       D  := D  / 4;
+       Show_Vars;
+
+       FP := FP / I;
+       D  := D  / I;
+       Show_Vars;
+    end Show_Fixed_Point_Integer_Mult_Div;
+
+Because :ada:`FP` and :ada:`D` are fixed-point types, we can write :ada:`* 2`,
+:ada:`/ 4` or :ada:`/ I` for objects of that type.
+
+If we look at the
+:ref:`machine representation <Adv_Ada_Fixed_Point_Machine_Representation>` of
+fixed-point types, it becomes clear that any integer operations we write for
+objects of fixed-point types become integer operations on the corresponding
+integer representation of those objects. In other words, in the *background*,
+we're basically performing integer operations.
+
+Let's start with a code example for decimal types:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
+    :class: ada-run
+
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Decimal_Types;
+    use  Custom_Decimal_Types;
+
+    with Custom_Decimal_Types.Show_Info_Procs;
+    use  Custom_Decimal_Types.Show_Info_Procs;
+
+    procedure Show_Decimal_Int_Mult_Repr is
+       V_T0_D4   : T0_D4;
+       V_T2_D6   : T2_D6;
+       V_T2_D12  : T2_D12;
+    begin
+       Put_Line ("-----------------------------");
+       Put_Line ("---- 152.0");
+       Put_Line ("-----------------------------");
+
+       V_T0_D4  := 152.0;
+       V_T2_D6  := 152.0;
+       V_T2_D12 := 152.0;
+
+       Show_Info (V_T0_D4,  "V_T0_D4  ");
+       Show_Info (V_T2_D6,  "V_T2_D6  ");
+       Show_Info (V_T2_D12, "V_T2_D12 ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("---- V := V * 2");
+       Put_Line ("-----------------------------");
+
+       V_T0_D4  := V_T0_D4  * 2;
+       V_T2_D6  := V_T2_D6  * 2;
+       V_T2_D12 := V_T2_D12 * 2;
+
+       Show_Info (V_T0_D4,  "V_T0_D4  ");
+       Show_Info (V_T2_D6,  "V_T2_D6  ");
+       Show_Info (V_T2_D12, "V_T2_D12 ");
+    end Show_Decimal_Int_Mult_Repr;
+
+The following table presents the values we get when we run the test
+application:
+
++--------+----------------------------------------+--------------------+-------------------+
+| Real   | Original                               | Operation          | Result            |
+| value  +--------------------+---------+---------+                    +---------+---------+
+|        | Type               | Actual  | Exact   |                    | Actual  | Exact   |
+|        |                    | integer | stored  |                    | integer | stored  |
+|        |                    | value   | value   |                    | value   | value   |
++========+====================+=========+=========+====================+=========+=========+
+|  152.0 |       :ada:`T0_D4` |     152 |   152.0 |  :ada:`V := V * 2` |     304 |   304.0 |
++--------+--------------------+---------+---------+                    +---------+---------+
+|  152.0 |       :ada:`T2_D6` |   15200 |   152.0 |                    |   30400 |   304.0 |
++--------+--------------------+---------+---------+                    +---------+---------+
+|  152.0 |      :ada:`T2_D12` |   15200 |   152.0 |                    |   30400 |   304.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+
+As we can see, the integer :ada:`* 2` operation is simply a multiplication by
+two of the integer representation of the fixed-point objects.
+
+Now, let's look at an example for ordinary fixed-point types:
+
+.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
+    :class: ada-run
+
+    with Ada.Text_IO;   use Ada.Text_IO;
+
+    with Angles;        use  Angles;
+
+    with Angles.Show_Info_Procs;
+    use  Angles.Show_Info_Procs;
+
+    procedure Show_Fixed_Int_Mult_Repr
+    is
+       V_Angle     : Angle;
+       V_Angle_Adj : Angle_Adj;
+    begin
+       Put_Line ("-----------------------------");
+       Put_Line ("---- 90.0");
+       Put_Line ("-----------------------------");
+
+       V_Angle     := 90.0;
+       V_Angle_Adj := 90.0;
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+
+       Put_Line ("-----------------------------");
+       Put_Line ("---- V := V * 2");
+       Put_Line ("-----------------------------");
+       V_Angle     := V_Angle     * 2;
+       V_Angle_Adj := V_Angle_Adj * 2;
+
+       Show_Info (V_Angle,     "V_Angle     ");
+       Show_Info (V_Angle_Adj, "V_Angle_Adj ");
+    end Show_Fixed_Int_Mult_Repr;
+
+The table presents the values we get when we run the test application:
+
++--------+----------------------------------------+--------------------+-------------------+
+| Real   | Original                               | Operation          | Result            |
+| value  +--------------------+---------+---------+                    +---------+---------+
+|        | Type               | Actual  | Exact   |                    | Actual  | Exact   |
+|        |                    | integer | stored  |                    | integer | stored  |
+|        |                    | value   | value   |                    | value   | value   |
++========+====================+=========+=========+====================+=========+=========+
+|   90.0 |       :ada:`Angle` |     720 |    90.0 |  :ada:`V := V * 2` |    1440 |   180.0 |
++--------+--------------------+---------+---------+                    +---------+---------+
+|   90.0 |   :ada:`Angle_Adj` |     450 |    90.0 |                    |     900 |   180.0 |
++--------+--------------------+---------+---------+--------------------+---------+---------+
+
+Again, the integer :ada:`* 2` operation is simply a multiplication by two of
+the integer representation of the fixed-point objects.
 
 
 .. _Adv_Ada_Decimal_Fixed_Point_Types:
