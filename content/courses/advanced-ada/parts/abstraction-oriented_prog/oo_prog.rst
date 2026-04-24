@@ -628,7 +628,7 @@ The trick is to always define a :ada:`Parent` subtype every time one
 extends a type, and use that subtype when calling the inherited procedure.
 Here is a full example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms_2
+.. code:: ada compile_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms_2
 
     package Geo_Forms with Pure is
 

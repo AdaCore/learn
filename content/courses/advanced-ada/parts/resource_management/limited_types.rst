@@ -2341,7 +2341,8 @@ Previously, we discussed
 For most types, extended return statements are no big deal |mdash| it's just
 syntactic sugar. But for limited types, this syntax is almost essential:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Extended_Return_Limited_Error
+.. code:: ada compile_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Extended_Return_Limited_Error
+    :class: ada-expect-compile-error
 
     package Task_Construct_Error is
 
