@@ -569,7 +569,7 @@ generally result in a run-time error.
     the subtype size is not known at compile time, but is dynamically computed
     (at run time).
 
-    .. code:: ada run_button project=Courses.Intro_To_Ada.Arrays.Indefinite_Subtypes
+    .. code:: ada no_button project=Courses.Intro_To_Ada.Arrays.Indefinite_Subtypes
 
         with Ada.Text_IO; use Ada.Text_IO;
 

@@ -1516,7 +1516,7 @@ We could map the :c:`int *` parameter of :ada:`add_one` to
 
 This is a complete code example:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
 
     package Operations is
 
@@ -1542,7 +1542,7 @@ appropriate parameter mode. In this case, we could replace
 :ada:`access Integer` by :ada:`aliased in out Integer`. This is the modified
 version of the code:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
 
     package Operations is
 
@@ -1626,7 +1626,7 @@ procedure, while we're using access types for the other two subprograms.
 
 Finally, as expected, we can use this specification in a test application:
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
+.. code:: ada no_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.C_Interfacing
 
     with Ada.Text_IO; use Ada.Text_IO;
 

@@ -480,7 +480,7 @@ checks are disabled. Here's an example of a simple program employing a
 low-level assertion. We can use it to show the effects of the switches,
 including the defaults:
 
-.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Low_Level_Assertion
+.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Low_Level_Assertion
 
    with Ada.Text_IO; use Ada.Text_IO;
 
