@@ -83,7 +83,10 @@
     "acorn": "^8.11.3",
     "is-svg": "^5.0.1",
     "ssri": "^10.0.6",
-    "whatwg-url": "^14"
+    "whatwg-url": "^14",
+    "lodash": "4.18.1",
+    "serialize-javascript": "7.0.5",
+    "globule/minimatch": "3.1.5"
   },
   "scripts": {
     "dev": "webpack serve --open --config webpack.dev.cjs --mode=development",
