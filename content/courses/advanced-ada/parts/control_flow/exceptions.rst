@@ -104,8 +104,7 @@ Just as an example, consider the bounded error described in section
 
 Let's see a code example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Classification_Of_Errors.Data_Validity_Bounded_Error
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Classification_Of_Errors.Data_Validity_Bounded_Error
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -168,8 +167,7 @@ section :arm:`13.9.1 Data Validity <13-9-1>`, paragraph 12/3, which discusses
 the implications of using the :ada:`Unchecked_Conversion` function. Let's see a
 code example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Classification_Of_Errors.Data_Validity_Erroneous_Execution
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Classification_Of_Errors.Data_Validity_Erroneous_Execution
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Unchecked_Conversion;
@@ -1442,8 +1440,7 @@ the exception occurrences that we collected.
 Similarly, we can use files to read and write exception occurrences. To do that,
 we can simply use the :ada:`Read` and :ada:`Write` attributes.
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exceptions_Package.Exception_Occurrence_Stream
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Exceptions_Package.Exception_Occurrence_Stream
 
     with Ada.Text_IO;
 

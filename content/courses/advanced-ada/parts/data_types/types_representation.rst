@@ -2520,8 +2520,7 @@ Overlays
 
 This approach allows us to create an overlay. For example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Simple_Overlay
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Simple_Overlay
 
     with Ada.Text_IO; use Ada.Text_IO;
 

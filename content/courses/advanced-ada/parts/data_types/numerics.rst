@@ -3587,8 +3587,7 @@ generic procedure for the :ada:`T0_D4` and :ada:`T2_D6` types (see
 We can then call :ada:`Show_Info` for a few values. By doing so, we see
 the machine representation of those decimal values. For example:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -3760,8 +3759,7 @@ type. We do this in the generic :ada:`Gen_Show_Info` procedure:
 With all these packages and procedures in place, let's write a test application
 that displays a couple of values:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
 
     with Ada.Text_IO;   use Ada.Text_IO;
 
@@ -3864,8 +3862,7 @@ information:
 We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
 :ada:`Angle` and :ada:`Angle_Adj` types to retrieve the *small* of each type:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
 
     with Angles;      use  Angles;
 
@@ -4445,8 +4442,7 @@ we've created before to uncover the integer representation of the decimal
 objects (:ada:`V_T0_D4`, :ada:`V_T2_D6` and :ada:`V_T2_D12`) after the type
 conversion:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -4581,8 +4577,7 @@ that, let's reuse the :ada:`Angle` and  :ada:`Angle_Adj` types from the
 created before to uncover the integer representation of the fixed-point
 objects (:ada:`V_Angle` and :ada:`V_Angle_Adj`) after the type conversion:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
 
     with Ada.Text_IO;   use Ada.Text_IO;
 
@@ -5056,8 +5051,7 @@ we're basically performing integer operations.
 
 Let's start with a code example for decimal types:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Decimal_Types
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -5119,8 +5113,7 @@ two of the integer representation of the fixed-point objects.
 
 Now, let's look at an example for ordinary fixed-point types:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Machine_Representation_Ordinary_Fixed_Types
 
     with Ada.Text_IO;   use Ada.Text_IO;
 
