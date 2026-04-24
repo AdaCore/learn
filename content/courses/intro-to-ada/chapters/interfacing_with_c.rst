@@ -36,7 +36,7 @@ the :ada:`Convention` aspect on the corresponding Ada type
 declaration. In the following example, we interface with the
 :ada:`C_Enum` enumeration declared in a C source file:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Enum
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Enum
 
     procedure Show_C_Enum is
 
@@ -50,7 +50,7 @@ declaration. In the following example, we interface with the
 To interface with C's built-in types, we use the :ada:`Interfaces.C`
 package, which contains most of the type definitions we need. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Struct
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Struct
 
     with Interfaces.C; use Interfaces.C;
 
@@ -111,7 +111,7 @@ Here's the corresponding C definition:
 
 We can interface this code in Ada using the :ada:`Import` aspect. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -135,7 +135,7 @@ We can interface this code in Ada using the :ada:`Import` aspect. For example:
 If you want, you can use a different subprogram name in the Ada code. For
 example, we could call the C function :ada:`Get_Value`:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Func
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -193,7 +193,7 @@ This is the corresponding body that implements that function:
 On the C side, we do the same as we would if the function were written
 in C: simply declare it using the :c:`extern` keyword.  For example:
 
-.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Func
+.. code:: c run_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Func
 
     !main.c
     #include <stdio.h>
@@ -248,7 +248,7 @@ The variable is declared in the C file and incremented in :c:`my_func`:
 
 In the Ada application, we just reference the foreign variable:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Vars
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Vars
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -334,7 +334,7 @@ The variable is then incremented in :ada:`My_Func`:
 
 In the C application, we just need to declare the variable and use it:
 
-.. code:: c no_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Vars
+.. code:: c run_button manual_chop project=Courses.Intro_To_Ada.Interfacing_With_C.C_Ada_Vars
 
     !main.c
     #include <stdio.h>
@@ -408,7 +408,7 @@ The result is an Ada spec file called :file:`test_h.ads`:
 
 Now we simply refer to this :file:`test_h` package in our Ada application:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds
 
     with Interfaces.C; use Interfaces.C;
     with Ada.Text_IO;  use Ada.Text_IO;
@@ -599,7 +599,7 @@ are replaced by addresses (:ada:`System.Address`). Nevertheless, these
 bindings are good enough to allow us to create a test application in
 Ada:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -682,7 +682,7 @@ This is the resulting specification:
 
 And this is the corresponding Ada body:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.C_Binds_3
 
     with Interfaces.C;
     use  Interfaces.C;

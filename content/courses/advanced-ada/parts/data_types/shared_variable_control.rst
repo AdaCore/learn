@@ -856,7 +856,7 @@ in the package:
 
 We then use the package in our test application:
 
-.. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register switches=Compiler(-gnat2022);
+.. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Shared_Variable_Control.Atomic_Full_Access_Register switches=Compiler(-gnat2022);
 
     with Registers;   use Registers;
 

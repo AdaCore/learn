@@ -258,7 +258,7 @@ it from Ada, but instead retrieving it as an access from C. For example:
 
 [Ada]
 
-.. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_2
+.. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Arr_2
 
     procedure Main is
        type Arr is array (Integer) of Integer;
@@ -471,7 +471,7 @@ Dynamically allocated arrays can be directly allocated on the stack:
 
 [C]
 
-.. code:: c manual_chop no_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Array_Stack_Alloc_C
+.. code:: c manual_chop run_button project=Courses.Ada_For_Embedded_C_Dev.Translation.Array_Stack_Alloc_C
 
     !array_decl.c
     #include <stdlib.h>
