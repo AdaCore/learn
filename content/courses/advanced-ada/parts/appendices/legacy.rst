@@ -53,7 +53,6 @@ the package body of the parent package :ada:`Week`:
 We can now use elements from :ada:`Week.Nested` in a test application:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Simple_Example
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Week;
@@ -141,7 +140,6 @@ Now, because :ada:`Author` is declared before the body of the nested package
 This is the test application in this case:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Appendices.Packages.Nested_Packages.Visibility
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Book;

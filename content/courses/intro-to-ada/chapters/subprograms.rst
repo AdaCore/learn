@@ -97,7 +97,6 @@ Subprogram calls
 We can then call our subprogram this way:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Increment_By;
@@ -174,7 +173,6 @@ For the previous example, we can move the duplicated code (call to
 the nested :ada:`Display_Result` procedure.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Increment_By
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Increment_By;
@@ -360,7 +358,6 @@ In out parameters
 To correct our code above, we can use an :ada:`in out` parameter.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.In_Out_Params
-    :class: ada-run
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -469,7 +466,6 @@ mutually recursive, as in the example below:
 .. ?? mutually dependent types, which have not been covered yet.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Subprograms.Mutually_Recursive_Subprograms
-    :class: ada-run
 
     procedure Mutually_Recursive_Subprograms is
         procedure Compute_A (V : Natural);
