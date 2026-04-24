@@ -36,7 +36,7 @@ the :ada:`Convention` aspect on the corresponding Ada type
 declaration. In the following example, we interface with the
 :ada:`C_Enum` enumeration declared in a C source file:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Enum
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Enum
 
     procedure Show_C_Enum is
 
@@ -50,7 +50,7 @@ declaration. In the following example, we interface with the
 To interface with C's built-in types, we use the :ada:`Interfaces.C`
 package, which contains most of the type definitions we need. For example:
 
-.. code:: ada no_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Struct
+.. code:: ada run_button project=Courses.Intro_To_Ada.Interfacing_With_C.Ada_C_Struct
 
     with Interfaces.C; use Interfaces.C;
 
