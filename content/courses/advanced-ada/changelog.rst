@@ -5,6 +5,16 @@ CHANGELOG
 
 .. include:: ../../global.txt
 
+Release 2026-04
+---------------
+
+- Improvements to section:
+
+  - :ref:`Fixed-point types <Adv_Ada_Fixed_Point_Types>`
+
+    - Note: the section was extended to cover ordinary fixed-point topics.
+
+
 Release 2026-02
 ---------------
 
