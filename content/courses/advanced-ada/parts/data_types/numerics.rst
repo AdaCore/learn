@@ -3868,7 +3868,7 @@ We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
 
     with Gen_Show_Type_Info;
 
-    procedure Show_Fixed_Point_Types_Info is
+    procedure Show_Ordinary_Fixed_Machine_Repr is
        procedure Show_Angle_Type_Info is new
          Gen_Show_Type_Info (T_Fixed => Angle);
        procedure Show_Angle_Adj_Type_Info is new
@@ -3876,7 +3876,7 @@ We instantiate the generic :ada:`Gen_Show_Type_Info` procedure for the
     begin
        Show_Angle_Type_Info ("Angle     ");
        Show_Angle_Adj_Type_Info ("Angle_Adj ");
-    end Show_Fixed_Point_Types_Info;
+    end Show_Ordinary_Fixed_Machine_Repr;
 
 Note that, as this output shows, :ada:`Angle'Small` (= 0.125) is not equal
 to :ada:`Angle'Delta` (= 0.2). This is because, when the :ada:`Small`
@@ -4452,7 +4452,7 @@ conversion:
     with Custom_Decimal_Types.Show_Info_Procs;
     use  Custom_Decimal_Types.Show_Info_Procs;
 
-    procedure Show_Decimal_Conversion_Repr is
+    procedure Show_Decimal_Types_Machine_Repr is
        V_T0_D4   : T0_D4;
        V_T2_D6   : T2_D6;
        V_T2_D12  : T2_D12;
@@ -4514,7 +4514,7 @@ conversion:
 
        Show_Info (V_T2_D6,  "V_T2_D6 ");
        Show_Info (V_T2_D12, "V_T2_D12 ");
-    end Show_Decimal_Conversion_Repr;
+    end Show_Decimal_Types_Machine_Repr;
 
 As we can see, the integer values are scaled to match the appropriate
 representation required for each type. For instance, the value 152.0 is
@@ -4586,7 +4586,7 @@ objects (:ada:`V_Angle` and :ada:`V_Angle_Adj`) after the type conversion:
     with Angles.Show_Info_Procs;
     use  Angles.Show_Info_Procs;
 
-    procedure Show_Fixed_Conversion_Repr
+    procedure Show_Ordinary_Fixed_Machine_Repr
     is
        V_Angle     : Angle;
        V_Angle_Adj : Angle_Adj;
@@ -4634,7 +4634,7 @@ objects (:ada:`V_Angle` and :ada:`V_Angle_Adj`) after the type conversion:
 
        Show_Info (V_Angle_Adj, "V_Angle_Adj ");
        Show_Info (V_Angle,     "V_Angle     ");
-    end Show_Fixed_Conversion_Repr;
+    end Show_Ordinary_Fixed_Machine_Repr;
 
 As expected, the integer values are scaled to match the appropriate
 representation for each type. For instance, the value 90.0 is represented as
@@ -5061,7 +5061,7 @@ Let's start with a code example for decimal types:
     with Custom_Decimal_Types.Show_Info_Procs;
     use  Custom_Decimal_Types.Show_Info_Procs;
 
-    procedure Show_Decimal_Int_Mult_Repr is
+    procedure Show_Decimal_Types_Machine_Repr is
        V_T0_D4   : T0_D4;
        V_T2_D6   : T2_D6;
        V_T2_D12  : T2_D12;
@@ -5089,7 +5089,7 @@ Let's start with a code example for decimal types:
        Show_Info (V_T0_D4,  "V_T0_D4  ");
        Show_Info (V_T2_D6,  "V_T2_D6  ");
        Show_Info (V_T2_D12, "V_T2_D12 ");
-    end Show_Decimal_Int_Mult_Repr;
+    end Show_Decimal_Types_Machine_Repr;
 
 The following table presents the values we get when we run the test
 application:
@@ -5122,7 +5122,7 @@ Now, let's look at an example for ordinary fixed-point types:
     with Angles.Show_Info_Procs;
     use  Angles.Show_Info_Procs;
 
-    procedure Show_Fixed_Int_Mult_Repr
+    procedure Show_Ordinary_Fixed_Machine_Repr
     is
        V_Angle     : Angle;
        V_Angle_Adj : Angle_Adj;
@@ -5145,7 +5145,7 @@ Now, let's look at an example for ordinary fixed-point types:
 
        Show_Info (V_Angle,     "V_Angle     ");
        Show_Info (V_Angle_Adj, "V_Angle_Adj ");
-    end Show_Fixed_Int_Mult_Repr;
+    end Show_Ordinary_Fixed_Machine_Repr;
 
 The table presents the values we get when we run the test application:
 
