@@ -429,7 +429,7 @@ as the index. The resulting Ada procedure body is extremely simple:
 In the Ada version, :ada:`AFR` is a component within the
 :ada:`GPIO_Port` record type, much like in the C code's struct. However,
 Ada allows us to declare a much more descriptive set of types, and it is
-these types that allows the developer to off-load the work to the compiler.
+these types that allow the developer to off-load the work to the compiler.
 
 First, in Ada we can declare a 4-bit numeric type:
 
@@ -884,7 +884,7 @@ incoming address in :ada:`Location` to a pointer designating the
 access value to get the designated :ada:`Word` value. Hence :ada:`X`
 refers to that two-byte value in memory.
 
-We could almost certainly achieve the same affect by replacing the call to
+We could almost certainly achieve the same effect by replacing the call to
 the function in :ada:`To_Pointer` with a call to an instance of
 :ada:`Ada.Unchecked_Conversion`. The conversion would still be between
 an access type and a value of type :ada:`System.Address`, but the access type

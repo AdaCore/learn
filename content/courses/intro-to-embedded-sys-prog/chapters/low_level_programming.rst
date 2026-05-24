@@ -630,7 +630,7 @@ To make that work, the compiler takes the most stringent alignment of
 all the record type's components and uses that for the alignment of the
 overall record type. That way, any address that satisfies the record
 object's alignment will satisfy the components' alignment requirements.
-The alignment is component :ada:`X`, of subtype :ada:`S`, is 4. The other
+The alignment of component :ada:`X`, of subtype :ada:`S`, is 4. The other
 components have an alignment of 1, therefore :ada:`R'Alignment` is 4. An
 aligned address plus 12 will also be an aligned address.
 
@@ -1227,9 +1227,9 @@ best approach is to specify the layout explicitly. For example, perhaps you
 are passing data to code written in C. In that case, you need the component
 order in memory to match the order given in the corresponding C struct
 declaration. That order in memory is not necessarily guaranteed from the
-order in the Ada source code. The Ada compiler is allowed to chose the
-representation unless you specify it, and it might chose a different layout
-from the one given. (Ordinarily, letting the compiler chose the layout is the
+order in the Ada source code. The Ada compiler is allowed to choose the
+representation unless you specify it, and it might choose a different layout
+from the one given. (Ordinarily, letting the compiler choose the layout is the
 most desirable approach, but in this case we have an external layout
 requirement.)
 
@@ -1267,7 +1267,7 @@ the components:
   :class: dark-mode-invert-image
 
 As a result, :ada:`R'Size` will be 80 bits (10 bytes), but those last two bytes
-will be will be allocated to objects, for an :ada:`Object_Size` of 96 bits (12
+will be allocated to objects, for an :ada:`Object_Size` of 96 bits (12
 bytes). We'll change that with an explicit layout specification.
 
 Having declared the record type, the second step consists of defining
@@ -1579,8 +1579,7 @@ hand, if your code is specifically for a single ISA, e.g. Arm, even if
 different boards and hardware vendors are involved, there's no need to
 be independent of the endian-ness. It will always be the same in that
 case. (Those are "famous last words" though.) For an overview of the
-GNAT facility, an attribute named attribute :ada:`Scalar_Storage_Order`
-see
+GNAT facility |mdash| an attribute named :ada:`Scalar_Storage_Order` |mdash| see
 https://www.adacore.com/papers/lady-ada-mediates-peace-treaty-in-endianness-war.
 
 Although specifying record type layouts and alignments are perhaps the
@@ -1703,7 +1702,7 @@ more (it might round up to some advantageous block size, for example).
 If the implementation cannot satisfy the request, :ada:`Storage_Error` is
 raised.
 
-It should be clear that that the two alternatives are mutually
+It should be clear that the two alternatives are mutually
 exclusive. Therefore the compiler will not allow you to specify both.
 
 Each alternative has advantages. If your only concern is the total
@@ -1734,7 +1733,7 @@ storage from it. Specifying a size of 0 tells the implementation not to
 waste that storage.
 
 Before we end this section, there is a GNAT compiler switch you should
-know about. Th ``-gnatR?`` switch instructs the compiler to list the
+know about. The ``-gnatR?`` switch instructs the compiler to list the
 representation details for the types, objects and subprograms in the
 compiled file(s). Both implementation-defined and user-defined
 representation details are presented. The '?' is just a placeholder and
@@ -2147,7 +2146,7 @@ by one:
    type Toggle_Switch is (Off, On);
    for Toggle_Switch use (Off => 0, On => 4);
 
-If we covert an unsigned integer (of the right size) to a :ada:`Toggle_Switch`
+If we convert an unsigned integer (of the right size) to a :ada:`Toggle_Switch`
 value, what would it mean if the :ada:`Source` value was neither 0 nor 4?
 
 We've said that the instantiations are likely allowed, hence callable
@@ -2169,7 +2168,7 @@ When the requirements for meaningful instantiations are not respected
 and the :ada:`Target` type is a scalar type, the result returned from the call
 is implementation defined and is potentially an invalid representation. For
 example, type :ada:`Toggle_Switch` is an enumeration type, hence it is a scalar
-type. Therefore, if we covert an unsigned integer (of the right size) to
+type. Therefore, if we convert an unsigned integer (of the right size) to
 a :ada:`Toggle_Switch` value, and the :ada:`Source` value is neither 0 nor 4,
 the resulting value is an invalid representation. That's the same as an
 object of type :ada:`Toggle_Switch` that is never assigned a value. The random

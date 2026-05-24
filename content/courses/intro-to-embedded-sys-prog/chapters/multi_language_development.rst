@@ -146,7 +146,7 @@ imported Fortran subprograms because the formal parameter will also be of type
 :ada:`Matrix`. The imported Fortran routine will then see the parameter in
 memory as it expects to see it. So although you wouldn't need to import or
 export a type itself, you might very well import or export an object of the
-type, or pass it as a argument.
+type, or pass it as an argument.
 
 When :ada:`Convention` is applied to subprograms, a natural mistake is to think
 that we are specifying the programming language used to implement the
@@ -204,7 +204,7 @@ convention for Ada. Convention :ada:`Ada` simply means the calling convention
 applied by the Ada compiler we happen to be using. (We'll talk about
 :ada:`Intrinsic` shortly.)
 
-So far, so good. But how to we get from those other language names to
+So far, so good. But how do we get from those other language names to
 corresponding calling conventions? There is no standard calling convention for,
 say, C, any more than there is a standard calling convention for Ada.
 
@@ -618,7 +618,7 @@ not used extensively in embedded systems. We will provide some information
 about the Fortran support but will not dwell on it.
 
 Even though we do not consider C to be appropriate for large development
-projects, neither technically not economically, it has its place in small,
+projects, neither technically nor economically, it has its place in small,
 low-criticality embedded systems. Ada developers can profit from existing
 device drivers and mature libraries coded in C, for example. Hence interfacing
 to it is important.
@@ -756,7 +756,7 @@ compiler could do it silently. As a result, you should specify the record
 layout explicitly using a record representation clause, matching the layout of
 the C struct in question. Then there will be no question of the layouts
 matching. Once your record types get more complicated, for example with
-discriminants or tagged record extensions, things get tricky. Your best bet it
+discriminants or tagged record extensions, things get tricky. Your best bet is
 to stick with the simple cases when interfacing to C.
 
 Some types that you might think would correspond do not, at least not
@@ -913,7 +913,7 @@ components, not the bounds, even for Ada unconstrained array types.
 Now for the other direction: passing an array from C to Ada. Here the lack of
 bounds information on the C side really makes a difference. We can't just pass
 the array by itself because that would not include the bounds, unlike an Ada
-call to an Ada routine. In this case the approach is the similar to the first
+call to an Ada routine. In this case the approach is similar to the first
 alternative described above, in which we declare a very large array and then
 pass the bounds explicitly:
 
@@ -1204,7 +1204,7 @@ With this package content, the expression in a code statement is of type
 Asm_Insn, short for "assembly instruction." Multiple overloaded functions named
 :ada:`Asm` return values of that type.
 
-The :ada:`Template` parameter in a string containing one or more assembly
+The :ada:`Template` parameter is a string containing one or more assembly
 language instructions. These instructions are specific to the target machine.
 The parameter :ada:`Outputs` provides mappings from registers to source-level
 entities that are updated by the assembly statement(s). :ada:`Inputs` provides
