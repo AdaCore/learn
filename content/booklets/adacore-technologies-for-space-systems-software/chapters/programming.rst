@@ -323,7 +323,7 @@ varying-length array) for an arbitrary element type :ada:`T`, where each element
 of the data structure is of type :ada:`T`.
 For safety and efficiency, compile-time checks should enforce type safety
 both within the parameterized module, and at each use (*instantiation*).
-Conceptually an
+Conceptually, an
 instantiation can be regarded as an expansion of the parameterized module,
 with actual parameters replacing the formal parameters. However, the expansion
 is not at the lexical/syntactic level (source text) but rather at the semantic
@@ -353,7 +353,7 @@ Object-Oriented Programming (OOP)
 (packages) corresponding to abstract data types or abstract objects.
 Full OOP support was not provided since, first, it seemed not to be required
 in the real-time domain that was Ada's primary target, and second, the
-apparent need for automatic garbage collection in an Object Oriented language
+apparent need for automatic garbage collection in an object-oriented language
 would have interfered with predictable and efficient performance.
 
 However, large real-time systems often have components such as graphical user

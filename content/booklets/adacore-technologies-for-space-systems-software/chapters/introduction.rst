@@ -29,7 +29,7 @@ national space organizations, and industrial partners. As stated in
 
 The resulting set of standards, available from the ECSS web portal
 :footcite:p:`Space_SW_ECSS_HomePage`, addresses space activities as a
-whole and complement the relevant country-specific standards.
+whole and complements the relevant country-specific standards.
 
 The ECSS standards specify requirements that must be satisfied (although
 project-specific tailoring is allowed) and fall into three categories:
