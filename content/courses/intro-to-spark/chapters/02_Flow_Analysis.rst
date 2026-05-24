@@ -357,13 +357,13 @@ subprogram is a function, we list its result as an output, using the
 Often, the final value of a variable depends on its own initial value.  You
 can specify this in a concise way using the :ada:`+` character, as we did
 in the specification of :ada:`Set_X_To_X_Plus_Y` above. If there's more than
-one variable on the left of the arrow, a :ada:`+` means each variables
+one variable on the left of the arrow, a :ada:`+` means each variable
 depends on itself, not that they all depend on each other.  You can write
 the corresponding dependency with (:ada:`=> +`) or without (:ada:`=>+`)
 whitespace.
 
 If you have a program where an input isn't used to compute the final value
-of any output, you express that by writting :ada:`null` on the left of the
+of any output, you express that by writing :ada:`null` on the left of the
 dependency relation, as we did for the :ada:`Do_Nothing` subprogram above.
 You can only write one such dependency relation, which lists all unused
 inputs of the subprogram, and it must be written last.  Such an annotation
@@ -729,7 +729,7 @@ Flow analysis doesn't emit any messages in this case, meaning it can verify
 that :ada:`Result` can't be read in SPARK code while uninitialized. But why is
 that, since :ada:`Result` is still not initialized when :ada:`E` is not in :ada:`A`?
 This is because the exception, :ada:`Not_Found`, can never be caught within
-SPARK code (SPAK doesn't allow exception handlers).  However, the GNATprove
+SPARK code (SPARK doesn't allow exception handlers).  However, the GNATprove
 tool also tries to ensure the absence of runtime errors in SPARK code, so
 tries to prove that :ada:`Not_Found` is never raised.  When it can't do that
 here, it produces a different message.
@@ -865,7 +865,7 @@ actually can't be read before being written, but flow analysis isn't able
 to verify its initialization by using just flow information.
 
 The call to :ada:`Test_Index` is automatically inlined by GNATprove, which
-leads to another messages above. If GNATprove couldn't inline the call to
+leads to another message above. If GNATprove couldn't inline the call to
 :ada:`Test_Index`, for example if it was defined in another unit, the same
 messages would be issued on the call to :ada:`Test_Index`.
 
@@ -876,7 +876,7 @@ Example #5
 In the following example, we model permutations as arrays where the element
 at index :ada:`I` is the position of the :ada:`I`'th element in the
 permutation. The procedure :ada:`Init` initializes a permutation to the
-identity, where the :ada:`I`'th elements is at the :ada:`I`'th
+identity, where the :ada:`I`'th element is at the :ada:`I`'th
 position. :ada:`Cyclic_Permutation` calls :ada:`Init` and then swaps elements to
 construct a cyclic permutation.
 

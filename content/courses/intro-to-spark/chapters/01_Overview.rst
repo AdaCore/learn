@@ -207,7 +207,7 @@ Ada compiler:
        Dummy := F - F; -- ??
     end Show_Illegal_SPARK_Code;
 
-The SPARK languages enforces the lack of side-effects in expressions by
+The SPARK language enforces the lack of side-effects in expressions by
 forbidding side-effects in functions, which include modifications to either
 parameters or global variables. As a consequence, SPARK forbids functions
 with :ada:`out` or :ada:`in out` parameters in addition to functions
@@ -417,7 +417,7 @@ A general rule in SPARK is that once :ada:`SPARK_Mode` has been set to
 `Off`, it can never be switched `On` again in the same part of a package or
 subprogram. This prevents setting :ada:`SPARK_Mode` to `On` for local units of
 a unit with :ada:`SPARK_Mode` `Off` and switching back to :ada:`SPARK_Mode`
-`On` for a part of a given unit where it was set fo `Off` in a previous
+`On` for a part of a given unit where it was set to `Off` in a previous
 part.
 
 .. note::

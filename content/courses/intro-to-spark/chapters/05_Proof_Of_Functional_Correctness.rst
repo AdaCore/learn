@@ -807,7 +807,7 @@ For example, consider the function :ada:`Find` which iterates over the array
 
 At the end of each loop iteration, GNATprove knows that the value stored at
 index :ada:`I` in :ada:`A` must not be :ada:`E`. (If it were, the loop wouldn't
-have reached the end of the interation.) This proves the second assertion.  But
+have reached the end of the iteration.) This proves the second assertion.  But
 it's unable to aggregate this information over multiple loop iterations to
 deduce that it's true for all the indexes smaller than :ada:`I`, so it can't
 prove the first assertion.
