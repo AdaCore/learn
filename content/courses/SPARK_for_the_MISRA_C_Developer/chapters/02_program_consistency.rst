@@ -23,7 +23,7 @@ consistency.
 Taming Text-Based Inclusion
 ***************************
 
-The text-based inclusion of files is one of the dated idiosyncracies of the C
+The text-based inclusion of files is one of the dated idiosyncrasies of the C
 programming language that was inherited by C++ and that is known to cause
 quality problems, especially during maintenance. Although multiple inclusion of
 a file in the same translation unit can be used to emulate template

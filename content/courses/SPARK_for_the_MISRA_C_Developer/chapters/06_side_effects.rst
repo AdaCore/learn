@@ -113,7 +113,7 @@ In SPARK, expressions cannot have side effects; only statements can. In
 particular, there are no increment/decrement operators, and no assignment
 operator. There is instead an assignment statement, whose syntax using :ada:`:=`
 clearly distinguishes it from equality (using :ada:`=`). And in any event an
-expression is not allowed as a statement and this a construct such as
+expression is not allowed as a statement and thus a construct such as
 :ada:`X = Y;` would be illegal. Here is how a variable :ada:`X` can be assigned,
 incremented and decremented:
 

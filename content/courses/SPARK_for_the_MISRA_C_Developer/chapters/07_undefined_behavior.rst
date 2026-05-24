@@ -38,7 +38,7 @@ exhibit two types of undefined behaviors that can occur in Ada:
   predefined exception is raised or execution continues using the invalid
   representation.
 
-- `erroneous execution`: when when the program enters a state not defined
+- `erroneous execution`: when the program enters a state not defined
   by the language semantics, but the consequences are not bounded
   by the Ada Reference Manual. This is the closest to an undefined behavior
   in C. For example, concurrently writing through different tasks to the same

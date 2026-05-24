@@ -18,7 +18,7 @@ The following documents are freely available:
 
 - `MISRA Compliance 2016: Achieving compliance with MISRA coding guidelines`,
   2016, which explains the rationale and process for compliance, including a
-  thorough discussions of acceptable deviations
+  thorough discussion of acceptable deviations
 
 - `MISRA C:2012 - Amendment 1: Additional security guidelines for MISRA
   C:2012`, 2016, which contains 14 additional guidelines focusing on
