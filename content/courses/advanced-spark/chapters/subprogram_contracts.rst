@@ -316,7 +316,7 @@ Universal and Existential Quantification
 
         - ``(∀ X . X ≥ A ⋀ X ≤ B → C)``
 
-    - :ada:`(for some X in A .. B => C)` expresses the universally
+    - :ada:`(for some X in A .. B => C)` expresses the existentially
       quantified property
 
         - ``(∃ X . X ≥ A ⋀ X ≤ B ⋀ C)``

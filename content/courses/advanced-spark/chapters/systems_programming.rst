@@ -845,7 +845,7 @@ Example #8
 This code is not correct. ``X`` has :ada:`Async_Writers = False`, hence is
 not considered as always initialized. As aspect :ada:`Initializes`
 specifies that ``State`` should be initialized after elaboration, this is
-an error. Note that is allowed to bundle volatile and non-volatile
+an error. Note that it is allowed to bundle volatile and non-volatile
 variables in an external abstract state.
 
 

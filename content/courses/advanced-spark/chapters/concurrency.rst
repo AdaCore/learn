@@ -146,7 +146,7 @@ Setup for using concurrency in SPARK
 
 - ... which are checked by GNAT partition-wide
 
-    - pragmas needed for verification even it not for compilation
+    - pragmas needed for verification even if not for compilation
 
 
 Tasks in Ravenscar
