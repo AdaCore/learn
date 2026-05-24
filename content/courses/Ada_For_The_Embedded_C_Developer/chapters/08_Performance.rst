@@ -16,7 +16,7 @@ implement imperative semantics, in particular with regards to memory management
 or control flow. They should be equivalent on average.
 
 When comparing the performance of C and Ada code, differences might be
-observed. This usually comes from the fact that, while the two piece *appear*
+observed. This usually comes from the fact that, while the two pieces *appear*
 semantically equivalent, they happen to be actually quite different; C code
 semantics do not implicitly apply the same run-time checks that Ada does.
 This section will present common ways for improving Ada code performance.
@@ -165,7 +165,7 @@ array. This is achieved by an index check.
 Another example of runtime check is the verification of valid ranges. For
 example, when adding two integer numbers, we would like to ensure that the
 result is still in the valid range |mdash| that the value is neither too large
-nor too small. This is achieved by an range check. Likewise, arithmetic operations
+nor too small. This is achieved by a range check. Likewise, arithmetic operations
 shouldn't overflow or underflow. This is achieved by an overflow check.
 
 Although runtime checks are very useful and should be used as much as possible,
@@ -383,9 +383,9 @@ types:
        F : Some_Field := Call_To_Some_Function;
     end record;
 
-However, the consequences of the above is that any declaration of a instance of
+However, the consequences of the above are that any declaration of an instance of
 this type without an explicit value for :ada:`F` will issue a call to
-:ada:`Call_To_Some_Function`. More subtle issue may arise with elaboration. For
+:ada:`Call_To_Some_Function`. More subtle issues may arise with elaboration. For
 example, it's possible to write:
 
 .. code:: ada compile_button project=Courses.Ada_For_Embedded_C_Dev.Performance.Dynamic_Array
@@ -416,7 +416,7 @@ and :ada:`A_End` at startup so as to align a series of arrays dynamically. The
 consequence, however, is that these values will not be known statically, so any
 code that needs to access to boundaries of the array will need to read data
 from memory. While it's perfectly fine most of the time, there may be
-situations where performances are so critical that static values for array
+situations where performance is so critical that static values for array
 boundaries must be enforced.
 
 Here's a last case which may also be surprising:
@@ -438,8 +438,8 @@ In the code above, :ada:`R` contains two arrays, :ada:`F1` and :ada:`F2`,
 respectively constrained by the discriminant :ada:`D1` and :ada:`D2`. The
 consequence is, however, that to access :ada:`F2`, the run-time needs to know
 how large :ada:`F1` is, which is dynamically constrained when creating an
-instance. Therefore, accessing to :ada:`F2` requires a computation involving
-:ada:`D1` which is slower than, let's say, two pointers in an C array that
+instance. Therefore, accessing :ada:`F2` requires a computation involving
+:ada:`D1` which is slower than, let's say, two pointers in a C array that
 would point to two different arrays.
 
 Generally speaking, when values are used in data structures, it's useful to
@@ -561,7 +561,7 @@ used to pass the values do not appear in the source code.
        Display (D1);
     end Update_Record;
 
-In the calls to :ada:`Update` and :ada:`Display`, :ada:`D1` is always be passed
+In the calls to :ada:`Update` and :ada:`Display`, :ada:`D1` is always passed
 by reference. Because no extra copy takes place, we get a performance that is
 equivalent to the C version. If we had used arrays in the example above,
 :ada:`D1` would have been passed by reference as well:

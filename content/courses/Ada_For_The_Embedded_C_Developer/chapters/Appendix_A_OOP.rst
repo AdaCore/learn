@@ -1322,7 +1322,7 @@ The :ada:`Limited_Controlled` type includes the following operations:
   where it was created.
 
 In this case, we must override those procedures, so we can use them for dynamic
-memory allocation. This is a simplified view of the update implementation:
+memory allocation. This is a simplified view of the updated implementation:
 
 .. code-block:: ada
 

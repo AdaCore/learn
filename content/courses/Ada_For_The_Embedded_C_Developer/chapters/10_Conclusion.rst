@@ -31,9 +31,9 @@ mismatches, we'll get a compilation error. Because the compiler prevents
 mixing variables of different types without explicit type conversion, we can't
 accidentally end up in a situation where we assume something will happen
 implicitly when, in fact, our assumption is incorrect. In this sense, Ada's
-type system  encourages programmers to think about data at a high level of
+type system encourages programmers to think about data at a high level of
 abstraction. Ada supports overlays and unchecked conversions as a way of
-converting between unrelated data type, which are typically used for
+converting between unrelated data types, which are typically used for
 interfacing with low-level elements such as registers.
 
 In Ada, arrays aren't interchangeable with operations on pointers like in C.
@@ -79,7 +79,7 @@ running on top of an operating system such as Linux. On more constrained
 systems, such as bare metal or some real-time operating systems, a subset of
 the Ada tasking capabilities |mdash| known as the Ravenscar and Jorvik profiles
 |mdash| is available. Though restricted, this subset also has nice properties,
-in particular the absence of deadlock,the absence of priority inversion,
+in particular the absence of deadlock, the absence of priority inversion,
 schedulability and very small footprint. On bare metal systems, this also
 essentially means that Ada comes with its own real-time kernel. The advantage
 of using the full Ada tasking model or the restricted profiles is to enhance
@@ -175,7 +175,7 @@ can deploy the final executable with checks disabled.
 
 In many situations, the migration of C code to Ada is justified by an increase
 in terms of integrity expectations, in which case it's expected that
-development costs will raise. However, Ada is a more expressive, powerful
+development costs will rise. However, Ada is a more expressive, powerful
 language, designed to reduce errors earlier in the life-cycle, thus reducing
 costs. Therefore, Ada makes it possible to write very safe and secure software
 at a lower cost than languages such as C.

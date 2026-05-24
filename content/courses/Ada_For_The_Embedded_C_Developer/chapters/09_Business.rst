@@ -78,7 +78,7 @@ That being said, the point of this argument is not to say that it's not
 possible to write very safe and secure software with languages different than
 Ada. With the right expertise, the right processes and the right tools, it's
 done every day. The point is that Ada overall reduces the level of processes,
-expertise and tools necessary and will allow to reach the same target at a
+expertise and tools necessary and will allow reaching the same target at a
 lower cost.
 
 Who is using Ada today?
@@ -88,7 +88,7 @@ Ada was initially born as a DoD project, and thus got its initial customer base
 in aerospace and defence (A&D). At the time these lines are written and from
 the perspective of AdaCore, A&D is still the largest consumer of Ada today and
 covers about 70% of the market. This creates a consistent and long lasting set
-of established users as these project last often for decades, using the same
+of established users as these projects last often for decades, using the same
 codebase migrating from platform to platform.
 
 More recently however, there has been an emerging interest for Ada in new
@@ -131,10 +131,10 @@ should AdaCore disappear or switch focus, Ada users would not be prevented from
 carrying on using its software (there is no lock) and a third party could take
 over maintenance. This is not a theoretical case, this has been done in the
 past either by companies looking at supporting their own version of GNAT,
-vendors occupying a specific niche that was left uncovered , or hobbyists
+vendors occupying a specific niche that was left uncovered, or hobbyists
 developing their own builds.
 
-With that in mind, it's clear that the "sole source" provider issue is a
+With that in mind, it's clear that the "sole source" provider issue is
 circumstantial |mdash| nothing is preventing other vendors from emerging if the
 conditions are met.
 
@@ -145,7 +145,7 @@ A language by itself is of little use for the development of safety-critical
 software. Instead, a complete toolset is needed to accompany the development
 process, in particular tools for edition, testing, static analysis, etc.
 
-AdaCore provides a number of these tools either in through its core or add-on
+AdaCore provides a number of these tools either through its core or add-on
 package. These include (as of 2019):
 
 - An IDE (GNAT Studio)

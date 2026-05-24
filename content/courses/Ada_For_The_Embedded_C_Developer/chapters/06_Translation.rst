@@ -387,7 +387,7 @@ Naming and prefixes
 
 Because of the absence of namespaces, any global name in C tends to be very
 long. And because of the absence of overloading, they can even encode type
-names in their type.
+names in their name.
 
 In Ada, the package is a namespace |mdash| two entities declared in two
 different packages are clearly identified and can always be specifically
@@ -493,7 +493,7 @@ Dynamically allocated arrays can be directly allocated on the stack:
        null;
     end Main;
 
-It's even possible to create a such an array within a structure, provided that
+It's even possible to create such an array within a structure, provided that
 the size of the array is known when instantiating this object, using a type
 discriminant:
 
@@ -557,7 +557,7 @@ particular, it differentiates between arrays and scalars. For example:
        procedure P (A : in out Integer; B : in out Arr);
     end Array_Types;
 
-Most of the time, access to registers end up in some specific structures
+Most of the time, accesses to registers end up in some specific structures
 being mapped onto a specific location in memory. In Ada, this can be achieved
 through an :ada:`Address` clause associated to a variable, for example:
 
@@ -623,7 +623,7 @@ boolean flags. In C, this would be done through masks, e.g.:
         return 0;
     }
 
-In Ada, the above can be represented through a Boolean array of enumerate
+In Ada, the above can be represented through a Boolean array of enumeration
 values:
 
 [Ada]
@@ -690,7 +690,7 @@ The benefit of using Ada structure instead of bitwise operations is threefold:
 - Individual fields are named
 
 - The compiler can run consistency checks (for example, check that the value
-  indeed fit in the expected size).
+  indeed fits in the expected size).
 
 Note that, in cases where bitwise operators are needed, Ada provides modular
 types with :ada:`and`, :ada:`or` and :ada:`xor` operators. Further shift
@@ -740,7 +740,7 @@ object of any type to declare a bit-field for this object. We've discussed the
 :ada:`Size` attribute :ref:`earlier in this course <Ada_For_Embedded_C_Dev_Size_Aspect_Attribute>`.
 
 The :ada:`Address` attribute indicates the address in memory of that object.
-For example, assuming we've declare a variable :ada:`V`, we can declare an
+For example, assuming we've declared a variable :ada:`V`, we can declare an
 actual bit-field object by referring to the :ada:`Address` attribute of
 :ada:`V` and using it in the declaration of the bit-field, as shown here:
 
@@ -901,7 +901,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
     default value of :ada:`null`.
 
     As we've just seen, when declaring objects for types with associated
-    default values, automatic initialization will happen. This can also happens
+    default values, automatic initialization will happen. This can also happen
     when creating an overlay with the :ada:`Address` aspect. The default value
     is then used to overwrite the content at the memory location indicated by
     the address. However, in most situations, this isn't the behavior we
@@ -1013,7 +1013,7 @@ In C, we would rely on bit-shifting and masking to set that specific bit:
 
     - when we use the :ada:`Default_Component_Value` aspect for array types, or
 
-    - when we set use the :ada:`Initialize_Scalars` pragma for a package.
+    - when we use the :ada:`Initialize_Scalars` pragma for a package.
 
     Again, using the :ada:`Import` aspect when declaring the overlay eliminates
     this side-effect.

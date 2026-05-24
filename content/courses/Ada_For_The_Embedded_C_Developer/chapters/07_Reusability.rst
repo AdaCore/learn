@@ -18,7 +18,7 @@ software in order to ensure its reusability.
 
 In C, variability is usually achieved through macros and function pointers, the
 former being tied to static variability (variability in different
-builds) the latter to dynamic variability (variability within the same build
+builds), the latter to dynamic variability (variability within the same build
 decided at run-time).
 
 Ada offers many alternatives for both techniques, which aim at structuring
@@ -31,7 +31,7 @@ languages such as C++ and Java |mdash|, you might also be interested in knowing
 that OOP is supported by Ada and can be used to implement variability. This
 should, however, be used with care, as OOP brings its own set of problems, such
 as loss of efficiency |mdash| dispatching calls can't be inlined and require
-one level  of indirection |mdash| or loss of analyzability |mdash| the target
+one level of indirection |mdash| or loss of analyzability |mdash| the target
 of a dispatching call isn't known at run time. As a rule of thumb, OOP should
 be considered only for cases of dynamic variability, where several versions of
 the same object need to exist concurrently in the same application.
@@ -44,7 +44,7 @@ Handling variability & reusability statically
 Genericity
 ~~~~~~~~~~
 
-One usage of C macros involves the creation of functions that works regardless
+One usage of C macros involves the creation of functions that work regardless
 of the type they're being called upon. For example, a swap macro may look like:
 
 [C]
@@ -128,7 +128,7 @@ In many respects, an Ada generic is a way to provide a safe specification and
 implementation of such macros, through both the validation of the generic
 itself and its usage.
 
-Subprograms aren't the only entities that can me made generic. As a matter of
+Subprograms aren't the only entities that can be made generic. As a matter of
 fact, it's much more common to render an entire package generic. In this case
 the instantiation creates a new version of all the entities present in the
 generic, including global variables. For example:
@@ -1460,7 +1460,7 @@ declaration (:ada:`V2`, in this case).
 Overriding subprograms
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Previously, we've seen that subprograms can be overriden. For example, if we
+Previously, we've seen that subprograms can be overridden. For example, if we
 had implemented a :ada:`Reset` and a :ada:`Display` procedure for the
 :ada:`Rec` type that we declared above, these procedures would be available for
 an :ada:`Ext_Rec` type derived from :ada:`Rec`. Also, we could override these
@@ -1691,7 +1691,7 @@ Dispatching calls are only possible for a type class |mdash| for example, the
 :ada:`Tagged_Rec'Class`. When the type of an object is known at compile time,
 the calls won't dispatch at runtime. For example, the call to the :ada:`Reset`
 procedure of the  :ada:`X_Ext_Tagged_Rec` object
-(:ada:`X_Ext_Tagged_Rec.Reset`) will always take the overriden
+(:ada:`X_Ext_Tagged_Rec.Reset`) will always take the overridden
 :ada:`Reset` procedure of the :ada:`Ext_Tagged_Rec` type. Similarly, if we
 perform a view conversion by writing
 :ada:`Tagged_Rec (A_Ext_Tagged_Rec).Display`, we're instructing the compiler to
@@ -2221,7 +2221,7 @@ This is the corresponding implementation in Ada:
     end Show_Subprogram_Selection;
 
 The structure of the code above is very similar to the one used in the C code.
-Again, we have two version of :ada:`Show_Msg`: :ada:`Show_Msg_V1` and
+Again, we have two versions of :ada:`Show_Msg`: :ada:`Show_Msg_V1` and
 :ada:`Show_Msg_V2`. We set :ada:`Current_Show_Msg` according to the value of
 :ada:`Selection`. Here, we use :ada:`'Access` to get access to the
 corresponding procedure. If no version of :ada:`Show_Msg` is available, we set
