@@ -414,7 +414,7 @@ The dynamic predicate of the :ada:`Tests_Week` type is verified during the
 initialization of :ada:`Num_Tests`. If we have a non-conformant value
 there, the check will fail. However, as we can see in our example,
 individual assignments to elements of the array do not trigger a check. We
-can't check for consistency at this point because the initialization of the
+can't check for consistency at this point because the initialization of
 a complex data structure (such as arrays or records) may not be performed
 with a single assignment. However, as soon as the object is passed as an
 argument to a subprogram, the dynamic predicate is checked because the

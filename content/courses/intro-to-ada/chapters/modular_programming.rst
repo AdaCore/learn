@@ -193,7 +193,7 @@ in the package body.
 
 Here we can see that the body of the :ada:`Increment_By` function has to be
 declared in the body. Coincidentally, introducing a body allows us to put the
-:ada:`Last_Increment` variable in the body, and make them inaccessible to the
+:ada:`Last_Increment` variable in the body, and make it inaccessible to the
 user of the :ada:`Operations` package, providing a first form of encapsulation.
 
 This works because entities declared in the body are *only* visible in the

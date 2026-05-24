@@ -170,7 +170,7 @@ In the example above, we are:
   each.
 
 Being able to use enumeration values as indices is very helpful in creating
-mappings such as shown above one, and is an often used feature in Ada.
+mappings such as the one shown above, and is an often used feature in Ada.
 
 Indexing
 --------

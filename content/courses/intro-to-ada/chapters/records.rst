@@ -163,7 +163,7 @@ variable declaration. For example:
     Some_Day : Date;
     Y        : Integer renames Some_Day.Year;
 
-Here, :ada:`Y` is an alias, so that every time we using :ada:`Y`, we are really
+Here, :ada:`Y` is an alias, so that every time we use :ada:`Y`, we are really
 using the :ada:`Year` component of :ada:`Some_Day`.
 
 Let's look at a complete example:

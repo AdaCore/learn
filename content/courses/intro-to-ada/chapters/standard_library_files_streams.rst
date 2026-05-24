@@ -425,7 +425,7 @@ After the call to :ada:`Create`, we retrieve the corresponding
 use this stream to write information to the file via the :ada:`'Write`
 attribute of the :ada:`Float` type. After closing the file and
 reopening it for reading, we again retrieve the corresponding
-:ada:`Stream_Access` element and processed to read information from the
+:ada:`Stream_Access` element and proceed to read information from the
 file via the :ada:`'Read` attribute of the :ada:`Float` type.
 
 You can use streams to create and process files containing different data

@@ -91,7 +91,7 @@ exception handler to any statement block as follows:
              Put ("Cannot open input file : ");
              Put_Line (Exception_Message (E));
              raise;
-             --  Reraise current occurence
+             --  Reraise current occurrence
        end;
     end Open_File;
 

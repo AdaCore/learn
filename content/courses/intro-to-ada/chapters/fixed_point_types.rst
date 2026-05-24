@@ -9,7 +9,7 @@ In this chapter, we discuss fixed-point types, which can be classified in two
 categories:
 :ref:`decimal fixed-point types <Intro_Ada_Decimal_Fixed_Point_Types>` and
 :ref:`ordinary (binary) fixed-point types <Intro_Ada_Ordinary_Fixed_Point_Types>`.
-Afterward a brief overview of each category, we discuss some
+After a brief overview of each category, we discuss some
 :ref:`differences between fixed-point and floating-point types <Intro_Ada_Fixed_Point_Vs_Floating_Point_Types>`.
 
 
@@ -318,7 +318,7 @@ type :ada:`Decimal` to the floating-point type :ada:`Float_32`:
 
 Both types in this example have roughly the same size and range. However, the
 result of the divide-by-two operation isn't the same: because of the exponent,
-:ada:`F` has the expected value (0.005) after the operation. while the value of
+:ada:`F` has the expected value (0.005) after the operation, while the value of
 :ada:`D` is zero. The reason is that the resulting value 0.005 cannot be
 represented by the decimal precision of the :ada:`Decimal` type. In the case of
 :ada:`F`, however, the value can be represented due to a simple change in the

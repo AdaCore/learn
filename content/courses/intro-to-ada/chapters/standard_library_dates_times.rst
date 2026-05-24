@@ -202,7 +202,7 @@ Real-time
 
 In addition to :ada:`Ada.Calendar`, the standard library also supports time
 operations for real-time applications. These are included in the
-:ada:`Ada.Real_Time` package. This package also include a :ada:`Time` type.
+:ada:`Ada.Real_Time` package. This package also includes a :ada:`Time` type.
 However, in the :ada:`Ada.Real_Time` package, the :ada:`Time` type is used to
 represent an absolute clock and handle a time span. This contrasts with the
 :ada:`Ada.Calendar`, which uses the :ada:`Time` type to represent dates and

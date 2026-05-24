@@ -150,7 +150,7 @@ default or not. There are some rules:
 .. ?? to do with the use of positional versus named
 
 As a convention, people usually name parameters at the call site if the
-function's corresponding parameters has a default value. However, it is also
+function's corresponding parameters have a default value. However, it is also
 perfectly acceptable to name every parameter if it makes the code clearer.
 
 Nested subprograms
@@ -457,7 +457,7 @@ acts like an uninitialized variable when the subprogram is invoked.
 Forward declaration of subprograms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As we saw earlier, a subprogram can be declared without being fully defined,
+As we saw earlier, a subprogram can be declared without being fully defined.
 This is possible in general, and can be useful if you need subprograms to be
 mutually recursive, as in the example below:
 

@@ -9,7 +9,7 @@ Ada. The following sections explain these concepts in more detail.
 Tasks
 -----
 
-A task can be thought as an application that runs *concurrently* with the
+A task can be thought of as an application that runs *concurrently* with the
 main application. In other programming languages, a task might be called a
 :wikipedia:`thread <Thread_(computing)>`, and tasking
 might be called
@@ -198,7 +198,7 @@ statement. For example:
 
 In this example, we're making the task :ada:`T` wait one second after each
 time it displays the "hello" message. In addition, the main task is waiting
-1.5 seconds before displaying its own "hello" message
+1.5 seconds before displaying its own "hello" message.
 
 Synchronization: rendezvous
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -327,7 +327,7 @@ example:
     end Show_Rendezvous_Loop;
 
 In this example, the task body implements an infinite loop that accepts
-calls to the :ada:`Reset` and :ada:`Increment` entry. We make the following
+calls to the :ada:`Reset` and :ada:`Increment` entries. We make the following
 observations:
 
 - The :ada:`accept E do ... end` block is used to increment a counter.
