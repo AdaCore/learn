@@ -32,7 +32,7 @@ A stack is like a pile of dishes...
 #. To get plates ( :ada:`data` ) out, you take the one off the top of the pile
    ( :ada:`pop` ).
 
-#. Out stack has a maximum height ( :ada:`size` ) of 9 dishes
+#. Our stack has a maximum height ( :ada:`size` ) of 9 dishes
 
 
 **Pushing items onto the stack**
@@ -67,7 +67,7 @@ The list starts out empty. Each time we push a character onto the stack,
 **Popping items from the stack**
 
 Here's what should happen if we popped :ada:`2` characters off our stack & then
-clear it.
+cleared it.
 
 .. container:: img_row
 
