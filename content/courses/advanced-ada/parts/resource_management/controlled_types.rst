@@ -697,7 +697,7 @@ In order to see this effect, let's start by implementing two controlled types:
 
 Now, let's use those controlled types as components of a type :ada:`T`. In
 addition, let's declare an integer component :ada:`I` with default
-initialization. This is how the complete code looks like:
+initialization. This is what the complete code looks like:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Controlled_Types.Initialization.Controlled_Initialization
 
@@ -2106,7 +2106,7 @@ Bounded errors of controlled types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :ref:`Bounded errors <Adv_Ada_Bounded_Errors>` are an important topic when
-talking about exception and
+talking about exceptions and
 controlled types. In general, if an exception is raised in the :ada:`Adjust` or
 :ada:`Finalize` procedure, this is considered a bounded error. If the bounded
 error is detected, the :ada:`Program_Error` exception is raised.
@@ -2231,7 +2231,7 @@ procedure is called *explicitly*, the exception raised in that procedure is
 *not* considered a bounded error. In this case, the original exception is
 raised.
 
-To show an example of such an explicit call, let's first move the overriden
+To show an example of such an explicit call, let's first move the overridden
 procedures for type :ada:`T` (:ada:`Initialize`, :ada:`Adjust` and
 :ada:`Finalize`) out of the private part of the package
 :ada:`CT_Finalize_Exception`, so they are now visible to clients. This allows
@@ -2749,7 +2749,7 @@ the location of the logfile (as the :ada:`Filename` parameter).
 
 Also, we can pass the logger to other subprograms and use it there. In this
 example, we pass the logger to the :ada:`Some_Processing` procedure and there,
-we the call :ada:`Put_Line` using the logger object.
+we call :ada:`Put_Line` using the logger object.
 
 Finally, as soon as the logger goes out of scope, the log is automatically
 closed via the call to :ada:`Finalize`.

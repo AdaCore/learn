@@ -9,7 +9,7 @@ discuss limited types.
 We can think of limited types as an easy way to avoid inappropriate semantics.
 For example, a lock should not be copied |mdash| neither directly, via
 assignment, nor with pass-by-copy. Similarly, a *file*, which is really a file
-descriptor, should not be copied. In this chapter, we'll see example of
+descriptor, should not be copied. In this chapter, we'll see examples of
 unwanted side-effects that arise if we don't use limited types for these cases.
 
 
@@ -293,7 +293,7 @@ The :ada:`Copy` procedure from this example copies the dereferenced values of
 :ada:`Simple_Rec`. Note that we could have also implemented a
 :ada:`Shallow_Copy` procedure to copy the actual access values (i.e.
 :ada:`To.V := From.V`). However, having this kind of procedure can be dangerous
-in many case, so this design decision must be made carefully. In any case,
+in many cases, so this design decision must be made carefully. In any case,
 using limited types ensures that only the assignment subprograms that are
 explicitly declared in the package specification are available.
 
@@ -2321,7 +2321,7 @@ Some languages have a specific feature called *constructor*. In Ada, a
         end Show_Set_Decl;
 
     which might mean "default-initialize to the empty set" or might mean
-    "leave it uninitialized, and we'll initialize it in later".
+    "leave it uninitialized, and we'll initialize it later".
 
 Return objects
 --------------

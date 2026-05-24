@@ -161,7 +161,7 @@ procedure :ada:`Test_Private_Data_Processing`. The fact that this procedure is
 private allows us to use the :ada:`Private_Data_Processing` package as if it
 was a non-private package. We then use the private
 :ada:`Test_Private_Data_Processing` procedure as our main application, so we can
-run it to test application the private package.
+run it to test the private package.
 
 
 Child subprograms of private packages

@@ -428,7 +428,7 @@ parameter in the form:
 
 This will allow us to reuse definitions from the generic package.
 
-This is the updated version of the our test application for the reversing
+This is the updated version of our test application for the reversing
 algorithm:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Simple_Generic_Array_Pkg
@@ -529,7 +529,7 @@ instantiation:
 For the previous example, the definitions come from the declarations of
 the :ada:`Color_Pkg` package:
 
-A complete parametrization, in constrast, contains the definition of all
+A complete parametrization, in contrast, contains the definition of all
 types in the generic declaration. For example:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Packages.Simple_Generic_Array_Pkg
@@ -656,7 +656,7 @@ will therefore declare the following formal parameters:
 Note that :ada:`Image` and :ada:`Pkg_Test` are examples of formal
 subprograms, which have been discussed in the introductory course. Also,
 note that :ada:`S` is an example of a formal object, which we discuss in
-later section.
+a later section.
 
 This is a version of the test application that makes use of the generic
 :ada:`Perform_Test` procedure:
@@ -759,7 +759,7 @@ related to the array that we're using for the test:
 
     - :ada:`S`: the string containing the array name
 
-    - the function :ada:`Image` that converts an elements of the array to a
+    - the function :ada:`Image` that converts an element of the array to a
       string
 
 We could abstract our implementation even further by moving these elements
@@ -772,7 +772,7 @@ packages:
     Generic_Array_Bundle <= Generic_Array_Pkg
 
 This strategy demonstrates that, in Ada, it is really straightforward to
-make use of generics in order to abstracts algorithms.
+make use of generics in order to abstract algorithms.
 
 First, let us define the new :ada:`Generic_Array_Bundle` package, which
 references the :ada:`Generic_Array_Pkg` package and the two formal elements
@@ -963,7 +963,7 @@ combination with other generic packages. Also, they don't define anything
 themselves. In this sense, signature packages don't have an associated
 package body.
 
-Using signature packages is an useful approach to clean-up the declaration
+Using signature packages is a useful approach to clean-up the declaration
 of generic packages or subprograms that contain many formal parameters.
 You may move these formal parameters into multiple signature packages,
 each one containing a group of formal parameters that belong together.
@@ -1483,7 +1483,7 @@ This is just an example on how we could implement these :ada:`Set` and
 
     end My_Type_Pkg;
 
-As expected, declaring and using variable of :ada:`My_Type` is
+As expected, declaring and using a variable of :ada:`My_Type` is
 straightforward:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Generics.Formal_Interfaces.Gen_Interface
@@ -1947,7 +1947,7 @@ using a formal type and formal subprograms.
 
 Signature packages make it more explicit that the types and subprograms
 defined in the package represent an interface. This is an advantage over
-the approach using formal subprograms directly. However, using signature
+the approach using formal subprograms directly. However, using a signature
 package isn't as explicit as using the :ada:`interface` keyword.
 
 As mentioned before, signature packages aren't used in isolation, but in
@@ -2485,7 +2485,7 @@ We create an instance of the :ada:`Gen_Float_Acc` by using the
 :ada:`My_Float` type declared in the :ada:`Float_Types` package. Because
 we used :ada:`<>` in the specification of :ada:`function "+"` (in the
 :ada:`Gen_Float_Acc` package), the compiler will automatically select
-the addition operator that we've overriden in the :ada:`Float_Types`
+the addition operator that we've overridden in the :ada:`Float_Types`
 package, so that we don't need to specify it in the package instantiation.
 
 The main reason for the formal subprogram in the specification of the

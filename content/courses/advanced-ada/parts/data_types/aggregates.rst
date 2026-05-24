@@ -311,7 +311,7 @@ components that have :ada:`<>` are not initialized:
     because the components of :ada:`Point_3D` don't have a default value.
     As no initialization is taking place for those components of the aggregate,
     the actual value that is assigned to the record is undefined. In other
-    words, the resulting behavior might dependent on the compiler's
+    words, the resulting behavior might depend on the compiler's
     implementation.
 
     When using GNAT, writing :ada:`(X => 42, Y => <>, Z => <>)` keeps the value
@@ -638,7 +638,7 @@ Full coverage rules for Aggregates
     This section was originally written by Robert A. Duff and published as
     `Gem #1: Limited Types in Ada 2005 <https://www.adacore.com/gems/gem-1>`_.
 
-One interesting feature of Ada are the *full coverage rules* for
+One interesting feature of Ada is the *full coverage rules* for
 aggregates. For example, suppose we have a record type:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Aggregates.Full_Coverage_Rules_Aggregates.Full_Coverage_Rules
@@ -972,7 +972,7 @@ very similar way as we did with record aggregates. (See the comments in the code
 example for more details.)
 
 Note that, as for record aggregates, the :ada:`<>` makes use of the default
-value (if it is available). We discuss this topic in more details
+value (if it is available). We discuss this topic in more detail
 :ref:`later on <Adv_Ada_Array_Aggregate_Box_Default_Value>`.
 
 :ada:`..`
@@ -1829,7 +1829,7 @@ information from :ada:`P_1D`, while the remaining components |mdash| in this
 case, :ada:`Y` and :ada:`Z` |mdash| are just set to 0.6.
 
 Continuing with this example, in the next assignment to :ada:`P_3D`, we're
-using information from :ada:`P_2` in the extension aggregate. This covers the
+using information from :ada:`P_2D` in the extension aggregate. This covers the
 :ada:`Point_2D` part of the :ada:`P_3D` object |mdash| components :ada:`X` and
 :ada:`Y`, to be more specific. The :ada:`Point_3D` specific components of
 :ada:`P_3D` |mdash| component :ada:`Z` in this case |mdash| receive their
@@ -1922,7 +1922,7 @@ Previously, we've discussed
 assign an object :ada:`Obj_From` of a tagged type to an object :ada:`Obj_To` of
 a descendent type.
 
-We may want also to assign an object :ada:`Obj_From` of to an object
+We may want to also assign an object :ada:`Obj_From` to an object
 :ada:`Obj_To` of the same type, but change some of the components in this
 assignment. To do this, we use delta aggregates.
 
@@ -1980,7 +1980,7 @@ Let's reuse the :ada:`Points` package from a previous example:
     end Show_Points;
 
 Here, we assign :ada:`P1` to :ada:`P2`, but change the :ada:`X` component.
-Also, we assign  :ada:`P1` to :ada:`P3`, but change the :ada:`X` and :ada:`Y`
+Also, we assign :ada:`P1` to :ada:`P3`, but change the :ada:`X` and :ada:`Y`
 components.
 
 We can use class-wide types with delta aggregates. Consider this example:
@@ -2152,11 +2152,11 @@ We can use delta aggregates for arrays. Let's change the declaration of
     end Show_Points;
 
 The implementation of :ada:`Show_Points` in this example is very similar to the
-version where use a record type. In this case, we:
+version where we use a record type. In this case, we:
 
 - assign :ada:`P1` to :ada:`P2`, but change the first component, and
 
-- we assign  :ada:`P1` to :ada:`P3`, but change the first and second
+- we assign :ada:`P1` to :ada:`P3`, but change the first and second
   components.
 
 Using slices

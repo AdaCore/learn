@@ -264,7 +264,7 @@ Pool-specific access types
 
 We've already discussed many aspects about pool-specific access types. In this
 section, we recapitulate some of those aspects, and discuss some new details
-that haven't seen yet.
+that we haven't seen yet.
 
 As we know, we cannot directly assign an object :ada:`Distance_Miles` of type
 :ada:`Miles` to an object :ada:`Distance_Meters` of type :ada:`Meters`, even if
@@ -745,7 +745,7 @@ the :ada:`P` object and specify the constraints of the allocated string object
 
     However, the advantage of discriminants as access values isn't restricted
     to being able to use unconstrained types such as arrays: we could really
-    use any type as the designated subtype! In fact, we can generalized this
+    use any type as the designated subtype! In fact, we can generalize this
     to:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Discriminants_As_Access_Values.Generic_Access
@@ -1084,7 +1084,7 @@ replacing it with a new object that we allocate inside the
 
 As expected, contrary to the previous examples, we cannot implement this
 code by relying on parameter modes to replace the object. In fact, we have to
-use access types for this kind of operations.
+use access types for this kind of operation.
 
 Note that this implementation creates a memory leak. In a proper
 implementation, we should make sure to
@@ -1225,7 +1225,7 @@ object won't be affected by the call to this subprogram. Note that this code
 actually compiles if we try to modify :ada:`N.all` in the :ada:`Show`
 procedure, but the post-condition fails at runtime when we do that.
 
-(By uncommentating and building the code again, you'll see an exception being
+(By uncommenting and building the code again, you'll see an exception being
 raised at runtime when trying to change the object.)
 
 In the postcondition above, we're using :ada:`'Old` to refer to the original
@@ -1953,7 +1953,7 @@ number of coefficients, as we discuss as an example in this section.
 Uniform multidimensional arrays
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Consider an algorithm that processes data based on coefficients that depends on
+Consider an algorithm that processes data based on coefficients that depend on
 a selected quality level:
 
 +------------------------+--------------+-----+-----+-----+-----+-----+
@@ -2325,7 +2325,7 @@ Note that these examples make use of these two features:
 2. The retrieval of a reference to :ada:`I_Var` using the :ada:`Access`
    attribute.
 
-In the next sections, we discuss these features in more details.
+In the next sections, we discuss these features in more detail.
 
 .. admonition:: In the Ada Reference Manual
 
@@ -2596,7 +2596,7 @@ to those components:
     end Show_Aliased_Components;
 
 In this example, we get access to the :ada:`I_Var_2` component of record
-:ada:`R`. (Note that trying to access the :ada:`I_Var_1` component would gives us
+:ada:`R`. (Note that trying to access the :ada:`I_Var_1` component would give us
 a compilation error, as this component is not aliased.) Similarly, we get
 access to the second component of array :ada:`Arr`.
 
@@ -3167,7 +3167,7 @@ the compiler applies those rules to detect potential dangling references at
 compile time. When this detection isn't possible at compile time, the compiler
 introduces an :ref:`accessibility check <Adv_Ada_Accessibility_Check>`. If this
 check fails at runtime, it raises a :ada:`Program_Error` exception |mdash|
-thereby preventing that a dangling reference gets used.
+thereby preventing a dangling reference from being used.
 
 Let's see an example of how dangling references could occur:
 
@@ -3243,7 +3243,7 @@ in terms of lifetime, and see which problems they are preventing in each case.
    :ada:`A1` has a longer lifetime than :ada:`I_Var_2`. After the
    :ada:`Inner_Block` finishes |mdash| when :ada:`I_Var_2` gets out of scope
    and its lifetime has ended |mdash|, :ada:`A1` would still be pointing to an
-   object that does not longer exist.
+   object that no longer exists.
 
 2. In the :ada:`A2 := I_Var_2'Access` assignment, however, both :ada:`A2` and
    :ada:`I_Var_2` have the same lifetime. In that sense, the assignment may
@@ -3371,7 +3371,7 @@ Therefore, we can assume that assigning the access to :ada:`I_Var` to :ada:`A`
 is safe.
 
 When we're sure that an access assignment cannot possibly generate dangling
-references, we can the use :ada:`Unchecked_Access` attribute. For instance, we
+references, we can use the :ada:`Unchecked_Access` attribute. For instance, we
 can use this attribute to circumvent the compilation error in the previous code
 example, since we know that the assignment is actually safe:
 
@@ -3756,7 +3756,7 @@ program becomes erroneous, as we discuss in this section. Let's see an example:
     end Show_Unchecked_Deallocation;
 
 In this example, we allocate an object for :ada:`I_1` and make :ada:`I_2` point
-to the same object. Then, we call :ada:`Free (I)`, which has the following
+to the same object. Then, we call :ada:`Free (I_1)`, which has the following
 consequences:
 
 - The call to :ada:`Free (I_1)` will try to reclaim the storage for the
@@ -5836,7 +5836,7 @@ In our discussion about accessibility rules, we've looked into
 the :ref:`accessibility rules <Adv_Ada_Accessibility_Rules>` that are based on
 those levels. The same accessibility rules apply to access-to-subprograms.
 :ref:`As we said previously  <Adv_Ada_Accessibility_Rules_Operations>`,
-operations targeting objects at a *less-deep* level are illegal, as it's the
+operations targeting objects at a *less-deep* level are illegal, as is the
 case for subprograms as well:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Accessibility_Rules_Access_To_Subprograms.Access_To_Subprogram_Accessibility_Error_Less_Deep
@@ -5929,7 +5929,7 @@ source code |mdash| for example, moving subprograms to a different level.
 Unchecked Access
 ~~~~~~~~~~~~~~~~
 
-Previously, we discussed about the
+Previously, we discussed the
 :ref:`Unchecked_Access attribute <Adv_Ada_Unchecked_Access>`, which we can use
 to circumvent accessibility issues in specific cases for access-to-objects. We
 also said in that section that this attribute only exists for objects, not for

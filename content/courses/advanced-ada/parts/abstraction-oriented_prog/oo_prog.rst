@@ -479,7 +479,7 @@ Calling inherited subprograms
     `Calling inherited subprograms in Ada <https://blog.adacore.com/calling-inherited-subprograms-in-ada>`_.
 
 In object-oriented code, it is often the case that we need to call
-inherited subprograms. Some programing languages make it very easy by
+inherited subprograms. Some programming languages make it very easy by
 introducing a new keyword `super` (although this approach has its limits
 for languages that allow multiple inheritance of implementation).
 
@@ -744,7 +744,7 @@ Now, if we want to add an extra :ada:`Parallelogram` class between
 of the :ada:`Parent` subtype in the :ada:`Rectangles` package, and no
 change is needed for the body.
 
-This is not a new syntax nor a new idiom, but is worth considering it when
+This is not a new syntax nor a new idiom, but is worth considering when
 one is developing a complex hierarchy of types, or at least a hierarchy
 that is likely to change regularly in the future.
 

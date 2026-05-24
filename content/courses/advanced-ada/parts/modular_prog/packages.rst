@@ -187,7 +187,7 @@ In the
 :ref:`Introduction to Ada course <Intro_Ada_Course_Privacy>`,
 we've seen that encapsulation plays an important role in modular programming.
 By using the private part of a package specification, we can disclose some
-information, but, at the same time, prevent that this information gets
+information, but, at the same time, prevent this information from being
 accessed where it shouldn't be used directly. Similarly, we've seen that we can
 use the private part of a package to distinguish between the
 :ref:`partial and full view <Adv_Ada_Type_View>` of a data type.
@@ -195,7 +195,7 @@ use the private part of a package to distinguish between the
 The main application of private packages is to create private child packages,
 whose purpose is to serve as internal implementation packages within a
 package hierarchy. By doing so, we can expose the internals to other public
-child packages, but prevent that external clients can directly access them.
+child packages, but prevent external clients from directly accessing them.
 
 As we'll see next, there are many rules that ensure that internal visibility is
 enforced for those private child packages. At the same time, the same rules
@@ -1342,7 +1342,7 @@ Another use clause example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's now consider a simple package called :ada:`Points`, which contains the
-declaration of the :ada:`Point` type and two primitive: an :ada:`Init` function
+declaration of the :ada:`Point` type and two primitives: an :ada:`Init` function
 and an addition operator.
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Modular_Prog.Packages.Use_Type_Clause.Use_Type_Clause

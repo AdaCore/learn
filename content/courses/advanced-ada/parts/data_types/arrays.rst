@@ -12,7 +12,7 @@ Array constraints
 Array constraints are important in the declaration of an array because they
 define the total size of the array. In fact, arrays must always be constrained.
 In this section, we start our discussion with unconstrained array types, and
-then continue with constrained arrays and arrays types. Finally, we discuss
+then continue with constrained arrays and array types. Finally, we discuss
 the differences between unconstrained arrays and vectors.
 
 .. admonition:: In the Ada Reference Manual

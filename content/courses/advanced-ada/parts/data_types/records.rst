@@ -134,7 +134,7 @@ possible as well:
     A: 1
 
 Therefore, we must write the default expression of each individual record
-components in such a way that the resulting initialization value is always
+component in such a way that the resulting initialization value is always
 correct, independently of the order that those expressions are evaluated.
 
 
@@ -146,7 +146,7 @@ record component is only evaluated upon the creation of a default-initialized
 object of the record type." This means that the default expression is by itself
 not evaluated when we declare the record type, but when we create an object of
 this type. It follows from this rule that the default is only evaluated when
-necessary, i.e,, when an explicit initial value is not specified in the object
+necessary, i.e., when an explicit initial value is not specified in the object
 declaration.
 
 Let's see an example:
@@ -294,7 +294,7 @@ Advanced Usages
 In addition to expressions such as subprogram calls, we can use
 :ref:`per-object expressions <Adv_Ada_Per_Object_Expressions_Default_Value>`
 for the default value of a record component. (We discuss this topic later on
-in more details.)
+in more detail.)
 
 For example:
 
@@ -1034,7 +1034,7 @@ read-only, so we cannot change it:
     end Show_Constant_Property;
 
 In this code example, the compilation fails because we cannot change the
-:ada:`C` discriminant. In this sense, :ada:`C` is a basically a constant
+:ada:`C` discriminant. In this sense, :ada:`C` is basically a constant
 component of the :ada:`R` object.
 
 
@@ -1170,7 +1170,7 @@ discriminant to constraint a component of an
 In this example, :ada:`Null_Rec_A` and :ada:`Null_Rec_B` have the same size
 because the type is a null record. However, :ada:`Rec_Array_A` and
 :ada:`Rec_Array_B` have different sizes because we're setting the :ada:`L`
-discriminant |mdash| which we use to constraint the :ada:`Arr` array component
+discriminant |mdash| which we use to constrain the :ada:`Arr` array component
 of the :ada:`Rec_Array` type |mdash| to 10 and 20, respectively.
 
 
@@ -1232,7 +1232,7 @@ In addition to that, we can also use a different kind of access types, namely
 :ref:`anonymous access-to-object subtypes <Adv_Ada_Anonymous_Access_To_Object_Types>`.
 This specific kind of discriminant is called
 :ref:`access discriminant <Adv_Ada_Anonymous_Access_Discriminants>`. We discuss
-this topic in more details in another chapter.
+this topic in more detail in another chapter.
 
 Let's see a code example:
 
@@ -1536,7 +1536,7 @@ changes the discriminants of :ada:`M_2` from :ada:`(L => 1, M => 2)` to
 :ada:`(L => 7, M => 8)`.
 
 Note that assignments of mutable variables may not always work at runtime. For
-example, if a discriminant of a mutable subtype is used to constraint a
+example, if a discriminant of a mutable subtype is used to constrain a
 component of indefinite subtype, we might see the corresponding checks fail at
 runtime. For example:
 
@@ -2133,7 +2133,7 @@ Discriminant constraints
 
 As we discussed before, when
 :ref:`declaring an object with a discriminant <Adv_Ada_Record_Discriminants_Object_Declaration>`,
-we have to specify the values of the all discriminants |mdash| unless, of
+we have to specify the values of all the discriminants |mdash| unless, of
 course, those discriminants have a
 :ref:`default value <Adv_Ada_Record_Discriminants_Default_Values>`. The values
 we specify for the discriminants are called discriminant constraints.
@@ -2253,7 +2253,7 @@ constrained (by the :ada:`L => 5` discriminant constraint), while the
 :ada:`Unconstr` object is unconstrained. Note that, even though :ada:`Unconstr`
 is using the default value for :ada:`L` |mdash| which would correspond to the
 discriminant constraint :ada:`L => 1` |mdash| the object itself hasn't been
-constraint at its declaration.
+constrained at its declaration.
 
 Let's continue our discussion with a more complex example by reusing
 the :ada:`Unconstrained_Types` package that we declared in a
@@ -2619,7 +2619,7 @@ Partial and full view
 ~~~~~~~~~~~~~~~~~~~~~
 
 As we've just seen, if we declare a type with an unknown discriminant part, we
-can only use it in the partial view. In the full view. we cannot use an unknown
+can only use it in the partial view. In the full view, we cannot use an unknown
 discriminant part, but have to use either no discriminants or known
 discriminants. For example:
 
@@ -2897,7 +2897,7 @@ compilation error:
     end Show_Object_Declaration;
 
 In addition, if we declare a subtype based on a type that allows range, index,
-or discriminant constraints, but we don't constraint the subtype, this subtype
+or discriminant constraints, but we don't constrain the subtype, this subtype
 is also considered an unconstrained subtype. For example:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Records.Unknown_Discriminants.Other_Unconstrained_Subtypes
@@ -3670,7 +3670,7 @@ Let's start with a simple record declaration:
     end Rec_Per_Object_Expressions;
 
 In this example, we see the :ada:`Stack` record type with a discriminant
-:ada:`S`. In the declaration of the :ada:`Arr` component of the that type,
+:ada:`S`. In the declaration of the :ada:`Arr` component of that type,
 :ada:`S` is a per-object expression, as it refers to the :ada:`S` discriminant.
 Also, :ada:`(1 .. S)` is a per-object constraint.
 
@@ -3788,7 +3788,7 @@ record component:
     end Rec_Per_Object_Expressions;
 
 Here, we calculate the default value of :ada:`V` using the per-object
-expression :ada:`D - 1`, and the default of value of :ada:`S` using the
+expression :ada:`D - 1`, and the default value of :ada:`S` using the
 per-object :ada:`D'Size`.
 
 The default expression for a component of a discriminated record can be

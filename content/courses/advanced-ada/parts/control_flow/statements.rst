@@ -50,7 +50,7 @@ to apply it to. Let's see an example of labels with simple statements:
 
 Here, we're labeling each statement. For example, we use the :ada:`Show_Hello`
 label to identify the :ada:`Put_Line ("Hello World!");` statement. Note that we
-can use multiple labels a single statement. In this code example, we use the
+can use multiple labels for a single statement. In this code example, we use the
 :ada:`Show_Separator` and :ada:`Show_Block_Separator` labels for the same
 statement.
 
@@ -399,7 +399,7 @@ Case statements and expressions
 As we know, the case statement has a choice expression
 (:ada:`case Choice_Expression is`), which is expected to be a discrete type.
 Also, this expression can be a function call or a type conversion, for example
-|mdash| in additional to being a variable or a constant.
+|mdash| in addition to being a variable or a constant.
 
 As we discussed :ref:`earlier on <Adv_Ada_Parenthesized_Expressions>`,
 if we use parentheses, the contents between those

@@ -400,7 +400,7 @@ Typical implementation
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Let's look at an application that declares a two-dimensional lookup table,
-retrieves a value from it an displays this value.
+retrieves a value from it and displays this value.
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.Strong_Typing.Example_Table_Access.Table_Access_1
 
@@ -554,7 +554,7 @@ By using the mapping, we can select the correct chunks from the input
 testing purposes.
 
 Let's skip the discussion whether the design used in this application is
-good or not and assume that all requirements listed above are set on stone
+good or not and assume that all requirements listed above are set in stone
 and can't be changed.
 
 
@@ -851,13 +851,13 @@ This is the updated specification of the :ada:`Test` child package:
     end Indirect_Ordering.Test;
 
 Note that we also declared a separate type for the array of ordered
-chunks: :ada:`Ord_Chunks`. This is needed because the arrays uses a
+chunks: :ada:`Ord_Chunks`. This is needed because the array uses a
 different index (:ada:`Ord_Chunk_Index`) and therefore can't be the same
 type as :ada:`Chunks`. For the same reason, we declared a separate type
 for the array of selected chunks: :ada:`Sel_Chunks`.
 
 As a side note, we're now able to include a :ada:`Dynamic_Predicate` to
-:ada:`Ord_Chunks` that verifies that the index stored in the each chunk
+:ada:`Ord_Chunks` that verifies that the index stored in each chunk
 matches the corresponding index of its position in the ordered array.
 
 We also had to add a new private package that includes a function that
@@ -882,7 +882,7 @@ retrieves the range of an array of :ada:`Chunk` type |mdash| which are of
 
     end Indirect_Ordering.Cnvt;
 
-This is needed for example in the :ada:`Get_Mapping` function, which has
+This is needed, for example, in the :ada:`Get_Mapping` function, which has
 to deal with indices of these two types. Although this makes the code a
 little bit more verbose, it helps documenting the expected types in that
 function.
@@ -1014,7 +1014,7 @@ to
 
     C1 : Chunk := C (S (I));
 
-The compiler will gives us an error, telling us that it expected the
+The compiler will give us an error, telling us that it expected the
 :ada:`Chunk_Index` type, but found the :ada:`Ord_Chunk_Index` instead.
 By using Ada's strong typing, we're detecting issues at compile time
 instead of having to rely on extensive testing and debugging to detect

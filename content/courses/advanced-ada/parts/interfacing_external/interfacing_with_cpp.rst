@@ -143,7 +143,7 @@ Also, in the declaration of :cpp:`my_func`, we need to include a reference to
 the original name using :ada:`External_Name`. If we leave this out, the
 linker won't be able to find the original implementation of :cpp:`my_func`,
 so it won't build the application. Note that the function name is not
-:cpp:`my_func` anymore (as it was the case for the C version). Instead, it is
+:cpp:`my_func` anymore (as was the case for the C version). Instead, it is
 now called :cpp:`_Z7my_funci`.  This situation is caused by symbol mangling.
 
 In C, the symbol names in object files match the symbol name in the
@@ -155,7 +155,7 @@ prominent example is the difference between the gcc and MSVC compilers.
 However, since GNAT is based on gcc, we can build applications using Ada
 and C++ code without issues |mdash| as long as we use the same compiler.
 
-In order to retrieved the mangled symbol names, we can simply generate
+In order to retrieve the mangled symbol names, we can simply generate
 bindings automatically by using :program:`g++` with the ``-fdump-ada-spec``
 option:
 
@@ -280,7 +280,7 @@ The Ada application can then use the bindings:
 
 Note that, in the Ada application, we cannot use the prefixed notation.
 This notation would be more similar to the corresponding syntax in C++.
-This restriction is caused by the fact that the automatic generated
+This restriction is caused by the fact that the automatically generated
 bindings don't use tagged types. However, if we adapt the declaration of
 :cpp:`Test` and replace it by :ada:`type Test is tagged limited record ...`,
 we'll be able to write :ada:`TA.my_func(1)` and :ada:`TA.get_cnt` in our

@@ -63,13 +63,13 @@ details about these checks later on when we discuss
 A typical example is an :ref:`overflow check <Adv_Ada_Overflow_Check>`.
 Consider a calculation using variables: if this calculation leads to a result
 that isn't representable with the underlying data types, we cannot possibly
-store a value  into a register or memory that can be considered correct |mdash|
+store a value into a register or memory that can be considered correct |mdash|
 so we have to detect this situation. Unfortunately, because we're using
 variables, we obviously cannot verify the result of the calculation at
 compilation time, so we have to verify it at runtime.
 
 As we've mentioned before, Ada strives for detecting as many erroneous
-conditions as possible, while other programming language would allow errors
+conditions as possible, while other programming languages would allow errors
 such as overflow errors to remain undetected |mdash| which would likely lead
 the application to misbehave. Those checks raise an exception if an erroneous
 condition is detected, so the programmer has the means |mdash| and the
@@ -247,7 +247,7 @@ could also display a message if the assertion is false:
     end Show_Pragma_Assert;
 
 Similarly, we can use the procedural form of :ada:`Assert`. For example, the
-code above can implemented as follows:
+code above can be implemented as follows:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Exceptions.Asserts.Procedure_Assert
     :class: ada-run-expect-failure
@@ -315,7 +315,7 @@ the :ada:`Assertion_Error` exception.
 The following table presents all policies that we can set:
 
 +----------------------------------+-------------------------------------------+
-| Policy                           | Descripton                                |
+| Policy                           | Description                               |
 +==================================+===========================================+
 | :ada:`Assert`                    | Check assertions                          |
 +----------------------------------+-------------------------------------------+
@@ -363,7 +363,7 @@ The following table presents all policies that we can set:
     - :ada:`Statement_Assertions`
     - :ada:`Subprogram_Variant`
 
-    Also, in addtion to :ada:`Check` and :ada:`Ignore`, GNAT allows you to set
+    Also, in addition to :ada:`Check` and :ada:`Ignore`, GNAT allows you to set
     a policy to :ada:`Disable` and :ada:`Suppressible`.
 
     You can read more about them in the
@@ -1153,7 +1153,7 @@ allocating memory. Let's revisit an example that we
 
 On each allocation (:ada:`new UInt_7`), a storage check is performed. Because
 there isn't enough reserved storage space before the second allocation, the
-checks fails and raises a :ada:`Storage_Error` exception.
+check fails and raises a :ada:`Storage_Error` exception.
 
 
 
@@ -1506,8 +1506,8 @@ we can simply use the :ada:`Read` and :ada:`Write` attributes.
 In this example, we store the exceptions raised in the application in the
 `exceptions_file.bin` file. In the exception part of procedures :ada:`Nested_1`
 and :ada:`Nested_2`, we call :ada:`Exception_Occurrence'Write` to store an
-exception occurence in the file. In the :ada:`Read_Exceptions` block, we read
-the exceptions from the the file by calling :ada:`Exception_Occurrence'Read`.
+exception occurrence in the file. In the :ada:`Read_Exceptions` block, we read
+the exceptions from the file by calling :ada:`Exception_Occurrence'Read`.
 
 
 Debugging exceptions in the GNAT toolchain
@@ -1675,7 +1675,7 @@ generally easy to find out which one it is.
 Exception renaming
 ------------------
 
-We can rename exceptions by using the an exception renaming declaration in this
+We can rename exceptions by using an exception renaming declaration in this
 form :ada:`Renamed_Exception : exception renames Existing_Exception;`. For
 example:
 
@@ -2137,7 +2137,7 @@ exception.) Of course, in this specific example, suppressing the index check
 masks a severe issue.
 
 In contrast, an index check is performed in the :ada:`Value_Of` function
-because of the :ada:`pragma Unsuppress`. As a result, the index checks fails in
+because of the :ada:`pragma Unsuppress`. As a result, the index check fails in
 the call to this function, which raises a :ada:`Constraint_Error` exception.
 
 
