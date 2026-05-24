@@ -19,7 +19,7 @@ example:
     gprbuild -P project.gpr
 
 You can find the binary built with the command above in the *obj*
-directory. You can the run it in the same way as you would do with any
+directory. You can then run it in the same way as you would do with any
 other executable on your platform. For example:
 
 .. code-block:: sh
@@ -34,7 +34,7 @@ aren't in the directory tree:
 
     gprbuild -p -P project.gpr
 
-Ada source-code are stored in *.ads* and *.adb* files. To view the
+Ada source-code is stored in *.ads* and *.adb* files. To view the
 content of these files, you can use :program:`GNAT Studio`. To open
 :program:`GNAT Studio`, double-click on the *.gpr*
 project file or invoke :program:`GNAT Studio` on the command line:
@@ -79,8 +79,8 @@ warnings.
 Warnings are useless if you don't do anything about them. If you give
 your team member some code that causes warnings, how are they supposed
 to know whether they represent real problems?  If you don't address
-each warning, people will soon starting ignoring warnings and there'll
-be lots of things that generates warnings scattered all over your
+each warning, people will soon start ignoring warnings and there'll
+be lots of things that generate warnings scattered all over your
 code.  To avoid this, you may want to use the ``-gnatwae`` switch to
 both turn on (almost) all warnings and to treat warnings as
 errors. This forces you to get a clean (no warnings or errors)

@@ -45,7 +45,7 @@ Basic structure
 The main element of a project file is a project declaration, which
 contains definitions for the current project. A project file may also
 include other project files in order to compose a complex build. One of
-the simplest form of a project file is the following:
+the simplest forms of a project file is the following:
 
 .. code-block:: none
 
@@ -59,7 +59,7 @@ the simplest form of a project file is the following:
 In this example, we declare a project named ``Default``. The
 ``for Main use`` expression indicates that the ``main.adb`` file is used
 as the entry point (main source-code file) of the project. The main file
-doesn't necessary need to be called ``main.adb``; we could use any source-code
+doesn't necessarily need to be called ``main.adb``; we could use any source-code
 implementing a main application, or even have a list of multiple main
 files. The ``for Source_Dirs use`` expression indicates that the ``src``
 directory contains the source-file for the application (including the main
@@ -68,7 +68,7 @@ file).
 Customization
 ~~~~~~~~~~~~~
 
-GPRbuild support scenario variables, which allow you to control the way
+GPRbuild supports scenario variables, which allow you to control the way
 binaries are built. For example, you may want to distinguish between debug
 and optimized versions of your binary. In principle, you could pass
 command-line options to :program:`gprbuild` that turn debugging on and

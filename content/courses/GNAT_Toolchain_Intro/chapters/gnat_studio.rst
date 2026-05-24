@@ -156,7 +156,7 @@ the debugger. To do this, you can click on ``Debug`` |srarr|
 Formal verification
 -------------------
 
-In order to see how SPARK can detect issues, let's creating a simple
+In order to see how SPARK can detect issues, let's create a simple
 application that accumulates values in a variable :ada:`A`:
 
 .. code-block:: ada

@@ -5,7 +5,7 @@ GNAT Tools
 
 .. include:: ../../../global.txt
 
-In chapter we present a brief overview of some of the tools included
+In this chapter we present a brief overview of some of the tools included
 in the GNAT toolchain.
 
 For further details on how to use these tools, please refer to the
