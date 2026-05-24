@@ -123,7 +123,7 @@ generalized constraints (predicates). Through contracts the developer can
 formalize the intended behavior of the application, and can
 verify this behavior by testing, static analysis or formal proof.
 
-Here's a skeletal example that illustrates contact-based programming; a
+Here's a skeletal example that illustrates contract-based programming; a
 :ada:`Table` object is a fixed-length container for distinct :ada:`Float`
 values.
 
@@ -294,7 +294,7 @@ memory safety; this is illustrated by a number of features, including:
   A run-time check guarantees that an array index is within the bounds of
   the array.
   This prevents buffer overflow vulnerabilities that are common in C and C++.
-  In many cases a a compiler optimization can detect statically that the
+  In many cases a compiler optimization can detect statically that the
   index is within bounds and thus eliminate any run-time code for the check.
 
 * *Prevention of null pointer dereferences*
@@ -305,7 +305,7 @@ memory safety; this is illustrated by a number of features, including:
 
 * *Prevention of dangling references*
 
-  A scope accessibility checks ensures that a pointer cannot reference an
+  A scope accessibility check ensures that a pointer cannot reference an
   object on the stack after exit/return from the scope (block or subprogram)
   in which the object is declared. Such checks are generally static,
   with no run-time overhead.
