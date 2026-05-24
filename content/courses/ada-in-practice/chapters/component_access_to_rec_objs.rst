@@ -55,7 +55,7 @@ types |mdash| the record object and the protected object. Let's say that a
 client declares an object :ada:`Obj` of type :ada:`R`. There is only one
 reference direction defined, from the record denoted by :ada:`Obj` to the
 component protected object denoted by :ada:`Obj.Y`. This idiom, however,
-requires a reference in the opposite direction, from :ada:`Oby.Y` to
+requires a reference in the opposite direction, from :ada:`Obj.Y` to
 :ada:`Obj`.
 
 This may seem like an unrealistic situation, but it is not. An IO device type
@@ -219,7 +219,7 @@ must be limited in both views if it is limited in either view.
 For the idiom implementation to be legal, the type's completion in the private part
 must not merely be limited, but actually *immutably limited*, meaning that it is always truly limited.
 There are various ways to make that happen (see
-:aarm22:`AARM22 7.5 (8.1/3) <7-5>` ) but the easiest way to is to include the
+:aarm22:`AARM22 7.5 (8.1/3) <7-5>` ) but the easiest way is to include the
 reserved word :ada:`limited` in the type definition within the full view, as we
 did above. That is known as making the type *explicitly limited*.  It turns out
 having a task or protected component also makes it immutably limited, so
@@ -401,7 +401,7 @@ visible extension components are the discriminants :ada:`Transceiver`,
 :ada:`IRQ`, and :ada:`IRQ_Priority`. :ada:`Transceiver` will designate the
 :ada:`USART` to drive (discussed in a moment). :ada:`IRQ` is the
 :ada:`Interrupt_ID` indicating the interrupt that the associated :ada:`USART`
-raises. :ada:`IRQ_Priority` is the priority for that interrupt. (*IRQ* in a
+raises. :ada:`IRQ_Priority` is the priority for that interrupt. (*IRQ* is a
 common abbreviation for *Interrupt ReQuest*.) These two interrupt-oriented
 discriminants are used within the PO declaration to configure it for interrupt
 handling.
@@ -535,7 +535,7 @@ Pros
 The implementation is directly expressed, requiring only an access discriminant and
 the current instance semantics of :ada:`type_name'Access`.
 
-Although the real-word example is complex |mdash| multiple discriminants are
+Although the real-world example is complex |mdash| multiple discriminants are
 involved, and a type extension |mdash| the implementation itself requires little
 text. Interrupt handling is relatively complex in any language.
 

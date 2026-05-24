@@ -170,7 +170,7 @@ bits, including individual bit access, using the two object names. The compiler
 will ensure that every reference via :ada:`X` is compatible with the integer
 view, and every reference via :ada:`Y` is compatible with the array view.
 
-In the above example, we've ignored the endianess issue. If you wanted to change the
+In the above example, we've ignored the endianness issue. If you wanted to change the
 sign bit, for example, or display the bits in the "correct" order, you'd need to
 handle that detail.
 
@@ -193,7 +193,7 @@ alternative type are made applicable to the object.
 Expressing this approach in Ada requires unchecked conversion because, in Ada,
 address values are semantically distinct from pointer values (*access values*).
 An access value might be represented by an address value, but because
-architectures vary, that implementation in not guaranteed. Therefore, the
+architectures vary, that implementation is not guaranteed. Therefore, the
 language does not define checked conversions between addresses and access
 values. We need the escape hatch.
 
@@ -335,7 +335,7 @@ appropriate approach.
 For that matter we could use type punning but have the record type be the
 designated type returned from the address conversion, rather than a single axis
 value. Then we'd just convert :ada:`Buffer'Address` and not need to specify
-array indexes as all. This would be the same as converting the array to the record
+array indexes at all. This would be the same as converting the array to the record
 type, but with a level of indirection added.
 
 For the network packet example, we want to apply record type views to arbitrary

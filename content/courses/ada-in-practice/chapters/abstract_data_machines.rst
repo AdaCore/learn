@@ -24,7 +24,7 @@ requirement?
 The Abstract Data Type (ADT) :ref:`Abstract Data Type
 <Ada_In_Practice_Abstract_Data_Types>` idiom is the primary abstraction
 definition facility in Ada. Given an ADT that provides the required
-facility you could simply declare a single object of the type. But how
+facility, you could simply declare a single object of the type. But how
 could you ensure that some other client, perhaps in the future, doesn't
 declare another object of the type, either accidentally or maliciously?
 
@@ -277,7 +277,7 @@ rotary switch's current value.
 However, on this target the memory at that address is read-only, and
 rightly so because the only way to change the value is to physically
 rotate the switch. Writing to that address has no effect whatsoever.
-Although doing so is a logical error no indication is provided by the
+Although doing so is a logical error, no indication is provided by the
 hardware, which is potentially confusing to developers. It certainly
 looks like a variable, after all. Declaring it as a constant wouldn't
 suffice because the user could rotate the switch during

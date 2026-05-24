@@ -45,7 +45,7 @@ These idioms pre-date later package facilities, such as private packages
 and hierarchical packages. We describe idioms for those kinds of packages
 separately.
 
-Two of the simpler idioms are described here. The other two, that are more
+Two of the simpler idioms are described here. The other two, which are more
 commonly used, are described in two separate, dedicated entries within
 this document.
 
@@ -109,7 +109,7 @@ When a library package contains variable declarations, these variables comprise
 global data. In this sense, *global* means potential visibility to multiple
 clients. Global data should be avoided by default, because the effects of
 changes are potentially pervasive, throughout the entire set of clients that
-have visibility to it. In effect the developer must understand everything
+have visibility to it. In effect, the developer must understand everything
 before changing anything. The introduction of new bugs is a common result. But
 if, for some compelling reason, the design really called for global data, this
 idiom provides the way to declare it. Note also that global *constants*

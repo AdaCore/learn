@@ -561,7 +561,7 @@ idiom. In that implementation, however, only single characters were sent and
 received, whereas messages will consist of one or more characters. Although
 there are differences, we assume that you are familiar enough with that idiom's
 approach that we don't need to go into all the details of the serial I/O, the
-USART, or the interrupt handler within a PO. We'll focus instead of the
+USART, or the interrupt handler within a PO. We'll focus instead on the
 differences due to this idiom.
 
 In this version we want to notify a task when an entire message has been sent

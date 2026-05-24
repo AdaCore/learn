@@ -766,7 +766,7 @@ would have events named :ada:`Hatch_Open`, :ada:`Hatch_Closed`,
 :ada:`Umbilical_Detached`, and so on.
 
 Client tasks can suspend, waiting for an arbitrary event to be signaled, and
-other tasks can signal the occurrence of events, using a *event manager* that
+other tasks can signal the occurrence of events, using an *event manager* that
 the two sets of tasks reference.
 
 Here's the declaration of the manager type:
@@ -1457,7 +1457,7 @@ events to test the :ada:`Event_Management` instance.
        end loop;
     end Demo_Events;
 
-When executed, each task iteratively prints a message indicated that it is
+When executed, each task iteratively prints a message indicating that it is
 responding to one of the awaited events. One of the tasks waits for one of two
 specified events, and the other two tasks wait for a single event each. The
 main procedure signals events at random. The demo runs forever so you'll have

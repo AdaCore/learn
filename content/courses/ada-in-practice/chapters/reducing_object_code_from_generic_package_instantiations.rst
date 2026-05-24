@@ -142,7 +142,7 @@ Cons
 
 What would otherwise be an implementation detail hidden from clients can now
 become visible to them because a (public) library unit can be named in
-with_clause by any other unit. As a result, this approach should not be used in
+a with_clause by any other unit. As a result, this approach should not be used in
 all cases, not even as a default design approach. Restricting the visibility of
 the instance may be more important than the amount of object code it
 contributes. Hiding implementation artifacts allows more freedom to change the

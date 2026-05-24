@@ -8,7 +8,7 @@ Using Building Blocks to Express Inheritance Idioms
 Motivation
 ----------
 
-Betrand Meyer's magisterial book on OOP :footcite:p:`1997:meyer`
+Bertrand Meyer's magisterial book on OOP :footcite:p:`1997:meyer`
 includes a taxonomy of inheritance
 idioms. Two especially well-known entries in that taxonomy are
 :wikipedia:`Subtype Inheritance <Subtyping>` and
@@ -187,12 +187,12 @@ There are two implementations presented, one for each of the two inheritance
 idioms under discussion. First, we will specify our building block choices,
 then show the two idiom expressions in separate subsections.
 
-- We use tagged types for the sake of providing  full OOP capabilities. That is
+- We use tagged types for the sake of providing full OOP capabilities. That is
   the most common choice when inheritance is involved. The static form of
   inheritance has cases in which it is useful, but those cases are very
   narrow in applicability.
 
-- We  assume that the parent type and the child type are both private
+- We assume that the parent type and the child type are both private
   types, i.e., abstract data types, because that is the best practice. See the
   :ref:`Abstract Data Type idiom <Ada_In_Practice_Abstract_Data_Types>` for
   justification and details.
@@ -213,7 +213,7 @@ To avoid unnecessary code duplication, we use
 the same parent type, declared as a simple tagged private type, in the examples
 for the two idiom implementations. The parent type
 could itself be derived from some other tagged type, but that changes nothing
-conceptually significant. We declare parent type in package :ada:`P` as
+conceptually significant. We declare the parent type in package :ada:`P` as
 follows:
 
 .. code-block:: ada
