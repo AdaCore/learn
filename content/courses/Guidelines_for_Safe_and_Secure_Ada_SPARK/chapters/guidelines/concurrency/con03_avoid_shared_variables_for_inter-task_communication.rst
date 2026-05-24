@@ -77,5 +77,5 @@ interact with a memory-mapped device, among other similar usages.
 Notes
 +++++++
 
-In additon to GNATcheck, SPARK and CodePeer can also detect conflicting access
+In addition to GNATcheck, SPARK and CodePeer can also detect conflicting access
 to unprotected variables.
