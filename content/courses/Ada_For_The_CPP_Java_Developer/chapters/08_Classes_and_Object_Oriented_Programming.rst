@@ -239,7 +239,7 @@ This is called "redispatching." Be careful, because this is the most common mist
 Constructors and Destructors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ada does not have constructors and destructors in quite the same way as C++ and Java, but there is analagous functionality in Ada in the form of default initialization and finalization.
+Ada does not have constructors and destructors in quite the same way as C++ and Java, but there is analogous functionality in Ada in the form of default initialization and finalization.
 
 Default initialization may be specified for a record component and will occur if a variable of the record type is not assigned a value at initialization. For example:
 
@@ -452,7 +452,7 @@ Invariants
   *This section is not part of the OOP material and should be moved to a different chapter*
 
 
-Any private type in Ada may be associated with a :ada:`Type_Invariant` contract. An invariant is a property of a type that must always be true after the return from of any of its primitive subprograms. (The invariant might not be maintained during the execution of the primitive subprograms, but will be true after the return.) Let's take the following example:
+Any private type in Ada may be associated with a :ada:`Type_Invariant` contract. An invariant is a property of a type that must always be true after the return from any of its primitive subprograms. (The invariant might not be maintained during the execution of the primitive subprograms, but will be true after the return.) Let's take the following example:
 
 .. code-block:: ada
 

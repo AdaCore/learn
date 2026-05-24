@@ -69,7 +69,7 @@ Here, :ada:`Root.Child` is a child package of :ada:`Root`. The public part of :a
 Using Entities from Packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Entities declared in the visible part of a package specification can be made accessible using a :ada:`with` clause that references the package, which is similar to the C++ :cpp:`#include` directive. Visibility is implicit in Java: you can always access all classes located in your *CLASSPATH*. After a :ada:`with` clause, entities needs to be prefixed by the name of their package, like a C++ namespace or a Java package. This prefix can be omitted if a :ada:`use` clause is employed, similar to a C++ :cpp:`using namespace` or a Java :java:`import`.
+Entities declared in the visible part of a package specification can be made accessible using a :ada:`with` clause that references the package, which is similar to the C++ :cpp:`#include` directive. Visibility is implicit in Java: you can always access all classes located in your *CLASSPATH*. After a :ada:`with` clause, entities need to be prefixed by the name of their package, like a C++ namespace or a Java package. This prefix can be omitted if a :ada:`use` clause is employed, similar to a C++ :cpp:`using namespace` or a Java :java:`import`.
 
 [Ada]
 

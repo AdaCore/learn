@@ -81,7 +81,7 @@ In Ada the programmer specifies how the parameter will be used and in general th
       }
    }
 
-The first two declarations for :ada:`Proc` and :ada:`Func` are specifications of the subprograms which are being provided later. Although optional here, it's still considered good practice to separately define specifications and implementations in order to make it easier to read the program. In Ada and C++, a function that has not yet been seen cannot be used. Here, :ada:`Proc` can call :ada:`Func` because its specification has been declared. In Java, it's fine to have the declaration of the subprogram later .
+The first two declarations for :ada:`Proc` and :ada:`Func` are specifications of the subprograms which are being provided later. Although optional here, it's still considered good practice to separately define specifications and implementations in order to make it easier to read the program. In Ada and C++, a function that has not yet been seen cannot be used. Here, :ada:`Proc` can call :ada:`Func` because its specification has been declared. In Java, it's fine to have the declaration of the subprogram later.
 
 Parameters in Ada subprogram declarations are separated with semicolons, because commas are reserved for listing multiple parameters of the same type. Parameter declaration syntax is the same as variable declaration syntax, including default values for parameters. If there are no parameters, the parentheses must be omitted entirely from both the declaration and invocation of the subprogram.
 
