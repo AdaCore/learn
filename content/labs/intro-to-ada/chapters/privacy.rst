@@ -247,7 +247,7 @@ Limited Strings
 
         #. The :ada:`Lim_String` type acts as a container for strings.
 
-            #. In the the private part, :ada:`Lim_String` is declared as an
+            #. In the private part, :ada:`Lim_String` is declared as an
                access  type to a :ada:`String`.
 
         #. There are two versions of the :ada:`Init` function that initializes

@@ -60,7 +60,7 @@ Display Array
 
     #. These are the formal parameters of the procedure:
 
-        #. a range type :ada:`T_Range` for the the array;
+        #. a range type :ada:`T_Range` for the array;
 
         #. a formal type :ada:`T_Element` for the elements of the array;
 
