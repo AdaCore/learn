@@ -125,7 +125,7 @@ but might fail to detect an error) to TQL-1 (the highest, applicable
 to software tools that can insert an error in software at level A).
 
 A tool is only qualified in the context of a specific project, for a
-specific certification credit, expressed in term of objectives and
+specific certification credit, expressed in terms of objectives and
 activities. Achieving qualification for a tool on a specific project
 does of course greatly increase the likelihood of being able to
 qualify the tool on another project. However, a different project may
@@ -172,7 +172,7 @@ do not relate directly to the issues addressed in this supplement.
 Object-Oriented Technology and Related Techniques Supplement: DO-332/ED-217
 ------------------------------------------------------------------------------
 
-Although |do-332| is often referred as the "object oriented
+Although |do-332| is often referred to as the "object oriented
 supplement", the "related techniques" mentioned in the title are
 equally relevant and are addressed in detail. They may be used in
 conjunction with Object-Oriented Technology (OOT) but are not

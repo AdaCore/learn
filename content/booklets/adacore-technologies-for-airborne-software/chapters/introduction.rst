@@ -6,7 +6,7 @@ Introduction
 This document explains how to use AdaCore's technologies |mdash| the
 company's tools, run-time libraries, and associated services |mdash|
 in conjunction with the safety-related standards for airborne
-software: |do-178c| and and its technology supplements and tool
+software: |do-178c| and its technology supplements and tool
 qualification considerations. It describes how AdaCore's technologies
 fit into a project's software life cycle processes, and how they can
 satisfy various objectives of the standards.  Many of the advantages
@@ -100,7 +100,7 @@ objectives for one project (determined by the development standards,
 the input complexity, the target computer and system environment) but
 not necessarily on another project. The effort and amount of
 justification to gain approval may also differ from one auditor to
-another, depending of their background. Whenever a new tool, method,
+another, depending on their background. Whenever a new tool, method,
 or technique is introduced, it's important to open a discussion with
 AdaCore and the designated authority to confirm its acceptability. The
 level of detail in the process description provided in the project
