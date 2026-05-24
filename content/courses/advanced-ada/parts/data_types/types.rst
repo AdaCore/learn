@@ -86,7 +86,7 @@ symbols or reserved words specified in the Ada language:
 +------------------------------+----------------------------------------------+
 | Unary adding operators       | :ada:`+`, :ada:`-`                           |
 +------------------------------+----------------------------------------------+
-| multiplying operators         | :ada:`*`, :ada:`/`, :ada:`mod`, :ada:`rem`   |
+| Multiplying operators        | :ada:`*`, :ada:`/`, :ada:`mod`, :ada:`rem`   |
 +------------------------------+----------------------------------------------+
 | Highest precedence operators | :ada:`**`, :ada:`abs`, :ada:`not`            |
 +------------------------------+----------------------------------------------+
