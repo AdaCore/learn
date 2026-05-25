@@ -37,7 +37,7 @@ $ vagrant ssh web
 
 $ source /vagrant/venv/bin/activate
 $ cd /vagrant/frontend
-$ yarn run dev
+$ pnpm run dev
 ```
 
 This will run webpack on the typescript and scss, then sphinx for the rst
