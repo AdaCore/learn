@@ -218,7 +218,7 @@ publish:                                                                       #
 
 # Development target, rebuilds the site, with it pointing to the local
 # code server.
-# This should only be called from `yarn run dev`
+# This should only be called from `pnpm run dev`
 local:
 	@SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
 	  SRC_TEST_DIR="$(SRC_TEST_DIR)" \
@@ -226,10 +226,10 @@ local:
 	  "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:
-	yarn run production
+	pnpm run production
 
 webpack-sandbox:
-	yarn run sandbox
+	pnpm run sandbox
 
 sphinx-production:
 	SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
