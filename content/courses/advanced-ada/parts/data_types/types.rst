@@ -524,7 +524,7 @@ Let's see an example:
     end Show_Object_View;
 
 In this example, both :ada:`Default` and :ada:`Dev` are constant objects.
-However, they have different views: while :ada:`Default_S` has a constant view
+However, they have different views: while :ada:`Default` has a constant view
 because it doesn't have any parts with variable view, :ada:`Dev` has a variable
 view because it's a private type. Finally, as expected, :ada:`Settings` has a
 variable view because it's a variable object.
