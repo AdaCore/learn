@@ -29,8 +29,8 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-        cache-dependency-path: 'frontend'
+        cache: 'pnpm'
+        cache-dependency-path: 'frontend/pnpm-lock.yaml'
     - name: Install OS Deps
       run: |
         sudo apt-get update && \
@@ -58,7 +58,7 @@ jobs:
         echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && \
         sudo sysctl -p
     - name: Install dependencies
-      run: yarn --immutable
+      run: pnpm install --frozen-lockfile
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
