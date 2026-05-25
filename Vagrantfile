@@ -79,8 +79,7 @@ $frontend = <<-SHELL
   cd /vagrant/frontend
   echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
   yes | corepack enable
-  yes | yarn set version berry
-  yarn
+  pnpm install --frozen-lockfile
 
 SHELL
 
@@ -215,8 +214,7 @@ $epub = <<-SHELL
   cd /vagrant/frontend
   echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
   yes | corepack enable
-  yes | yarn set version berry
-  yarn
+  pnpm install --frozen-lockfile
 
 SHELL
 
