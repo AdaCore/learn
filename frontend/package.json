@@ -98,7 +98,7 @@
     "sandbox": "webpack --env sandbox --config webpack.prod.cjs",
     "production": "webpack --config webpack.prod.cjs",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"strict\":false}' mocha --exit",
-    "cover": "c8 yarn run test",
+    "cover": "c8 pnpm run test",
     "doc": "typedoc src --out docs"
   },
   "author": "AdaCore",
