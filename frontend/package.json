@@ -154,5 +154,5 @@
       "src/ts/sandbox-redirect.ts"
     ]
   },
-  "packageManager": "yarn@4.12.0"
+  "packageManager": "pnpm@11.3.0"
 }
