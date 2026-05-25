@@ -5,5 +5,5 @@ build-manifest.json
 dist
 .nyc_output/
 coverage/
-yarn-error.log
+pnpm-debug.log
 .coverage
