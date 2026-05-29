@@ -191,9 +191,15 @@ if _sphinx_unit:
             for _sub in sorted(_top_path.iterdir()):
                 if _sub.is_dir() and f'{_top}/{_sub.name}' != _sphinx_unit:
                     exclude_patterns.append(f'{_top}/{_sub.name}')
-    # The root index.rst still references excluded units via toctree —
-    # suppress those warnings rather than failing or spamming the output.
-    suppress_warnings = ['toc.not_readable']
+    # Exclude the site landing page (index.rst, about.rst) from per-unit
+    # builds.  They belong to a separate "pass 2" project and rebuilding
+    # them on every RST edit wastes time and produces a spurious gnatchop
+    # error from the "Try Ada Now" code block in index.rst.
+    # dist/html/index.html is left untouched from the last full build.
+    exclude_patterns += ['index.rst', 'about.rst']
+    # With the site root excluded, the unit's own index becomes the Sphinx
+    # master document so that the sidebar shows only the unit's chapters.
+    master_doc = f'{_sphinx_unit}/index'
 
 show_authors = True
 
