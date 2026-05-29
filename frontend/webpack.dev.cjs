@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const { merge } = require('webpack-merge');
 const exec = require('child_process').exec;
@@ -8,6 +9,19 @@ const common = require('./webpack.common.cjs');
 module.exports = function(env) {
   const common_config = common(env);
   const unit = process.env.UNIT || '';
+
+  // Validate UNIT before webpack starts so a typo produces a clean error
+  // rather than a cryptic ShellPlugin stack trace after 30 s of compilation.
+  // The Makefile $(error) catches the same mistake for direct `make` CLI use.
+  if (unit) {
+    const confIni = path.join(__dirname, '..', 'content', unit, 'conf.ini');
+    if (!fs.existsSync(confIni)) {
+      console.error(`\nERROR: UNIT="${unit}" is not a valid content unit.`);
+      console.error(`       No conf.ini found at: ${confIni}`);
+      console.error(`       Check for typos.\n`);
+      process.exit(1);
+    }
+  }
 
   const dev_config = {
     mode: 'development',
