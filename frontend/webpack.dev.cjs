@@ -44,6 +44,17 @@ module.exports = function(env) {
         // first build only.
         dev: false,
       }),
+      // Watch RST files so that editing content triggers a sphinx rebuild via
+      // the ShellPlugin's onBuildExit. Scoped to the target unit when UNIT is
+      // set, otherwise watches all content.
+      new WatchPlugin({
+        files: [
+          path.join(
+            __dirname, '..', 'content',
+            process.env.UNIT ? `${process.env.UNIT}/**/*.rst` : '**/*.rst'
+          )
+        ]
+      }),
     ]
   };
 
