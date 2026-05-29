@@ -511,7 +511,11 @@ texinfo_documents = [
 
 # -- Options for intersphinx extension ---------------------------------------
 
-intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
+_inv_cache = os.path.join(os.path.dirname(__file__), 'objects.inv.learn')
+intersphinx_mapping = {
+    'learn': ('https://learn.adacore.com/',
+              _inv_cache if os.path.exists(_inv_cache) else None)
+}
 
 # -- Options for redirects extension -----------------------------------------
 
