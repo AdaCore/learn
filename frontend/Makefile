@@ -31,6 +31,14 @@ CONTENT_DIR   	= $(MKFILE_DIR)/../content
 #        UNIT=courses/advanced-ada pnpm run dev
 UNIT ?=
 
+# Validate UNIT immediately at parse time so a typo fails loudly before
+# Sphinx is invoked.  Every valid unit has a conf.ini at its root.
+ifneq ($(UNIT),)
+ifeq ($(wildcard $(CONTENT_DIR)/$(UNIT)/conf.ini),)
+$(error UNIT="$(UNIT)": not found or missing conf.ini under $(CONTENT_DIR). Check for typos.)
+endif
+endif
+
 TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
 

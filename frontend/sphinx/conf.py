@@ -185,6 +185,14 @@ else:
 _sphinx_unit = os.environ.get('SPHINX_UNIT', '')
 if _sphinx_unit:
     _content_root = Path(os.path.dirname(__file__)) / '../../content'
+    if not (_content_root / _sphinx_unit / 'conf.ini').is_file():
+        print(
+            f'\nERROR: SPHINX_UNIT={_sphinx_unit!r} is not a valid content unit'
+            f' — no conf.ini found at {_content_root / _sphinx_unit / "conf.ini"}.'
+            '\nCheck for typos in the UNIT variable.\n',
+            file=sys.stderr,
+        )
+        sys.exit(1)
     for _top in ('courses', 'labs', 'booklets'):
         _top_path = _content_root / _top
         if _top_path.is_dir():
