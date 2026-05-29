@@ -28,7 +28,6 @@ CONTENT_DIR   	= $(MKFILE_DIR)/../content
 # exclude_patterns, so only the target unit's RST files are processed.
 # The source root stays content/ and the output paths are unchanged.
 # Usage: make local UNIT=courses/intro-to-ada
-#        UNIT=courses/advanced-ada pnpm run dev
 UNIT ?=
 
 # Validate UNIT immediately at parse time so a typo fails loudly before
