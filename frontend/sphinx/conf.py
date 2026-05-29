@@ -546,10 +546,19 @@ def setup(app):
     if 'html' in outdir:
         templates_path.append('_templates')
 
-        redirects.update({
-            "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
-            "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
-        })
+        if 'SPHINX_CONF_INI' in os.environ and os.environ['SPHINX_CONF_INI']:
+            # Per-unit build: load redirects only for this unit
+            unit_dir = Path(os.environ['SPHINX_CONF_INI']).parent
+            redirects_file = unit_dir / 'redirects.json'
+            if redirects_file.is_file():
+                with open(redirects_file) as _f:
+                    redirects.update(json.load(_f))
+        else:
+            # Full-site build: merge redirects from all units
+            _content_dir = Path(os.path.dirname(__file__)) / '../../content'
+            for _redirects_file in sorted(_content_dir.rglob('redirects.json')):
+                with open(_redirects_file) as _f:
+                    redirects.update(json.load(_f))
 
 
         if not os.getenv('FRONTEND_TESTING'):
