@@ -178,6 +178,23 @@ if 'HIDDEN_CONTENTS' in os.environ and os.environ['HIDDEN_CONTENTS'] != "":
 else:
     tags.add('no_hidden_contents')
 
+# Per-unit build: exclude every content unit except the target so that
+# Sphinx only reads and writes the target unit's RST files.
+# The source root stays content/ and output paths are unchanged
+# (e.g. dist/html/courses/advanced-ada/).
+_sphinx_unit = os.environ.get('SPHINX_UNIT', '')
+if _sphinx_unit:
+    _content_root = Path(os.path.dirname(__file__)) / '../../content'
+    for _top in ('courses', 'labs', 'booklets'):
+        _top_path = _content_root / _top
+        if _top_path.is_dir():
+            for _sub in sorted(_top_path.iterdir()):
+                if _sub.is_dir() and f'{_top}/{_sub.name}' != _sphinx_unit:
+                    exclude_patterns.append(f'{_top}/{_sub.name}')
+    # The root index.rst still references excluded units via toctree —
+    # suppress those warnings rather than failing or spamming the output.
+    suppress_warnings = ['toc.not_readable']
+
 show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
@@ -191,7 +208,7 @@ numfig = True
 # numbered starting at 1.
 numfig_secnum_depth = 0
 
-nitpicky = True
+nitpicky = not bool(_sphinx_unit)
 
 # sphinx.ext.extlinks: markup to shorten external links
 extlinks = {
@@ -551,11 +568,19 @@ def setup(app):
         templates_path.append('_templates')
 
         if 'SPHINX_CONF_INI' in os.environ and os.environ['SPHINX_CONF_INI']:
-            # Per-unit build: load redirects only for this unit
+            # Per-unit book build (source-root = unit dir): load this unit's redirects
             unit_dir = Path(os.environ['SPHINX_CONF_INI']).parent
             redirects_file = unit_dir / 'redirects.json'
             if redirects_file.is_file():
                 with open(redirects_file) as _f:
+                    redirects.update(json.load(_f))
+        elif _sphinx_unit:
+            # Per-unit dev build (source-root = content/, SPHINX_UNIT set):
+            # load only the target unit's redirects
+            _unit_redirects = (Path(os.path.dirname(__file__))
+                               / '../../content' / _sphinx_unit / 'redirects.json')
+            if _unit_redirects.is_file():
+                with open(_unit_redirects) as _f:
                     redirects.update(json.load(_f))
         else:
             # Full-site build: merge redirects from all units
