@@ -46,6 +46,31 @@ using `make local` which will point the widgets at 127.0.0.1:8000
 You can then point your browser on your host to 127.0.0.1:8080 to see the learn
 website being served from vagrant.
 
+### Building a single course or lab (faster dev builds)
+
+By default `pnpm run dev` rebuilds the entire content tree (all courses, labs,
+and booklets — 284 RST files). If you are working on a single unit you can
+limit both the Sphinx build and the watched file set to that unit by setting the
+`UNIT` environment variable:
+
+```bash
+# Inside the web VM, in /vagrant/frontend:
+UNIT=courses/intro-to-ada          pnpm run dev
+UNIT=courses/advanced-ada          pnpm run dev
+UNIT=labs/intro-to-ada             pnpm run dev
+UNIT=booklets/adacore-technologies-for-railway-software  pnpm run dev
+```
+
+You can also invoke the Sphinx step directly without the webpack server:
+
+```bash
+make local UNIT=courses/intro-to-ada
+```
+
+`UNIT` must be a path relative to the `content/` directory. Every unit with a
+`conf.ini` file at its root is supported (all courses, labs, and booklets).
+When `UNIT` is unset the behaviour is unchanged: the full site is built.
+
 ## Generate content for publishing
 
 To build and start the publishing server, run:
