@@ -24,17 +24,12 @@ BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
 
 # Optional: limit the local/dev Sphinx build to a single content unit.
+# conf.py reads SPHINX_UNIT and adds all other unit directories to
+# exclude_patterns, so only the target unit's RST files are processed.
+# The source root stays content/ and the output paths are unchanged.
 # Usage: make local UNIT=courses/intro-to-ada
 #        UNIT=courses/advanced-ada pnpm run dev
 UNIT ?=
-
-ifneq ($(UNIT),)
-_SPHINX_SRC := $(CONTENT_DIR)/$(UNIT)
-_SPHINX_INI := $(shell [ -f $(_SPHINX_SRC)/conf.ini ] && echo $(_SPHINX_SRC)/conf.ini)
-else
-_SPHINX_SRC := $(CONTENT_DIR)
-_SPHINX_INI := $(SPHINX_CONF_INI)
-endif
 
 TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
@@ -234,9 +229,10 @@ publish:                                                                       #
 # code server.
 # This should only be called from `pnpm run dev`
 local:
-	@SPHINX_CONF_INI="$(_SPHINX_INI)" \
+	@SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
+	  SPHINX_UNIT="$(UNIT)" \
 	  SRC_TEST_DIR="$(SRC_TEST_DIR)" \
-	  $(SPHINXBUILD) -M html $(_SPHINX_SRC) \
+	  $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	  "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:
