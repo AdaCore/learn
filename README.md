@@ -48,17 +48,14 @@ website being served from vagrant.
 
 ### Building a single course or lab (faster dev builds)
 
-By default `pnpm run dev` rebuilds the entire content tree (all courses, labs,
-and booklets — 284 RST files). If you are working on a single unit you can
-limit both the Sphinx build and the watched file set to that unit by setting the
-`UNIT` environment variable:
+By default `pnpm run dev` rebuilds the entire content tree.
+If you are working on a single unit you can limit both the Sphinx build and the
+watched file set to that unit by setting the `UNIT` environment variable:
 
 ```bash
 # Inside the web VM, in /vagrant/frontend:
 UNIT=courses/intro-to-ada          pnpm run dev
-UNIT=courses/advanced-ada          pnpm run dev
 UNIT=labs/intro-to-ada             pnpm run dev
-UNIT=booklets/adacore-technologies-for-railway-software  pnpm run dev
 ```
 
 You can also invoke the Sphinx step directly without the webpack server:
