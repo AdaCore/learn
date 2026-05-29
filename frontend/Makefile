@@ -22,6 +22,20 @@ MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
 BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
+
+# Optional: limit the local/dev Sphinx build to a single content unit.
+# Usage: make local UNIT=courses/intro-to-ada
+#        UNIT=courses/advanced-ada pnpm run dev
+UNIT ?=
+
+ifneq ($(UNIT),)
+_SPHINX_SRC := $(CONTENT_DIR)/$(UNIT)
+_SPHINX_INI := $(shell [ -f $(_SPHINX_SRC)/conf.ini ] && echo $(_SPHINX_SRC)/conf.ini)
+else
+_SPHINX_SRC := $(CONTENT_DIR)
+_SPHINX_INI := $(SPHINX_CONF_INI)
+endif
+
 TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
 
@@ -220,9 +234,9 @@ publish:                                                                       #
 # code server.
 # This should only be called from `pnpm run dev`
 local:
-	@SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
+	@SPHINX_CONF_INI="$(_SPHINX_INI)" \
 	  SRC_TEST_DIR="$(SRC_TEST_DIR)" \
-	  $(SPHINXBUILD) -M html $(CONTENT_DIR) \
+	  $(SPHINXBUILD) -M html $(_SPHINX_SRC) \
 	  "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
 
 webpack-production:

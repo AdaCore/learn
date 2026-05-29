@@ -33,7 +33,7 @@ module.exports = function(env) {
           parallel: false
         },
         onBuildExit:{
-          scripts: ['make local'],
+          scripts: [`make local${process.env.UNIT ? ' UNIT=' + process.env.UNIT : ''}`],
           blocking: false,
           parallel: false
         },
