@@ -28,7 +28,10 @@ module.exports = function(env) {
     plugins: [
       new ShellPlugin({
         onBuildStart:{
-          scripts: ['make cleanall'],
+          // Skip cleanall for per-unit builds: the doctree cache must survive
+          // across webpack recompilations so that subsequent sphinx invocations
+          // are incremental (near-instant) rather than full rebuilds.
+          scripts: [process.env.UNIT ? 'echo "UNIT build: skipping cleanall"' : 'make cleanall'],
           blocking: true,
           parallel: false
         },
