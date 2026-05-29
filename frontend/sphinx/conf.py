@@ -527,8 +527,12 @@ if config.has_option('', 'bibtex_file'):
     bibtex_file_full_path = get_file_from_conf_ini(bibtex_file)
     bibtex_bibfiles.append(bibtex_file_full_path)
 else:
-    ## PATCH: get content directory
-    content_dir = os.path.abspath(os.path.dirname(__file__ ) + '/../../content')
+    if 'SPHINX_CONF_INI' in os.environ and os.environ['SPHINX_CONF_INI']:
+        # Per-unit build: only search within the unit's own directory
+        content_dir = os.path.dirname(os.path.abspath(os.environ['SPHINX_CONF_INI']))
+    else:
+        # Full-site build: search entire content directory
+        content_dir = os.path.abspath(os.path.dirname(__file__) + '/../../content')
 
     for bib_file in Path(content_dir).rglob('*.bib'):
         bibtex_bibfiles.append(str(bib_file))
