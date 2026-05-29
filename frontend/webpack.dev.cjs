@@ -10,8 +10,7 @@ module.exports = function(env) {
   const common_config = common(env);
   const unit = process.env.UNIT || '';
 
-  // Validate UNIT before webpack starts so a typo produces a clean error
-  // rather than a cryptic ShellPlugin stack trace after 30 s of compilation.
+  // Validate UNIT before webpack starts so a typo produces a clean error.
   // The Makefile $(error) catches the same mistake for direct `make` CLI use.
   if (unit) {
     const confIni = path.join(__dirname, '..', 'content', unit, 'conf.ini');
