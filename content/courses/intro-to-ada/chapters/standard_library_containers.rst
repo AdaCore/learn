@@ -1300,7 +1300,7 @@ previous section. In fact, since both kinds of maps share many operations,
 we didn't need to make extensive modifications when we changed our example
 to use ordered maps instead of hashed maps. The main difference is seen
 when we run the examples: the output of a hashed map is usually unordered,
-but the output of a ordered map is always ordered, as implied by its name.
+but the output of an ordered map is always ordered, as implied by its name.
 
 Complexity
 ~~~~~~~~~~

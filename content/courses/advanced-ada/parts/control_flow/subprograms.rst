@@ -191,7 +191,7 @@ The following table provides more details:
 
 Note that, for parameters of limited types, only those parameters whose type is
 *explicitly* limited are always passed by reference. We discuss this topic in
-more details :ref:`in another chapter <Adv_Ada_Limited_Types_As_Parameters>`.
+more detail :ref:`in another chapter <Adv_Ada_Limited_Types_As_Parameters>`.
 
 Let's see an example:
 
@@ -391,7 +391,7 @@ error. Consider the following code example:
     end Show_By_Copy_By_Ref_Params;
 
 In the :ada:`Update_Value` procedure, because :ada:`Global_R` and :ada:`R`
-have a type that is neither a by-pass nor a by-reference type, the language does
+have a type that is neither a by-copy nor a by-reference type, the language does
 not specify whether the old or the new value would be read in the calls to
 :ada:`Put_Line`. In other words, the actual behavior is undefined. Also, this
 situation might raise the :ada:`Program_Error` exception.
@@ -483,7 +483,7 @@ Parameter Associations
 
 When actual parameters are associated with formal parameters, some rules are
 checked. As a typical example, the type of each actual parameter must match the
-type of the corresponding actual parameter. In this section, we see some details
+type of the corresponding formal parameter. In this section, we see some details
 about how this association is made and some of the potential errors.
 
 .. admonition:: In the Ada Reference Manual
@@ -543,7 +543,7 @@ default values. Let's see some examples:
        Add (A, Right => 2.0);
     end Show_Param_Association;
 
-This code snippet has examples of positional and name parameter association.
+This code snippet has examples of positional and named parameter association.
 Also, it has an example of mixed positional / named parameter association. In
 most cases, the actual :ada:`A` parameter is associated with the formal
 :ada:`Left` parameter, and the actual 2.0 parameter is associated with the
@@ -720,7 +720,7 @@ For non-scalar types, not all operators are defined. For example, it wouldn't
 make sense to expect a compiler to include an addition operator for a record
 type with multiple components. Exceptions to this rule are the
 equality and inequality operators (:ada:`=` and :ada:`/=`), which are defined
-for any type (be it scalar, record types, and array types).
+for any type (be it scalar types, record types, or array types).
 
 For array types, the concatenation operator (:ada:`&`) is a primitive operator:
 
@@ -1055,7 +1055,7 @@ is that, in the first version, the package specification contains the
 implementation of the :ada:`Is_Zero` function, while, in the second version,
 the implementation is in the body of the :ada:`Expr_Func` package.
 
-An expression function can be, at same time, the specification and the
+An expression function can be, at the same time, the specification and the
 implementation of a function. Therefore, in the first version of the
 :ada:`Expr_Func` package above, we don't have a separate implementation of the
 :ada:`Is_Zero` function because :ada:`(I = 0)` is the actual implementation of
@@ -1657,7 +1657,7 @@ the :ada:`Logged_Failure`, so it never returns to the
 
 We could implement exception handling in the :ada:`Show_No_Return_Exception`
 procedure, so that the :ada:`Logged_Failure` exception could be handled there
-after it's raised in :ada:`Log_And_Raise`. However,  this wouldn't be
+after it's raised in :ada:`Log_And_Raise`. However, this wouldn't be
 considered a *normal* return to the procedure because it wouldn't return to the
 point where it should (i.e. to the point where :ada:`Put_Line` is about to be
 called, right after the call to the :ada:`Log_And_Raise` procedure).
@@ -1717,7 +1717,7 @@ the call in place of the call itself.
 
 In modern compilers, inlining depends on the optimization level selected by the
 user. For example, if we select the higher optimization level, the compiler
-will perform automatic inlining agressively.
+will perform automatic inlining aggressively.
 
 .. admonition:: In the GNAT toolchain
 
@@ -1727,10 +1727,10 @@ will perform automatic inlining agressively.
     performance may be worse than the one we would achieve by compiling the
     same code with optimization level 2 (``-O2``). Therefore, the general
     recommendation is to not *just* select ``-O3`` for the optimized version of
-    an application, but instead compare it the optimized version built with
+    an application, but instead compare it to the optimized version built with
     ``-O2``.
 
-It's important to highlight that the inlining we're referring above happens
+It's important to highlight that the inlining we're referring to above happens
 automatically, so the decision about which subprogram is inlined depends
 entirely on the compiler. However, in some cases, it's better to reduce the
 optimization level and perform manual inlining instead of automatic inlining.

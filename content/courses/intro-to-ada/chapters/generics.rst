@@ -389,7 +389,7 @@ Just as a side note, we could also have written:
        Price_IO.Default_Aft  := 2;
        Price_IO.Default_Exp  := 0;
 
-In this case, we're ajusting :ada:`Default_Aft`, too, to get two decimal digits
+In this case, we're adjusting :ada:`Default_Aft`, too, to get two decimal digits
 after the point when calling :ada:`Put`.
 
 In addition to the generic :ada:`Float_IO` package, the following generic
@@ -947,4 +947,4 @@ procedure (:ada:`Perform_Test`). Note that:
       of the :ada:`Color` type
 
     - For the formal :ada:`Test` procedure, we reference the
-      :ada:`Reverse_Array` procedure from the package.
+      :ada:`Reverse_It` procedure from the package.

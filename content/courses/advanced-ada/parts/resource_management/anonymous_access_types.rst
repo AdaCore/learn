@@ -1718,7 +1718,7 @@ when we call :ada:`Proc (Obj_Child)`, a compilation error occurs because the
 compiler expects type :ada:`T_Access` |mdash| there's no
 :ada:`Proc (N : T_Child_Access)` that could be used here.
 
-If we replace :ada:`T_Access` in the :ada:`Proc` procedure with an an access
+If we replace :ada:`T_Access` in the :ada:`Proc` procedure with an access
 parameter (:ada:`access T`), the subprogram becomes a primitive of :ada:`T`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Anonymous_Access_Types.Anonymous_Access_Parameters.Inherited_Primitives

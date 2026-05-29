@@ -168,7 +168,7 @@ of values.
 **Remarks**:
 
     #. The :wikipedia:`root-mean-square <Root_mean_square>`
-       (RMS) value is an important information associated with    sequences of
+       (RMS) value is important information associated with sequences of
        values.
 
         #. It's used, for example, as a measurement for signal processing.

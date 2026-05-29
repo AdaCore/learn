@@ -132,7 +132,7 @@ Ada offers multiple attributes to retrieve the size of a type or an object:
 
 For the first three attributes, the size is measured in bits. In the case of
 :ada:`Storage_Size`, the size is measured in storage elements. Note that the
-size information depends your target architecture. We'll discuss some examples
+size information depends on your target architecture. We'll discuss some examples
 to better understand the differences among those attributes.
 
 .. _Adv_Ada_Storage_Elements:
@@ -781,7 +781,7 @@ share the same storage space or not.
 
 We can use the :ada:`Has_Same_Storage` and the :ada:`Overlaps_Storage`
 attributes to retrieve more information about how the storage space of two
-objects related to each other:
+objects is related to each other:
 
 - the :ada:`Has_Same_Storage` attribute indicates whether two objects have the
   exact same storage.
@@ -890,7 +890,7 @@ In this code example, we implement two procedures:
 - :ada:`Show_Storage`, which shows storage information about two arrays by
   using the :ada:`Has_Same_Storage` and :ada:`Overlaps_Storage` attributes.
 
-- :ada:`Process`, which are supposed to process an input array :ada:`X` and
+- :ada:`Process`, which is supposed to process an input array :ada:`X` and
   store the processed data in the output array :ada:`Y`.
 
     - Note that the implementation of this procedure is actually just a
@@ -984,7 +984,7 @@ the :ada:`Flags_1` array |mdash| has a size of 64 bits.
 
 Therefore, having a way to compact the representation |mdash| so that we can
 store multiple objects without wasting storage space |mdash| may help us
-improving memory usage. This is actually possible by using the :ada:`Pack`
+improve memory usage. This is actually possible by using the :ada:`Pack`
 aspect. For example, we could extend the previous example and declare a
 :ada:`Packed_Flags` type that makes use of this aspect:
 
@@ -1046,7 +1046,7 @@ the one used for the :ada:`Flags_1` array above) to a packed representation
 this conversion may require writing custom code with manual bit-shifting and
 bit-masking to get the proper target representation. In Ada, however, we just
 need to indicate the actual type conversion, and the compiler takes care of
-generating code containing bit-shifting and bit-masking to performs the type
+generating code containing bit-shifting and bit-masking to perform the type
 conversion.
 
 Let's modify the previous example and introduce this type conversion:
@@ -1837,7 +1837,7 @@ them happening behind your back. So if you write the explicit conversion, you
 get all the gobbledygook listed above, but you can be sure that this never
 happens unless you explicitly ask for it.
 
-This also explains the restriction we mentioned in previous subsection from
+This also explains the restriction we mentioned in the previous subsection from
 :arm22:`RM 13.1 <13-1>` (10):
 
     10 For an untagged derived type, no type-related representation items are
@@ -2297,7 +2297,7 @@ Also, we can assign to any of the components of a record that has the
        Display_State_Value (V);
     end Show_Unchecked_Union;
 
-In the example above, we're use an aggregate in the assignments to :ada:`V`. By
+In the example above, we're using an aggregate in the assignments to :ada:`V`. By
 doing so, we avoid that :ada:`Use_Enum` is set to the *wrong* component. For
 example:
 
@@ -2325,7 +2325,7 @@ cannot directly assign to the :ada:`I` component because :ada:`Use_Enum` is set
 to :ada:`True`, so only the :ada:`S` is accessible. We can, however, read its
 value, as we do in the :ada:`Display_State_Value` procedure.
 
-Be aware that, due to the fact the union is not checked, we might write invalid
+Be aware that, due to the fact that the union is not checked, we might write invalid
 data to the record. In the example below, we initialize the :ada:`I` component
 with 3, which is a valid integer value, but results in an invalid value for
 the :ada:`S` component, as the value 3 cannot be mapped to the representation
@@ -2460,7 +2460,7 @@ Here, we're assigning the address of the :ada:`I` object to the :ada:`A` address
         function System.Address_Image
           (A : System.Address) return String;
 
-    We can use this function to display the address in an user message, for
+    We can use this function to display the address in a user message, for
     example:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Show_Address_Attribute
@@ -2574,7 +2574,7 @@ the :ada:`I` variable).
     the :ada:`System'To_Address` attribute denotes a function identical to
     :ada:`To_Address` (from the :ada:`System.Storage_Elements` package) except
     that it is a static attribute. (We talk about the
-    :ref:`To_Address function <Adv_Ada_Address_Integer>` function later on.)
+    :ref:`To_Address function <Adv_Ada_Address_Integer>` later on.)
 
     Note that we're using the :ada:`Atomic` aspect here, which we discuss
     :ref:`in another chapter <Adv_Ada_Shared_Variable_Control_Atomic>`.
@@ -2896,7 +2896,7 @@ used for storing names for this type. Let's see an example:
     end Show_Discard_Names;
 
 In this example, the compiler attempts to not store strings associated with
-the :ada:`Months` type duration compilation.
+the :ada:`Months` type during compilation.
 
 Note that the :ada:`Discard_Names` aspect is available for enumerations,
 exceptions, and tagged types.

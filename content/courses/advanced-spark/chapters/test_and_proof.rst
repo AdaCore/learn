@@ -280,7 +280,7 @@ The same contracts are useful for test and for proof, so it’s useful to
 develop them for test initially.
 
 **Evaluation**: This approach is not correct. In fact, proof requires more
-contracts that test, as each subprogram is analyzed separately. But these
+contracts than test, as each subprogram is analyzed separately. But these
 are a superset of the contracts used for test.
 
 

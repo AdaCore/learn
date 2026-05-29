@@ -161,7 +161,7 @@ expressions. Very roughly said, this is how we can break up simple expressions:
 Later on in this chapter, we discuss
 :ref:`conditional expressions <Adv_Ada_Conditional_Expressions>`,
 :ref:`quantified expressions <Adv_Ada_Quantified_Expressions>` and
-:ref:`declare expressions <Adv_Ada_Declare_Expressions>` in more details.
+:ref:`declare expressions <Adv_Ada_Declare_Expressions>` in more detail.
 
 In the relation :ada:`M2 in Off | A` from the code example, :ada:`Off | A` is
 a membership choice list, and :ada:`Off` and :ada:`A` are membership choices.
@@ -241,7 +241,7 @@ just a single simple expression. (Note that simple expressions do not have to
 be "simple".) This simple expression consists of two terms: :ada:`2 ** 4` and
 :ada:`3 * C1 ** 8`. While the :ada:`2 ** 4` term is also a single factor, the
 :ada:`3 * C1 ** 8` term consists of two factors: :ada:`3` and :ada:`C1 ** 8`.
-Both the :ada:`2 ** 4` and the :ada:`C1 ** 8` factors consists of two primaries
+Both the :ada:`2 ** 4` and the :ada:`C1 ** 8` factors consist of two primaries
 each:
 
 - the :ada:`2 ** 4` factor has the primaries :ada:`2` and :ada:`4`,
@@ -534,7 +534,7 @@ Quantified Expressions
 
 Quantified expressions are :ada:`for` expressions using a quantifier |mdash|
 which can be either :ada:`all` or :ada:`some` |mdash| and a predicate. This
-kind of expressions let us formalize statements such as:
+kind of expression lets us formalize statements such as:
 
 - "all values of array :ada:`A` must be zero" into
   :ada:`for all I in A'Range => A (I) = 0`, and
@@ -553,8 +553,8 @@ two functions:
 - :ada:`Is_Zero`, which checks whether all components of an array :ada:`A` are
   zero, and
 
-- :ada:`Has_Zero`, which checks whether array :ada:`A` has at least one
-  component of the array :ada:`A` is zero.
+- :ada:`Has_Zero`, which checks whether at least one component of array
+  :ada:`A` is zero.
 
 This is the complete code:
 
@@ -953,7 +953,7 @@ providing the reducer and its initial value:
 - the initial value is the value that we use before all other values of the
   list.
 
-For example, if we use :ada:`+` as the operator and :ada:`0` an the initial
+For example, if we use :ada:`+` as the operator and :ada:`0` as the initial
 value, we get the reduction expression: :ada:`0 + 2 + 3 + 4 = 9`. This can be
 implemented using an array:
 
@@ -1018,7 +1018,7 @@ complete operation is: :ada:`1 * 2 * 3 * 4 = 24`.)
 Value sequences
 ~~~~~~~~~~~~~~~
 
-In addition to arrays, we can apply reduction expression to value sequences,
+In addition to arrays, we can apply a reduction expression to value sequences,
 which consist of an iterated element association |mdash| for example,
 :ada:`[for I in 1 .. 3 => I + 1]`. We can simply *append* the reduction
 expression to a value sequence:

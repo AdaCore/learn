@@ -86,7 +86,7 @@ symbols or reserved words specified in the Ada language:
 +------------------------------+----------------------------------------------+
 | Unary adding operators       | :ada:`+`, :ada:`-`                           |
 +------------------------------+----------------------------------------------+
-| multiplying opertors         | :ada:`*`, :ada:`/`, :ada:`mod`, :ada:`rem`   |
+| Multiplying operators        | :ada:`*`, :ada:`/`, :ada:`mod`, :ada:`rem`   |
 +------------------------------+----------------------------------------------+
 | Highest precedence operators | :ada:`**`, :ada:`abs`, :ada:`not`            |
 +------------------------------+----------------------------------------------+
@@ -326,11 +326,11 @@ that don't originate from object declarations:
        end loop;
     end Show_Objects;
 
-As we can see in this code example a formal parameter of a subprogram or an
+As we can see in this code example, a formal parameter of a subprogram or an
 entry is also an object |mdash| in addition, so are
 :ref:`value conversions <Adv_Ada_Value_Conversion>`, the result returned by a
 function, the result of evaluating an :doc:`aggregate <./aggregates>`, loop
-parameters, :doc:`arrays <./arrays>`, or the slices of arrays objects, or the
+parameters, :doc:`arrays <./arrays>`, or the slices of array objects, or the
 components of composite objects.
 
 .. todo::
@@ -523,7 +523,7 @@ Let's see an example:
        Settings := (Started => True);
     end Show_Object_View;
 
-In this example, both :ada:`Default_S` and :ada:`Dev` are constant objects.
+In this example, both :ada:`Default` and :ada:`Dev` are constant objects.
 However, they have different views: while :ada:`Default_S` has a constant view
 because it doesn't have any parts with variable view, :ada:`Dev` has a variable
 view because it's a private type. Finally, as expected, :ada:`Settings` has a
@@ -882,7 +882,7 @@ enumeration renaming, enumeration overloading and representation clauses.
 Enumerations as functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have used programming language such as C in the past, you're familiar
+If you have used a programming language such as C in the past, you're familiar
 with the concept of enumerations being constants with integer values. In Ada,
 however, enumerations are not integers. In fact, they're actually parameterless
 functions! Let's consider this example:
@@ -1019,7 +1019,7 @@ is just another name to refer to the actual enumeration (:ada:`Mon`).
            Put_Line (Day'Image (D1));
         end Show_Renaming;
 
-    Note that the call to :ada:`Put_Line` still display ``Mon`` instead of
+    Note that the call to :ada:`Put_Line` still displays ``Mon`` instead of
     ``Monday``.
 
 Enumeration overloading
@@ -1471,7 +1471,7 @@ Let's see some examples of indefinite types:
 In this example, both :ada:`Integer_Array` and :ada:`Simple_Record` are
 indefinite types.
 
-As we've just mentioned, we cannot declare variable of indefinite types:
+As we've just mentioned, we cannot declare variables of indefinite types:
 
 .. code:: ada compile_button project=Courses.Advanced_Ada.Data_Types.Types.Definite_Indefinite_Subtypes.Indefinite_Types
     :class: ada-expect-compile-error
@@ -1778,7 +1778,7 @@ after the declaration of :ada:`Next`.
 
 Incomplete types are useful to declare
 :ref:`mutually dependent types <Adv_Ada_Mutually_Dependent_Types>`, as we'll
-see later on. Also, we can also have formal incomplete types, as
+see later on. We can also have formal incomplete types, as
 we'll discuss :ref:`later <Adv_Ada_Formal_Incomplete_Types>`.
 
 .. admonition:: In the Ada Reference Manual
@@ -2986,7 +2986,7 @@ In this example, we have the :ada:`To_Integer` function that converts from the
     declare the :cpp:`T3` class before the :cpp:`T1` class, we could overload
     the :cpp:`=` operator, as you can see in the commented-out lines.)
 
-    In Ada, this kind of conversions isn't available. Instead, we have to
+    In Ada, this kind of conversion isn't available. Instead, we have to
     implement conversion functions such as the :ada:`To_Integer` function from
     the previous code example. This is the corresponding implementation:
 
@@ -3646,11 +3646,11 @@ converts:
 
     - a value in the interval [0, 1) to :ada:`Off`, and
 
-    - a value equal or above 1.0 to :ada:`On`.
+    - a value equal to or above 1.0 to :ada:`On`.
 
-Note that the string parameter of :ada:`To_Activation_State` function |mdash|
+Note that the string parameter of the :ada:`To_Activation_State` function |mdash|
 which converts string literals |mdash| is of :ada:`Wide_Wide_String` type, and
-not of :ada:`String` type, as it's the case for the other conversion functions.
+not of :ada:`String` type, as is the case for the other conversion functions.
 
 In the :ada:`Activation_Examples` procedure, we show how we can initialize an
 object of :ada:`Activation_State` type with all kinds of literals (string,
@@ -3725,7 +3725,7 @@ preconditions of the conversion function:
                         S = "Unknown";
 
 In this case, the precondition explicitly indicates which string literals are
-allowed for the :ada:`To_Activation_State` type.
+allowed for the :ada:`To_Activation_State` function.
 
 User-defined literals can also be used for more complex types, such as records.
 For example:
@@ -3778,7 +3778,7 @@ string, its components are:
 
 Obviously, this example isn't particularly useful. However, the goal is to
 show that this approach is useful for more complex types where a string literal
-(or a numeric literal) might simplify handling those types. Used-defined
+(or a numeric literal) might simplify handling those types. User-defined
 literals let you design types in ways that, otherwise, would only be possible
 when using a preprocessor or a domain-specific language.
 

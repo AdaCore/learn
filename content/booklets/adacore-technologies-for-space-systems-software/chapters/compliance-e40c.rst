@@ -42,7 +42,7 @@ Transformation of software requirements into a software architecture {§5.4.3.1}
   behavior." {§5.4.3.1a}
 
   * The Ada and SPARK languages (and thus the GNAT Pro Ada and SPARK Pro
-    toolsuites directly support this requirement. Relevant
+    toolsuites) directly support this requirement. Relevant
     features include packages, child libraries, subunits, private types,
     tasking, and object-oriented programming (tagged types). The
     :index:`GNATstub` utility (included with GNAT Pro Ada) is useful here;
@@ -226,8 +226,8 @@ Detailed design of real-time software {§5.5.2.5}
     pragma :ada:`Restrictions` produces a run-time check that detects
     attempts to perform allocations from a standard storage pool after
     elaboration (initialization). Depending on the program structure,
-    static analysis by the GNAT Static Analysis Suite's Defect and
-    vulnerability Analyzer may be able to determine that this check
+    static analysis by the GNAT Static Analysis Suite's Defects and
+    Vulnerability Analyzer may be able to determine that this check
     will never fail.
 
 Utilization of description techniques for the software behaviour {§5.5.2.6}

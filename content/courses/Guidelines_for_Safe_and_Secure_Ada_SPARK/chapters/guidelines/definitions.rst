@@ -44,7 +44,7 @@ Level
 Remediation
 -------------
 
-**Remediation** indicates the the level of difficulty to modify/update
+**Remediation** indicates the level of difficulty to modify/update
 code that does not follow this particular rule.
 
    High

@@ -280,7 +280,7 @@ produce. Anything else |mdash| the internal effects |mdash| could be
 removed by the optimizer.
 
 For example, suppose you have a program that writes a value to some
-variable and also writes the string literal "42" to a file. That's is
+variable and also writes the string literal "42" to a file. That's
 absolutely all that the program contains.
 
 .. code-block:: ada
@@ -382,7 +382,7 @@ and stores. If we wrote this in Ada it would look like this:
       Temp := Port.LCKR;
    end Lock;
 
-:ada:`Temp` is marked volatile for the sake of getting exactly the load
+:ada:`Temp` is marked volatile for the sake of getting exactly the loads
 and stores that we express in the source code, corresponding to the
 hardware locking protocol. It's true that :ada:`Port` is a memory-mapped
 object, so it too would be volatile, but we also need :ada:`Temp` to be
@@ -490,7 +490,7 @@ definition. We simply use the bit-level operations to set and clear the
 individual bits. But we cannot set the bits |mdash| the lock bit and the
 bit for the I/O pin to freeze |mdash| one at a time because the locking
 protocol requires all the bits to be written at the same time, and only
-the entire 32-bit load and stores are atomic. Likewise, if instead of a
+the entire 32-bit loads and stores are atomic. Likewise, if instead of a
 scalar we used a record type or an array type to represent the bits in
 the lock register, we could not write individual record or array
 components one at a time, for the same reason we could not write

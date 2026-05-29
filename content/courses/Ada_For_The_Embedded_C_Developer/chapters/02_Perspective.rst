@@ -74,7 +74,7 @@ the project's GPR project file or as a command-line switch to
 target, the user interface stays the same, providing portability for the
 application.
 
-Run-time libraries consists of:
+Run-time libraries consist of:
 
 #. Files that are dependent on the target board.
 
@@ -82,7 +82,7 @@ Run-time libraries consists of:
       hardware.
 
     - They are known as a Board Support Package |mdash| commonly referred to by
-      their abbrevation *BSP*.
+      their abbreviation *BSP*.
 
 #. Code that is target-independent.
 
@@ -671,7 +671,7 @@ Let's look at the equivalent Ada code:
        end if;
     end Main;
 
-The above code will not compile. This is because Ada does no allow assignment
+The above code will not compile. This is because Ada does not allow assignment
 as an expression.
 
 .. admonition:: The "use" clause
@@ -1044,14 +1044,14 @@ reverse order?
 .. admonition:: Tick Image
 
     Strangely enough, Ada people call the single apostrophe symbol, :ada:`'`,
-    "tick". This "tick" says the we are accessing an attribute of the variable.
+    "tick". This "tick" says that we are accessing an attribute of the variable.
     When we do :ada:`'Img` on a variable of a numerical type, we are going to
     return the string version of that numerical type. So in the for loop above,
     :ada:`I'Img`, or "I tick image" will return the string representation of
     the numerical value stored in I. We have to do this because Put_Line is
     expecting a string as an input parameter.
 
-    We'll discuss attributes in more details
+    We'll discuss attributes in more detail
     :ref:`later in this chapter <Ada_For_Embedded_C_Dev_Attributes>`.
 
 In the above example, we are traversing over the range in reverse order. In
@@ -1307,8 +1307,8 @@ Are the three programs above equivalent? It may seem like Ada is just adding
 extra complexity by forcing you to make the conversion from :ada:`Integer` to
 :ada:`Float` explicit. In fact, it significantly changes the behavior of the
 computation. While the Ada code performs a floating point operation 1.0 / 10.0
-and stores 0.1 in :ada:`Result`, the C version instead store 0.0 in
-:c:`result`. This is because the C version perform an integer operation between
+and stores 0.1 in :ada:`Result`, the C version instead stores 0.0 in
+:c:`result`. This is because the C version performs an integer operation between
 two integer variables: 1 / 10 is 0. The
 result of the integer division is then converted to a :c:`float` and stored.
 Errors of this sort can be very hard to locate in complex pieces of code, and
@@ -1870,7 +1870,7 @@ value into a :ada:`String` and vice-versa. For example:
         function Integer'Image(Arg : Integer'Base) return String;
 
 Certain attributes are provided only for certain kinds of types. For example,
-the :ada:`'Val` and :ada:`'Pos` attributes for an enumeration type associates a
+the :ada:`'Val` and :ada:`'Pos` attributes for an enumeration type associate a
 discrete value with its position among its peers. One circuitous way of moving
 to the next character of the ASCII table is:
 
@@ -2326,8 +2326,8 @@ As a foreword to the topic of pointers, it's important to keep in mind the fact
 that most situations that would require a pointer in C do not in Ada. In the
 vast majority of cases, indirect memory management can be hidden from the
 developer and thus saves from many potential errors. However, there are
-situation that do require the use of pointers, or said differently that require
-to make memory indirection explicit. This section will present Ada access
+situations that do require the use of pointers, or said differently that require
+making memory indirection explicit. This section will present Ada access
 types, the equivalent of C pointers. A further section will provide more
 details as to how situations that require pointers in C can be done without
 access types in Ada.

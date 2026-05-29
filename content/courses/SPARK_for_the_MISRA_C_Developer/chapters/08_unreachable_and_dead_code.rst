@@ -32,7 +32,7 @@ executed is not necessarily unreachable (it could simply reflect gaps in the tes
 suite). Note that `statement coverage`, rather than the more comprehensive
 *decision coverage* or *modified condition / decision coverage* (MC/DC) as
 defined in the DO-178C standard for airborne software, is sufficient to detect
-potential unreachable statements, corresponding to code that is not covered
+potentially unreachable statements, corresponding to code that is not covered
 during the testing campaign.
 
 The presence of dead code is much harder to detect, both statically and
@@ -91,7 +91,7 @@ detect complex cases, but it goes well beyond what other analyses do in general.
 The only code in the body of :ada:`Much_Ado_About_Little` that affects the result
 of the procedure's execution is the :ada:`if Z > Y...` statement, since this
 statement sets :ada:`Success` to either True or False regardless of what the
-previous statements did.  I.e., the statements preceding this :ada:`if` are
+previous statements did. I.e., the statements preceding this :ada:`if` are
 dead code in the MISRA C sense. Since both branches of the :ada:`if Z > Y...`
 statement return from the procedure, the subsequent :ada:`if Success...` statement
 is unreachable.  GNATprove detects and issues warnings about both

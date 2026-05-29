@@ -452,7 +452,7 @@ words, these type declarations are equivalent:
 
     end Shared_Var_Types;
 
-A simular rule applies to components of an array. When we use the
+A similar rule applies to components of an array. When we use the
 :ada:`Atomic_Components`, the following aspects are implied: :ada:`Volatile`,
 :ada:`Volatile_Components` and :ada:`Independent_Components`. For example,
 these array declarations are equivalent:
@@ -1284,7 +1284,7 @@ Atomic operations
 
 Ada offers four packages to handle atomic operations. Those packages are
 child packages of the :ada:`System.Atomic_Operations` package. We will discuss
-each of those package individually in this section.
+each of those packages individually in this section.
 
 .. admonition:: Relevant topics
 
@@ -1608,7 +1608,7 @@ In this procedure, we also see two main
   the task *sleep* for a random amount of time (in the :ada:`Sleep_Range`
   range); and
 
-- the block statement with the :ada:`Generate_Value` identified, where we
+- the block statement with the :ada:`Generate_Value` identifier, where we
   generate a new value randomly and attempt to update the :ada:`Value` variable
   (of :ada:`Lazy_Value` type).
 

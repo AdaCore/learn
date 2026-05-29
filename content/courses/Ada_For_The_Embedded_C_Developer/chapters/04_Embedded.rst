@@ -611,7 +611,7 @@ Let's look at a simple example of a volatile variable in C:
 In this example, :c:`val` has the modifier :c:`volatile`, which indicates that
 the compiler must handle :c:`val` as a volatile object. Therefore, each read
 and write access in the loop is performed by accessing the value of :c:`val` in
-then memory.
+the memory.
 
 This is the corresponding implementation in Ada:
 

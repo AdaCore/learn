@@ -162,7 +162,7 @@ maintainability, and to detect errors early in the software
 development process. This section will summarize several Ada features
 that help meet these goals.
 
-.. index:: single: Ada language; Modulatization
+.. index:: single: Ada language; Modularization
 .. index:: single: Ada language; Information hiding
 .. index:: single: Ada language; Packages
 .. index:: single: Ada language; Programming in the large
@@ -410,7 +410,7 @@ object.  To deallocate an allocated object, it is necessary to
 instantiate the generic procedure :ada:`Ada.Unchecked_Deallocation`;
 the result is the definition of procedure :ada:`Free`.  The sample
 code allocates an initialized heap object and subsequently frees its
-storage
+storage.
 
 As another example, here's a C code fragment that performs pointer
 arithmetic:
@@ -660,7 +660,7 @@ be specified informally by comments:
 
 They can also be captured more formally as `aspects` of the procedure
 specification (an aspect is a technical feature that specifies a
-property of program entity) if the SPARK subset of Ada is used, as
+property of a program entity) if the SPARK subset of Ada is used, as
 will be explained below.
 
 .. index:: single: Ada language; Interface / implementation separation
@@ -911,7 +911,7 @@ correctly on both little-endian and big-endian hardware.
     with
        Bit_Order            => System.Low_Order_First,
        Scalar_Storage_Order => System.Low_Order_First,
-          -- Scalar_Storage_Order is a GNAT-specifc aspect
+          -- Scalar_Storage_Order is a GNAT-specific aspect
        Size                 => 32, -- Bits
        Alignment            => 4;  -- Storage units
 
@@ -1226,7 +1226,7 @@ possible activities:
   raise the :ada:`Assertion_Error` exception. After testing and
   related verification activities achieve sufficient assurance that no
   violations will occur, the checking code can be removed (either by
-  :ada:`pragma Asserion_Policy(Ignore)` or by compiling without
+  :ada:`pragma Assertion_Policy(Ignore)` or by compiling without
   |gnata|).
 * **Enabling dynamic checks during testing, and keeping them in the
   final executable object code**. In this case, the software
@@ -1559,7 +1559,7 @@ Approach 1: Test cases are not specified in Ada specifications
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A traditional approach can be followed by GNATtest |mdash| that is to
-say, tests cases are described outside of the Ada specification, but
+say, test cases are described outside of the Ada specification, but
 linked to a particular function. When working this way, GNATtest will
 generate one test per subprogram; for example :
 
@@ -1838,7 +1838,7 @@ implementation of one or several requirements, and a single test with
 all three conditions :ada:`True` will almost certainly fail to satisfy the
 requirement coverage criterion. Further, this single test is probably
 not sufficient to detect implementation errors: the purpose of testing
-is to detect errors and to show that the software satisifes its
+is to detect errors and to show that the software satisfies its
 requirements, not to achieve structural code coverage.  Structural
 coverage analysis is mainly a test completeness activity.
 
@@ -2541,7 +2541,7 @@ an exception would be raised.)  The type :ada:`Jet` is not
 substitutable for the type :ada:`Aircraft` on invocations of
 :ada:`Open_Doors`.
 
-The non-substitutabiity is reflected in the use of the specific aspect
+The non-substitutability is reflected in the use of the specific aspect
 :ada:`Pre` rather than the class-wide aspect :ada:`Pre'Class`. In a
 type hierarchy rooted at type :ada:`T` where :ada:`Pre'Class` is
 specified at each level for a subprogram :ada:`Proc`, the effective
@@ -2781,7 +2781,7 @@ than the precondition on :ada:`Open_Doors` for :ada:`Aircraft`. But
     * The postcondition for :ada:`Take_Off(Aircraft)` is strengthened
       by :ada:`Jet`
 
-Whether it is easier to demonstrate local versus global suitability
+Whether it is easier to demonstrate local versus global substitutability
 for a given class depends on the architecture and the ease of
 identification of actual dispatch destinations and
 substitutability. |do-332| allows the applicant to decide on whichever
@@ -2840,7 +2840,7 @@ be made by dispatching from this call. All objectives that apply to
 control and data coupling now apply to type derivation coupling, in
 particular the coverage objectives. Whether or not testing with all
 possible derivations in the system is used (i.e., pessimistic testing)
-depends of the strategy chosen for substitutability demonstration.
+depends on the strategy chosen for substitutability demonstration.
 
 .. index:: single: DO-332/ED-217: Object-Oriented Technology and
            Related Techniques; Memory management issues
@@ -3031,7 +3031,7 @@ several reasons:
   correspond to violations of preconditions, and such violations
   should not occur in verified code.
 * Since the normal control flow has been abandoned, the program may be
-  in an instable state (for example with aggregate data structures not
+  in an unstable state (for example with aggregate data structures not
   fully updated) and writing an appropriate handler can be difficult.
 
 |do-332| specifies that exception handling needs to be taken into
@@ -3881,7 +3881,7 @@ check the contents of a flash zone:
 
 .. index:: DO-333/ED-216: Formal Methods
 
-The Low-Level Requirments comprise a textual description and a set of
+The Low-Level Requirements comprise a textual description and a set of
 formal properties.  The textual description appears in |do-333| and is
 not repeated here.  The formal properties of the :ada:`A1F2_TestZone`
 procedure are of three kinds:
@@ -4062,7 +4062,7 @@ correctness of the overall system."
   and discrepancies explained
 * Table FM.A-6, Objective 3: Executable object code complies with
   low-level requirements
-* Table FM.A-6, Objective 4: Executable object code is tobust with
+* Table FM.A-6, Objective 4: Executable object code is robust with
   low-level requirements
 * Table FM.A-7, Objective FM 4: Coverage of low-level requirements is
   achieved

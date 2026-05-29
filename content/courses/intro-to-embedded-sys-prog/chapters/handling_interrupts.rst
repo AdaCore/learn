@@ -146,7 +146,7 @@ closely adheres to the conceptual model described above. If you have
 experience with interrupt handling, you will recognize them in the Ada
 model. One very important point to make about the Ada facilities is that
 they are highly portable, so they don't require extensive changes when
-moving to an new target computer. Part of that portability is due to the
+moving to a new target computer. Part of that portability is due to the
 language-defined model.
 
 Before we go into the Ada facility details, there's a final point.
@@ -390,7 +390,7 @@ occurrence is not delivered again.
 
 Furthermore, the standard model requires the underlying software to
 block further occurrences while the handler executes, and only allow
-preemption by higher-priory interrupt occurrences (if any). The
+preemption by higher-priority interrupt occurrences (if any). The
 application handlers are not responsible for these semantics either. As
 you will see, the choice of program unit used for expressing handlers
 makes this all very convenient for the developer.
@@ -561,7 +561,7 @@ the Systems Programming Annex requires the handler to be invoked again
 later, subject to the PO semantics described above.
 
 The default treatment for a given interrupt depends on the RTL implementation.
-The default may be to jump immediately to system-defined handler that
+The default may be to jump immediately to a system-defined handler that
 merely loops forever, thereby "hanging" the system and preventing any
 further execution of the application. On a bare-board target that would
 be a very common approach. Alternatively the default could be to ignore
@@ -604,7 +604,7 @@ application or restart application execution.
 However, typically you will not use these procedures or functions to
 manage interrupts. In part that's because the architecture is usually
 static, i.e., the handlers are set up once and then never changed. In
-that case you won't need to query whether a given exception is reserved
+that case you won't need to query whether a given interrupt is reserved
 at run-time, or to check whether a handler is attached. You'd know that
 already, as part of the system architecture choices. For the same
 reasons, another mechanism for attaching handlers is more commonly used,
@@ -912,7 +912,7 @@ as the aspect and subtype. Here is an example:
 
 In the above we set the interrupt priority to 245, presumably a value
 conformant with this specific target. You should be familiar with this
-pragma too, because there is some much existing code using it. New code
+pragma too, because there is so much existing code using it. New code
 should use the aspect, ideally.
 
 If we don't specify the priority for some protected object containing an
@@ -1091,7 +1091,7 @@ characteristic. The :ada:`IRQ` and :ada:`IRQ_Priority` discriminants
 specify the handler values for that specific device and stream. These
 discriminant values are then used in the :ada:`Interrupt_Priority`
 pragma and the :ada:`Attach_Handler` aspect in the private part. ("IRQ"
-is a command handler name across programming languages, and is an
+is a common handler name across programming languages, and is an
 abbreviation for "interrupt request.")
 
 Here then are the declarations for two instances of the interrupt

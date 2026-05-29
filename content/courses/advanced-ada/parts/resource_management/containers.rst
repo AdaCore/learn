@@ -68,7 +68,7 @@ to specify a procedure that is called when adding an element to the container:
     - for indexed named container aggregates, the index of each component is
       explicitly indicated.
 
-    We discuss this topic later in more details.
+    We discuss this topic later in more detail.
 
 Some restrictions apply to the :ada:`Aggregate` aspect. For example:
 
@@ -140,7 +140,7 @@ element.
 The :ada:`Empty` element allows us to specify the behavior for an empty
 container, i.e. the simplest version of a container without any components.
 
-Let's assume we a container type :ada:`T` for which we specify an
+Let's assume we have a container type :ada:`T` for which we specify an
 :ada:`Empty` function in the :ada:`Aggregate` aspect, and we declare an object
 :ada:`Obj : T`. In this case, the :ada:`Empty` function is called in one of
 two scenarios:

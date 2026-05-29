@@ -178,7 +178,7 @@ Contracts can be associated with types and variables, to refine values and defin
       G1 := (G1 + G2)/2; -- Legal, run-time range check
    end Main;
 
-In the above example, :ada:`Grade` is a new integer type associated with a range check. Range checks are dynamic and are meant to enforce the property that no object of the given type can have a value outside the specified range. In this example, the first assignment to :ada:`G1` is correct and will not raise a run-time exceprion. Assigning :ada:`N` to :ada:`G1` is illegal since :ada:`Grade` is a different type than :ada:`Integer`. Converting :ada:`N` to :ada:`Grade` makes the assignment legal, and a range check on the conversion confirms that the value is within :ada:`0 .. 100`.  Assigning :ada:`G1+10` to :ada:`G2` is legal since :ada:`+` for :ada:`Grade` returns a :ada:`Grade` (note that the literal :ada:`10` is interpreted as a :ada:`Grade` value in this context), and again there is a range check.
+In the above example, :ada:`Grade` is a new integer type associated with a range check. Range checks are dynamic and are meant to enforce the property that no object of the given type can have a value outside the specified range. In this example, the first assignment to :ada:`G1` is correct and will not raise a run-time exception. Assigning :ada:`N` to :ada:`G1` is illegal since :ada:`Grade` is a different type than :ada:`Integer`. Converting :ada:`N` to :ada:`Grade` makes the assignment legal, and a range check on the conversion confirms that the value is within :ada:`0 .. 100`.  Assigning :ada:`G1+10` to :ada:`G2` is legal since :ada:`+` for :ada:`Grade` returns a :ada:`Grade` (note that the literal :ada:`10` is interpreted as a :ada:`Grade` value in this context), and again there is a range check.
 
 The final assignment illustrates an interesting but subtle point. The subexpression :ada:`G1 + G2` may be outside the range of :ada:`Grade`, but the final result will be in range. Nevertheless, depending on the representation chosen for :ada:`Grade`, the addition may overflow. If the compiler represents :ada:`Grade` values as signed 8-bit integers (i.e., machine numbers in the range :ada:`-128 .. 127`) then the sum :ada:`G1+G2` may exceed 127, resulting in an integer overflow. To prevent this, you can use explicit conversions and perform the computation in a sufficiently large integer type, for example:
 
@@ -287,7 +287,7 @@ Other interesting examples are the :ada:`'First` and :ada:`'Last` attributes whi
 Arrays and Strings
 ~~~~~~~~~~~~~~~~~~~~~
 
-C++ arrays are pointers with offsets, but the same is not the case for Ada and Java. Arrays in the latter two languages are not interchangable with operations on pointers, and array types are considered first-class citizens. Arrays in Ada have dedicated semantics such as the availability of the array's boundaries at run-time. Therefore, unhandled array overflows are impossible unless checks are suppressed. Any discrete type can serve as an array index, and you can specify both the starting and ending bounds |mdash| the lower bound doesn't necessarily have to be 0. Most of the time, array types need to be explicitly declared prior to the declaration of an object of that array type.
+C++ arrays are pointers with offsets, but the same is not the case for Ada and Java. Arrays in the latter two languages are not interchangeable with operations on pointers, and array types are considered first-class citizens. Arrays in Ada have dedicated semantics such as the availability of the array's boundaries at run-time. Therefore, unhandled array overflows are impossible unless checks are suppressed. Any discrete type can serve as an array index, and you can specify both the starting and ending bounds |mdash| the lower bound doesn't necessarily have to be 0. Most of the time, array types need to be explicitly declared prior to the declaration of an object of that array type.
 
 Here's an example of declaring an array of 26 characters, initializing the values from ``'a'`` to ``'z'``:
 
@@ -334,7 +334,7 @@ In C++ and Java, only the size of the array is given during declaration. In Ada,
 
 As in C++, Ada :ada:`String`\s are arrays of :ada:`Character`\s. The C++ or Java :cpp:`String` class is the equivalent of the Ada type :ada:`Ada.Strings.Unbounded_String` which offers additional capabilities in exchange for some overhead. Ada strings, importantly, are not delimited with the special character :cpp:`\'\\0\'` like they are in C++. It is not necessary because Ada uses the array's bounds to determine where the string starts and stops.
 
-Ada's predefined :ada:`String` type is very straighforward to use:
+Ada's predefined :ada:`String` type is very straightforward to use:
 
 .. code-block:: ada
 

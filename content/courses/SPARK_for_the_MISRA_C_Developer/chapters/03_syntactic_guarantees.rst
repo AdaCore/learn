@@ -138,7 +138,7 @@ should not be modified"`.
 
 No such rule is needed in SPARK, since function parameters are only inputs so
 cannot be modified, and procedure parameters have a *mode* defining whether
-they can be modified or not. Only parameters of mode :ada:`out` or ada:`in out`
+they can be modified or not. Only parameters of mode :ada:`out` or :ada:`in out`
 can be modified |mdash| and these are prohibited from functions in SPARK
 |mdash| and their modification is visible at the calling site. For example,
 assigning to a parameter of mode :ada:`in` (the default parameter mode if

@@ -96,7 +96,7 @@ And the following call won't crash on any supported platform:
 
    printf_int (Interfaces.C.To_C ("d=%d"), 5);
 
-Without this convention, problems cause by this mismatch can be very hard
+Without this convention, problems caused by this mismatch can be very hard
 to debug. So, this is a very useful extension to the Ada-to-C interfacing
 facility.
 

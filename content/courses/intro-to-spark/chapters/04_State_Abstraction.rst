@@ -93,7 +93,7 @@ shown below, this means the loop must terminate.
 
 Callers can also assume that the implementation of :ada:`Increase` won't cause
 any runtime errors when called in the loop. On the other hand, nothing in
-the specification guarantees that the assertion show above is correct: it
+the specification guarantees that the assertion shown above is correct: it
 may fail if :ada:`Increase`'s implementation is changed.
 
 If you follow this basic principle, abstraction can bring you significant
@@ -624,7 +624,7 @@ subprogram's body, provides stronger guarantees to internal callers of a
 subprogram. If you provide one, the refined postcondition must imply the
 subprogram's postcondition. This is checked by GNATprove, which reports a
 failing postcondition if the refined postcondition is too weak, even if
-it's actually implied by the subprogram's body. SPARK doesn't peform a
+it's actually implied by the subprogram's body. SPARK doesn't perform a
 similar verification for normal preconditions.
 
 For example, we can refine the postconditions in the bodies of :ada:`Pop` and

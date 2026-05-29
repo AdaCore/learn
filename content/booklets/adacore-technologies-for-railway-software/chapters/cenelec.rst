@@ -10,7 +10,7 @@ EN 50128 governs software used in railway control and protection applications,
 i.e., systems that ensure the safe and efficient movement of trains.
 Examples include:
 
-* *Automatic Train Protection (ATP)*, which ensure automatic braking to avoid
+* *Automatic Train Protection (ATP)*, which ensures automatic braking to avoid
   collisions or overspeed;
 
 * *Interlocking Systems*, which prevent conflicting train movements through
@@ -22,10 +22,10 @@ Examples include:
 * *Level Crossing Protection*, which manages gates and warnings at road-rail
   intersections; and
 
-* *Centralized Traffic Control (CTC)*, which oversee train routing and
+* *Centralized Traffic Control (CTC)*, which oversees train routing and
   dispatch across large regions.
 
-The goal of the standard is to provide confidence that that the software
+The goal of the standard is to provide confidence that the software
 functions reliably and safely relative to its SIL. To this end it
 specifies requirements in areas including the following:
 
@@ -168,7 +168,7 @@ Clause 7, *Generic software development*, has the following sub-clauses:
 * Component design (sub-clause 7.4);
 * Component implementation and testing (sub-clause 7.5);
 * Integration (sub-clause 7.6); and
-* Overall Software Testing / Final Validation (sub-class 7.7).
+* Overall Software Testing / Final Validation (sub-clause 7.7).
 
 .. index:: single: EN 50128; Clause 8 (Development of application data or algorithms)
 

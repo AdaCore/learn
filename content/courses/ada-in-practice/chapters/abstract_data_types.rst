@@ -160,7 +160,7 @@ compile-time visibility to the private type's representation necessary to
 implement the required behavior.
 
 Clients can create their own operations by calling the type's primitive
-operations, but client's can't compile any operation that manipulates the
+operations, but clients can't compile any operation that manipulates the
 internal representation.
 
 Consider the following revision to the package :ada:`Integer_Stacks`, now as

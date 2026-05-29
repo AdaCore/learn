@@ -635,7 +635,7 @@ We can successfully bind our C code with Ada using the
 automatically-generated bindings, but they aren't ideal. Instead, we would
 prefer Ada bindings that match our (human) interpretation of the C header
 file. This requires manual analysis of the header file. The good news is
-that we can use the automatic generated bindings as a starting point and
+that we can use the automatically generated bindings as a starting point and
 adapt them to our needs. For example, we can:
 
     #. Define a :ada:`Test` type based on :ada:`System.Address` and use it in

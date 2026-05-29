@@ -95,7 +95,7 @@ contrary to the expectation for constructors. Therefore, Ada has rules
 specific to primitive constructor functions that have the effect of preventing
 their inheritance.
 
-The explanation and illustration for these rules first requires explanation of
+The explanation and illustration for these rules first require explanation of
 the word *abstract*. We mentioned above that the package enclosing the
 type will be designed with the
 :ref:`Abstract Data Type <Ada_In_Practice_Abstract_Data_Types>` idiom. In that idiom
@@ -296,14 +296,14 @@ hence more packages and files (assuming one unit per file, which is desirable in
 itself, even if not required by the language).
 
 Some developers might argue for having fewer files, presumably containing larger
-units. In the author's experience larger units make comprehension, and therefore
+units. In the author's experience, larger units make comprehension, and therefore
 correctness, unjustifiably difficult if smaller units are possible. Some units are
 unavoidably large and complicated but often we can achieve relative simplicity.
 
 For those developers, however, the constructor package could be declared instead
 as a nested package located within the package defining the tagged type. Doing so
 would achieve the same effect as using a child package because the contained
-functions would not be primitive. Therefore, they would not inherited.
+functions would not be primitive. Therefore, they would not be inherited.
 
 This alternative would reduce the number of files back to the minimum. However,
 the defining package would be relatively more complicated because of this nested

@@ -96,7 +96,7 @@ expensive to debug.
 In response to the new requirements, we could declare a protected object within
 the package body and move the declaration of :ada:`State` into that PO. In
 addition, we would declare two protected procedures corresponding to
-:ada:`Operation_1` and :ada:`Operations_2`. The two new protected procedure
+:ada:`Operation_1` and :ada:`Operation_2`. The two new protected procedure
 bodies would do what the original procedures did, including accessing and
 updating :ada:`State`. The original procedures |mdash| still presented to
 clients |mdash| would now call these new protected procedures:
@@ -170,7 +170,7 @@ same PO could access the enclosed variables while the first caller is blocked,
 thus breaking the mutually exclusive access guarantee.
 
 Calling an I/O operation is not all that strange here, and those are not the
-only potentially blocking operation defined by the language.
+only potentially blocking operations defined by the language.
 
 Note that moving the calls to :ada:`Put_Line` out of the PO procedure bodies,
 back to the regular procedure bodies that call those PO procedures, would solve

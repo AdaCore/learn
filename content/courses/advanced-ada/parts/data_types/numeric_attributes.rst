@@ -349,7 +349,7 @@ bits for the floating-point mantissa of the :ada:`Float` type.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The :ada:`Machine_Emin` and :ada:`Machine_Emax` attributes return the minimum
-and maximum value, respectively, of the machine exponent the floating-point
+and maximum value, respectively, of the machine exponent of the floating-point
 type. Note that, in all cases, the returned value is a universal integer. For
 example:
 
@@ -627,7 +627,7 @@ For example, on a typical PC with a machine radix of two,
 Round-up and round-down attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:ada:`Floor` and :ada:`Ceiling` are attributes that returned the rounded-down
+:ada:`Floor` and :ada:`Ceiling` are attributes that return the rounded-down
 or rounded-up value, respectively, of a floating-point value. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numeric_Attributes.Floating_Point_Types.Floor_Ceiling
@@ -649,7 +649,7 @@ Round-to-nearest attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we discuss three attributes used for rounding:
-:ada:`Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`
+:ada:`Rounding`, :ada:`Unbiased_Rounding`, :ada:`Machine_Rounding`.
 In all cases, the rounding attributes return the nearest integer value (as a
 floating-point value). For example, the rounded value for 4.8 is 5.0 because 5
 is the closest integer value.
@@ -733,7 +733,7 @@ point. For example, the truncation of 1.55 is 1.0 because the integer part of
 
 The :ada:`Remainder` attribute returns the remainder part of a division. For
 example, :ada:`Float'Remainder (1.25, 0.5) = 0.25`. Let's briefly discuss the
-details of this operations. The result of the division 1.25 / 0.5 is 2.5. Here,
+details of this operation. The result of the division 1.25 / 0.5 is 2.5. Here,
 1.25 is the dividend and 0.5 is the divisor. The quotient and remainder of this
 division are 2 and 0.25, respectively. (Here, the quotient is an integer number,
 and the remainder is the floating-point part that remains.)
@@ -1153,7 +1153,7 @@ This is the reason why we see 1.3008896 x 10\ :sup:`7` instead of
     1.3008896 x 10\ :sup:`7`.)
 
     Depending on the model that is being used, the subtraction
-    :ada:`1.0E+15 - Float'Model (1.0E+15)` might gives us the same value as
+    :ada:`1.0E+15 - Float'Model (1.0E+15)` might give us the same value as
     :ada:`1.0E+15 - Float'Machine (1.0E+15)` or not. For example, the result is the
     same if the 32-bit IEEE floating-point model from the ISO/IEC 60559:2020
     standard is being used.
@@ -1375,7 +1375,7 @@ As we can see in the output of the code example, the :ada:`Delta` attribute
 returns the value we used for :ada:`delta` in the type definition of the
 :ada:`T3_D3`, :ada:`TD3`, :ada:`TQ31` and :ada:`TQ15` types.
 
-The :ada:`TD3` type is an ordinary fixed-point type with the the same delta as
+The :ada:`TD3` type is an ordinary fixed-point type with the same delta as
 the decimal :ada:`T3_D3` type. In this case, however, :ada:`TD3'Small` is not
 the same as the :ada:`TD3'Delta`. On a typical desktop PC, :ada:`TD3'Small` is
 2\ :sup:`-10`, while the delta is 10\ :sup:`-3`. (Remember that, for ordinary
@@ -1553,7 +1553,7 @@ In this example, we get the following values for the scales:
 
 - :ada:`TM3_D6'Scale = -3`,
 - :ada:`T3_D6'Scale = 3`,
-- :ada:`T9_D12 = 9`.
+- :ada:`T9_D12'Scale = 9`.
 
 As you can see, the value of :ada:`Scale` is directly related to the *delta*
 of the corresponding type declaration.

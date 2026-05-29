@@ -42,10 +42,10 @@ convenient:
 - You can use the :ada:`others` choice to refer to every component that has not
   yet been specified, provided all those fields have the same type.
 
-- You can use the range notation :ada:`..` to refer to specify a contiguous
+- You can use the range notation :ada:`..` to specify a contiguous
   sequence of indices in an array.
 
-However, note that as soon as you used a named association, all subsequent
+However, note that as soon as you use a named association, all subsequent
 components likewise need to be specified with named associations.
 
 .. code:: ada compile_button project=Courses.Intro_To_Ada.More_About_Types.Points

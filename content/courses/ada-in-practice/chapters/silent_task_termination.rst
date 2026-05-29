@@ -296,7 +296,7 @@ frames and dynamic call chains is irrelevant. That's where the caveat comes
 into play.
 
 Specifically, if there's insufficient storage remaining for execution to
-continue, how how do we know there's enough storage remaining to execute the
+continue, how do we know there's enough storage remaining to execute the
 exception handler? For that matter, how do we even know there's enough storage
 available for the run-time library to find the handler in the first place?
 Absent a storage analysis, we can't know with certainty.

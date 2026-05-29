@@ -69,7 +69,7 @@ Boundary Value Analysis (D.4)
 -----------------------------
 
 The objective of this technique is to verify and test the behavior of a
-subprogram at the limits and boundaries values of its parameters.
+subprogram at the limits and boundary values of its parameters.
 AdaCore's technologies can provide complementary assurance on the quality
 of this analysis and potentially decrease the number of tests that need
 to be performed.
@@ -522,7 +522,7 @@ with their associated expected output, verifying the following criteria:
 
 These criteria can be verified either dynamically, by verifying at
 test time that all inputs exercised fall into one and only one partition,
-or formally by SPARK, proving that the partition are indeed complete
+or formally by SPARK, proving that the partitions are indeed complete
 and disjoint.
 
 .. index:: Contract_Cases aspect
@@ -641,7 +641,7 @@ It's also possible to create an *abstract* state, implemented by a set of
 variables. Generally speaking, although these notations and verifications
 are quite useful on the lower levels of the architecture, they may not be
 that pertinent at higher levels. SPARK is flexible with regard to where
-this should be checked or and where it should not.
+this should be checked or where it should not.
 
 At the lower level of the design phases, some properties and requirements
 can be refined or specified in the form of boolean expressions.
@@ -680,7 +680,7 @@ removed.
 Impact Analysis (D.32)
 ----------------------
 
-Identifying the effect of a change on entire software component requires
+Identifying the effect of a change on an entire software component requires
 the combination of various techniques, including reviews, testing and static
 analysis. GNAT SAS has specific features to identify the impact of a change
 from the perspective of potential run-time errors. It can establish a baseline
@@ -943,7 +943,7 @@ complex computations such as cyclomatic complexity or coupling.
 
 Custom metrics can be computed based on these first-level metrics.
 In particular, the GNATdashboard environment allows gathering all metrics
-into a database that can then accessed through Python or SQL.
+into a database that can then be accessed through Python or SQL.
 
 These metrics can be viewed through various interfaces.
 
@@ -1119,7 +1119,7 @@ by the compiler. For example:
     type Miles is new Float:
 
 These are distinct types.
-the compiler will not allow mixed operations, for example assigning a
+The compiler will not allow mixed operations, for example assigning a
 :ada:`Kilometers` value to a :ada:`Miles` variable, or adding
 a :ada:`Kilometers` value and a :ada:`Miles` value, unless explicit
 conversions are used.
@@ -1181,8 +1181,8 @@ Some features may, however, not be suitable for the highest SIL.
 To enforce the detection and rejection of specific features, the
 developer can specify a language subset; see :ref:`Railway_SW_Language_Subset`.
 
-One of the advantage of the Ada language is that it is precisely defined
-in a international document, ISO/IEC 8652.
+One of the advantages of the Ada language is that it is precisely defined
+in an international document, ISO/IEC 8652.
 This document specifies the required effect as well as any
 implementation-defined behavior for the core language, the standard Ada
 libraries (known as the "predefined environment"), and the specialized needs

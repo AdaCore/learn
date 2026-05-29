@@ -8,7 +8,7 @@ Strings
 Character and String Literals
 -----------------------------
 
-So far, we're already seen many examples of string literals |mdash| both in
+So far, we've already seen many examples of string literals |mdash| both in
 the :ref:`Introduction to Ada <Intro_Ada_Course_Index>` course and in the
 present course. In this section, we define them once more and discuss a couple
 of details about them.
@@ -148,7 +148,7 @@ This is made explicit by the declaration of :ada:`S2`. Here, by using the range
 Wide and Wide-Wide Strings
 --------------------------
 
-We've seen many source-code examples so far that includes strings. In most of
+We've seen many source-code examples so far that include strings. In most of
 them, we were using the standard string type: :ada:`String`. This type is
 useful for the common use-case of displaying messages or dealing with
 information in plain English. Here, we define "plain English" as the use of the
@@ -856,7 +856,7 @@ to worry about character sets, as UTF-8 is backwards compatible with ASCII.
 
 However, you might want to use Unicode symbols in your Ada source code to
 declare constants |mdash| as we did in the previous sections |mdash| and store
-the source code in a UTF-8 coded file. In this case, you need be careful about
+the source code in a UTF-8 coded file. In this case, you need to be careful about
 how this file is parsed by the compiler.
 
 Let's look at this source-code example:
@@ -1063,7 +1063,7 @@ Parsing UTF-8 files for Wide-Wide-String processing
 
 A typical use-case is to parse a text file in UTF-8 format and use *wide-wide*
 strings to process the lines of that file. Before we look at the implementation
-that does that, let's first write a procedure that generate a text file in
+that does that, let's first write a procedure that generates a text file in
 UTF-8 format:
 
 .. code:: ada no_button project=Courses.Advanced_Ada.Data_Types.Strings.String_Encoding.UTF_8_File_Processing

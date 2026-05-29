@@ -29,7 +29,7 @@ response when exceptions are "raised" by those statements. These
 exceptions could be raised directly within the statements, or indirectly
 via calls to other procedures and functions.
 
-For example, the frame below is a procedure including three exceptions
+For example, the frame below is a procedure including three exception
 handlers:
 
 .. code:: ada no_button project=Courses.Ada_For_Embedded_C_Dev.SPARK.Exceptions
@@ -1060,7 +1060,7 @@ the user-defined assertions correctly and sufficiently describe and
 constrain the implementation of the corresponding routines.
 
 Although we are not proving whole program correctness, as you will have
-seen |mdash| and done |mdash| we can prove properties than make our
+seen |mdash| and done |mdash| we can prove properties that make our
 software far more robust and bug-free than is possible otherwise. But in
 addition, consider what proving the unit-level requirements for your
 procedures and functions would do for the cost of unit testing and
@@ -1072,7 +1072,7 @@ amenable to expression as boolean conditions (for example, a mouse
 driver). In other cases the source code is beyond the capabilities of
 the analyzers that actually do the mathematical proof. In these cases
 the combination of proof and actual test is appropriate, and still less
-expensive that testing alone.
+expensive than testing alone.
 
 There is, of course, much more to be said about what can be done with
 SPARK and :program:`gnatprove`. Those topics are reserved for the

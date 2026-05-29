@@ -597,7 +597,7 @@ For example, the following is a partial definition of a :ada:`Stack` ADT. It is
 only a partial definition primarily because :ada:`Pop` is not provided, but
 other operations would be included as well. Moreover, a fully realistic version
 would be a generic package. We have used a subtype named :ada:`Element` as a
-substitute for the generic formal type what would have had that name. Note that
+substitute for the generic formal type that would have had that name. Note that
 there is a :ada:`Default_Initial_Condition` aspect specifying that any object
 of type :ada:`Stack` is initially empty as a result of default initialization.
 The *argument* to the function call is the corresponding type name,

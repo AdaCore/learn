@@ -239,7 +239,7 @@ The following technologies will be presented:
 
   - GNAT Studio |mdash| a robust, flexible, and extensible IDE
   - VS Code support |mdash| extensions for Ada and SPARK
-  - GNATbench |mdash| an Ada-knowlegeable Eclipse plug-in
+  - GNATbench |mdash| an Ada-knowledgeable Eclipse plug-in
   - GNATdashboard |mdash| a metric integration and management platform
 
 .. _Railway_SW_fig2:

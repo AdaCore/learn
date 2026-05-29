@@ -7,7 +7,7 @@
 
    Attribute :ada:`'Image` for any type is supported by
 
-    * GNAT Community Edition 2020 and latter
+    * GNAT Community Edition 2020 and later
     * GCC 11
 
 :ada:`'Image` attribute for a value

@@ -470,7 +470,7 @@ the result is of universal real type:
     end Static_Expressions;
 
 In this example, the result of the static expression is of universal real type
-because of we're using the named number :ada:`Pi`, which is of universal real
+because we're using the named number :ada:`Pi`, which is of universal real
 type.
 
 Complexity of static expressions
@@ -657,7 +657,7 @@ we use the :ada:`Long_Long_Float` type |mdash| as we see in the value of the
 Conversion of universal real and integer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Although a named number exists as an numeric representation form in Ada, the
+Although a named number exists as a numeric representation form in Ada, the
 value it represents cannot be used directly at runtime |mdash| even if we
 *just* display the value of the constant at runtime, for example. In fact, a
 conversion to a non-universal type is required in order to use the named number
@@ -957,7 +957,7 @@ In this example, the conversion from the fixed-point type :ada:`T3_D3` to the
 Similarly, the multiplication operation :ada:`Val_T6_D6 * 2.0` uses universal
 fixed types. Here, we're actually multiplying a variable of type :ada:`T6_D6`
 by two and assigning it to a variable of type :ada:`Val_T3_D6`. Although these
-variable have different fixed-point types, no explicit conversion (e.g.:
+variables have different fixed-point types, no explicit conversion (e.g.:
 :ada:`Val_T3_D6 := T3_D6 (Val_T6_D6 * 2.0);`) is required in this case because
 the result of the operation is of universal fixed type, so that it can be
 assigned to a variable of any fixed-point type.
@@ -1086,7 +1086,7 @@ and the corresponding numeric root types.
 
 Ada also has the concept of base types, which *sounds* similar to the
 concept of the root type. However, the focus of each one is different:
-while the the root type refers to the derivation tree of a type, the base
+while the root type refers to the derivation tree of a type, the base
 type refers to the constraints of a type.
 
 In fact, the base type denotes the unconstrained underlying hardware
@@ -2034,7 +2034,7 @@ section, we will revise and expand on those topics.
 Decimal precision
 ~~~~~~~~~~~~~~~~~
 
-The main defining characteristic of a floating-point types is its decimal
+The main defining characteristic of a floating-point type is its decimal
 precision |mdash| and not its range, as for integer types. (You may, however,
 define
 :ref:`ranges for floating-point types <Adv_Ada_Floating_Point_Type_Ranges>`,
@@ -3053,7 +3053,7 @@ floating-point types.
     circumvent limitations |mdash| such as the ones that originate from using
     integer types to emulate fixed-point operations.
 
-As mentioned in the Introduction to Ada course course, fixed-point types
+As mentioned in the Introduction to Ada course, fixed-point types
 are classified as either
 :ref:`decimal fixed-point types <Adv_Ada_Decimal_Fixed_Point_Types>` or
 ordinary (binary) types.
@@ -3182,7 +3182,7 @@ rule that it must be smaller or equal to the *delta*. For example:
                  & Ordinary_Fixed_Point'Size'Image);
     end Show_Fixed_Small_Delta;
 
-In this example, the *delta* that we specifed for :ada:`Ordinary_Fixed_Point`
+In this example, the *delta* that we specified for :ada:`Ordinary_Fixed_Point`
 is 0.2, while the compiler-selected *small* is 0.125 (2.0\ :sup:`-3`).
 
 .. admonition:: For further reading...
@@ -3885,7 +3885,7 @@ of two not exceeding the *delta* value. Since 0.2 is not a power of two, we get
 0.125 (= 2\ :sup:`-3`) as the *small* for the :ada:`Angle` type. In contrast,
 :ada:`Angle_Adj` explicitly sets :ada:`Small => D`, so that
 :ada:`Angle_Adj'Small` = :ada:`Angle_Adj'Delta` = 0.2. (We discuss this topic
-in more details later on.)
+in more detail later on.)
 
 .. todo::
 
@@ -4208,7 +4208,7 @@ an ordinary fixed-point type via :ada:`Fixed_Point (D)`.
            Show_Fixed_Point_Type_Info ("Fixed_Point ");
         end Show_Fixed_Point_Conversions;
 
-    By running this test application, we see that the the size of
+    By running this test application, we see that the size of
     :ada:`Decimal` is 31 bits, while size of :ada:`Fixed_Point` is 32 bits.
     Also, the *small* of :ada:`Decimal` is 1.0e-09 (10.0\ :sup:`-9`), while the
     *small* of :ada:`Fixed_Point` is a bit smaller: 4.65661287307739258e-10
@@ -4765,7 +4765,7 @@ objects of different decimal types:
     end Show_Mixing_Decimal_Types;
 
 In this example, the :ada:`A * B` expression makes use of universal fixed
-types. If this wasn't the case, :ada:`B` would have to be first convert to the
+types. If this wasn't the case, :ada:`B` would have to be first converted to the
 :ada:`Short_Decimal` type, and the result of the operation would be zero:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_Decimal
@@ -4833,7 +4833,7 @@ types, and the :ada:`A / B` expression makes use of universal fixed types.
 
 .. admonition:: For further reading...
 
-    Note that we can use *explicit* type conversions, and the results is still
+    Note that we can use *explicit* type conversions, and the result is still
     the same:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed_Decimal
@@ -4899,7 +4899,7 @@ package:
 
     end Custom_Fixed_Point;
 
-The :ada:`Show_Universal_Fixed` procedure show a couple of multiplications
+The :ada:`Show_Universal_Fixed` procedure shows a couple of multiplications
 using universal fixed types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Numerics.Fixed_Point_Types.Universal_Fixed
@@ -5498,7 +5498,7 @@ In this example, we derive the :ada:`Smaller_Money` type from the
 :ada:`T2_D6` type and decrease the decimal precision from 6 to 2 digits.
 Because the *delta* of both types is the same, we see that the range of the
 :ada:`Smaller_Money` type (from -0.99 to 0.99) is smaller than the range of the
-:ada:`T2_D6` type (from 9999.99 to 9999.99).
+:ada:`T2_D6` type (from -9999.99 to 9999.99).
 
 As expected, the type conversion :ada:`Smaller_Money (D)` in this example
 |mdash| from :ada:`T2_D6` to the :ada:`Smaller_Money` type |mdash| raises a
@@ -6182,7 +6182,7 @@ range at the same time. For example:
     end Show_Decimal_Subtype_Range;
 
 Now, :ada:`D6_RD3` and :ada:`D6_R5` are subtypes of the :ada:`D6` type, which
-has a range between -999,999.0 to 999,999.0. For these subtypes, we use the
+has a range between -999,999.0 and 999,999.0. For these subtypes, we use the
 same ranges as in the previous code example |mdash| i.e. the range of the
 :ada:`D6_RD3` type goes from -999.0 to 999.0, while the range of the
 :ada:`D6_R5` type goes from -5.0 to 5.0.
@@ -6264,7 +6264,7 @@ example:
 
 In this example, we convert the value of :ada:`D6` |mdash| from the
 :ada:`T2_D6` to the :ada:`T2_D38` type |mdash| by writing :ada:`T2_D38 (D6)`.
-This conversion is cannot is safe |mdash| i.e. it cannot raise an exception
+This conversion is safe |mdash| i.e. it cannot raise an exception
 |mdash| because the range of the target type is wider.
 
 Of course, type conversions may fail when the ranges of two types don't
@@ -6346,7 +6346,7 @@ values we can use for a scale :ada:`N` in the formula
 :ada:`delta 10.0 ** (-N)`. Because the formula uses a negative exponent
 (:ada:`-N`), this means that the minimum delta :ada:`Min_Delta` is calculated
 with the :ada:`Max_Scale`, while the :ada:`Max_Delta` is calculated with the
-:ada:`Min_Scale`. In fact, this is declaration of those constants in the
+:ada:`Min_Scale`. In fact, this is the declaration of those constants in the
 :ada:`Decimal` package:
 
 .. code-block:: ada
@@ -6685,7 +6685,7 @@ range possible for that type, it is considered illegal:
 
 In this example, the range we declare for the :ada:`T0_D4` type
 (from -10,000 to 10,000) is outside the maximum range that the type allows
-(from 9,999 to 9,999).
+(from -9,999 to 9,999).
 
 
 Operations on decimal types
@@ -6758,8 +6758,8 @@ Let's look at simple operations such as :ada:`1000 + 500.25` and
                  A'Image);
     end Show_Mixing_Decimal_Types;
 
-In this example, during to the :ada:`T0_D4 (B)` conversion, we get the value
-500.0 instead of 500.25 to the delta of the :ada:`T0_D4` type. (This is of
+In this example, due to the :ada:`T0_D4 (B)` conversion, we get the value
+500.0 instead of 500.25, due to the delta of the :ada:`T0_D4` type. (This is of
 course the expected behavior for this type.) Therefore, the result of the
 operation is 500.0.
 
@@ -7285,9 +7285,9 @@ types, too:
 
 In this case, the total price is 75.9696 and the price without sales tax is
 63.84. Again, if we round the total price to get two digits after the dot, we
-get 75.97 instead 75.96.
+get 75.97 instead of 75.96.
 
-A 0.01 error might be consider small, but the accumulation of such errors in
+A 0.01 error might be considered small, but the accumulation of such errors in
 a complex financial application can be significant and, therefore, it might be
 considered undesirable. As we've seen in this example, we can use decimal
 fixed-point types to avoid such unwanted side effects.
@@ -7635,7 +7635,7 @@ Validity
 ^^^^^^^^
 
 The package specifications of big numbers include subtypes that *ensure*
-that a actual value of a big number is valid:
+that the actual value of a big number is valid:
 
 +------------------------------+---------------------------------------------+
 | Type                         | Subtype for valid values                    |
@@ -7762,7 +7762,7 @@ any signed or unsigned integer types:
 
     end Show_Arbitrary_Big_Integer_Conversion;
 
-In this examples, we declare the :ada:`Long_Long_Integer_Conversions` and the
+In this example, we declare the :ada:`Long_Long_Integer_Conversions` and the
 :ada:`Mod_32_Bit_Conversions` to be able to convert between big integers and
 the :ada:`Long_Long_Integer` and the :ada:`Mod_32_Bit` types, respectively.
 
@@ -7898,7 +7898,7 @@ We can also convert between big reals and big integers (or standard integers):
 
     end Show_Big_Real_Big_Integer_Conversion;
 
-Here, we use the :ada:`To_Real` and the :ada:`To_Big_Real` and functions for
+Here, we use the :ada:`To_Real` and :ada:`To_Big_Real` functions for
 the conversions.
 
 

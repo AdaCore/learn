@@ -14,7 +14,7 @@ Sometimes you need to create a copy of an object, but with a few
 modifications. Before Ada 2022, doing this involves a dummy object
 declaration or an aggregate with associations for each property.  The dummy
 object approach doesn't work in contract aspects or when there are limited
-components. On the other hand, re-listing properties in an large aggregate
+components. On the other hand, re-listing properties in a large aggregate
 can be very tedious and error-prone. So, in Ada 2022, you can use a `delta
 aggregate` instead.
 

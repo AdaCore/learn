@@ -51,7 +51,7 @@ added:
 
 - Runtime polymorphism can be implemented using variant records.
 
-However, this lists leaves out type extensions, if you don't consider
+However, this list leaves out type extensions, if you don't consider
 variant records, and extensibility.
 
 The 1995 revision of Ada added a feature filling the gaps, which
@@ -59,7 +59,7 @@ allowed people to program following the object-oriented paradigm in an
 easier fashion.  This feature is called *tagged types*.
 
 .. note:: It's possible to program in Ada without ever creating tagged
-    types. If that's your prefered style of programming or you have
+    types. If that's your preferred style of programming or you have
     no specific use for tagged types, feel free to not use them, as is
     the case for many features of Ada.
 
@@ -164,7 +164,7 @@ Tagged types
 ------------
 
 The 1995 revision of the Ada language introduced tagged types to
-fullfil the need for an unified solution that allows programming in an
+fulfill the need for a unified solution that allows programming in an
 object-oriented style similar to the one described at the beginning of
 this chapter.
 
@@ -407,7 +407,7 @@ above, you can also write the above program this way:
 
 If the dispatching parameter of a primitive is the first parameter,
 which is the case in our examples, you can call the primitive using
-the dot notation. Any remaining parameter are passed normally:
+the dot notation. Any remaining parameters are passed normally:
 
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Object_Oriented_Programming.Tagged_Types
@@ -524,7 +524,7 @@ compilation errors would also occur for non-tagged types.
 Classwide access types
 ----------------------
 
-In this section, we'll discuss an useful pattern for object-oriented programming
+In this section, we'll discuss a useful pattern for object-oriented programming
 in Ada: classwide access type. Let's start with an example where we declare a
 tagged type :ada:`T` and a derived type :ada:`T_New`:
 

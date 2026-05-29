@@ -4,7 +4,7 @@ Standard library: Strings
 .. include:: ../../../global.txt
 
 In previous chapters, we've seen source-code examples using the :ada:`String`
-type, which is a fixed-length string type |mdash| essentialy, it's an array
+type, which is a fixed-length string type |mdash| essentially, it's an array
 of characters. In many cases, this data type is good enough to deal with
 textual information. However, there are situations that require more advanced
 text processing. Ada offers alternative approaches for these cases:
@@ -143,7 +143,7 @@ example, we retrieve all the words in the string. We do this using
        end loop;
     end Show_Find_Words;
 
-We pass a set of characters to be used as delimitators to the procedure
+We pass a set of characters to be used as delimiters to the procedure
 :ada:`Find_Token`. This set is a member of the :ada:`Character_Set` type from the
 :ada:`Ada.Strings.Maps` package. We call the :ada:`To_Set` function (from the
 same package) to initialize the set to :ada:`Whitespace` and then call

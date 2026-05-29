@@ -830,7 +830,7 @@ and returns its relative position as an integer, starting at :ada:`0`.
 For example, :ada:`Animal'Pos(Bee)` is :ada:`1`, and :ada:`Boolean'Pos(False)`
 is :ada:`0`. In the other direction, :ada:`T'Val(n)`, where :ada:`n` is an integer,
 returns the enumeration value in type :ada:`T` at relative position ``n``.
-If ``n`` is negative or greater then :ada:`T'Pos(T'Last)` then a run-time
+If ``n`` is negative or greater than :ada:`T'Pos(T'Last)` then a run-time
 exception is raised.
 
 Hence, the following is valid SPARK (and Ada) code; :ada:`Character` is defined as

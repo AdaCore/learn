@@ -67,7 +67,7 @@ will be collected in the GNATcheck report that can be used as evidence of the
 level of adherence to the coding standard. In addition, GNATcheck provides a
 mechanism to deal with accepted exemptions. Note that, when the verification
 method indicates a GNATcheck rule could be used, the rule will note whether
-it is part of the atandard GNATcheck rule set, or has been provided as-is
+it is part of the standard GNATcheck rule set, or has been provided as-is
 within the document repository, located
 `here. <https://github.com/AdaCore/learn/tree/master/content/courses/Guidelines_for_Safe_and_Secure_Ada_SPARK/rules>`_
 
