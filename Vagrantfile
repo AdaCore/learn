@@ -76,10 +76,9 @@ $frontend = <<-SHELL
   # Needed for npm
   echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 
-  cd /vagrant/frontend
   echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
   yes | corepack enable
-  pnpm install --frozen-lockfile
+  sudo -u vagrant bash -c "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; cd /vagrant/frontend && pnpm install --frozen-lockfile"
 
 SHELL
 
@@ -211,10 +210,9 @@ $epub = <<-SHELL
   # Needed for npm
   echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 
-  cd /vagrant/frontend
   echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
   yes | corepack enable
-  pnpm install --frozen-lockfile
+  sudo -u vagrant bash -c "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; cd /vagrant/frontend && pnpm install --frozen-lockfile"
 
 SHELL
 
