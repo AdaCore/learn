@@ -3,7 +3,9 @@ npm-debug.log
 *.map
 build-manifest.json
 dist
+dist-poc
 .nyc_output/
 coverage/
 pnpm-debug.log
 .coverage
+sphinx/objects.inv.learn

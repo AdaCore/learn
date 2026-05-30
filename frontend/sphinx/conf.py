@@ -178,6 +178,31 @@ if 'HIDDEN_CONTENTS' in os.environ and os.environ['HIDDEN_CONTENTS'] != "":
 else:
     tags.add('no_hidden_contents')
 
+# Per-unit build: exclude every content unit except the target so that
+# Sphinx only reads and writes the target unit's RST files.
+# The source root stays content/ and output paths are unchanged
+# (e.g. dist/html/courses/advanced-ada/).
+_sphinx_unit = os.environ.get('SPHINX_UNIT', '')
+if _sphinx_unit:
+    _content_root = Path(os.path.dirname(__file__)) / '../../content'
+    if not (_content_root / _sphinx_unit / 'conf.ini').is_file():
+        print(
+            f'\nERROR: SPHINX_UNIT={_sphinx_unit!r} is not a valid content unit'
+            f' — no conf.ini found at {_content_root / _sphinx_unit / "conf.ini"}.'
+            '\nCheck for typos in the UNIT variable.\n',
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    for _top in ('courses', 'labs', 'booklets'):
+        _top_path = _content_root / _top
+        if _top_path.is_dir():
+            for _sub in sorted(_top_path.iterdir()):
+                if _sub.is_dir() and f'{_top}/{_sub.name}' != _sphinx_unit:
+                    exclude_patterns.append(f'{_top}/{_sub.name}')
+    # The root index.rst still references excluded units via toctree —
+    # suppress those warnings rather than failing or spamming the output.
+    suppress_warnings = ['toc.not_readable']
+
 show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
@@ -191,7 +216,7 @@ numfig = True
 # numbered starting at 1.
 numfig_secnum_depth = 0
 
-nitpicky = True
+nitpicky = not bool(_sphinx_unit)
 
 # sphinx.ext.extlinks: markup to shorten external links
 extlinks = {
@@ -511,7 +536,11 @@ texinfo_documents = [
 
 # -- Options for intersphinx extension ---------------------------------------
 
-intersphinx_mapping = {'learn': ('https://learn.adacore.com/', None)}
+_inv_cache = os.path.join(os.path.dirname(__file__), 'objects.inv.learn')
+intersphinx_mapping = {
+    'learn': ('https://learn.adacore.com/',
+              _inv_cache if os.path.exists(_inv_cache) else None)
+}
 
 # -- Options for redirects extension -----------------------------------------
 
@@ -527,8 +556,12 @@ if config.has_option('', 'bibtex_file'):
     bibtex_file_full_path = get_file_from_conf_ini(bibtex_file)
     bibtex_bibfiles.append(bibtex_file_full_path)
 else:
-    ## PATCH: get content directory
-    content_dir = os.path.abspath(os.path.dirname(__file__ ) + '/../../content')
+    if 'SPHINX_CONF_INI' in os.environ and os.environ['SPHINX_CONF_INI']:
+        # Per-unit build: only search within the unit's own directory
+        content_dir = os.path.dirname(os.path.abspath(os.environ['SPHINX_CONF_INI']))
+    else:
+        # Full-site build: search entire content directory
+        content_dir = os.path.abspath(os.path.dirname(__file__) + '/../../content')
 
     for bib_file in Path(content_dir).rglob('*.bib'):
         bibtex_bibfiles.append(str(bib_file))
@@ -542,10 +575,27 @@ def setup(app):
     if 'html' in outdir:
         templates_path.append('_templates')
 
-        redirects.update({
-            "courses/Ada_For_The_C_Embedded_Developer/index": "../Ada_For_The_Embedded_C_Developer/",
-            "courses/GNAT_Toolchain_Getting_Started/index": "../GNAT_Toolchain_Intro/"
-        })
+        if 'SPHINX_CONF_INI' in os.environ and os.environ['SPHINX_CONF_INI']:
+            # Per-unit book build (source-root = unit dir): load this unit's redirects
+            unit_dir = Path(os.environ['SPHINX_CONF_INI']).parent
+            redirects_file = unit_dir / 'redirects.json'
+            if redirects_file.is_file():
+                with open(redirects_file) as _f:
+                    redirects.update(json.load(_f))
+        elif _sphinx_unit:
+            # Per-unit dev build (source-root = content/, SPHINX_UNIT set):
+            # load only the target unit's redirects
+            _unit_redirects = (Path(os.path.dirname(__file__))
+                               / '../../content' / _sphinx_unit / 'redirects.json')
+            if _unit_redirects.is_file():
+                with open(_unit_redirects) as _f:
+                    redirects.update(json.load(_f))
+        else:
+            # Full-site build: merge redirects from all units
+            _content_dir = Path(os.path.dirname(__file__)) / '../../content'
+            for _redirects_file in sorted(_content_dir.rglob('redirects.json')):
+                with open(_redirects_file) as _f:
+                    redirects.update(json.load(_f))
 
 
         if not os.getenv('FRONTEND_TESTING'):

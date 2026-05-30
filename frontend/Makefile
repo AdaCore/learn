@@ -22,6 +22,22 @@ MKFILE_DIR   	:= $(dir $(MKFILE_PATH))
 BUILD_MANIFEST 	:= $(MKFILE_DIR)/build-manifest.json
 
 CONTENT_DIR   	= $(MKFILE_DIR)/../content
+
+# Optional: limit the local/dev Sphinx build to a single content unit.
+# conf.py reads SPHINX_UNIT and adds all other unit directories to
+# exclude_patterns, so only the target unit's RST files are processed.
+# The source root stays content/ and the output paths are unchanged.
+# Usage: make local UNIT=courses/intro-to-ada
+UNIT ?=
+
+# Validate UNIT immediately at parse time so a typo fails loudly before
+# Sphinx is invoked.  Every valid unit has a conf.ini at its root.
+ifneq ($(UNIT),)
+ifeq ($(wildcard $(CONTENT_DIR)/$(UNIT)/conf.ini),)
+$(error UNIT="$(UNIT)": not found or missing conf.ini under $(CONTENT_DIR). Check for typos.)
+endif
+endif
+
 TEST_CONTENT    = tests/rst
 TEST_BUILDDIR   = tests/html
 
@@ -221,6 +237,7 @@ publish:                                                                       #
 # This should only be called from `pnpm run dev`
 local:
 	@SPHINX_CONF_INI="$(SPHINX_CONF_INI)" \
+	  SPHINX_UNIT="$(UNIT)" \
 	  SRC_TEST_DIR="$(SRC_TEST_DIR)" \
 	  $(SPHINXBUILD) -M html $(CONTENT_DIR) \
 	  "$(BUILDDIR)" $(SPHINXOPTS) $(O) -v -c "$(SPHINXCONF)"
