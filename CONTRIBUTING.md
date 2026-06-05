@@ -835,3 +835,9 @@ arguments trigger each test case at runtime:
 In this case, `in 0:` and `in 1:` contain the enumeration name, which
 corresponds to a test case triggered by the `Check` procedure.
 
+
+## Git workflow
+
+For details about the git workflow of this repository, see
+[GIT_WORKFLOW.md](GIT_WORKFLOW.md).
+
