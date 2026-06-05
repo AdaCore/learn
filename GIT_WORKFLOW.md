@@ -11,7 +11,7 @@ default branch (`main`), never directly on `main`. Two top-level forms are used,
 selected by whether an issue exists:
 
 ```
-dev/issue/<ticket>/<descriptor>[/<YYYY-MM-DD>]            # an issue exists
+dev/issue/<ticket>/<descriptor>[/<YYYY-MM-DD>]                # an issue exists
 dev/topic/<area>/<sub-area>/.../<descriptor>[/<YYYY-MM-DD>]   # no issue
 ```
 
@@ -94,21 +94,21 @@ The tag axis differs by area. *Content* tags name the *nature* of the change
 (the area is always content); *infrastructure* tags name the *component* touched
 (the verb in the description carries add/fix/update).
 
-| Area | Tag | Use |
-|------|-----|-----|
-| content | `New content:` | adding new material |
-| content | `Editorial:` | wording, style, typos, grammar, prose restructuring |
-| content | `Correction:` | fixing an error in an example or explanation |
-| infrastructure | `Frontend:` | general frontend code |
-| infrastructure | `Widget:` | the interactive widget |
-| infrastructure | `SCSS:` | styles |
-| infrastructure | `Sphinx:` | Sphinx plugins / extensions / config |
-| infrastructure | `Python:` | Python tooling / modules |
-| infrastructure | `Test script:` | test tooling |
-| infrastructure | `CI:` | GitHub Actions / CI |
-| infrastructure | `Vagrant:` | VM provisioning |
-| infrastructure | `Makefile:` | build pipeline |
-| infrastructure | `Docs:` | repository docs (README, CONTRIBUTING, and so on) |
+| Area            | Tag             | Use                                                 |
+|-----------------|-----------------|-----------------------------------------------------|
+| content         | `New content:`  | adding new material                                 |
+| content         | `Editorial:`    | wording, style, typos, grammar, prose restructuring |
+| content         | `Correction:`   | fixing an error in an example or explanation        |
+| infrastructure  | `Frontend:`     | general frontend code                               |
+| infrastructure  | `Widget:`       | the interactive widget                              |
+| infrastructure  | `SCSS:`         | styles                                              |
+| infrastructure  | `Sphinx:`       | Sphinx plugins / extensions / config                |
+| infrastructure  | `Python:`       | Python tooling / modules                            |
+| infrastructure  | `Test script:`  | test tooling                                        |
+| infrastructure  | `CI:`           | GitHub Actions / CI                                 |
+| infrastructure  | `Vagrant:`      | VM provisioning                                     |
+| infrastructure  | `Makefile:`     | build pipeline                                      |
+| infrastructure  | `Docs:`         | repository docs (README, CONTRIBUTING, and so on)   |
 
 Example:
 
