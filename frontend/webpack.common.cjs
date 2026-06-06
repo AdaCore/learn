@@ -120,6 +120,13 @@ module.exports = function(env) {
       }
     },
 
+    cache: {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
+      },
+    },
+
     module: {
       rules: [
         ts_rule(env),
