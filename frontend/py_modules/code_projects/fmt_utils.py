@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import colors as C
+from . import colors as C
 
 def header(strn: str) -> str:
     return C.col("{}\n{}\n".format(strn, '*' * len(strn)), C.Colors.BLUE)
