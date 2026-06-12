@@ -1,6 +1,6 @@
 import unittest
 
-from widget.resource import Resource
+from rst_code_example_pipeline.resource import Resource
 
 
 class TestResource(unittest.TestCase):
