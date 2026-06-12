@@ -8,10 +8,10 @@ import argparse
 import os
 import glob
 
-import blocks
-import check_code_block
-import extract_projects
-import fmt_utils
+from . import blocks
+from . import check_code_block
+from . import extract_projects
+from . import fmt_utils
 
 verbose: bool = False
 all_diagnostics: bool = False
