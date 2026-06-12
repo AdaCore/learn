@@ -5,25 +5,11 @@ Run with:
     python -m unittest discover -s tests/
 or (from the project root):
     python -m unittest rst_code_example_pipeline.tests.test_smoke
-
-Note: tests that import extract_projects / check_projects require
-`sphinx/` on PYTHONPATH (for widget.chop), as sphinx/widget/chop.py has
-not yet been moved into the package.  Those tests are skipped automatically
-when widget is absent.
 """
-import sys
 import unittest
 from unittest.mock import patch
 
 import rst_code_example_pipeline
-
-
-def _widget_available() -> bool:
-    try:
-        import widget.chop  # noqa: F401
-        return True
-    except ImportError:
-        return False
 
 
 class TestPackageMetadata(unittest.TestCase):
@@ -60,11 +46,9 @@ class TestModuleImports(unittest.TestCase):
     def test_import_check_code_block(self) -> None:
         from rst_code_example_pipeline import check_code_block  # noqa: F401
 
-    @unittest.skipUnless(_widget_available(), 'widget.chop not on PYTHONPATH (sphinx/widget/chop.py not yet moved into the package)')
     def test_import_extract_projects(self) -> None:
         from rst_code_example_pipeline import extract_projects  # noqa: F401
 
-    @unittest.skipUnless(_widget_available(), 'widget.chop not on PYTHONPATH (sphinx/widget/chop.py not yet moved into the package)')
     def test_import_check_projects(self) -> None:
         from rst_code_example_pipeline import check_projects  # noqa: F401
 
@@ -83,11 +67,9 @@ class TestEntryPoints(unittest.TestCase):
     def test_check_block_help(self) -> None:
         self._assert_help_exits_zero('check_block')
 
-    @unittest.skipUnless(_widget_available(), 'widget.chop not on PYTHONPATH (sphinx/widget/chop.py not yet moved into the package)')
     def test_extract_help(self) -> None:
         self._assert_help_exits_zero('extract')
 
-    @unittest.skipUnless(_widget_available(), 'widget.chop not on PYTHONPATH (sphinx/widget/chop.py not yet moved into the package)')
     def test_check_help(self) -> None:
         self._assert_help_exits_zero('check')
 
