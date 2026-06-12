@@ -13,7 +13,7 @@ import shutil
 import re
 import json
 
-from widget.chop import manual_chop, real_gnatchop
+from .chop import manual_chop, real_gnatchop
 
 from . import blocks
 from . import fmt_utils
