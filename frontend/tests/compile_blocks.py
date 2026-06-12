@@ -80,13 +80,8 @@ if __name__ == "__main__":
         print("Storing list of project in " + extracted_projects_json)
 
     if CALL_SCRIPTS:
-        PATH_CODE_PROJECTS = \
-            os.path.dirname(os.path.realpath(__file__)) + \
-            "/../py_modules/code_projects"
-
         if RUN_PROJECT_EXTRACTION:
-            cmd_extract_projects = PATH_CODE_PROJECTS + \
-                "/extract_projects.py"
+            cmd_extract_projects = "python3 -m code_projects.extract_projects"
 
             cmd_extract_projects += " --build-dir " + \
                 os.path.abspath(args.build_dir)
@@ -111,8 +106,7 @@ if __name__ == "__main__":
             test_error = ret_value != 0
 
         if RUN_PROJECT_CHECK:
-            cmd_check_projects = PATH_CODE_PROJECTS + \
-                "/check_projects.py"
+            cmd_check_projects = "python3 -m code_projects.check_projects"
 
             cmd_check_projects += " --extracted_projects " + \
                 extracted_projects_json
