@@ -28,11 +28,10 @@ Here are the available classes for annotation:
 
 import argparse
 import os
-import colors as C
 import shutil
 from datetime import datetime
 
-import code_projects.fmt_utils as fmt_utils
+import rst_code_example_pipeline.fmt_utils as fmt_utils
 
 EXTRACTED_PROJECTS_JSON = "extracted_projects_TIMESTAMP.json"
 USE_TIMESTAMP = True
@@ -81,7 +80,7 @@ if __name__ == "__main__":
 
     if CALL_SCRIPTS:
         if RUN_PROJECT_EXTRACTION:
-            cmd_extract_projects = "python3 -m code_projects.extract_projects"
+            cmd_extract_projects = "learn-extract-code"
 
             cmd_extract_projects += " --build-dir " + \
                 os.path.abspath(args.build_dir)
@@ -106,7 +105,7 @@ if __name__ == "__main__":
             test_error = ret_value != 0
 
         if RUN_PROJECT_CHECK:
-            cmd_check_projects = "python3 -m code_projects.check_projects"
+            cmd_check_projects = "learn-check-code"
 
             cmd_check_projects += " --extracted_projects " + \
                 extracted_projects_json
