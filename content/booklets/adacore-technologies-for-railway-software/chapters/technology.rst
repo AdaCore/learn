@@ -350,8 +350,8 @@ according to their dimension. The system is implemented based on the
 seven base dimensions (meter, kilogram, second, ampere, kelvin, mole,
 candela), and will check that operations between these types are
 consistent.
-For example, a type :ada:`Speed` can be defined to represent time per
-distance. Consistency between these types is checked at compile time
+For example, a type :ada:`Speed` can be defined to represent distance per
+time. Consistency between these types is checked at compile time
 so that dimension errors will be reported as errors. For example:
 
 .. code-block:: ada

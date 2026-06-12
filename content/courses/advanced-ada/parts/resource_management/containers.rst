@@ -204,7 +204,7 @@ Let's see a complete code example:
     end Show_Container_Aggregate_Empty;
 
 In this example, we specify the :ada:`Empty` function for the :ada:`Aggregate`
-aspect of the container type :ada:`T`. (We also use the :ada:`Add_Unnamed`
+aspect of the container type :ada:`T`. (We also use the :ada:`Add_Named`
 element. You can ignore it for the moment: we'll discuss it later on.)
 
 The :ada:`A := []` statement in the :ada:`Show_Container_Aggregate_Empty`

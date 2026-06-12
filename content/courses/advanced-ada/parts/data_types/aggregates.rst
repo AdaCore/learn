@@ -1787,7 +1787,7 @@ aggregates in assignments to this object:
 In the first assignment to :ada:`P_3D` in the example above, we're
 initializing this object with information from :ada:`P_2D` and specifying
 the value of the :ada:`Z` component. Then, in the next assignment to the
-:ada:`P_3D` object, we're using an aggregate with information from :ada:`P_1`
+:ada:`P_3D` object, we're using an aggregate with information from :ada:`P_1D`
 and specifying values for the :ada:`Y` and :ada:`Z` components. (Just as a
 reminder, we can write :ada:`Y | Z => 0.1` to assign 0.1 to both :ada:`Y` and
 :ada:`Z` components.)

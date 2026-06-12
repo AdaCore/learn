@@ -771,7 +771,7 @@ Let's use these subtypes in a test application:
 
 As expected, assignments to objects with different subtypes |mdash| but with
 the same parent type |mdash| work fine without conversion. The assignment to
-:ada:`M_Max_20` fails because of the predicate failure: the predicate requires
+:ada:`M_Max20` fails because of the predicate failure: the predicate requires
 that the length be 20 at most, and it's 40 in this case. Also, the
 assignment to :ada:`M_F2` fails because the predicate requires that the first
 element must be set to :ada:`2.0`, and :ada:`MD10 (1)` has the value 4.0.

@@ -991,7 +991,7 @@ language standard.
 Package Interfaces.C.Strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Package :ada:`Interfaces.C` declares types and subprograms allowing an Ada
+Package :ada:`Interfaces.C.Strings` declares types and subprograms allowing an Ada
 program to allocate, reference, update, and free C-style strings. In
 particular, the private type :ada:`chars_ptr` corresponds to a common use of
 :ada:`char *` in C programs, and an object of this type can be passed to
