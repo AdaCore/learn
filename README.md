@@ -111,15 +111,11 @@ website being served from the local Python-based HTTP server.
 The ReST files found in the [content directory](content) have `.. code:: ada`
 blocks that contain source-code examples. To test the expected behavior of
 those examples, a test script called `compile_blocks.py` is available, as well
-as the `code_projects` module.
+as the `rst_code_example_pipeline` package.
 
 To make use of this test infrastructure, the best approach is to start the
-Vagrant publishing server (`epub`) and install the environment:
-
-```sh
-cd /vagrant/frontend
-export PYTHONPATH="$PYTHONPATH:sphinx:py_modules"
-```
+Vagrant publishing server (`epub`). The Python environment is configured
+automatically during provisioning.
 
 
 ### Using the `compile_blocks.py` script
@@ -203,28 +199,28 @@ python3 tests/compile_blocks.py \
 ```
 
 
-### Using the code_projects module
+### Using the rst_code_example_pipeline package
 
-The [code_projects module](frontend/py_modules/code_projects) contains the
+The [rst_code_example_pipeline package](frontend/python/rst_code_example_pipeline) contains the
 actual Python modules that are called by the `compile_blocks.py` script. It's
-possible to use them directly:
+possible to use them directly via the installed entry points:
 
-- `extract_projects.py` extracts all code blocks and stores into the specified
+- `learn-extract-code` extracts all code blocks and stores into the specified
   directory;
 
-- `check_projects.py` checks each code blocks from the specified directory.
+- `learn-check-code` checks each code block from the specified directory.
 
 For example, to build the source-code examples from the
 [Introduction to Ada course](content/courses/intro-to-ada), run:
 
 ```sh
-python3 py_modules/code_projects/extract_projects.py     \
+learn-extract-code                                       \
   --build-dir test_output                                \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-python3 py_modules/code_projects/check_projects.py       \
+learn-check-code                                         \
   --build-dir test_output
 ```
 
 For more examples and alternative configurations, please refer to the
-[README of the code_projects module](frontend/py_modules/code_projects/README.md)
+[README of the rst_code_example_pipeline package](frontend/python/rst_code_example_pipeline/README.md)
