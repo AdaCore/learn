@@ -27,11 +27,11 @@ the source-code examples from the
 [Introduction to Ada course](content/courses/intro-to-ada), run:
 
 ```sh
-extract-code                                            \
+extract-code                                                  \
   --build-dir test_output                                     \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-check-code                                              \
+check-code                                                    \
   --build-dir test_output
 ```
 
@@ -46,12 +46,12 @@ and checks the source-code example described in each of those JSON files.
 All the scripts have a `--verbose` / `-v` switch. For example:
 
 ```sh
-extract-code                                            \
+extract-code                                                  \
   --verbose                                                   \
   --build-dir test_output                                     \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-check-code                                              \
+check-code                                                    \
   --verbose                                                   \
   --build-dir test_output
 ```
@@ -65,22 +65,22 @@ examples from the
 [Introduction to Ada course](content/courses/intro-to-ada), run:
 
 ```sh
-extract-code                                            \
-  --extracted_projects test_output/extracted_projects.json   \
+extract-code                                                  \
+  --extracted_projects test_output/extracted_projects.json    \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-check-code                                             \
+check-code                                                    \
   --extracted_projects test_output/extracted_projects.json
 ```
 
 To build the source-code examples extracted from a single ReST file:
 
 ```sh
-extract-code                                            \
-  --extracted_projects test_output/extracted_projects.json   \
+extract-code                                                  \
+  --extracted_projects test_output/extracted_projects.json    \
   ../content/courses/intro-to-ada/chapters/imperative_language.rst
 
-check-code                                             \
+check-code                                                    \
   --extracted_projects test_output/extracted_projects.json
 ```
 
@@ -97,13 +97,13 @@ both `--extracted_projects` and `--build-dir` switches and specify different
 paths. For example:
 
 ```sh
-extract-code                                            \
+extract-code                                                  \
   --build-dir test_output                                     \
-  --extracted_projects extracted_projects.json               \
+  --extracted_projects extracted_projects.json                \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-check-code                                             \
-  --build-dir test_output                                    \
+check-code                                                    \
+  --build-dir test_output                                     \
   --extracted_projects extracted_projects.json
 ```
 
@@ -126,7 +126,7 @@ check-block \
 To force checking of a specific code block, use the `--force` switch:
 
 ```sh
-check-block                                             \
+check-block                                                   \
   --force                                                     \
   test_output/projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/block_info.json
 ```
@@ -138,12 +138,12 @@ To test just a single code block from an ReST file, use the `--code-block-at`
 switch:
 
 ```sh
-extract-code                                            \
-  --code-block-at=28                                         \
-  --extracted_projects test_output/extracted_projects.json   \
+extract-code                                                  \
+  --code-block-at=28                                          \
+  --extracted_projects test_output/extracted_projects.json    \
   ../content/courses/intro-to-ada/chapters/imperative_language.rst
 
-check-code                                             \
+check-code                                                    \
   --extracted_projects test_output/extracted_projects.json
 ```
 
@@ -156,15 +156,15 @@ examples, use the `--max-columns` switch.
 For example, using `check-code`:
 
 ```sh
-check-code                                             \
-  --max-columns 80                                           \
+check-code                                                    \
+  --max-columns 80                                            \
   --extracted_projects test_output/extracted_projects.json
 ```
 
 For example, using `check-block`:
 
 ```sh
-check-block                                             \
-  --max-columns 80                                           \
+check-block                                                   \
+  --max-columns 80                                            \
   test_output/projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/block_info.json
 ```
