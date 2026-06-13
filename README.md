@@ -205,20 +205,20 @@ The [rst_code_example_pipeline package](frontend/python/rst_code_example_pipelin
 actual Python modules that are called by the `compile_blocks.py` script. It's
 possible to use them directly via the installed entry points:
 
-- `learn-extract-code` extracts all code blocks and stores into the specified
+- `extract-code` extracts all code blocks and stores into the specified
   directory;
 
-- `learn-check-code` checks each code block from the specified directory.
+- `check-code` checks each code block from the specified directory.
 
 For example, to build the source-code examples from the
 [Introduction to Ada course](content/courses/intro-to-ada), run:
 
 ```sh
-learn-extract-code                                       \
+extract-code                                       \
   --build-dir test_output                                \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-learn-check-code                                         \
+check-code                                         \
   --build-dir test_output
 ```
 

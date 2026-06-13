@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     if CALL_SCRIPTS:
         if RUN_PROJECT_EXTRACTION:
-            cmd_extract_projects = "learn-extract-code"
+            cmd_extract_projects = "extract-code"
 
             cmd_extract_projects += " --build-dir " + \
                 os.path.abspath(args.build_dir)
@@ -105,7 +105,7 @@ if __name__ == "__main__":
             test_error = ret_value != 0
 
         if RUN_PROJECT_CHECK:
-            cmd_check_projects = "learn-check-code"
+            cmd_check_projects = "check-code"
 
             cmd_check_projects += " --extracted_projects " + \
                 extracted_projects_json

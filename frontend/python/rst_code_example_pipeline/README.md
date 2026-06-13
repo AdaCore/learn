@@ -6,12 +6,12 @@ The [rst_code_example_pipeline](frontend/python/rst_code_example_pipeline) packa
 scripts to extract, build and run the code blocks from the ReST files. These are the main
 entry points:
 
-- `learn-extract-code` extracts all code blocks and stores into the specified
+- `extract-code` extracts all code blocks and stores into the specified
   build directory;
 
-- `learn-check-code` checks each code block from the specified build directory;
+- `check-code` checks each code block from the specified build directory;
 
-- `learn-check-block` checks a single (previously extracted) code block.
+- `check-block` checks a single (previously extracted) code block.
 
 The package is installed in editable mode as part of the VM provisioning:
 ```sh
@@ -22,22 +22,22 @@ pip install -e frontend/python/rst_code_example_pipeline
 ## Simple usage
 
 To build and run the source-code examples from a course, just run
-`learn-extract-code` followed by `learn-check-code`. For example, to test
+`extract-code` followed by `check-code`. For example, to test
 the source-code examples from the
 [Introduction to Ada course](content/courses/intro-to-ada), run:
 
 ```sh
-learn-extract-code                                            \
+extract-code                                            \
   --build-dir test_output                                     \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-learn-check-code                                              \
+check-code                                              \
   --build-dir test_output
 ```
 
-When `learn-extract-code` runs, it creates a JSON file called `block_info.json`
+When `extract-code` runs, it creates a JSON file called `block_info.json`
 for each code block (source-code example) that is extracted from the ReST files.
-`learn-check-code` looks for all `block_info.json` files in the build directory
+`check-code` looks for all `block_info.json` files in the build directory
 and checks the source-code example described in each of those JSON files.
 
 
@@ -46,12 +46,12 @@ and checks the source-code example described in each of those JSON files.
 All the scripts have a `--verbose` / `-v` switch. For example:
 
 ```sh
-learn-extract-code                                            \
+extract-code                                            \
   --verbose                                                   \
   --build-dir test_output                                     \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-learn-check-code                                              \
+check-code                                              \
   --verbose                                                   \
   --build-dir test_output
 ```
@@ -65,22 +65,22 @@ examples from the
 [Introduction to Ada course](content/courses/intro-to-ada), run:
 
 ```sh
-learn-extract-code                                            \
+extract-code                                            \
   --extracted_projects test_output/extracted_projects.json   \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-learn-check-code                                             \
+check-code                                             \
   --extracted_projects test_output/extracted_projects.json
 ```
 
 To build the source-code examples extracted from a single ReST file:
 
 ```sh
-learn-extract-code                                            \
+extract-code                                            \
   --extracted_projects test_output/extracted_projects.json   \
   ../content/courses/intro-to-ada/chapters/imperative_language.rst
 
-learn-check-code                                             \
+check-code                                             \
   --extracted_projects test_output/extracted_projects.json
 ```
 
@@ -97,12 +97,12 @@ both `--extracted_projects` and `--build-dir` switches and specify different
 paths. For example:
 
 ```sh
-learn-extract-code                                            \
+extract-code                                            \
   --build-dir test_output                                     \
   --extracted_projects extracted_projects.json               \
   $(find ../content/courses/intro-to-ada/ -name '*.rst')
 
-learn-check-code                                             \
+check-code                                             \
   --build-dir test_output                                    \
   --extracted_projects extracted_projects.json
 ```
@@ -112,11 +112,11 @@ learn-check-code                                             \
 
 When extracting the source-code examples from the ReST files, a JSON file
 called `block_info.json` is created for each code block. It's possible to check
-a single code block by using `learn-check-block` and indicating this JSON file.
+a single code block by using `check-block` and indicating this JSON file.
 For example:
 
 ```sh
-learn-check-block \
+check-block \
   test_output/projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/block_info.json
 ```
 
@@ -126,7 +126,7 @@ learn-check-block \
 To force checking of a specific code block, use the `--force` switch:
 
 ```sh
-learn-check-block                                             \
+check-block                                             \
   --force                                                     \
   test_output/projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/block_info.json
 ```
@@ -138,12 +138,12 @@ To test just a single code block from an ReST file, use the `--code-block-at`
 switch:
 
 ```sh
-learn-extract-code                                            \
+extract-code                                            \
   --code-block-at=28                                         \
   --extracted_projects test_output/extracted_projects.json   \
   ../content/courses/intro-to-ada/chapters/imperative_language.rst
 
-learn-check-code                                             \
+check-code                                             \
   --extracted_projects test_output/extracted_projects.json
 ```
 
@@ -153,18 +153,18 @@ learn-check-code                                             \
 To ensure that a maximum limit of 80 columns per line is respected in the code
 examples, use the `--max-columns` switch.
 
-For example, using `learn-check-code`:
+For example, using `check-code`:
 
 ```sh
-learn-check-code                                             \
+check-code                                             \
   --max-columns 80                                           \
   --extracted_projects test_output/extracted_projects.json
 ```
 
-For example, using `learn-check-block`:
+For example, using `check-block`:
 
 ```sh
-learn-check-block                                             \
+check-block                                             \
   --max-columns 80                                           \
   test_output/projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/block_info.json
 ```

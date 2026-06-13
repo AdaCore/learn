@@ -8,9 +8,9 @@ version = "0.2.0"
 requires-python = ">=3.10"
 
 [project.scripts]
-learn-extract-code = "rst_code_example_pipeline.cli.extract:main"
-learn-check-code   = "rst_code_example_pipeline.cli.check:main"
-learn-check-block  = "rst_code_example_pipeline.cli.check_block:main"
+extract-code = "rst_code_example_pipeline.cli.extract:main"
+check-code   = "rst_code_example_pipeline.cli.check:main"
+check-block  = "rst_code_example_pipeline.cli.check_block:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
