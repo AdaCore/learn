@@ -27,6 +27,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install pyright
       run: pip install pyright
+    - name: Install rst_code_example_pipeline
+      run: pip install -e frontend/python/rst_code_example_pipeline
     - name: Run pyright on rst_code_example_pipeline
       working-directory: frontend/python/rst_code_example_pipeline
       run: pyright .
