@@ -1,10 +1,8 @@
 #! /usr/bin/env python3
 
-import os
 import re
 import configparser
-
-TOOLCHAIN_CONFIG = os.path.dirname(os.path.realpath(__file__))  + "/" + "toolchain.ini"
+from importlib.resources import files
 
 TOOLCHAIN_PATH: dict[str, str] = {}
 TOOLCHAINS: dict[str, list[str]] = {}
@@ -12,8 +10,9 @@ DEFAULT_VERSION: dict[str, str] = {}
 
 def init_toolchain_info() -> None:
     config = configparser.ConfigParser()
-
-    config.read(TOOLCHAIN_CONFIG)
+    config.read_string(
+        files('rst_code_example_pipeline').joinpath('data/toolchain.ini').read_text()
+    )
 
     DEFAULT_VERSION['gnat']      = config['default_version']['gnat']
     DEFAULT_VERSION['gnatprove'] = config['default_version']['gnatprove']

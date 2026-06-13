@@ -15,5 +15,8 @@ learn-check-block  = "rst_code_example_pipeline.cli.check_block:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+rst_code_example_pipeline = ["data/*.ini"]
+
 [tool.pyright]
 pythonVersion = "3.10"
