@@ -3,8 +3,8 @@ import re
 from typing import List, Match, Dict, Optional
 
 from .button import Button
-from .chop import manual_chop, cheapo_gnatchop, real_gnatchop, ChopStrategy
-from .resource import Resource
+from rst_code_example_pipeline.chop import manual_chop, cheapo_gnatchop, real_gnatchop, ChopStrategy
+from rst_code_example_pipeline.resource import Resource
 
 class ButtonException(Exception):
     pass
