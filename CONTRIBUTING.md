@@ -532,7 +532,7 @@ By default, the standard version of the GNAT toolchain specified in the
 frontend is used in the testing phase. The list of versions for each specific
 tool from the GNAT toolchain can be found in this file:
 
-frontend/py_modules/code_projects/toolchain.ini
+frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini
 
 An alternative version of a tool can be selected for a specific code block
 using the `gnat=`, `gnatprove=` or `gprbuild=` parameters. For example:
