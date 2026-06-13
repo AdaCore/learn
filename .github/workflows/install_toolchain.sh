@@ -2,7 +2,7 @@
 
 GNAT_FSF_BUILDS=https://github.com/alire-project/GNAT-FSF-builds/releases/download
 
-TOOLCHAIN_CONFIG=${GITHUB_WORKSPACE}/frontend/py_modules/code_projects/toolchain.ini
+TOOLCHAIN_CONFIG=${GITHUB_WORKSPACE}/frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini
 
 INSTALL_GNATPROVE=NO
 INSTALL_GNAT=NO

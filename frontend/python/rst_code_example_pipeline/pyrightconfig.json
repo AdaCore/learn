@@ -1,6 +1,0 @@
-{
-    "pythonVersion": "3.10",
-    "extraPaths": [
-        "../../sphinx"
-    ]
-}
