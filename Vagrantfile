@@ -234,7 +234,7 @@ Vagrant.configure("2") do |config|
     web.vm.synced_folder './frontend', '/vagrant/frontend'
     web.vm.synced_folder './content', '/vagrant/content'
 
-    web.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
+    web.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     web.vm.provision "file", source: "./frontend/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
     web.vm.provision :shell, inline: $frontend
   end
@@ -246,7 +246,7 @@ Vagrant.configure("2") do |config|
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'
 
-    epub.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
+    epub.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     epub.vm.provision "file", source: "./frontend/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
     epub.vm.provision :shell, inline: $epub
   end
