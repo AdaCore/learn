@@ -1,7 +1,7 @@
 import unittest
 
-from widget.chop import manual_chop, cheapo_gnatchop, real_gnatchop
-from widget.resource import Resource
+from rst_code_example_pipeline.chop import manual_chop, cheapo_gnatchop, real_gnatchop
+from rst_code_example_pipeline.resource import Resource
 
 
 class TestManual_Chop(unittest.TestCase):

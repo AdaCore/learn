@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rst-code-example-pipeline"
+version = "0.2.0"
+requires-python = ">=3.10"
+
+[project.scripts]
+extract-code = "rst_code_example_pipeline.cli.extract:main"
+check-code   = "rst_code_example_pipeline.cli.check:main"
+check-block  = "rst_code_example_pipeline.cli.check_block:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+rst_code_example_pipeline = ["data/*.ini"]
+
+[tool.pyright]
+pythonVersion = "3.10"

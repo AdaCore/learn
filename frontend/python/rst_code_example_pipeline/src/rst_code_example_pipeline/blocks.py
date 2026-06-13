@@ -6,8 +6,8 @@ import hashlib
 import json
 from typing import Any
 
-import colors as C
-import toolchain_info
+from . import colors as C
+from . import toolchain_info
 
 class Block(object):
     @staticmethod

@@ -16,7 +16,7 @@ from websocket import WebSocket
 SPHINX_PATH = (Path(__file__).parent.parent / 'sphinx').resolve()
 sys.path.append(str(SPHINX_PATH))
 
-from widget.chop import manual_chop, real_gnatchop
+from rst_code_example_pipeline.chop import manual_chop, real_gnatchop
 
 from code_block import CodeBlock, get_blocks
 

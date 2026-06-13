@@ -13,11 +13,11 @@ import shutil
 import re
 import json
 
-from widget.chop import manual_chop, real_gnatchop
+from .chop import manual_chop, real_gnatchop
 
-import blocks
-import fmt_utils
-import toolchain_setup
+from . import blocks
+from . import fmt_utils
+from . import toolchain_setup
 
 
 current_config = blocks.ConfigBlock(

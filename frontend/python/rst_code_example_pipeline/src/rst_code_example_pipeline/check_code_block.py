@@ -18,10 +18,10 @@ from os import path as P
 import glob
 import re
 
-import blocks
-import checks
-import fmt_utils
-import toolchain_setup
+from . import blocks
+from . import checks
+from . import fmt_utils
+from . import toolchain_setup
 
 LOOK_FOR_PREVIOUS_CHECKS = True
 

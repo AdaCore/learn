@@ -3,8 +3,8 @@
 import os
 import re
 
-import blocks
-import toolchain_info as info
+from . import blocks
+from . import toolchain_info as info
 
 def set_toolchain(block: blocks.CodeBlock) -> None:
 
