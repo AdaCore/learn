@@ -418,3 +418,141 @@ Explanatory paragraph.
         rst_file = self._write_rst(work_dir, rst_content)
         result = ep.analyze_file(rst_file)
         assert result is False
+
+    def test_code_block_at_sets_inactive(self, work_dir, capsys):
+        """Set code_block_at to a line that matches no block — all blocks stay
+        inactive and the inner loop hits the 'continue' path at line 211."""
+        # code_block_at=9999 is far beyond any line in the small RST fixture
+        ep.code_block_at = 9999
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        # No project directory should have been created (all blocks inactive)
+        assert not (work_dir / "projects" / "NoCheckProject").exists(), \
+            "No project dir expected when all blocks are inactive"
+
+    def test_verbose_prints_headers(self, work_dir, capsys):
+        """Set verbose=True and confirm that project header lines are printed."""
+        ep.verbose = True
+        rst_content = """\
+.. code:: ada project=VerboseProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+        # The verbose header and block count line should appear
+        assert "VerboseProject" in out, \
+            "Expected project name in verbose output"
+
+    def test_second_call_same_project_logs_exists(self, work_dir, capsys):
+        """Call analyze_file() twice with the same project; the second call
+        must print 'already exists' when verbose=True."""
+        ep.verbose = True
+        rst_content = """\
+.. code:: ada project=RepeatedProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file)  # first call: creates the project dir
+        # reset verbose (it gets cleared by the autouse fixture between tests,
+        # but we are in one test so set it again for the second call)
+        ep.verbose = True
+        capsys.readouterr()  # discard first-call output
+        ep.analyze_file(rst_file)  # second call: dir already exists
+        out = capsys.readouterr().out
+        assert "already exists" in out, \
+            "Expected 'already exists' in verbose output on second call"
+
+    def test_no_check_verbose_skip(self, work_dir, capsys):
+        """With verbose=True a no-check block must print a 'Skipping' message."""
+        ep.verbose = True
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+        assert "Skipping" in out, \
+            "Expected 'Skipping' message for no-check block in verbose mode"
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-05: Diag class
+# (covers extract_projects.py lines 28-40)
+# ---------------------------------------------------------------------------
+
+class TestDiag:
+    def test_fields_stored(self):
+        d = ep.Diag("f.adb", 3, 7, "error message")
+        assert d.file == "f.adb"
+        assert d.line == 3
+        assert d.col == 7
+        assert d.msg == "error message"
+
+    def test_repr_format(self):
+        d = ep.Diag("f.adb", 3, 7, "error message")
+        assert repr(d) == "f.adb:3:7: error message"
+
+    def test_repr_edge_case_zero_and_empty(self):
+        d = ep.Diag("", 0, 0, "")
+        assert repr(d) == ":0:0: "
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-06: same-project second block
+# (covers false branch of 'if not b.project in projects:' at line 218)
+# ---------------------------------------------------------------------------
+
+class TestAnalyzeFileSameProjectTwoBlocks:
+    TWO_BLOCKS_RST = """\
+.. code:: ada project=SameProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+First explanatory paragraph.
+
+.. code:: ada project=SameProject
+   :class: ada-nocheck
+
+   procedure Helper is
+   begin
+      null;
+   end Helper;
+
+Second explanatory paragraph.
+"""
+
+    def _write_rst(self, tmp_path, content: str) -> str:
+        rst_path = tmp_path / "two_blocks.rst"
+        rst_path.write_text(content)
+        return str(rst_path)
+
+    def test_two_blocks_same_project(self, work_dir):
+        """Two no-check Ada blocks with the same project= attribute: the second
+        block hits the false branch of 'if not b.project in projects:'."""
+        rst_file = self._write_rst(work_dir, self.TWO_BLOCKS_RST)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        # The project directory must have been created
+        assert (work_dir / "projects" / "SameProject").exists()
+        # Two separate block_info.json files must exist (each block has its own
+        # hash-named subdirectory)
+        block_jsons = list((work_dir / "projects" / "SameProject").rglob("block_info.json"))
+        assert len(block_jsons) == 2, \
+            f"Expected 2 block_info.json files; found {len(block_jsons)}"
