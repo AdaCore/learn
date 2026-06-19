@@ -248,7 +248,7 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
             print("Number of code blocks: {}".format(len(projects[project])))
 
         for i, block in projects[project]:
-            if isinstance(block, blocks.ConfigBlock):
+            if isinstance(block, blocks.ConfigBlock):  # pragma: no cover
                 current_config.update(block)
                 toolchain_setup.reset_toolchain()
                 continue
