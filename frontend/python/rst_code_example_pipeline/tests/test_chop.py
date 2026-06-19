@@ -1,10 +1,7 @@
 """
-Unit tests for rst_code_example_pipeline.chop — edge cases.
+Unit tests for rst_code_example_pipeline.chop — edge cases and real_gnatchop.
 
-Covers manual_chop and cheapo_gnatchop only (real_gnatchop requires the Ada
-toolchain and is already covered by frontend/sphinx/tests/test_chop.py).
-
-New edge cases (not in the existing sphinx test):
+Covers:
 - manual_chop with .ads and .adb extensions
 - manual_chop with empty input
 - manual_chop with no !filename lines at all (only garbage)
@@ -14,10 +11,12 @@ New edge cases (not in the existing sphinx test):
 - cheapo_gnatchop with only a spec (package A)
 - cheapo_gnatchop with empty input
 - cheapo_gnatchop with only garbage (no recognized declaration)
+- real_gnatchop: valid Ada, compiler_switches, error handler
+  (requires the Ada toolchain; runs on the epub VM)
 """
 import pytest
 
-from rst_code_example_pipeline.chop import manual_chop, cheapo_gnatchop
+from rst_code_example_pipeline.chop import manual_chop, cheapo_gnatchop, real_gnatchop
 from rst_code_example_pipeline.resource import Resource
 
 
@@ -216,3 +215,42 @@ class TestCheapoGnatchopEdgeCases:
         assert len(result) == 2
         assert result[0].basename == "a.adb"
         assert result[1].basename == "a.ads"
+
+
+# ---------------------------------------------------------------------------
+# T-chop-06: real_gnatchop — Ada toolchain required
+# (covers chop.py lines 96-149)
+# ---------------------------------------------------------------------------
+
+class TestRealGnatchop:
+    """Tests for real_gnatchop; require gnatchop in PATH."""
+
+    VALID_ADA = ["procedure Main is", "begin null; end Main;"]
+
+    def test_valid_ada_no_switches_returns_resources(self):
+        """real_gnatchop with compiler_switches=None returns a non-empty list
+        of Resource objects (covers line 118 — compiler_switches=None branch)."""
+        result = real_gnatchop(self.VALID_ADA, compiler_switches=None)
+        assert len(result) >= 1
+        assert all(isinstance(r, Resource) for r in result)
+
+    def test_valid_ada_no_switches_basename(self):
+        """gnatchop on a minimal procedure Main produces main.adb."""
+        result = real_gnatchop(self.VALID_ADA, compiler_switches=None)
+        basenames = [r.basename for r in result]
+        assert "main.adb" in basenames
+
+    def test_valid_ada_with_compiler_switches(self):
+        """real_gnatchop with compiler_switches=["-gnata"] exercises the
+        'cmd.extend' path (lines 120-125) and still succeeds."""
+        result = real_gnatchop(self.VALID_ADA, compiler_switches=["-gnata"])
+        assert len(result) >= 1
+        basenames = [r.basename for r in result]
+        assert "main.adb" in basenames
+
+    def test_invalid_input_raises_exception(self):
+        """Garbage input causes gnatchop to fail; the error handler at lines
+        137-144 prints the numbered lines and raises Exception."""
+        with pytest.raises(Exception, match="Could not chop files with gnatchop"):
+            real_gnatchop(["this is not valid Ada at all !@#$"],
+                          compiler_switches=None)
