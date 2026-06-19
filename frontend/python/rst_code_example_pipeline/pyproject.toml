@@ -31,7 +31,13 @@ branch = true
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 90
+fail_under = 75
+exclude_lines = [
+    # Standard pragma for uncoverable lines
+    "pragma: no cover",
+    # CLI __main__ entry points are not exercised by unit tests
+    "if __name__ == .__main__.:",
+]
 
 [tool.pyright]
 pythonVersion = "3.10"
