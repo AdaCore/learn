@@ -12,6 +12,9 @@ extract-code = "rst_code_example_pipeline.cli.extract:main"
 check-code   = "rst_code_example_pipeline.cli.check:main"
 check-block  = "rst_code_example_pipeline.cli.check_block:main"
 
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
