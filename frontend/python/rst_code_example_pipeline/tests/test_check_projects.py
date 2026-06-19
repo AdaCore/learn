@@ -32,6 +32,20 @@ def restore_cwd():
     os.chdir(original)
 
 
+@pytest.fixture(autouse=True)
+def reset_cp_globals():
+    """Reset check_projects module-level globals before and after each test."""
+    cp.verbose = False
+    cp.all_diagnostics = False
+    cp.max_columns = 0
+    cp.force_checks = False
+    yield
+    cp.verbose = False
+    cp.all_diagnostics = False
+    cp.max_columns = 0
+    cp.force_checks = False
+
+
 def _make_minimal_block_info(project: str,
                              tmp_path,
                              subdir: str = "") -> str:
@@ -286,3 +300,97 @@ class TestCheckProjectsIntegration:
         must return False (no errors)."""
         result = cp.check_projects(str(tmp_path), projects_list_file=None)
         assert result is False
+
+
+# ---------------------------------------------------------------------------
+# T-check_projects-08: extended coverage — malformed JSON, verbose, inactive,
+# duplicate project
+# (covers check_projects.py lines 30-32, 38-40, 87-88, 93)
+# ---------------------------------------------------------------------------
+
+class TestCheckProjectsExtended:
+    def test_get_blocks_from_json_file_returns_none(self, tmp_path, capsys, monkeypatch):
+        """When from_json_file() returns None, get_blocks() prints ERROR and
+        skips the entry (covers lines 30-32)."""
+        # Write a valid block_info.json so iglob finds the file
+        json_file = _make_minimal_block_info("NullProject", tmp_path)
+
+        # Patch from_json_file to return None regardless of content
+        monkeypatch.setattr(_blocks_mod.CodeBlock, "from_json_file",
+                            staticmethod(lambda *args, **kwargs: None))
+
+        result = cp.get_blocks([json_file])
+        assert result == {}, "Expected empty dict when from_json_file returns None"
+        out = capsys.readouterr().out
+        assert "ERROR" in out, "Expected ERROR printed when block cannot be loaded"
+
+    def test_get_blocks_duplicate_project(self, tmp_path):
+        """Two block_info.json files with the same project name: the second hits
+        the false branch of 'if not b.project in projects:' (lines 38-40)."""
+        # Write two files for the same project in different subdirs
+        _make_minimal_block_info("DupProject", tmp_path, subdir="a")
+        _make_minimal_block_info("DupProject", tmp_path, subdir="b")
+        pattern = str(tmp_path / "**" / "block_info.json")
+        result = cp.get_blocks([pattern])
+        # Both blocks are in the list under the same project key
+        assert "DupProject" in result
+        assert len(result["DupProject"]) == 2, \
+            "Expected both blocks accumulated under the same project key"
+
+    def test_get_projects_verbose(self, tmp_path, capsys):
+        """check_projects() with verbose=True prints the project header
+        (covers lines 87-88)."""
+        subdir = "projects/VerbProj/abc123"
+        _make_minimal_block_info("VerbProj", tmp_path, subdir=subdir)
+        cp.verbose = True
+        cp.check_projects(str(tmp_path), projects_list_file=None)
+        out = capsys.readouterr().out
+        assert "VerbProj" in out, \
+            "Expected verbose project header to contain the project name"
+
+    def test_check_projects_skips_inactive_block(self, tmp_path, monkeypatch):
+        """A block with active=False is skipped by check_projects() without
+        calling check_block() (covers line 93)."""
+        # Build a block and serialise it with active=False
+        if not info.DEFAULT_VERSION:
+            info.init_toolchain_info()
+
+        block = _blocks_mod.CodeBlock(
+            rst_file="test.rst",
+            line_start=1,
+            line_end=5,
+            text="procedure Main is begin null; end Main;",
+            language="ada",
+            project="InactiveProj",
+            main_file=None,
+            gnat_version=["default", info.DEFAULT_VERSION["gnat"]],
+            gnatprove_version=["default", info.DEFAULT_VERSION["gnatprove"]],
+            gprbuild_version=["default", info.DEFAULT_VERSION["gprbuild"]],
+            compiler_switches=["-gnata"],
+            classes=["ada-nocheck"],
+            manual_chop=False,
+            buttons=["no"],
+        )
+        block.active = False  # mark inactive before serialising
+
+        subdir = "projects/InactiveProj/hash000"
+        dest_dir = tmp_path / subdir
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        json_file = str(dest_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        # Track calls to check_block
+        calls = []
+
+        original_check_block = cp.check_block
+
+        def tracking_check_block(blk, jf):
+            calls.append(blk)
+            return original_check_block(blk, jf)
+
+        monkeypatch.setattr(cp, "check_block", tracking_check_block)
+
+        result = cp.check_projects(str(tmp_path), projects_list_file=None)
+        assert result is False, "Expected no error for inactive block"
+        assert len(calls) == 0, \
+            "check_block must NOT be called for an inactive block"
