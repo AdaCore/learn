@@ -224,3 +224,8 @@ check-code                                         \
 
 For more examples and alternative configurations, please refer to the
 [README of the rst_code_example_pipeline package](frontend/python/rst_code_example_pipeline/README.md)
+
+The package also has its own pytest-based unit test suite.  On the epub VM,
+run it with `make test_rst_pipeline` (from the `frontend/` directory).  See
+the "Development" section of the package README for installation and usage
+details.
