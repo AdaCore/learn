@@ -528,3 +528,32 @@ class TestConfigBlock:
     def test_no_opts(self):
         cb = ConfigBlock("my.rst")
         assert cb._opts == {}
+
+
+# ---------------------------------------------------------------------------
+# T-blocks-15: gnatprove_version and gprbuild_version selected attributes
+# (covers blocks.py lines 129 and 133)
+# ---------------------------------------------------------------------------
+
+class TestGnatproveVersionSelected:
+    RST = minimal_rst("""\
+.. code:: ada gnatprove=12.1.0-1
+
+   procedure P is null;
+""")
+
+    def test_gnatprove_version_is_selected(self):
+        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert blocks[0].gnatprove_version == ["selected", "12.1.0-1"]
+
+
+class TestGprbuildVersionSelected:
+    RST = minimal_rst("""\
+.. code:: ada gprbuild=22.0.0-1
+
+   procedure P is null;
+""")
+
+    def test_gprbuild_version_is_selected(self):
+        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert blocks[0].gprbuild_version == ["selected", "22.0.0-1"]
