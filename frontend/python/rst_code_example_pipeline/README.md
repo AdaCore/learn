@@ -168,3 +168,35 @@ check-block                                                   \
   --max-columns 80                                            \
   test_output/projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/block_info.json
 ```
+
+
+## Development
+
+### Installing with test dependencies
+
+The package declares an optional `test` extras group that installs
+[pytest](https://docs.pytest.org/) and
+[pytest-cov](https://pytest-cov.readthedocs.io/).
+Install the package in editable mode together with those extras:
+
+```sh
+pip install -e ".[test]"
+```
+
+### Running the unit tests
+
+Coverage options and test paths are configured in `pyproject.toml`, so a plain
+`pytest` invocation from the package root is enough:
+
+```sh
+pytest
+```
+
+Some modules require an Ada toolchain (GNAT) to be on `PATH`; run the full
+suite in an environment where GNAT is available.
+
+To pass coverage options explicitly:
+
+```sh
+pytest --cov=rst_code_example_pipeline --cov-report=term-missing tests/
+```

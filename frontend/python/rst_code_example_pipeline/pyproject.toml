@@ -12,11 +12,26 @@ extract-code = "rst_code_example_pipeline.cli.extract:main"
 check-code   = "rst_code_example_pipeline.cli.check:main"
 check-block  = "rst_code_example_pipeline.cli.check_block:main"
 
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 rst_code_example_pipeline = ["data/*.ini"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=rst_code_example_pipeline --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["rst_code_example_pipeline"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
 
 [tool.pyright]
 pythonVersion = "3.10"
