@@ -215,6 +215,9 @@ test_parser:                                                                   #
 	@coverage run --source=widget,rst_code_example_pipeline.chop,rst_code_example_pipeline.resource -m unittest discover --start-directory sphinx
 	@coverage report --fail-under=90 -m
 
+test_rst_pipeline:                                                             ## Test the rst_code_example_pipeline package (epub VM).
+	@cd python/rst_code_example_pipeline && pytest
+
 ##@ Build website
 publish:                                                                       ## [DEPRECATED] Publish contents to the learn website.
 	@echo "Publishing current branch to learn..."
