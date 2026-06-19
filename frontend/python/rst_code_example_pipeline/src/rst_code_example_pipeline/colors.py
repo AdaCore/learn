@@ -36,7 +36,7 @@ class Colors(object):
 
 # Keep colors when we are running under GDB. Otherwise, disable colors as soon
 # as one of stdout or stderr is not a TTY.
-if not sys.stdout.isatty() or not sys.stderr.isatty():
+if not sys.stdout.isatty() or not sys.stderr.isatty():  # pragma: no branch
     Colors.disable_colors()
 
 

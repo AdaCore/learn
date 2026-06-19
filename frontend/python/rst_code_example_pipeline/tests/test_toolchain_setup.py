@@ -264,3 +264,28 @@ class TestAdversarialDoubleSet:
         setup.set_toolchain(block)
         assert os.path.exists(os.path.join(selected, "gnat")), \
             "Symlink must still be present after two consecutive set_toolchain() calls"
+
+
+# ---------------------------------------------------------------------------
+# T-toolchain_setup-07: set_toolchain() with uninitialized TOOLCHAIN_PATH
+# (covers toolchain_setup.py lines 12-13)
+# ---------------------------------------------------------------------------
+
+class TestSetToolchain:
+    def test_set_toolchain_reinitialises_toolchain_path(
+            self, isolated_toolchain_path, monkeypatch):
+        """When TOOLCHAIN_PATH has no 'root' key, set_toolchain() calls
+        init_toolchain_info() to populate it (covers lines 12-13)."""
+        # Remove 'root' so the guard 'if not "root" in info.TOOLCHAIN_PATH:'
+        # evaluates to True
+        monkeypatch.delitem(info.TOOLCHAIN_PATH, "root")
+        assert "root" not in info.TOOLCHAIN_PATH, \
+            "Precondition: 'root' must be absent before the call"
+
+        block = _make_block(gnat_version=["default", info.DEFAULT_VERSION["gnat"]])
+        # set_toolchain() must call init_toolchain_info() internally and succeed
+        setup.set_toolchain(block)
+
+        # After the call, 'root' must be back (init_toolchain_info() re-populated it)
+        assert "root" in info.TOOLCHAIN_PATH, \
+            "Expected 'root' to be present after set_toolchain() triggers init"
