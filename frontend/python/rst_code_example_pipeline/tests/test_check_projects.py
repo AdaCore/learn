@@ -8,6 +8,7 @@ Covers:
 - get_projects(build_dir, projects_list_file=None) with no JSON files → empty dict
 - get_projects(build_dir, projects_list_file) with a valid projects-list JSON
 - cwd side effect: get_projects calls os.chdir(build_dir) — fixture saves/restores cwd
+- check_projects() returns True when a block fails to compile (requires the Ada toolchain)
 """
 import json
 import os
@@ -305,13 +306,12 @@ class TestCheckProjectsIntegration:
 # ---------------------------------------------------------------------------
 # T-check_projects-08: extended coverage — malformed JSON, verbose, inactive,
 # duplicate project
-# (covers check_projects.py lines 30-32, 38-40, 87-88, 93)
 # ---------------------------------------------------------------------------
 
 class TestCheckProjectsExtended:
     def test_get_blocks_from_json_file_returns_none(self, tmp_path, capsys, monkeypatch):
         """When from_json_file() returns None, get_blocks() prints ERROR and
-        skips the entry (covers lines 30-32)."""
+        skips the entry (exercises the None-block error path in get_blocks)."""
         # Write a valid block_info.json so iglob finds the file
         json_file = _make_minimal_block_info("NullProject", tmp_path)
 
@@ -325,8 +325,8 @@ class TestCheckProjectsExtended:
         assert "ERROR" in out, "Expected ERROR printed when block cannot be loaded"
 
     def test_get_blocks_duplicate_project(self, tmp_path):
-        """Two block_info.json files with the same project name: the second hits
-        the false branch of 'if not b.project in projects:' (lines 38-40)."""
+        """Two block_info.json files with the same project name: the second block
+        appends to the existing project entry rather than creating a new key."""
         # Write two files for the same project in different subdirs
         _make_minimal_block_info("DupProject", tmp_path, subdir="a")
         _make_minimal_block_info("DupProject", tmp_path, subdir="b")
@@ -339,7 +339,7 @@ class TestCheckProjectsExtended:
 
     def test_get_projects_verbose(self, tmp_path, capsys):
         """check_projects() with verbose=True prints the project header
-        (covers lines 87-88)."""
+        (exercises the verbose header output path)."""
         subdir = "projects/VerbProj/abc123"
         _make_minimal_block_info("VerbProj", tmp_path, subdir=subdir)
         cp.verbose = True
@@ -350,7 +350,7 @@ class TestCheckProjectsExtended:
 
     def test_check_projects_skips_inactive_block(self, tmp_path, monkeypatch):
         """A block with active=False is skipped by check_projects() without
-        calling check_block() (covers line 93)."""
+        calling check_block() (exercises the inactive-block continue path)."""
         # Build a block and serialise it with active=False
         if not info.DEFAULT_VERSION:
             info.init_toolchain_info()
@@ -394,3 +394,84 @@ class TestCheckProjectsExtended:
         assert result is False, "Expected no error for inactive block"
         assert len(calls) == 0, \
             "check_block must NOT be called for an inactive block"
+
+
+# ---------------------------------------------------------------------------
+# C5 — TestCheckProjectsReturnsTrue
+# check_projects() must return True when check_block() returns True for a block.
+# Requires the Ada toolchain (gprbuild invoked for a failing compile).
+# ---------------------------------------------------------------------------
+
+class TestCheckProjectsReturnsTrue:
+    """Tests that check_projects() propagates check_error=True."""
+
+    BAD_ADA_SOURCE = "procedure Bad is\nbegin\n   SYNTAX ERROR HERE!!!\nend Bad;\n"
+
+    def test_check_projects_returns_true_on_check_error(self, tmp_path):
+        """Set up a block_info.json with Ada source that fails to compile.
+        check_projects() must return True when check_block() reports an error."""
+        if not info.DEFAULT_VERSION:
+            info.init_toolchain_info()
+
+        # Write a bad Ada source file so gprbuild will fail
+        src = tmp_path / "bad.adb"
+        src.write_text(self.BAD_ADA_SOURCE)
+
+        # Change to tmp_path so write_project_file creates files there
+        original_cwd = os.getcwd()
+        os.chdir(str(tmp_path))
+
+        project_filename = ep.write_project_file(
+            main_file="bad.adb",
+            compiler_switches=[],
+            spark_mode=False,
+        )
+
+        # Build a CodeBlock that will trigger a compile attempt
+        block = _blocks_mod.CodeBlock(
+            rst_file="test.rst",
+            line_start=1,
+            line_end=5,
+            text=self.BAD_ADA_SOURCE,
+            language="ada",
+            project="FailProject",
+            main_file="bad.adb",
+            gnat_version=["default", info.DEFAULT_VERSION["gnat"]],
+            gnatprove_version=["default", info.DEFAULT_VERSION["gnatprove"]],
+            gprbuild_version=["default", info.DEFAULT_VERSION["gprbuild"]],
+            compiler_switches=[],
+            classes=[],
+            manual_chop=False,
+            buttons=["compile"],
+            compile_it=True,
+            run_it=False,
+            syntax_only=False,
+            no_check=False,
+            source_files=["bad.adb"],
+        )
+        block.project_filename = project_filename
+        block.project_main_file = "bad.adb"
+
+        # Place the block_info.json in a subdirectory matching check_projects expectations
+        subdir = tmp_path / "projects" / "FailProject" / "hash001"
+        subdir.mkdir(parents=True, exist_ok=True)
+
+        # Copy the project files into the subdir (check_block os.chdir's into json_file's dir)
+        import shutil
+        shutil.copy(str(tmp_path / project_filename), str(subdir / project_filename))
+        shutil.copy(str(tmp_path / "bad.adb"), str(subdir / "bad.adb"))
+        # Also copy .adc if it exists
+        adc = tmp_path / "main.adc"
+        if adc.exists():
+            shutil.copy(str(adc), str(subdir / "main.adc"))
+
+        json_file = str(subdir / "block_info.json")
+        block.to_json_file(json_file)
+
+        os.chdir(original_cwd)
+
+        # Force checks to bypass any cached result
+        cp.force_checks = True
+        result = cp.check_projects(str(tmp_path), projects_list_file=None)
+        assert result is True, \
+            "check_projects() must return True when a block fails to compile"
