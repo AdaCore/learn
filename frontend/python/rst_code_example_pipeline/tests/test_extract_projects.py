@@ -6,9 +6,13 @@ Covers:
 - write_project_file(): all four combinations of spark_mode × main_file × compiler_switches
 - ProjectsList: init, add(), to_json_file(), from_json_file() round-trip, missing file
 - analyze_file(): minimal no-check / syntax-only Ada block (no toolchain invocation)
+- analyze_file() integration: compile_button / run_button / prove_button Ada blocks
+  (requires the Ada toolchain — real gnatchop and write_project_file calls)
 - Global state (verbose, code_block_at, current_config) reset before each test
 
-NOTE: analyze_file() tests use no-check blocks so gnatchop/toolchain are not called.
+NOTE: analyze_file() pure-unit tests use no-check blocks so gnatchop/toolchain are not
+called.  The TestAnalyzeFileIntegration class uses real Ada source and requires the Ada
+toolchain.
 """
 import json
 import os
@@ -420,8 +424,8 @@ Explanatory paragraph.
         assert result is False
 
     def test_code_block_at_sets_inactive(self, work_dir, capsys):
-        """Set code_block_at to a line that matches no block — all blocks stay
-        inactive and the inner loop hits the 'continue' path at line 211."""
+        """Set code_block_at to a value that matches no block — all blocks stay
+        inactive and the inner loop skips all of them via the inactive-block continue path."""
         # code_block_at=9999 is far beyond any line in the small RST fixture
         ep.code_block_at = 9999
         rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
@@ -490,7 +494,6 @@ Explanatory paragraph.
 
 # ---------------------------------------------------------------------------
 # T-extract_projects-05: Diag class
-# (covers extract_projects.py lines 28-40)
 # ---------------------------------------------------------------------------
 
 class TestDiag:
@@ -512,7 +515,6 @@ class TestDiag:
 
 # ---------------------------------------------------------------------------
 # T-extract_projects-06: same-project second block
-# (covers false branch of 'if not b.project in projects:' at line 218)
 # ---------------------------------------------------------------------------
 
 class TestAnalyzeFileSameProjectTwoBlocks:
@@ -556,3 +558,92 @@ Second explanatory paragraph.
         block_jsons = list((work_dir / "projects" / "SameProject").rglob("block_info.json"))
         assert len(block_jsons) == 2, \
             f"Expected 2 block_info.json files; found {len(block_jsons)}"
+
+
+# ---------------------------------------------------------------------------
+# C4 — TestAnalyzeFileIntegration
+# analyze_file() with compile_button / run_button / prove_button Ada blocks.
+# Requires the Ada toolchain (real gnatchop called for non-no-check blocks).
+# ---------------------------------------------------------------------------
+
+class TestAnalyzeFileIntegration:
+    """Integration tests for analyze_file() with real Ada compilation paths.
+
+    Each RST fixture uses a valid Ada ``procedure Main`` body so that
+    real_gnatchop can parse it into exactly one source file.  The block
+    attributes (compile_button / run_button / prove_button) set compile_it /
+    run_it / prove_it on the parsed CodeBlock.
+    """
+
+    # A minimal but valid Ada procedure that gnatchop can chop into one file.
+    _ADA_BODY = """\
+procedure Main is
+begin
+   null;
+end Main;"""
+
+    @staticmethod
+    def _write_rst(work_dir, content: str, name: str = "test_integration.rst") -> str:
+        rst_path = work_dir / name
+        rst_path.write_text(content)
+        return str(rst_path)
+
+    def test_analyze_file_compile_button(self, work_dir):
+        """RST with a compile_button Ada block: analyze_file() must call
+        real_gnatchop, write the project file, write block_info.json, and
+        return False (no error)."""
+        rst_content = (
+            ".. code:: ada project=TestCompile main=main.adb compile_button\n"
+            "\n"
+            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid compile_button block"
+        # At least one block_info.json must have been written
+        block_jsons = list(work_dir.rglob("block_info.json"))
+        assert len(block_jsons) >= 1, \
+            "analyze_file() must write at least one block_info.json for a compile block"
+
+    def test_analyze_file_run_button(self, work_dir):
+        """RST with a run_button Ada block: analyze_file() must call
+        real_gnatchop, write the project file, write block_info.json, and
+        return False (no error)."""
+        rst_content = (
+            ".. code:: ada project=TestRun main=main.adb run_button\n"
+            "\n"
+            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid run_button block"
+        block_jsons = list(work_dir.rglob("block_info.json"))
+        assert len(block_jsons) >= 1, \
+            "analyze_file() must write at least one block_info.json for a run block"
+
+    def test_analyze_file_prove_button(self, work_dir):
+        """RST with a prove_button SPARK Ada block: analyze_file() must call
+        real_gnatchop, write the SPARK project file, write block_info.json, and
+        return False (no error)."""
+        spark_body = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;"""
+        rst_content = (
+            ".. code:: ada project=TestProve main=main.adb prove_button\n"
+            "\n"
+            + "\n".join("   " + line for line in spark_body.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid prove_button block"
+        block_jsons = list(work_dir.rglob("block_info.json"))
+        assert len(block_jsons) >= 1, \
+            "analyze_file() must write at least one block_info.json for a prove block"

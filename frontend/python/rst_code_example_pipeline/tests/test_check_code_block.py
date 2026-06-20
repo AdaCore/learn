@@ -10,9 +10,15 @@ Covers:
 - check_block() for a minimal Ada syntax-only block (gcc -gnats) → False
 - check_block() for a block with empty buttons list → has_error=True (BUTTONS check fails)
 - check_code_block_json() with nonexistent file → returns True (error)
+- C compile path (gcc): valid C → False; invalid C → True (requires the Ada toolchain)
+- ada-expect-compile-error class: Ada that fails to compile → False (expected failure)
+- C run path: valid C that exits 0 → False (requires the Ada toolchain)
+- gnatprove path: minimal SPARK Ada → False; C + prove_it → True (requires the Ada toolchain)
+- verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
+- all_diagnostics flag: compiles a valid Ada block with all_diagnostics=True → no crash
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
-NOTE: Tests that actually run gcc/gprbuild require the Ada toolchain.
+NOTE: Tests that actually run gcc/gprbuild/gnatprove require the Ada toolchain.
 """
 import json
 import os
@@ -253,7 +259,7 @@ class TestCheckBlockNoButtons:
         # Use syntax_only=True to short-circuit after the SYNTAX check so
         # we reach the BUTTONS validation. Actually syntax_only returns early.
         # Use an actual no-compile block but with empty buttons to hit BUTTONS.
-        # We need to reach the BUTTONS check section (after line 476 "if True:").
+        # We need to reach the BUTTONS check section (the "if True:" block always runs).
         # The BUTTONS check is always run (it's under `if True:`).
         # With syntax_only=True the function returns early before BUTTONS.
         # So we need a block that is NOT syntax-only and NOT no_check.
@@ -508,3 +514,290 @@ end Main;
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is False, \
             "A compilable and runnable Ada block must not produce an error"
+
+
+# ---------------------------------------------------------------------------
+# C1 — TestCheckBlockCCompile
+# Covers check_code_block.py C language compile path (lines ~285-312)
+# Requires gcc in PATH (part of the Ada toolchain).
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockCCompile:
+    """Tests that actually invoke gcc on C source files."""
+
+    VALID_C_SOURCE = "int main(void) { return 0; }\n"
+    INVALID_C_SOURCE = "this is not C at all !@#$\n"
+
+    def test_c_compile_success(self, tmp_path):
+        """A valid C file with compile_it=True and buttons=['compile'] must return False."""
+        src = tmp_path / "main.c"
+        src.write_text(self.VALID_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = _make_block(
+            language="c",
+            buttons=["compile"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=False,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "A valid C file must compile without error"
+
+    def test_c_compile_failure(self, tmp_path):
+        """An invalid C file with compile_it=True must return True (has_error)."""
+        src = tmp_path / "main.c"
+        src.write_text(self.INVALID_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = _make_block(
+            language="c",
+            buttons=["compile"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=False,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "An invalid C file must produce a compile error"
+
+
+# ---------------------------------------------------------------------------
+# C2 — TestCheckBlockExpectCompileError + C run path
+# Covers ada-expect-compile-error class handling and C run path.
+# Requires the Ada toolchain.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockExpectCompileError:
+    """Tests for ada-expect-compile-error class and C run path."""
+
+    # This Ada source is syntactically valid (passes gcc -gnats) but fails
+    # gprbuild compilation because it refers to a non-existent package.
+    # The nosyntax-check class bypasses the SYNTAX phase so only the BUILD
+    # phase runs; 'ada-expect-compile-error' suppresses the BUILD failure.
+    BAD_BUILD_ADA_SOURCE = """\
+with NonExistent_Package; use NonExistent_Package;
+procedure Bad is
+begin
+   null;
+end Bad;
+"""
+    VALID_C_SOURCE = "int main(void) { return 0; }\n"
+
+    def test_ada_expect_compile_error(self, tmp_path):
+        """A block with classes=['ada-expect-compile-error', 'nosyntax-check']
+        and Ada source that fails to compile at the BUILD phase must return False
+        (the expected compile failure is not treated as an error)."""
+        src = tmp_path / "bad.adb"
+        src.write_text(self.BAD_BUILD_ADA_SOURCE)
+        os.chdir(str(tmp_path))
+        project_filename = ep.write_project_file(
+            main_file="bad.adb",
+            compiler_switches=[],
+            spark_mode=False,
+        )
+
+        block = _make_block(
+            classes=["ada-expect-compile-error", "nosyntax-check"],
+            buttons=["compile"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=False,
+            source_files=["bad.adb"],
+        )
+        block.project_filename = project_filename
+        block.project_main_file = "bad.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "An expected compile error must not count as a test failure"
+
+    def test_c_run(self, tmp_path):
+        """A valid C file compiled and run (exits 0) must return False."""
+        src = tmp_path / "main.c"
+        src.write_text(self.VALID_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = _make_block(
+            language="c",
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "A valid C program that exits 0 must not produce a run error"
+
+
+# ---------------------------------------------------------------------------
+# C3 — TestCheckBlockGnatprove
+# Covers gnatprove path (lines ~411-473)
+# Requires gnatprove in PATH (part of the Ada toolchain).
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockGnatprove:
+    """Tests that actually invoke gnatprove."""
+
+    SPARK_SOURCE = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;
+"""
+
+    def test_ada_gnatprove_success(self, tmp_path):
+        """A minimal SPARK Ada block with prove_it=True must return False."""
+        src = tmp_path / "main.adb"
+        src.write_text(self.SPARK_SOURCE)
+        os.chdir(str(tmp_path))
+
+        spark_project_filename = ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=True,
+        )
+
+        block = _make_block(
+            buttons=["prove"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+            source_files=["main.adb"],
+        )
+        block.project_filename = None
+        block.spark_project_filename = spark_project_filename
+        block.project_main_file = "main.adb"
+        # prove_it is derived from buttons in CodeBlock but we can set it directly
+        block.prove_it = True
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "A provable SPARK block must not produce a prove error"
+
+    def test_ada_gnatprove_language_c_else(self, tmp_path):
+        """A block with language='c' and prove_it=True must return True
+        (C + prove not supported — hits the else branch at line ~465)."""
+        os.chdir(str(tmp_path))
+
+        block = _make_block(
+            language="c",
+            buttons=["prove"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+            source_files=[],
+        )
+        block.prove_it = True
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "C language with prove_it=True must return True (unsupported)"
+
+
+# ---------------------------------------------------------------------------
+# Verbose / all_diagnostics paths
+# Covers the verbose cache-skip output and the all_diagnostics output path.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockVerbose:
+    """Tests for verbose and all_diagnostics flag paths."""
+
+    ADA_SOURCE = """\
+procedure Main is
+begin
+   null;
+end Main;
+"""
+
+    def test_verbose_cache_skip(self, tmp_path, capsys):
+        """With verbose=True and a cached status_ok=True, check_block must print
+        'already checked. Skipping...' (exercises the verbose cache-hit path)."""
+        block = _make_block(buttons=["no"])
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        os.chdir(str(tmp_path))
+        bc = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        bc.status_ok = True
+        bc.to_json_file()
+
+        ccb.verbose = True
+        result = ccb.check_block(block, json_file, verbose=True, force_checks=False)
+        assert result is False
+        out = capsys.readouterr().out
+        assert "already checked" in out or "Skipping" in out, \
+            "Expected 'already checked. Skipping...' in verbose cache-hit output"
+
+    def test_all_diagnostics_flag(self, tmp_path):
+        """With all_diagnostics=True and verbose=True and a real Ada compile,
+        check_block must not crash and must exercise the all_diagnostics output
+        path as well as the verbose toolchain-version print path."""
+        src = tmp_path / "main.adb"
+        src.write_text(self.ADA_SOURCE)
+        os.chdir(str(tmp_path))
+        project_filename = ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=False,
+        )
+
+        block = _make_block(
+            buttons=["compile"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=False,
+            source_files=["main.adb"],
+        )
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        ccb.all_diagnostics = True
+        ccb.verbose = True
+        result = ccb.check_block(
+            block, json_file, all_diagnostics=True, verbose=True, force_checks=True
+        )
+        assert result is False, \
+            "A valid Ada compile with all_diagnostics=True and verbose=True must not produce an error"
