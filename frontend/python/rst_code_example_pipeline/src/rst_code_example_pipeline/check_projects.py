@@ -104,7 +104,7 @@ def check_projects(build_dir: str, projects_list_file: str | None = None) -> boo
     return check_error
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)

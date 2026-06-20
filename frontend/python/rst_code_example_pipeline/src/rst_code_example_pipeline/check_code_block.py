@@ -556,7 +556,7 @@ def check_code_block_json(json_file: str) -> bool:
     return has_error
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('json_files', type=str, nargs="+",
                         help="The JSON file for each code block")

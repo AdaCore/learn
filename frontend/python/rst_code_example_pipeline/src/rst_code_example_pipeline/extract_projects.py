@@ -397,7 +397,7 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
 
     return analysis_error
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
