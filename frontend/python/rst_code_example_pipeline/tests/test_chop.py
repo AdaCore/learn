@@ -12,7 +12,7 @@ Covers:
 - cheapo_gnatchop with empty input
 - cheapo_gnatchop with only garbage (no recognized declaration)
 - real_gnatchop: valid Ada, compiler_switches, error handler
-  (requires the Ada toolchain; runs on the epub VM)
+  (requires the Ada toolchain)
 """
 import pytest
 

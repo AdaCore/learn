@@ -10,7 +10,7 @@ Covers:
 - Adversarial: empty RST, missing json file, exit(1) path
 
 NOTE: get_blocks_from_rst() calls toolchain_info.get_toolchain_default_version()
-at parse time. This test file runs on the epub VM where the Ada toolchain .ini
+at parse time; requires the Ada toolchain .ini
 is present and toolchain_info initialises correctly.
 """
 import hashlib
