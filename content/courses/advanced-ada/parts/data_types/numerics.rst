@@ -4870,6 +4870,8 @@ types, and the :ada:`A / B` expression makes use of universal fixed types.
     universal fixed types, too.)
 
 
+.. _Adv_Ada_Ordinary_Fixed_Point_Type_Multiplication_Division:
+
 Multiplication and division operations with ordinary fixed-point types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -5507,6 +5509,7 @@ beyond the range of the :ada:`Smaller_Money` type.
 
 
 
+.. _Adv_Ada_Decimal_Fixed_Point_Base_Type_Decimal_Precision:
 
 Decimal precision of the base type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
