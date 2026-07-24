@@ -254,3 +254,11 @@ class TestRealGnatchop:
         with pytest.raises(Exception, match="Could not chop files with gnatchop"):
             real_gnatchop(["this is not valid Ada at all !@#$"],
                           compiler_switches=None)
+
+    def test_non_gnat_switch_is_skipped(self):
+        """A compiler_switches entry that doesn't contain "gnat" (e.g. -Wall)
+        is silently dropped before invoking gnatchop; gnatchop still succeeds
+        since gnatchop itself never sees -Wall."""
+        result = real_gnatchop(self.VALID_ADA, compiler_switches=["-Wall"])
+        assert len(result) == 1
+        assert result[0].basename == "main.adb"

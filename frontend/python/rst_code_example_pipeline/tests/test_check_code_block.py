@@ -801,3 +801,367 @@ end Main;
         )
         assert result is False, \
             "A valid Ada compile with all_diagnostics=True and verbose=True must not produce an error"
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockMaxColumns
+# Covers the max_columns setting being passed through to the Ada syntax
+# check (it appends a -gnatyM<N> style-check switch).
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockMaxColumns:
+    ADA_SOURCE = """\
+procedure Main is
+begin
+   null;
+end Main;
+"""
+
+    def test_syntax_check_with_max_columns(self, tmp_path):
+        """max_columns > 0 appends -gnatyMN to the syntax-check command and
+        a normal-width Ada block still passes."""
+        src = tmp_path / "main.adb"
+        src.write_text(self.ADA_SOURCE)
+
+        block = _make_block(
+            buttons=["no"],
+            syntax_only=True,
+            no_check=False,
+            source_files=["main.adb"],
+        )
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, max_columns=80, force_checks=True)
+        assert result is False
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockRunExpectFailure
+# Covers the ada-run-expect-failure class: an unexpectedly successful run,
+# an expectedly failing run, and an unexpectedly failing run.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockRunExpectFailure:
+    VALID_ADA_SOURCE = """\
+procedure Main is
+begin
+   null;
+end Main;
+"""
+
+    FAILING_ADA_SOURCE = """\
+with Ada.Command_Line;
+procedure Main is
+begin
+   Ada.Command_Line.Set_Exit_Status (1);
+end Main;
+"""
+
+    def _setup_project(self, tmp_path, source):
+        src = tmp_path / "main.adb"
+        src.write_text(source)
+        os.chdir(str(tmp_path))
+        return ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=False,
+        )
+
+    def _make_run_block(self, classes=None):
+        return _make_block(
+            classes=classes or [],
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.adb"],
+        )
+
+    def test_run_success_with_expect_failure_class(self, tmp_path):
+        """A program that exits 0 while marked ada-run-expect-failure must
+        return True: the run succeeded when a failure was expected."""
+        project_filename = self._setup_project(tmp_path, self.VALID_ADA_SOURCE)
+        block = self._make_run_block(classes=["ada-run-expect-failure"])
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True
+
+    def test_ada_run_fail_with_expect_failure_class(self, tmp_path):
+        """A program that exits non-zero while marked ada-run-expect-failure
+        must return False: the failure was expected."""
+        project_filename = self._setup_project(tmp_path, self.FAILING_ADA_SOURCE)
+        block = self._make_run_block(classes=["ada-run-expect-failure"])
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False
+
+    def test_ada_run_fail_without_expect_failure(self, tmp_path):
+        """A program that exits non-zero without ada-run-expect-failure must
+        return True: an unexpected run failure."""
+        project_filename = self._setup_project(tmp_path, self.FAILING_ADA_SOURCE)
+        block = self._make_run_block()
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockCRunExpectFailure
+# Covers the c-run-expect-failure class, symmetric to the Ada case above.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockCRunExpectFailure:
+    FAILING_C_SOURCE = "int main(void) { return 1; }\n"
+
+    def _make_c_run_block(self, classes=None):
+        return _make_block(
+            language="c",
+            classes=classes or [],
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.c"],
+        )
+
+    def test_c_run_fail_with_expect_failure_class(self, tmp_path):
+        """A C program that exits non-zero while marked c-run-expect-failure
+        must return False: the failure was expected."""
+        src = tmp_path / "main.c"
+        src.write_text(self.FAILING_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = self._make_c_run_block(classes=["c-run-expect-failure"])
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False
+
+    def test_c_run_fail_without_expect_failure(self, tmp_path):
+        """A C program that exits non-zero without c-run-expect-failure must
+        return True: an unexpected run failure."""
+        src = tmp_path / "main.c"
+        src.write_text(self.FAILING_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = self._make_c_run_block()
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockCExpectCompileError
+# Covers the c-expect-compile-error class in the C compile handler.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockCExpectCompileError:
+    INVALID_C_SOURCE = "this is not C at all !@#$\n"
+
+    def test_c_compile_error_expected(self, tmp_path):
+        """A C file that fails to compile while marked c-expect-compile-error
+        must return False: the compile failure was expected.
+
+        nosyntax-check is also set: for C, the SYNTAX phase and the BUILD
+        phase both invoke gcc on the same source, so a genuine syntax error
+        would already fail (as an unexpected error) during SYNTAX before the
+        BUILD phase's c-expect-compile-error handling is ever reached -- the
+        same reason the analogous ada-expect-compile-error test bypasses the
+        SYNTAX phase."""
+        src = tmp_path / "main.c"
+        src.write_text(self.INVALID_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = _make_block(
+            language="c",
+            classes=["c-expect-compile-error", "nosyntax-check"],
+            buttons=["compile"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=False,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockProveFailure
+# Covers the gnatprove failure handler: the expected (ada-expect-prove-error)
+# and unexpected branches.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockProveFailure:
+    # X is read via Y := X before being initialized: a flow-analysis check
+    # that reliably fails under --checks-as-errors (mirrors the pattern used
+    # in the course's own "may not be initialized" SPARK examples).
+    FAILING_SPARK_SOURCE = """\
+procedure Main with SPARK_Mode is
+   X, Y : Integer;
+begin
+   Y := X;
+end Main;
+"""
+
+    def _setup_spark_project(self, tmp_path):
+        src = tmp_path / "main.adb"
+        src.write_text(self.FAILING_SPARK_SOURCE)
+        os.chdir(str(tmp_path))
+        return ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=True,
+        )
+
+    def _make_prove_block(self, classes=None):
+        return _make_block(
+            classes=classes or [],
+            buttons=["prove"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+            source_files=["main.adb"],
+        )
+
+    def test_prove_failure_expected(self, tmp_path):
+        """SPARK code that fails to prove while marked ada-expect-prove-error
+        must return False: the failure was expected."""
+        spark_project_filename = self._setup_spark_project(tmp_path)
+        block = self._make_prove_block(classes=["ada-expect-prove-error"])
+        block.spark_project_filename = spark_project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False
+
+    def test_prove_failure_unexpected(self, tmp_path):
+        """SPARK code that fails to prove without ada-expect-prove-error must
+        return True: an unexpected prove failure."""
+        spark_project_filename = self._setup_spark_project(tmp_path)
+        block = self._make_prove_block()
+        block.spark_project_filename = spark_project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockProveExtraArgs
+# Covers the gnatprove extra-arguments variants selected via the prove_flow /
+# prove_flow_report_all / prove_report_all buttons.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockProveExtraArgs:
+    SPARK_SOURCE = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;
+"""
+
+    def _setup_spark_project(self, tmp_path):
+        src = tmp_path / "main.adb"
+        src.write_text(self.SPARK_SOURCE)
+        os.chdir(str(tmp_path))
+        return ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=True,
+        )
+
+    def _make_prove_block(self, button):
+        return _make_block(
+            buttons=[button],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+            source_files=["main.adb"],
+        )
+
+    def _run(self, tmp_path, button):
+        spark_project_filename = self._setup_spark_project(tmp_path)
+        block = self._make_prove_block(button)
+        block.spark_project_filename = spark_project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        return ccb.check_block(block, json_file, force_checks=True)
+
+    def test_prove_flow_mode(self, tmp_path):
+        """prove_flow button selects '--mode=flow'; a trivially valid SPARK
+        block must still pass."""
+        assert self._run(tmp_path, "prove_flow") is False
+
+    def test_prove_flow_report_all(self, tmp_path):
+        """prove_flow_report_all button selects '--mode=flow --report=all'."""
+        assert self._run(tmp_path, "prove_flow_report_all") is False
+
+    def test_prove_report_all(self, tmp_path):
+        """prove_report_all button selects '--report=all'."""
+        assert self._run(tmp_path, "prove_report_all") is False
+
+
+# ---------------------------------------------------------------------------
+# TestCheckCodeBlockJsonInactive
+# Covers the inactive-block WARNING printed by check_code_block_json().
+# ---------------------------------------------------------------------------
+
+class TestCheckCodeBlockJsonInactive:
+    def test_check_code_block_json_inactive_block(self, tmp_path, capsys):
+        """check_code_block_json() on a block with active=False prints the
+        deactivation WARNING and still checks it."""
+        block = _make_block(classes=["ada-nocheck"], no_check=True, buttons=["no"])
+        block.active = False
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_code_block_json(json_file)
+        assert result is False
+        assert "WARNING" in capsys.readouterr().out

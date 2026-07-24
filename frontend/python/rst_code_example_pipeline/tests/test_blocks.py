@@ -557,3 +557,22 @@ class TestGprbuildVersionSelected:
     def test_gprbuild_version_is_selected(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         assert blocks[0].gprbuild_version == ["selected", "22.0.0-1"]
+
+
+# ---------------------------------------------------------------------------
+# T-blocks-16: default compiler switch not duplicated when already explicit
+# ---------------------------------------------------------------------------
+
+class TestDefaultSwitchNotDuplicated:
+    RST = minimal_rst("""\
+.. code:: ada switches=Compiler(-gnata)
+
+   procedure P is null;
+""")
+
+    def test_gnata_not_duplicated(self):
+        """-gnata is both the explicit switch and the default; it must only
+        appear once in compiler_switches (the default-switches loop must skip
+        adding it again)."""
+        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert blocks[0].compiler_switches.count("-gnata") == 1

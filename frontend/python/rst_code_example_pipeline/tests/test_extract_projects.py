@@ -309,6 +309,27 @@ Explanatory paragraph.
         assert "projects" in data
         assert "ListedProject" in data["projects"]
 
+    def test_analyze_file_verbose_existing_projects_list_file(self, work_dir, capsys):
+        """verbose=True + extracted_projects_list_file pointing at a file that
+        already exists prints the 'Extracted list of projects...' message."""
+        prj_list = work_dir / "projects.json"
+        prj_list.write_text('{"projects": {}}')
+        ep.verbose = True
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file, str(prj_list))
+        assert result is False
+        assert "Extracted list" in capsys.readouterr().out
+
+    def test_analyze_file_verbose_missing_projects_list_file(self, work_dir, capsys):
+        """verbose=True + extracted_projects_list_file pointing at a file that
+        does not exist yet prints the 'will be created' message."""
+        prj_list = work_dir / "new_projects.json"
+        ep.verbose = True
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file, str(prj_list))
+        assert result is False
+        assert "will be created" in capsys.readouterr().out
+
     def test_analyze_file_existing_projects_list_loaded(self, work_dir):
         # Pre-create a projects list JSON with an existing entry
         prj_list_file = str(work_dir / "projects.json")
@@ -422,6 +443,17 @@ Explanatory paragraph.
         rst_file = self._write_rst(work_dir, rst_content)
         result = ep.analyze_file(rst_file)
         assert result is False
+
+    def test_code_block_at_matches_one_block(self, work_dir):
+        """code_block_at set to a value inside a block's (line_start, line_end)
+        range: that block stays active, the true branch of the code_block_at
+        match."""
+        ep.code_block_at = 4
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        # The block stayed active, so its project directory must exist.
+        assert (work_dir / "projects" / "NoCheckProject").exists()
 
     def test_code_block_at_sets_inactive(self, work_dir, capsys):
         """Set code_block_at to a value that matches no block — all blocks stay
@@ -647,3 +679,70 @@ end Main;"""
         block_jsons = list(work_dir.rglob("block_info.json"))
         assert len(block_jsons) >= 1, \
             "analyze_file() must write at least one block_info.json for a prove block"
+
+    def test_analyze_file_run_button_no_main(self, work_dir):
+        """RST with run_button and no main= attribute: get_main_filename()
+        falls back to using the chopped source file as the main file."""
+        rst_content = (
+            ".. code:: ada project=TestRunNoMain run_button\n"
+            "\n"
+            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a run_button block with no main="
+        block_jsons = list(work_dir.rglob("block_info.json"))
+        assert len(block_jsons) >= 1
+
+    def test_analyze_file_prove_and_run_button(self, work_dir):
+        """RST with both prove_button and run_button: the main file is
+        resolved via get_main_filename() inside the prove_it handling as well
+        as the compile_it handling, and both project files are written."""
+        spark_body = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;"""
+        rst_content = (
+            ".. code:: ada project=TestProveRun prove_button run_button\n\n"
+            + "\n".join("   " + line for line in spark_body.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid prove_button+run_button block"
+        block_jsons = list(work_dir.rglob("block_info.json"))
+        assert len(block_jsons) >= 1
+
+    def test_analyze_file_c_prove_button_wrong_language(self, work_dir, capsys):
+        """A C-language block with prove_button hits the 'Wrong language
+        selected for prove button' error path. Known behaviour (not a bug to
+        fix): the per-block error flag set on this path is never merged into
+        analyze_file()'s own return value, so the function still returns
+        False even though an error was printed."""
+        rst_content = (
+            ".. code:: c project=TestCProve prove_button\n\n"
+            "   !main.c\n"
+            "   int main(void) { return 0; }\n\n"
+            "Explanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        assert "Wrong language selected for prove button" in capsys.readouterr().out
+
+    def test_analyze_file_no_buttons_block(self, work_dir, capsys):
+        """A compile/run-eligible block with no button keyword at all
+        (buttons == []) hits the 'Expected at least...' error path."""
+        rst_content = (
+            ".. code:: ada project=TestNoBtns main=main.adb\n\n"
+            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        assert "Expected at least" in capsys.readouterr().out

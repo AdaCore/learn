@@ -190,7 +190,7 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
             if block.line_start < code_block_at < block.line_end:
                 block.active = True
 
-    def remove_string(some_text, rem):
+    def remove_string(some_text, rem):  # pragma: no cover
         return re.sub(".*" + rem + ".*\n?","", some_text)
 
     projects = dict()
