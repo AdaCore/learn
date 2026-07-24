@@ -19,6 +19,7 @@ Covers:
 - all_diagnostics flag: compiles a valid Ada block with all_diagnostics=True → no crash
 - a corrupt (unparseable) cache file on disk does not crash the check
 - an unrecognized language value takes neither the Ada nor the C branch anywhere
+- a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: Tests that actually run gcc/gprbuild/gnatprove require the Ada toolchain.
@@ -1248,3 +1249,33 @@ class TestCheckCodeBlockJsonInactive:
         result = ccb.check_code_block_json(json_file)
         assert result is False
         assert "WARNING" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# Missing-toolchain path
+# Covers the version-lookup fallback when a toolchain binary is missing from
+# PATH, in place of monkeypatching the subprocess call.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockMissingToolchain:
+    def test_missing_toolchain_binary_falls_back_to_unknown_version(self, tmp_path, monkeypatch):
+        """When none of the toolchain binaries can be found on PATH, the
+        version lookup must not abort the check: it silently falls back to an
+        unknown-version marker instead, and check_block() still completes and
+        returns False. The recorded check result is read back from the raw
+        written file (not through the round-trip API, which does not restore
+        the nested per-check dict) to confirm the fallback value was actually
+        recorded, rather than only asserting the absence of a crash."""
+        block = _make_block(buttons=["no"])
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        monkeypatch.setenv("PATH", str(tmp_path))
+
+        result = ccb.check_block(block, json_file)
+        assert result is False, \
+            "A missing toolchain must not crash the check, only skip real checks"
+
+        written = json.loads((tmp_path / "block_checks.json").read_text())
+        assert written["checks"]["SYNTAX"]["version"] == "<unknown>", \
+            "The version lookup must have failed and recorded the fallback marker"
