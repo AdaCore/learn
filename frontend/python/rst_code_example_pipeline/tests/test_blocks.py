@@ -576,3 +576,26 @@ class TestDefaultSwitchNotDuplicated:
         adding it again)."""
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         assert blocks[0].compiler_switches.count("-gnata") == 1
+
+
+# ---------------------------------------------------------------------------
+# T-blocks-17: switches= value not shaped like Compiler(...)
+# ---------------------------------------------------------------------------
+
+class TestSwitchesValueNotCompilerShaped:
+    RST = minimal_rst("""\
+.. code:: ada switches=Foo(-gnata)
+
+   procedure P is null;
+""")
+
+    def test_parses_without_error(self):
+        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert len(blocks) == 1
+
+    def test_no_explicit_switches_beyond_defaults(self):
+        """switches=Foo(-gnata) is present but not shaped like Compiler(...),
+        so the captured value is never used; only the default -gnata switch
+        is present."""
+        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert blocks[0].compiler_switches == ["-gnata"]
