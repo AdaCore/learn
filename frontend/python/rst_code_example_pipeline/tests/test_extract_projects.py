@@ -6,6 +6,8 @@ Covers:
 - write_project_file(): all four combinations of spark_mode × main_file × compiler_switches
 - ProjectsList: init, add(), to_json_file(), from_json_file() round-trip, missing file
 - analyze_file(): minimal no-check / syntax-only Ada block (no toolchain invocation)
+- analyze_file(): a block directory left over from a prior run whose info JSON file was
+  deleted is detected as stale, logged, and removed rather than reused
 - analyze_file() integration: compile_button / run_button / prove_button Ada blocks
   (requires the Ada toolchain — real gnatchop and write_project_file calls)
 - Global state (verbose, code_block_at, current_config) reset before each test
@@ -513,6 +515,38 @@ Explanatory paragraph.
         out = capsys.readouterr().out
         assert "already exists" in out, \
             "Expected 'already exists' in verbose output on second call"
+
+    def test_stale_block_dir_missing_json_is_removed_and_recreated(self, work_dir, capsys):
+        """If a code block's per-block directory already exists from a prior
+        run but its info JSON file has since been deleted, the directory must
+        be treated as stale: logged and removed rather than reused, and the
+        analysis must complete without crashing."""
+        rst_content = """\
+.. code:: ada project=StaleProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file)  # first call: creates the block's info JSON
+
+        block_jsons = list(work_dir.rglob("block_info.json"))
+        assert len(block_jsons) == 1, \
+            f"Expected exactly 1 block_info.json after the first call; found {len(block_jsons)}"
+        block_jsons[0].unlink()
+
+        capsys.readouterr()  # discard first-call output
+        result = ep.analyze_file(rst_file)  # second call: block dir is stale
+        assert result is False
+
+        out = capsys.readouterr().out
+        assert "no JSON info file" in out, \
+            "Expected the stale-directory message when the info JSON is missing"
 
     def test_no_check_verbose_skip(self, work_dir, capsys):
         """With verbose=True a no-check block must print a 'Skipping' message."""
