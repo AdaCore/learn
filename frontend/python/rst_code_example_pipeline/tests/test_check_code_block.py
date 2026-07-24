@@ -725,8 +725,10 @@ end Main;
             "A provable SPARK block must not produce a prove error"
 
     def test_ada_gnatprove_language_c_else(self, tmp_path):
-        """A block with language='c' and prove_it=True must return True
-        (C + prove not supported — hits the else branch at line ~465)."""
+        """A block with language="c" and prove_it=True must return True:
+        proving only supports Ada, so a non-Ada block takes the "wrong
+        language selected for prove button" error branch instead of
+        invoking gnatprove."""
         os.chdir(str(tmp_path))
 
         block = _make_block(
@@ -979,9 +981,10 @@ end Main;
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True
 
-    def test_ada_run_fail_with_expect_failure_class(self, tmp_path):
+    def test_ada_run_fail_with_expect_failure_class(self, tmp_path, capsys):
         """A program that exits non-zero while marked ada-run-expect-failure
-        must return False: the failure was expected."""
+        must return False: the failure was expected. With verbose enabled,
+        the expected-failure message is printed."""
         project_filename = self._setup_project(tmp_path, self.FAILING_ADA_SOURCE)
         block = self._make_run_block(classes=["ada-run-expect-failure"])
         block.project_filename = project_filename
@@ -991,8 +994,11 @@ end Main;
         block.to_json_file(json_file)
         os.chdir(str(tmp_path))
 
-        result = ccb.check_block(block, json_file, force_checks=True)
+        ccb.verbose = True
+        result = ccb.check_block(block, json_file, verbose=True, force_checks=True)
         assert result is False
+        out = capsys.readouterr().out
+        assert "Running of example expectedly failed" in out
 
     def test_ada_run_fail_without_expect_failure(self, tmp_path):
         """A program that exits non-zero without ada-run-expect-failure must
@@ -1016,6 +1022,7 @@ end Main;
 # ---------------------------------------------------------------------------
 
 class TestCheckBlockCRunExpectFailure:
+    VALID_C_SOURCE = "int main(void) { return 0; }\n"
     FAILING_C_SOURCE = "int main(void) { return 1; }\n"
 
     def _make_c_run_block(self, classes=None):
@@ -1030,9 +1037,10 @@ class TestCheckBlockCRunExpectFailure:
             source_files=["main.c"],
         )
 
-    def test_c_run_fail_with_expect_failure_class(self, tmp_path):
+    def test_c_run_fail_with_expect_failure_class(self, tmp_path, capsys):
         """A C program that exits non-zero while marked c-run-expect-failure
-        must return False: the failure was expected."""
+        must return False: the failure was expected. With verbose enabled,
+        the expected-failure message is printed."""
         src = tmp_path / "main.c"
         src.write_text(self.FAILING_C_SOURCE)
         os.chdir(str(tmp_path))
@@ -1042,8 +1050,26 @@ class TestCheckBlockCRunExpectFailure:
         json_file = str(tmp_path / "block_info.json")
         block.to_json_file(json_file)
 
-        result = ccb.check_block(block, json_file, force_checks=True)
+        ccb.verbose = True
+        result = ccb.check_block(block, json_file, verbose=True, force_checks=True)
         assert result is False
+        out = capsys.readouterr().out
+        assert "Running of example expectedly failed" in out
+
+    def test_c_run_success_with_expect_failure_class(self, tmp_path):
+        """A C program that exits 0 while marked c-run-expect-failure must
+        return True: the run succeeded when a failure was expected."""
+        src = tmp_path / "main.c"
+        src.write_text(self.VALID_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = self._make_c_run_block(classes=["c-run-expect-failure"])
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True
 
     def test_c_run_fail_without_expect_failure(self, tmp_path):
         """A C program that exits non-zero without c-run-expect-failure must
