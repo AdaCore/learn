@@ -14,8 +14,11 @@ Covers:
 - ada-expect-compile-error class: Ada that fails to compile → False (expected failure)
 - C run path: valid C that exits 0 → False (requires the Ada toolchain)
 - gnatprove path: minimal SPARK Ada → False; C + prove_it → True (requires the Ada toolchain)
+- gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: compiles a valid Ada block with all_diagnostics=True → no crash
+- a corrupt (unparseable) cache file on disk does not crash the check
+- an unrecognized language value takes neither the Ada nor the C branch anywhere
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: Tests that actually run gcc/gprbuild/gnatprove require the Ada toolchain.
@@ -247,6 +250,22 @@ class TestCheckBlockCacheHitFail:
         # `not None` is True → has_error = True
         result = ccb.check_block(block, json_file, force_checks=False)
         assert result is True
+
+
+class TestCheckBlockCorruptCache:
+    def test_corrupt_cache_file_is_ignored(self, tmp_path):
+        """A previous-check cache file that is not valid JSON must not crash
+        check_block(): the read failure is caught, no cached result is used,
+        and a full check runs and completes normally instead."""
+        block = _make_block(buttons=["no"])
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        (tmp_path / "block_checks.json").write_text("{not valid json")
+
+        result = ccb.check_block(block, json_file)
+        assert result is False, \
+            "An unparseable cache file must be ignored rather than crash the check"
 
 
 # ---------------------------------------------------------------------------
@@ -727,6 +746,70 @@ end Main;
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True, \
             "C language with prove_it=True must return True (unsupported)"
+
+    def test_ada_gnatprove_pinned_legacy_version(self, tmp_path):
+        """A prove block pinned to a specific, genuinely installed legacy
+        GNATprove version must build the older-style command line that
+        version expects, and a real invocation with it must still prove the
+        example cleanly."""
+        src = tmp_path / "main.adb"
+        src.write_text(self.SPARK_SOURCE)
+        os.chdir(str(tmp_path))
+
+        spark_project_filename = ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=True,
+        )
+
+        block = _make_block(
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+            source_files=["main.adb"],
+            gnatprove_version=["selected", "12.1.0-1"],
+        )
+        block.project_filename = None
+        block.spark_project_filename = spark_project_filename
+        block.project_main_file = "main.adb"
+        block.prove_it = True
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "A provable SPARK block must prove cleanly under a pinned legacy GNATprove version"
+
+
+# ---------------------------------------------------------------------------
+# Unrecognized-language paths
+# Covers cleanup/syntax-check/compile/run all falling through without taking
+# either the Ada or the C branch, and without crashing.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockUnrecognizedLanguage:
+    def test_unrecognized_language_takes_neither_branch(self, tmp_path):
+        """A block whose language is neither 'ada' nor 'c' must fall through
+        the cleanup, syntax-check, compile, and run steps without taking
+        either language-specific branch, and must complete without raising."""
+        block = _make_block(
+            language="fortran",
+            no_check=False,
+            syntax_only=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.f90"],
+        )
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "An unrecognized language must not raise and must not report an error"
 
 
 # ---------------------------------------------------------------------------
