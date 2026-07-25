@@ -59,51 +59,63 @@ class TestMinimalAdaBlock:
 
     def test_rst_file_stored(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].rst_file == RST_FILE
 
     def test_language_is_ada(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].language == "ada"
 
     def test_project_is_none(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].project is None
 
     def test_main_file_is_none(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].main_file is None
 
     def test_manual_chop_false(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].manual_chop is False
 
     def test_default_compiler_switches_includes_gnata(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert "-gnata" in blocks[0].compiler_switches
 
     def test_gnat_version_default(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gnat_version[0] == "default"
 
     def test_gnatprove_version_default(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gnatprove_version[0] == "default"
 
     def test_gprbuild_version_default(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gprbuild_version[0] == "default"
 
     def test_line_start_and_end_set(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].line_start >= 0
         assert blocks[0].line_end > blocks[0].line_start
 
     def test_text_not_empty(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].text.strip() != ""
 
     def test_active_defaults_to_true(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].active is True
 
 
@@ -123,10 +135,12 @@ class TestProjectAndMainFile:
 
     def test_project(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].project == "MyProject"
 
     def test_main_file(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].main_file == "main.adb"
 
 
@@ -143,12 +157,14 @@ class TestCompilerSwitches:
 
     def test_custom_switches_present(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         switches = blocks[0].compiler_switches
         assert "-gnatwa" in switches
         assert "-gnatwe" in switches
 
     def test_default_gnata_also_present(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert "-gnata" in blocks[0].compiler_switches
 
 
@@ -165,6 +181,7 @@ class TestGnatVersionSelected:
 
     def test_gnat_version_is_selected(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gnat_version == ["selected", "12.2.0-1"]
 
 
@@ -182,10 +199,12 @@ class TestLanguageC:
 
     def test_manual_chop_true_for_c(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].manual_chop is True
 
     def test_language_is_c(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].language == "c"
 
 
@@ -202,6 +221,7 @@ class TestManualChopKeyword:
 
     def test_manual_chop_true(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].manual_chop is True
 
 
@@ -217,6 +237,7 @@ class TestButtons:
    procedure P is null;
 """)
         blocks = Block.get_blocks_from_rst(RST_FILE, rst)
+        assert isinstance(blocks[0], CodeBlock)
         assert "run" in blocks[0].buttons
 
     def test_compile_button(self):
@@ -226,6 +247,7 @@ class TestButtons:
    procedure P is null;
 """)
         blocks = Block.get_blocks_from_rst(RST_FILE, rst)
+        assert isinstance(blocks[0], CodeBlock)
         assert "compile" in blocks[0].buttons
 
 
@@ -248,9 +270,12 @@ Some paragraph.
     def test_config_attributes(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         cb = [b for b in blocks if isinstance(b, ConfigBlock)][0]
-        assert cb.run_button is False
-        assert cb.prove_button is True
-        assert cb.accumulate_code is False
+        # run_button/prove_button/accumulate_code are set dynamically via
+        # setattr() in ConfigBlock.__init__, so they are looked up with
+        # getattr() rather than direct attribute access.
+        assert getattr(cb, "run_button") is False
+        assert getattr(cb, "prove_button") is True
+        assert getattr(cb, "accumulate_code") is False
 
 
 # ---------------------------------------------------------------------------
@@ -499,15 +524,17 @@ class TestCodeBlockJsonRoundTrip:
 class TestConfigBlock:
     def test_run_button_false(self):
         cb = ConfigBlock("test.rst", run_button="False")
-        assert cb.run_button is False
+        # run_button is set dynamically via setattr() in ConfigBlock.__init__,
+        # so it is looked up with getattr() rather than direct attribute access.
+        assert getattr(cb, "run_button") is False
 
     def test_prove_button_true(self):
         cb = ConfigBlock("test.rst", prove_button="True")
-        assert cb.prove_button is True
+        assert getattr(cb, "prove_button") is True
 
     def test_accumulate_code_false(self):
         cb = ConfigBlock("test.rst", accumulate_code="False")
-        assert cb.accumulate_code is False
+        assert getattr(cb, "accumulate_code") is False
 
     def test_rst_file_stored(self):
         cb = ConfigBlock("my.rst", run_button="True")
@@ -522,8 +549,8 @@ class TestConfigBlock:
         cb1 = ConfigBlock("my.rst", run_button="False", accumulate_code="True")
         cb2 = ConfigBlock("my.rst", run_button="True", accumulate_code="False")
         cb1.update(cb2)
-        assert cb1.run_button is True
-        assert cb1.accumulate_code is False
+        assert getattr(cb1, "run_button") is True
+        assert getattr(cb1, "accumulate_code") is False
 
     def test_no_opts(self):
         cb = ConfigBlock("my.rst")
@@ -544,6 +571,7 @@ class TestGnatproveVersionSelected:
 
     def test_gnatprove_version_is_selected(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gnatprove_version == ["selected", "12.1.0-1"]
 
 
@@ -556,6 +584,7 @@ class TestGprbuildVersionSelected:
 
     def test_gprbuild_version_is_selected(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gprbuild_version == ["selected", "22.0.0-1"]
 
 
@@ -575,6 +604,7 @@ class TestDefaultSwitchNotDuplicated:
         appear once in compiler_switches (the default-switches loop must skip
         adding it again)."""
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].compiler_switches.count("-gnata") == 1
 
 
@@ -598,4 +628,5 @@ class TestSwitchesValueNotCompilerShaped:
         so the captured value is never used; only the default -gnata switch
         is present."""
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
+        assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].compiler_switches == ["-gnata"]
