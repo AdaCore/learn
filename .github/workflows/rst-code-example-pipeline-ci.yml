@@ -1,0 +1,62 @@
+name: rst_code_example_pipeline CI
+
+on:
+  push:
+    paths:
+      - 'frontend/python/rst_code_example_pipeline/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'frontend/python/rst_code_example_pipeline/**'
+
+jobs:
+  pyright:
+
+    runs-on: ubuntu-26.04
+
+    strategy:
+      matrix:
+        python-version: ['3.14']
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install pyright
+      run: pip install pyright
+    - name: Install rst_code_example_pipeline
+      run: pip install -e 'frontend/python/rst_code_example_pipeline[test]'
+    - name: Run pyright on rst_code_example_pipeline
+      working-directory: frontend/python/rst_code_example_pipeline
+      run: pyright .
+
+  pytest:
+
+    runs-on: ubuntu-26.04
+
+    strategy:
+      matrix:
+        python-version: ['3.14']
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install OS deps
+      run: |
+        sudo apt-get update && \
+        sudo apt-get install -y \
+        crudini
+    - name: Install GNAT FSF
+      run: |
+        ${GITHUB_WORKSPACE}/.github/workflows/install_toolchain.sh --gnat --gnatprove --gprbuild
+    - name: Install rst_code_example_pipeline
+      run: pip install -e 'frontend/python/rst_code_example_pipeline[test]'
+    - name: Run rst_code_example_pipeline test suite
+      working-directory: frontend
+      run: make test_rst_pipeline
