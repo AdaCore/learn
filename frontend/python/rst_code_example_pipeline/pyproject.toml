@@ -31,7 +31,7 @@ branch = true
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 95
+fail_under = 99
 exclude_lines = [
     # Standard pragma for uncoverable lines
     "pragma: no cover",
