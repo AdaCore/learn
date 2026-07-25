@@ -10,6 +10,8 @@ Covers:
   deleted is detected as stale, logged, and removed rather than reused
 - analyze_file() integration: compile_button / run_button / prove_button Ada blocks
   (requires the Ada toolchain — real gnatchop and write_project_file calls)
+- analyze_file(): a block whose source text chops into zero source files is logged and
+  skipped rather than crashing the whole analysis
 - Global state (verbose, code_block_at, current_config) reset before each test
 
 NOTE: analyze_file() pure-unit tests use no-check blocks so gnatchop/toolchain are not
@@ -556,6 +558,38 @@ Explanatory paragraph.
         out = capsys.readouterr().out
         assert "Skipping" in out, \
             "Expected 'Skipping' message for no-check block in verbose mode"
+
+    def test_chopper_returning_no_source_files_is_logged_and_skipped(
+            self, work_dir, monkeypatch, capsys):
+        """If chopping a block's source text produces no source files at all,
+        the block is logged and skipped rather than crashing the whole
+        analysis: two distinct messages are printed (one from the immediate
+        failure site, one from the surrounding handler that catches it and
+        moves on to the next block), and the overall analysis still reports
+        no error."""
+        monkeypatch.setattr(ep, "real_gnatchop", lambda *a, **kw: [])
+
+        rst_content = """\
+.. code:: ada project=EmptyChopProject main=main.adb compile_button
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+
+        out = capsys.readouterr().out
+        assert "Failed to chop example" in out
+        assert "No active exception to reraise" in out, \
+            "the internal re-raise with no exception in flight is expected to surface " \
+            "this exact Python RuntimeError message"
+        assert "Error while updating code for the block, continuing with next one!" in out
+        assert result is False, \
+            "a per-block chopping failure is logged but must not surface as an overall error"
 
 
 # ---------------------------------------------------------------------------

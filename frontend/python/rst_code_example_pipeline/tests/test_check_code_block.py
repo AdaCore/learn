@@ -20,6 +20,8 @@ Covers:
 - a corrupt (unparseable) cache file on disk does not crash the check
 - an unrecognized language value takes neither the Ada nor the C branch anywhere
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
+- gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
+- an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: Tests that actually run gcc/gprbuild/gnatprove require the Ada toolchain.
@@ -1305,3 +1307,125 @@ class TestCheckBlockMissingToolchain:
         written = json.loads((tmp_path / "block_checks.json").read_text())
         assert written["checks"]["SYNTAX"]["version"] == "<unknown>", \
             "The version lookup must have failed and recorded the fallback marker"
+
+
+# ---------------------------------------------------------------------------
+# Clean-up failure paths
+# Covers the gprclean / gnatprove --clean clean-up failures after an Ada
+# compile and run, and the rm -f clean-up failure after a C compile and run.
+# The clean-up commands are selectively made to fail while every other
+# command (the real compile and run) is left untouched.
+# ---------------------------------------------------------------------------
+
+class TestCheckBlockCleanupFailures:
+    """A real Ada compile and run that both succeed, while every clean-up
+    command invoked along the way is made to fail."""
+
+    ADA_SOURCE = """\
+procedure Main is
+begin
+   null;
+end Main;
+"""
+
+    def _setup_project(self, tmp_path):
+        """Write an Ada source file and a .gpr project file into tmp_path."""
+        src = tmp_path / "main.adb"
+        src.write_text(self.ADA_SOURCE)
+        os.chdir(str(tmp_path))
+        project_filename = ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=False,
+        )
+        return project_filename
+
+    def test_gprclean_and_gnatprove_clean_failures_do_not_affect_result(
+            self, tmp_path, monkeypatch, capsys):
+        """A gprclean failure before compiling, a gprclean failure during
+        end-of-check clean-up, and a gnatprove --clean failure during
+        end-of-check clean-up are all logged (the first two) or silently
+        swallowed (the third) -- but none of them aborts the check or changes
+        its result: a real compile and run that succeed still make the check
+        pass."""
+        import subprocess as S
+
+        project_filename = self._setup_project(tmp_path)
+
+        real_check_output = S.check_output
+
+        def fake_check_output(cmd, *args, **kwargs):
+            if cmd[0] == "gprclean" or (cmd[0] == "gnatprove" and "--clean" in cmd):
+                raise S.CalledProcessError(1, cmd, output=b"simulated cleanup failure")
+            return real_check_output(cmd, *args, **kwargs)
+
+        monkeypatch.setattr(S, "check_output", fake_check_output)
+
+        block = _make_block(
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.adb"],
+        )
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+        os.chdir(str(tmp_path))
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "clean-up failures must not affect the outcome of a successful compile and run"
+
+        out = capsys.readouterr().out
+        assert out.count("Failed to clean-up example") == 2, \
+            "expected exactly two logged clean-up failures (the pre-compile gprclean and " \
+            "the end-of-check gprclean); the gnatprove --clean failure is silently " \
+            "swallowed and must not be counted a third time"
+
+
+class TestCheckBlockCCleanupFailure:
+    """A real C compile and run that both succeed, while the rm -f clean-up
+    command is made to fail."""
+
+    VALID_C_SOURCE = "int main(void) { return 0; }\n"
+
+    def test_rm_cleanup_failure_does_not_affect_result(self, tmp_path, monkeypatch, capsys):
+        """An rm -f clean-up failure after a successful C compile and run is
+        logged, but it does not abort the check or change its result."""
+        import subprocess as S
+
+        src = tmp_path / "main.c"
+        src.write_text(self.VALID_C_SOURCE)
+        os.chdir(str(tmp_path))
+
+        real_check_output = S.check_output
+
+        def fake_check_output(cmd, *args, **kwargs):
+            if cmd[0] == "rm":
+                raise S.CalledProcessError(1, cmd, output=b"simulated rm failure")
+            return real_check_output(cmd, *args, **kwargs)
+
+        monkeypatch.setattr(S, "check_output", fake_check_output)
+
+        block = _make_block(
+            language="c",
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "an rm -f clean-up failure must not affect the outcome of a successful compile and run"
+
+        assert "Failed to clean-up example" in capsys.readouterr().out

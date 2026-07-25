@@ -140,7 +140,6 @@ def check_block(block: blocks.CodeBlock,
             except S.CalledProcessError as e:
                 print_error(loc, "Failed to clean-up example")
                 print(e.output)
-                has_error = True
 
     toolchain_setup.set_toolchain(block)
 
