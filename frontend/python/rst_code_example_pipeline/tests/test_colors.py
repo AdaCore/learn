@@ -8,7 +8,8 @@ Covers:
 - no_colors() context manager (disable inside, restore outside)
 - Colors.disable_colors() and state restore
 - TTY-detection: _enabled is False in CI/non-TTY environment
-- Adversarial: direct __enter__/__exit__ use on no_colors()
+- Adversarial: direct __enter__/__exit__ use on no_colors(), and restoring the
+  previous setting when the guarded block raises
 """
 import pytest
 
@@ -74,7 +75,7 @@ class TestColorsAttributes:
         assert Colors.GREY == '\033[97m'
 
     def test_aliases(self):
-        """Semantic aliases must point to the expected base colours."""
+        """Semantic aliases must point to the expected base colors."""
         assert Colors.HEADER == Colors.MAGENTA
         assert Colors.OKBLUE == Colors.BLUE
         assert Colors.OKGREEN == Colors.GREEN
@@ -267,16 +268,14 @@ class TestNoColorsAdversarial:
         ctx.__exit__(None, None, None)
         assert Colors._enabled is False
 
-    def test_no_colors_with_exception_does_not_restore_state(self):
-        """Known limitation: no_colors() uses a bare yield without try/finally,
-        so if an exception propagates out of the 'with' block, the generator is
-        abandoned and _enabled is NOT restored.  This test documents the actual
-        (current) behaviour rather than asserting an ideal that doesn't hold."""
+    def test_no_colors_restores_state_when_the_block_raises(self):
+        """An exception escaping the 'with' block must still restore the
+        previous color setting: no_colors() only narrows the scope it was
+        given, so a caller that lets an exception through must not be left
+        with colors silently disabled for the rest of the process."""
         Colors._enabled = True
-        try:
+        with pytest.raises(ValueError):
             with no_colors():
+                assert Colors._enabled is False
                 raise ValueError("oops")
-        except ValueError:
-            pass
-        # _enabled is left as False because the generator did not resume
-        assert Colors._enabled is False
+        assert Colors._enabled is True

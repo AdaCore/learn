@@ -147,28 +147,75 @@ class TestBlockCheckJsonRoundTrip:
         assert bc2.timestamp == 1000.0
         assert bc2.status_ok is True
 
-    def test_round_trip_checks_dict_not_persisted(self, tmp_path):
-        """Known limitation: BlockCheck.__init__ always initialises self.checks
-        to an empty dict (ignoring the 'checks' keyword argument).  Therefore
-        from_json_file() — which calls BlockCheck(**json_data) — also loses any
-        nested CodeCheck entries that were written to JSON.  This is a design
-        limitation of the current implementation and is documented here rather
-        than hidden."""
+    def test_to_json_file_writes_the_per_phase_checks(self, tmp_path):
+        """A saved BlockCheck must carry its per-phase checks into the JSON.
+
+        Reloading them is covered by the companion ``xfail`` test below; the
+        two are kept apart so that losing the written detail fails the suite
+        on its own."""
         bc = BlockCheck(text_hash="h", text_hash_short="s")
         cc = CodeCheck(timestamp=1.0, version="v1", status_ok=True,
                        logfile="x.log", cmdline="cmd")
         bc.add_check("syntax", cc)
-        # Verify the check is present before saving
         assert "syntax" in bc.checks
 
         f = str(tmp_path / "bc.json")
         bc.to_json_file(f)
 
-        # After reload, the checks dict is empty because __init__ ignores
-        # the 'checks' kwarg and resets self.checks = dict().
+        with open(f) as json_file:
+            written = json.load(json_file)
+        assert "syntax" in written["checks"], \
+            "Expected the saved JSON to record the per-phase check"
+
+        fields = written["checks"]["syntax"]
+        assert fields["timestamp"] == 1.0
+        assert fields["version"] == "v1"
+        assert fields["status_ok"] is True
+        assert fields["logfile"] == "x.log"
+        assert fields["cmdline"] == "cmd"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="BlockCheck.__init__ discards the checks argument, so a JSON "
+               "round-trip loses every per-phase CodeCheck entry",
+    )
+    def test_round_trip_preserves_the_per_phase_checks(self, tmp_path):
+        """A saved BlockCheck must come back carrying its per-phase checks.
+
+        What ``to_json_file()`` writes out is covered by the companion test
+        above; this one covers only what comes back.
+
+        Tracking note — this currently fails. ``BlockCheck.__init__`` accepts a
+        ``checks`` argument but then unconditionally assigns
+        ``self.checks = dict()``, so ``from_json_file()`` (which reconstructs
+        the object with ``BlockCheck(**json_data)``) silently drops every
+        ``CodeCheck`` entry that ``to_json_file()`` had written out. Nothing
+        warns: a reloaded block simply looks like one that was never checked,
+        which defeats the point of persisting the checks at all. A fix would
+        make ``__init__`` honor the argument and rebuild the ``CodeCheck``
+        values from their serialized form; this test then passes and the
+        ``xfail`` marker must be removed."""
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        cc = CodeCheck(timestamp=1.0, version="v1", status_ok=True,
+                       logfile="x.log", cmdline="cmd")
+        bc.add_check("syntax", cc)
+
+        f = str(tmp_path / "bc.json")
+        bc.to_json_file(f)
+
         bc2 = BlockCheck.from_json_file(f)
         assert bc2 is not None
-        assert bc2.checks == {}
+        assert "syntax" in bc2.checks
+
+        # Accept either a rebuilt CodeCheck or its plain-dict form: the point
+        # is that the recorded detail survived, not how it is represented.
+        reloaded = bc2.checks["syntax"]
+        fields = reloaded if isinstance(reloaded, dict) else vars(reloaded)
+        assert fields["timestamp"] == 1.0
+        assert fields["version"] == "v1"
+        assert fields["status_ok"] is True
+        assert fields["logfile"] == "x.log"
+        assert fields["cmdline"] == "cmd"
 
     def test_explicit_filename(self, tmp_path):
         bc = BlockCheck(text_hash="abc", text_hash_short="a")

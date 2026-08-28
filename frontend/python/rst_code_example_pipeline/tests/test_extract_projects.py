@@ -252,6 +252,19 @@ class TestAnalyzeFile:
 Explanatory paragraph.
 """
 
+    # A single Ada block whose chopping is made to yield nothing, so no source
+    # file is ever written out for it.
+    EMPTY_CHOP_RST = """\
+.. code:: ada project=EmptyChopProject main=main.adb compile_button
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+
     def _write_rst(self, tmp_path, content: str) -> str:
         rst_path = tmp_path / "test_nocheck.rst"
         rst_path.write_text(content)
@@ -583,37 +596,61 @@ Explanatory paragraph.
             "Expected 'Skipping' message for no-check block in verbose mode"
 
     @pytest.mark.toolchain
-    def test_chopper_returning_no_source_files_is_logged_and_skipped(
+    def test_chopper_returning_no_source_files_is_reported(
             self, work_dir, monkeypatch, capsys):
-        """If chopping a block's source text produces no source files at all,
-        the block is logged and skipped rather than crashing the whole
-        analysis: two distinct messages are printed (one from the immediate
-        failure site, one from the surrounding handler that catches it and
-        moves on to the next block), and the overall analysis still reports
-        no error."""
+        """A block whose source text chops to nothing must be reported.
+
+        Two distinct messages are printed, one from the immediate failure site
+        and one from the surrounding handler that moves on to the next block,
+        and the block itself is still logged so the remaining blocks get their
+        turn.
+
+        The overall result the same run must report is covered by the
+        companion ``xfail`` test below; the two are kept apart so that losing
+        these messages fails the suite on its own."""
         monkeypatch.setattr(ep, "real_gnatchop", lambda *a, **kw: [])
 
-        rst_content = """\
-.. code:: ada project=EmptyChopProject main=main.adb compile_button
-
-   procedure Main is
-   begin
-      null;
-   end Main;
-
-Explanatory paragraph.
-"""
-        rst_file = self._write_rst(work_dir, rst_content)
-        result = ep.analyze_file(rst_file)
+        rst_file = self._write_rst(work_dir, self.EMPTY_CHOP_RST)
+        ep.analyze_file(rst_file)
 
         out = capsys.readouterr().out
-        assert "Failed to chop example" in out
-        assert "No active exception to reraise" in out, \
-            "the internal re-raise with no exception in flight is expected to surface " \
-            "this exact Python RuntimeError message"
-        assert "Error while updating code for the block, continuing with next one!" in out
-        assert result is False, \
-            "a per-block chopping failure is logged but must not surface as an overall error"
+        assert "Failed to chop example" in out, \
+            "Expected the immediate failure message when chopping yields nothing"
+        assert "Error while updating code for the block, continuing with next one!" in out, \
+            "Expected the surrounding handler to report that it moves on"
+        assert list(work_dir.rglob("block_info.json")), \
+            "Expected the failing block to still be logged before moving on"
+
+    @pytest.mark.toolchain
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the error flag raised when a block cannot be chopped is set on "
+               "a nested function's local, so analyze_file() still reports success",
+    )
+    def test_chopper_returning_no_source_files_fails_the_run(
+            self, work_dir, monkeypatch):
+        """A block whose source text chops to nothing must fail the analysis.
+
+        Chopping producing no source files at all means the block's code was
+        never written out, so the run cannot be called successful. The block
+        itself is still logged and skipped so the remaining blocks get their
+        turn, and the companion test above covers the diagnostics printed
+        along the way; the overall result, though, must report an error.
+
+        Tracking note — this currently fails. The failure site assigns the
+        analysis-error flag inside a nested helper function, which makes it a
+        fresh local of that helper instead of updating the flag
+        ``analyze_file()`` eventually returns, so the run reports success and
+        the caller's exit code stays zero. The same site also re-raises with no
+        exception in flight, which turns the real diagnostic into Python's
+        ``No active exception to reraise`` message. A fix would declare the
+        flag ``nonlocal`` (and raise a real exception carrying the reason);
+        this test then passes and the ``xfail`` marker must be removed."""
+        monkeypatch.setattr(ep, "real_gnatchop", lambda *a, **kw: [])
+
+        rst_file = self._write_rst(work_dir, self.EMPTY_CHOP_RST)
+        assert ep.analyze_file(rst_file) is True, \
+            "a per-block chopping failure must surface as an overall error"
 
 
 # ---------------------------------------------------------------------------
@@ -707,6 +744,28 @@ procedure Main is
 begin
    null;
 end Main;"""
+
+    # A C block asking for a prove button: proving is Ada-only, so this is a
+    # malformed example.
+    _C_PROVE_RST = (
+        ".. code:: c project=TestCProve prove_button\n\n"
+        "   !main.c\n"
+        "   int main(void) { return 0; }\n\n"
+        "Explanatory paragraph.\n"
+    )
+
+    # A compile/run-eligible Ada block declaring no button indicator at all,
+    # not even no_button.
+    _NO_BUTTONS_RST = """\
+.. code:: ada project=TestNoBtns main=main.adb
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
 
     @staticmethod
     def _write_rst(work_dir, content: str, name: str = "test_integration.rst") -> str:
@@ -811,32 +870,84 @@ end Main;"""
         block_jsons = list(work_dir.rglob("block_info.json"))
         assert len(block_jsons) >= 1
 
-    def test_analyze_file_c_prove_button_wrong_language(self, work_dir, capsys):
-        """A C-language block with prove_button hits the 'Wrong language
-        selected for prove button' error path. Known behaviour (not a bug to
-        fix): the per-block error flag set on this path is never merged into
-        analyze_file()'s own return value, so the function still returns
-        False even though an error was printed."""
-        rst_content = (
-            ".. code:: c project=TestCProve prove_button\n\n"
-            "   !main.c\n"
-            "   int main(void) { return 0; }\n\n"
-            "Explanatory paragraph.\n"
-        )
-        rst_file = self._write_rst(work_dir, rst_content)
-        result = ep.analyze_file(rst_file)
-        assert result is False
-        assert "Wrong language selected for prove button" in capsys.readouterr().out
+    def test_analyze_file_c_prove_button_reports_the_wrong_language(
+            self, work_dir, capsys):
+        """A prove button on a C block must be reported as a wrong language.
 
-    def test_analyze_file_no_buttons_block(self, work_dir, capsys):
-        """A compile/run-eligible block with no button keyword at all
-        (buttons == []) hits the 'Expected at least...' error path."""
-        rst_content = (
-            ".. code:: ada project=TestNoBtns main=main.adb\n\n"
-            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
-            + "\n\nExplanatory paragraph.\n"
-        )
-        rst_file = self._write_rst(work_dir, rst_content)
-        result = ep.analyze_file(rst_file)
-        assert result is False
-        assert "Expected at least" in capsys.readouterr().out
+        Proving is Ada-only, so a C block asking for a prove button is a
+        malformed example, and the run must name the problem.
+
+        The overall result the same run must report is covered by the
+        companion ``xfail`` test below; the two are kept apart so that losing
+        this message fails the suite on its own."""
+        rst_file = self._write_rst(work_dir, self._C_PROVE_RST)
+        ep.analyze_file(rst_file)
+        assert "Wrong language selected for prove button" in capsys.readouterr().out, \
+            "Expected the wrong-language message for a prove button on a C block"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the per-block error flag is never merged into analyze_file()'s "
+               "return value, so a prove button on a non-Ada block reports success",
+    )
+    def test_analyze_file_c_prove_button_fails_the_run(self, work_dir):
+        """A prove button on a C block must fail the analysis.
+
+        Proving is Ada-only, so a C block asking for a prove button is a
+        malformed example: the message is printed — the companion test above
+        covers that — and the run must report an error so the caller's exit
+        code reflects it.
+
+        Tracking note — this currently fails, and so does the sibling
+        ``xfail`` test covering a block that carries no button indicator at
+        all: both paths set the same per-block error flag, which is written
+        but never read. Nothing merges it into the value ``analyze_file()``
+        returns, so the run reports success and a broken example passes
+        unnoticed. One fix — folding the per-block flag into the overall
+        analysis result — closes both; when it lands, both tests pass and
+        both ``xfail`` markers must be removed."""
+        rst_file = self._write_rst(work_dir, self._C_PROVE_RST)
+        assert ep.analyze_file(rst_file) is True, \
+            "a prove button on a non-Ada block must surface as an overall error"
+
+    def test_analyze_file_no_buttons_block_is_reported(self, work_dir, capsys):
+        """A compile/run-eligible block with no button indicator must be
+        reported.
+
+        Every such block is expected to declare at least a no_button
+        indicator, so a block declaring none is a malformed example, and the
+        run must name the problem.
+
+        The overall result the same run must report is covered by the
+        companion ``xfail`` test below; the two are kept apart so that losing
+        this message fails the suite on its own."""
+        rst_file = self._write_rst(work_dir, self._NO_BUTTONS_RST)
+        ep.analyze_file(rst_file)
+        assert "Expected at least" in capsys.readouterr().out, \
+            "Expected the missing-indicator message for a block with no buttons"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the per-block error flag is never merged into analyze_file()'s "
+               "return value, so a block carrying no button indicator reports success",
+    )
+    def test_analyze_file_no_buttons_block_fails_the_run(self, work_dir):
+        """A compile/run-eligible block with no button indicator must fail the
+        analysis.
+
+        Every such block is expected to declare at least a no_button
+        indicator, so a block declaring none is a malformed example: the
+        message is printed — the companion test above covers that — and the
+        run must report an error so the caller's exit code reflects it.
+
+        Tracking note — this currently fails, for the same reason as the
+        sibling ``xfail`` test covering a prove button on a C block. Both
+        paths set the same per-block error flag, which is written but never
+        read: nothing merges it into the value ``analyze_file()`` returns, so
+        the run reports success and a broken example passes unnoticed. One
+        fix — folding the per-block flag into the overall analysis result —
+        closes both; when it lands, both tests pass and both ``xfail``
+        markers must be removed."""
+        rst_file = self._write_rst(work_dir, self._NO_BUTTONS_RST)
+        assert ep.analyze_file(rst_file) is True, \
+            "a block with no button indicator must surface as an overall error"

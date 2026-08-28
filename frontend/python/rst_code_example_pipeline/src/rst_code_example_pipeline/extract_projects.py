@@ -171,6 +171,53 @@ class ProjectsList(object):
 
 
 def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None) -> bool:
+    """Extracts the code blocks of a single ReST file
+
+    Each active code block is written to its own project directory below the
+    current working directory, together with the ``block_info.json`` file that
+    describes it for the checking stage.
+
+    Args:
+        rst_file (str): The ReST file to extract the code blocks from
+        extracted_projects_list_file (str, optional): JSON file the names of
+            the extracted projects are added to. Defaults to None.
+
+    Returns:
+        bool: The error flag for this file. The extraction command turns a
+            true value into a non-zero exit status.
+
+    Note:
+        That flag is effectively the constant ``False`` today, so the exit
+        status derived from it never becomes non-zero:
+
+        * The single assignment that would set it sits in the nested
+          ``expand_source_files()``. Without a ``nonlocal`` declaration it
+          binds a fresh local there rather than the flag defined in this
+          function, so the chopping failure it records dies with the nested
+          scope.
+        * The remaining per-block errors printed here never touch the flag at
+          all: a block whose button and language do not go together, and a
+          block with no button indicator.
+        * The one condition this function treats as fatal for the whole run,
+          a code block with no project name, calls ``exit(1)`` directly and so
+          bypasses the flag too.
+
+        A caller that inspects only the returned value therefore always
+        concludes the file was extracted cleanly. In the extraction command
+        this leaves the failure branch unreachable; that branch also announces
+        ``TEST ERROR`` through ``fmt_utils.simple_success()``, the formatter
+        for success messages.
+
+        Not every ``ERROR`` line printed here marks a failure either. Removing
+        a per-block directory left over from an earlier run whose info JSON
+        file has gone missing is reported the same way, and that is a recovery
+        on the success path.
+
+        Repairing this means declaring ``nonlocal analysis_error`` in the
+        nested scope and setting the flag at the remaining per-block error
+        sites. Both are behavior changes: ReST files that pass today would
+        start failing.
+    """
 
     analysis_error = False
 

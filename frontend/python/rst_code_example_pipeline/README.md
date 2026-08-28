@@ -41,6 +41,45 @@ for each code block (source-code example) that is extracted from the ReST files.
 and checks the source-code example described in each of those JSON files.
 
 
+## Exit status
+
+All three entry points report the outcome of a run through their exit status,
+which is what a script driving them should gate on:
+
+- `check-code` exits `1` if any of the code blocks it checked failed a check,
+  and `0` otherwise. It also exits `1` when neither `--build-dir` nor
+  `--extracted_projects` was specified, so exit `1` on its own does not
+  distinguish a broken code block from a usage error.
+
+- `check-block` takes one or more `block_info.json` files and exits `1` if any
+  of them failed a check, and `0` otherwise. A JSON file that cannot be loaded
+  counts as a failure too, so exit `1` does not imply that a check ran at all.
+
+- `extract-code` exits `1` when the extraction run itself cannot proceed — for
+  example, when a code block has no project name, or when neither `--build-dir`
+  nor `--extracted_projects` was specified — and `0` otherwise.
+
+An invalid command line is rejected before any work is done, with exit
+status `2`.
+
+`extract-code` and `check-code` share a gap here: each prints an `ERROR` line
+for a code block it cannot process, but the run still exits `0`. For
+`extract-code` this affects a code block whose source cannot be split into
+individual source files, a code block whose button and language do not go
+together (a prove button on a C block), and a code block that carries no button
+indicator at all. For `check-code` it affects a `block_info.json` that cannot
+be loaded and a block that carries no project name — and if every block in a
+build directory is skipped this way, `check-code` exits `0` having checked
+nothing.
+
+Until this is fixed, a script that gates only on the exit status does not
+notice those code blocks, so read the output as well. Do not treat every
+`ERROR` line as a failure, though: `extract-code` also prints one when it finds
+a per-block directory left over from an earlier run whose info JSON file is
+gone, which it removes and rebuilds before carrying on. Match on the message
+text of the errors listed above rather than on the `ERROR` prefix alone.
+
+
 ## Verbose mode
 
 All the scripts have a `--verbose` / `-v` switch. For example:
