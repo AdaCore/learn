@@ -171,6 +171,32 @@ class ProjectsList(object):
 
 
 def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None) -> bool:
+    """Extracts the code blocks of a single ReST file
+
+    Each active code block is written to its own project directory below the
+    current working directory, together with the ``block_info.json`` file that
+    describes it for the checking stage.
+
+    Args:
+        rst_file (str): The ReST file to extract the code blocks from
+        extracted_projects_list_file (str, optional): JSON file the names of
+            the extracted projects are added to. Defaults to None.
+
+    Returns:
+        bool: The error flag for this file, which the extraction command turns
+            into its exit status: a true value makes the run exit non-zero.
+
+    Note:
+        The flag covers failures of the extraction run as a whole, not errors
+        reported for an individual code block. Such an error is printed and
+        the flag stays false, so a caller that only inspects the returned
+        value can conclude the file was extracted cleanly when it was not.
+        This applies to every per-block error reported here today: a block
+        whose source cannot be chopped into source files, a block whose button
+        and language do not go together, and a block with no button indicator.
+        Making these reach the flag is a behavior change: ReST files that pass
+        today would start failing.
+    """
 
     analysis_error = False
 

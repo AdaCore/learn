@@ -41,6 +41,33 @@ for each code block (source-code example) that is extracted from the ReST files.
 and checks the source-code example described in each of those JSON files.
 
 
+## Exit status
+
+All three entry points report the outcome of a run through their exit status,
+which is what a script driving them should gate on:
+
+- `check-code` exits `1` if any of the code blocks it checked failed a check,
+  and `0` otherwise.
+
+- `check-block` exits `1` if the code block it was given failed a check, and
+  `0` otherwise.
+
+- `extract-code` exits `1` when the extraction run itself cannot proceed — for
+  example, when a code block has no project name, or when neither `--build-dir`
+  nor `--extracted_projects` was specified — and `0` otherwise.
+
+An invalid command line is rejected before any work is done, with exit
+status `2`.
+
+`extract-code` has one gap here: it prints an `ERROR` line for a code block it
+cannot process, but the run still exits `0`. This affects a code block whose
+source cannot be split into individual source files, a code block whose button
+and language do not go together (a prove button on a C block), and a code block
+that carries no button indicator at all. Until this is fixed, a script that
+gates only on the exit status of `extract-code` does not notice those code
+blocks, so scan its output for `ERROR` lines as well.
+
+
 ## Verbose mode
 
 All the scripts have a `--verbose` / `-v` switch. For example:
