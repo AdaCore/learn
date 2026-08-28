@@ -5,7 +5,7 @@ Covers:
 - get_project_dir(): simple and dotted project names
 - write_project_file(): all four combinations of spark_mode × main_file × compiler_switches
 - ProjectsList: init, add(), to_json_file(), from_json_file() round-trip, missing file
-- analyze_file(): minimal no-check / syntax-only Ada block (no toolchain invocation)
+- analyze_file(): minimal no-check / syntax-only Ada block
 - analyze_file(): a block directory left over from a prior run whose info JSON file was
   deleted is detected as stale, logged, and removed rather than reused
 - analyze_file() integration: compile_button / run_button / prove_button Ada blocks
@@ -14,9 +14,11 @@ Covers:
   skipped rather than crashing the whole analysis
 - Global state (verbose, code_block_at, current_config) reset before each test
 
-NOTE: analyze_file() pure-unit tests use no-check blocks so gnatchop/toolchain are not
-called.  The TestAnalyzeFileIntegration class uses real Ada source and requires the Ada
-toolchain.
+NOTE: a no-check block does not spare analyze_file() the toolchain.  The chop step runs
+before the no-check test, and every block reaching it goes through the toolchain setup,
+which writes into the toolchain installation tree.  Tests requiring the Ada toolchain are
+therefore marked with the `toolchain` marker; only the two that return before the block
+loop (a block without a project, and a file whose blocks are all inactive) are unmarked.
 """
 import json
 import os
@@ -230,7 +232,9 @@ class TestProjectsList:
 
 class TestAnalyzeFile:
     # A minimal RST file with a single Ada block marked as no-check.
-    # This avoids any gnatchop/toolchain invocation.
+    # The no-check class keeps analyze_file() from compiling or running the
+    # block, but it is still chopped and still goes through the toolchain
+    # setup, so these tests need the Ada toolchain all the same.
     # NOTE: analyze_file() requires every code block to have a project attribute;
     # blocks without one cause exit(1).  Always include project=... here.
     NOCHECK_RST = """\
@@ -250,12 +254,14 @@ Explanatory paragraph.
         rst_path.write_text(content)
         return str(rst_path)
 
+    @pytest.mark.toolchain
     def test_no_crash_on_nocheck_block(self, work_dir):
         rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
         # analyze_file() must return without raising
         result = ep.analyze_file(rst_file)
         assert result is False
 
+    @pytest.mark.toolchain
     def test_no_crash_on_nocheck_block_with_project(self, work_dir):
         rst_content = """\
 .. code:: ada project=TestProj
@@ -272,6 +278,7 @@ Explanatory paragraph.
         result = ep.analyze_file(rst_file)
         assert result is False
 
+    @pytest.mark.toolchain
     def test_analyze_file_creates_project_dirs(self, work_dir):
         rst_content = """\
 .. code:: ada project=MyProject
@@ -290,6 +297,7 @@ Explanatory paragraph.
         assert project_dir.exists(), \
             f"Expected project directory {project_dir} to be created"
 
+    @pytest.mark.toolchain
     def test_analyze_file_with_projects_list_file(self, work_dir):
         rst_content = """\
 .. code:: ada project=ListedProject
@@ -313,6 +321,7 @@ Explanatory paragraph.
         assert "projects" in data
         assert "ListedProject" in data["projects"]
 
+    @pytest.mark.toolchain
     def test_analyze_file_verbose_existing_projects_list_file(self, work_dir, capsys):
         """verbose=True + extracted_projects_list_file pointing at a file that
         already exists prints the 'Extracted list of projects...' message."""
@@ -324,6 +333,7 @@ Explanatory paragraph.
         assert result is False
         assert "Extracted list" in capsys.readouterr().out
 
+    @pytest.mark.toolchain
     def test_analyze_file_verbose_missing_projects_list_file(self, work_dir, capsys):
         """verbose=True + extracted_projects_list_file pointing at a file that
         does not exist yet prints the 'will be created' message."""
@@ -334,6 +344,7 @@ Explanatory paragraph.
         assert result is False
         assert "will be created" in capsys.readouterr().out
 
+    @pytest.mark.toolchain
     def test_analyze_file_existing_projects_list_loaded(self, work_dir):
         # Pre-create a projects list JSON with an existing entry
         prj_list_file = str(work_dir / "projects.json")
@@ -361,6 +372,7 @@ Explanatory paragraph.
         assert "NewProject" in data["projects"], \
             "New project must be added to the existing projects list"
 
+    @pytest.mark.toolchain
     def test_analyze_file_syntax_only_block(self, work_dir):
         rst_content = """\
 .. code:: ada project=SyntaxProject
@@ -396,6 +408,7 @@ Explanatory paragraph.
         with pytest.raises(SystemExit):
             ep.analyze_file(rst_file)
 
+    @pytest.mark.toolchain
     def test_analyze_file_no_button_block(self, work_dir):
         """A non-no-check, non-syntax-only block with buttons=["no"] reaches
         the project extraction path and writes block_info.json without error."""
@@ -413,6 +426,7 @@ Explanatory paragraph.
         result = ep.analyze_file(rst_file)
         assert result is False
 
+    @pytest.mark.toolchain
     def test_analyze_file_config_block(self, work_dir):
         """A :code-config: line produces a ConfigBlock; analyze_file() must handle
         it (via isinstance check) without crashing."""
@@ -433,6 +447,7 @@ Explanatory paragraph.
         result = ep.analyze_file(rst_file)
         assert result is False
 
+    @pytest.mark.toolchain
     def test_analyze_file_manual_chop_block(self, work_dir):
         """A C block uses manual_chop=True; analyze_file() must call manual_chop
         (not real_gnatchop) and succeed."""
@@ -448,6 +463,7 @@ Explanatory paragraph.
         result = ep.analyze_file(rst_file)
         assert result is False
 
+    @pytest.mark.toolchain
     def test_code_block_at_matches_one_block(self, work_dir):
         """code_block_at set to a value inside a block's (line_start, line_end)
         range: that block stays active, the true branch of the code_block_at
@@ -471,6 +487,7 @@ Explanatory paragraph.
         assert not (work_dir / "projects" / "NoCheckProject").exists(), \
             "No project dir expected when all blocks are inactive"
 
+    @pytest.mark.toolchain
     def test_verbose_prints_headers(self, work_dir, capsys):
         """Set verbose=True and confirm that project header lines are printed."""
         ep.verbose = True
@@ -492,6 +509,7 @@ Explanatory paragraph.
         assert "VerboseProject" in out, \
             "Expected project name in verbose output"
 
+    @pytest.mark.toolchain
     def test_second_call_same_project_logs_exists(self, work_dir, capsys):
         """Call analyze_file() twice with the same project; the second call
         must print 'already exists' when verbose=True."""
@@ -518,6 +536,7 @@ Explanatory paragraph.
         assert "already exists" in out, \
             "Expected 'already exists' in verbose output on second call"
 
+    @pytest.mark.toolchain
     def test_stale_block_dir_missing_json_is_removed_and_recreated(self, work_dir, capsys):
         """If a code block's per-block directory already exists from a prior
         run but its info JSON file has since been deleted, the directory must
@@ -550,6 +569,7 @@ Explanatory paragraph.
         assert "no JSON info file" in out, \
             "Expected the stale-directory message when the info JSON is missing"
 
+    @pytest.mark.toolchain
     def test_no_check_verbose_skip(self, work_dir, capsys):
         """With verbose=True a no-check block must print a 'Skipping' message."""
         ep.verbose = True
@@ -559,6 +579,7 @@ Explanatory paragraph.
         assert "Skipping" in out, \
             "Expected 'Skipping' message for no-check block in verbose mode"
 
+    @pytest.mark.toolchain
     def test_chopper_returning_no_source_files_is_logged_and_skipped(
             self, work_dir, monkeypatch, capsys):
         """If chopping a block's source text produces no source files at all,
@@ -617,6 +638,7 @@ class TestDiag:
 # T-extract_projects-06: same-project second block
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestAnalyzeFileSameProjectTwoBlocks:
     TWO_BLOCKS_RST = """\
 .. code:: ada project=SameProject
@@ -666,6 +688,7 @@ Second explanatory paragraph.
 # Requires the Ada toolchain (real gnatchop called for non-no-check blocks).
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestAnalyzeFileIntegration:
     """Integration tests for analyze_file() with real Ada compilation paths.
 

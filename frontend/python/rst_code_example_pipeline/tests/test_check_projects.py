@@ -262,6 +262,7 @@ class TestGetProjectsWithPrjList:
 # T-check_projects-06: check_block() thin wrapper
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockWrapper:
     def test_no_check_block_returns_false(self, tmp_path):
         """check_block() delegates to check_code_block.check_block(); a
@@ -280,6 +281,7 @@ class TestCheckBlockWrapper:
 # ---------------------------------------------------------------------------
 
 class TestCheckProjectsIntegration:
+    @pytest.mark.toolchain
     def test_check_projects_with_nocheck_block_returns_false(self, tmp_path):
         """check_projects() iterates over all blocks in the build dir and calls
         check_block().  A build dir with only no-check blocks must return False."""
@@ -329,6 +331,7 @@ class TestCheckProjectsExtended:
         assert len(result["DupProject"]) == 2, \
             "Expected both blocks accumulated under the same project key"
 
+    @pytest.mark.toolchain
     def test_get_projects_verbose(self, tmp_path, capsys):
         """check_projects() with verbose=True prints the project header
         (exercises the verbose header output path)."""
@@ -394,6 +397,7 @@ class TestCheckProjectsExtended:
 # Requires the Ada toolchain (gprbuild invoked for a failing compile).
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckProjectsReturnsTrue:
     """Tests that check_projects() propagates check_error=True."""
 

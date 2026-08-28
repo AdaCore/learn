@@ -24,7 +24,11 @@ Covers:
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
-NOTE: Tests that actually run gcc/gprbuild/gnatprove require the Ada toolchain.
+NOTE: check_block() sets the toolchain up for every block before any early return, so a
+test needs the Ada toolchain even when it stops at a no-check block or a cache hit and
+never reaches a compiler.  Every test that calls check_block() therefore carries the
+`toolchain` marker; only the Diag repr tests and the two check_code_block_json() tests
+that bail out on a missing file are free of it.
 """
 import json
 import os
@@ -129,6 +133,7 @@ class TestDiagRepr:
 # T-check_code_block-02: check_block() with no_check=True
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockNoCheck:
     def test_returns_false_when_no_check(self, tmp_path):
         block = _make_block(classes=["ada-nocheck"], no_check=True)
@@ -164,6 +169,7 @@ class TestCheckBlockNoCheck:
 # T-check_code_block-03: check_block() cache hit (status_ok=True)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockCacheHitOk:
     def test_cache_hit_returns_false(self, tmp_path):
         """Prior check with status_ok=True and force_checks=False → return False."""
@@ -208,6 +214,7 @@ class TestCheckBlockCacheHitOk:
 # T-check_code_block-04: check_block() cache hit (status_ok=False)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockCacheHitFail:
     def test_cached_failure_returns_true(self, tmp_path):
         """Prior check with status_ok=False and force_checks=False → return True."""
@@ -247,6 +254,7 @@ class TestCheckBlockCacheHitFail:
         assert result is True
 
 
+@pytest.mark.toolchain
 class TestCheckBlockCorruptCache:
     def test_corrupt_cache_file_is_ignored(self, tmp_path):
         """A previous-check cache file that is not valid JSON must not crash
@@ -267,6 +275,7 @@ class TestCheckBlockCorruptCache:
 # T-check_code_block-05: check_block() with no buttons (BUTTONS check failure)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockNoButtons:
     def test_empty_buttons_returns_true(self, tmp_path):
         """A block with empty buttons list must fail the BUTTONS check."""
@@ -320,6 +329,7 @@ class TestCheckBlockNoButtons:
 # T-check_code_block-06: check_block() real Ada syntax check
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockRealSyntax:
     """Tests that actually invoke gcc -gnats."""
 
@@ -389,6 +399,7 @@ class TestCheckCodeBlockJson:
         captured = capsys.readouterr()
         assert "ERROR" in captured.out
 
+    @pytest.mark.toolchain
     def test_valid_nocheck_block_json_returns_false(self, tmp_path):
         """check_code_block_json() on a no-check block must return False."""
         block = _make_block(classes=["ada-nocheck"], no_check=True, buttons=["no"])
@@ -403,6 +414,7 @@ class TestCheckCodeBlockJson:
 # T-check_code_block-08: selected toolchain + non-no button validation
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockSelectedToolchainButtonValidation:
     def test_selected_gnat_with_compile_button_fails_buttons_check(self, tmp_path):
         """When a specific toolchain version is selected, only 'no' button is allowed.
@@ -429,6 +441,7 @@ class TestCheckBlockSelectedToolchainButtonValidation:
 # T-check_code_block-09: real compile check (gprbuild)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockRealCompile:
     """Tests that actually invoke gprbuild."""
 
@@ -536,6 +549,7 @@ end Main;
 # Requires gcc in PATH (part of the Ada toolchain).
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockCCompile:
     """Tests that actually invoke gcc on C source files."""
 
@@ -595,6 +609,7 @@ class TestCheckBlockCCompile:
 # Requires the Ada toolchain.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockExpectCompileError:
     """Tests for ada-expect-compile-error class and C run path."""
 
@@ -674,6 +689,7 @@ end Bad;
 # Requires gnatprove in PATH (part of the Ada toolchain).
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockGnatprove:
     """Tests that actually invoke gnatprove."""
 
@@ -788,6 +804,7 @@ end Main;
 # either the Ada or the C branch, and without crashing.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockUnrecognizedLanguage:
     def test_unrecognized_language_takes_neither_branch(self, tmp_path):
         """A block whose language is neither 'ada' nor 'c' must fall through
@@ -814,6 +831,7 @@ class TestCheckBlockUnrecognizedLanguage:
 # Covers the verbose cache-skip output and the all_diagnostics output path.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockVerbose:
     """Tests for verbose and all_diagnostics flag paths."""
 
@@ -889,6 +907,7 @@ end Main;
 # check (it appends a -gnatyM<N> style-check switch).
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockMaxColumns:
     ADA_SOURCE = """\
 procedure Main is
@@ -923,6 +942,7 @@ end Main;
 # an expectedly failing run, and an unexpectedly failing run.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockRunExpectFailure:
     VALID_ADA_SOURCE = """\
 procedure Main is
@@ -1015,6 +1035,7 @@ end Main;
 # Covers the c-run-expect-failure class, symmetric to the Ada case above.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockCRunExpectFailure:
     VALID_C_SOURCE = "int main(void) { return 0; }\n"
     FAILING_C_SOURCE = "int main(void) { return 1; }\n"
@@ -1086,6 +1107,7 @@ class TestCheckBlockCRunExpectFailure:
 # Covers the c-expect-compile-error class in the C compile handler.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockCExpectCompileError:
     INVALID_C_SOURCE = "this is not C at all !@#$\n"
 
@@ -1127,6 +1149,7 @@ class TestCheckBlockCExpectCompileError:
 # and unexpected branches.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockProveFailure:
     # X is read via Y := X before being initialized: a flow-analysis check
     # that reliably fails under --checks-as-errors (mirrors the pattern used
@@ -1197,6 +1220,7 @@ end Main;
 # prove_flow_report_all / prove_report_all buttons.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockProveExtraArgs:
     SPARK_SOURCE = """\
 procedure Main with SPARK_Mode is
@@ -1256,6 +1280,7 @@ end Main;
 # Covers the inactive-block WARNING printed by check_code_block_json().
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckCodeBlockJsonInactive:
     def test_check_code_block_json_inactive_block(self, tmp_path, capsys):
         """check_code_block_json() on a block with active=False prints the
@@ -1277,6 +1302,7 @@ class TestCheckCodeBlockJsonInactive:
 # PATH, in place of monkeypatching the subprocess call.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockMissingToolchain:
     def test_missing_toolchain_binary_falls_back_to_unknown_version(self, tmp_path, monkeypatch):
         """When none of the toolchain binaries can be found on PATH, the
@@ -1309,6 +1335,7 @@ class TestCheckBlockMissingToolchain:
 # command (the real compile and run) is left untouched.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestCheckBlockCleanupFailures:
     """A real Ada compile and run that both succeed, while every clean-up
     command invoked along the way is made to fail."""
@@ -1379,6 +1406,7 @@ end Main;
             "swallowed and must not be counted a third time"
 
 
+@pytest.mark.toolchain
 class TestCheckBlockCCleanupFailure:
     """A real C compile and run that both succeed, while the rm -f clean-up
     command is made to fail."""

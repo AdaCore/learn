@@ -222,6 +222,7 @@ class TestCheapoGnatchopEdgeCases:
 # (covers chop.py lines 96-149)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.toolchain
 class TestRealGnatchop:
     """Tests for real_gnatchop; require gnatchop in PATH."""
 

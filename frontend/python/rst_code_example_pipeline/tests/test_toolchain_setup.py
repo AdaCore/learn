@@ -272,6 +272,7 @@ class TestAdversarialDoubleSet:
 # ---------------------------------------------------------------------------
 
 class TestSetToolchain:
+    @pytest.mark.toolchain
     def test_set_toolchain_reinitialises_toolchain_path(
             self, isolated_toolchain_path, monkeypatch):
         """When TOOLCHAIN_PATH has no 'root' key, set_toolchain() calls
