@@ -10,9 +10,12 @@ Covers:
 - Adversarial: set_toolchain() called twice without reset → must not fail
 - State isolation: teardown_function resets toolchain after every test
 
-NOTE: Requires the Ada toolchain installed at /opt/ada.
-The tests redirect symlink creation into a tmp_path-based directory to avoid
-mutating /opt/ada/selected in the real environment.
+NOTE: nearly every test here is toolchain-free.  The isolated_toolchain_path fixture
+redirects TOOLCHAIN_PATH into a tmp_path-based directory, so the symlinks are created
+and removed there and the real toolchain installation tree is never touched.  The one
+exception is the test that deletes the 'root' key: set_toolchain() then re-reads the
+toolchain configuration, which restores the real installation paths over the redirect,
+so the call writes into the real tree.  That single test carries the `toolchain` marker.
 """
 import os
 
@@ -71,8 +74,9 @@ def _make_block(gnat_version: list[str],
 def isolated_toolchain_path(tmp_path, monkeypatch):
     """
     Redirect TOOLCHAIN_PATH so symlinks are created in tmp_path instead of
-    the real /opt/ada/selected directory.  Also creates stub target directories
-    matching the installed toolchain versions so os.symlink targets exist.
+    the selected directory of the real toolchain installation tree.  Also
+    creates stub target directories matching the installed toolchain versions
+    so os.symlink targets exist.
     """
     # Ensure toolchain_info is initialised
     if not info.TOOLCHAINS:

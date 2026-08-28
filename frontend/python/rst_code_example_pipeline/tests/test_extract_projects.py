@@ -16,9 +16,12 @@ Covers:
 
 NOTE: a no-check block does not spare analyze_file() the toolchain.  The chop step runs
 before the no-check test, and every block reaching it goes through the toolchain setup,
-which writes into the toolchain installation tree.  Tests requiring the Ada toolchain are
-therefore marked with the `toolchain` marker; only the two that return before the block
-loop (a block without a project, and a file whose blocks are all inactive) are unmarked.
+which writes into the toolchain installation tree.  Every analyze_file() test that
+reaches the block loop therefore carries the `toolchain` marker; the only unmarked
+analyze_file() tests are the two that return before that loop (a block without a
+project, and a file whose blocks are all inactive).  The get_project_dir(),
+write_project_file(), ProjectsList and Diag tests never call analyze_file() at all and
+need no marker.
 """
 import json
 import os
