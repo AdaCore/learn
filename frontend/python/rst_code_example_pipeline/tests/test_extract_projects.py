@@ -837,13 +837,13 @@ end Main;"""
         malformed example: the message is printed and the run must report an
         error so the caller's exit code reflects it.
 
-        Tracking note — this currently fails. The per-block error flag set on
-        this path is written but never read: nothing merges it into the value
-        ``analyze_file()`` returns, so the run reports success and a broken
-        example passes unnoticed. The same flag is set — and lost the same way
-        — on the path that complains about a block carrying no button
-        indicator at all. A fix would fold the per-block flag into the overall
-        analysis result; this test then passes and the ``xfail`` marker must
+        Tracking note — this currently fails, and so does the sibling test
+        covering a block that carries no button indicator at all: both paths
+        set the same per-block error flag, which is written but never read.
+        Nothing merges it into the value ``analyze_file()`` returns, so the
+        run reports success and a broken example passes unnoticed. One fix —
+        folding the per-block flag into the overall analysis result — closes
+        both; when it lands, both tests pass and both ``xfail`` markers must
         be removed."""
         rst_content = (
             ".. code:: c project=TestCProve prove_button\n\n"
@@ -857,9 +857,29 @@ end Main;"""
         assert result is True, \
             "a prove button on a non-Ada block must surface as an overall error"
 
-    def test_analyze_file_no_buttons_block(self, work_dir, capsys):
-        """A compile/run-eligible block with no button keyword at all
-        (buttons == []) hits the 'Expected at least...' error path."""
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the per-block error flag is never merged into analyze_file()'s "
+               "return value, so a block carrying no button indicator reports success",
+    )
+    def test_analyze_file_no_buttons_block_is_reported_as_an_error(
+            self, work_dir, capsys):
+        """A compile/run-eligible block with no button indicator must fail the
+        analysis.
+
+        Every such block is expected to declare at least a no_button
+        indicator, so a block declaring none is a malformed example: the
+        message is printed and the run must report an error so the caller's
+        exit code reflects it.
+
+        Tracking note — this currently fails, for the same reason as the
+        sibling test covering a prove button on a C block. Both paths set the
+        same per-block error flag, which is written but never read: nothing
+        merges it into the value ``analyze_file()`` returns, so the run
+        reports success and a broken example passes unnoticed. One fix —
+        folding the per-block flag into the overall analysis result — closes
+        both; when it lands, both tests pass and both ``xfail`` markers must
+        be removed."""
         rst_content = (
             ".. code:: ada project=TestNoBtns main=main.adb\n\n"
             + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
@@ -867,5 +887,6 @@ end Main;"""
         )
         rst_file = self._write_rst(work_dir, rst_content)
         result = ep.analyze_file(rst_file)
-        assert result is False
         assert "Expected at least" in capsys.readouterr().out
+        assert result is True, \
+            "a block with no button indicator must surface as an overall error"
