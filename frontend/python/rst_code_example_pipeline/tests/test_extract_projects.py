@@ -583,14 +583,31 @@ Explanatory paragraph.
             "Expected 'Skipping' message for no-check block in verbose mode"
 
     @pytest.mark.toolchain
-    def test_chopper_returning_no_source_files_is_logged_and_skipped(
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the error flag raised when a block cannot be chopped is set on "
+               "a nested function's local, so analyze_file() still reports success",
+    )
+    def test_chopper_returning_no_source_files_is_reported_as_an_error(
             self, work_dir, monkeypatch, capsys):
-        """If chopping a block's source text produces no source files at all,
-        the block is logged and skipped rather than crashing the whole
-        analysis: two distinct messages are printed (one from the immediate
-        failure site, one from the surrounding handler that catches it and
-        moves on to the next block), and the overall analysis still reports
-        no error."""
+        """A block whose source text chops to nothing must fail the analysis.
+
+        Chopping producing no source files at all means the block's code was
+        never written out, so the run cannot be called successful. The block
+        itself is still logged and skipped so the remaining blocks get their
+        turn — two distinct messages are printed, one from the immediate
+        failure site and one from the surrounding handler that moves on to the
+        next block — but the overall result must report an error.
+
+        Tracking note — this currently fails. The failure site assigns the
+        analysis-error flag inside a nested helper function, which makes it a
+        fresh local of that helper instead of updating the flag
+        ``analyze_file()`` eventually returns, so the run reports success and
+        the caller's exit code stays zero. The same site also re-raises with no
+        exception in flight, which turns the real diagnostic into Python's
+        ``No active exception to reraise`` message. A fix would declare the
+        flag ``nonlocal`` (and raise a real exception carrying the reason);
+        this test then passes and the ``xfail`` marker must be removed."""
         monkeypatch.setattr(ep, "real_gnatchop", lambda *a, **kw: [])
 
         rst_content = """\
@@ -608,12 +625,9 @@ Explanatory paragraph.
 
         out = capsys.readouterr().out
         assert "Failed to chop example" in out
-        assert "No active exception to reraise" in out, \
-            "the internal re-raise with no exception in flight is expected to surface " \
-            "this exact Python RuntimeError message"
         assert "Error while updating code for the block, continuing with next one!" in out
-        assert result is False, \
-            "a per-block chopping failure is logged but must not surface as an overall error"
+        assert result is True, \
+            "a per-block chopping failure must surface as an overall error"
 
 
 # ---------------------------------------------------------------------------
@@ -811,12 +825,26 @@ end Main;"""
         block_jsons = list(work_dir.rglob("block_info.json"))
         assert len(block_jsons) >= 1
 
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the per-block error flag is never merged into analyze_file()'s "
+               "return value, so a prove button on a non-Ada block reports success",
+    )
     def test_analyze_file_c_prove_button_wrong_language(self, work_dir, capsys):
-        """A C-language block with prove_button hits the 'Wrong language
-        selected for prove button' error path. Known behaviour (not a bug to
-        fix): the per-block error flag set on this path is never merged into
-        analyze_file()'s own return value, so the function still returns
-        False even though an error was printed."""
+        """A prove button on a C block must fail the analysis.
+
+        Proving is Ada-only, so a C block asking for a prove button is a
+        malformed example: the message is printed and the run must report an
+        error so the caller's exit code reflects it.
+
+        Tracking note — this currently fails. The per-block error flag set on
+        this path is written but never read: nothing merges it into the value
+        ``analyze_file()`` returns, so the run reports success and a broken
+        example passes unnoticed. The same flag is set — and lost the same way
+        — on the path that complains about a block carrying no button
+        indicator at all. A fix would fold the per-block flag into the overall
+        analysis result; this test then passes and the ``xfail`` marker must
+        be removed."""
         rst_content = (
             ".. code:: c project=TestCProve prove_button\n\n"
             "   !main.c\n"
@@ -825,8 +853,9 @@ end Main;"""
         )
         rst_file = self._write_rst(work_dir, rst_content)
         result = ep.analyze_file(rst_file)
-        assert result is False
         assert "Wrong language selected for prove button" in capsys.readouterr().out
+        assert result is True, \
+            "a prove button on a non-Ada block must surface as an overall error"
 
     def test_analyze_file_no_buttons_block(self, work_dir, capsys):
         """A compile/run-eligible block with no button keyword at all
