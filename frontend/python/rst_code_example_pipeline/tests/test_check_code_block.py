@@ -60,6 +60,32 @@ def reset_module_globals():
     ccb.force_checks = False
 
 
+def _installed_version(tool: str) -> str:
+    """Return a version of ``tool`` declared as installed in the toolchain
+    configuration, for tests that need to select a version explicitly rather
+    than take the default one."""
+    if not info.TOOLCHAINS:
+        info.init_toolchain_info()
+    return info.TOOLCHAINS[tool][0]
+
+
+def _legacy_gnatprove_version() -> str:
+    """Return the declared GNATprove version that gets the older command line.
+
+    check_block() builds a pre-14 GNATprove command line for any version whose
+    identifier starts with "12", so a test of that branch needs a declared
+    version of that generation.  Fail with a message naming the branch if none
+    is declared any more, rather than with an obscure lookup error.
+    """
+    if not info.TOOLCHAINS:
+        info.init_toolchain_info()
+    legacy = [v for v in info.TOOLCHAINS["gnatprove"] if v.startswith("12")]
+    assert legacy, \
+        "No GNATprove version of the 12 generation is declared as installed, " \
+        "so the older-style command line it needs cannot be exercised"
+    return legacy[0]
+
+
 def _make_block(project: str = "TestProject",
                 language: str = "ada",
                 classes: list[str] | None = None,
@@ -420,7 +446,7 @@ class TestCheckBlockSelectedToolchainButtonValidation:
         """When a specific toolchain version is selected, only 'no' button is allowed.
         A block with gnat_version=selected and buttons=['compile'] must fail."""
         block = _make_block(
-            gnat_version=["selected", "12.2.0-1"],
+            gnat_version=["selected", _installed_version("gnat")],
             buttons=["compile"],
             syntax_only=False,
             no_check=False,
@@ -782,7 +808,7 @@ end Main;
             compile_it=False,
             run_it=False,
             source_files=["main.adb"],
-            gnatprove_version=["selected", "12.1.0-1"],
+            gnatprove_version=["selected", _legacy_gnatprove_version()],
         )
         block.project_filename = None
         block.spark_project_filename = spark_project_filename

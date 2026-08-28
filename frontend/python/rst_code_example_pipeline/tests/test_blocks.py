@@ -12,6 +12,15 @@ Covers:
 NOTE: get_blocks_from_rst() calls toolchain_info.get_toolchain_default_version()
 at parse time; requires the Ada toolchain .ini
 is present and toolchain_info initialises correctly.
+
+NOTE: the version strings written inside the RST fixtures below, and the values
+the parser is expected to produce from them, are deliberately spelled out.  They
+stand for what a course author types in a real .rst file, and the parser never
+validates them against the configured toolchains -- it round-trips the string
+verbatim.  Driving both the input and the expected output from the toolchain
+configuration would make the pair self-referential and hide a parsing error.
+Version strings passed straight to the CodeBlock constructor are a different
+matter: those are copies of configuration data and are read back from it.
 """
 import hashlib
 import os
@@ -19,6 +28,7 @@ import os
 import pytest
 
 from rst_code_example_pipeline.blocks import Block, CodeBlock, ConfigBlock
+import rst_code_example_pipeline.toolchain_info as info
 
 
 # ---------------------------------------------------------------------------
@@ -361,6 +371,8 @@ class TestEmptyRst:
 
 class TestCodeBlockDerivedFields:
     def _make_block(self, classes, buttons=None, language="ada"):
+        if not info.DEFAULT_VERSION:
+            info.init_toolchain_info()
         return CodeBlock(
             rst_file="test.rst",
             line_start=0,
@@ -369,9 +381,9 @@ class TestCodeBlockDerivedFields:
             language=language,
             project=None,
             main_file=None,
-            gnat_version=["default", "15.1.0-2"],
-            gnatprove_version=["default", "15.1.0-1"],
-            gprbuild_version=["default", "25.0.0-1"],
+            gnat_version=["default", info.DEFAULT_VERSION["gnat"]],
+            gnatprove_version=["default", info.DEFAULT_VERSION["gnatprove"]],
+            gprbuild_version=["default", info.DEFAULT_VERSION["gprbuild"]],
             compiler_switches=["-gnata"],
             classes=classes,
             manual_chop=False,
@@ -468,6 +480,8 @@ class TestCodeBlockDerivedFields:
 
 class TestCodeBlockJsonRoundTrip:
     def _make_block(self):
+        if not info.DEFAULT_VERSION:
+            info.init_toolchain_info()
         return CodeBlock(
             rst_file="foo.rst",
             line_start=1,
@@ -476,9 +490,9 @@ class TestCodeBlockJsonRoundTrip:
             language="ada",
             project="MyProj",
             main_file="main.adb",
-            gnat_version=["default", "15.1.0-2"],
-            gnatprove_version=["default", "15.1.0-1"],
-            gprbuild_version=["default", "25.0.0-1"],
+            gnat_version=["default", info.DEFAULT_VERSION["gnat"]],
+            gnatprove_version=["default", info.DEFAULT_VERSION["gnatprove"]],
+            gprbuild_version=["default", info.DEFAULT_VERSION["gprbuild"]],
             compiler_switches=["-gnata"],
             classes=[],
             manual_chop=False,
