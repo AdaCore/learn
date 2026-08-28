@@ -147,6 +147,33 @@ class TestBlockCheckJsonRoundTrip:
         assert bc2.timestamp == 1000.0
         assert bc2.status_ok is True
 
+    def test_to_json_file_writes_the_per_phase_checks(self, tmp_path):
+        """A saved BlockCheck must carry its per-phase checks into the JSON.
+
+        Reloading them is covered by the companion ``xfail`` test below; the
+        two are kept apart so that losing the written detail fails the suite
+        on its own."""
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        cc = CodeCheck(timestamp=1.0, version="v1", status_ok=True,
+                       logfile="x.log", cmdline="cmd")
+        bc.add_check("syntax", cc)
+        assert "syntax" in bc.checks
+
+        f = str(tmp_path / "bc.json")
+        bc.to_json_file(f)
+
+        with open(f) as json_file:
+            written = json.load(json_file)
+        assert "syntax" in written["checks"], \
+            "Expected the saved JSON to record the per-phase check"
+
+        fields = written["checks"]["syntax"]
+        assert fields["timestamp"] == 1.0
+        assert fields["version"] == "v1"
+        assert fields["status_ok"] is True
+        assert fields["logfile"] == "x.log"
+        assert fields["cmdline"] == "cmd"
+
     @pytest.mark.xfail(
         strict=True,
         reason="BlockCheck.__init__ discards the checks argument, so a JSON "
@@ -154,6 +181,9 @@ class TestBlockCheckJsonRoundTrip:
     )
     def test_round_trip_preserves_the_per_phase_checks(self, tmp_path):
         """A saved BlockCheck must come back carrying its per-phase checks.
+
+        What ``to_json_file()`` writes out is covered by the companion test
+        above; this one covers only what comes back.
 
         Tracking note — this currently fails. ``BlockCheck.__init__`` accepts a
         ``checks`` argument but then unconditionally assigns
@@ -169,8 +199,6 @@ class TestBlockCheckJsonRoundTrip:
         cc = CodeCheck(timestamp=1.0, version="v1", status_ok=True,
                        logfile="x.log", cmdline="cmd")
         bc.add_check("syntax", cc)
-        # Verify the check is present before saving
-        assert "syntax" in bc.checks
 
         f = str(tmp_path / "bc.json")
         bc.to_json_file(f)
