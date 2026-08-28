@@ -46,8 +46,10 @@ def no_colors() -> Iterator[None]:
     Context manager to disable colors for a given scope.
     """
     old_val, Colors._enabled = Colors._enabled, False
-    yield
-    Colors._enabled = old_val
+    try:
+        yield
+    finally:
+        Colors._enabled = old_val
 
 
 def col(msg: str, color: str) -> str:
