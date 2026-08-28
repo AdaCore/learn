@@ -56,14 +56,6 @@ def reset_module_globals():
     ccb.force_checks = False
 
 
-@pytest.fixture(autouse=True)
-def restore_cwd():
-    """Restore working directory after each test (check_block does os.chdir)."""
-    original = os.getcwd()
-    yield
-    os.chdir(original)
-
-
 def _make_block(project: str = "TestProject",
                 language: str = "ada",
                 classes: list[str] | None = None,

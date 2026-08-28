@@ -26,14 +26,6 @@ import rst_code_example_pipeline.toolchain_info as info
 # ---------------------------------------------------------------------------
 
 @pytest.fixture(autouse=True)
-def restore_cwd():
-    """Restore the working directory after each test (get_projects changes it)."""
-    original = os.getcwd()
-    yield
-    os.chdir(original)
-
-
-@pytest.fixture(autouse=True)
 def reset_cp_globals():
     """Reset check_projects module-level globals before and after each test."""
     cp.verbose = False
