@@ -192,7 +192,7 @@ class TestBlockCheckJsonRoundTrip:
         ``CodeCheck`` entry that ``to_json_file()`` had written out. Nothing
         warns: a reloaded block simply looks like one that was never checked,
         which defeats the point of persisting the checks at all. A fix would
-        make ``__init__`` honour the argument and rebuild the ``CodeCheck``
+        make ``__init__`` honor the argument and rebuild the ``CodeCheck``
         values from their serialized form; this test then passes and the
         ``xfail`` marker must be removed."""
         bc = BlockCheck(text_hash="h", text_hash_short="s")
