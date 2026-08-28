@@ -5,14 +5,17 @@ Covers:
 - reset_toolchain() when no symlinks exist → no exception
 - reset_toolchain() when symlinks exist → symlinks removed
 - set_toolchain(block) with gnat_version=["default", …] → no symlink created
-- set_toolchain(block) with gnat_version=["selected", "12.2.0-1"] → symlink created
+- set_toolchain(block) with a non-default version selector → symlink created
 - set_toolchain() followed by reset_toolchain() → symlinks removed
 - Adversarial: set_toolchain() called twice without reset → must not fail
 - State isolation: teardown_function resets toolchain after every test
 
-NOTE: Requires the Ada toolchain installed at /opt/ada.
-The tests redirect symlink creation into a tmp_path-based directory to avoid
-mutating /opt/ada/selected in the real environment.
+NOTE: nearly every test here is toolchain-free.  The isolated_toolchain_path fixture
+redirects TOOLCHAIN_PATH into a tmp_path-based directory, so the symlinks are created
+and removed there and the real toolchain installation tree is never touched.  The one
+exception is the test that deletes the 'root' key: set_toolchain() then re-reads the
+toolchain configuration, which restores the real installation paths over the redirect,
+so the call writes into the real tree.  That single test carries the `toolchain` marker.
 """
 import os
 
@@ -26,6 +29,19 @@ from rst_code_example_pipeline.blocks import CodeBlock
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
+
+def _installed_version(tool: str) -> str:
+    """Return a version of ``tool`` declared as installed in the toolchain
+    configuration.
+
+    Tests needing a non-default toolchain selector read the version from the
+    configuration instead of spelling one out, so that changing the installed
+    set cannot leave them selecting a version that no longer exists.
+    """
+    if not info.TOOLCHAINS:
+        info.init_toolchain_info()
+    return info.TOOLCHAINS[tool][0]
+
 
 def _make_block(gnat_version: list[str],
                 gnatprove_version: list[str] | None = None,
@@ -58,11 +74,12 @@ def _make_block(gnat_version: list[str],
 def isolated_toolchain_path(tmp_path, monkeypatch):
     """
     Redirect TOOLCHAIN_PATH so symlinks are created in tmp_path instead of
-    the real /opt/ada/selected directory.  Also creates stub target directories
-    matching the installed toolchain versions so os.symlink targets exist.
+    the selected directory of the real toolchain installation tree.  Also
+    creates stub target directories matching the installed toolchain versions
+    so os.symlink targets exist.
     """
     # Ensure toolchain_info is initialised
-    if not info.DEFAULT_VERSION:
+    if not info.TOOLCHAINS:
         info.init_toolchain_info()
 
     root = tmp_path / "ada"
@@ -71,12 +88,9 @@ def isolated_toolchain_path(tmp_path, monkeypatch):
     selected.mkdir(parents=True)
     default_dir.mkdir(parents=True)
 
-    # Create stub version directories for the known installed versions
-    for tool, versions in [
-        ("gnat", ["12.2.0-1", "14.2.0-1", "15.1.0-2"]),
-        ("gnatprove", ["12.1.0-1", "14.1.0-1", "15.1.0-1"]),
-        ("gprbuild", ["22.0.0-1", "24.0.0-2", "25.0.0-1"]),
-    ]:
+    # Create a stub version directory for every version declared as installed,
+    # so that a symlink to any of them has an existing target
+    for tool, versions in info.TOOLCHAINS.items():
         for ver in versions:
             tool_dir = root / tool / ver
             tool_dir.mkdir(parents=True, exist_ok=True)
@@ -186,7 +200,7 @@ class TestSetToolchainDefaultVersion:
 class TestSetToolchainSelectedVersion:
     def test_gnat_symlink_created(self, isolated_toolchain_path):
         selected = isolated_toolchain_path["selected"]
-        block = _make_block(gnat_version=["selected", "12.2.0-1"])
+        block = _make_block(gnat_version=["selected", _installed_version("gnat")])
         setup.set_toolchain(block)
         link_path = os.path.join(selected, "gnat")
         assert os.path.exists(link_path), \
@@ -195,16 +209,17 @@ class TestSetToolchainSelectedVersion:
     def test_gnat_symlink_points_to_correct_version(self, isolated_toolchain_path):
         selected = isolated_toolchain_path["selected"]
         root = isolated_toolchain_path["root"]
-        block = _make_block(gnat_version=["selected", "14.2.0-1"])
+        version = _installed_version("gnat")
+        block = _make_block(gnat_version=["selected", version])
         setup.set_toolchain(block)
         link_path = os.path.join(selected, "gnat")
-        expected_target = os.path.join(root, "gnat", "14.2.0-1")
+        expected_target = os.path.join(root, "gnat", version)
         assert os.readlink(link_path) == expected_target, \
             f"Symlink must point to {expected_target!r}"
 
     def test_no_gnatprove_symlink_when_only_gnat_selected(self, isolated_toolchain_path):
         selected = isolated_toolchain_path["selected"]
-        block = _make_block(gnat_version=["selected", "12.2.0-1"])
+        block = _make_block(gnat_version=["selected", _installed_version("gnat")])
         setup.set_toolchain(block)
         assert not os.path.exists(os.path.join(selected, "gnatprove")), \
             "gnatprove symlink must not be created when only gnat is 'selected'"
@@ -212,9 +227,9 @@ class TestSetToolchainSelectedVersion:
     def test_all_three_selected(self, isolated_toolchain_path):
         selected = isolated_toolchain_path["selected"]
         block = _make_block(
-            gnat_version=["selected", "12.2.0-1"],
-            gnatprove_version=["selected", "12.1.0-1"],
-            gprbuild_version=["selected", "22.0.0-1"],
+            gnat_version=["selected", _installed_version("gnat")],
+            gnatprove_version=["selected", _installed_version("gnatprove")],
+            gprbuild_version=["selected", _installed_version("gprbuild")],
         )
         setup.set_toolchain(block)
         for tool in ("gnat", "gnatprove", "gprbuild"):
@@ -229,7 +244,7 @@ class TestSetToolchainSelectedVersion:
 class TestSetThenReset:
     def test_symlinks_removed_after_reset(self, isolated_toolchain_path):
         selected = isolated_toolchain_path["selected"]
-        block = _make_block(gnat_version=["selected", "15.1.0-2"])
+        block = _make_block(gnat_version=["selected", _installed_version("gnat")])
         setup.set_toolchain(block)
         assert os.path.exists(os.path.join(selected, "gnat"))
         setup.reset_toolchain()
@@ -237,7 +252,7 @@ class TestSetThenReset:
             "Symlink must be gone after reset_toolchain()"
 
     def test_set_then_reset_is_idempotent(self, isolated_toolchain_path):
-        block = _make_block(gnat_version=["selected", "14.2.0-1"])
+        block = _make_block(gnat_version=["selected", _installed_version("gnat")])
         setup.set_toolchain(block)
         setup.reset_toolchain()
         # A second reset must not raise
@@ -252,14 +267,14 @@ class TestAdversarialDoubleSet:
     def test_double_set_does_not_fail(self, isolated_toolchain_path):
         """set_toolchain() calls reset_toolchain() internally, so calling it
         twice without an explicit reset in between must not raise."""
-        block = _make_block(gnat_version=["selected", "12.2.0-1"])
+        block = _make_block(gnat_version=["selected", _installed_version("gnat")])
         setup.set_toolchain(block)
         # Second call must not raise (reset is called inside set_toolchain)
         setup.set_toolchain(block)
 
     def test_after_double_set_symlink_still_present(self, isolated_toolchain_path):
         selected = isolated_toolchain_path["selected"]
-        block = _make_block(gnat_version=["selected", "12.2.0-1"])
+        block = _make_block(gnat_version=["selected", _installed_version("gnat")])
         setup.set_toolchain(block)
         setup.set_toolchain(block)
         assert os.path.exists(os.path.join(selected, "gnat")), \
@@ -268,14 +283,15 @@ class TestAdversarialDoubleSet:
 
 # ---------------------------------------------------------------------------
 # T-toolchain_setup-07: set_toolchain() with uninitialized TOOLCHAIN_PATH
-# (covers toolchain_setup.py lines 12-13)
+# (exercises the lazy init_toolchain_info() guard at the start of set_toolchain())
 # ---------------------------------------------------------------------------
 
 class TestSetToolchain:
+    @pytest.mark.toolchain
     def test_set_toolchain_reinitialises_toolchain_path(
             self, isolated_toolchain_path, monkeypatch):
         """When TOOLCHAIN_PATH has no 'root' key, set_toolchain() calls
-        init_toolchain_info() to populate it (covers lines 12-13)."""
+        init_toolchain_info() to populate it."""
         # Remove 'root' so the guard 'if not "root" in info.TOOLCHAIN_PATH:'
         # evaluates to True
         monkeypatch.delitem(info.TOOLCHAIN_PATH, "root")
