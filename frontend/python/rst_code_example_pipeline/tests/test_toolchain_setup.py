@@ -283,7 +283,7 @@ class TestAdversarialDoubleSet:
 
 # ---------------------------------------------------------------------------
 # T-toolchain_setup-07: set_toolchain() with uninitialized TOOLCHAIN_PATH
-# (covers toolchain_setup.py lines 12-13)
+# (exercises the lazy init_toolchain_info() guard at the start of set_toolchain())
 # ---------------------------------------------------------------------------
 
 class TestSetToolchain:
@@ -291,7 +291,7 @@ class TestSetToolchain:
     def test_set_toolchain_reinitialises_toolchain_path(
             self, isolated_toolchain_path, monkeypatch):
         """When TOOLCHAIN_PATH has no 'root' key, set_toolchain() calls
-        init_toolchain_info() to populate it (covers lines 12-13)."""
+        init_toolchain_info() to populate it."""
         # Remove 'root' so the guard 'if not "root" in info.TOOLCHAIN_PATH:'
         # evaluates to True
         monkeypatch.delitem(info.TOOLCHAIN_PATH, "root")

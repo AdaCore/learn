@@ -573,7 +573,7 @@ class TestConfigBlock:
 
 # ---------------------------------------------------------------------------
 # T-blocks-15: gnatprove_version and gprbuild_version selected attributes
-# (covers blocks.py lines 129 and 133)
+# (covers the "selected" branch of gnatprove= and gprbuild= version parsing)
 # ---------------------------------------------------------------------------
 
 class TestGnatproveVersionSelected:

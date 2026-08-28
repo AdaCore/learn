@@ -219,7 +219,7 @@ class TestCheapoGnatchopEdgeCases:
 
 # ---------------------------------------------------------------------------
 # T-chop-06: real_gnatchop — Ada toolchain required
-# (covers chop.py lines 96-149)
+# (covers real_gnatchop end to end: success, switch filtering, error handling)
 # ---------------------------------------------------------------------------
 
 @pytest.mark.toolchain
@@ -230,7 +230,8 @@ class TestRealGnatchop:
 
     def test_valid_ada_no_switches_returns_resources(self):
         """real_gnatchop with compiler_switches=None returns a non-empty list
-        of Resource objects (covers line 118 — compiler_switches=None branch)."""
+        of Resource objects, taking the branch that invokes gnatchop with no
+        switches."""
         result = real_gnatchop(self.VALID_ADA, compiler_switches=None)
         assert len(result) >= 1
         assert all(isinstance(r, Resource) for r in result)
@@ -242,16 +243,17 @@ class TestRealGnatchop:
         assert "main.adb" in basenames
 
     def test_valid_ada_with_compiler_switches(self):
-        """real_gnatchop with compiler_switches=["-gnata"] exercises the
-        'cmd.extend' path (lines 120-125) and still succeeds."""
+        """real_gnatchop with compiler_switches=["-gnata"] exercises the branch
+        that appends the accepted switches to the gnatchop command line, and
+        still succeeds."""
         result = real_gnatchop(self.VALID_ADA, compiler_switches=["-gnata"])
         assert len(result) >= 1
         basenames = [r.basename for r in result]
         assert "main.adb" in basenames
 
     def test_invalid_input_raises_exception(self):
-        """Garbage input causes gnatchop to fail; the error handler at lines
-        137-144 prints the numbered lines and raises Exception."""
+        """Garbage input causes gnatchop to fail; the CalledProcessError
+        handler prints the numbered input lines and raises Exception."""
         with pytest.raises(Exception, match="Could not chop files with gnatchop"):
             real_gnatchop(["this is not valid Ada at all !@#$"],
                           compiler_switches=None)
