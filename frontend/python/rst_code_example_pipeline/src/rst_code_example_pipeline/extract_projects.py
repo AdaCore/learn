@@ -183,19 +183,40 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
             the extracted projects are added to. Defaults to None.
 
     Returns:
-        bool: The error flag for this file, which the extraction command turns
-            into its exit status: a true value makes the run exit non-zero.
+        bool: The error flag for this file. The extraction command turns a
+            true value into a non-zero exit status.
 
     Note:
-        The flag covers failures of the extraction run as a whole, not errors
-        reported for an individual code block. Such an error is printed and
-        the flag stays false, so a caller that only inspects the returned
-        value can conclude the file was extracted cleanly when it was not.
-        This applies to every per-block error reported here today: a block
-        whose source cannot be chopped into source files, a block whose button
-        and language do not go together, and a block with no button indicator.
-        Making these reach the flag is a behavior change: ReST files that pass
-        today would start failing.
+        That flag is effectively the constant ``False`` today, so the exit
+        status derived from it never becomes non-zero:
+
+        * The single assignment that would set it sits in the nested
+          ``expand_source_files()``. Without a ``nonlocal`` declaration it
+          binds a fresh local there rather than the flag defined in this
+          function, so the chopping failure it records dies with the nested
+          scope.
+        * The remaining per-block errors printed here never touch the flag at
+          all: a block whose button and language do not go together, and a
+          block with no button indicator.
+        * The one condition this function treats as fatal for the whole run,
+          a code block with no project name, calls ``exit(1)`` directly and so
+          bypasses the flag too.
+
+        A caller that inspects only the returned value therefore always
+        concludes the file was extracted cleanly. In the extraction command
+        this leaves the failure branch unreachable; that branch also announces
+        ``TEST ERROR`` through ``fmt_utils.simple_success()``, the formatter
+        for success messages.
+
+        Not every ``ERROR`` line printed here marks a failure either. Removing
+        a per-block directory left over from an earlier run whose info JSON
+        file has gone missing is reported the same way, and that is a recovery
+        on the success path.
+
+        Repairing this means declaring ``nonlocal analysis_error`` in the
+        nested scope and setting the flag at the remaining per-block error
+        sites. Both are behavior changes: ReST files that pass today would
+        start failing.
     """
 
     analysis_error = False
