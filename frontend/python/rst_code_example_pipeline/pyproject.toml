@@ -24,6 +24,9 @@ rst_code_example_pipeline = ["data/*.ini"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--cov=rst_code_example_pipeline --cov-report=term-missing"
+markers = [
+    "toolchain: test needs the Ada toolchain -- it either invokes a binary (gcc, gprbuild, gnatprove, gnatchop) on PATH, or reaches code that creates/removes symlinks under the toolchain installation tree",
+]
 
 [tool.coverage.run]
 source = ["rst_code_example_pipeline"]
