@@ -44,6 +44,9 @@ if not sys.stdout.isatty() or not sys.stderr.isatty():  # pragma: no branch
 def no_colors() -> Iterator[None]:
     """
     Context manager to disable colors for a given scope.
+
+    The previous setting is restored when the scope ends, including when it
+    ends by raising an exception.
     """
     old_val, Colors._enabled = Colors._enabled, False
     try:
