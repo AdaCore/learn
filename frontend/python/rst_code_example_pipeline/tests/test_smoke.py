@@ -23,13 +23,20 @@ def _distribution_name() -> str:
     distribution is named with hyphens where the import package uses
     underscores, and only the metadata knows which distribution provides
     which import package.
+
+    The same distribution is reported once per metadata directory on the
+    import path.  An editable install routinely has two -- the one written
+    beside the interpreter and the build residue left in the source tree --
+    so repeats of a single name are expected and are collapsed here.  Two
+    *different* names is the case worth failing on: the lookup would then be
+    ambiguous and the version compared below could come from either.
     """
-    provided_by = metadata.packages_distributions()[
-        rst_code_example_pipeline.__name__]
+    provided_by = set(metadata.packages_distributions()[
+        rst_code_example_pipeline.__name__])
     assert len(provided_by) == 1, \
         "expected exactly one distribution to provide the package, got " \
-        "{}".format(provided_by)
-    return provided_by[0]
+        "{}".format(sorted(provided_by))
+    return provided_by.pop()
 
 
 class TestPackageMetadata:
