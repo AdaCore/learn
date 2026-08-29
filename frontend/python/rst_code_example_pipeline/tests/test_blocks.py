@@ -489,40 +489,43 @@ class TestCodeBlockDerivedFields:
     # outside this package requires any particular algorithm, and a pinned
     # digest would freeze one for no benefit.
 
-    # Hashing the same text in a fresh interpreter and comparing against the
-    # in-process value.  A same-process comparison cannot see the failure this
-    # test exists for: a hash that folds in anything drawn per process is
-    # perfectly stable within one run and still moves the project directory
-    # and loses the cached check result on the next one.
+    # Hash the given text in a fresh interpreter, in a block whose every other
+    # field differs from the one the test builds in process.  Two things have
+    # to be true at once and neither alone is enough: the hash must survive a
+    # process boundary -- one that folds in a value drawn per process is
+    # perfectly stable within a single run, and still moves the project
+    # directory and orphans the cached check result on the next one -- and it
+    # must be a function of the block text alone, or moving a block to another
+    # file, or editing the line above it, has the same effect.
     _HASH_PROBE = textwrap.dedent(
         """
         import json, sys
         from rst_code_example_pipeline.blocks import CodeBlock
 
         block = CodeBlock(
-            rst_file="test.rst",
-            line_start=0,
-            line_end=5,
+            rst_file="other.rst",
+            line_start=42,
+            line_end=99,
             text=sys.argv[1],
-            language="ada",
-            project=None,
-            main_file=None,
-            gnat_version=["default", "unused"],
-            gnatprove_version=["default", "unused"],
-            gprbuild_version=["default", "unused"],
-            compiler_switches=[],
-            classes=[],
-            manual_chop=False,
-            buttons=[],
+            language="c",
+            project="OtherProject",
+            main_file="other.c",
+            gnat_version=["selected", "1.2.3-4"],
+            gnatprove_version=["selected", "1.2.3-4"],
+            gprbuild_version=["selected", "1.2.3-4"],
+            compiler_switches=["-gnatwa"],
+            classes=["c-nocheck"],
+            manual_chop=True,
+            buttons=["run"],
         )
         print(json.dumps([block.text_hash, block.text_hash_short]))
         """
     )
 
     def test_text_hashes_are_deterministic_across_runs(self):
-        """The same block text must hash the same way on every run, or a
-        block's project directory moves and its cached check result is never
-        found again between runs."""
+        """The same block text must hash the same way on every run and in every
+        block that carries it, or a block's project directory moves and its
+        cached check result is never found again."""
         b = self._make_block([])
         output = subprocess.check_output(
             [sys.executable, "-c", self._HASH_PROBE, b.text], text=True)
