@@ -363,30 +363,11 @@ class TestCheckBlockForceChecks:
 class TestCheckBlockNoButtons:
     def test_empty_buttons_returns_true(self, work_dir):
         """A block with empty buttons list must fail the BUTTONS check."""
-        # Use syntax_only=True to short-circuit after the SYNTAX check so
-        # we reach the BUTTONS validation. Actually syntax_only returns early.
-        # Use an actual no-compile block but with empty buttons to hit BUTTONS.
-        # We need to reach the BUTTONS check section (the "if True:" block always runs).
-        # The BUTTONS check is always run (it's under `if True:`).
-        # With syntax_only=True the function returns early before BUTTONS.
-        # So we need a block that is NOT syntax-only and NOT no_check.
-        # We need source_files to be empty so the SYNTAX loop doesn't subprocess-fail.
-        # Easiest: use a block that IS marked syntax_only in the classes, so
-        # gcc runs on zero source_files (loop doesn't execute), and then
-        # the syntax_only branch returns early.
-        # To actually hit the BUTTONS check, we need a non-syntax-only, non-no-check
-        # block that has been pre-cached as passing syntax so it doesn't try subprocess.
-        # The simplest approach: pre-write a block_checks.json with status_ok=True so
-        # the cache is hit first. But we want to test BUTTONS.
-        # Alternative: use force_checks=True and an empty source_files list so the
-        # SYNTAX loop does nothing, then BUTTONS check runs and finds empty buttons.
-        #
-        # Actually: with force_checks=True, no cache is read. SYNTAX loop runs on
-        # block.source_files (empty → loop body never executes → no subprocess).
-        # block.syntax_only=False → we don't return early at the syntax_only branch.
-        # block.compile_it=False → no compile.
-        # block.prove_it=False → no prove.
-        # BUTTONS check: buttons=[] → error.
+        # The block asks for nothing but the button validation: it is
+        # neither no-check nor syntax-only, so the check runs to the end; it
+        # declares no source files, so the syntax check has nothing to look
+        # at; and it asks for no compile and no proof.  Forcing the checks
+        # keeps a cached result from short-circuiting all of that.
 
         block = _make_block(buttons=[], syntax_only=False, no_check=False)
         json_file = str(work_dir / "block_info.json")
@@ -633,7 +614,7 @@ class TestCheckBlockRealCompile:
 
 # ---------------------------------------------------------------------------
 # C1 — TestCheckBlockCCompile
-# Covers check_code_block.py C language compile path (lines ~285-312)
+# Covers the compile step for a C block.
 # Requires gcc in PATH (part of the Ada toolchain).
 # ---------------------------------------------------------------------------
 
@@ -768,7 +749,7 @@ end Bad;
 
 # ---------------------------------------------------------------------------
 # C3 — TestCheckBlockGnatprove
-# Covers gnatprove path (lines ~411-473)
+# Covers the proof step, which only Ada blocks reach.
 # Requires gnatprove in PATH (part of the Ada toolchain).
 # ---------------------------------------------------------------------------
 

@@ -325,8 +325,8 @@ class TestCheckProjectsExtended:
             "Expected verbose project header to contain the project name"
 
     def test_check_projects_skips_inactive_block(self, tmp_path, monkeypatch):
-        """A block with active=False is skipped by check_projects() without
-        calling check_block() (exercises the inactive-block continue path)."""
+        """A block marked inactive must be skipped by check_projects()
+        without being checked at all."""
         # Build a block and serialise it with active=False
         if not info.DEFAULT_VERSION:
             info.init_toolchain_info()

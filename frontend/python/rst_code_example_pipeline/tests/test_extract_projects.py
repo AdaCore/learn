@@ -451,9 +451,8 @@ Explanatory paragraph.
 
     @pytest.mark.toolchain
     def test_code_block_at_matches_one_block(self, work_dir):
-        """code_block_at set to a value inside a block's (line_start, line_end)
-        range: that block stays active, the true branch of the code_block_at
-        match."""
+        """A block whose line range contains the requested line must stay
+        active and be extracted."""
         ep.code_block_at = 4
         rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
         result = ep.analyze_file(rst_file)
@@ -462,8 +461,8 @@ Explanatory paragraph.
         assert (work_dir / "projects" / "NoCheckProject").exists()
 
     def test_code_block_at_sets_inactive(self, work_dir, capsys):
-        """Set code_block_at to a value that matches no block — all blocks stay
-        inactive and the inner loop skips all of them via the inactive-block continue path."""
+        """A requested line that falls inside no block must leave every block
+        inactive, so that nothing is extracted."""
         # code_block_at=9999 is far beyond any line in the small RST fixture
         ep.code_block_at = 9999
         rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
@@ -678,8 +677,8 @@ Second explanatory paragraph.
         return str(rst_path)
 
     def test_two_blocks_same_project(self, work_dir):
-        """Two no-check Ada blocks with the same project= attribute: the second
-        block hits the false branch of 'if not b.project in projects:'."""
+        """Two no-check Ada blocks declaring the same project= attribute must
+        both be extracted under that one project."""
         rst_file = self._write_rst(work_dir, self.TWO_BLOCKS_RST)
         result = ep.analyze_file(rst_file)
         assert result is False
