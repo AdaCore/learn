@@ -203,6 +203,40 @@ class Block(object):
             json.dump(block_info, f, indent=4)
 
 class CodeBlock(Block):
+    """A single code block extracted from a ReST file
+
+    Note:
+        ``text_hash`` and ``text_hash_short`` are derived from the block's
+        text whenever the constructor is not handed them. What this package
+        asks of them is exactly three things:
+
+        * **determinism** -- the same text hashes the same way in every run,
+          or a block's directory moves and the result cached in it is never
+          found again;
+        * **distinctness** -- two different texts do not collide, or one
+          block's extracted project overwrites another's and one of the two
+          silently stops being checked;
+        * **hexadecimal shape** -- the short hash is used verbatim as a
+          directory name, so it must hold nothing a path would have to
+          escape.
+
+        What this package does **not** ask of them is any particular digest.
+        Neither hash is compared against a value computed anywhere else in
+        the package, so SHA-512 and MD5 are a choice made here, not a
+        promise made to a caller. Tests belong on the three properties above
+        and never on a literal digest: pinning one turns a correct change of
+        algorithm into a test failure, which is the opposite of what such a
+        test is for.
+
+        One constraint does come from outside the package, and it is easy to
+        miss because nothing fails loudly when it is broken:
+        ``frontend/sphinx/widget_extension.py`` recomputes the same MD5 over
+        the same block text and uses it to locate the per-block directory
+        whose log files it renders beside the example. Change the algorithm
+        on one side only and the boxes simply come out empty. The two sides
+        have to move together.
+    """
+
     @staticmethod
     def from_json_file(json_filename: str | None = None) -> CodeBlock | None:
 
