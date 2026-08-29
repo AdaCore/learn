@@ -20,6 +20,7 @@ import re
 
 from . import blocks
 from . import checks
+from . import constants
 from . import fmt_utils
 from . import toolchain_setup
 
@@ -259,7 +260,7 @@ def check_block(block: blocks.CodeBlock,
                 out = run(*cmdline)
 
             except S.CalledProcessError as e:
-                if 'ada-expect-compile-error' in block.classes:
+                if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
                     compile_error = True
                 else:
                     print_error(loc, "Failed to compile example")
@@ -289,7 +290,7 @@ def check_block(block: blocks.CodeBlock,
                            P.splitext(block.project_main_file)[0]] + glob.glob('*.c')
                 out = run(*cmdline)
             except S.CalledProcessError as e:
-                if 'c-expect-compile-error' in block.classes:
+                if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
                     compile_error = True
                 else:
                     print_error(loc, "Failed to compile example")
@@ -319,14 +320,14 @@ def check_block(block: blocks.CodeBlock,
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
                     out = run(*cmdline)
 
-                    if 'ada-run-expect-failure' in block.classes:
+                    if constants.CLASS_ADA_RUN_EXPECT_FAILURE in block.classes:
                         print_error(
                             loc, "Running of example should have failed"
                         )
                         check_error = True
 
                 except S.CalledProcessError as e:
-                    if 'ada-run-expect-failure' in block.classes:
+                    if constants.CLASS_ADA_RUN_EXPECT_FAILURE in block.classes:
                         if verbose:
                             print("Running of example expectedly failed")
                     else:
@@ -344,14 +345,14 @@ def check_block(block: blocks.CodeBlock,
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
                     out = run(*cmdline)
 
-                    if 'c-run-expect-failure' in block.classes:
+                    if constants.CLASS_C_RUN_EXPECT_FAILURE in block.classes:
                         print_error(
                             loc, "Running of example should have failed"
                         )
                         check_error = True
 
                 except S.CalledProcessError as e:
-                    if 'c-run-expect-failure' in block.classes:
+                    if constants.CLASS_C_RUN_EXPECT_FAILURE in block.classes:
                         if verbose:
                             print("Running of example expectedly failed")
                     else:
@@ -380,7 +381,7 @@ def check_block(block: blocks.CodeBlock,
                     out = run("gcc", "-c", "-gnatc", "-gnatyg0-s",
                                 source_file)
                 except S.CalledProcessError as e:
-                    if 'ada-expect-compile-error' in block.classes:
+                    if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
                         compile_error = True
                     else:
                         print_error(loc, "Failed to compile example")
@@ -394,7 +395,7 @@ def check_block(block: blocks.CodeBlock,
                 try:
                     out = run("gcc", "-c", source_file)
                 except S.CalledProcessError as e:
-                    if 'c-expect-compile-error' in block.classes:
+                    if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
                         compile_error = True
                     else:
                         print_error(loc, "Failed to compile example")
@@ -412,20 +413,20 @@ def check_block(block: blocks.CodeBlock,
 
         if block.language == "ada":
 
-            is_prove_error_class = any(c in ['ada-expect-prove-error',
-                                'ada-expect-compile-error',
-                                'ada-run-expect-failure']
+            is_prove_error_class = any(c in [constants.CLASS_ADA_EXPECT_PROVE_ERROR,
+                                constants.CLASS_ADA_EXPECT_COMPILE_ERROR,
+                                constants.CLASS_ADA_RUN_EXPECT_FAILURE]
                         for c in block.classes)
             extra_args = []
 
             if 'prove_flow' in block.buttons \
-                or 'ada-prove-flow' in block.classes:
+                or constants.CLASS_ADA_PROVE_FLOW in block.classes:
                 extra_args = ["--mode=flow"]
             elif 'prove_flow_report_all' in block.buttons \
-                or 'ada-prove-flow-report-all' in block.classes:
+                or constants.CLASS_ADA_PROVE_FLOW_REPORT_ALL in block.classes:
                 extra_args = ["--mode=flow", "--report=all"]
             elif 'prove_report_all' in block.buttons \
-                or 'ada-report-all' in block.classes:
+                or constants.CLASS_ADA_REPORT_ALL in block.classes:
                 extra_args = ["--report=all"]
 
             # Default switches for GNATprove 14 and above
@@ -486,16 +487,18 @@ def check_block(block: blocks.CodeBlock,
             print_error(loc, "Only 'no_button' is allowed when selecting a specific toolchain!")
             check_error = True
 
-        if 'ada-expect-compile-error' in block.classes:
+        if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
             if (not (any(b in ['compile', 'run'] for b in block.buttons) or
-                     any(c in ['ada-compile', 'ada-run'] for c in block.classes))):
+                     any(c in [constants.CLASS_ADA_COMPILE,
+                               constants.CLASS_ADA_RUN]
+                         for c in block.classes))):
                 print_error(loc, "Expected compile or run button/class, got none!")
                 check_error = True
             if not compile_error:
                 print_error(loc, "Expected compile error, got none!")
                 check_error = True
 
-        if 'ada-expect-prove-error' in block.classes:
+        if constants.CLASS_ADA_EXPECT_PROVE_ERROR in block.classes:
             if not block.prove_it:
                 print_error(loc, "Expected prove button, got none!")
                 check_error = True
@@ -505,10 +508,11 @@ def check_block(block: blocks.CodeBlock,
                 print_error(loc, "Expected prove error, got none!")
                 check_error = True
 
-        if (any (c in ['ada-run-expect-failure','ada-norun'] for
-                    c in block.classes)
+        if (any (c in [constants.CLASS_ADA_RUN_EXPECT_FAILURE,
+                       constants.CLASS_ADA_NORUN]
+                    for c in block.classes)
             and not ('run' in block.buttons or
-                     'ada-run' in block.classes)):
+                     constants.CLASS_ADA_RUN in block.classes)):
             print_error(loc, "Expected run button, got none!")
             check_error = True
 

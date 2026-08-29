@@ -260,30 +260,28 @@ class CodeBlock(Block):
         self.active: bool = active if active is not None else True
 
         self.no_check: bool = no_check if no_check is not None else \
-            any(sphinx_class in ["ada-nocheck", "c-nocheck"]
+            any(sphinx_class in [constants.CLASS_ADA_NOCHECK, constants.CLASS_C_NOCHECK]
                 for sphinx_class in self.classes)
 
         self.syntax_only: bool = syntax_only if syntax_only is not None else \
-            'ada-syntax-only' in self.classes
+            constants.CLASS_ADA_SYNTAX_ONLY in self.classes
 
         self.run_it: bool = run_it if run_it is not None else \
-            (('ada-run' in self.classes
-              or 'ada-run-expect-failure' in self.classes
+            ((constants.CLASS_ADA_RUN in self.classes
+              or constants.CLASS_ADA_RUN_EXPECT_FAILURE in self.classes
               or 'run' in self.buttons)
-              and not 'ada-norun' in self.classes)
+              and not constants.CLASS_ADA_NORUN in self.classes)
         self.compile_it: bool = compile_it if compile_it is not None else \
             self.run_it or \
-            (('ada-compile' in self.classes and self.language == 'ada')
-             or ('c-compile' in self.classes and self.language == 'c')
+            ((constants.CLASS_ADA_COMPILE in self.classes and self.language == 'ada')
+             or (constants.CLASS_C_COMPILE in self.classes and self.language == 'c')
              or 'compile' in self.buttons)
 
         prove_buttons: list[str] = ["prove", "prove_flow", "prove_flow_report_all",
                          "prove_report_all"]
-        prove_classes: list[str] = ["ada-prove", "ada-prove-flow", "ada-prove-flow-report-all",
-                         "ada-prove-report-all"]
 
         self.prove_it: bool = prove_it if prove_it is not None else \
-            (any(b in prove_classes for b in self.classes)
+            (any(b in constants.PROVE_CLASSES for b in self.classes)
              or any(b in prove_buttons for b in self.buttons))
 
         self.source_files: list[str] = source_files if source_files is not None else \
