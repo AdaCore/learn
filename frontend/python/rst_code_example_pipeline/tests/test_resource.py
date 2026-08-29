@@ -7,8 +7,6 @@ Covers:
 - append() adds a line; empty resource then append
 - Adversarial: append empty string; append line with embedded newline
 """
-import pytest
-
 from rst_code_example_pipeline.resource import Resource
 
 

@@ -229,9 +229,8 @@ class TestRealGnatchop:
     VALID_ADA = ["procedure Main is", "begin null; end Main;"]
 
     def test_valid_ada_no_switches_returns_resources(self):
-        """real_gnatchop with compiler_switches=None returns a non-empty list
-        of Resource objects, taking the branch that invokes gnatchop with no
-        switches."""
+        """real_gnatchop with no compiler switches returns a non-empty list
+        of Resource objects."""
         result = real_gnatchop(self.VALID_ADA, compiler_switches=None)
         assert len(result) >= 1
         assert all(isinstance(r, Resource) for r in result)
@@ -243,9 +242,8 @@ class TestRealGnatchop:
         assert "main.adb" in basenames
 
     def test_valid_ada_with_compiler_switches(self):
-        """real_gnatchop with compiler_switches=["-gnata"] exercises the branch
-        that appends the accepted switches to the gnatchop command line, and
-        still succeeds."""
+        """real_gnatchop must still chop the source when it is given
+        compiler switches to pass on."""
         result = real_gnatchop(self.VALID_ADA, compiler_switches=["-gnata"])
         assert len(result) >= 1
         basenames = [r.basename for r in result]

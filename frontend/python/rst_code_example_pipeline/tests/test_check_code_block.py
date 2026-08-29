@@ -21,6 +21,8 @@ Covers:
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
 - an unrecognized language value takes neither the Ada nor the C branch anywhere
+- the maximum-columns setting reaches the Ada syntax check, and the limit applied
+  is the one that was asked for
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
 - gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
@@ -57,20 +59,6 @@ import rst_code_example_pipeline.toolchain_info as info
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
 
-@pytest.fixture(autouse=True)
-def reset_module_globals():
-    """Reset check_code_block module-level globals before and after each test."""
-    ccb.verbose = False
-    ccb.all_diagnostics = False
-    ccb.max_columns = 0
-    ccb.force_checks = False
-    yield
-    ccb.verbose = False
-    ccb.all_diagnostics = False
-    ccb.max_columns = 0
-    ccb.force_checks = False
-
-
 # The smallest Ada program that compiles and runs, shared by every test that
 # needs a source file but does not care what it contains.
 MINIMAL_ADA_SOURCE = """\
@@ -79,6 +67,20 @@ begin
    null;
 end Main;
 """
+
+
+def _ada_source_with_a_line_of_width(width: int) -> str:
+    """A syntactically valid Ada program whose declaration line is exactly
+    ``width`` characters across.
+
+    For tests that set a column limit to one side of that width and check
+    what the syntax check makes of it.
+    """
+    head, tail = '   S : constant String := "', '";'
+    line = head + "x" * (width - len(head) - len(tail)) + tail
+    assert len(line) == width, \
+        "the source line must be exactly the width the test asked for"
+    return "procedure Main is\n{}\nbegin\n   null;\nend Main;\n".format(line)
 
 
 def _installed_version(tool: str) -> str:
@@ -224,14 +226,13 @@ class TestCheckBlockNoCheck:
 
 @pytest.mark.toolchain
 class TestCheckBlockCacheHitOk:
-    def test_cache_hit_returns_false(self, tmp_path):
+    def test_cache_hit_returns_false(self, work_dir):
         """Prior check with status_ok=True and force_checks=False → return False."""
         block = _make_block(buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         # Write a fake block_checks.json in the same directory
-        os.chdir(str(tmp_path))
         bc = _checks_mod.BlockCheck(
             text_hash=block.text_hash,
             text_hash_short=block.text_hash_short,
@@ -249,13 +250,12 @@ class TestCheckBlockCacheHitOk:
 
 @pytest.mark.toolchain
 class TestCheckBlockCacheHitFail:
-    def test_cached_failure_returns_true(self, tmp_path):
+    def test_cached_failure_returns_true(self, work_dir):
         """Prior check with status_ok=False and force_checks=False → return True."""
         block = _make_block(buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
-        os.chdir(str(tmp_path))
         bc = _checks_mod.BlockCheck(
             text_hash=block.text_hash,
             text_hash_short=block.text_hash_short,
@@ -266,15 +266,14 @@ class TestCheckBlockCacheHitFail:
         result = ccb.check_block(block, json_file, force_checks=False)
         assert result is True
 
-    def test_cached_none_status_ok_reruns(self, tmp_path):
+    def test_cached_none_status_ok_reruns(self, work_dir):
         """status_ok=None in the cache means previous run was incomplete.
         The code does `not ref_block_check.status_ok` which evaluates None as
         falsy — so has_error=True and we return True. Verify this edge case."""
         block = _make_block(buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
-        os.chdir(str(tmp_path))
         bc = _checks_mod.BlockCheck(
             text_hash=block.text_hash,
             text_hash_short=block.text_hash_short,
@@ -310,7 +309,7 @@ class TestCheckBlockCorruptCache:
 
 @pytest.mark.toolchain
 class TestCheckBlockForceChecks:
-    def test_forcing_the_checks_overrides_a_cached_failure(self, tmp_path):
+    def test_forcing_the_checks_overrides_a_cached_failure(self, work_dir):
         """Forcing the checks must ignore what a previous run recorded and
         check the block again.
 
@@ -326,9 +325,8 @@ class TestCheckBlockForceChecks:
         record left behind afterwards must carry this run's own result and the
         checks it performed.
         """
-        src = tmp_path / "main.adb"
+        src = work_dir / "main.adb"
         src.write_text(MINIMAL_ADA_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = _make_block(
             buttons=["no"],
@@ -336,7 +334,7 @@ class TestCheckBlockForceChecks:
             syntax_only=False,
             source_files=["main.adb"],
         )
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         stale = _checks_mod.BlockCheck(
@@ -350,7 +348,7 @@ class TestCheckBlockForceChecks:
         assert result is False, \
             "a recorded failure must not be returned when the checks are forced"
 
-        rewritten = json.loads((tmp_path / "block_checks.json").read_text())
+        rewritten = json.loads((work_dir / "block_checks.json").read_text())
         assert rewritten["status_ok"] is True, \
             "the forced run must replace the stale record with its own result"
         assert "SYNTAX" in rewritten["checks"], \
@@ -363,49 +361,28 @@ class TestCheckBlockForceChecks:
 
 @pytest.mark.toolchain
 class TestCheckBlockNoButtons:
-    def test_empty_buttons_returns_true(self, tmp_path):
+    def test_empty_buttons_returns_true(self, work_dir):
         """A block with empty buttons list must fail the BUTTONS check."""
-        # Use syntax_only=True to short-circuit after the SYNTAX check so
-        # we reach the BUTTONS validation. Actually syntax_only returns early.
-        # Use an actual no-compile block but with empty buttons to hit BUTTONS.
-        # We need to reach the BUTTONS check section (the "if True:" block always runs).
-        # The BUTTONS check is always run (it's under `if True:`).
-        # With syntax_only=True the function returns early before BUTTONS.
-        # So we need a block that is NOT syntax-only and NOT no_check.
-        # We need source_files to be empty so the SYNTAX loop doesn't subprocess-fail.
-        # Easiest: use a block that IS marked syntax_only in the classes, so
-        # gcc runs on zero source_files (loop doesn't execute), and then
-        # the syntax_only branch returns early.
-        # To actually hit the BUTTONS check, we need a non-syntax-only, non-no-check
-        # block that has been pre-cached as passing syntax so it doesn't try subprocess.
-        # The simplest approach: pre-write a block_checks.json with status_ok=True so
-        # the cache is hit first. But we want to test BUTTONS.
-        # Alternative: use force_checks=True and an empty source_files list so the
-        # SYNTAX loop does nothing, then BUTTONS check runs and finds empty buttons.
-        #
-        # Actually: with force_checks=True, no cache is read. SYNTAX loop runs on
-        # block.source_files (empty → loop body never executes → no subprocess).
-        # block.syntax_only=False → we don't return early at the syntax_only branch.
-        # block.compile_it=False → no compile.
-        # block.prove_it=False → no prove.
-        # BUTTONS check: buttons=[] → error.
+        # The block asks for nothing but the button validation: it is
+        # neither no-check nor syntax-only, so the check runs to the end; it
+        # declares no source files, so the syntax check has nothing to look
+        # at; and it asks for no compile and no proof.  Forcing the checks
+        # keeps a cached result from short-circuiting all of that.
 
         block = _make_block(buttons=[], syntax_only=False, no_check=False)
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True, \
             "check_block() must return True (has_error) when buttons list is empty"
 
-    def test_empty_buttons_prints_error(self, tmp_path, capsys):
+    def test_empty_buttons_prints_error(self, work_dir, capsys):
         """The diagnostic must name the offending block and say what was
         missing, since that text is all a course author gets to act on."""
         block = _make_block(buttons=[], syntax_only=False, no_check=False)
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         ccb.check_block(block, json_file, force_checks=True)
         captured = capsys.readouterr()
@@ -435,10 +412,10 @@ begin
 end Main;
 """
 
-    def test_valid_ada_syntax_returns_false(self, tmp_path):
+    def test_valid_ada_syntax_returns_false(self, work_dir):
         """A syntactically correct Ada block must pass the syntax check."""
         # Write source file
-        src = tmp_path / "main.adb"
+        src = work_dir / "main.adb"
         src.write_text(self.ADA_SOURCE)
 
         block = _make_block(
@@ -447,18 +424,17 @@ end Main;
             no_check=False,
             source_files=["main.adb"],
         )
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is False, \
             "A syntactically valid Ada block must not produce an error"
 
-    def test_invalid_ada_syntax_returns_true(self, tmp_path):
+    def test_invalid_ada_syntax_returns_true(self, work_dir):
         """A syntactically invalid Ada block must fail the syntax check."""
         bad_source = "this is not ada;\n"
-        src = tmp_path / "bad.adb"
+        src = work_dir / "bad.adb"
         src.write_text(bad_source)
 
         block = _make_block(
@@ -467,9 +443,8 @@ end Main;
             no_check=False,
             source_files=["bad.adb"],
         )
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True, \
@@ -494,12 +469,11 @@ class TestCheckCodeBlockJson:
         assert "ERROR" in captured.out
 
     @pytest.mark.toolchain
-    def test_valid_nocheck_block_json_returns_false(self, tmp_path):
+    def test_valid_nocheck_block_json_returns_false(self, work_dir):
         """check_code_block_json() on a no-check block must return False."""
         block = _make_block(classes=["ada-nocheck"], no_check=True, buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
         result = ccb.check_code_block_json(json_file)
         assert result is False
 
@@ -510,7 +484,7 @@ class TestCheckCodeBlockJson:
 
 @pytest.mark.toolchain
 class TestCheckBlockSelectedToolchainButtonValidation:
-    def test_selected_gnat_with_compile_button_fails_buttons_check(self, tmp_path):
+    def test_selected_gnat_with_compile_button_fails_buttons_check(self, work_dir):
         """When a specific toolchain version is selected, only 'no' button is allowed.
         A block with gnat_version=selected and buttons=['compile'] must fail."""
         block = _make_block(
@@ -522,9 +496,8 @@ class TestCheckBlockSelectedToolchainButtonValidation:
             # triggering gprclean/gprbuild (which need a real project file).
             compile_it=False,
         )
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True, \
@@ -579,7 +552,6 @@ class TestCheckBlockRealCompile:
 
         json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(work_dir))
 
         capsys.readouterr()
         result = ccb.check_block(block, json_file, force_checks=True)
@@ -642,7 +614,7 @@ class TestCheckBlockRealCompile:
 
 # ---------------------------------------------------------------------------
 # C1 — TestCheckBlockCCompile
-# Covers check_code_block.py C language compile path (lines ~285-312)
+# Covers the compile step for a C block.
 # Requires gcc in PATH (part of the Ada toolchain).
 # ---------------------------------------------------------------------------
 
@@ -653,11 +625,10 @@ class TestCheckBlockCCompile:
     VALID_C_SOURCE = "int main(void) { return 0; }\n"
     INVALID_C_SOURCE = "this is not C at all !@#$\n"
 
-    def test_c_compile_success(self, tmp_path):
+    def test_c_compile_success(self, work_dir):
         """A valid C file with compile_it=True and buttons=['compile'] must return False."""
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.VALID_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = _make_block(
             language="c",
@@ -669,18 +640,17 @@ class TestCheckBlockCCompile:
             source_files=["main.c"],
         )
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is False, \
             "A valid C file must compile without error"
 
-    def test_c_compile_failure(self, tmp_path):
+    def test_c_compile_failure(self, work_dir):
         """An invalid C file with compile_it=True must return True (has_error)."""
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.INVALID_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = _make_block(
             language="c",
@@ -692,7 +662,7 @@ class TestCheckBlockCCompile:
             source_files=["main.c"],
         )
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
@@ -723,13 +693,12 @@ end Bad;
 """
     VALID_C_SOURCE = "int main(void) { return 0; }\n"
 
-    def test_ada_expect_compile_error(self, tmp_path):
+    def test_ada_expect_compile_error(self, work_dir):
         """A block with classes=['ada-expect-compile-error', 'nosyntax-check']
         and Ada source that fails to compile at the BUILD phase must return False
         (the expected compile failure is not treated as an error)."""
-        src = tmp_path / "bad.adb"
+        src = work_dir / "bad.adb"
         src.write_text(self.BAD_BUILD_ADA_SOURCE)
-        os.chdir(str(tmp_path))
         project_filename = ep.write_project_file(
             main_file="bad.adb",
             compiler_switches=[],
@@ -748,19 +717,17 @@ end Bad;
         block.project_filename = project_filename
         block.project_main_file = "bad.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is False, \
             "An expected compile error must not count as a test failure"
 
-    def test_c_run(self, tmp_path):
+    def test_c_run(self, work_dir):
         """A valid C file compiled and run (exits 0) must return False."""
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.VALID_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = _make_block(
             language="c",
@@ -772,7 +739,7 @@ end Bad;
             source_files=["main.c"],
         )
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
@@ -782,7 +749,7 @@ end Bad;
 
 # ---------------------------------------------------------------------------
 # C3 — TestCheckBlockGnatprove
-# Covers gnatprove path (lines ~411-473)
+# Covers the proof step, which only Ada blocks reach.
 # Requires gnatprove in PATH (part of the Ada toolchain).
 # ---------------------------------------------------------------------------
 
@@ -797,12 +764,11 @@ begin
 end Main;
 """
 
-    def test_ada_gnatprove_language_c_else(self, tmp_path):
+    def test_ada_gnatprove_language_c_else(self, work_dir):
         """A block with language="c" and prove_it=True must return True:
         proving only supports Ada, so a non-Ada block takes the "wrong
         language selected for prove button" error branch instead of
         invoking gnatprove."""
-        os.chdir(str(tmp_path))
 
         block = _make_block(
             language="c",
@@ -815,22 +781,20 @@ end Main;
         )
         block.prove_it = True
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True, \
             "C language with prove_it=True must return True (unsupported)"
 
-    def test_ada_gnatprove_pinned_legacy_version(self, tmp_path):
+    def test_ada_gnatprove_pinned_legacy_version(self, work_dir):
         """A prove block pinned to a specific, genuinely installed legacy
         GNATprove version must build the older-style command line that
         version expects, and a real invocation with it must still prove the
         example cleanly."""
-        src = tmp_path / "main.adb"
+        src = work_dir / "main.adb"
         src.write_text(self.SPARK_SOURCE)
-        os.chdir(str(tmp_path))
 
         spark_project_filename = ep.write_project_file(
             main_file="main.adb",
@@ -852,13 +816,25 @@ end Main;
         block.project_main_file = "main.adb"
         block.prove_it = True
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is False, \
             "A provable SPARK block must prove cleanly under a pinned legacy GNATprove version"
+
+        recorded = json.loads(
+            (work_dir / "block_checks.json").read_text())["checks"]
+        proved_with = ast.literal_eval(recorded["PROVE"]["cmdline"])
+        assert "--no-axiom-guard" in proved_with, \
+            "the older command line must ask for the switch only that " \
+            "generation understands: {}".format(proved_with)
+        assert "--checks-as-errors" in proved_with, \
+            "the older command line must spell the checks-as-errors switch " \
+            "the way that generation accepts it: {}".format(proved_with)
+        assert "--function-sandboxing=off" not in proved_with, \
+            "the older command line must not carry a switch introduced " \
+            "after it: {}".format(proved_with)
 
 
 # ---------------------------------------------------------------------------
@@ -869,10 +845,31 @@ end Main;
 
 @pytest.mark.toolchain
 class TestCheckBlockUnrecognizedLanguage:
-    def test_unrecognized_language_takes_neither_branch(self, tmp_path):
+    def test_unrecognized_language_takes_neither_branch(self, tmp_path,
+                                                        monkeypatch):
         """A block whose language is neither 'ada' nor 'c' must fall through
-        the cleanup, syntax-check, compile, and run steps without taking
-        either language-specific branch, and must complete without raising."""
+        the syntax-check, compile and run steps without taking either
+        language-specific branch, and must complete without raising.
+
+        The block asks for a compile and a run, and names the main file a
+        language branch would need, so that a branch wrongly taken would have
+        enough to proceed rather than tripping over missing state: the check
+        has to skip it on the language alone.  Two things then show it did.
+        No command but the toolchain version probes is run -- a branch taken
+        would invoke a compiler -- and the record left behind carries no BUILD
+        phase, which is only added from inside a language branch.
+        """
+        import subprocess as S
+
+        commands = []
+        real_check_output = S.check_output
+
+        def recording_check_output(args, *rest, **kwargs):
+            commands.append(list(args))
+            return real_check_output(args, *rest, **kwargs)
+
+        monkeypatch.setattr(S, "check_output", recording_check_output)
+
         block = _make_block(
             language="fortran",
             no_check=False,
@@ -881,10 +878,22 @@ class TestCheckBlockUnrecognizedLanguage:
             run_it=True,
             source_files=["main.f90"],
         )
+        block.project_main_file = "main.f90"
         json_file = str(tmp_path / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
+
+        assert all(command[1:2] == ["--version"] for command in commands), \
+            "only the toolchain version probes may run for a language the " \
+            "check does not know: {}".format(commands)
+
+        recorded = json.loads(
+            (tmp_path / "block_checks.json").read_text())["checks"]
+        assert "BUILD" not in recorded, \
+            "a compile was asked for, so a recorded BUILD phase means a " \
+            "language branch was taken: {}".format(sorted(recorded))
+
         assert result is False, \
             "An unrecognized language must not raise and must not report an error"
 
@@ -898,14 +907,13 @@ class TestCheckBlockUnrecognizedLanguage:
 class TestCheckBlockVerbose:
     """Tests for verbose and all_diagnostics flag paths."""
 
-    def test_verbose_cache_skip(self, tmp_path, capsys):
+    def test_verbose_cache_skip(self, work_dir, capsys):
         """With verbose=True and a cached status_ok=True, check_block must print
         'already checked. Skipping...' (exercises the verbose cache-hit path)."""
         block = _make_block(buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
-        os.chdir(str(tmp_path))
         bc = _checks_mod.BlockCheck(
             text_hash=block.text_hash,
             text_hash_short=block.text_hash_short,
@@ -923,13 +931,12 @@ class TestCheckBlockVerbose:
                 block.rst_file, block.line_start, block.text_hash_short))
         assert expected in out
 
-    def test_all_diagnostics_flag(self, tmp_path, capsys):
+    def test_all_diagnostics_flag(self, work_dir, capsys):
         """With all_diagnostics=True and verbose=True, a clean Ada compile must
         announce the block it is checking, report success, and print no
         diagnostics at all."""
-        src = tmp_path / "main.adb"
+        src = work_dir / "main.adb"
         src.write_text(MINIMAL_ADA_SOURCE)
-        os.chdir(str(tmp_path))
         project_filename = ep.write_project_file(
             main_file="main.adb",
             compiler_switches=["-gnata"],
@@ -947,9 +954,8 @@ class TestCheckBlockVerbose:
         block.project_filename = project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         ccb.all_diagnostics = True
         ccb.verbose = True
@@ -970,17 +976,32 @@ class TestCheckBlockVerbose:
 
 # ---------------------------------------------------------------------------
 # TestCheckBlockMaxColumns
-# Covers the max_columns setting being passed through to the Ada syntax
-# check (it appends a -gnatyM<N> style-check switch).
+# Covers the maximum-columns setting reaching the Ada syntax check, and the
+# limit actually applied being the one that was asked for.
 # ---------------------------------------------------------------------------
 
 @pytest.mark.toolchain
 class TestCheckBlockMaxColumns:
-    def test_syntax_check_with_max_columns(self, tmp_path):
-        """max_columns > 0 appends -gnatyMN to the syntax-check command and
-        a normal-width Ada block still passes."""
-        src = tmp_path / "main.adb"
-        src.write_text(MINIMAL_ADA_SOURCE)
+    """The maximum-columns setting reaches the Ada syntax check.
+
+    The syntax check already asks for the compiler's own style rules, and
+    those carry a column limit of their own, narrower than the one either
+    test below sets.  So a block that is wider than the limit it is given
+    proves nothing on its own -- it would be reported either way -- and only
+    the block that is *narrower* than the limit it is given can show that the
+    setting was passed on at all.  The two tests together pin both halves:
+    that the limit is applied, and that it is the one that was asked for.
+    """
+
+    #: How wide the one long line of the source below is.  Both tests set a
+    #: limit to one side of it, and both limits are above the compiler's own.
+    LINE_WIDTH = 90
+
+    def _check_under_limit(self, work_dir, max_columns: int) -> bool:
+        """Syntax-check a block holding one LINE_WIDTH-wide line under the
+        given column limit, and return whether the check reported an error."""
+        (work_dir / "main.adb").write_text(
+            _ada_source_with_a_line_of_width(self.LINE_WIDTH))
 
         block = _make_block(
             buttons=["no"],
@@ -988,12 +1009,29 @@ class TestCheckBlockMaxColumns:
             no_check=False,
             source_files=["main.adb"],
         )
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
-        result = ccb.check_block(block, json_file, max_columns=80, force_checks=True)
-        assert result is False
+        return ccb.check_block(block, json_file, max_columns=max_columns,
+                               force_checks=True)
+
+    def test_line_within_the_column_limit_passes(self, work_dir):
+        """A line narrower than the limit asked for must pass the syntax
+        check, even though it is wider than the compiler's own limit.  Nothing
+        but the setting having been passed on can make that happen."""
+        assert self._check_under_limit(
+            work_dir, self.LINE_WIDTH + 10) is False, \
+            "a line of {} characters must pass a limit of {}".format(
+                self.LINE_WIDTH, self.LINE_WIDTH + 10)
+
+    def test_line_beyond_the_column_limit_fails(self, work_dir):
+        """A line wider than the limit asked for must fail the syntax check,
+        so that the limit applied is the one that was asked for rather than
+        some other one that happens to be set."""
+        assert self._check_under_limit(
+            work_dir, self.LINE_WIDTH - 10) is True, \
+            "a line of {} characters must not pass a limit of {}".format(
+                self.LINE_WIDTH, self.LINE_WIDTH - 10)
 
 
 # ---------------------------------------------------------------------------
@@ -1019,10 +1057,9 @@ begin
 end Main;
 """
 
-    def _setup_project(self, tmp_path, source):
-        src = tmp_path / "main.adb"
+    def _setup_project(self, work_dir, source):
+        src = work_dir / "main.adb"
         src.write_text(source)
-        os.chdir(str(tmp_path))
         return ep.write_project_file(
             main_file="main.adb",
             compiler_switches=["-gnata"],
@@ -1040,33 +1077,31 @@ end Main;
             source_files=["main.adb"],
         )
 
-    def test_run_success_with_expect_failure_class(self, tmp_path):
+    def test_run_success_with_expect_failure_class(self, work_dir):
         """A program that exits 0 while marked ada-run-expect-failure must
         return True: the run succeeded when a failure was expected."""
-        project_filename = self._setup_project(tmp_path, self.VALID_ADA_SOURCE)
+        project_filename = self._setup_project(work_dir, self.VALID_ADA_SOURCE)
         block = self._make_run_block(classes=["ada-run-expect-failure"])
         block.project_filename = project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True
 
-    def test_ada_run_fail_with_expect_failure_class(self, tmp_path, capsys):
+    def test_ada_run_fail_with_expect_failure_class(self, work_dir, capsys):
         """A program that exits non-zero while marked ada-run-expect-failure
         must return False: the failure was expected. With verbose enabled,
         the expected-failure message is printed."""
-        project_filename = self._setup_project(tmp_path, self.FAILING_ADA_SOURCE)
+        project_filename = self._setup_project(work_dir, self.FAILING_ADA_SOURCE)
         block = self._make_run_block(classes=["ada-run-expect-failure"])
         block.project_filename = project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         ccb.verbose = True
         result = ccb.check_block(block, json_file, verbose=True, force_checks=True)
@@ -1074,17 +1109,16 @@ end Main;
         out = capsys.readouterr().out
         assert "Running of example expectedly failed" in out
 
-    def test_ada_run_fail_without_expect_failure(self, tmp_path):
+    def test_ada_run_fail_without_expect_failure(self, work_dir):
         """A program that exits non-zero without ada-run-expect-failure must
         return True: an unexpected run failure."""
-        project_filename = self._setup_project(tmp_path, self.FAILING_ADA_SOURCE)
+        project_filename = self._setup_project(work_dir, self.FAILING_ADA_SOURCE)
         block = self._make_run_block()
         block.project_filename = project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True
@@ -1112,17 +1146,16 @@ class TestCheckBlockCRunExpectFailure:
             source_files=["main.c"],
         )
 
-    def test_c_run_fail_with_expect_failure_class(self, tmp_path, capsys):
+    def test_c_run_fail_with_expect_failure_class(self, work_dir, capsys):
         """A C program that exits non-zero while marked c-run-expect-failure
         must return False: the failure was expected. With verbose enabled,
         the expected-failure message is printed."""
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.FAILING_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = self._make_c_run_block(classes=["c-run-expect-failure"])
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         ccb.verbose = True
@@ -1131,31 +1164,29 @@ class TestCheckBlockCRunExpectFailure:
         out = capsys.readouterr().out
         assert "Running of example expectedly failed" in out
 
-    def test_c_run_success_with_expect_failure_class(self, tmp_path):
+    def test_c_run_success_with_expect_failure_class(self, work_dir):
         """A C program that exits 0 while marked c-run-expect-failure must
         return True: the run succeeded when a failure was expected."""
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.VALID_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = self._make_c_run_block(classes=["c-run-expect-failure"])
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True
 
-    def test_c_run_fail_without_expect_failure(self, tmp_path):
+    def test_c_run_fail_without_expect_failure(self, work_dir):
         """A C program that exits non-zero without c-run-expect-failure must
         return True: an unexpected run failure."""
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.FAILING_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = self._make_c_run_block()
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
@@ -1171,7 +1202,7 @@ class TestCheckBlockCRunExpectFailure:
 class TestCheckBlockCExpectCompileError:
     INVALID_C_SOURCE = "this is not C at all !@#$\n"
 
-    def test_c_compile_error_expected(self, tmp_path):
+    def test_c_compile_error_expected(self, work_dir):
         """A C file that fails to compile while marked c-expect-compile-error
         must return False: the compile failure was expected.
 
@@ -1181,9 +1212,8 @@ class TestCheckBlockCExpectCompileError:
         BUILD phase's c-expect-compile-error handling is ever reached -- the
         same reason the analogous ada-expect-compile-error test bypasses the
         SYNTAX phase."""
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.INVALID_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         block = _make_block(
             language="c",
@@ -1196,7 +1226,7 @@ class TestCheckBlockCExpectCompileError:
             source_files=["main.c"],
         )
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
@@ -1222,10 +1252,9 @@ begin
 end Main;
 """
 
-    def _setup_spark_project(self, tmp_path):
-        src = tmp_path / "main.adb"
+    def _setup_spark_project(self, work_dir):
+        src = work_dir / "main.adb"
         src.write_text(self.FAILING_SPARK_SOURCE)
-        os.chdir(str(tmp_path))
         return ep.write_project_file(
             main_file="main.adb",
             compiler_switches=["-gnata"],
@@ -1243,32 +1272,30 @@ end Main;
             source_files=["main.adb"],
         )
 
-    def test_prove_failure_expected(self, tmp_path):
+    def test_prove_failure_expected(self, work_dir):
         """SPARK code that fails to prove while marked ada-expect-prove-error
         must return False: the failure was expected."""
-        spark_project_filename = self._setup_spark_project(tmp_path)
+        spark_project_filename = self._setup_spark_project(work_dir)
         block = self._make_prove_block(classes=["ada-expect-prove-error"])
         block.spark_project_filename = spark_project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is False
 
-    def test_prove_failure_unexpected(self, tmp_path):
+    def test_prove_failure_unexpected(self, work_dir):
         """SPARK code that fails to prove without ada-expect-prove-error must
         return True: an unexpected prove failure."""
-        spark_project_filename = self._setup_spark_project(tmp_path)
+        spark_project_filename = self._setup_spark_project(work_dir)
         block = self._make_prove_block()
         block.spark_project_filename = spark_project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True
@@ -1289,10 +1316,9 @@ begin
 end Main;
 """
 
-    def _setup_spark_project(self, tmp_path):
-        src = tmp_path / "main.adb"
+    def _setup_spark_project(self, work_dir):
+        src = work_dir / "main.adb"
         src.write_text(self.SPARK_SOURCE)
-        os.chdir(str(tmp_path))
         return ep.write_project_file(
             main_file="main.adb",
             compiler_switches=["-gnata"],
@@ -1309,30 +1335,29 @@ end Main;
             source_files=["main.adb"],
         )
 
-    def _run(self, tmp_path, button):
-        spark_project_filename = self._setup_spark_project(tmp_path)
+    def _run(self, work_dir, button):
+        spark_project_filename = self._setup_spark_project(work_dir)
         block = self._make_prove_block(button)
         block.spark_project_filename = spark_project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         return ccb.check_block(block, json_file, force_checks=True)
 
-    def test_prove_flow_mode(self, tmp_path):
+    def test_prove_flow_mode(self, work_dir):
         """prove_flow button selects '--mode=flow'; a trivially valid SPARK
         block must still pass."""
-        assert self._run(tmp_path, "prove_flow") is False
+        assert self._run(work_dir, "prove_flow") is False
 
-    def test_prove_flow_report_all(self, tmp_path):
+    def test_prove_flow_report_all(self, work_dir):
         """prove_flow_report_all button selects '--mode=flow --report=all'."""
-        assert self._run(tmp_path, "prove_flow_report_all") is False
+        assert self._run(work_dir, "prove_flow_report_all") is False
 
-    def test_prove_report_all(self, tmp_path):
+    def test_prove_report_all(self, work_dir):
         """prove_report_all button selects '--report=all'."""
-        assert self._run(tmp_path, "prove_report_all") is False
+        assert self._run(work_dir, "prove_report_all") is False
 
 
 # ---------------------------------------------------------------------------
@@ -1342,14 +1367,13 @@ end Main;
 
 @pytest.mark.toolchain
 class TestCheckCodeBlockJsonInactive:
-    def test_check_code_block_json_inactive_block(self, tmp_path, capsys):
+    def test_check_code_block_json_inactive_block(self, work_dir, capsys):
         """check_code_block_json() on a block with active=False prints the
         deactivation WARNING and still checks it."""
         block = _make_block(classes=["ada-nocheck"], no_check=True, buttons=["no"])
         block.active = False
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_code_block_json(json_file)
         assert result is False
@@ -1400,11 +1424,10 @@ class TestCheckBlockCleanupFailures:
     """A real Ada compile and run that both succeed, while every clean-up
     command invoked along the way is made to fail."""
 
-    def _setup_project(self, tmp_path):
-        """Write an Ada source file and a .gpr project file into tmp_path."""
-        src = tmp_path / "main.adb"
+    def _setup_project(self, work_dir):
+        """Write an Ada source file and a .gpr project file into work_dir."""
+        src = work_dir / "main.adb"
         src.write_text(MINIMAL_ADA_SOURCE)
-        os.chdir(str(tmp_path))
         project_filename = ep.write_project_file(
             main_file="main.adb",
             compiler_switches=["-gnata"],
@@ -1413,7 +1436,7 @@ class TestCheckBlockCleanupFailures:
         return project_filename
 
     def test_gprclean_and_gnatprove_clean_failures_do_not_affect_result(
-            self, tmp_path, monkeypatch, capsys):
+            self, work_dir, monkeypatch, capsys):
         """A gprclean failure before compiling, a gprclean failure during
         end-of-check clean-up, and a gnatprove --clean failure during
         end-of-check clean-up are all logged (the first two) or silently
@@ -1422,7 +1445,7 @@ class TestCheckBlockCleanupFailures:
         pass."""
         import subprocess as S
 
-        project_filename = self._setup_project(tmp_path)
+        project_filename = self._setup_project(work_dir)
 
         real_check_output = S.check_output
         failed_cleanups = []
@@ -1446,9 +1469,8 @@ class TestCheckBlockCleanupFailures:
         block.project_filename = project_filename
         block.project_main_file = "main.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
 
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is False, \
@@ -1479,14 +1501,13 @@ class TestCheckBlockCCleanupFailure:
 
     VALID_C_SOURCE = "int main(void) { return 0; }\n"
 
-    def test_rm_cleanup_failure_does_not_affect_result(self, tmp_path, monkeypatch, capsys):
+    def test_rm_cleanup_failure_does_not_affect_result(self, work_dir, monkeypatch, capsys):
         """An rm -f clean-up failure after a successful C compile and run is
         logged, but it does not abort the check or change its result."""
         import subprocess as S
 
-        src = tmp_path / "main.c"
+        src = work_dir / "main.c"
         src.write_text(self.VALID_C_SOURCE)
-        os.chdir(str(tmp_path))
 
         real_check_output = S.check_output
 
@@ -1507,7 +1528,7 @@ class TestCheckBlockCCleanupFailure:
             source_files=["main.c"],
         )
         block.project_main_file = "main.c"
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
@@ -1642,7 +1663,6 @@ int main(void)
         """
         rst_path = work_dir / "extracted.rst"
         rst_path.write_text(self._rst(directive, body, classes))
-        os.chdir(str(work_dir))
 
         assert ep.analyze_file(str(rst_path)) is False, \
             "the fixture must extract cleanly, or the check that follows is " \
@@ -1709,7 +1729,7 @@ int main(void)
             "the generated project must name a configuration pragma file"
         return (block_dir / named.group(1)).read_text()
 
-    def test_compile_button_block_is_built_as_extracted(self, tmp_path):
+    def test_compile_button_block_is_built_as_extracted(self, work_dir):
         """A compile button carries from the RST directive through to a real
         build with nothing adjusted in between.
 
@@ -1720,7 +1740,7 @@ int main(void)
         button selects no main to link.
         """
         block_dir, info, json_file = self._extract(
-            tmp_path,
+            work_dir,
             ".. code:: ada project=ExtractedCompile main={} compile_button".format(
                 self._MAIN),
             self._ADA_BODY, "ExtractedCompile")
@@ -1751,7 +1771,7 @@ int main(void)
             self._configuration_pragmas(block_dir, built_against), \
             "a compile button must not be built against a SPARK-configured project"
 
-    def test_run_button_block_is_built_and_run_as_extracted(self, tmp_path):
+    def test_run_button_block_is_built_and_run_as_extracted(self, work_dir):
         """A run button carries from the RST directive through to the program
         actually running.
 
@@ -1763,7 +1783,7 @@ int main(void)
         and executed.
         """
         block_dir, info, json_file = self._extract(
-            tmp_path,
+            work_dir,
             ".. code:: ada project=ExtractedRun main={} run_button".format(
                 self._MAIN),
             self._ADA_BODY, "ExtractedRun")
@@ -1797,7 +1817,7 @@ int main(void)
         assert self._log_of(block_dir, recorded["RUN"]).strip() == self._RUN_OUTPUT, \
             "the program the author wrote must be the one that ran"
 
-    def test_prove_button_block_is_proved_as_extracted(self, tmp_path):
+    def test_prove_button_block_is_proved_as_extracted(self, work_dir):
         """A prove button carries from the RST directive through to a real
         proof.
 
@@ -1810,7 +1830,7 @@ int main(void)
         field name.
         """
         block_dir, info, json_file = self._extract(
-            tmp_path,
+            work_dir,
             ".. code:: ada project=ExtractedProve main={} prove_button".format(
                 self._MAIN),
             self._SPARK_BODY, "ExtractedProve")
@@ -1835,7 +1855,7 @@ int main(void)
             self._configuration_pragmas(block_dir, proved_against), \
             "the proof must have run against a project that turns SPARK mode on"
 
-    def test_extracted_block_that_does_not_build_fails_the_check(self, tmp_path):
+    def test_extracted_block_that_does_not_build_fails_the_check(self, work_dir):
         """A block that does not compile must be reported as an error when the
         check is driven from the extraction step too.
 
@@ -1844,7 +1864,7 @@ int main(void)
         so it chops and passes the syntax check and only the build can fail.
         """
         block_dir, info, json_file = self._extract(
-            tmp_path,
+            work_dir,
             ".. code:: ada project=ExtractedBadBuild main={} compile_button".format(
                 self._MAIN),
             self._BROKEN_ADA_BODY, "ExtractedBadBuild")
@@ -1864,7 +1884,7 @@ int main(void)
         assert self._MISSING_NAME in self._log_of(block_dir, recorded["BUILD"]), \
             "the build log must name what the compiler could not resolve"
 
-    def test_extracted_block_expecting_a_compile_error_passes(self, tmp_path):
+    def test_extracted_block_expecting_a_compile_error_passes(self, work_dir):
         """A block declared as expecting a compile error must pass the check
         even though the compiler rejects it.
 
@@ -1875,7 +1895,7 @@ int main(void)
         the same answer for the wrong reason.
         """
         block_dir, info, json_file = self._extract(
-            tmp_path,
+            work_dir,
             ".. code:: ada project=ExtractedExpectError main={} compile_button".format(
                 self._MAIN),
             self._BROKEN_ADA_BODY, "ExtractedExpectError",
@@ -1900,7 +1920,7 @@ int main(void)
             "the compiler must really have rejected the block, or the " \
             "expectation was satisfied by nothing happening"
 
-    def test_c_run_button_block_is_built_and_run_as_extracted(self, tmp_path):
+    def test_c_run_button_block_is_built_and_run_as_extracted(self, work_dir):
         """A run button on a C block carries through to the program running.
 
         C blocks take a different route on both sides of the seam: the
@@ -1910,7 +1930,7 @@ int main(void)
         pinned below is what the author's code prints.
         """
         block_dir, info, json_file = self._extract(
-            tmp_path,
+            work_dir,
             ".. code:: c project=ExtractedCRun main={} run_button".format(
                 self._C_MAIN),
             self._C_BODY, "ExtractedCRun")
@@ -1936,7 +1956,7 @@ int main(void)
         reason="a C block asking only for a compile is never given a main file "
                "by the extraction step, and the checker asserts it has one",
     )
-    def test_c_compile_button_block_is_built_as_extracted(self, tmp_path):
+    def test_c_compile_button_block_is_built_as_extracted(self, work_dir):
         """A compile button on a C block must be compiled.
 
         Tracking note -- this currently fails.  The extraction step resolves a
@@ -1966,7 +1986,7 @@ int main(void)
         so such a break reddens there.
         """
         block_dir, info, json_file = self._extract(
-            tmp_path,
+            work_dir,
             ".. code:: c project=ExtractedCCompile main={} compile_button".format(
                 self._C_MAIN),
             self._C_BODY, "ExtractedCCompile")

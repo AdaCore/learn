@@ -10,7 +10,6 @@ Covers:
 - cwd side effect: get_projects calls os.chdir(build_dir) — fixture saves/restores cwd
 - check_projects() returns True when a block fails to compile (requires the Ada toolchain)
 """
-import json
 import os
 
 import pytest
@@ -24,20 +23,6 @@ import rst_code_example_pipeline.toolchain_info as info
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
-
-@pytest.fixture(autouse=True)
-def reset_cp_globals():
-    """Reset check_projects module-level globals before and after each test."""
-    cp.verbose = False
-    cp.all_diagnostics = False
-    cp.max_columns = 0
-    cp.force_checks = False
-    yield
-    cp.verbose = False
-    cp.all_diagnostics = False
-    cp.max_columns = 0
-    cp.force_checks = False
-
 
 def _make_minimal_block_info(project: str,
                              tmp_path,
@@ -339,8 +324,8 @@ class TestCheckProjectsExtended:
             "Expected verbose project header to contain the project name"
 
     def test_check_projects_skips_inactive_block(self, tmp_path, monkeypatch):
-        """A block with active=False is skipped by check_projects() without
-        calling check_block() (exercises the inactive-block continue path)."""
+        """A block marked inactive must be skipped by check_projects()
+        without being checked at all."""
         # Build a block and serialise it with active=False
         if not info.DEFAULT_VERSION:
             info.init_toolchain_info()

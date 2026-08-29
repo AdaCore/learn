@@ -25,7 +25,6 @@ Version strings passed straight to the CodeBlock constructor are a different
 matter: those are copies of configuration data and are read back from it.
 """
 import json
-import os
 import re
 import subprocess
 import sys

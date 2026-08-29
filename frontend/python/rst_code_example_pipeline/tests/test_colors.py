@@ -15,18 +15,6 @@ from rst_code_example_pipeline.colors import Colors, col, no_colors, printcol
 
 
 # ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-@pytest.fixture(autouse=True)
-def restore_colors_state():
-    """Save and restore Colors._enabled around every test."""
-    original = Colors._enabled
-    yield
-    Colors._enabled = original
-
-
-# ---------------------------------------------------------------------------
 # T-colors-01: col() enabled
 # ---------------------------------------------------------------------------
 
