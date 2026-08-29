@@ -1721,6 +1721,10 @@ int main(void)
                 self._MAIN),
             self._ADA_BODY, "ExtractedCompile")
 
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
+
         assert self._buttons_asked_for(info) == (True, False, False), \
             "a compile button must reach the checker as a compile and nothing else"
 
@@ -1759,6 +1763,10 @@ int main(void)
             ".. code:: ada project=ExtractedRun main={} run_button".format(
                 self._MAIN),
             self._ADA_BODY, "ExtractedRun")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
 
         assert self._buttons_asked_for(info) == (True, True, False), \
             "a run button must reach the checker as a run, which implies a " \
@@ -1803,6 +1811,10 @@ int main(void)
                 self._MAIN),
             self._SPARK_BODY, "ExtractedProve")
 
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
+
         assert self._buttons_asked_for(info) == (False, False, True), \
             "a prove button must reach the checker as a proof and nothing else"
 
@@ -1827,11 +1839,15 @@ int main(void)
         success whatever the compiler said.  The block is syntactically valid,
         so it chops and passes the syntax check and only the build can fail.
         """
-        block_dir, _info, json_file = self._extract(
+        block_dir, info, json_file = self._extract(
             tmp_path,
             ".. code:: ada project=ExtractedBadBuild main={} compile_button".format(
                 self._MAIN),
             self._BROKEN_ADA_BODY, "ExtractedBadBuild")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
 
         assert ccb.check_code_block_json(json_file) is True, \
             "an extracted block that does not compile must be reported as an error"
@@ -1860,6 +1876,10 @@ int main(void)
                 self._MAIN),
             self._BROKEN_ADA_BODY, "ExtractedExpectError",
             classes="ada-expect-compile-error")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
 
         assert "ada-expect-compile-error" in info["classes"], \
             "the class written in the RST source must reach the checker"
