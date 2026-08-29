@@ -21,6 +21,8 @@ Covers:
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
 - an unrecognized language value takes neither the Ada nor the C branch anywhere
+- the maximum-columns setting reaches the Ada syntax check, and the limit applied
+  is the one that was asked for
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
 - gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
@@ -65,6 +67,20 @@ begin
    null;
 end Main;
 """
+
+
+def _ada_source_with_a_line_of_width(width: int) -> str:
+    """A syntactically valid Ada program whose declaration line is exactly
+    ``width`` characters across.
+
+    For tests that set a column limit to one side of that width and check
+    what the syntax check makes of it.
+    """
+    head, tail = '   S : constant String := "', '";'
+    line = head + "x" * (width - len(head) - len(tail)) + tail
+    assert len(line) == width, \
+        "the source line must be exactly the width the test asked for"
+    return "procedure Main is\n{}\nbegin\n   null;\nend Main;\n".format(line)
 
 
 def _installed_version(tool: str) -> str:
@@ -826,6 +842,19 @@ end Main;
         assert result is False, \
             "A provable SPARK block must prove cleanly under a pinned legacy GNATprove version"
 
+        recorded = json.loads(
+            (work_dir / "block_checks.json").read_text())["checks"]
+        proved_with = ast.literal_eval(recorded["PROVE"]["cmdline"])
+        assert "--no-axiom-guard" in proved_with, \
+            "the older command line must ask for the switch only that " \
+            "generation understands: {}".format(proved_with)
+        assert "--checks-as-errors" in proved_with, \
+            "the older command line must spell the checks-as-errors switch " \
+            "the way that generation accepts it: {}".format(proved_with)
+        assert "--function-sandboxing=off" not in proved_with, \
+            "the older command line must not carry a switch introduced " \
+            "after it: {}".format(proved_with)
+
 
 # ---------------------------------------------------------------------------
 # Unrecognized-language paths
@@ -835,10 +864,31 @@ end Main;
 
 @pytest.mark.toolchain
 class TestCheckBlockUnrecognizedLanguage:
-    def test_unrecognized_language_takes_neither_branch(self, tmp_path):
+    def test_unrecognized_language_takes_neither_branch(self, tmp_path,
+                                                        monkeypatch):
         """A block whose language is neither 'ada' nor 'c' must fall through
-        the cleanup, syntax-check, compile, and run steps without taking
-        either language-specific branch, and must complete without raising."""
+        the syntax-check, compile and run steps without taking either
+        language-specific branch, and must complete without raising.
+
+        The block asks for a compile and a run, and names the main file a
+        language branch would need, so that a branch wrongly taken would have
+        enough to proceed rather than tripping over missing state: the check
+        has to skip it on the language alone.  Two things then show it did.
+        No command but the toolchain version probes is run -- a branch taken
+        would invoke a compiler -- and the record left behind carries no BUILD
+        phase, which is only added from inside a language branch.
+        """
+        import subprocess as S
+
+        commands = []
+        real_check_output = S.check_output
+
+        def recording_check_output(args, *rest, **kwargs):
+            commands.append(list(args))
+            return real_check_output(args, *rest, **kwargs)
+
+        monkeypatch.setattr(S, "check_output", recording_check_output)
+
         block = _make_block(
             language="fortran",
             no_check=False,
@@ -847,10 +897,22 @@ class TestCheckBlockUnrecognizedLanguage:
             run_it=True,
             source_files=["main.f90"],
         )
+        block.project_main_file = "main.f90"
         json_file = str(tmp_path / "block_info.json")
         block.to_json_file(json_file)
 
         result = ccb.check_block(block, json_file, force_checks=True)
+
+        assert all(command[1:2] == ["--version"] for command in commands), \
+            "only the toolchain version probes may run for a language the " \
+            "check does not know: {}".format(commands)
+
+        recorded = json.loads(
+            (tmp_path / "block_checks.json").read_text())["checks"]
+        assert "BUILD" not in recorded, \
+            "a compile was asked for, so a recorded BUILD phase means a " \
+            "language branch was taken: {}".format(sorted(recorded))
+
         assert result is False, \
             "An unrecognized language must not raise and must not report an error"
 
@@ -933,17 +995,32 @@ class TestCheckBlockVerbose:
 
 # ---------------------------------------------------------------------------
 # TestCheckBlockMaxColumns
-# Covers the max_columns setting being passed through to the Ada syntax
-# check (it appends a -gnatyM<N> style-check switch).
+# Covers the maximum-columns setting reaching the Ada syntax check, and the
+# limit actually applied being the one that was asked for.
 # ---------------------------------------------------------------------------
 
 @pytest.mark.toolchain
 class TestCheckBlockMaxColumns:
-    def test_syntax_check_with_max_columns(self, work_dir):
-        """max_columns > 0 appends -gnatyMN to the syntax-check command and
-        a normal-width Ada block still passes."""
-        src = work_dir / "main.adb"
-        src.write_text(MINIMAL_ADA_SOURCE)
+    """The maximum-columns setting reaches the Ada syntax check.
+
+    The syntax check already asks for the compiler's own style rules, and
+    those carry a column limit of their own, narrower than the one either
+    test below sets.  So a block that is wider than the limit it is given
+    proves nothing on its own -- it would be reported either way -- and only
+    the block that is *narrower* than the limit it is given can show that the
+    setting was passed on at all.  The two tests together pin both halves:
+    that the limit is applied, and that it is the one that was asked for.
+    """
+
+    #: How wide the one long line of the source below is.  Both tests set a
+    #: limit to one side of it, and both limits are above the compiler's own.
+    LINE_WIDTH = 90
+
+    def _check_under_limit(self, work_dir, max_columns: int) -> bool:
+        """Syntax-check a block holding one LINE_WIDTH-wide line under the
+        given column limit, and return whether the check reported an error."""
+        (work_dir / "main.adb").write_text(
+            _ada_source_with_a_line_of_width(self.LINE_WIDTH))
 
         block = _make_block(
             buttons=["no"],
@@ -954,8 +1031,26 @@ class TestCheckBlockMaxColumns:
         json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
-        result = ccb.check_block(block, json_file, max_columns=80, force_checks=True)
-        assert result is False
+        return ccb.check_block(block, json_file, max_columns=max_columns,
+                               force_checks=True)
+
+    def test_line_within_the_column_limit_passes(self, work_dir):
+        """A line narrower than the limit asked for must pass the syntax
+        check, even though it is wider than the compiler's own limit.  Nothing
+        but the setting having been passed on can make that happen."""
+        assert self._check_under_limit(
+            work_dir, self.LINE_WIDTH + 10) is False, \
+            "a line of {} characters must pass a limit of {}".format(
+                self.LINE_WIDTH, self.LINE_WIDTH + 10)
+
+    def test_line_beyond_the_column_limit_fails(self, work_dir):
+        """A line wider than the limit asked for must fail the syntax check,
+        so that the limit applied is the one that was asked for rather than
+        some other one that happens to be set."""
+        assert self._check_under_limit(
+            work_dir, self.LINE_WIDTH - 10) is True, \
+            "a line of {} characters must not pass a limit of {}".format(
+                self.LINE_WIDTH, self.LINE_WIDTH - 10)
 
 
 # ---------------------------------------------------------------------------
