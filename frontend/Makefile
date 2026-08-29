@@ -218,6 +218,9 @@ test_parser:                                                                   #
 test_rst_pipeline:                                                             ## Test the rst_code_example_pipeline package (epub VM).
 	@cd python/rst_code_example_pipeline && pytest
 
+test_rst_pipeline_smoke:                                                       ## Toolchain-free smoke test; does NOT validate the package.
+	@cd python/rst_code_example_pipeline && pytest -m "not toolchain" --no-cov
+
 ##@ Build website
 publish:                                                                       ## [DEPRECATED] Publish contents to the learn website.
 	@echo "Publishing current branch to learn..."
