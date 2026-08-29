@@ -107,6 +107,34 @@ end Main_Spark;
 def write_project_file(main_file: str | None,
                        compiler_switches: list[str],
                        spark_mode: bool) -> str:
+    """Writes the project file for a code block, and its pragmas file
+
+    Both files are written into the current working directory, which the
+    caller has already changed to the block's own directory.
+
+    Args:
+        main_file (str, optional): The source file holding the main
+            procedure, or None to generate a project that names no main.
+        compiler_switches (list[str]): Switches added to the ``Compiler``
+            package of the generated project.
+        spark_mode (bool): Selects the SPARK variants of the project file
+            and of the configuration pragmas file.
+
+    Returns:
+        str: The name of the project file that was written.
+
+    Note:
+        The project gets a ``for Main use`` attribute only when a main file
+        is passed, and the caller passes one only for a code block that is
+        meant to be run. That restriction is deliberate rather than
+        incidental: a code block that is only compiled may legitimately have
+        no main procedure at all -- a package spec and body on their own are
+        a complete example -- and naming a main for such a block would send
+        the builder looking for something to link that the block does not
+        contain. The extraction tests pin both halves of the distinction:
+        the attribute is present for a runnable code block and absent
+        otherwise.
+    """
     gpr_filename = constants.PROJECT_FILENAME
     adc_filename = constants.PROJECT_PRAGMAS_FILENAME
     main_gpr = MAIN_GPR
