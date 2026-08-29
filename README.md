@@ -225,7 +225,46 @@ check-code                                         \
 For more examples and alternative configurations, please refer to the
 [README of the rst_code_example_pipeline package](frontend/python/rst_code_example_pipeline/README.md)
 
+#### Running the package's unit tests
+
 The package also has its own pytest-based unit test suite.  On the epub VM,
-run it with `make test_rst_pipeline` (from the `frontend/` directory).  See
-the "Development" section of the package README for installation and usage
-details.
+run it with `make test_rst_pipeline` (from the `frontend/` directory):
+
+```sh
+make test_rst_pipeline
+```
+
+This runs the entire suite and requires the Ada toolchain: the package
+exists to extract, build and run source-code examples, so the tests that
+cover that work invoke the toolchain for real.  It is the only run that
+validates the package.
+
+For developers working on a machine without an Ada toolchain, a second
+target runs just the subset of tests that need no toolchain:
+
+```sh
+make test_rst_pipeline_smoke
+```
+
+**This smoke run does not validate the module.**  It compiles nothing, so it
+proves nothing about the package's actual job.  It exists purely as a
+convenience: it catches obvious breakage in the pure-Python parts while a
+toolchain is out of reach.  A green smoke run must never be mistaken for a
+passing suite -- only `make test_rst_pipeline` gives that answer.  Coverage
+is switched off for the smoke run, because a coverage figure measured from a
+subset would invite the same misreading.
+
+Both targets are thin wrappers around `pytest`, run from the package
+directory (`frontend/python/rst_code_example_pipeline`).  Without the
+Makefile, the equivalent commands are:
+
+```sh
+# Full suite -- the validation run, and the only one
+pytest
+
+# Smoke subset -- does not validate the module
+pytest -m "not toolchain" --no-cov
+```
+
+See the "Development" section of the package README for installation and
+usage details.
