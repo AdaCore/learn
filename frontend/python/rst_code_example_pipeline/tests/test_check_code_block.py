@@ -316,7 +316,7 @@ class TestCheckBlockForceChecks:
 
         The block is checkable and clean, but a record of an earlier run
         sitting beside it says the block failed.  Left alone, that record is
-        what the caller gets back -- the cached-failure test above pins that.
+        what the caller gets back -- TestCheckBlockCacheHitFail pins that.
         Forced, the stale record has to be ignored, the checks have to run for
         real, and the answer has to be the one the block earns rather than the
         one on disk.
