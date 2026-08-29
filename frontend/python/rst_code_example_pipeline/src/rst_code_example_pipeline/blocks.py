@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 from . import colors as C
+from . import constants
 from . import toolchain_info
 
 class Block(object):
@@ -197,7 +198,7 @@ class Block(object):
         block_info = vars(self)
 
         if json_filename is None:
-            json_filename = "block_info.json"
+            json_filename = constants.BLOCK_INFO_FILENAME
         with open(json_filename, u'w') as f:
             json.dump(block_info, f, indent=4)
 
@@ -206,7 +207,7 @@ class CodeBlock(Block):
     def from_json_file(json_filename: str | None = None) -> CodeBlock | None:
 
         if json_filename is None:
-            json_filename = "block_info.json"
+            json_filename = constants.BLOCK_INFO_FILENAME
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:

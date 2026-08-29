@@ -16,6 +16,7 @@ import json
 from .chop import manual_chop, real_gnatchop
 
 from . import blocks
+from . import constants
 from . import fmt_utils
 from . import toolchain_setup
 
@@ -79,11 +80,11 @@ project Main is
 
    package Builder is
       for Default_Switches ("Ada") use ("-g");
-      for Global_Configuration_Pragmas use "main.adc";
+      for Global_Configuration_Pragmas use "{}";
    end Builder;
 
 end Main;
-"""
+""".format(constants.PROJECT_PRAGMAS_FILENAME)
 
 MAIN_SPARK_GPR="""
 project Main_Spark is
@@ -97,22 +98,22 @@ project Main_Spark is
 
    package Builder is
       for Default_Switches ("Ada") use ("-g");
-      for Global_Configuration_Pragmas use "main_spark.adc";
+      for Global_Configuration_Pragmas use "{}";
    end Builder;
 
 end Main_Spark;
-"""
+""".format(constants.SPARK_PROJECT_PRAGMAS_FILENAME)
 
 def write_project_file(main_file: str | None,
                        compiler_switches: list[str],
                        spark_mode: bool) -> str:
-    gpr_filename = "main.gpr"
-    adc_filename = "main.adc"
+    gpr_filename = constants.PROJECT_FILENAME
+    adc_filename = constants.PROJECT_PRAGMAS_FILENAME
     main_gpr = MAIN_GPR
 
     if spark_mode:
-        gpr_filename = "main_spark.gpr"
-        adc_filename = "main_spark.adc"
+        gpr_filename = constants.SPARK_PROJECT_FILENAME
+        adc_filename = constants.SPARK_PROJECT_PRAGMAS_FILENAME
         main_gpr = MAIN_SPARK_GPR
 
     adc_content = COMMON_ADC
@@ -356,7 +357,7 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
                 copytree_latest = True
 
                 if os.path.exists(project_block_dir):
-                    json_filename = "block_info.json"
+                    json_filename = constants.BLOCK_INFO_FILENAME
                     json_file = project_block_dir + "/" + json_filename
                     if os.path.exists(json_file):
                         copytree_latest = False
