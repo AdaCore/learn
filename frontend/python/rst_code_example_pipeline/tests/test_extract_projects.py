@@ -4,6 +4,8 @@ Unit tests for rst_code_example_pipeline.extract_projects.
 Covers:
 - get_project_dir(): simple and dotted project names
 - write_project_file(): all four combinations of spark_mode × main_file × compiler_switches
+- write_project_file(): the generated project points at the configuration pragma
+  file the same call wrote, in both plain and SPARK mode
 - ProjectsList: init, add(), to_json_file(), from_json_file() round-trip, missing file
 - analyze_file(): minimal no-check / syntax-only Ada block
 - analyze_file(): a block directory left over from a prior run whose info JSON file was
@@ -138,6 +140,23 @@ class TestWriteProjectFile:
         ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
         content = (work_dir / "main.adc").read_text()
         assert "pragma SPARK_Mode" not in content
+
+    @pytest.mark.parametrize("spark_mode", [False, True], ids=["plain", "spark"])
+    def test_project_names_the_pragma_file_the_same_call_wrote(
+            self, work_dir, spark_mode):
+        """The pragma file a generated project points at is the one written
+        beside it.
+
+        The project text and the pragma file are produced by two separate
+        parts of one call, and nothing in the generator checks that the two
+        agree on the name.  A disagreement leaves both files on disk and is
+        invisible here; only a later build against the project would meet it.
+        """
+        result = ep.write_project_file(
+            main_file=None, compiler_switches=[], spark_mode=spark_mode
+        )
+        assert _configuration_pragmas(work_dir, result).strip(), \
+            "the pragma file the project names must have something in it"
 
     def test_full_combo_main_switches_spark(self, work_dir):
         result = ep.write_project_file(
