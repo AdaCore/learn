@@ -100,6 +100,7 @@ def _make_block(project: str = "TestProject",
                 compile_it: bool | None = None,
                 run_it: bool | None = None,
                 source_files: list[str] | None = None,
+                line_start: int = 1,
                 text: str = "procedure Main is begin null; end Main;") -> _blocks_mod.CodeBlock:
     """Build a minimal CodeBlock for testing.
 
@@ -107,6 +108,11 @@ def _make_block(project: str = "TestProject",
     with an empty buttons list.  ``None`` (the default) falls back to
     ``["no"]`` so that most tests get a valid button indicator without having
     to spell it out each time.
+
+    NOTE: ``line_start`` says where the block sits in its RST file.  A test
+    that checks how a compiler diagnostic is mapped back onto the RST file
+    should set it higher than any line the compiler could report on its own,
+    so that an unmapped line cannot be mistaken for a mapped one.
     """
     if not info.DEFAULT_VERSION:
         info.init_toolchain_info()
@@ -118,8 +124,8 @@ def _make_block(project: str = "TestProject",
     gprbuild_version = gprbuild_version or ["default", info.DEFAULT_VERSION["gprbuild"]]
     return _blocks_mod.CodeBlock(
         rst_file="test.rst",
-        line_start=1,
-        line_end=5,
+        line_start=line_start,
+        line_end=line_start + 4,
         text=text,
         language=language,
         project=project,
@@ -537,6 +543,9 @@ end Main;
             spark_mode=False,
         )
 
+        # Start the block far below any line the compiler can report on for a
+        # four-line file, so an unshifted line number cannot pass for a
+        # shifted one.
         block = _make_block(
             buttons=["compile"],
             syntax_only=False,
@@ -544,6 +553,7 @@ end Main;
             compile_it=True,
             run_it=False,
             source_files=["bad.adb"],
+            line_start=100,
         )
         block.project_filename = project_filename
         block.project_main_file = "bad.adb"
@@ -565,8 +575,12 @@ end Main;
             r"^{}:(\d+):(\d+): ".format(re.escape(block.rst_file)), out, re.M)
         assert reported, \
             "no compiler diagnostic was reported against the RST file"
-        assert all(int(line) > block.line_start for line, _ in reported), \
-            "diagnostic line numbers must be offset by the block start line"
+        source_line_count = len(bad_source.splitlines())
+        offsets = sorted({int(line) - block.line_start for line, _ in reported})
+        assert all(1 <= offset <= source_line_count for offset in offsets), \
+            "every diagnostic must be reported at its compiler line shifted by " \
+            "the block's start line, so the offsets must fall inside the {}-line " \
+            "block; got {}".format(source_line_count, offsets)
 
     def test_valid_ada_run_returns_false(self, tmp_path):
         """A compilable and runnable Ada block must compile and run without error."""
@@ -1467,13 +1481,16 @@ end Main;
         assert "gnatprove" in failed_cleanups
 
         out = capsys.readouterr().out
-        assert "Failed to clean-up example" in out, \
+        # Both gprclean failures are logged and the gnatprove --clean one is
+        # not, so at least two messages must appear.  The bound is a minimum
+        # rather than an equality on purpose: adding a further clean-up step is
+        # not a regression, whereas dropping the logging from either of the two
+        # sites that have it is -- and the two messages are textually identical,
+        # so counting them is the only way to tell one has gone.
+        assert out.count("Failed to clean-up example") >= 2, \
             "a failing clean-up must be logged rather than passed over in silence"
         assert "simulated cleanup failure" in out, \
             "the failing clean-up command's own output must be shown with the message"
-        # How many clean-up steps run is not part of the contract, so the
-        # number of logged failures is deliberately not pinned: adding one
-        # more clean-up step is not a regression.
 
 
 @pytest.mark.toolchain
