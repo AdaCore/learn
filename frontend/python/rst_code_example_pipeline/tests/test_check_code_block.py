@@ -1941,9 +1941,25 @@ int main(void)
         is set, so a C block asking only for a compile stops the check with an
         assertion instead of compiling.  An Ada block in the same position is
         fine, because the project builder takes the main from the generated
-        project rather than from the field.  Resolving a main file for every
-        compiled block, or naming the executable some other way, fixes it;
-        when it lands this test passes and the marker must be removed.
+        project rather than from the field.
+
+        The fix that is open is to name the C executable some other way.
+        Resolving a main file for every compiled block is not: a compile
+        button asks for a compile and not a link -- a block holding only a
+        package spec has nothing to link -- and the sibling Ada compile test
+        pins the generated project as naming no main, so that route reddens
+        it.  When the open fix lands this test passes and the marker must be
+        removed.
+
+        What the marker can absorb: it is strict, so it fails the suite if
+        the defect is fixed without the marker being removed, but it carries
+        no ``raises``, so a later break in the shared extraction helper, in
+        the button triple, or in the C chopper would keep it xfailing for a
+        different reason than the one recorded here.  ``raises`` would not
+        separate those, since the defect and a broken fixture both raise
+        AssertionError.  The mitigation is that the sibling C run test drives
+        the same extraction helper and the same chopper with no marker on it,
+        so such a break reddens there.
         """
         block_dir, info, json_file = self._extract(
             tmp_path,
