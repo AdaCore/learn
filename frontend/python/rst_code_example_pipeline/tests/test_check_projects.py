@@ -96,7 +96,11 @@ class TestGetBlocksValid:
     def test_project_entry_has_one_tuple(self, tmp_path):
         json_file = _make_minimal_block_info("MyProject", tmp_path)
         result = cp.get_blocks([json_file])
-        assert len(result["MyProject"]) == 1
+        # A list, not just any sized container: callers append to it as further
+        # block files for the same project are found.
+        entry = result["MyProject"]
+        assert isinstance(entry, list)
+        assert len(entry) == 1
 
     def test_tuple_contains_codeblock_and_path(self, tmp_path):
         json_file = _make_minimal_block_info("MyProject", tmp_path)

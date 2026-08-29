@@ -11,21 +11,7 @@ Covers:
 """
 import pytest
 
-from rst_code_example_pipeline import colors as C
 from rst_code_example_pipeline.colors import Colors, col, no_colors, printcol
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-def force_enabled():
-    """Forcibly enable colors regardless of TTY state (used in fixture teardown)."""
-    Colors._enabled = True
-
-
-def force_disabled():
-    Colors._enabled = False
 
 
 # ---------------------------------------------------------------------------
