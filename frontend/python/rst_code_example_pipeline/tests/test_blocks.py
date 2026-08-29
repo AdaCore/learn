@@ -108,16 +108,29 @@ class TestMinimalAdaBlock:
         assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gprbuild_version[0] == "default"
 
-    def test_line_start_and_end_set(self):
-        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
-        assert isinstance(blocks[0], CodeBlock)
-        assert blocks[0].line_start >= 0
-        assert blocks[0].line_end > blocks[0].line_start
+    def test_line_span_and_text_are_exact(self):
+        """The parser must report exactly where the block body starts and ends
+        in the RST file, and hand back that body with the directive indentation
+        removed.
 
-    def test_text_not_empty(self):
+        The expected values are spelled out rather than derived from the
+        parser: every consumer of a block reports diagnostics against these
+        line numbers, so an off-by-one here misdirects a course author to the
+        wrong line.  Recomputing them the way the parser does would make the
+        test agree with whatever the parser produced.
+        """
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         assert isinstance(blocks[0], CodeBlock)
-        assert blocks[0].text.strip() != ""
+        assert blocks[0].line_start == 1
+        assert blocks[0].line_end == 9
+        assert blocks[0].text == (
+            'with Ada.Text_IO; use Ada.Text_IO;\n'
+            'procedure Main is\n'
+            'begin\n'
+            '   Put_Line ("Hello");\n'
+            'end Main;\n'
+            '\n'
+        )
 
     def test_active_defaults_to_true(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
@@ -308,11 +321,16 @@ More text.
         code_blocks = [b for b in blocks if isinstance(b, CodeBlock)]
         assert len(code_blocks) == 2
 
-    def test_order_preserved(self):
+    def test_line_spans_are_exact_and_ordered(self):
+        """Each block must carry its own span, in file order and without
+        overlapping the other one."""
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         code_blocks = [b for b in blocks if isinstance(b, CodeBlock)]
-        # First block comes before second
-        assert code_blocks[0].line_start < code_blocks[1].line_start
+        assert [(b.line_start, b.line_end) for b in code_blocks] == [(1, 4), (7, 10)]
+        assert [b.text for b in code_blocks] == [
+            "procedure A is null;\n",
+            "procedure B is null;\n",
+        ]
 
 
 # ---------------------------------------------------------------------------
@@ -335,10 +353,19 @@ class TestBlockAtEndOfFile:
 
     def test_block_with_content_no_trailing_paragraph_succeeds(self):
         """A block at end-of-file that has content produces a WARNING but
-        is successfully parsed (no SystemExit)."""
+        is successfully parsed (no SystemExit).
+
+        The end of the file closes the block in place of an explanatory
+        paragraph, so the span has to end one line past the last body line --
+        the value is pinned because this path computes it differently from the
+        ordinary one.
+        """
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST_WITH_CONTENT)
         assert len(blocks) == 1
         assert isinstance(blocks[0], CodeBlock)
+        assert blocks[0].line_start == 1
+        assert blocks[0].line_end == 3
+        assert blocks[0].text == "procedure P is null;"
 
     def test_empty_block_body_raises_system_exit(self):
         """A code-block directive with an empty body (no content lines at all)
