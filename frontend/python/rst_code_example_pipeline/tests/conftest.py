@@ -17,7 +17,10 @@ here once instead of being re-implemented, differently, in each of them.
 - ``reset_pipeline_globals`` puts the settings globals of the three entry-point
   modules back to the values their modules declare, around every test.  Those
   globals are what the command-line switches assign to, so a test that sets one
-  is changing the setting for the rest of the session.
+  is changing the setting for the rest of the session.  The values are read
+  back from the modules rather than written down here, so that a default which
+  changes in the source is followed instead of being quietly overridden with a
+  stale copy of it for the whole suite.
 - ``restore_color_state`` puts ``Colors._enabled`` back after every test, so a
   test that turns colors on or off cannot change what a later test finds in its
   captured output.
@@ -25,11 +28,11 @@ here once instead of being re-implemented, differently, in each of them.
   directory for the duration of the test and hands it back, for the many tests
   whose subject reads or writes relative to the working directory.
 """
+import copy
 import os
 
 import pytest
 
-from rst_code_example_pipeline import blocks
 from rst_code_example_pipeline import check_code_block
 from rst_code_example_pipeline import check_projects
 from rst_code_example_pipeline import extract_projects
@@ -44,23 +47,34 @@ def restore_cwd():
     os.chdir(original)
 
 
-def _reset_pipeline_globals() -> None:
-    """Assign the settings globals the values their own modules declare."""
-    check_code_block.verbose = False
-    check_code_block.all_diagnostics = False
-    check_code_block.max_columns = 0
-    check_code_block.force_checks = False
-
-    check_projects.verbose = False
-    check_projects.all_diagnostics = False
-    check_projects.max_columns = 0
-    check_projects.force_checks = False
-
-    extract_projects.verbose = False
-    extract_projects.code_block_at = None
-    extract_projects.current_config = blocks.ConfigBlock(
-        run_button=False, prove_button=True, accumulate_code=False
+# The settings globals of each entry-point module, captured as those modules
+# declare them.  A conftest is imported before any test module, so nothing has
+# had the chance to assign to one of these yet and what is captured here is the
+# declared value.
+_DECLARED_SETTINGS = {
+    module: {name: getattr(module, name) for name in names}
+    for module, names in (
+        (check_code_block,
+         ("verbose", "all_diagnostics", "max_columns", "force_checks")),
+        (check_projects,
+         ("verbose", "all_diagnostics", "max_columns", "force_checks")),
+        (extract_projects,
+         ("verbose", "code_block_at", "current_config")),
     )
+}
+
+
+def _reset_pipeline_globals() -> None:
+    """Assign the settings globals the values their own modules declare.
+
+    Each value is handed out as a copy.  One of them is a configuration block
+    the package updates in place, so assigning the captured object itself would
+    give every test the same one to mutate and lose the declared value with the
+    first test that did.
+    """
+    for module, declared in _DECLARED_SETTINGS.items():
+        for name, value in declared.items():
+            setattr(module, name, copy.deepcopy(value))
 
 
 @pytest.fixture(autouse=True)
