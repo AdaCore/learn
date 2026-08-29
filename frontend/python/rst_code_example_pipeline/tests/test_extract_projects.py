@@ -8,7 +8,8 @@ Covers:
 - analyze_file(): minimal no-check / syntax-only Ada block
 - analyze_file(): a block directory left over from a prior run whose info JSON file was
   deleted is detected as stale, logged, and removed rather than reused
-- analyze_file() integration: compile_button / run_button / prove_button Ada blocks
+- analyze_file() integration: compile_button / run_button / prove_button Ada blocks --
+  the extracted source, the per-block directory name and the generated project files
   (requires the Ada toolchain — real gnatchop and write_project_file calls)
 - analyze_file(): a block whose source text chops into zero source files is logged and
   skipped rather than crashing the whole analysis
@@ -137,10 +138,7 @@ class TestWriteProjectFile:
     def test_spark_adc_contains_spark_mode_pragma(self, work_dir):
         ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
         content = (work_dir / "main_spark.adc").read_text()
-        assert "SPARK_Mode" in content or "pragma SPARK_Mode" in content or \
-               "SPARK_ADC" in ep.SPARK_ADC  # content from SPARK_ADC constant
-        # Verify SPARK_ADC content is actually written
-        assert "SPARK" in content
+        assert "pragma SPARK_Mode (On);" in content
 
     def test_non_spark_adc_does_not_contain_spark_pragma(self, work_dir):
         ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
@@ -773,6 +771,25 @@ Explanatory paragraph.
         rst_path.write_text(content)
         return str(rst_path)
 
+    @staticmethod
+    def _block_dir(work_dir, project: str):
+        """Return the single per-block directory written for ``project``.
+
+        Every block gets its own directory below the project, named after the
+        short hash of its text so that two blocks cannot collide; ``latest``
+        is the staging copy and is not one of them."""
+        project_dir = work_dir / "projects" / project
+        block_dirs = sorted(d for d in project_dir.iterdir()
+                            if d.is_dir() and d.name != "latest")
+        assert len(block_dirs) == 1, \
+            "expected exactly one per-block directory, got {}".format(
+                [d.name for d in block_dirs])
+        return block_dirs[0]
+
+    @staticmethod
+    def _block_info(block_dir) -> dict:
+        return json.loads((block_dir / "block_info.json").read_text())
+
     def test_analyze_file_compile_button(self, work_dir):
         """RST with a compile_button Ada block: analyze_file() must call
         real_gnatchop, write the project file, write block_info.json, and
@@ -787,10 +804,22 @@ Explanatory paragraph.
         result = ep.analyze_file(rst_file)
         assert result is False, \
             "analyze_file() must return False for a valid compile_button block"
-        # At least one block_info.json must have been written
-        block_jsons = list(work_dir.rglob("block_info.json"))
-        assert len(block_jsons) >= 1, \
-            "analyze_file() must write at least one block_info.json for a compile block"
+
+        block_dir = self._block_dir(work_dir, "TestCompile")
+        info = self._block_info(block_dir)
+        assert block_dir.name == info["text_hash_short"], \
+            "the block directory must be named after the block's short hash"
+        # The chopped source is what the compiler will see, so it must be the
+        # author's code, unchanged and un-reindented.
+        assert (block_dir / "main.adb").read_text() == self._ADA_BODY
+        assert info["source_files"] == ["main.adb"]
+        assert info["project_filename"] == "main.gpr"
+        assert info["spark_project_filename"] is None, \
+            "no SPARK project may be written for a block that is not proved"
+        # A compile button alone is not runnable, so no main is selected and
+        # the generated project must not name one.
+        assert info["project_main_file"] is None
+        assert "for Main use" not in (block_dir / "main.gpr").read_text()
 
     def test_analyze_file_run_button(self, work_dir):
         """RST with a run_button Ada block: analyze_file() must call
@@ -806,9 +835,17 @@ Explanatory paragraph.
         result = ep.analyze_file(rst_file)
         assert result is False, \
             "analyze_file() must return False for a valid run_button block"
-        block_jsons = list(work_dir.rglob("block_info.json"))
-        assert len(block_jsons) >= 1, \
-            "analyze_file() must write at least one block_info.json for a run block"
+
+        block_dir = self._block_dir(work_dir, "TestRun")
+        info = self._block_info(block_dir)
+        assert (block_dir / "main.adb").read_text() == self._ADA_BODY
+        assert info["source_files"] == ["main.adb"]
+        assert info["project_filename"] == "main.gpr"
+        assert info["spark_project_filename"] is None
+        # A runnable block selects a main, and the project must name it or
+        # there is nothing for the builder to link.
+        assert info["project_main_file"] == "main.adb"
+        assert 'for Main use ("main.adb");' in (block_dir / "main.gpr").read_text()
 
     def test_analyze_file_prove_button(self, work_dir):
         """RST with a prove_button SPARK Ada block: analyze_file() must call
@@ -829,9 +866,17 @@ end Main;"""
         result = ep.analyze_file(rst_file)
         assert result is False, \
             "analyze_file() must return False for a valid prove_button block"
-        block_jsons = list(work_dir.rglob("block_info.json"))
-        assert len(block_jsons) >= 1, \
-            "analyze_file() must write at least one block_info.json for a prove block"
+
+        block_dir = self._block_dir(work_dir, "TestProve")
+        info = self._block_info(block_dir)
+        assert (block_dir / "main.adb").read_text() == spark_body
+        assert info["source_files"] == ["main.adb"]
+        # A prove button alone builds only the SPARK project.
+        assert info["spark_project_filename"] == "main_spark.gpr"
+        assert info["project_filename"] is None
+        assert not (block_dir / "main.gpr").exists()
+        # GNATprove only treats the unit as SPARK because of this pragma.
+        assert "pragma SPARK_Mode (On);" in (block_dir / "main_spark.adc").read_text()
 
     def test_analyze_file_run_button_no_main(self, work_dir):
         """RST with run_button and no main= attribute: get_main_filename()
@@ -846,8 +891,16 @@ end Main;"""
         result = ep.analyze_file(rst_file)
         assert result is False, \
             "analyze_file() must return False for a run_button block with no main="
-        block_jsons = list(work_dir.rglob("block_info.json"))
-        assert len(block_jsons) >= 1
+
+        block_dir = self._block_dir(work_dir, "TestRunNoMain")
+        info = self._block_info(block_dir)
+        assert info["main_file"] is None, \
+            "the fixture must not declare a main= attribute, or the fallback " \
+            "this test exists for is never taken"
+        # With nothing declared, the last chopped source becomes the main file.
+        assert info["source_files"] == ["main.adb"]
+        assert info["project_main_file"] == "main.adb"
+        assert 'for Main use ("main.adb");' in (block_dir / "main.gpr").read_text()
 
     def test_analyze_file_prove_and_run_button(self, work_dir):
         """RST with both prove_button and run_button: the main file is
@@ -867,8 +920,19 @@ end Main;"""
         result = ep.analyze_file(rst_file)
         assert result is False, \
             "analyze_file() must return False for a valid prove_button+run_button block"
-        block_jsons = list(work_dir.rglob("block_info.json"))
-        assert len(block_jsons) >= 1
+
+        block_dir = self._block_dir(work_dir, "TestProveRun")
+        info = self._block_info(block_dir)
+        assert (block_dir / "main.adb").read_text() == spark_body
+        # Both projects are written, and both must name the resolved main file.
+        assert info["project_filename"] == "main.gpr"
+        assert info["spark_project_filename"] == "main_spark.gpr"
+        assert info["main_file"] is None
+        assert info["project_main_file"] == "main.adb"
+        for gpr in ("main.gpr", "main_spark.gpr"):
+            assert 'for Main use ("main.adb");' in (block_dir / gpr).read_text(), \
+                "{} must name the main file".format(gpr)
+        assert "pragma SPARK_Mode (On);" in (block_dir / "main_spark.adc").read_text()
 
     def test_analyze_file_c_prove_button_reports_the_wrong_language(
             self, work_dir, capsys):

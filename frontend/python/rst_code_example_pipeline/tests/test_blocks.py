@@ -4,7 +4,9 @@ Unit tests for rst_code_example_pipeline.blocks.
 Covers:
 - Block.get_blocks_from_rst(): RST parser (all attributes, derived fields)
 - CodeBlock constructor derived fields (no_check, syntax_only, run_it, compile_it,
-  prove_it, text_hash, text_hash_short)
+  prove_it)
+- text_hash / text_hash_short: deterministic, distinct per text, usable as a
+  directory name
 - CodeBlock.to_json_file() + from_json_file() round-trip
 - ConfigBlock.__init__ and update()
 - Adversarial: empty RST, missing json file, exit(1) path
@@ -22,8 +24,12 @@ configuration would make the pair self-referential and hide a parsing error.
 Version strings passed straight to the CodeBlock constructor are a different
 matter: those are copies of configuration data and are read back from it.
 """
-import hashlib
+import json
 import os
+import re
+import subprocess
+import sys
+import textwrap
 
 import pytest
 
@@ -62,10 +68,6 @@ class TestMinimalAdaBlock:
     def test_returns_one_block(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         assert len(blocks) == 1
-
-    def test_type_is_codeblock(self):
-        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
-        assert isinstance(blocks[0], CodeBlock)
 
     def test_rst_file_stored(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
@@ -112,16 +114,34 @@ class TestMinimalAdaBlock:
         assert isinstance(blocks[0], CodeBlock)
         assert blocks[0].gprbuild_version[0] == "default"
 
-    def test_line_start_and_end_set(self):
-        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
-        assert isinstance(blocks[0], CodeBlock)
-        assert blocks[0].line_start >= 0
-        assert blocks[0].line_end > blocks[0].line_start
+    def test_line_span_and_text_are_exact(self):
+        """The parser must report the block's span in the RST file and hand
+        back its body with the directive indentation removed.
 
-    def test_text_not_empty(self):
+        Counting lines from zero, ``line_start`` is the first line after the
+        ``.. code::`` directive -- which makes it equal to the directive's own
+        1-based line number -- and ``line_end`` is the line that closed the
+        block.  The body is everything between the two, so it keeps the blank
+        lines separating the block from what follows it.
+
+        The expected values are spelled out rather than derived from the
+        parser: every consumer of a block reports diagnostics against these
+        line numbers, so an off-by-one here misdirects a course author to the
+        wrong line.  Recomputing them the way the parser does would make the
+        test agree with whatever the parser produced.
+        """
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         assert isinstance(blocks[0], CodeBlock)
-        assert blocks[0].text.strip() != ""
+        assert blocks[0].line_start == 1
+        assert blocks[0].line_end == 9
+        assert blocks[0].text == (
+            'with Ada.Text_IO; use Ada.Text_IO;\n'
+            'procedure Main is\n'
+            'begin\n'
+            '   Put_Line ("Hello");\n'
+            'end Main;\n'
+            '\n'
+        )
 
     def test_active_defaults_to_true(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
@@ -312,11 +332,16 @@ More text.
         code_blocks = [b for b in blocks if isinstance(b, CodeBlock)]
         assert len(code_blocks) == 2
 
-    def test_order_preserved(self):
+    def test_line_spans_are_exact_and_ordered(self):
+        """Each block must carry its own span, in file order and without
+        overlapping the other one."""
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         code_blocks = [b for b in blocks if isinstance(b, CodeBlock)]
-        # First block comes before second
-        assert code_blocks[0].line_start < code_blocks[1].line_start
+        assert [(b.line_start, b.line_end) for b in code_blocks] == [(1, 4), (7, 10)]
+        assert [b.text for b in code_blocks] == [
+            "procedure A is null;\n",
+            "procedure B is null;\n",
+        ]
 
 
 # ---------------------------------------------------------------------------
@@ -339,10 +364,20 @@ class TestBlockAtEndOfFile:
 
     def test_block_with_content_no_trailing_paragraph_succeeds(self):
         """A block at end-of-file that has content produces a WARNING but
-        is successfully parsed (no SystemExit)."""
+        is successfully parsed (no SystemExit).
+
+        With no explanatory paragraph to close the block, the end of the file
+        closes it instead, so the span ends one line past the last line of the
+        file -- pinned because this path computes it differently from the
+        ordinary one, and because nothing follows the body here the text
+        carries no trailing blank line.
+        """
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST_WITH_CONTENT)
         assert len(blocks) == 1
         assert isinstance(blocks[0], CodeBlock)
+        assert blocks[0].line_start == 1
+        assert blocks[0].line_end == 3
+        assert blocks[0].text == "procedure P is null;"
 
     def test_empty_block_body_raises_system_exit(self):
         """A code-block directive with an empty body (no content lines at all)
@@ -370,14 +405,15 @@ class TestEmptyRst:
 # ---------------------------------------------------------------------------
 
 class TestCodeBlockDerivedFields:
-    def _make_block(self, classes, buttons=None, language="ada"):
+    def _make_block(self, classes, buttons=None, language="ada",
+                    text="procedure P is null;"):
         if not info.DEFAULT_VERSION:
             info.init_toolchain_info()
         return CodeBlock(
             rst_file="test.rst",
             line_start=0,
             line_end=5,
-            text="procedure P is null;",
+            text=text,
             language=language,
             project=None,
             main_file=None,
@@ -447,31 +483,72 @@ class TestCodeBlockDerivedFields:
         b = self._make_block([])
         assert b.prove_it is False
 
-    def test_text_hash_is_str(self):
-        b = self._make_block([])
-        assert isinstance(b.text_hash, str)
+    # The two hashes are tested for the properties the rest of the package
+    # relies on, not against a fixed digest: the short hash names a block's
+    # project directory and the long one keys its check cache, so nothing
+    # outside this package requires any particular algorithm, and a pinned
+    # digest would freeze one for no benefit.
 
-    def test_text_hash_short_is_str(self):
-        b = self._make_block([])
-        assert isinstance(b.text_hash_short, str)
+    # Hash the given text in a fresh interpreter, in a block whose every other
+    # field differs from the one the test builds in process.  Two things have
+    # to be true at once and neither alone is enough: the hash must survive a
+    # process boundary -- one that folds in a value drawn per process is
+    # perfectly stable within a single run, and still moves the project
+    # directory and orphans the cached check result on the next one -- and it
+    # must be a function of the block text alone, or moving a block to another
+    # file, or editing the line above it, has the same effect.
+    _HASH_PROBE = textwrap.dedent(
+        """
+        import json, sys
+        from rst_code_example_pipeline.blocks import CodeBlock
 
-    def test_text_hash_deterministic(self):
-        text = "procedure P is null;"
-        b1 = self._make_block([])
-        b2 = self._make_block([])
-        assert b1.text_hash == b2.text_hash
+        block = CodeBlock(
+            rst_file="other.rst",
+            line_start=42,
+            line_end=99,
+            text=sys.argv[1],
+            language="c",
+            project="OtherProject",
+            main_file="other.c",
+            gnat_version=["selected", "1.2.3-4"],
+            gnatprove_version=["selected", "1.2.3-4"],
+            gprbuild_version=["selected", "1.2.3-4"],
+            compiler_switches=["-gnatwa"],
+            classes=["c-nocheck"],
+            manual_chop=True,
+            buttons=["run"],
+        )
+        print(json.dumps([block.text_hash, block.text_hash_short]))
+        """
+    )
 
-    def test_text_hash_sha512(self):
-        text = "procedure P is null;"
+    def test_text_hashes_are_deterministic_across_runs(self):
+        """The same block text must hash the same way on every run and in every
+        block that carries it, or a block's project directory moves and its
+        cached check result is never found again."""
         b = self._make_block([])
-        expected = hashlib.sha512(text.encode("utf-8")).hexdigest()
-        assert b.text_hash == expected
+        output = subprocess.check_output(
+            [sys.executable, "-c", self._HASH_PROBE, b.text], text=True)
+        fresh_hash, fresh_hash_short = json.loads(output)
+        assert fresh_hash == b.text_hash
+        assert fresh_hash_short == b.text_hash_short
 
-    def test_text_hash_short_md5(self):
-        text = "procedure P is null;"
+    def test_text_hashes_distinguish_different_text(self):
+        """Two blocks with different text must hash differently, or one
+        block's extracted project overwrites the other's and one of the two
+        is silently never checked."""
+        b1 = self._make_block([], text="procedure P is null;")
+        b2 = self._make_block([], text="procedure Q is null;")
+        assert b1.text_hash != b2.text_hash
+        assert b1.text_hash_short != b2.text_hash_short
+
+    def test_text_hashes_are_usable_as_directory_names(self):
+        """The short hash is used verbatim as a directory name, so both
+        hashes must be non-empty lowercase hexadecimal with nothing in them
+        that a path would have to escape."""
         b = self._make_block([])
-        expected = hashlib.md5(text.encode("utf-8")).hexdigest()
-        assert b.text_hash_short == expected
+        assert re.fullmatch(r"[0-9a-f]+", b.text_hash)
+        assert re.fullmatch(r"[0-9a-f]+", b.text_hash_short)
 
 
 # ---------------------------------------------------------------------------
