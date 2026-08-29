@@ -12,11 +12,12 @@ Covers:
 - check_code_block_json() with nonexistent file → returns True (error)
 - C compile path (gcc): valid C → False; invalid C → True (requires the Ada toolchain)
 - ada-expect-compile-error class: Ada that fails to compile → False (expected failure)
+- a failing Ada compile reports its diagnostics against the RST file, with the block's start line added
 - C run path: valid C that exits 0 → False (requires the Ada toolchain)
 - gnatprove path: minimal SPARK Ada → False; C + prove_it → True (requires the Ada toolchain)
 - gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
-- all_diagnostics flag: compiles a valid Ada block with all_diagnostics=True → no crash
+- all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
 - an unrecognized language value takes neither the Ada nor the C branch anywhere
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
@@ -32,6 +33,7 @@ that bail out on a missing file are free of it.
 """
 import json
 import os
+import re
 
 import pytest
 
@@ -340,6 +342,8 @@ class TestCheckBlockNoButtons:
             "check_block() must return True (has_error) when buttons list is empty"
 
     def test_empty_buttons_prints_error(self, tmp_path, capsys):
+        """The diagnostic must name the offending block and say what was
+        missing, since that text is all a course author gets to act on."""
         block = _make_block(buttons=[], syntax_only=False, no_check=False)
         json_file = str(tmp_path / "block_info.json")
         block.to_json_file(json_file)
@@ -347,8 +351,14 @@ class TestCheckBlockNoButtons:
 
         ccb.check_block(block, json_file, force_checks=True)
         captured = capsys.readouterr()
-        assert "no_button" in captured.out or "Expected" in captured.out, \
-            "An error message about missing buttons must be printed"
+        # The "ERROR" prefix and its coloring belong to the message formatter
+        # and are covered with it; what matters here is the location and the
+        # wording that follows.
+        expected = (
+            "at {}:{} (code block hash: {}): "
+            "Expected at least 'no_button' indicator, got none!".format(
+                block.rst_file, block.line_start, block.text_hash_short))
+        assert expected in captured.out
 
 
 # ---------------------------------------------------------------------------
@@ -514,8 +524,9 @@ end Main;
         assert result is False, \
             "A compilable Ada block must not produce a compile error"
 
-    def test_compile_error_block_returns_true(self, tmp_path):
-        """An Ada block that fails to compile must return True (error)."""
+    def test_compile_error_block_returns_true(self, tmp_path, capsys):
+        """An Ada block that fails to compile must return True (error) and
+        report the compiler diagnostics against the RST file."""
         bad_source = "procedure Bad is\nbegin\n   SYNTAX ERROR HERE!!!\nend Bad;\n"
         src = tmp_path / "bad.adb"
         src.write_text(bad_source)
@@ -544,6 +555,18 @@ end Main;
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True, \
             "An Ada block that fails to compile must return True (has_error)"
+
+        # The compiler reports against the extracted .adb file; check_block has
+        # to re-point every diagnostic at the RST file the reader is editing and
+        # shift its line number by where the block starts there.  The message
+        # text itself is left to the compiler and deliberately not pinned.
+        out = capsys.readouterr().out
+        reported = re.findall(
+            r"^{}:(\d+):(\d+): ".format(re.escape(block.rst_file)), out, re.M)
+        assert reported, \
+            "no compiler diagnostic was reported against the RST file"
+        assert all(int(line) > block.line_start for line, _ in reported), \
+            "diagnostic line numbers must be offset by the block start line"
 
     def test_valid_ada_run_returns_false(self, tmp_path):
         """A compilable and runnable Ada block must compile and run without error."""
@@ -887,13 +910,16 @@ end Main;
         result = ccb.check_block(block, json_file, verbose=True, force_checks=False)
         assert result is False
         out = capsys.readouterr().out
-        assert "already checked" in out or "Skipping" in out, \
-            "Expected 'already checked. Skipping...' in verbose cache-hit output"
+        expected = (
+            "Code block at {}:{} (code block hash: {}) "
+            "already checked. Skipping...".format(
+                block.rst_file, block.line_start, block.text_hash_short))
+        assert expected in out
 
-    def test_all_diagnostics_flag(self, tmp_path):
-        """With all_diagnostics=True and verbose=True and a real Ada compile,
-        check_block must not crash and must exercise the all_diagnostics output
-        path as well as the verbose toolchain-version print path."""
+    def test_all_diagnostics_flag(self, tmp_path, capsys):
+        """With all_diagnostics=True and verbose=True, a clean Ada compile must
+        announce the block it is checking, report success, and print no
+        diagnostics at all."""
         src = tmp_path / "main.adb"
         src.write_text(self.ADA_SOURCE)
         os.chdir(str(tmp_path))
@@ -925,6 +951,14 @@ end Main;
         )
         assert result is False, \
             "A valid Ada compile with all_diagnostics=True and verbose=True must not produce an error"
+
+        out = capsys.readouterr().out
+        assert "Checking code block at {}:{} (code block hash: {})".format(
+            block.rst_file, block.line_start, block.text_hash_short) in out
+        assert "SUCCESS" in out
+        assert not re.search(
+            r"^{}:\d+:\d+: ".format(re.escape(block.rst_file)), out, re.M), \
+            "a clean compile must not report any diagnostic against the RST file"
 
 
 # ---------------------------------------------------------------------------
