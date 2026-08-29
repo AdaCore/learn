@@ -1686,6 +1686,10 @@ int main(void)
         so it can be read back as one and the project taken from behind the
         switch that names it -- rather than by matching a name the test would
         otherwise have to know in advance.
+
+        Only for phases that are driven by a project file: the Ada build and
+        the proof.  A C build is a compiler command line with no project on
+        it, and asking this for one raises rather than returning anything.
         """
         args = ast.literal_eval(recorded_check["cmdline"])
         return args[args.index("-P") + 1]
