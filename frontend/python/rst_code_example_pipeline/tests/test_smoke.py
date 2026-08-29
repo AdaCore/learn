@@ -1,78 +1,71 @@
 """
 Smoke tests for rst_code_example_pipeline.
 
-Run with:
-    python -m unittest discover -s tests/
-or (from the project root):
-    python -m unittest rst_code_example_pipeline.tests.test_smoke
+Covers:
+- package metadata: the declared title and the shape of the declared version
+- every module of the package is importable without side effects
+- every command-line entry point accepts --help and exits successfully
 """
-import unittest
-from unittest.mock import patch
+from importlib import import_module
+import re
+import sys
+
+import pytest
 
 import rst_code_example_pipeline
 
 
-class TestPackageMetadata(unittest.TestCase):
-    def test_title(self) -> None:
-        self.assertEqual(rst_code_example_pipeline.__title__,
-                         'rst_code_example_pipeline')
+class TestPackageMetadata:
+    def test_title(self):
+        assert rst_code_example_pipeline.__title__ == \
+            'rst_code_example_pipeline'
 
-    def test_version(self) -> None:
-        self.assertRegex(rst_code_example_pipeline.__version__,
-                         r'^\d+\.\d+\.\d+$')
+    def test_version(self):
+        assert re.match(r'^\d+\.\d+\.\d+$',
+                        rst_code_example_pipeline.__version__)
 
 
-class TestModuleImports(unittest.TestCase):
+class TestModuleImports:
     """Each module must be importable without side-effects."""
 
-    def test_import_colors(self) -> None:
+    def test_import_colors(self):
         from rst_code_example_pipeline import colors  # noqa: F401
 
-    def test_import_fmt_utils(self) -> None:
+    def test_import_fmt_utils(self):
         from rst_code_example_pipeline import fmt_utils  # noqa: F401
 
-    def test_import_checks(self) -> None:
+    def test_import_checks(self):
         from rst_code_example_pipeline import checks  # noqa: F401
 
-    def test_import_blocks(self) -> None:
+    def test_import_blocks(self):
         from rst_code_example_pipeline import blocks  # noqa: F401
 
-    def test_import_toolchain_info(self) -> None:
+    def test_import_toolchain_info(self):
         from rst_code_example_pipeline import toolchain_info  # noqa: F401
 
-    def test_import_toolchain_setup(self) -> None:
+    def test_import_toolchain_setup(self):
         from rst_code_example_pipeline import toolchain_setup  # noqa: F401
 
-    def test_import_check_code_block(self) -> None:
+    def test_import_check_code_block(self):
         from rst_code_example_pipeline import check_code_block  # noqa: F401
 
-    def test_import_extract_projects(self) -> None:
+    def test_import_extract_projects(self):
         from rst_code_example_pipeline import extract_projects  # noqa: F401
 
-    def test_import_check_projects(self) -> None:
+    def test_import_check_projects(self):
         from rst_code_example_pipeline import check_projects  # noqa: F401
 
 
-class TestEntryPoints(unittest.TestCase):
+class TestEntryPoints:
     """Entry-point main() functions must accept --help (exit 0)."""
 
-    def _assert_help_exits_zero(self, entry: str) -> None:
-        from importlib import import_module
-        mod = import_module(f'rst_code_example_pipeline.cli.{entry}')
-        with patch('sys.argv', [entry, '--help']):
-            with self.assertRaises(SystemExit) as ctx:
-                mod.main()
-        self.assertEqual(ctx.exception.code, 0)
+    @pytest.mark.parametrize("entry", ["check_block", "extract", "check"])
+    def test_help_exits_zero(self, entry, monkeypatch):
+        module = import_module("rst_code_example_pipeline.cli.{}".format(entry))
+        monkeypatch.setattr(sys, "argv", [entry, "--help"])
 
-    def test_check_block_help(self) -> None:
-        self._assert_help_exits_zero('check_block')
+        with pytest.raises(SystemExit) as raised:
+            module.main()
 
-    def test_extract_help(self) -> None:
-        self._assert_help_exits_zero('extract')
-
-    def test_check_help(self) -> None:
-        self._assert_help_exits_zero('check')
-
-
-if __name__ == '__main__':
-    unittest.main()
+        assert raised.value.code == 0, \
+            "{} --help must exit successfully".format(entry)
