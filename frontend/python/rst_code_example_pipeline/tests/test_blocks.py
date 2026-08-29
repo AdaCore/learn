@@ -4,7 +4,9 @@ Unit tests for rst_code_example_pipeline.blocks.
 Covers:
 - Block.get_blocks_from_rst(): RST parser (all attributes, derived fields)
 - CodeBlock constructor derived fields (no_check, syntax_only, run_it, compile_it,
-  prove_it, text_hash, text_hash_short)
+  prove_it)
+- text_hash / text_hash_short: deterministic, distinct per text, usable as a
+  directory name
 - CodeBlock.to_json_file() + from_json_file() round-trip
 - ConfigBlock.__init__ and update()
 - Adversarial: empty RST, missing json file, exit(1) path
@@ -22,8 +24,8 @@ configuration would make the pair self-referential and hide a parsing error.
 Version strings passed straight to the CodeBlock constructor are a different
 matter: those are copies of configuration data and are read back from it.
 """
-import hashlib
 import os
+import re
 
 import pytest
 
@@ -393,14 +395,15 @@ class TestEmptyRst:
 # ---------------------------------------------------------------------------
 
 class TestCodeBlockDerivedFields:
-    def _make_block(self, classes, buttons=None, language="ada"):
+    def _make_block(self, classes, buttons=None, language="ada",
+                    text="procedure P is null;"):
         if not info.DEFAULT_VERSION:
             info.init_toolchain_info()
         return CodeBlock(
             rst_file="test.rst",
             line_start=0,
             line_end=5,
-            text="procedure P is null;",
+            text=text,
             language=language,
             project=None,
             main_file=None,
@@ -470,31 +473,37 @@ class TestCodeBlockDerivedFields:
         b = self._make_block([])
         assert b.prove_it is False
 
-    def test_text_hash_is_str(self):
-        b = self._make_block([])
-        assert isinstance(b.text_hash, str)
+    # The two hashes are tested for the properties the rest of the package
+    # relies on, not against a fixed digest: the short hash names a block's
+    # project directory and the long one keys its check cache, so nothing
+    # outside this package requires any particular algorithm, and a pinned
+    # digest would freeze one for no benefit.
 
-    def test_text_hash_short_is_str(self):
-        b = self._make_block([])
-        assert isinstance(b.text_hash_short, str)
-
-    def test_text_hash_deterministic(self):
-        text = "procedure P is null;"
+    def test_text_hashes_are_deterministic(self):
+        """The same block text must hash the same way on every run, or a
+        block's project directory moves and its cached check result is never
+        found again."""
         b1 = self._make_block([])
         b2 = self._make_block([])
         assert b1.text_hash == b2.text_hash
+        assert b1.text_hash_short == b2.text_hash_short
 
-    def test_text_hash_sha512(self):
-        text = "procedure P is null;"
-        b = self._make_block([])
-        expected = hashlib.sha512(text.encode("utf-8")).hexdigest()
-        assert b.text_hash == expected
+    def test_text_hashes_distinguish_different_text(self):
+        """Two blocks with different text must hash differently, or one
+        block's extracted project overwrites the other's and one of the two
+        is silently never checked."""
+        b1 = self._make_block([], text="procedure P is null;")
+        b2 = self._make_block([], text="procedure Q is null;")
+        assert b1.text_hash != b2.text_hash
+        assert b1.text_hash_short != b2.text_hash_short
 
-    def test_text_hash_short_md5(self):
-        text = "procedure P is null;"
+    def test_text_hashes_are_usable_as_directory_names(self):
+        """The short hash is used verbatim as a directory name, so both
+        hashes must be non-empty lowercase hexadecimal with nothing in them
+        that a path would have to escape."""
         b = self._make_block([])
-        expected = hashlib.md5(text.encode("utf-8")).hexdigest()
-        assert b.text_hash_short == expected
+        assert re.fullmatch(r"[0-9a-f]+", b.text_hash)
+        assert re.fullmatch(r"[0-9a-f]+", b.text_hash_short)
 
 
 # ---------------------------------------------------------------------------
