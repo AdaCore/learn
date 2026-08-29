@@ -1432,9 +1432,11 @@ end Main;
         project_filename = self._setup_project(tmp_path)
 
         real_check_output = S.check_output
+        failed_cleanups = []
 
         def fake_check_output(cmd, *args, **kwargs):
             if cmd[0] == "gprclean" or (cmd[0] == "gnatprove" and "--clean" in cmd):
+                failed_cleanups.append(cmd[0])
                 raise S.CalledProcessError(1, cmd, output=b"simulated cleanup failure")
             return real_check_output(cmd, *args, **kwargs)
 
@@ -1459,11 +1461,19 @@ end Main;
         assert result is False, \
             "clean-up failures must not affect the outcome of a successful compile and run"
 
+        # Both clean-up commands must have been reached and must have failed,
+        # otherwise the test proves nothing about how their failure is handled.
+        assert "gprclean" in failed_cleanups
+        assert "gnatprove" in failed_cleanups
+
         out = capsys.readouterr().out
-        assert out.count("Failed to clean-up example") == 2, \
-            "expected exactly two logged clean-up failures (the pre-compile gprclean and " \
-            "the end-of-check gprclean); the gnatprove --clean failure is silently " \
-            "swallowed and must not be counted a third time"
+        assert "Failed to clean-up example" in out, \
+            "a failing clean-up must be logged rather than passed over in silence"
+        assert "simulated cleanup failure" in out, \
+            "the failing clean-up command's own output must be shown with the message"
+        # How many clean-up steps run is not part of the contract, so the
+        # number of logged failures is deliberately not pinned: adding one
+        # more clean-up step is not a regression.
 
 
 @pytest.mark.toolchain
