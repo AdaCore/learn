@@ -530,22 +530,32 @@ end Main;
         assert result is False, \
             "A compilable Ada block must not produce a compile error"
 
-    def test_compile_error_block_returns_true(self, tmp_path, capsys):
-        """An Ada block that fails to compile must return True (error) and
-        report the compiler diagnostics against the RST file."""
-        bad_source = "procedure Bad is\nbegin\n   SYNTAX ERROR HERE!!!\nend Bad;\n"
-        src = tmp_path / "bad.adb"
-        src.write_text(bad_source)
-        os.chdir(str(tmp_path))
+    BAD_ADA_SOURCE = "procedure Bad is\nbegin\n   SYNTAX ERROR HERE!!!\nend Bad;\n"
+
+    @staticmethod
+    def _compile_failing_block_at(work_dir, capsys, line_start, bad_source):
+        """Check a block that fails to compile, starting at ``line_start`` in
+        its RST file.
+
+        Returns the check result, the distinct line numbers the diagnostics
+        were reported at against the RST file, and the distinct line numbers
+        the compiler itself used for the extracted source -- the latter read
+        back from the raw compiler output the check prints alongside them, so
+        the test never has to know where the compiler places a diagnostic.
+
+        Both are de-duplicated: a failing check reports the same diagnostic
+        several times over, and how often it does is not what is under test
+        here.
+        """
+        work_dir.mkdir(parents=True, exist_ok=True)
+        (work_dir / "bad.adb").write_text(bad_source)
+        os.chdir(str(work_dir))
         project_filename = ep.write_project_file(
             main_file="bad.adb",
             compiler_switches=[],
             spark_mode=False,
         )
 
-        # Start the block far below any line the compiler can report on for a
-        # four-line file, so an unshifted line number cannot pass for a
-        # shifted one.
         block = _make_block(
             buttons=["compile"],
             syntax_only=False,
@@ -553,34 +563,72 @@ end Main;
             compile_it=True,
             run_it=False,
             source_files=["bad.adb"],
-            line_start=100,
+            line_start=line_start,
         )
         block.project_filename = project_filename
         block.project_main_file = "bad.adb"
 
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
+        os.chdir(str(work_dir))
 
+        capsys.readouterr()
         result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is True, \
-            "An Ada block that fails to compile must return True (has_error)"
-
-        # The compiler reports against the extracted .adb file; check_block has
-        # to re-point every diagnostic at the RST file the reader is editing and
-        # shift its line number by where the block starts there.  The message
-        # text itself is left to the compiler and deliberately not pinned.
         out = capsys.readouterr().out
-        reported = re.findall(
-            r"^{}:(\d+):(\d+): ".format(re.escape(block.rst_file)), out, re.M)
-        assert reported, \
+
+        reported = sorted({int(line) for line in re.findall(
+            r"^{}:(\d+):\d+: ".format(re.escape(block.rst_file)), out, re.M)})
+        raw = sorted({int(line)
+                      for line in re.findall(r"bad\.adb:(\d+):\d+: ", out)})
+        return result, reported, raw
+
+    def test_compile_error_block_returns_true(self, tmp_path, capsys):
+        """An Ada block that fails to compile must return True (error) and
+        report the compiler diagnostics against the RST file, at the lines the
+        block occupies there.
+
+        The compiler numbers its diagnostics from the top of the extracted
+        source; check_block has to re-point them at the RST file the reader is
+        editing and shift them by where the block starts in it.  Neither the
+        compiler's wording nor any particular line is pinned, so a compiler
+        upgrade that moves or adds a diagnostic does not redden this:
+
+        * against the compiler's own numbering, read back from the raw output
+          printed alongside the remapped diagnostics, every reported line must
+          be that number plus the block's start line -- which is what catches a
+          shift that is missing, doubled, or off by one;
+        * and compiling the same block a second time from a different start
+          line must move every reported line by exactly that difference.
+        """
+        first_start, second_start = 100, 250
+
+        first_result, first_lines, first_raw = self._compile_failing_block_at(
+            tmp_path / "first", capsys, first_start, self.BAD_ADA_SOURCE)
+        second_result, second_lines, second_raw = self._compile_failing_block_at(
+            tmp_path / "second", capsys, second_start, self.BAD_ADA_SOURCE)
+
+        assert first_result is True and second_result is True, \
+            "An Ada block that fails to compile must return True (has_error)"
+        assert first_lines, \
             "no compiler diagnostic was reported against the RST file"
-        source_line_count = len(bad_source.splitlines())
-        offsets = sorted({int(line) - block.line_start for line, _ in reported})
-        assert all(1 <= offset <= source_line_count for offset in offsets), \
-            "every diagnostic must be reported at its compiler line shifted by " \
-            "the block's start line, so the offsets must fall inside the {}-line " \
-            "block; got {}".format(source_line_count, offsets)
+        assert first_raw, \
+            "the raw compiler output must be shown, or there is nothing to " \
+            "compare the remapped line numbers against"
+
+        assert first_lines == [line + first_start for line in first_raw], \
+            "each diagnostic must be reported at its compiler line shifted by " \
+            "the block's start line; compiler said {}, block starts at {}, " \
+            "reported {}".format(first_raw, first_start, first_lines)
+        assert second_lines == [line + second_start for line in second_raw], \
+            "each diagnostic must be reported at its compiler line shifted by " \
+            "the block's start line; compiler said {}, block starts at {}, " \
+            "reported {}".format(second_raw, second_start, second_lines)
+
+        assert second_lines == [
+            line + (second_start - first_start) for line in first_lines], \
+            "moving the block down the RST file must move its diagnostics with " \
+            "it: {} at line {} became {} at line {}".format(
+                first_lines, first_start, second_lines, second_start)
 
     def test_valid_ada_run_returns_false(self, tmp_path):
         """A compilable and runnable Ada block must compile and run without error."""
