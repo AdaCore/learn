@@ -23,6 +23,10 @@ Covers:
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
 - gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
+- check_block() driven by the real extraction step rather than by a hand-built block:
+  the compile, run and prove buttons an author writes in an RST directive each carry
+  through to the checks actually performed, and an extracted block that does not build
+  is reported as an error (requires the Ada toolchain)
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: check_block() sets the toolchain up for every block before any early return, so a
@@ -1584,3 +1588,222 @@ class TestCheckBlockCCleanupFailure:
             "an rm -f clean-up failure must not affect the outcome of a successful compile and run"
 
         assert "Failed to clean-up example" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# check_block() driven by the real extraction step
+# Requires the Ada toolchain (real gnatchop, gprbuild and gnatprove runs).
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockDrivenByTheExtractor:
+    """check_block() started from what the extraction step really wrote.
+
+    Every other check_block() test in this file assembles a CodeBlock in
+    memory and then pokes the fields the checker reads -- project_filename,
+    spark_project_filename, project_main_file, source_files -- into the shape
+    the path under test needs.  That verifies the checker against a state the
+    extraction step may never produce, so a disagreement between the two
+    halves about a field name, a value, or where a file is written stays
+    invisible.
+
+    These tests run the whole chain instead: the RST directive an author types
+    is parsed, the extraction step chops the block and writes the project
+    files and the block info beside it, and the check is then started from
+    that block info exactly as the command line starts it.  Nothing is
+    adjusted in between.
+
+    The trade-off is deliberate: a hand-built block is independent of the
+    extraction step, and these are not.  So the assertions below are chosen to
+    fail when the two halves disagree -- the button the directive asks for
+    against the checks actually performed, and the project file the block info
+    names against the one the check really used -- rather than to accept
+    whatever the extraction step happened to emit.
+    """
+
+    _RUN_OUTPUT = "extracted example ran"
+
+    # A minimal Ada program that announces itself, so that a test can tell a
+    # run that really happened from one that was reported as having happened.
+    _ADA_BODY = """\
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Main is
+begin
+   Put_Line ("{}");
+end Main;""".format(_RUN_OUTPUT)
+
+    # Syntactically valid -- so it chops and passes the syntax check -- but it
+    # calls something that does not exist, so the build must fail.
+    _BROKEN_ADA_BODY = """\
+procedure Main is
+begin
+   No_Such_Procedure;
+end Main;"""
+
+    _SPARK_BODY = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;"""
+
+    @staticmethod
+    def _rst(directive: str, body: str) -> str:
+        """An RST file holding exactly one code block.
+
+        The body is indented the way an author writes it, and the explanatory
+        paragraph that follows is what tells the parser the block has ended.
+        """
+        indented = "\n".join("   " + line for line in body.splitlines())
+        return "{}\n\n{}\n\nExplanatory paragraph.\n".format(directive, indented)
+
+    def _extract(self, work_dir, directive: str, body: str, project: str):
+        """Run the real extraction step on a one-block RST file.
+
+        Returns the per-block directory it wrote, the block info the checker
+        will be handed, and the absolute path of that block info file.
+        """
+        rst_path = work_dir / "extracted.rst"
+        rst_path.write_text(self._rst(directive, body))
+        os.chdir(str(work_dir))
+
+        assert ep.analyze_file(str(rst_path)) is False, \
+            "the fixture must extract cleanly, or the check that follows is " \
+            "not being handed a well-formed block"
+
+        project_dir = work_dir / "projects" / project
+        block_dirs = sorted(d for d in project_dir.iterdir()
+                            if d.is_dir() and d.name != "latest")
+        assert len(block_dirs) == 1, \
+            "expected exactly one per-block directory, got {}".format(
+                [d.name for d in block_dirs])
+        block_dir = block_dirs[0]
+        json_file = block_dir / "block_info.json"
+        return block_dir, json.loads(json_file.read_text()), str(json_file)
+
+    @staticmethod
+    def _buttons_asked_for(info) -> tuple[bool, bool, bool]:
+        """The compile / run / prove decision the checker branches on."""
+        return info["compile_it"], info["run_it"], info["prove_it"]
+
+    @staticmethod
+    def _recorded_checks(block_dir) -> dict:
+        """The per-phase results the check wrote beside the block.
+
+        Read straight from the file rather than through
+        checks.BlockCheck.from_json_file(), which drops the per-phase entries
+        on the way back in.
+        """
+        return json.loads((block_dir / "block_checks.json").read_text())["checks"]
+
+    def test_compile_button_block_is_built_as_extracted(self, tmp_path):
+        """A compile button carries from the RST directive through to a real
+        build with nothing adjusted in between.
+
+        The directive asks for a compile and nothing else, so the block must
+        reach the checker asking for a compile and nothing else, and the
+        checker must record a build and neither a run nor a proof.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedCompile main=main.adb compile_button",
+            self._ADA_BODY, "ExtractedCompile")
+
+        assert self._buttons_asked_for(info) == (True, False, False), \
+            "a compile button must reach the checker as a compile and nothing else"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
+            "a compile button must be syntax-checked and built, and neither " \
+            "run nor proved"
+        assert recorded["BUILD"]["status_ok"] is True
+        # The build has to have been driven by a project file that really
+        # exists beside the block info the checker was handed; nothing puts it
+        # there but the extraction step.
+        assert (block_dir / info["project_filename"]).is_file(), \
+            "the project file the block info names must exist beside it"
+        assert info["project_filename"] in recorded["BUILD"]["cmdline"], \
+            "the build must have used the project file the extraction step wrote"
+
+    def test_run_button_block_is_built_and_run_as_extracted(self, tmp_path):
+        """A run button carries from the RST directive through to the program
+        actually running.
+
+        A run implies a compile, so both must be asked for and both must be
+        recorded.  The output pinned below is what the author's code prints:
+        it can only appear in the run log if the block was chopped, built from
+        the project the extraction step generated for it, and then executed --
+        which is the whole seam in one assertion.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedRun main=main.adb run_button",
+            self._ADA_BODY, "ExtractedRun")
+
+        assert self._buttons_asked_for(info) == (True, True, False), \
+            "a run button must reach the checker as a run, which implies a " \
+            "compile, and not as a proof"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "a run button must be syntax-checked, built and run, and not proved"
+        assert (block_dir / "run.log").read_text().strip() == self._RUN_OUTPUT, \
+            "the program the author wrote must be the one that ran"
+
+    def test_prove_button_block_is_proved_as_extracted(self, tmp_path):
+        """A prove button carries from the RST directive through to a real
+        proof.
+
+        Proving needs its own project file, which the extraction step writes
+        under a different name and records in a different field from the one
+        the build uses.  The checker has to read back the field the extraction
+        step wrote, so the proof must be recorded, the build must not be, and
+        the project file the proof ran against must be the SPARK one sitting
+        beside the block info.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedProve main=main.adb prove_button",
+            self._SPARK_BODY, "ExtractedProve")
+
+        assert self._buttons_asked_for(info) == (False, False, True), \
+            "a prove button must reach the checker as a proof and nothing else"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUTTONS", "PROVE", "SYNTAX"], \
+            "a prove button must be syntax-checked and proved, and not built"
+        assert recorded["PROVE"]["status_ok"] is True
+        assert (block_dir / info["spark_project_filename"]).is_file(), \
+            "the SPARK project file the block info names must exist beside it"
+        assert info["spark_project_filename"] in recorded["PROVE"]["cmdline"], \
+            "the proof must have used the SPARK project the extraction step wrote"
+
+    def test_extracted_block_that_does_not_build_fails_the_check(self, tmp_path):
+        """A block that does not compile must be reported as an error when the
+        check is driven from the extraction step too.
+
+        Without this the tests above could all pass on a seam that reports
+        success whatever the compiler said.  The block is syntactically valid,
+        so it chops and passes the syntax check and only the build can fail.
+        """
+        block_dir, _info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedBadBuild main=main.adb compile_button",
+            self._BROKEN_ADA_BODY, "ExtractedBadBuild")
+
+        assert ccb.check_code_block_json(json_file) is True, \
+            "an extracted block that does not compile must be reported as an error"
+
+        recorded = self._recorded_checks(block_dir)
+        assert recorded["SYNTAX"]["status_ok"] is True, \
+            "the block must be syntactically valid, or the build is not what failed"
+        assert recorded["BUILD"]["status_ok"] is False, \
+            "the failure must be recorded against the build"
