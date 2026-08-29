@@ -21,11 +21,12 @@ from rst_code_example_pipeline.colors import Colors
 
 @pytest.fixture(autouse=True)
 def disable_colors_for_tests():
-    """Disable ANSI codes so assertions on plain text are predictable."""
-    original = Colors._enabled
+    """Disable ANSI codes so assertions on plain text are predictable.
+
+    The shared fixture in conftest.py puts the previous setting back, so this
+    one only has to establish the setting these tests need.
+    """
     Colors._enabled = False
-    yield
-    Colors._enabled = original
 
 
 # ---------------------------------------------------------------------------

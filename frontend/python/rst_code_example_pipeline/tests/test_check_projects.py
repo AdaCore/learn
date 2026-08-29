@@ -25,20 +25,6 @@ import rst_code_example_pipeline.toolchain_info as info
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
 
-@pytest.fixture(autouse=True)
-def reset_cp_globals():
-    """Reset check_projects module-level globals before and after each test."""
-    cp.verbose = False
-    cp.all_diagnostics = False
-    cp.max_columns = 0
-    cp.force_checks = False
-    yield
-    cp.verbose = False
-    cp.all_diagnostics = False
-    cp.max_columns = 0
-    cp.force_checks = False
-
-
 def _make_minimal_block_info(project: str,
                              tmp_path,
                              subdir: str = "") -> str:

@@ -57,20 +57,6 @@ import rst_code_example_pipeline.toolchain_info as info
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
 
-@pytest.fixture(autouse=True)
-def reset_module_globals():
-    """Reset check_code_block module-level globals before and after each test."""
-    ccb.verbose = False
-    ccb.all_diagnostics = False
-    ccb.max_columns = 0
-    ccb.force_checks = False
-    yield
-    ccb.verbose = False
-    ccb.all_diagnostics = False
-    ccb.max_columns = 0
-    ccb.force_checks = False
-
-
 # The smallest Ada program that compiles and runs, shared by every test that
 # needs a source file but does not care what it contains.
 MINIMAL_ADA_SOURCE = """\

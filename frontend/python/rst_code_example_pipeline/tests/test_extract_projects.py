@@ -30,34 +30,6 @@ import os
 import pytest
 
 import rst_code_example_pipeline.extract_projects as ep
-from rst_code_example_pipeline import blocks as _blocks_mod
-
-
-# ---------------------------------------------------------------------------
-# Helpers / fixtures
-# ---------------------------------------------------------------------------
-
-@pytest.fixture(autouse=True)
-def reset_module_globals():
-    """Reset extract_projects module-level globals before and after each test."""
-    ep.verbose = False
-    ep.code_block_at = None
-    ep.current_config = _blocks_mod.ConfigBlock(
-        run_button=False, prove_button=True, accumulate_code=False
-    )
-    yield
-    ep.verbose = False
-    ep.code_block_at = None
-    ep.current_config = _blocks_mod.ConfigBlock(
-        run_button=False, prove_button=True, accumulate_code=False
-    )
-
-
-@pytest.fixture()
-def work_dir(tmp_path, monkeypatch):
-    """Change to a fresh temporary directory and restore cwd on teardown."""
-    monkeypatch.chdir(tmp_path)
-    return tmp_path
 
 
 # ---------------------------------------------------------------------------
