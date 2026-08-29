@@ -436,10 +436,10 @@ class TestCheckProjectsReturnsTrue:
         import shutil
         shutil.copy(str(tmp_path / project_filename), str(subdir / project_filename))
         shutil.copy(str(tmp_path / "bad.adb"), str(subdir / "bad.adb"))
-        # Also copy .adc if it exists
-        adc = tmp_path / "main.adc"
-        if adc.exists():
-            shutil.copy(str(adc), str(subdir / "main.adc"))
+        # Take the configuration pragma files from what write_project_file
+        # actually wrote, rather than naming one the package chose.
+        for adc in tmp_path.glob("*.adc"):
+            shutil.copy(str(adc), str(subdir / adc.name))
 
         json_file = str(subdir / "block_info.json")
         block.to_json_file(json_file)
