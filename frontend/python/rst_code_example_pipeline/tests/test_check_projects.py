@@ -10,7 +10,6 @@ Covers:
 - cwd side effect: get_projects calls os.chdir(build_dir) — fixture saves/restores cwd
 - check_projects() returns True when a block fails to compile (requires the Ada toolchain)
 """
-import json
 import os
 
 import pytest
