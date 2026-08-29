@@ -71,6 +71,16 @@ def reset_module_globals():
     ccb.force_checks = False
 
 
+# The smallest Ada program that compiles and runs, shared by every test that
+# needs a source file but does not care what it contains.
+MINIMAL_ADA_SOURCE = """\
+procedure Main is
+begin
+   null;
+end Main;
+"""
+
+
 def _installed_version(tool: str) -> str:
     """Return a version of ``tool`` declared as installed in the toolchain
     configuration, for tests that need to select a version explicitly rather
@@ -300,13 +310,6 @@ class TestCheckBlockCorruptCache:
 
 @pytest.mark.toolchain
 class TestCheckBlockForceChecks:
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
     def test_forcing_the_checks_overrides_a_cached_failure(self, tmp_path):
         """Forcing the checks must ignore what a previous run recorded and
         check the block again.
@@ -324,7 +327,7 @@ end Main;
         checks it performed.
         """
         src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
+        src.write_text(MINIMAL_ADA_SOURCE)
         os.chdir(str(tmp_path))
 
         block = _make_block(
@@ -895,13 +898,6 @@ class TestCheckBlockUnrecognizedLanguage:
 class TestCheckBlockVerbose:
     """Tests for verbose and all_diagnostics flag paths."""
 
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
     def test_verbose_cache_skip(self, tmp_path, capsys):
         """With verbose=True and a cached status_ok=True, check_block must print
         'already checked. Skipping...' (exercises the verbose cache-hit path)."""
@@ -932,7 +928,7 @@ end Main;
         announce the block it is checking, report success, and print no
         diagnostics at all."""
         src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
+        src.write_text(MINIMAL_ADA_SOURCE)
         os.chdir(str(tmp_path))
         project_filename = ep.write_project_file(
             main_file="main.adb",
@@ -980,18 +976,11 @@ end Main;
 
 @pytest.mark.toolchain
 class TestCheckBlockMaxColumns:
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
     def test_syntax_check_with_max_columns(self, tmp_path):
         """max_columns > 0 appends -gnatyMN to the syntax-check command and
         a normal-width Ada block still passes."""
         src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
+        src.write_text(MINIMAL_ADA_SOURCE)
 
         block = _make_block(
             buttons=["no"],
@@ -1411,17 +1400,10 @@ class TestCheckBlockCleanupFailures:
     """A real Ada compile and run that both succeed, while every clean-up
     command invoked along the way is made to fail."""
 
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
     def _setup_project(self, tmp_path):
         """Write an Ada source file and a .gpr project file into tmp_path."""
         src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
+        src.write_text(MINIMAL_ADA_SOURCE)
         os.chdir(str(tmp_path))
         project_filename = ep.write_project_file(
             main_file="main.adb",
