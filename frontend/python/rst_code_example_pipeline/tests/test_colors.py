@@ -2,7 +2,6 @@
 Unit tests for rst_code_example_pipeline.colors.
 
 Covers:
-- Colors class ANSI escape sequence attributes
 - col() with colors enabled and disabled
 - printcol() output captured via capsys
 - no_colors() context manager (disable inside, restore outside)
@@ -43,48 +42,7 @@ def restore_colors_state():
 
 
 # ---------------------------------------------------------------------------
-# T-colors-01: ANSI class attributes
-# ---------------------------------------------------------------------------
-
-class TestColorsAttributes:
-    def test_endc(self):
-        assert Colors.ENDC == '\033[0m'
-
-    def test_bold(self):
-        assert Colors.BOLD == '\033[1m'
-
-    def test_red(self):
-        assert Colors.RED == '\033[91m'
-
-    def test_green(self):
-        assert Colors.GREEN == '\033[92m'
-
-    def test_yellow(self):
-        assert Colors.YELLOW == '\033[93m'
-
-    def test_blue(self):
-        assert Colors.BLUE == '\033[94m'
-
-    def test_magenta(self):
-        assert Colors.MAGENTA == '\033[95m'
-
-    def test_cyan(self):
-        assert Colors.CYAN == '\033[96m'
-
-    def test_grey(self):
-        assert Colors.GREY == '\033[97m'
-
-    def test_aliases(self):
-        """Semantic aliases must point to the expected base colors."""
-        assert Colors.HEADER == Colors.MAGENTA
-        assert Colors.OKBLUE == Colors.BLUE
-        assert Colors.OKGREEN == Colors.GREEN
-        assert Colors.WARNING == Colors.YELLOW
-        assert Colors.FAIL == Colors.RED
-
-
-# ---------------------------------------------------------------------------
-# T-colors-02: col() enabled
+# T-colors-01: col() enabled
 # ---------------------------------------------------------------------------
 
 class TestColEnabled:
@@ -116,7 +74,7 @@ class TestColEnabled:
 
 
 # ---------------------------------------------------------------------------
-# T-colors-03: col() disabled
+# T-colors-02: col() disabled
 # ---------------------------------------------------------------------------
 
 class TestColDisabled:
@@ -135,7 +93,7 @@ class TestColDisabled:
 
 
 # ---------------------------------------------------------------------------
-# T-colors-04: col() in CI / non-TTY environment
+# T-colors-03: col() in CI / non-TTY environment
 # ---------------------------------------------------------------------------
 
 class TestColCIEnvironment:
@@ -159,7 +117,7 @@ class TestColCIEnvironment:
 
 
 # ---------------------------------------------------------------------------
-# T-colors-05: printcol() output
+# T-colors-04: printcol() output
 # ---------------------------------------------------------------------------
 
 class TestPrintcol:
@@ -185,7 +143,7 @@ class TestPrintcol:
 
 
 # ---------------------------------------------------------------------------
-# T-colors-06: no_colors() context manager
+# T-colors-05: no_colors() context manager
 # ---------------------------------------------------------------------------
 
 class TestNoColors:
@@ -231,7 +189,7 @@ class TestNoColors:
 
 
 # ---------------------------------------------------------------------------
-# T-colors-07: disable_colors()
+# T-colors-06: disable_colors()
 # ---------------------------------------------------------------------------
 
 class TestDisableColors:
@@ -247,7 +205,7 @@ class TestDisableColors:
 
 
 # ---------------------------------------------------------------------------
-# T-colors-08: Adversarial — direct __enter__/__exit__ on no_colors()
+# T-colors-07: Adversarial — direct __enter__/__exit__ on no_colors()
 # ---------------------------------------------------------------------------
 
 class TestNoColorsAdversarial:

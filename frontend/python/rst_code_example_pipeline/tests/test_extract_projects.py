@@ -137,10 +137,7 @@ class TestWriteProjectFile:
     def test_spark_adc_contains_spark_mode_pragma(self, work_dir):
         ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
         content = (work_dir / "main_spark.adc").read_text()
-        assert "SPARK_Mode" in content or "pragma SPARK_Mode" in content or \
-               "SPARK_ADC" in ep.SPARK_ADC  # content from SPARK_ADC constant
-        # Verify SPARK_ADC content is actually written
-        assert "SPARK" in content
+        assert "pragma SPARK_Mode (On);" in content
 
     def test_non_spark_adc_does_not_contain_spark_pragma(self, work_dir):
         ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
