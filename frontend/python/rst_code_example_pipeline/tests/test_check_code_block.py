@@ -6,7 +6,8 @@ Covers:
 - check_block() with block.no_check=True → returns False immediately
 - check_block() with prior BlockCheck.status_ok=True in cache + force_checks=False → cache hit
 - check_block() with prior BlockCheck.status_ok=False in cache + force_checks=False → cached failure
-- check_block() with force_checks=True → ignores cache, runs checks
+- check_block() with force_checks=True → a recorded failure is ignored, the block is
+  checked again, and the record left behind carries this run's own result
 - check_block() for a minimal Ada syntax-only block (gcc -gnats) → False
 - check_block() for a block with empty buttons list → has_error=True (BUTTONS check fails)
 - check_code_block_json() with nonexistent file → returns True (error)
@@ -14,7 +15,7 @@ Covers:
 - ada-expect-compile-error class: Ada that fails to compile → False (expected failure)
 - a failing Ada compile reports its diagnostics against the RST file, with the block's start line added
 - C run path: valid C that exits 0 → False (requires the Ada toolchain)
-- gnatprove path: minimal SPARK Ada → False; C + prove_it → True (requires the Ada toolchain)
+- gnatprove path: C + prove_it → True (requires the Ada toolchain)
 - gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
@@ -23,6 +24,13 @@ Covers:
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
 - gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
+- check_block() driven by the real extraction step rather than by a hand-built block:
+  the compile, run and prove buttons an author writes in an RST directive, plus the
+  C run path and the ada-expect-compile-error class, each carry through to the checks
+  actually performed; an extracted block that does not build is reported as an error;
+  and an extracted C block asking only for a compile is an xfail (requires the Ada
+  toolchain).  These subsume the hand-built happy-path compile, run and prove tests
+  that used to sit alongside them
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: check_block() sets the toolchain up for every block before any early return, so a
@@ -31,6 +39,7 @@ never reaches a compiler.  Every test that calls check_block() therefore carries
 `toolchain` marker; only the Diag repr tests and the two check_code_block_json() tests
 that bail out on a missing file are free of it.
 """
+import ast
 import json
 import os
 import re
@@ -60,6 +69,16 @@ def reset_module_globals():
     ccb.all_diagnostics = False
     ccb.max_columns = 0
     ccb.force_checks = False
+
+
+# The smallest Ada program that compiles and runs, shared by every test that
+# needs a source file but does not care what it contains.
+MINIMAL_ADA_SOURCE = """\
+procedure Main is
+begin
+   null;
+end Main;
+"""
 
 
 def _installed_version(tool: str) -> str:
@@ -223,26 +242,6 @@ class TestCheckBlockCacheHitOk:
         result = ccb.check_block(block, json_file, force_checks=False)
         assert result is False
 
-    def test_cache_hit_with_force_true_does_not_use_cache(self, tmp_path):
-        """force_checks=True must bypass the cache and run actual checks."""
-        block = _make_block(classes=["ada-nocheck"], no_check=True, buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-
-        os.chdir(str(tmp_path))
-        bc = _checks_mod.BlockCheck(
-            text_hash=block.text_hash,
-            text_hash_short=block.text_hash_short,
-        )
-        bc.status_ok = True
-        bc.to_json_file()
-
-        # With force_checks=True, even though cache says ok, execution continues.
-        # But since no_check=True, the block is still skipped (no_check check comes
-        # first in the code, before the cache lookup).
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False
-
 
 # ---------------------------------------------------------------------------
 # T-check_code_block-04: check_block() cache hit (status_ok=False)
@@ -303,6 +302,59 @@ class TestCheckBlockCorruptCache:
         result = ccb.check_block(block, json_file)
         assert result is False, \
             "An unparseable cache file must be ignored rather than crash the check"
+
+
+# ---------------------------------------------------------------------------
+# check_block() with the checks forced against a populated cache
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockForceChecks:
+    def test_forcing_the_checks_overrides_a_cached_failure(self, tmp_path):
+        """Forcing the checks must ignore what a previous run recorded and
+        check the block again.
+
+        The block is checkable and clean, but a record of an earlier run
+        sitting beside it says the block failed.  Left alone, that record is
+        what the caller gets back -- TestCheckBlockCacheHitFail pins that.
+        Forced, the stale record has to be ignored, the checks have to run for
+        real, and the answer has to be the one the block earns rather than the
+        one on disk.
+
+        Both halves are asserted, because the outcome alone cannot tell a
+        re-check apart from a cache lookup that happened to be dropped: the
+        record left behind afterwards must carry this run's own result and the
+        checks it performed.
+        """
+        src = tmp_path / "main.adb"
+        src.write_text(MINIMAL_ADA_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = _make_block(
+            buttons=["no"],
+            no_check=False,
+            syntax_only=False,
+            source_files=["main.adb"],
+        )
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        stale = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        stale.status_ok = False
+        stale.to_json_file()
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "a recorded failure must not be returned when the checks are forced"
+
+        rewritten = json.loads((tmp_path / "block_checks.json").read_text())
+        assert rewritten["status_ok"] is True, \
+            "the forced run must replace the stale record with its own result"
+        assert "SYNTAX" in rewritten["checks"], \
+            "the forced run must have checked the block, not skipped it"
 
 
 # ---------------------------------------------------------------------------
@@ -487,49 +539,6 @@ class TestCheckBlockSelectedToolchainButtonValidation:
 class TestCheckBlockRealCompile:
     """Tests that actually invoke gprbuild."""
 
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
-    def _setup_project(self, tmp_path):
-        """Write an Ada source file and a .gpr project file into tmp_path."""
-        src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
-        os.chdir(str(tmp_path))
-        project_filename = ep.write_project_file(
-            main_file="main.adb",
-            compiler_switches=["-gnata"],
-            spark_mode=False,
-        )
-        return project_filename
-
-    def test_valid_ada_compile_returns_false(self, tmp_path):
-        """A compilable Ada block must pass the compile check."""
-        project_filename = self._setup_project(tmp_path)
-
-        block = _make_block(
-            buttons=["compile"],
-            syntax_only=False,
-            no_check=False,
-            compile_it=True,
-            run_it=False,
-            source_files=["main.adb"],
-        )
-        # Set the project fields that analyze_file normally sets
-        block.project_filename = project_filename
-        block.project_main_file = "main.adb"
-
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
-
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False, \
-            "A compilable Ada block must not produce a compile error"
-
     BAD_ADA_SOURCE = "procedure Bad is\nbegin\n   SYNTAX ERROR HERE!!!\nend Bad;\n"
 
     @staticmethod
@@ -629,29 +638,6 @@ end Main;
             "moving the block down the RST file must move its diagnostics with " \
             "it: {} at line {} became {} at line {}".format(
                 first_lines, first_start, second_lines, second_start)
-
-    def test_valid_ada_run_returns_false(self, tmp_path):
-        """A compilable and runnable Ada block must compile and run without error."""
-        project_filename = self._setup_project(tmp_path)
-
-        block = _make_block(
-            buttons=["run"],
-            syntax_only=False,
-            no_check=False,
-            compile_it=True,
-            run_it=True,
-            source_files=["main.adb"],
-        )
-        block.project_filename = project_filename
-        block.project_main_file = "main.adb"
-
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
-
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False, \
-            "A compilable and runnable Ada block must not produce an error"
 
 
 # ---------------------------------------------------------------------------
@@ -811,40 +797,6 @@ begin
 end Main;
 """
 
-    def test_ada_gnatprove_success(self, tmp_path):
-        """A minimal SPARK Ada block with prove_it=True must return False."""
-        src = tmp_path / "main.adb"
-        src.write_text(self.SPARK_SOURCE)
-        os.chdir(str(tmp_path))
-
-        spark_project_filename = ep.write_project_file(
-            main_file="main.adb",
-            compiler_switches=["-gnata"],
-            spark_mode=True,
-        )
-
-        block = _make_block(
-            buttons=["prove"],
-            syntax_only=False,
-            no_check=False,
-            compile_it=False,
-            run_it=False,
-            source_files=["main.adb"],
-        )
-        block.project_filename = None
-        block.spark_project_filename = spark_project_filename
-        block.project_main_file = "main.adb"
-        # prove_it is derived from buttons in CodeBlock but we can set it directly
-        block.prove_it = True
-
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
-
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False, \
-            "A provable SPARK block must not produce a prove error"
-
     def test_ada_gnatprove_language_c_else(self, tmp_path):
         """A block with language="c" and prove_it=True must return True:
         proving only supports Ada, so a non-Ada block takes the "wrong
@@ -946,13 +898,6 @@ class TestCheckBlockUnrecognizedLanguage:
 class TestCheckBlockVerbose:
     """Tests for verbose and all_diagnostics flag paths."""
 
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
     def test_verbose_cache_skip(self, tmp_path, capsys):
         """With verbose=True and a cached status_ok=True, check_block must print
         'already checked. Skipping...' (exercises the verbose cache-hit path)."""
@@ -983,7 +928,7 @@ end Main;
         announce the block it is checking, report success, and print no
         diagnostics at all."""
         src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
+        src.write_text(MINIMAL_ADA_SOURCE)
         os.chdir(str(tmp_path))
         project_filename = ep.write_project_file(
             main_file="main.adb",
@@ -1031,18 +976,11 @@ end Main;
 
 @pytest.mark.toolchain
 class TestCheckBlockMaxColumns:
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
     def test_syntax_check_with_max_columns(self, tmp_path):
         """max_columns > 0 appends -gnatyMN to the syntax-check command and
         a normal-width Ada block still passes."""
         src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
+        src.write_text(MINIMAL_ADA_SOURCE)
 
         block = _make_block(
             buttons=["no"],
@@ -1462,17 +1400,10 @@ class TestCheckBlockCleanupFailures:
     """A real Ada compile and run that both succeed, while every clean-up
     command invoked along the way is made to fail."""
 
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
     def _setup_project(self, tmp_path):
         """Write an Ada source file and a .gpr project file into tmp_path."""
         src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
+        src.write_text(MINIMAL_ADA_SOURCE)
         os.chdir(str(tmp_path))
         project_filename = ep.write_project_file(
             main_file="main.adb",
@@ -1584,3 +1515,470 @@ class TestCheckBlockCCleanupFailure:
             "an rm -f clean-up failure must not affect the outcome of a successful compile and run"
 
         assert "Failed to clean-up example" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# check_block() driven by the real extraction step
+# Requires the Ada toolchain (real gnatchop, gprbuild and gnatprove runs).
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockDrivenByTheExtractor:
+    """check_block() started from what the extraction step really wrote.
+
+    Every other check_block() test in this file assembles a CodeBlock in
+    memory and then pokes the fields the checker reads -- project_filename,
+    spark_project_filename, project_main_file, source_files -- into the shape
+    the path under test needs.  That verifies the checker against a state the
+    extraction step may never produce, so a disagreement between the two
+    halves about what is written, and about what it contains, stays invisible.
+
+    These tests run the whole chain instead: the RST directive an author types
+    is parsed, the extraction step chops the block and writes the project
+    files and the block info beside it, and the check is then started from
+    that block info exactly as the command line starts it.  Nothing is
+    adjusted in between.
+
+    The trade-off is deliberate: a hand-built block is independent of the
+    extraction step, and these are not.  So the assertions are chosen to fail
+    when the two halves disagree:
+
+    * the set of phases the check recorded must be exactly the set the
+      directive's button calls for -- this is the assertion with real
+      detection power, and it is also the one that pins the phase labels
+      ("SYNTAX", "BUILD", "RUN", "PROVE", "BUTTONS") as literals.  That pin is
+      a deliberate trade: the labels are the checker's own choice of name, so
+      renaming one reddens these tests and no others, but the recorded set is
+      the only observable of *which* checks actually ran, and nothing else in
+      the suite watches it;
+    * and the project file the check really used -- read back out of the
+      command line the check recorded -- must be configured the way that
+      button requires, which is what catches the extraction step writing a
+      project for the wrong mode.
+
+    Known limit, so that the messages above are not read as promising more
+    than they deliver: the extraction step always writes its project files
+    under the same two names, so a checker that stopped reading the block
+    info's filename fields and hard-coded those same names instead would
+    behave identically and go undetected here.  What *is* detected is the two
+    halves being cross-wired (a build driven from the SPARK project, or the
+    reverse) and a project whose contents do not match the button.
+    """
+
+    _RUN_OUTPUT = "extracted example ran"
+    _C_RUN_OUTPUT = "extracted C example ran"
+
+    # The main file the directives below declare.  Kept as one value because
+    # the tests assert that the generated project names this same file.
+    _MAIN = "main.adb"
+    _C_MAIN = "main.c"
+
+    # A name nothing declares, so that a build has to fail on it and the
+    # compiler has to say so.
+    _MISSING_NAME = "No_Such_Procedure"
+
+    # What tells a SPARK project apart from an ordinary one: GNATprove only
+    # treats the unit as SPARK because this pragma is configured in.
+    _SPARK_CONFIGURATION = "pragma SPARK_Mode (On);"
+
+    # A minimal Ada program that announces itself, so that a test can tell a
+    # run that really happened from one that was reported as having happened.
+    _ADA_BODY = """\
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Main is
+begin
+   Put_Line ("{}");
+end Main;""".format(_RUN_OUTPUT)
+
+    # Syntactically valid -- so it chops and passes the syntax check -- but it
+    # calls something that does not exist, so the build must fail.
+    _BROKEN_ADA_BODY = """\
+procedure Main is
+begin
+   {};
+end Main;""".format(_MISSING_NAME)
+
+    _SPARK_BODY = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;"""
+
+    # A C block declares its file names inline; the chopper reads them off the
+    # leading marker lines rather than calling gnatchop.
+    _C_BODY = """\
+!{}
+#include <stdio.h>
+
+int main(void)
+{{
+   printf("{}\\n");
+   return 0;
+}}""".format(_C_MAIN, _C_RUN_OUTPUT)
+
+    @staticmethod
+    def _rst(directive: str, body: str, classes: str | None = None) -> str:
+        """An RST file holding exactly one code block.
+
+        The body is indented the way an author writes it, and the explanatory
+        paragraph that follows is what tells the parser the block has ended.
+        """
+        indented = "\n".join("   " + line for line in body.splitlines())
+        head = directive if classes is None else \
+            "{}\n   :class: {}".format(directive, classes)
+        return "{}\n\n{}\n\nExplanatory paragraph.\n".format(head, indented)
+
+    def _extract(self, work_dir, directive: str, body: str, project: str,
+                 classes: str | None = None):
+        """Run the real extraction step on a one-block RST file.
+
+        Returns the per-block directory it wrote, the block info the checker
+        will be handed, and the absolute path of that block info file.
+
+        The per-block directory is found by asking the extraction step where
+        it puts a project, and then by which directory below it holds a block
+        info file -- the staging copy the extraction step keeps alongside does
+        not have one.
+        """
+        rst_path = work_dir / "extracted.rst"
+        rst_path.write_text(self._rst(directive, body, classes))
+        os.chdir(str(work_dir))
+
+        assert ep.analyze_file(str(rst_path)) is False, \
+            "the fixture must extract cleanly, or the check that follows is " \
+            "not being handed a well-formed block"
+
+        project_dir = work_dir / ep.get_project_dir(project)
+        block_dirs = sorted(d for d in project_dir.iterdir()
+                            if (d / "block_info.json").is_file())
+        assert len(block_dirs) == 1, \
+            "expected exactly one per-block directory, got {}".format(
+                [d.name for d in block_dirs])
+        block_dir = block_dirs[0]
+        json_file = block_dir / "block_info.json"
+        return block_dir, json.loads(json_file.read_text()), str(json_file)
+
+    @staticmethod
+    def _buttons_asked_for(info) -> tuple[bool, bool, bool]:
+        """The compile / run / prove decision the checker branches on."""
+        return info["compile_it"], info["run_it"], info["prove_it"]
+
+    @staticmethod
+    def _recorded_checks(block_dir) -> dict:
+        """The per-phase results the check wrote beside the block.
+
+        Read straight from the file rather than through
+        checks.BlockCheck.from_json_file(), which drops the per-phase entries
+        on the way back in.
+        """
+        return json.loads((block_dir / "block_checks.json").read_text())["checks"]
+
+    @staticmethod
+    def _log_of(block_dir, recorded_check) -> str:
+        """The log a recorded phase says it wrote."""
+        return (block_dir / recorded_check["logfile"]).read_text()
+
+    @staticmethod
+    def _project_used(recorded_check) -> str:
+        """The project file a recorded phase really ran against.
+
+        The command line is recorded as the printed form of the argument list,
+        so it can be read back as one and the project taken from behind the
+        switch that names it -- rather than by matching a name the test would
+        otherwise have to know in advance.
+
+        Only for phases that are driven by a project file: the Ada build and
+        the proof.  A C build is a compiler command line with no project on
+        it, and asking this for one raises rather than returning anything.
+        """
+        args = ast.literal_eval(recorded_check["cmdline"])
+        return args[args.index("-P") + 1]
+
+    @staticmethod
+    def _configuration_pragmas(block_dir, project_filename: str) -> str:
+        """The configuration pragmas a project file pulls in.
+
+        Followed through the project's own reference to its pragma file, so
+        that a project generated for the wrong mode is caught by what it
+        configures rather than by what it happens to be called.
+        """
+        project_text = (block_dir / project_filename).read_text()
+        named = re.search(r'for Global_Configuration_Pragmas use "([^"]+)"',
+                          project_text)
+        assert named is not None, \
+            "the generated project must name a configuration pragma file"
+        return (block_dir / named.group(1)).read_text()
+
+    def test_compile_button_block_is_built_as_extracted(self, tmp_path):
+        """A compile button carries from the RST directive through to a real
+        build with nothing adjusted in between.
+
+        The directive asks for a compile and nothing else, so the block must
+        reach the checker asking for a compile and nothing else, the checker
+        must record a build and neither a run nor a proof, and the project it
+        built against must be an ordinary one naming no main -- a compile
+        button selects no main to link.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedCompile main={} compile_button".format(
+                self._MAIN),
+            self._ADA_BODY, "ExtractedCompile")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
+
+        assert self._buttons_asked_for(info) == (True, False, False), \
+            "a compile button must reach the checker as a compile and nothing else"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        # Pins the checker's phase labels; see the class docstring for why
+        # that trade is made deliberately.
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
+            "a compile button must be syntax-checked and built, and neither " \
+            "run nor proved"
+        assert recorded["BUILD"]["status_ok"] is True
+
+        built_against = self._project_used(recorded["BUILD"])
+        assert "for Main use" not in (block_dir / built_against).read_text(), \
+            "a compile button selects no main, so the project built against " \
+            "must name none"
+        assert self._SPARK_CONFIGURATION not in \
+            self._configuration_pragmas(block_dir, built_against), \
+            "a compile button must not be built against a SPARK-configured project"
+
+    def test_run_button_block_is_built_and_run_as_extracted(self, tmp_path):
+        """A run button carries from the RST directive through to the program
+        actually running.
+
+        A run implies a compile, so both must be asked for and both must be
+        recorded.  The project built against must name the main the directive
+        declared, or there is nothing for the builder to link.  And the output
+        pinned below is what the author's code prints: it can only reach the
+        run log if the block was chopped, built from the generated project,
+        and executed.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedRun main={} run_button".format(
+                self._MAIN),
+            self._ADA_BODY, "ExtractedRun")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
+
+        assert self._buttons_asked_for(info) == (True, True, False), \
+            "a run button must reach the checker as a run, which implies a " \
+            "compile, and not as a proof"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "a run button must be syntax-checked, built and run, and not proved"
+
+        built_against = self._project_used(recorded["BUILD"])
+        # A localizer, not a detector: the run above cannot happen at all
+        # unless the project names a main, so this line says which link
+        # broke rather than being the first to notice.
+        assert 'for Main use ("{}");'.format(self._MAIN) in \
+            (block_dir / built_against).read_text(), \
+            "the project built against must name the main the directive declared"
+        assert self._SPARK_CONFIGURATION not in \
+            self._configuration_pragmas(block_dir, built_against), \
+            "a run button must not be built against a SPARK-configured project"
+
+        assert self._log_of(block_dir, recorded["RUN"]).strip() == self._RUN_OUTPUT, \
+            "the program the author wrote must be the one that ran"
+
+    def test_prove_button_block_is_proved_as_extracted(self, tmp_path):
+        """A prove button carries from the RST directive through to a real
+        proof.
+
+        Proving needs a project configured for SPARK, which the extraction
+        step generates separately from the one a build would use.  So the
+        proof must be recorded, the build must not be, and the project the
+        proof really ran against must be one that turns SPARK mode on --
+        asserted through what that project configures, since a project
+        generated in the wrong mode would still be recorded under the right
+        field name.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedProve main={} prove_button".format(
+                self._MAIN),
+            self._SPARK_BODY, "ExtractedProve")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
+
+        assert self._buttons_asked_for(info) == (False, False, True), \
+            "a prove button must reach the checker as a proof and nothing else"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUTTONS", "PROVE", "SYNTAX"], \
+            "a prove button must be syntax-checked and proved, and not built"
+        assert recorded["PROVE"]["status_ok"] is True
+
+        proved_against = self._project_used(recorded["PROVE"])
+        assert self._SPARK_CONFIGURATION in \
+            self._configuration_pragmas(block_dir, proved_against), \
+            "the proof must have run against a project that turns SPARK mode on"
+
+    def test_extracted_block_that_does_not_build_fails_the_check(self, tmp_path):
+        """A block that does not compile must be reported as an error when the
+        check is driven from the extraction step too.
+
+        Without this the tests above could all pass on a seam that reports
+        success whatever the compiler said.  The block is syntactically valid,
+        so it chops and passes the syntax check and only the build can fail.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedBadBuild main={} compile_button".format(
+                self._MAIN),
+            self._BROKEN_ADA_BODY, "ExtractedBadBuild")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
+
+        assert ccb.check_code_block_json(json_file) is True, \
+            "an extracted block that does not compile must be reported as an error"
+
+        recorded = self._recorded_checks(block_dir)
+        assert recorded["SYNTAX"]["status_ok"] is True, \
+            "the block must be syntactically valid, or the build is not what failed"
+        assert recorded["BUILD"]["status_ok"] is False, \
+            "the failure must be recorded against the build"
+        assert self._MISSING_NAME in self._log_of(block_dir, recorded["BUILD"]), \
+            "the build log must name what the compiler could not resolve"
+
+    def test_extracted_block_expecting_a_compile_error_passes(self, tmp_path):
+        """A block declared as expecting a compile error must pass the check
+        even though the compiler rejects it.
+
+        The class that declares the expectation is written in the RST source,
+        so it has to survive extraction and reach the checker; if it did not,
+        this block would be reported as a failure.  The build log is checked
+        as well, because a class that suppressed the build entirely would give
+        the same answer for the wrong reason.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedExpectError main={} compile_button".format(
+                self._MAIN),
+            self._BROKEN_ADA_BODY, "ExtractedExpectError",
+            classes="ada-expect-compile-error")
+
+        assert info["source_files"] == [self._MAIN], \
+            "the chopped source must be recorded, or the syntax check runs " \
+            "on nothing and passes vacuously"
+
+        assert "ada-expect-compile-error" in info["classes"], \
+            "the class written in the RST source must reach the checker"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "a compile error the block declared it expects must not fail the check"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
+            "an expected compile error must still be syntax-checked and built"
+        assert recorded["BUILD"]["status_ok"] is True, \
+            "a compile error the block expects must not be recorded as a failure"
+        assert self._MISSING_NAME in self._log_of(block_dir, recorded["BUILD"]), \
+            "the compiler must really have rejected the block, or the " \
+            "expectation was satisfied by nothing happening"
+
+    def test_c_run_button_block_is_built_and_run_as_extracted(self, tmp_path):
+        """A run button on a C block carries through to the program running.
+
+        C blocks take a different route on both sides of the seam: the
+        extraction step chops them from the file names written into the source
+        rather than by calling gnatchop, and the checker compiles and links
+        them with the C compiler instead of the project builder.  The output
+        pinned below is what the author's code prints.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: c project=ExtractedCRun main={} run_button".format(
+                self._C_MAIN),
+            self._C_BODY, "ExtractedCRun")
+
+        assert self._buttons_asked_for(info) == (True, True, False), \
+            "a run button must reach the checker as a run, which implies a " \
+            "compile, and not as a proof"
+        assert info["source_files"] == [self._C_MAIN], \
+            "the C source must have been chopped out under the name the block " \
+            "declares for it"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted C block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "a C run button must be syntax-checked, built and run, and not proved"
+        assert self._log_of(block_dir, recorded["RUN"]).strip() == self._C_RUN_OUTPUT, \
+            "the program the author wrote must be the one that ran"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="a C block asking only for a compile is never given a main file "
+               "by the extraction step, and the checker asserts it has one",
+    )
+    def test_c_compile_button_block_is_built_as_extracted(self, tmp_path):
+        """A compile button on a C block must be compiled.
+
+        Tracking note -- this currently fails.  The extraction step resolves a
+        main file only for blocks that are also run, but the checker's C
+        compile step names the executable after that main file and asserts it
+        is set, so a C block asking only for a compile stops the check with an
+        assertion instead of compiling.  An Ada block in the same position is
+        fine, because the project builder takes the main from the generated
+        project rather than from the field.
+
+        The fix that is open is to name the C executable some other way.
+        Resolving a main file for every compiled block is not: a compile
+        button asks for a compile and not a link -- a block holding only a
+        package spec has nothing to link -- and the sibling Ada compile test
+        pins the generated project as naming no main, so that route reddens
+        it.  When the open fix lands this test passes and the marker must be
+        removed.
+
+        What the marker can absorb: it is strict, so it fails the suite if
+        the defect is fixed without the marker being removed, but it carries
+        no ``raises``, so a later break in the shared extraction helper, in
+        the button triple, or in the C chopper would keep it xfailing for a
+        different reason than the one recorded here.  ``raises`` would not
+        separate those, since the defect and a broken fixture both raise
+        AssertionError.  The mitigation is that the sibling C run test drives
+        the same extraction helper and the same chopper with no marker on it,
+        so such a break reddens there.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: c project=ExtractedCCompile main={} compile_button".format(
+                self._C_MAIN),
+            self._C_BODY, "ExtractedCCompile")
+
+        assert self._buttons_asked_for(info) == (True, False, False), \
+            "a compile button must reach the checker as a compile and nothing else"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted C block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
+            "a C compile button must be syntax-checked and built, and neither " \
+            "run nor proved"
+        assert recorded["BUILD"]["status_ok"] is True
