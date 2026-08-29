@@ -2,12 +2,13 @@
 Smoke tests for rst_code_example_pipeline.
 
 Covers:
-- package metadata: the declared title and the shape of the declared version
+- package metadata: the declared version is the one the distribution was
+  installed under, and the declared title is the name the package is imported
+  under
 - every module of the package is importable without side effects
 - every command-line entry point accepts --help and exits successfully
 """
-from importlib import import_module
-import re
+from importlib import import_module, metadata
 import sys
 
 import pytest
@@ -15,14 +16,51 @@ import pytest
 import rst_code_example_pipeline
 
 
-class TestPackageMetadata:
-    def test_title(self):
-        assert rst_code_example_pipeline.__title__ == \
-            'rst_code_example_pipeline'
+def _distribution_name() -> str:
+    """The name the package is installed under.
 
-    def test_version(self):
-        assert re.match(r'^\d+\.\d+\.\d+$',
-                        rst_code_example_pipeline.__version__)
+    Read back from the installed metadata rather than written down here: the
+    distribution is named with hyphens where the import package uses
+    underscores, and only the metadata knows which distribution provides
+    which import package.
+    """
+    provided_by = metadata.packages_distributions()[
+        rst_code_example_pipeline.__name__]
+    assert len(provided_by) == 1, \
+        "expected exactly one distribution to provide the package, got " \
+        "{}".format(provided_by)
+    return provided_by[0]
+
+
+class TestPackageMetadata:
+    def test_version_matches_the_installed_distribution(self):
+        """The version the package declares must be the one it was installed
+        under.
+
+        The version is written down twice -- in the package and in the
+        packaging metadata -- and nothing ties the two together, so a release
+        that bumps one and forgets the other would otherwise pass unnoticed
+        and ship a package that misreports its own version.
+        """
+        installed = metadata.version(_distribution_name())
+        assert rst_code_example_pipeline.__version__ == installed, \
+            "the package declares version {} but was installed as {}".format(
+                rst_code_example_pipeline.__version__, installed)
+
+    def test_title_is_the_name_the_package_is_imported_under(self):
+        """The declared title must be the name the package is imported under.
+
+        It is not the distribution name, which is spelled with hyphens: the
+        title has tracked the import package since before the package was
+        distributed at all.  Checking it against the name the import machinery
+        supplies catches a package that was renamed without the title
+        following it.
+        """
+        assert rst_code_example_pipeline.__title__ == \
+            rst_code_example_pipeline.__name__, \
+            "the package declares the title {} but is imported as {}".format(
+                rst_code_example_pipeline.__title__,
+                rst_code_example_pipeline.__name__)
 
 
 class TestModuleImports:
