@@ -5,7 +5,6 @@ Covers:
 - Resource constructor: basename stored, content=None → empty, content=[] → empty,
   single-element list, multi-element list joined with newline
 - append() adds a line; empty resource then append
-- content property always returns str
 - Adversarial: append empty string; append line with embedded newline
 """
 import pytest
@@ -46,14 +45,6 @@ class TestResourceConstructor:
         r = Resource("f.adb", content=["a", "b", "c"])
         assert r.content == "a\nb\nc"
 
-    def test_content_property_is_str(self):
-        r = Resource("f.adb", content=["hello"])
-        assert isinstance(r.content, str)
-
-    def test_content_none_property_is_str(self):
-        r = Resource("f.adb", content=None)
-        assert isinstance(r.content, str)
-
 
 # ---------------------------------------------------------------------------
 # T-resource-02: append()
@@ -82,11 +73,6 @@ class TestResourceAppend:
         r.append("")
         # Join adds a newline between the two elements
         assert r.content == "line\n"
-
-    def test_content_is_str_after_append(self):
-        r = Resource("f.adb")
-        r.append("x")
-        assert isinstance(r.content, str)
 
 
 # ---------------------------------------------------------------------------
@@ -118,9 +104,3 @@ class TestResourceAdversarial:
         lines = [str(i) for i in range(1000)]
         r = Resource("big.adb", content=lines)
         assert r.content == "\n".join(lines)
-
-    def test_content_never_none(self):
-        """content property must return a str, never None."""
-        r = Resource("f.adb", content=None)
-        assert r.content is not None
-        assert isinstance(r.content, str)

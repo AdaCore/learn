@@ -63,10 +63,6 @@ class TestMinimalAdaBlock:
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         assert len(blocks) == 1
 
-    def test_type_is_codeblock(self):
-        blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
-        assert isinstance(blocks[0], CodeBlock)
-
     def test_rst_file_stored(self):
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST)
         assert isinstance(blocks[0], CodeBlock)

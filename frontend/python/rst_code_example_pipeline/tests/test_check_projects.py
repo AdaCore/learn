@@ -82,10 +82,6 @@ class TestGetBlocksEmpty:
         result = cp.get_blocks([])
         assert result == {}
 
-    def test_return_type_is_dict(self):
-        result = cp.get_blocks([])
-        assert isinstance(result, dict)
-
 
 # ---------------------------------------------------------------------------
 # T-check_projects-02: get_blocks() with a valid block_info.json
@@ -96,11 +92,6 @@ class TestGetBlocksValid:
         json_file = _make_minimal_block_info("MyProject", tmp_path)
         result = cp.get_blocks([json_file])
         assert "MyProject" in result
-
-    def test_project_entry_is_list(self, tmp_path):
-        json_file = _make_minimal_block_info("MyProject", tmp_path)
-        result = cp.get_blocks([json_file])
-        assert isinstance(result["MyProject"], list)
 
     def test_project_entry_has_one_tuple(self, tmp_path):
         json_file = _make_minimal_block_info("MyProject", tmp_path)

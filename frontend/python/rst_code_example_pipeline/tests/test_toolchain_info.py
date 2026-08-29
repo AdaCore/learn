@@ -61,12 +61,6 @@ class TestInitToolchainInfo:
             assert info.DEFAULT_VERSION[tool], \
                 f"DEFAULT_VERSION[{tool!r}] must be a non-empty string"
 
-    def test_toolchains_values_are_lists(self):
-        info.init_toolchain_info()
-        for tool in ("gnat", "gnatprove", "gprbuild"):
-            assert isinstance(info.TOOLCHAINS[tool], list), \
-                f"TOOLCHAINS[{tool!r}] must be a list"
-
     def test_toolchains_entries_are_release_versions(self):
         """Every declared version must be a non-empty release identifier of the
         form <major>.<minor>.<patch>-<release>.
