@@ -36,6 +36,7 @@ never reaches a compiler.  Every test that calls check_block() therefore carries
 `toolchain` marker; only the Diag repr tests and the two check_code_block_json() tests
 that bail out on a missing file are free of it.
 """
+import ast
 import json
 import os
 import re
@@ -1645,8 +1646,7 @@ class TestCheckBlockDrivenByTheExtractor:
     spark_project_filename, project_main_file, source_files -- into the shape
     the path under test needs.  That verifies the checker against a state the
     extraction step may never produce, so a disagreement between the two
-    halves about a field name, a value, or where a file is written stays
-    invisible.
+    halves about what is written, and about what it contains, stays invisible.
 
     These tests run the whole chain instead: the RST directive an author types
     is parsed, the extraction step chops the block and writes the project
@@ -1655,14 +1655,44 @@ class TestCheckBlockDrivenByTheExtractor:
     adjusted in between.
 
     The trade-off is deliberate: a hand-built block is independent of the
-    extraction step, and these are not.  So the assertions below are chosen to
-    fail when the two halves disagree -- the button the directive asks for
-    against the checks actually performed, and the project file the block info
-    names against the one the check really used -- rather than to accept
-    whatever the extraction step happened to emit.
+    extraction step, and these are not.  So the assertions are chosen to fail
+    when the two halves disagree:
+
+    * the set of phases the check recorded must be exactly the set the
+      directive's button calls for -- this is the assertion with real
+      detection power, and it is also the one that pins the phase labels
+      ("SYNTAX", "BUILD", "RUN", "PROVE", "BUTTONS") as literals.  That pin is
+      a deliberate trade: the labels are the checker's own choice of name, so
+      renaming one reddens these tests and no others, but the recorded set is
+      the only observable of *which* checks actually ran, and nothing else in
+      the suite watches it;
+    * and the project file the check really used -- read back out of the
+      command line the check recorded -- must be configured the way that
+      button requires, which is what catches the extraction step writing a
+      project for the wrong mode.
+
+    Known limit, so that the messages above are not read as promising more
+    than they deliver: the extraction step always writes its project files
+    under the same two names, so a checker that stopped reading the block
+    info's filename fields and hard-coded those same names instead would
+    behave identically and go undetected here.  What *is* detected is the two
+    halves being cross-wired (a build driven from the SPARK project, or the
+    reverse) and a project whose contents do not match the button.
     """
 
     _RUN_OUTPUT = "extracted example ran"
+
+    # The main file the directives below declare.  Kept as one value because
+    # the tests assert that the generated project names this same file.
+    _MAIN = "main.adb"
+
+    # A name nothing declares, so that a build has to fail on it and the
+    # compiler has to say so.
+    _MISSING_NAME = "No_Such_Procedure"
+
+    # What tells a SPARK project apart from an ordinary one: GNATprove only
+    # treats the unit as SPARK because this pragma is configured in.
+    _SPARK_CONFIGURATION = "pragma SPARK_Mode (On);"
 
     # A minimal Ada program that announces itself, so that a test can tell a
     # run that really happened from one that was reported as having happened.
@@ -1678,8 +1708,8 @@ end Main;""".format(_RUN_OUTPUT)
     _BROKEN_ADA_BODY = """\
 procedure Main is
 begin
-   No_Such_Procedure;
-end Main;"""
+   {};
+end Main;""".format(_MISSING_NAME)
 
     _SPARK_BODY = """\
 procedure Main with SPARK_Mode is
@@ -1702,6 +1732,11 @@ end Main;"""
 
         Returns the per-block directory it wrote, the block info the checker
         will be handed, and the absolute path of that block info file.
+
+        The per-block directory is found by asking the extraction step where
+        it puts a project, and then by which directory below it holds a block
+        info file -- the staging copy the extraction step keeps alongside does
+        not have one.
         """
         rst_path = work_dir / "extracted.rst"
         rst_path.write_text(self._rst(directive, body))
@@ -1711,9 +1746,9 @@ end Main;"""
             "the fixture must extract cleanly, or the check that follows is " \
             "not being handed a well-formed block"
 
-        project_dir = work_dir / "projects" / project
+        project_dir = work_dir / ep.get_project_dir(project)
         block_dirs = sorted(d for d in project_dir.iterdir()
-                            if d.is_dir() and d.name != "latest")
+                            if (d / "block_info.json").is_file())
         assert len(block_dirs) == 1, \
             "expected exactly one per-block directory, got {}".format(
                 [d.name for d in block_dirs])
@@ -1736,17 +1771,52 @@ end Main;"""
         """
         return json.loads((block_dir / "block_checks.json").read_text())["checks"]
 
+    @staticmethod
+    def _log_of(block_dir, recorded_check) -> str:
+        """The log a recorded phase says it wrote."""
+        return (block_dir / recorded_check["logfile"]).read_text()
+
+    @staticmethod
+    def _project_used(recorded_check) -> str:
+        """The project file a recorded phase really ran against.
+
+        The command line is recorded as the printed form of the argument list,
+        so it can be read back as one and the project taken from behind the
+        switch that names it -- rather than by matching a name the test would
+        otherwise have to know in advance.
+        """
+        args = ast.literal_eval(recorded_check["cmdline"])
+        return args[args.index("-P") + 1]
+
+    @staticmethod
+    def _configuration_pragmas(block_dir, project_filename: str) -> str:
+        """The configuration pragmas a project file pulls in.
+
+        Followed through the project's own reference to its pragma file, so
+        that a project generated for the wrong mode is caught by what it
+        configures rather than by what it happens to be called.
+        """
+        project_text = (block_dir / project_filename).read_text()
+        named = re.search(r'for Global_Configuration_Pragmas use "([^"]+)"',
+                          project_text)
+        assert named is not None, \
+            "the generated project must name a configuration pragma file"
+        return (block_dir / named.group(1)).read_text()
+
     def test_compile_button_block_is_built_as_extracted(self, tmp_path):
         """A compile button carries from the RST directive through to a real
         build with nothing adjusted in between.
 
         The directive asks for a compile and nothing else, so the block must
-        reach the checker asking for a compile and nothing else, and the
-        checker must record a build and neither a run nor a proof.
+        reach the checker asking for a compile and nothing else, the checker
+        must record a build and neither a run nor a proof, and the project it
+        built against must be an ordinary one naming no main -- a compile
+        button selects no main to link.
         """
         block_dir, info, json_file = self._extract(
             tmp_path,
-            ".. code:: ada project=ExtractedCompile main=main.adb compile_button",
+            ".. code:: ada project=ExtractedCompile main={} compile_button".format(
+                self._MAIN),
             self._ADA_BODY, "ExtractedCompile")
 
         assert self._buttons_asked_for(info) == (True, False, False), \
@@ -1756,31 +1826,36 @@ end Main;"""
             "the checker must accept the extracted block as it stands"
 
         recorded = self._recorded_checks(block_dir)
+        # Pins the checker's phase labels; see the class docstring for why
+        # that trade is made deliberately.
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
             "a compile button must be syntax-checked and built, and neither " \
             "run nor proved"
         assert recorded["BUILD"]["status_ok"] is True
-        # The build has to have been driven by a project file that really
-        # exists beside the block info the checker was handed; nothing puts it
-        # there but the extraction step.
-        assert (block_dir / info["project_filename"]).is_file(), \
-            "the project file the block info names must exist beside it"
-        assert info["project_filename"] in recorded["BUILD"]["cmdline"], \
-            "the build must have used the project file the extraction step wrote"
+
+        built_against = self._project_used(recorded["BUILD"])
+        assert "for Main use" not in (block_dir / built_against).read_text(), \
+            "a compile button selects no main, so the project built against " \
+            "must name none"
+        assert self._SPARK_CONFIGURATION not in \
+            self._configuration_pragmas(block_dir, built_against), \
+            "a compile button must not be built against a SPARK-configured project"
 
     def test_run_button_block_is_built_and_run_as_extracted(self, tmp_path):
         """A run button carries from the RST directive through to the program
         actually running.
 
         A run implies a compile, so both must be asked for and both must be
-        recorded.  The output pinned below is what the author's code prints:
-        it can only appear in the run log if the block was chopped, built from
-        the project the extraction step generated for it, and then executed --
-        which is the whole seam in one assertion.
+        recorded.  The project built against must name the main the directive
+        declared, or there is nothing for the builder to link.  And the output
+        pinned below is what the author's code prints: it can only reach the
+        run log if the block was chopped, built from the generated project,
+        and executed.
         """
         block_dir, info, json_file = self._extract(
             tmp_path,
-            ".. code:: ada project=ExtractedRun main=main.adb run_button",
+            ".. code:: ada project=ExtractedRun main={} run_button".format(
+                self._MAIN),
             self._ADA_BODY, "ExtractedRun")
 
         assert self._buttons_asked_for(info) == (True, True, False), \
@@ -1793,23 +1868,34 @@ end Main;"""
         recorded = self._recorded_checks(block_dir)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
             "a run button must be syntax-checked, built and run, and not proved"
-        assert (block_dir / "run.log").read_text().strip() == self._RUN_OUTPUT, \
+
+        built_against = self._project_used(recorded["BUILD"])
+        assert 'for Main use ("{}");'.format(self._MAIN) in \
+            (block_dir / built_against).read_text(), \
+            "the project built against must name the main the directive declared"
+        assert self._SPARK_CONFIGURATION not in \
+            self._configuration_pragmas(block_dir, built_against), \
+            "a run button must not be built against a SPARK-configured project"
+
+        assert self._log_of(block_dir, recorded["RUN"]).strip() == self._RUN_OUTPUT, \
             "the program the author wrote must be the one that ran"
 
     def test_prove_button_block_is_proved_as_extracted(self, tmp_path):
         """A prove button carries from the RST directive through to a real
         proof.
 
-        Proving needs its own project file, which the extraction step writes
-        under a different name and records in a different field from the one
-        the build uses.  The checker has to read back the field the extraction
-        step wrote, so the proof must be recorded, the build must not be, and
-        the project file the proof ran against must be the SPARK one sitting
-        beside the block info.
+        Proving needs a project configured for SPARK, which the extraction
+        step generates separately from the one a build would use.  So the
+        proof must be recorded, the build must not be, and the project the
+        proof really ran against must be one that turns SPARK mode on --
+        asserted through what that project configures, since a project
+        generated in the wrong mode would still be recorded under the right
+        field name.
         """
         block_dir, info, json_file = self._extract(
             tmp_path,
-            ".. code:: ada project=ExtractedProve main=main.adb prove_button",
+            ".. code:: ada project=ExtractedProve main={} prove_button".format(
+                self._MAIN),
             self._SPARK_BODY, "ExtractedProve")
 
         assert self._buttons_asked_for(info) == (False, False, True), \
@@ -1822,10 +1908,11 @@ end Main;"""
         assert sorted(recorded) == ["BUTTONS", "PROVE", "SYNTAX"], \
             "a prove button must be syntax-checked and proved, and not built"
         assert recorded["PROVE"]["status_ok"] is True
-        assert (block_dir / info["spark_project_filename"]).is_file(), \
-            "the SPARK project file the block info names must exist beside it"
-        assert info["spark_project_filename"] in recorded["PROVE"]["cmdline"], \
-            "the proof must have used the SPARK project the extraction step wrote"
+
+        proved_against = self._project_used(recorded["PROVE"])
+        assert self._SPARK_CONFIGURATION in \
+            self._configuration_pragmas(block_dir, proved_against), \
+            "the proof must have run against a project that turns SPARK mode on"
 
     def test_extracted_block_that_does_not_build_fails_the_check(self, tmp_path):
         """A block that does not compile must be reported as an error when the
@@ -1837,7 +1924,8 @@ end Main;"""
         """
         block_dir, _info, json_file = self._extract(
             tmp_path,
-            ".. code:: ada project=ExtractedBadBuild main=main.adb compile_button",
+            ".. code:: ada project=ExtractedBadBuild main={} compile_button".format(
+                self._MAIN),
             self._BROKEN_ADA_BODY, "ExtractedBadBuild")
 
         assert ccb.check_code_block_json(json_file) is True, \
@@ -1848,3 +1936,5 @@ end Main;"""
             "the block must be syntactically valid, or the build is not what failed"
         assert recorded["BUILD"]["status_ok"] is False, \
             "the failure must be recorded against the build"
+        assert self._MISSING_NAME in self._log_of(block_dir, recorded["BUILD"]), \
+            "the build log must name what the compiler could not resolve"
