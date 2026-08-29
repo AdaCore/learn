@@ -15,7 +15,7 @@ Covers:
 - ada-expect-compile-error class: Ada that fails to compile → False (expected failure)
 - a failing Ada compile reports its diagnostics against the RST file, with the block's start line added
 - C run path: valid C that exits 0 → False (requires the Ada toolchain)
-- gnatprove path: minimal SPARK Ada → False; C + prove_it → True (requires the Ada toolchain)
+- gnatprove path: C + prove_it → True (requires the Ada toolchain)
 - gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
@@ -25,9 +25,12 @@ Covers:
 - gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
 - check_block() driven by the real extraction step rather than by a hand-built block:
-  the compile, run and prove buttons an author writes in an RST directive each carry
-  through to the checks actually performed, and an extracted block that does not build
-  is reported as an error (requires the Ada toolchain)
+  the compile, run and prove buttons an author writes in an RST directive, plus the
+  C run path and the ada-expect-compile-error class, each carry through to the checks
+  actually performed; an extracted block that does not build is reported as an error;
+  and an extracted C block asking only for a compile is an xfail (requires the Ada
+  toolchain).  These subsume the hand-built happy-path compile, run and prove tests
+  that used to sit alongside them
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: check_block() sets the toolchain up for every block before any early return, so a
@@ -533,49 +536,6 @@ class TestCheckBlockSelectedToolchainButtonValidation:
 class TestCheckBlockRealCompile:
     """Tests that actually invoke gprbuild."""
 
-    ADA_SOURCE = """\
-procedure Main is
-begin
-   null;
-end Main;
-"""
-
-    def _setup_project(self, tmp_path):
-        """Write an Ada source file and a .gpr project file into tmp_path."""
-        src = tmp_path / "main.adb"
-        src.write_text(self.ADA_SOURCE)
-        os.chdir(str(tmp_path))
-        project_filename = ep.write_project_file(
-            main_file="main.adb",
-            compiler_switches=["-gnata"],
-            spark_mode=False,
-        )
-        return project_filename
-
-    def test_valid_ada_compile_returns_false(self, tmp_path):
-        """A compilable Ada block must pass the compile check."""
-        project_filename = self._setup_project(tmp_path)
-
-        block = _make_block(
-            buttons=["compile"],
-            syntax_only=False,
-            no_check=False,
-            compile_it=True,
-            run_it=False,
-            source_files=["main.adb"],
-        )
-        # Set the project fields that analyze_file normally sets
-        block.project_filename = project_filename
-        block.project_main_file = "main.adb"
-
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
-
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False, \
-            "A compilable Ada block must not produce a compile error"
-
     BAD_ADA_SOURCE = "procedure Bad is\nbegin\n   SYNTAX ERROR HERE!!!\nend Bad;\n"
 
     @staticmethod
@@ -675,29 +635,6 @@ end Main;
             "moving the block down the RST file must move its diagnostics with " \
             "it: {} at line {} became {} at line {}".format(
                 first_lines, first_start, second_lines, second_start)
-
-    def test_valid_ada_run_returns_false(self, tmp_path):
-        """A compilable and runnable Ada block must compile and run without error."""
-        project_filename = self._setup_project(tmp_path)
-
-        block = _make_block(
-            buttons=["run"],
-            syntax_only=False,
-            no_check=False,
-            compile_it=True,
-            run_it=True,
-            source_files=["main.adb"],
-        )
-        block.project_filename = project_filename
-        block.project_main_file = "main.adb"
-
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
-
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False, \
-            "A compilable and runnable Ada block must not produce an error"
 
 
 # ---------------------------------------------------------------------------
@@ -856,40 +793,6 @@ begin
    null;
 end Main;
 """
-
-    def test_ada_gnatprove_success(self, tmp_path):
-        """A minimal SPARK Ada block with prove_it=True must return False."""
-        src = tmp_path / "main.adb"
-        src.write_text(self.SPARK_SOURCE)
-        os.chdir(str(tmp_path))
-
-        spark_project_filename = ep.write_project_file(
-            main_file="main.adb",
-            compiler_switches=["-gnata"],
-            spark_mode=True,
-        )
-
-        block = _make_block(
-            buttons=["prove"],
-            syntax_only=False,
-            no_check=False,
-            compile_it=False,
-            run_it=False,
-            source_files=["main.adb"],
-        )
-        block.project_filename = None
-        block.spark_project_filename = spark_project_filename
-        block.project_main_file = "main.adb"
-        # prove_it is derived from buttons in CodeBlock but we can set it directly
-        block.prove_it = True
-
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-        os.chdir(str(tmp_path))
-
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False, \
-            "A provable SPARK block must not produce a prove error"
 
     def test_ada_gnatprove_language_c_else(self, tmp_path):
         """A block with language="c" and prove_it=True must return True:
