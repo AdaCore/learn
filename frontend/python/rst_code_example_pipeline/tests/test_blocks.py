@@ -24,8 +24,12 @@ configuration would make the pair self-referential and hide a parsing error.
 Version strings passed straight to the CodeBlock constructor are a different
 matter: those are copies of configuration data and are read back from it.
 """
+import json
 import os
 import re
+import subprocess
+import sys
+import textwrap
 
 import pytest
 
@@ -111,9 +115,14 @@ class TestMinimalAdaBlock:
         assert blocks[0].gprbuild_version[0] == "default"
 
     def test_line_span_and_text_are_exact(self):
-        """The parser must report exactly where the block body starts and ends
-        in the RST file, and hand back that body with the directive indentation
-        removed.
+        """The parser must report the block's span in the RST file and hand
+        back its body with the directive indentation removed.
+
+        Counting lines from zero, ``line_start`` is the first line after the
+        ``.. code::`` directive -- which makes it equal to the directive's own
+        1-based line number -- and ``line_end`` is the line that closed the
+        block.  The body is everything between the two, so it keeps the blank
+        lines separating the block from what follows it.
 
         The expected values are spelled out rather than derived from the
         parser: every consumer of a block reports diagnostics against these
@@ -357,10 +366,11 @@ class TestBlockAtEndOfFile:
         """A block at end-of-file that has content produces a WARNING but
         is successfully parsed (no SystemExit).
 
-        The end of the file closes the block in place of an explanatory
-        paragraph, so the span has to end one line past the last body line --
-        the value is pinned because this path computes it differently from the
-        ordinary one.
+        With no explanatory paragraph to close the block, the end of the file
+        closes it instead, so the span ends one line past the last line of the
+        file -- pinned because this path computes it differently from the
+        ordinary one, and because nothing follows the body here the text
+        carries no trailing blank line.
         """
         blocks = Block.get_blocks_from_rst(RST_FILE, self.RST_WITH_CONTENT)
         assert len(blocks) == 1
@@ -479,14 +489,46 @@ class TestCodeBlockDerivedFields:
     # outside this package requires any particular algorithm, and a pinned
     # digest would freeze one for no benefit.
 
-    def test_text_hashes_are_deterministic(self):
+    # Hashing the same text in a fresh interpreter and comparing against the
+    # in-process value.  A same-process comparison cannot see the failure this
+    # test exists for: a hash that folds in anything drawn per process is
+    # perfectly stable within one run and still moves the project directory
+    # and loses the cached check result on the next one.
+    _HASH_PROBE = textwrap.dedent(
+        """
+        import json, sys
+        from rst_code_example_pipeline.blocks import CodeBlock
+
+        block = CodeBlock(
+            rst_file="test.rst",
+            line_start=0,
+            line_end=5,
+            text=sys.argv[1],
+            language="ada",
+            project=None,
+            main_file=None,
+            gnat_version=["default", "unused"],
+            gnatprove_version=["default", "unused"],
+            gprbuild_version=["default", "unused"],
+            compiler_switches=[],
+            classes=[],
+            manual_chop=False,
+            buttons=[],
+        )
+        print(json.dumps([block.text_hash, block.text_hash_short]))
+        """
+    )
+
+    def test_text_hashes_are_deterministic_across_runs(self):
         """The same block text must hash the same way on every run, or a
         block's project directory moves and its cached check result is never
-        found again."""
-        b1 = self._make_block([])
-        b2 = self._make_block([])
-        assert b1.text_hash == b2.text_hash
-        assert b1.text_hash_short == b2.text_hash_short
+        found again between runs."""
+        b = self._make_block([])
+        output = subprocess.check_output(
+            [sys.executable, "-c", self._HASH_PROBE, b.text], text=True)
+        fresh_hash, fresh_hash_short = json.loads(output)
+        assert fresh_hash == b.text_hash
+        assert fresh_hash_short == b.text_hash_short
 
     def test_text_hashes_distinguish_different_text(self):
         """Two blocks with different text must hash differently, or one
