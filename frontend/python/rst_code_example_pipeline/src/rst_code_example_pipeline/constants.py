@@ -30,8 +30,15 @@ SPARK_PROJECT_PRAGMAS_FILENAME = "main_spark.adc"
 # what the checker reads to decide what to do with it.  They arrive as plain
 # strings from the RST source, so a misspelling here would not raise -- the
 # comparison would simply never match and the check would be skipped in
-# silence, on a block that looks checked.  Naming them means a typo is an
-# AttributeError at import instead.
+# silence, on a block that looks checked.  Naming them turns that typo into
+# an AttributeError at the point of use.
+#
+# This is not yet the whole vocabulary the checker reads: ``nosyntax-check``
+# is still compared as a bare literal in ``check_code_block.py``.  What a
+# course author may actually write is fixed elsewhere -- ``CONTRIBUTING.md``
+# documents it, and the code-block directive rejects any class it does not
+# recognize -- so read this list as the names the checker acts on, not as
+# the reference for the RST source.
 CLASS_ADA_NOCHECK = "ada-nocheck"
 CLASS_C_NOCHECK = "c-nocheck"
 
@@ -53,6 +60,11 @@ CLASS_ADA_PROVE = "ada-prove"
 CLASS_ADA_PROVE_FLOW = "ada-prove-flow"
 CLASS_ADA_PROVE_FLOW_REPORT_ALL = "ada-prove-flow-report-all"
 CLASS_ADA_PROVE_REPORT_ALL = "ada-prove-report-all"
+
+# Not part of the vocabulary a course author can write: the code-block
+# directive rejects this class outright, so no ReST source can carry it, and
+# neither the directive nor ``CONTRIBUTING.md`` mentions it.  It is named
+# here only because the checker still compares against it.
 CLASS_ADA_REPORT_ALL = "ada-report-all"
 
 # The classes that ask for a proof.  Grouped here because the check that
