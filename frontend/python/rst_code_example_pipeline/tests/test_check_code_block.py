@@ -1681,10 +1681,12 @@ class TestCheckBlockDrivenByTheExtractor:
     """
 
     _RUN_OUTPUT = "extracted example ran"
+    _C_RUN_OUTPUT = "extracted C example ran"
 
     # The main file the directives below declare.  Kept as one value because
     # the tests assert that the generated project names this same file.
     _MAIN = "main.adb"
+    _C_MAIN = "main.c"
 
     # A name nothing declares, so that a build has to fail on it and the
     # compiler has to say so.
@@ -1717,17 +1719,32 @@ begin
    null;
 end Main;"""
 
+    # A C block declares its file names inline; the chopper reads them off the
+    # leading marker lines rather than calling gnatchop.
+    _C_BODY = """\
+!{}
+#include <stdio.h>
+
+int main(void)
+{{
+   printf("{}\\n");
+   return 0;
+}}""".format(_C_MAIN, _C_RUN_OUTPUT)
+
     @staticmethod
-    def _rst(directive: str, body: str) -> str:
+    def _rst(directive: str, body: str, classes: str | None = None) -> str:
         """An RST file holding exactly one code block.
 
         The body is indented the way an author writes it, and the explanatory
         paragraph that follows is what tells the parser the block has ended.
         """
         indented = "\n".join("   " + line for line in body.splitlines())
-        return "{}\n\n{}\n\nExplanatory paragraph.\n".format(directive, indented)
+        head = directive if classes is None else \
+            "{}\n   :class: {}".format(directive, classes)
+        return "{}\n\n{}\n\nExplanatory paragraph.\n".format(head, indented)
 
-    def _extract(self, work_dir, directive: str, body: str, project: str):
+    def _extract(self, work_dir, directive: str, body: str, project: str,
+                 classes: str | None = None):
         """Run the real extraction step on a one-block RST file.
 
         Returns the per-block directory it wrote, the block info the checker
@@ -1739,7 +1756,7 @@ end Main;"""
         not have one.
         """
         rst_path = work_dir / "extracted.rst"
-        rst_path.write_text(self._rst(directive, body))
+        rst_path.write_text(self._rst(directive, body, classes))
         os.chdir(str(work_dir))
 
         assert ep.analyze_file(str(rst_path)) is False, \
@@ -1938,3 +1955,102 @@ end Main;"""
             "the failure must be recorded against the build"
         assert self._MISSING_NAME in self._log_of(block_dir, recorded["BUILD"]), \
             "the build log must name what the compiler could not resolve"
+
+    def test_extracted_block_expecting_a_compile_error_passes(self, tmp_path):
+        """A block declared as expecting a compile error must pass the check
+        even though the compiler rejects it.
+
+        The class that declares the expectation is written in the RST source,
+        so it has to survive extraction and reach the checker; if it did not,
+        this block would be reported as a failure.  The build log is checked
+        as well, because a class that suppressed the build entirely would give
+        the same answer for the wrong reason.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: ada project=ExtractedExpectError main={} compile_button".format(
+                self._MAIN),
+            self._BROKEN_ADA_BODY, "ExtractedExpectError",
+            classes="ada-expect-compile-error")
+
+        assert "ada-expect-compile-error" in info["classes"], \
+            "the class written in the RST source must reach the checker"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "a compile error the block declared it expects must not fail the check"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
+            "an expected compile error must still be syntax-checked and built"
+        assert recorded["BUILD"]["status_ok"] is True, \
+            "a compile error the block expects must not be recorded as a failure"
+        assert self._MISSING_NAME in self._log_of(block_dir, recorded["BUILD"]), \
+            "the compiler must really have rejected the block, or the " \
+            "expectation was satisfied by nothing happening"
+
+    def test_c_run_button_block_is_built_and_run_as_extracted(self, tmp_path):
+        """A run button on a C block carries through to the program running.
+
+        C blocks take a different route on both sides of the seam: the
+        extraction step chops them from the file names written into the source
+        rather than by calling gnatchop, and the checker compiles and links
+        them with the C compiler instead of the project builder.  The output
+        pinned below is what the author's code prints.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: c project=ExtractedCRun main={} run_button".format(
+                self._C_MAIN),
+            self._C_BODY, "ExtractedCRun")
+
+        assert self._buttons_asked_for(info) == (True, True, False), \
+            "a run button must reach the checker as a run, which implies a " \
+            "compile, and not as a proof"
+        assert info["source_files"] == [self._C_MAIN], \
+            "the C source must have been chopped out under the name the block " \
+            "declares for it"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted C block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "a C run button must be syntax-checked, built and run, and not proved"
+        assert self._log_of(block_dir, recorded["RUN"]).strip() == self._C_RUN_OUTPUT, \
+            "the program the author wrote must be the one that ran"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="a C block asking only for a compile is never given a main file "
+               "by the extraction step, and the checker asserts it has one",
+    )
+    def test_c_compile_button_block_is_built_as_extracted(self, tmp_path):
+        """A compile button on a C block must be compiled.
+
+        Tracking note -- this currently fails.  The extraction step resolves a
+        main file only for blocks that are also run, but the checker's C
+        compile step names the executable after that main file and asserts it
+        is set, so a C block asking only for a compile stops the check with an
+        assertion instead of compiling.  An Ada block in the same position is
+        fine, because the project builder takes the main from the generated
+        project rather than from the field.  Resolving a main file for every
+        compiled block, or naming the executable some other way, fixes it;
+        when it lands this test passes and the marker must be removed.
+        """
+        block_dir, info, json_file = self._extract(
+            tmp_path,
+            ".. code:: c project=ExtractedCCompile main={} compile_button".format(
+                self._C_MAIN),
+            self._C_BODY, "ExtractedCCompile")
+
+        assert self._buttons_asked_for(info) == (True, False, False), \
+            "a compile button must reach the checker as a compile and nothing else"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted C block as it stands"
+
+        recorded = self._recorded_checks(block_dir)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
+            "a C compile button must be syntax-checked and built, and neither " \
+            "run nor proved"
+        assert recorded["BUILD"]["status_ok"] is True
