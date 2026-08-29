@@ -9,7 +9,8 @@ is the contract the package README sets out under "Exit status", and it is
 what a build gates on; nothing else in the suite goes near it.
 
 Covers:
-- a course whose one example builds: extract-code and check-code both succeed
+- a course whose one example builds and runs: extract-code and check-code both
+  succeed, and what the example printed is there in the run log afterwards
 - the same course with the example broken: check-code fails, and says which
   name the compiler could not resolve
 - check-block over a single extracted example: success for one that builds,
@@ -33,14 +34,18 @@ import subprocess
 import pytest
 
 
-# A complete Ada example that announces itself, so that a course which is
-# supposed to check out really does something rather than merely not failing.
+# A complete Ada example that announces itself when it runs.  The course
+# below asks for a run, so a check that reports success has to have built the
+# example, executed it, and recorded what it printed -- rather than merely not
+# failing, which is what a command that checked nothing at all also does.
+RUN_OUTPUT = "the example ran"
+
 WORKING_ADA_BODY = """\
 with Ada.Text_IO; use Ada.Text_IO;
 procedure Main is
 begin
-   Put_Line ("the example ran");
-end Main;"""
+   Put_Line ("{}");
+end Main;""".format(RUN_OUTPUT)
 
 # A name nothing declares, so the build has to fail on it and the compiler has
 # to say so -- which is how a failing run is told apart from one that failed
@@ -61,7 +66,7 @@ def _write_course(directory, project: str, body: str):
     its name relative to the directory holding it."""
     indented = "\n".join("   " + line for line in body.splitlines())
     (directory / "course.rst").write_text(
-        ".. code:: ada project={} main=main.adb compile_button\n"
+        ".. code:: ada project={} main=main.adb run_button\n"
         "\n"
         "{}\n"
         "\n"
@@ -94,6 +99,20 @@ def _the_extracted_block(cwd) -> str:
     return str(written[0])
 
 
+def _the_run_log(cwd) -> str:
+    """What the example printed when it was run, of which there is one.
+
+    A run writes its output beside the example rather than to the command's
+    own output, so reading it back is the only way to tell a course that
+    really ran something from one that reported success over nothing.
+    """
+    written = sorted((cwd / "build").rglob("run.log"))
+    assert len(written) == 1, \
+        "expected the check to write exactly one run log, got {}".format(
+            [str(path) for path in written])
+    return written[0].read_text()
+
+
 # ---------------------------------------------------------------------------
 # A course whose examples all build
 # ---------------------------------------------------------------------------
@@ -101,8 +120,14 @@ def _the_extracted_block(cwd) -> str:
 @pytest.mark.toolchain
 class TestCourseThatChecksOut:
     def test_extract_and_check_both_succeed(self, tmp_path):
-        """A course whose one example builds must be extracted and checked
-        without either command reporting a failure."""
+        """A course whose one example builds and runs must be extracted and
+        checked without either command reporting a failure.
+
+        The status alone cannot tell success apart from having checked
+        nothing, which the package README warns is possible, so the output the
+        example printed is asserted as well: it can only be there if the block
+        was extracted, built and executed.
+        """
         extracted = _extract(tmp_path, "CliCourseGood", WORKING_ADA_BODY)
         assert extracted.returncode == 0, \
             "extracting a well-formed course must succeed: {}".format(
@@ -112,6 +137,10 @@ class TestCourseThatChecksOut:
         assert checked.returncode == 0, \
             "checking a course whose example builds must succeed: {}".format(
                 checked.stdout)
+
+        assert RUN_OUTPUT in _the_run_log(tmp_path), \
+            "a course reported as checked must have run its example, and the "\
+            "run log is where what it printed ends up"
 
 
 # ---------------------------------------------------------------------------
