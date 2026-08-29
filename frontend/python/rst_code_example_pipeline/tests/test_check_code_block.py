@@ -6,7 +6,8 @@ Covers:
 - check_block() with block.no_check=True → returns False immediately
 - check_block() with prior BlockCheck.status_ok=True in cache + force_checks=False → cache hit
 - check_block() with prior BlockCheck.status_ok=False in cache + force_checks=False → cached failure
-- check_block() with force_checks=True → ignores cache, runs checks
+- check_block() with force_checks=True → a recorded failure is ignored, the block is
+  checked again, and the record left behind carries this run's own result
 - check_block() for a minimal Ada syntax-only block (gcc -gnats) → False
 - check_block() for a block with empty buttons list → has_error=True (BUTTONS check fails)
 - check_code_block_json() with nonexistent file → returns True (error)
@@ -227,26 +228,6 @@ class TestCheckBlockCacheHitOk:
         result = ccb.check_block(block, json_file, force_checks=False)
         assert result is False
 
-    def test_cache_hit_with_force_true_does_not_use_cache(self, tmp_path):
-        """force_checks=True must bypass the cache and run actual checks."""
-        block = _make_block(classes=["ada-nocheck"], no_check=True, buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
-        block.to_json_file(json_file)
-
-        os.chdir(str(tmp_path))
-        bc = _checks_mod.BlockCheck(
-            text_hash=block.text_hash,
-            text_hash_short=block.text_hash_short,
-        )
-        bc.status_ok = True
-        bc.to_json_file()
-
-        # With force_checks=True, even though cache says ok, execution continues.
-        # But since no_check=True, the block is still skipped (no_check check comes
-        # first in the code, before the cache lookup).
-        result = ccb.check_block(block, json_file, force_checks=True)
-        assert result is False
-
 
 # ---------------------------------------------------------------------------
 # T-check_code_block-04: check_block() cache hit (status_ok=False)
@@ -307,6 +288,66 @@ class TestCheckBlockCorruptCache:
         result = ccb.check_block(block, json_file)
         assert result is False, \
             "An unparseable cache file must be ignored rather than crash the check"
+
+
+# ---------------------------------------------------------------------------
+# check_block() with the checks forced against a populated cache
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockForceChecks:
+    ADA_SOURCE = """\
+procedure Main is
+begin
+   null;
+end Main;
+"""
+
+    def test_forcing_the_checks_overrides_a_cached_failure(self, tmp_path):
+        """Forcing the checks must ignore what a previous run recorded and
+        check the block again.
+
+        The block is checkable and clean, but a record of an earlier run
+        sitting beside it says the block failed.  Left alone, that record is
+        what the caller gets back -- the cached-failure test above pins that.
+        Forced, the stale record has to be ignored, the checks have to run for
+        real, and the answer has to be the one the block earns rather than the
+        one on disk.
+
+        Both halves are asserted, because the outcome alone cannot tell a
+        re-check apart from a cache lookup that happened to be dropped: the
+        record left behind afterwards must carry this run's own result and the
+        checks it performed.
+        """
+        src = tmp_path / "main.adb"
+        src.write_text(self.ADA_SOURCE)
+        os.chdir(str(tmp_path))
+
+        block = _make_block(
+            buttons=["no"],
+            no_check=False,
+            syntax_only=False,
+            source_files=["main.adb"],
+        )
+        json_file = str(tmp_path / "block_info.json")
+        block.to_json_file(json_file)
+
+        stale = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        stale.status_ok = False
+        stale.to_json_file()
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "a recorded failure must not be returned when the checks are forced"
+
+        rewritten = json.loads((tmp_path / "block_checks.json").read_text())
+        assert rewritten["status_ok"] is True, \
+            "the forced run must replace the stale record with its own result"
+        assert "SYNTAX" in rewritten["checks"], \
+            "the forced run must have checked the block, not skipped it"
 
 
 # ---------------------------------------------------------------------------
