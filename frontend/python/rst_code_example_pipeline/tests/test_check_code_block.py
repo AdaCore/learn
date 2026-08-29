@@ -1772,6 +1772,9 @@ int main(void)
             "a run button must be syntax-checked, built and run, and not proved"
 
         built_against = self._project_used(recorded["BUILD"])
+        # A localizer, not a detector: the run above cannot happen at all
+        # unless the project names a main, so this line says which link
+        # broke rather than being the first to notice.
         assert 'for Main use ("{}");'.format(self._MAIN) in \
             (block_dir / built_against).read_text(), \
             "the project built against must name the main the directive declared"
