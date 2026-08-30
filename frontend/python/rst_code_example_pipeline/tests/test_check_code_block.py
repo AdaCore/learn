@@ -17,8 +17,10 @@ Covers:
 - C run path: valid C that exits 0 → False (requires the Ada toolchain)
 - gnatprove path: C + prove_it → True (requires the Ada toolchain)
 - gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
-- the prove classes an author writes select the same gnatprove switches as the
-  matching buttons -- ada-prove-report-all asking for the full report is an xfail
+- each prove button, and each prove class an author writes, selects the gnatprove
+  switches it names and no others -- read off the recorded command line, since the
+  fixture block proves cleanly under any switches at all.  The full report for the
+  ada-prove-report-all class is an xfail
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
@@ -1352,46 +1354,19 @@ end Main;
             spark_mode=True,
         )
 
-    def _make_prove_block(self, button):
-        return _make_block(
-            buttons=[button],
-            syntax_only=False,
-            no_check=False,
-            compile_it=False,
-            run_it=False,
-            source_files=["main.adb"],
-        )
+    def _prove(self, work_dir, buttons=None, classes=None):
+        """Prove a SPARK block asking for it the given way, and hand back the
+        command line the proof phase recorded.
 
-    def _run(self, work_dir, button):
-        spark_project_filename = self._setup_spark_project(work_dir)
-        block = self._make_prove_block(button)
-        block.spark_project_filename = spark_project_filename
-        block.project_main_file = "main.adb"
-
-        json_file = str(work_dir / "block_info.json")
-        block.to_json_file(json_file)
-
-        return ccb.check_block(block, json_file, force_checks=True)
-
-    def test_prove_flow_mode(self, work_dir):
-        """prove_flow button selects '--mode=flow'; a trivially valid SPARK
-        block must still pass."""
-        assert self._run(work_dir, "prove_flow") is False
-
-    def test_prove_flow_report_all(self, work_dir):
-        """prove_flow_report_all button selects '--mode=flow --report=all'."""
-        assert self._run(work_dir, "prove_flow_report_all") is False
-
-    def test_prove_report_all(self, work_dir):
-        """prove_report_all button selects '--report=all'."""
-        assert self._run(work_dir, "prove_report_all") is False
-
-    def _prove_by_class(self, work_dir, sphinx_class):
-        """Prove a SPARK block that asks for it by class rather than by button,
-        and hand back what the proof phase recorded."""
+        The switches have to be read off that command line.  The fixture
+        block is trivially valid, so it proves cleanly under any switches at
+        all, and a passing result therefore says nothing whatever about which
+        ones were selected.
+        """
         spark_project_filename = self._setup_spark_project(work_dir)
         block = _make_block(
-            classes=[sphinx_class],
+            buttons=buttons,
+            classes=classes,
             syntax_only=False,
             no_check=False,
             compile_it=False,
@@ -1410,9 +1385,71 @@ end Main;
         recorded = json.loads(
             _check_record(work_dir, json_file).read_text())["checks"]
         assert "PROVE" in recorded, \
-            "the class must have asked for a proof, or there is no command " \
+            "the block must have asked for a proof, or there is no command " \
             "line to look at"
         return ast.literal_eval(recorded["PROVE"]["cmdline"])
+
+    def test_prove_button_selects_neither_switch(self, work_dir):
+        """A plain prove button asks for neither the flow mode nor the full
+        report, so the proof runs on the default switches alone."""
+        proved_with = self._prove(work_dir, buttons=["prove"])
+        assert "--mode=flow" not in proved_with, \
+            "a plain prove button must not restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+        assert "--report=all" not in proved_with, \
+            "a plain prove button must not ask for the full report: " \
+            "{}".format(proved_with)
+
+    def test_prove_flow_mode(self, work_dir):
+        """The prove_flow button selects the flow mode and nothing else."""
+        proved_with = self._prove(work_dir, buttons=["prove_flow"])
+        assert "--mode=flow" in proved_with, \
+            "the flow button must restrict the proof to flow analysis: " \
+            "{}".format(proved_with)
+        assert "--report=all" not in proved_with, \
+            "the flow button must not also ask for the full report: " \
+            "{}".format(proved_with)
+
+    def test_prove_flow_report_all(self, work_dir):
+        """The prove_flow_report_all button selects both switches."""
+        proved_with = self._prove(work_dir, buttons=["prove_flow_report_all"])
+        assert "--mode=flow" in proved_with, \
+            "the flow report-all button must restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+        assert "--report=all" in proved_with, \
+            "the flow report-all button must ask for the full report: " \
+            "{}".format(proved_with)
+
+    def test_prove_report_all(self, work_dir):
+        """The prove_report_all button selects the full report and nothing
+        else."""
+        proved_with = self._prove(work_dir, buttons=["prove_report_all"])
+        assert "--report=all" in proved_with, \
+            "the report-all button must ask for the full report: " \
+            "{}".format(proved_with)
+        assert "--mode=flow" not in proved_with, \
+            "the report-all button must not also restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+
+    def test_ada_prove_flow_class_selects_the_flow_mode(self, work_dir):
+        """The class an author writes selects what the matching button does."""
+        proved_with = self._prove(work_dir, classes=["ada-prove-flow"])
+        assert "--mode=flow" in proved_with, \
+            "the flow class must restrict the proof to flow analysis: " \
+            "{}".format(proved_with)
+        assert "--report=all" not in proved_with, \
+            "the flow class must not also ask for the full report: " \
+            "{}".format(proved_with)
+
+    def test_ada_prove_flow_report_all_class_selects_both(self, work_dir):
+        """The class an author writes selects what the matching button does."""
+        proved_with = self._prove(work_dir, classes=["ada-prove-flow-report-all"])
+        assert "--mode=flow" in proved_with, \
+            "the flow report-all class must restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+        assert "--report=all" in proved_with, \
+            "the flow report-all class must ask for the full report: " \
+            "{}".format(proved_with)
 
     def test_ada_prove_report_all_class_is_proved(self, work_dir):
         """The class alone asks for a proof, with no prove button present.
@@ -1421,7 +1458,7 @@ end Main;
         only report on the switches of a proof that really happened, so the
         proof itself is asserted here, where no marker can absorb its loss.
         """
-        assert self._prove_by_class(work_dir, "ada-prove-report-all")
+        assert self._prove(work_dir, classes=["ada-prove-report-all"])
 
     @pytest.mark.xfail(
         strict=True,
@@ -1452,8 +1489,8 @@ end Main;
         mitigation is the unmarked sibling above, which drives the same
         fixture and reddens if the proof stops happening.
         """
-        assert "--report=all" in self._prove_by_class(
-            work_dir, "ada-prove-report-all"), \
+        assert "--report=all" in self._prove(
+            work_dir, classes=["ada-prove-report-all"]), \
             "a class that names the full report must select it"
 
 
