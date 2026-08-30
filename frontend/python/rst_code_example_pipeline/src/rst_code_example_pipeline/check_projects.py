@@ -10,6 +10,7 @@ import glob
 
 from . import blocks
 from . import check_code_block
+from . import constants
 from . import extract_projects
 from . import fmt_utils
 
@@ -54,11 +55,11 @@ def get_projects(build_dir: str, projects_list_file: str | None = None) -> dict[
         if extracted_projects:
             for prj in extracted_projects.projects:
                 json_files_regex_list.append(extract_projects.get_project_dir(prj) +
-                                            "/**/block_info.json")
+                                            "/**/" + constants.BLOCK_INFO_FILENAME)
         else:
             print("WARNING: no projects found in file: " + projects_list_file)
     else:
-        json_files_regex_list.append("./**/block_info.json")
+        json_files_regex_list.append("./**/" + constants.BLOCK_INFO_FILENAME)
 
     projects = get_blocks(json_files_regex_list)
 

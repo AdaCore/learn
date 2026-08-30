@@ -17,6 +17,10 @@ Covers:
 - C run path: valid C that exits 0 → False (requires the Ada toolchain)
 - gnatprove path: C + prove_it → True (requires the Ada toolchain)
 - gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
+- each prove button, and each prove class an author writes, selects the gnatprove
+  switches it names and no others -- read off the recorded command line, since the
+  fixture block proves cleanly under any switches at all.  The full report for the
+  ada-prove-report-all class is an xfail
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
@@ -53,6 +57,25 @@ import rst_code_example_pipeline.extract_projects as ep
 from rst_code_example_pipeline import blocks as _blocks_mod
 from rst_code_example_pipeline import checks as _checks_mod
 import rst_code_example_pipeline.toolchain_info as info
+
+
+def _check_record(directory, block_record):
+    """The record a check wrote, found as the JSON file beside the block that
+    is not the one the check was handed.
+
+    A check names that file itself, from the package's own default, so a test
+    spelling the name out here would restate a choice the package is free to
+    change -- and would go on passing if the check stopped writing a record
+    at all, as long as a file of the expected name happened to be lying there
+    from something else.
+    """
+    handed = os.path.realpath(str(block_record))
+    written = sorted(path for path in directory.glob("*.json")
+                     if os.path.realpath(str(path)) != handed)
+    assert len(written) == 1, \
+        "expected the check to write exactly one record beside the block, " \
+        "got {}".format([path.name for path in written])
+    return written[0]
 
 
 # ---------------------------------------------------------------------------
@@ -288,15 +311,21 @@ class TestCheckBlockCacheHitFail:
 
 @pytest.mark.toolchain
 class TestCheckBlockCorruptCache:
-    def test_corrupt_cache_file_is_ignored(self, tmp_path):
+    def test_corrupt_cache_file_is_ignored(self, work_dir):
         """A previous-check cache file that is not valid JSON must not crash
         check_block(): the read failure is caught, no cached result is used,
         and a full check runs and completes normally instead."""
         block = _make_block(buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
-        (tmp_path / "block_checks.json").write_text("{not valid json")
+        # Let the package write the cache file, so that the corrupt one lands
+        # under the name the read is going to look for.  Named here instead,
+        # a rename would leave nothing to be read and this test would pass
+        # over a check that never met a corrupt file at all.
+        _checks_mod.BlockCheck(text_hash=block.text_hash,
+                               text_hash_short=block.text_hash_short).to_json_file()
+        _check_record(work_dir, json_file).write_text("{not valid json")
 
         result = ccb.check_block(block, json_file)
         assert result is False, \
@@ -348,7 +377,7 @@ class TestCheckBlockForceChecks:
         assert result is False, \
             "a recorded failure must not be returned when the checks are forced"
 
-        rewritten = json.loads((work_dir / "block_checks.json").read_text())
+        rewritten = json.loads(_check_record(work_dir, json_file).read_text())
         assert rewritten["status_ok"] is True, \
             "the forced run must replace the stale record with its own result"
         assert "SYNTAX" in rewritten["checks"], \
@@ -824,7 +853,7 @@ end Main;
             "A provable SPARK block must prove cleanly under a pinned legacy GNATprove version"
 
         recorded = json.loads(
-            (work_dir / "block_checks.json").read_text())["checks"]
+            _check_record(work_dir, json_file).read_text())["checks"]
         proved_with = ast.literal_eval(recorded["PROVE"]["cmdline"])
         assert "--no-axiom-guard" in proved_with, \
             "the older command line must ask for the switch only that " \
@@ -889,7 +918,7 @@ class TestCheckBlockUnrecognizedLanguage:
             "check does not know: {}".format(commands)
 
         recorded = json.loads(
-            (tmp_path / "block_checks.json").read_text())["checks"]
+            _check_record(tmp_path, json_file).read_text())["checks"]
         assert "BUILD" not in recorded, \
             "a compile was asked for, so a recorded BUILD phase means a " \
             "language branch was taken: {}".format(sorted(recorded))
@@ -1325,39 +1354,144 @@ end Main;
             spark_mode=True,
         )
 
-    def _make_prove_block(self, button):
-        return _make_block(
-            buttons=[button],
+    def _prove(self, work_dir, buttons=None, classes=None):
+        """Prove a SPARK block asking for it the given way, and hand back the
+        command line the proof phase recorded.
+
+        The switches have to be read off that command line.  The fixture
+        block is trivially valid, so it proves cleanly under any switches at
+        all, and a passing result therefore says nothing whatever about which
+        ones were selected.
+        """
+        spark_project_filename = self._setup_spark_project(work_dir)
+        block = _make_block(
+            buttons=buttons,
+            classes=classes,
             syntax_only=False,
             no_check=False,
             compile_it=False,
             run_it=False,
             source_files=["main.adb"],
         )
-
-    def _run(self, work_dir, button):
-        spark_project_filename = self._setup_spark_project(work_dir)
-        block = self._make_prove_block(button)
         block.spark_project_filename = spark_project_filename
         block.project_main_file = "main.adb"
 
         json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
-        return ccb.check_block(block, json_file, force_checks=True)
+        assert ccb.check_block(block, json_file, force_checks=True) is False, \
+            "the fixture block must prove cleanly, or what the proof recorded " \
+            "is not what this test is about"
+        recorded = json.loads(
+            _check_record(work_dir, json_file).read_text())["checks"]
+        assert "PROVE" in recorded, \
+            "the block must have asked for a proof, or there is no command " \
+            "line to look at"
+        return ast.literal_eval(recorded["PROVE"]["cmdline"])
+
+    def test_prove_button_selects_neither_switch(self, work_dir):
+        """A plain prove button asks for neither the flow mode nor the full
+        report, so the proof runs on the default switches alone."""
+        proved_with = self._prove(work_dir, buttons=["prove"])
+        assert "--mode=flow" not in proved_with, \
+            "a plain prove button must not restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+        assert "--report=all" not in proved_with, \
+            "a plain prove button must not ask for the full report: " \
+            "{}".format(proved_with)
 
     def test_prove_flow_mode(self, work_dir):
-        """prove_flow button selects '--mode=flow'; a trivially valid SPARK
-        block must still pass."""
-        assert self._run(work_dir, "prove_flow") is False
+        """The prove_flow button selects the flow mode and nothing else."""
+        proved_with = self._prove(work_dir, buttons=["prove_flow"])
+        assert "--mode=flow" in proved_with, \
+            "the flow button must restrict the proof to flow analysis: " \
+            "{}".format(proved_with)
+        assert "--report=all" not in proved_with, \
+            "the flow button must not also ask for the full report: " \
+            "{}".format(proved_with)
 
     def test_prove_flow_report_all(self, work_dir):
-        """prove_flow_report_all button selects '--mode=flow --report=all'."""
-        assert self._run(work_dir, "prove_flow_report_all") is False
+        """The prove_flow_report_all button selects both switches."""
+        proved_with = self._prove(work_dir, buttons=["prove_flow_report_all"])
+        assert "--mode=flow" in proved_with, \
+            "the flow report-all button must restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+        assert "--report=all" in proved_with, \
+            "the flow report-all button must ask for the full report: " \
+            "{}".format(proved_with)
 
     def test_prove_report_all(self, work_dir):
-        """prove_report_all button selects '--report=all'."""
-        assert self._run(work_dir, "prove_report_all") is False
+        """The prove_report_all button selects the full report and nothing
+        else."""
+        proved_with = self._prove(work_dir, buttons=["prove_report_all"])
+        assert "--report=all" in proved_with, \
+            "the report-all button must ask for the full report: " \
+            "{}".format(proved_with)
+        assert "--mode=flow" not in proved_with, \
+            "the report-all button must not also restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+
+    def test_ada_prove_flow_class_selects_the_flow_mode(self, work_dir):
+        """The class an author writes selects what the matching button does."""
+        proved_with = self._prove(work_dir, classes=["ada-prove-flow"])
+        assert "--mode=flow" in proved_with, \
+            "the flow class must restrict the proof to flow analysis: " \
+            "{}".format(proved_with)
+        assert "--report=all" not in proved_with, \
+            "the flow class must not also ask for the full report: " \
+            "{}".format(proved_with)
+
+    def test_ada_prove_flow_report_all_class_selects_both(self, work_dir):
+        """The class an author writes selects what the matching button does."""
+        proved_with = self._prove(work_dir, classes=["ada-prove-flow-report-all"])
+        assert "--mode=flow" in proved_with, \
+            "the flow report-all class must restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+        assert "--report=all" in proved_with, \
+            "the flow report-all class must ask for the full report: " \
+            "{}".format(proved_with)
+
+    def test_ada_prove_report_all_class_is_proved(self, work_dir):
+        """The class alone asks for a proof, with no prove button present.
+
+        Pins the fixture the strict xfail below depends on: that test can
+        only report on the switches of a proof that really happened, so the
+        proof itself is asserted here, where no marker can absorb its loss.
+        """
+        assert self._prove(work_dir, classes=["ada-prove-report-all"])
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the report-all arm reads the 'ada-report-all' class, so the "
+               "'ada-prove-report-all' class is proved without the switch",
+    )
+    def test_ada_prove_report_all_class_asks_for_the_full_report(self, work_dir):
+        """A block classed ``ada-prove-report-all`` must be proved with
+        ``--report=all``.
+
+        Tracking note -- this currently fails.  Each prove button is paired
+        with the class that carries the same name: prove_flow with
+        ada-prove-flow, prove_flow_report_all with ada-prove-flow-report-all.
+        The third pairs prove_report_all with ada-report-all instead, which is
+        a class no proof-selecting list contains, so on its own it never
+        causes a proof at all.  ada-prove-report-all does cause one -- it is
+        one of the classes that select a proof -- and then never reaches the
+        switch its own name asks for.
+
+        The open fix is to read ada-prove-report-all in that arm, which leaves
+        ada-report-all unused and to be dropped in the same change.  When it
+        lands this test passes and the marker must be removed.
+
+        What the marker can absorb: it is strict, so it fails the suite if the
+        defect is fixed without the marker being removed, but it carries no
+        ``raises``, so a break in the shared prove fixture would keep it
+        xfailing for a different reason than the one recorded here.  The
+        mitigation is the unmarked sibling above, which drives the same
+        fixture and reddens if the proof stops happening.
+        """
+        assert "--report=all" in self._prove(
+            work_dir, classes=["ada-prove-report-all"]), \
+            "a class that names the full report must select it"
 
 
 # ---------------------------------------------------------------------------
@@ -1406,7 +1540,7 @@ class TestCheckBlockMissingToolchain:
         assert result is False, \
             "A missing toolchain must not crash the check, only skip real checks"
 
-        written = json.loads((tmp_path / "block_checks.json").read_text())
+        written = json.loads(_check_record(tmp_path, json_file).read_text())
         assert written["checks"]["SYNTAX"]["version"] == "<unknown>", \
             "The version lookup must have failed and recorded the fallback marker"
 
@@ -1658,8 +1792,10 @@ int main(void)
 
         The per-block directory is found by asking the extraction step where
         it puts a project, and then by which directory below it holds a block
-        info file -- the staging copy the extraction step keeps alongside does
-        not have one.
+        record -- the staging copy the extraction step keeps alongside holds
+        none.  The record is taken as the one JSON file in that directory
+        rather than by a name written down here, so that what is read back is
+        whatever the extraction step wrote.
         """
         rst_path = work_dir / "extracted.rst"
         rst_path.write_text(self._rst(directive, body, classes))
@@ -1670,12 +1806,16 @@ int main(void)
 
         project_dir = work_dir / ep.get_project_dir(project)
         block_dirs = sorted(d for d in project_dir.iterdir()
-                            if (d / "block_info.json").is_file())
+                            if d.is_dir() and list(d.glob("*.json")))
         assert len(block_dirs) == 1, \
             "expected exactly one per-block directory, got {}".format(
                 [d.name for d in block_dirs])
         block_dir = block_dirs[0]
-        json_file = block_dir / "block_info.json"
+        records = sorted(block_dir.glob("*.json"))
+        assert len(records) == 1, \
+            "expected exactly one block record, got {}".format(
+                [record.name for record in records])
+        json_file = records[0]
         return block_dir, json.loads(json_file.read_text()), str(json_file)
 
     @staticmethod
@@ -1684,14 +1824,15 @@ int main(void)
         return info["compile_it"], info["run_it"], info["prove_it"]
 
     @staticmethod
-    def _recorded_checks(block_dir) -> dict:
+    def _recorded_checks(block_dir, block_record) -> dict:
         """The per-phase results the check wrote beside the block.
 
         Read straight from the file rather than through
         checks.BlockCheck.from_json_file(), which drops the per-phase entries
         on the way back in.
         """
-        return json.loads((block_dir / "block_checks.json").read_text())["checks"]
+        return json.loads(
+            _check_record(block_dir, block_record).read_text())["checks"]
 
     @staticmethod
     def _log_of(block_dir, recorded_check) -> str:
@@ -1755,7 +1896,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         # Pins the checker's phase labels; see the class docstring for why
         # that trade is made deliberately.
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
@@ -1799,7 +1940,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
             "a run button must be syntax-checked, built and run, and not proved"
 
@@ -1845,7 +1986,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUTTONS", "PROVE", "SYNTAX"], \
             "a prove button must be syntax-checked and proved, and not built"
         assert recorded["PROVE"]["status_ok"] is True
@@ -1876,7 +2017,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is True, \
             "an extracted block that does not compile must be reported as an error"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert recorded["SYNTAX"]["status_ok"] is True, \
             "the block must be syntactically valid, or the build is not what failed"
         assert recorded["BUILD"]["status_ok"] is False, \
@@ -1911,7 +2052,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "a compile error the block declared it expects must not fail the check"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
             "an expected compile error must still be syntax-checked and built"
         assert recorded["BUILD"]["status_ok"] is True, \
@@ -1945,7 +2086,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted C block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
             "a C run button must be syntax-checked, built and run, and not proved"
         assert self._log_of(block_dir, recorded["RUN"]).strip() == self._C_RUN_OUTPUT, \
@@ -1997,7 +2138,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted C block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
             "a C compile button must be syntax-checked and built, and neither " \
             "run nor proved"

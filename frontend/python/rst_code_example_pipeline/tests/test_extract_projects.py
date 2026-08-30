@@ -4,6 +4,10 @@ Unit tests for rst_code_example_pipeline.extract_projects.
 Covers:
 - get_project_dir(): simple and dotted project names
 - write_project_file(): all four combinations of spark_mode × main_file × compiler_switches
+- write_project_file(): the generated project points at the configuration pragma
+  file the same call wrote, in both plain and SPARK mode
+- write_project_file(): the plain and SPARK modes write separate project and
+  pragma files, so a block that is both proved and run keeps both
 - ProjectsList: init, add(), to_json_file(), from_json_file() round-trip, missing file
 - analyze_file(): minimal no-check / syntax-only Ada block
 - analyze_file(): a block directory left over from a prior run whose info JSON file was
@@ -26,10 +30,39 @@ need no marker.
 """
 import json
 import os
+import re
 
 import pytest
 
 import rst_code_example_pipeline.extract_projects as ep
+
+
+def _pragma_file(directory, project_filename: str):
+    """The configuration pragma file a generated project points at.
+
+    Located through the project's own reference rather than through a name
+    written down here, so that a test says what a build against that project
+    would pick up instead of restating a name the package was free to choose.
+    """
+    project_text = (directory / project_filename).read_text()
+    named = re.search(r'for Global_Configuration_Pragmas use "([^"]+)"',
+                      project_text)
+    assert named is not None, \
+        "the generated project must name a configuration pragma file"
+    return directory / named.group(1)
+
+
+def _configuration_pragmas(directory, project_filename: str) -> str:
+    """The configuration pragmas a generated project pulls in.
+
+    A project naming a file nobody wrote is caught here, by name, instead of
+    surfacing much later as a build that quietly used none of them.
+    """
+    pragma_file = _pragma_file(directory, project_filename)
+    assert pragma_file.is_file(), \
+        "{} names {}, which was never written".format(
+            project_filename, pragma_file.name)
+    return pragma_file.read_text()
 
 
 # ---------------------------------------------------------------------------
@@ -62,69 +95,113 @@ class TestGetProjectDir:
 class TestWriteProjectFile:
     def test_no_main_no_switches_not_spark_creates_gpr(self, work_dir):
         ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
-        assert (work_dir / "main.gpr").exists()
+        assert list(work_dir.glob("*.gpr")), "a project file must be written"
 
     def test_no_main_no_switches_not_spark_creates_adc(self, work_dir):
-        ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
-        assert (work_dir / "main.adc").exists()
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        assert _pragma_file(work_dir, result).is_file(), \
+            "the pragma file the project points at must be written"
 
     def test_returns_gpr_filename_not_spark(self, work_dir):
         result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
-        assert result == "main.gpr"
+        assert (work_dir / result).is_file(), \
+            "the name returned must be the project file that was written"
 
     def test_no_main_placeholder_absent_when_none(self, work_dir):
-        ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
-        content = (work_dir / "main.gpr").read_text()
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        content = (work_dir / result).read_text()
         assert "for Main use" not in content
 
     def test_with_main_file_gpr_contains_main_use(self, work_dir):
-        ep.write_project_file(main_file="main.adb", compiler_switches=[], spark_mode=False)
-        content = (work_dir / "main.gpr").read_text()
+        result = ep.write_project_file(main_file="main.adb", compiler_switches=[],
+                                       spark_mode=False)
+        content = (work_dir / result).read_text()
         assert 'for Main use ("main.adb")' in content
 
     def test_with_compiler_switch_gpr_contains_switch(self, work_dir):
-        ep.write_project_file(main_file=None, compiler_switches=["-gnatwa"], spark_mode=False)
-        content = (work_dir / "main.gpr").read_text()
+        result = ep.write_project_file(main_file=None, compiler_switches=["-gnatwa"],
+                                       spark_mode=False)
+        content = (work_dir / result).read_text()
         assert '"-gnatwa"' in content
 
     def test_multiple_switches_all_present(self, work_dir):
-        ep.write_project_file(
+        result = ep.write_project_file(
             main_file=None, compiler_switches=["-gnatwa", "-gnatwe"], spark_mode=False
         )
-        content = (work_dir / "main.gpr").read_text()
+        content = (work_dir / result).read_text()
         assert '"-gnatwa"' in content
         assert '"-gnatwe"' in content
 
     def test_spark_mode_creates_main_spark_gpr(self, work_dir):
         ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
-        assert (work_dir / "main_spark.gpr").exists()
+        assert list(work_dir.glob("*.gpr")), \
+            "a project file must be written in SPARK mode too"
 
     def test_spark_mode_creates_main_spark_adc(self, work_dir):
-        ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
-        assert (work_dir / "main_spark.adc").exists()
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
+        assert _pragma_file(work_dir, result).is_file(), \
+            "the pragma file the SPARK project points at must be written"
 
     def test_spark_mode_returns_spark_gpr_filename(self, work_dir):
         result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
-        assert result == "main_spark.gpr"
+        assert (work_dir / result).is_file(), \
+            "the name returned must be the project file that was written"
+
+    def test_the_two_modes_write_separate_projects(self, work_dir):
+        """A SPARK project and a plain one can sit side by side.
+
+        The two modes are asked for one after the other for the same block --
+        a block that is both proved and run gets both -- so they have to write
+        to different places.  Were they to share a name the second call would
+        overwrite the first, and the block would be built against whichever
+        project happened to be written last.
+        """
+        plain = ep.write_project_file(main_file=None, compiler_switches=[],
+                                      spark_mode=False)
+        spark = ep.write_project_file(main_file=None, compiler_switches=[],
+                                      spark_mode=True)
+        assert plain != spark, \
+            "the two modes must not write to the same project file"
+        assert (work_dir / plain).is_file() and (work_dir / spark).is_file(), \
+            "both project files must survive the other being written"
+        assert _pragma_file(work_dir, plain) != _pragma_file(work_dir, spark), \
+            "the two projects must not share a configuration pragma file"
 
     def test_spark_adc_contains_spark_mode_pragma(self, work_dir):
-        ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
-        content = (work_dir / "main_spark.adc").read_text()
-        assert "pragma SPARK_Mode (On);" in content
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
+        assert "pragma SPARK_Mode (On);" in _configuration_pragmas(work_dir, result)
 
     def test_non_spark_adc_does_not_contain_spark_pragma(self, work_dir):
-        ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
-        content = (work_dir / "main.adc").read_text()
-        assert "pragma SPARK_Mode" not in content
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        assert "pragma SPARK_Mode" not in _configuration_pragmas(work_dir, result)
+
+    @pytest.mark.parametrize("spark_mode", [False, True], ids=["plain", "spark"])
+    def test_project_names_the_pragma_file_the_same_call_wrote(
+            self, work_dir, spark_mode):
+        """The pragma file a generated project points at is the one written
+        beside it.
+
+        The project text and the pragma file are produced by two separate
+        parts of one call, and nothing in the generator checks that the two
+        agree on the name.  A disagreement leaves both files on disk and is
+        invisible here; only a later build against the project would meet it.
+        """
+        result = ep.write_project_file(
+            main_file=None, compiler_switches=[], spark_mode=spark_mode
+        )
+        assert _configuration_pragmas(work_dir, result).strip(), \
+            "the pragma file the project names must have something in it"
 
     def test_full_combo_main_switches_spark(self, work_dir):
         result = ep.write_project_file(
             main_file="main.adb", compiler_switches=["-gnatwa"], spark_mode=True
         )
-        assert result == "main_spark.gpr"
-        gpr = (work_dir / "main_spark.gpr").read_text()
+        gpr = (work_dir / result).read_text()
         assert 'for Main use ("main.adb")' in gpr
         assert '"-gnatwa"' in gpr
+        # Says the project really is the SPARK one, by what it configures
+        # rather than by what it is called.
+        assert "pragma SPARK_Mode (On);" in _configuration_pragmas(work_dir, result)
 
 
 # ---------------------------------------------------------------------------
@@ -541,9 +618,9 @@ Explanatory paragraph.
         rst_file = self._write_rst(work_dir, rst_content)
         ep.analyze_file(rst_file)  # first call: creates the block's info JSON
 
-        block_jsons = list(work_dir.rglob("block_info.json"))
+        block_jsons = list(work_dir.rglob("*.json"))
         assert len(block_jsons) == 1, \
-            f"Expected exactly 1 block_info.json after the first call; found {len(block_jsons)}"
+            f"Expected exactly 1 block record after the first call; found {len(block_jsons)}"
         block_jsons[0].unlink()
 
         capsys.readouterr()  # discard first-call output
@@ -587,7 +664,7 @@ Explanatory paragraph.
             "Expected the immediate failure message when chopping yields nothing"
         assert "Error while updating code for the block, continuing with next one!" in out, \
             "Expected the surrounding handler to report that it moves on"
-        assert list(work_dir.rglob("block_info.json")), \
+        assert list(work_dir.rglob("*.json")), \
             "Expected the failing block to still be logged before moving on"
 
     @pytest.mark.toolchain
@@ -684,11 +761,11 @@ Second explanatory paragraph.
         assert result is False
         # The project directory must have been created
         assert (work_dir / "projects" / "SameProject").exists()
-        # Two separate block_info.json files must exist (each block has its own
+        # Two separate block records must exist (each block has its own
         # hash-named subdirectory)
-        block_jsons = list((work_dir / "projects" / "SameProject").rglob("block_info.json"))
+        block_jsons = list((work_dir / "projects" / "SameProject").rglob("*.json"))
         assert len(block_jsons) == 2, \
-            f"Expected 2 block_info.json files; found {len(block_jsons)}"
+            f"Expected 2 block records; found {len(block_jsons)}"
 
 
 # ---------------------------------------------------------------------------
@@ -759,7 +836,18 @@ Explanatory paragraph.
 
     @staticmethod
     def _block_info(block_dir) -> dict:
-        return json.loads((block_dir / "block_info.json").read_text())
+        """The record the extraction step wrote for a block, of which there is
+        one.
+
+        Taken as the JSON file that is there rather than by a name written
+        down here: the extraction step chooses that name from the package's
+        own default, and the check step goes looking for the same default.
+        """
+        written = sorted(block_dir.glob("*.json"))
+        assert len(written) == 1, \
+            "expected exactly one block record, got {}".format(
+                [path.name for path in written])
+        return json.loads(written[0].read_text())
 
     def test_analyze_file_compile_button(self, work_dir):
         """RST with a compile_button Ada block: analyze_file() must call
@@ -784,13 +872,18 @@ Explanatory paragraph.
         # author's code, unchanged and un-reindented.
         assert (block_dir / "main.adb").read_text() == self._ADA_BODY
         assert info["source_files"] == ["main.adb"]
-        assert info["project_filename"] == "main.gpr"
+        # The project file the record names must be the one on disk, or the
+        # check step goes looking for a project that is not there.
+        assert info["project_filename"] is not None and \
+            (block_dir / info["project_filename"]).is_file(), \
+            "the recorded project file must be the one that was written"
         assert info["spark_project_filename"] is None, \
             "no SPARK project may be written for a block that is not proved"
         # A compile button alone is not runnable, so no main is selected and
         # the generated project must not name one.
         assert info["project_main_file"] is None
-        assert "for Main use" not in (block_dir / "main.gpr").read_text()
+        assert "for Main use" not in \
+            (block_dir / info["project_filename"]).read_text()
 
     def test_analyze_file_run_button(self, work_dir):
         """RST with a run_button Ada block: analyze_file() must call
@@ -811,12 +904,15 @@ Explanatory paragraph.
         info = self._block_info(block_dir)
         assert (block_dir / "main.adb").read_text() == self._ADA_BODY
         assert info["source_files"] == ["main.adb"]
-        assert info["project_filename"] == "main.gpr"
+        assert info["project_filename"] is not None and \
+            (block_dir / info["project_filename"]).is_file(), \
+            "the recorded project file must be the one that was written"
         assert info["spark_project_filename"] is None
         # A runnable block selects a main, and the project must name it or
         # there is nothing for the builder to link.
         assert info["project_main_file"] == "main.adb"
-        assert 'for Main use ("main.adb");' in (block_dir / "main.gpr").read_text()
+        assert 'for Main use ("main.adb");' in \
+            (block_dir / info["project_filename"]).read_text()
 
     def test_analyze_file_prove_button(self, work_dir):
         """RST with a prove_button SPARK Ada block: analyze_file() must call
@@ -843,11 +939,16 @@ end Main;"""
         assert (block_dir / "main.adb").read_text() == spark_body
         assert info["source_files"] == ["main.adb"]
         # A prove button alone builds only the SPARK project.
-        assert info["spark_project_filename"] == "main_spark.gpr"
+        assert info["spark_project_filename"] is not None and \
+            (block_dir / info["spark_project_filename"]).is_file(), \
+            "the recorded SPARK project file must be the one that was written"
         assert info["project_filename"] is None
-        assert not (block_dir / "main.gpr").exists()
+        assert [p.name for p in block_dir.glob("*.gpr")] == \
+            [info["spark_project_filename"]], \
+            "the SPARK project must be the only project file written"
         # GNATprove only treats the unit as SPARK because of this pragma.
-        assert "pragma SPARK_Mode (On);" in (block_dir / "main_spark.adc").read_text()
+        assert "pragma SPARK_Mode (On);" in \
+            _configuration_pragmas(block_dir, info["spark_project_filename"])
 
     def test_analyze_file_run_button_no_main(self, work_dir):
         """RST with run_button and no main= attribute: get_main_filename()
@@ -871,7 +972,11 @@ end Main;"""
         # With nothing declared, the last chopped source becomes the main file.
         assert info["source_files"] == ["main.adb"]
         assert info["project_main_file"] == "main.adb"
-        assert 'for Main use ("main.adb");' in (block_dir / "main.gpr").read_text()
+        assert info["project_filename"] is not None and \
+            (block_dir / info["project_filename"]).is_file(), \
+            "the recorded project file must be the one that was written"
+        assert 'for Main use ("main.adb");' in \
+            (block_dir / info["project_filename"]).read_text()
 
     def test_analyze_file_prove_and_run_button(self, work_dir):
         """RST with both prove_button and run_button: the main file is
@@ -896,14 +1001,15 @@ end Main;"""
         info = self._block_info(block_dir)
         assert (block_dir / "main.adb").read_text() == spark_body
         # Both projects are written, and both must name the resolved main file.
-        assert info["project_filename"] == "main.gpr"
-        assert info["spark_project_filename"] == "main_spark.gpr"
         assert info["main_file"] is None
         assert info["project_main_file"] == "main.adb"
-        for gpr in ("main.gpr", "main_spark.gpr"):
+        for gpr in (info["project_filename"], info["spark_project_filename"]):
+            assert gpr is not None and (block_dir / gpr).is_file(), \
+                "both recorded project files must be the ones that were written"
             assert 'for Main use ("main.adb");' in (block_dir / gpr).read_text(), \
                 "{} must name the main file".format(gpr)
-        assert "pragma SPARK_Mode (On);" in (block_dir / "main_spark.adc").read_text()
+        assert "pragma SPARK_Mode (On);" in \
+            _configuration_pragmas(block_dir, info["spark_project_filename"])
 
     def test_analyze_file_c_prove_button_reports_the_wrong_language(
             self, work_dir, capsys):

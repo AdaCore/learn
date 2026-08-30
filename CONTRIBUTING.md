@@ -586,7 +586,8 @@ block in the generated HTML or e-book output.
 
 The following classes are available for the testing phase:
 
-  - `ada-nocheck`: testing of this specific code block is completely skipped.
+  - `ada-nocheck` and `c-nocheck`: testing of this specific code block is
+    completely skipped, for Ada or C code respectively.
 
   - `nosyntax-check`: code must not be checked for syntax errors. (Note that
     the code block is still compiled in the testing phase.)
@@ -597,9 +598,15 @@ The following classes are available for the testing phase:
 If an error is expected during the testing phase, one of the following classes
 must be used:
 
-  - `ada-expect-compile-error`: a compilation error is expected.
+  - `ada-expect-compile-error` and `c-expect-compile-error`: a compilation
+    error is expected, in Ada or C code respectively.
 
-  - `ada-run-expect-failure`: a run-time error is expected.
+  - `ada-run-expect-failure` and `c-run-expect-failure`: a run-time error is
+    expected, in Ada or C code respectively.
+
+  - `ada-expect-prove-error`: a proof error is expected. The code block must
+    also be proved, either through one of the prove buttons or through one of
+    the `ada-prove` classes listed below.
 
 When the `no_button` parameter is used, the following classes are available to
 compile or run the code examples:

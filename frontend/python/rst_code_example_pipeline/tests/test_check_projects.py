@@ -24,6 +24,30 @@ import rst_code_example_pipeline.toolchain_info as info
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
 
+def _write_block_record(block, directory) -> str:
+    """Write a block's record into ``directory`` under the name the package
+    chooses for it, and hand back the path it landed at.
+
+    The reader builds its search pattern from its own default name, so a test
+    that spelled the name out here would be restating a choice the package is
+    free to change -- and would keep passing if writer and reader ever drifted
+    apart, since both sides of the seam would have been replaced by the test's
+    own copy of the name.
+    """
+    directory.mkdir(parents=True, exist_ok=True)
+    original_cwd = os.getcwd()
+    os.chdir(str(directory))
+    try:
+        block.to_json_file()
+    finally:
+        os.chdir(original_cwd)
+    written = sorted(directory.glob("*.json"))
+    assert len(written) == 1, \
+        "expected exactly one block record to be written, got {}".format(
+            [path.name for path in written])
+    return str(written[0])
+
+
 def _make_minimal_block_info(project: str,
                              tmp_path,
                              subdir: str = "") -> str:
@@ -52,10 +76,7 @@ def _make_minimal_block_info(project: str,
         buttons=["no"],
     )
     dest_dir = tmp_path / subdir if subdir else tmp_path
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    json_file = str(dest_dir / "block_info.json")
-    block.to_json_file(json_file)
-    return json_file
+    return _write_block_record(block, dest_dir)
 
 
 # ---------------------------------------------------------------------------
@@ -95,15 +116,15 @@ class TestGetBlocksValid:
         assert path == json_file
 
     def test_glob_pattern_finds_file(self, tmp_path):
-        _make_minimal_block_info("GlobProject", tmp_path, subdir="subdir")
-        pattern = str(tmp_path / "**" / "block_info.json")
+        written = _make_minimal_block_info("GlobProject", tmp_path, subdir="subdir")
+        pattern = str(tmp_path / "**" / os.path.basename(written))
         result = cp.get_blocks([pattern])
         assert "GlobProject" in result
 
     def test_two_projects_from_two_files(self, tmp_path):
-        _make_minimal_block_info("Project1", tmp_path, subdir="p1")
+        written = _make_minimal_block_info("Project1", tmp_path, subdir="p1")
         _make_minimal_block_info("Project2", tmp_path, subdir="p2")
-        pattern = str(tmp_path / "**" / "block_info.json")
+        pattern = str(tmp_path / "**" / os.path.basename(written))
         result = cp.get_blocks([pattern])
         assert "Project1" in result
         assert "Project2" in result
@@ -302,9 +323,9 @@ class TestCheckProjectsExtended:
         """Two block_info.json files with the same project name: the second block
         appends to the existing project entry rather than creating a new key."""
         # Write two files for the same project in different subdirs
-        _make_minimal_block_info("DupProject", tmp_path, subdir="a")
+        written = _make_minimal_block_info("DupProject", tmp_path, subdir="a")
         _make_minimal_block_info("DupProject", tmp_path, subdir="b")
-        pattern = str(tmp_path / "**" / "block_info.json")
+        pattern = str(tmp_path / "**" / os.path.basename(written))
         result = cp.get_blocks([pattern])
         # Both blocks are in the list under the same project key
         assert "DupProject" in result
@@ -348,11 +369,8 @@ class TestCheckProjectsExtended:
         )
         block.active = False  # mark inactive before serialising
 
-        subdir = "projects/InactiveProj/hash000"
-        dest_dir = tmp_path / subdir
-        dest_dir.mkdir(parents=True, exist_ok=True)
-        json_file = str(dest_dir / "block_info.json")
-        block.to_json_file(json_file)
+        dest_dir = tmp_path / "projects" / "InactiveProj" / "hash000"
+        json_file = _write_block_record(block, dest_dir)
 
         # Track calls to check_block
         calls = []
@@ -436,13 +454,12 @@ class TestCheckProjectsReturnsTrue:
         import shutil
         shutil.copy(str(tmp_path / project_filename), str(subdir / project_filename))
         shutil.copy(str(tmp_path / "bad.adb"), str(subdir / "bad.adb"))
-        # Also copy .adc if it exists
-        adc = tmp_path / "main.adc"
-        if adc.exists():
-            shutil.copy(str(adc), str(subdir / "main.adc"))
+        # Take the configuration pragma files from what write_project_file
+        # actually wrote, rather than naming one the package chose.
+        for adc in tmp_path.glob("*.adc"):
+            shutil.copy(str(adc), str(subdir / adc.name))
 
-        json_file = str(subdir / "block_info.json")
-        block.to_json_file(json_file)
+        json_file = _write_block_record(block, subdir)
 
         os.chdir(original_cwd)
 

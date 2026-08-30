@@ -92,7 +92,7 @@ def _the_extracted_block(cwd) -> str:
     The extraction step keeps a staging copy of the sources alongside the
     per-block directory, and only the latter holds a block info file.
     """
-    written = sorted((cwd / "build").rglob("block_info.json"))
+    written = sorted((cwd / "build").rglob("*.json"))
     assert len(written) == 1, \
         "expected the extraction step to write exactly one block info " \
         "file, got {}".format([str(path) for path in written])

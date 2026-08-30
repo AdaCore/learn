@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 from . import colors as C
+from . import constants
 from . import toolchain_info
 
 class Block(object):
@@ -197,16 +198,50 @@ class Block(object):
         block_info = vars(self)
 
         if json_filename is None:
-            json_filename = "block_info.json"
+            json_filename = constants.BLOCK_INFO_FILENAME
         with open(json_filename, u'w') as f:
             json.dump(block_info, f, indent=4)
 
 class CodeBlock(Block):
+    """A single code block extracted from a ReST file
+
+    Note:
+        ``text_hash`` and ``text_hash_short`` are derived from the block's
+        text whenever the constructor is not handed them. What this package
+        asks of them is exactly three things:
+
+        * **determinism** -- the same text hashes the same way in every run,
+          or a block's directory moves and the result cached in it is never
+          found again;
+        * **distinctness** -- two different texts do not collide, or one
+          block's extracted project overwrites another's and one of the two
+          silently stops being checked;
+        * **hexadecimal shape** -- the short hash is used verbatim as a
+          directory name, so it must hold nothing a path would have to
+          escape.
+
+        What this package does **not** ask of them is any particular digest.
+        Neither hash is compared against a value computed anywhere else in
+        the package, so SHA-512 and MD5 are a choice made here, not a
+        promise made to a caller. Tests belong on the three properties above
+        and never on a literal digest: pinning one turns a correct change of
+        algorithm into a test failure, which is the opposite of what such a
+        test is for.
+
+        One constraint does come from outside the package, and it is easy to
+        miss because nothing fails loudly when it is broken:
+        ``frontend/sphinx/widget_extension.py`` recomputes the same MD5 over
+        the same block text and uses it to locate the per-block directory
+        whose log files it renders beside the example. Change the algorithm
+        on one side only and the boxes simply come out empty. The two sides
+        have to move together.
+    """
+
     @staticmethod
     def from_json_file(json_filename: str | None = None) -> CodeBlock | None:
 
         if json_filename is None:
-            json_filename = "block_info.json"
+            json_filename = constants.BLOCK_INFO_FILENAME
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:
@@ -259,30 +294,28 @@ class CodeBlock(Block):
         self.active: bool = active if active is not None else True
 
         self.no_check: bool = no_check if no_check is not None else \
-            any(sphinx_class in ["ada-nocheck", "c-nocheck"]
+            any(sphinx_class in [constants.CLASS_ADA_NOCHECK, constants.CLASS_C_NOCHECK]
                 for sphinx_class in self.classes)
 
         self.syntax_only: bool = syntax_only if syntax_only is not None else \
-            'ada-syntax-only' in self.classes
+            constants.CLASS_ADA_SYNTAX_ONLY in self.classes
 
         self.run_it: bool = run_it if run_it is not None else \
-            (('ada-run' in self.classes
-              or 'ada-run-expect-failure' in self.classes
+            ((constants.CLASS_ADA_RUN in self.classes
+              or constants.CLASS_ADA_RUN_EXPECT_FAILURE in self.classes
               or 'run' in self.buttons)
-              and not 'ada-norun' in self.classes)
+              and not constants.CLASS_ADA_NORUN in self.classes)
         self.compile_it: bool = compile_it if compile_it is not None else \
             self.run_it or \
-            (('ada-compile' in self.classes and self.language == 'ada')
-             or ('c-compile' in self.classes and self.language == 'c')
+            ((constants.CLASS_ADA_COMPILE in self.classes and self.language == 'ada')
+             or (constants.CLASS_C_COMPILE in self.classes and self.language == 'c')
              or 'compile' in self.buttons)
 
         prove_buttons: list[str] = ["prove", "prove_flow", "prove_flow_report_all",
                          "prove_report_all"]
-        prove_classes: list[str] = ["ada-prove", "ada-prove-flow", "ada-prove-flow-report-all",
-                         "ada-prove-report-all"]
 
         self.prove_it: bool = prove_it if prove_it is not None else \
-            (any(b in prove_classes for b in self.classes)
+            (any(b in constants.PROVE_CLASSES for b in self.classes)
              or any(b in prove_buttons for b in self.buttons))
 
         self.source_files: list[str] = source_files if source_files is not None else \

@@ -231,7 +231,6 @@ class TestBlockCheckJsonRoundTrip:
         monkeypatch.chdir(tmp_path)
         bc = BlockCheck(text_hash="xyz", text_hash_short="x")
         bc.to_json_file()
-        assert os.path.isfile("block_checks.json")
         bc2 = BlockCheck.from_json_file()
         assert bc2 is not None
         assert bc2.text_hash == "xyz"
