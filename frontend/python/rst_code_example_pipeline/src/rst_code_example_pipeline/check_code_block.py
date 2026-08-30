@@ -316,8 +316,10 @@ def check_block(block: blocks.CodeBlock,
         if not compile_error and not has_error and block.run_it:
             check_error = False
             cmdline = None
+            run_attempted = False
 
             if block.language == "ada":
+                run_attempted = True
                 try:
                     assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
@@ -343,6 +345,7 @@ def check_block(block: blocks.CodeBlock,
                     logfile.write(out)
 
             elif block.language == "c":
+                run_attempted = True
                 try:
                     assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
@@ -366,11 +369,16 @@ def check_block(block: blocks.CodeBlock,
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)
 
-            code_check = checks.CodeCheck(status_ok=(not check_error),
-                                          logfile="run.log",
-                                          cmdline=str(cmdline))
+            # Only a language the checker actually runs gets a RUN phase.
+            # Recording one for any other language claimed a successful run
+            # of a command that was never built, naming a log file that was
+            # never written.
+            if run_attempted:
+                code_check = checks.CodeCheck(status_ok=(not check_error),
+                                              logfile="run.log",
+                                              cmdline=str(cmdline))
 
-            block_check.add_check("RUN", code_check)
+                block_check.add_check("RUN", code_check)
 
             if check_error:
                 has_error = True
