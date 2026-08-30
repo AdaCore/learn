@@ -28,7 +28,9 @@ Covers:
 - the maximum-columns setting reaches the Ada syntax check, and the limit applied
   is the one that was asked for
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
-- gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged without affecting the result
+- each of the three clean-up commands an Ada compile and run reaches is reported
+  separately when it fails, the gnatprove --clean one naming the command it ran,
+  and none of the failures affects the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
 - check_block() driven by the real extraction step rather than by a hand-built block:
   the compile, run and prove buttons an author writes in an RST directive, plus the
@@ -1571,12 +1573,22 @@ class TestCheckBlockCleanupFailures:
 
     def test_gprclean_and_gnatprove_clean_failures_do_not_affect_result(
             self, work_dir, monkeypatch, capsys):
-        """A gprclean failure before compiling, a gprclean failure during
-        end-of-check clean-up, and a gnatprove --clean failure during
-        end-of-check clean-up are all logged (the first two) or silently
-        swallowed (the third) -- but none of them aborts the check or changes
-        its result: a real compile and run that succeed still make the check
-        pass."""
+        """Each of the three clean-up commands an Ada block reaches is
+        reported when it fails, and none of the failures aborts the check or
+        changes its result.
+
+        The three are a gprclean before the build, and a gprclean and a
+        gnatprove --clean during the end-of-check clean-up.  All three are
+        made to fail here, so all three have to be reported: a real compile
+        and run that succeed still make the check pass, but they do so
+        loudly.
+
+        The counts are exact rather than bounded from below, so that dropping
+        any one of the three reddens this test.  The two gprclean sites print
+        the same text, so only their number tells that both are still there;
+        the gnatprove --clean site names the command it ran, so it is
+        asserted by that name and by being the last of the three to report.
+        """
         import subprocess as S
 
         project_filename = self._setup_project(work_dir)
@@ -1616,16 +1628,29 @@ class TestCheckBlockCleanupFailures:
         assert "gnatprove" in failed_cleanups
 
         out = capsys.readouterr().out
-        # Both gprclean failures are logged and the gnatprove --clean one is
-        # not, so at least two messages must appear.  The bound is a minimum
-        # rather than an equality on purpose: adding a further clean-up step is
-        # not a regression, whereas dropping the logging from either of the two
-        # sites that have it is -- and the two messages are textually identical,
-        # so counting them is the only way to tell one has gone.
-        assert out.count("Failed to clean-up example") >= 2, \
-            "a failing clean-up must be logged rather than passed over in silence"
-        assert "simulated cleanup failure" in out, \
-            "the failing clean-up command's own output must be shown with the message"
+        shared_message = "Failed to clean-up example"
+        gnatprove_message = shared_message + " (gnatprove --clean)"
+
+        assert out.count(gnatprove_message) == 1, \
+            "the gnatprove --clean failure must be reported once, under a " \
+            "message that names the command that failed -- three reports " \
+            "spelled the same way would say that a clean-up failed and " \
+            "never which one: {}".format(out)
+
+        assert out.count(shared_message) - out.count(gnatprove_message) == 2, \
+            "both gprclean failures -- the one before the build and the one " \
+            "in the end-of-check clean-up -- must be reported, and the two " \
+            "print the same text, so only their number tells that neither " \
+            "has gone: {}".format(out)
+
+        assert out.rindex(shared_message) == out.index(gnatprove_message), \
+            "the gnatprove --clean report belongs to the end-of-check " \
+            "clean-up and must therefore come after both gprclean reports: " \
+            "{}".format(out)
+
+        assert out.count("simulated cleanup failure") == 3, \
+            "each report must carry the output of the command it is about, " \
+            "which is the part that says why the clean-up failed: {}".format(out)
 
 
 @pytest.mark.toolchain
