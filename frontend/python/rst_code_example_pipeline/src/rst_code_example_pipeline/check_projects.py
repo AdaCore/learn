@@ -21,7 +21,7 @@ force_checks: bool = False
 
 
 def get_blocks(json_files_regex_list: list[str],
-               unreadable: list[str] | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
+               skipped: list[str] | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
     projects: dict[str, list[tuple[blocks.CodeBlock, str]]] = dict()
 
     for json_regex in json_files_regex_list:
@@ -31,12 +31,14 @@ def get_blocks(json_files_regex_list: list[str],
 
             if b is None:
                 print("ERROR: Could not load block info from {}".format(json_file_path))
-                if unreadable is not None:
-                    unreadable.append(json_file_path)
+                if skipped is not None:
+                    skipped.append(json_file_path)
                 continue
 
             if b.project is None:
                 print("ERROR: Block has no project in {}".format(json_file_path))
+                if skipped is not None:
+                    skipped.append(json_file_path)
                 continue
 
             if not b.project in projects:
@@ -47,7 +49,7 @@ def get_blocks(json_files_regex_list: list[str],
 
 
 def get_projects(build_dir: str, projects_list_file: str | None = None,
-                 unreadable: list[str] | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
+                 skipped: list[str] | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
     json_files_regex_list: list[str] = list()
 
     os.chdir(build_dir)
@@ -65,7 +67,7 @@ def get_projects(build_dir: str, projects_list_file: str | None = None,
     else:
         json_files_regex_list.append("./**/" + constants.BLOCK_INFO_FILENAME)
 
-    projects = get_blocks(json_files_regex_list, unreadable)
+    projects = get_blocks(json_files_regex_list, skipped)
 
     return projects
 
@@ -84,14 +86,15 @@ def check_projects(build_dir: str, projects_list_file: str | None = None) -> boo
 
     work_dir = os.getcwd()
 
-    # A block info file that could not be read describes a block that was
-    # never checked.  Reporting it and then exiting 0 would claim a clean run
-    # over an example nothing looked at.
-    unreadable: list[str] = []
+    # Every skip above describes a block that was not checked -- one whose
+    # info file could not be read, and one that names no project.  Reporting
+    # either and then exiting 0 would claim a clean run over an example
+    # nothing looked at.
+    skipped: list[str] = []
 
-    projects = get_projects(build_dir, projects_list_file, unreadable)
+    projects = get_projects(build_dir, projects_list_file, skipped)
 
-    if unreadable:
+    if skipped:
         check_error = True
 
     for project in projects:
