@@ -12,6 +12,9 @@ Covers:
 - analyze_file(): minimal no-check / syntax-only Ada block
 - analyze_file(): a block directory left over from a prior run whose info JSON file was
   deleted is detected as stale, logged, and removed rather than reused
+- analyze_file(): a block record left over from a prior run that is present but cannot be
+  read is rebuilt, the run still succeeds, and a warning names the file as rebuilt -- while
+  a record that reads back is repaired silently, because it was never damaged
 - analyze_file() integration: compile_button / run_button / prove_button Ada blocks --
   the extracted source, the per-block directory name and the generated project files
   (requires the Ada toolchain — real gnatchop and write_project_file calls)
@@ -35,6 +38,7 @@ import re
 import pytest
 
 import rst_code_example_pipeline.extract_projects as ep
+from rst_code_example_pipeline import blocks as _blocks_mod
 
 
 def _pragma_file(directory, project_filename: str):
@@ -630,6 +634,129 @@ Explanatory paragraph.
         out = capsys.readouterr().out
         assert "no JSON info file" in out, \
             "Expected the stale-directory message when the info JSON is missing"
+
+    # The block record left over from an earlier run, in the two states the
+    # repair path tells apart.  The reader refuses the first and accepts the
+    # second unchanged.
+    DAMAGED_RECORD = "{ this is not a block record"
+
+    REBUILT_RST = """\
+.. code:: ada project=RebuiltProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+
+    def _the_block_record(self, work_dir):
+        """The one block record below the working directory."""
+        written = list(work_dir.rglob("*.json"))
+        assert len(written) == 1, \
+            "expected exactly one block record, got {}".format(
+                [str(path) for path in written])
+        return written[0]
+
+    @pytest.mark.toolchain
+    def test_damaged_block_record_is_rebuilt_and_the_rebuild_is_announced(
+            self, work_dir, capsys):
+        """A block record that is present but cannot be read must be rebuilt,
+        must not fail the run, and must say so.
+
+        This is the repair a kept build directory makes necessary: the record
+        of a block extracted earlier is damaged -- by an interrupted run, an
+        edit, a half-finished copy -- and the next extraction finds it there
+        and unreadable.  Rewriting it and carrying on is the right outcome,
+        and it used to end the run with a traceback instead.  Because the
+        outcome is now a success, the only thing that tells anyone the file
+        was damaged is the message, so the message is what is asserted: it
+        names the file, and it says the example is still extracted and
+        checked.
+
+        The neighboring repair -- a block directory whose record has gone
+        missing entirely -- takes a different branch with a different message
+        and removes the directory.  Its message is asserted absent, so this
+        test cannot pass by having taken that path instead.
+
+        That the record is genuinely rebuilt is asserted last and matters
+        most: it is what the message promises, and a repair that printed the
+        line without rewriting the file would satisfy everything above it.
+        """
+        rst_file = self._write_rst(work_dir, self.REBUILT_RST)
+        ep.analyze_file(rst_file)
+
+        record = self._the_block_record(work_dir)
+        original = record.read_text()
+        record.write_text(self.DAMAGED_RECORD)
+
+        capsys.readouterr()          # discard the first run's output
+        result = ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+
+        assert result is False, \
+            "repairing the record is a recovery, not a failure of the run"
+
+        assert "WARNING" in out, \
+            "a rebuilt record must be announced as a warning, not left to be " \
+            "inferred from the reader's error line: {}".format(out)
+        assert "Block info file could not be read and is being rebuilt" in out, \
+            "the warning must say what was done to the file: {}".format(out)
+        # The repair runs from inside the project directory, so the record is
+        # named relative to it -- the block directory and the file within it.
+        # Taken from the real path rather than written out, and paired with
+        # the location prefix below, which is what makes a relative path
+        # enough to find the block again.
+        named_as = os.path.join(record.parent.name, record.name)
+        assert named_as in out, \
+            "the warning must name the record it rebuilt: {}".format(out)
+        assert rst_file in out, \
+            "the warning must say which block it is about, or the record it " \
+            "names cannot be located from the message alone: {}".format(out)
+        assert "The example is still extracted and checked" in out, \
+            "the warning must say the run was not cut short, or a reader " \
+            "cannot tell it apart from the fatal case: {}".format(out)
+
+        assert "no JSON info file" not in out, \
+            "the record was present, so the branch that removes a directory " \
+            "with no record at all must not be the one that ran: {}".format(out)
+
+        rebuilt = self._the_block_record(work_dir)
+        assert rebuilt.read_text() != self.DAMAGED_RECORD, \
+            "the damaged record must have been rewritten, not merely reported"
+        assert _blocks_mod.CodeBlock.from_json_file(str(rebuilt)) is not None, \
+            "the rebuilt record must read back as a block, or the example " \
+            "the warning promises is still checked has no record to check it by"
+        assert json.loads(rebuilt.read_text()) == json.loads(original), \
+            "the rebuilt record must describe the same block the undamaged " \
+            "run wrote"
+
+    @pytest.mark.toolchain
+    def test_a_block_record_that_reads_back_is_not_announced_as_rebuilt(
+            self, work_dir, capsys):
+        """A second extraction over an undamaged record must say nothing
+        about rebuilding it.
+
+        The control for the test above.  A warning that fires whenever a
+        block directory is reused would satisfy every assertion there and
+        would tell a reader that a healthy build directory is damaged, which
+        is worse than saying nothing at all.
+        """
+        rst_file = self._write_rst(work_dir, self.REBUILT_RST)
+        ep.analyze_file(rst_file)
+
+        capsys.readouterr()          # discard the first run's output
+        ep.analyze_file(rst_file)    # the record is reused exactly as written
+        out = capsys.readouterr().out
+
+        assert "being rebuilt" not in out, \
+            "nothing was damaged, so nothing may be reported as rebuilt: " \
+            "{}".format(out)
+        assert "WARNING" not in out, \
+            "a reused build directory in good order must produce no warning " \
+            "at all: {}".format(out)
 
     @pytest.mark.toolchain
     def test_no_check_verbose_skip(self, work_dir, capsys):

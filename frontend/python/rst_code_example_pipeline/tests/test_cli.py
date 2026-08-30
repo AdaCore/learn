@@ -24,6 +24,9 @@ Covers:
 - extract-code over a course whose block names no project: the run fails and
   no block info file is written at all, which is why a block naming no project
   is only reachable from a file written or edited by hand
+- extract-code over a course whose block record was damaged since the last run:
+  the record is rebuilt, a warning names it as rebuilt, the run still succeeds,
+  and the example is still checked afterwards
 - the command lines the README says are rejected: naming neither a build
   directory nor a project list fails, and an unknown switch is rejected
   outright with the distinct status argument parsing uses
@@ -509,6 +512,90 @@ class TestACourseWhoseBlockNamesNoProject:
             "the extraction step must write no block info file at all when " \
             "it refuses a course: {}".format(
                 [str(path) for path in _block_info_files_written(tmp_path)])
+
+
+# ---------------------------------------------------------------------------
+# A course whose block record was damaged between runs
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestACourseWhoseBlockRecordWasDamaged:
+    """extract-code finding a record it wrote earlier and cannot read now.
+
+    A build directory is reused between runs, so a record damaged by an
+    interrupted run survives into the next one.  Extraction rewrites it and
+    carries on, which is the right outcome and used to be a traceback -- and
+    because the outcome is a success, the message is the only thing that says
+    the file was ever damaged.
+
+    Asserted through the commands rather than in process, because what makes
+    the repair honest is the pair of statuses: the extraction succeeds, and
+    the example it repaired is then really checked.
+    """
+
+    DAMAGED_RECORD = "{ this is not a block record"
+
+    def test_the_record_is_rebuilt_and_the_example_is_still_checked(
+            self, tmp_path):
+        """A damaged block record must be rebuilt with a warning naming it,
+        the extraction must still succeed, and the example must still be
+        checked afterwards.
+
+        The last clause is the one the warning promises and the one most
+        likely to rot: a repair that printed the line and left the record
+        unusable would satisfy the status and the message and still leave the
+        example unchecked.  The run log is what settles it -- the output below
+        can only get there by the example being built and executed.
+        """
+        assert _extract(tmp_path, "CliCourseRebuilt",
+                        WORKING_ADA_BODY).returncode == 0, \
+            "the course must extract cleanly first, or there is no record to " \
+            "damage"
+
+        written = _the_extracted_blocks(tmp_path)
+        assert len(written) == 1, \
+            "expected one block record after the first extraction, got " \
+            "{}".format([str(path) for path in written])
+        record = written[0]
+        record.write_text(self.DAMAGED_RECORD)
+
+        again = _run("extract-code", "--build-dir", "build", "course.rst",
+                     cwd=tmp_path)
+
+        assert again.returncode == 0, \
+            "rebuilding a damaged record is a recovery, so the extraction " \
+            "must still succeed: {}".format(again.stdout)
+        assert "WARNING" in again.stdout, \
+            "a rebuilt record must be announced as a warning: {}".format(
+                again.stdout)
+        # The repair runs from inside the project directory, so the record is
+        # named relative to it.  Derived from the real path rather than
+        # written out here.
+        named_as = "{}/{}".format(record.parent.name, record.name)
+        assert named_as in again.stdout, \
+            "the warning must name the record it rebuilt: {}".format(
+                again.stdout)
+        assert "course.rst" in again.stdout, \
+            "the warning must say which block it is about, or the record it " \
+            "names cannot be located from the message alone: {}".format(
+                again.stdout)
+        assert "The example is still extracted and checked" in again.stdout, \
+            "the warning must say the run was not cut short: {}".format(
+                again.stdout)
+        assert "Traceback" not in again.stderr, \
+            "the record must be rebuilt, not crashed on: {}".format(
+                again.stderr)
+
+        assert record.read_text() != self.DAMAGED_RECORD, \
+            "the damaged record must have been rewritten, not merely reported"
+
+        checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+        assert checked.returncode == 0, \
+            "the example the warning says is still checked must check out: " \
+            "{}".format(checked.stdout)
+        assert RUN_OUTPUT in _the_run_log(tmp_path), \
+            "the example must really have been built and run after its " \
+            "record was rebuilt"
 
 
 # ---------------------------------------------------------------------------
