@@ -6,11 +6,20 @@ looking for it by name.  Nothing checks that the two names match -- a
 mismatch produces no error, only a check that quietly finds nothing to do.
 Keeping the names here means the commands in this package cannot disagree.
 
-The guarantee stops at the package boundary, and one reader is outside it:
+Two limits are worth knowing before renaming anything here.
+
+The guarantee stops at the package boundary.
 ``frontend/sphinx/code_block_info.py`` locates the block info file by its own
-copy of the name, and treats a miss as "no metadata" rather than an error.
-Renaming an artifact here is therefore safe within the package and not
-outside it -- that reader has to be changed in step, and nothing will say so.
+copy of the name and treats a miss as "no metadata" rather than an error, so
+it has to be changed in step and nothing will say so.  The browser-side
+download code writes its own copies of the four project-file names, and of
+the project template that refers to them.
+
+And the two project file names are not free even inside the package: the
+templates below name the project units ``Main`` and ``Main_Spark``, which
+the builder requires to match the file names.  Renaming those two constants
+alone produces a project whose unit name does not match its file, which the
+builder reports; the unit names have to move with them.
 """
 
 # The per-block file the extraction step writes and the checking step reads.
