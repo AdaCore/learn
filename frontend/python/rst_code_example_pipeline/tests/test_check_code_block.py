@@ -24,7 +24,8 @@ Covers:
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
-- an unrecognized language value takes neither the Ada nor the C branch anywhere
+- an unrecognized language value takes neither the Ada nor the C branch anywhere,
+  and has neither a build nor a run recorded for it
 - the maximum-columns setting reaches the Ada syntax check, and the limit applied
   is the one that was asked for
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
@@ -885,10 +886,15 @@ class TestCheckBlockUnrecognizedLanguage:
         The block asks for a compile and a run, and names the main file a
         language branch would need, so that a branch wrongly taken would have
         enough to proceed rather than tripping over missing state: the check
-        has to skip it on the language alone.  Two things then show it did.
+        has to skip it on the language alone.  Three things then show it did.
         No command but the toolchain version probes is run -- a branch taken
-        would invoke a compiler -- and the record left behind carries no BUILD
-        phase, which is only added from inside a language branch.
+        would invoke a compiler -- and the record left behind carries neither
+        a BUILD nor a RUN phase.  A BUILD phase is only added from inside a
+        language branch.  A RUN phase is only added when a run was really
+        attempted, which is also only decided inside a language branch: a
+        recorded RUN for a language the checker does not run would claim a
+        successful run of a command that was never built, and would name a
+        log file that was never written.
         """
         import subprocess as S
 
@@ -924,6 +930,11 @@ class TestCheckBlockUnrecognizedLanguage:
         assert "BUILD" not in recorded, \
             "a compile was asked for, so a recorded BUILD phase means a " \
             "language branch was taken: {}".format(sorted(recorded))
+
+        assert "RUN" not in recorded, \
+            "a run was asked for, but no language branch could attempt one, " \
+            "so a recorded RUN phase describes a run that never happened: " \
+            "{}".format(sorted(recorded))
 
         assert result is False, \
             "An unrecognized language must not raise and must not report an error"
