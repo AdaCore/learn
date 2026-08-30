@@ -54,6 +54,11 @@ which is what a script driving them should gate on:
 - `check-block` takes one or more `block_info.json` files and exits `1` if any
   of them failed a check, and `0` otherwise. A JSON file that cannot be loaded
   counts as a failure too, so exit `1` does not imply that a check ran at all.
+  Such a file is reported before the run ends, naming the file — and, when the
+  file was there but did not parse as a code block, the reason as well. One
+  case is not covered: a file that exists but cannot be opened at all, for
+  example because of its permissions, still ends the run with a traceback
+  instead of a reported failure.
 
 - `extract-code` exits `1` when the extraction run itself cannot proceed — for
   example, when a code block has no project name, or when neither `--build-dir`
