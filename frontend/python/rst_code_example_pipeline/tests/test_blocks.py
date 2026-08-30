@@ -8,6 +8,9 @@ Covers:
 - text_hash / text_hash_short: deterministic, distinct per text, usable as a
   directory name
 - CodeBlock.to_json_file() + from_json_file() round-trip
+- CodeBlock.from_json_file() on a record that is present but cannot be turned
+  into a block: read back as no block, and reported with the file name and the
+  reason, rather than left as an exception for the caller to trip over
 - ConfigBlock.__init__ and update()
 - Adversarial: empty RST, missing json file, exit(1) path
 
@@ -605,6 +608,100 @@ class TestCodeBlockJsonRoundTrip:
     def test_from_json_file_nonexistent(self, tmp_path):
         f = str(tmp_path / "no_such.json")
         assert CodeBlock.from_json_file(f) is None
+
+
+# ---------------------------------------------------------------------------
+# A block record that is present but cannot be turned into a block
+# ---------------------------------------------------------------------------
+
+class TestCodeBlockRecordThatCannotBeRead:
+    """A block record file that exists but does not describe a block.
+
+    The reader used to check only that the file was there, so anything past
+    that point left the reader as an exception -- and it is the reader both
+    commands go through, so the traceback came out of whichever one was
+    running.  Each case below is a different way for the file to be
+    unusable, and each must come back as no block at all, with a message
+    saying which file it was and why it could not be used.
+
+    A record written by the extraction step is never in any of these states.
+    These are the file after something else has been at it: a truncated
+    write, a hand edit, a merge that went wrong.
+    """
+
+    # The text of a record that is present and unusable, one entry per way of
+    # being unusable.  The first two never parse; the third parses into
+    # something that is not a record; the fourth is a record with none of the
+    # fields a block is made of.
+    UNUSABLE_TEXTS = {
+        "truncated": '{"rst_file": "test.rst", "line_start": 1',
+        "not_json_at_all": "this file is not JSON",
+        "json_but_not_an_object": "[1, 2, 3]",
+        "an_object_with_none_of_the_fields": '{"something": "else"}',
+    }
+
+    # The fifth way, built from a real block at test time rather than written
+    # out here: a complete, valid record of a real block, carrying one field
+    # a block is not made of -- a record written by a later version of the
+    # package than the one reading it.  It is valid JSON and an object of the
+    # right shape, so it gets as far as being handed to the block, which is
+    # where it is refused.  This is the case that shows the guard is not
+    # merely a check that the text parses.
+    A_RECORD_FROM_A_LATER_FORMAT = "a_record_from_a_later_format"
+
+    ALL_CASES = sorted(UNUSABLE_TEXTS) + [A_RECORD_FROM_A_LATER_FORMAT]
+
+    def _record_text(self, case: str) -> str:
+        if case in self.UNUSABLE_TEXTS:
+            return self.UNUSABLE_TEXTS[case]
+
+        if not info.DEFAULT_VERSION:
+            info.init_toolchain_info()
+        block = CodeBlock(
+            rst_file="foo.rst",
+            line_start=1,
+            line_end=10,
+            text="procedure P is null;",
+            language="ada",
+            project="MyProj",
+            main_file="main.adb",
+            gnat_version=["default", info.DEFAULT_VERSION["gnat"]],
+            gnatprove_version=["default", info.DEFAULT_VERSION["gnatprove"]],
+            gprbuild_version=["default", info.DEFAULT_VERSION["gprbuild"]],
+            compiler_switches=["-gnata"],
+            classes=[],
+            manual_chop=False,
+            buttons=[],
+        )
+        record = json.loads(json.dumps(block, default=lambda o: o.__dict__))
+        record["a_field_this_version_does_not_know"] = "from a later format"
+        return json.dumps(record)
+
+    @pytest.mark.parametrize("case", ALL_CASES)
+    def test_an_unusable_record_is_reported_as_no_block(self, case, tmp_path,
+                                                        capsys):
+        """Reading an unusable record must come back as no block, and must
+        say which file could not be read and what was wrong with it.
+
+        The reason is asserted separately from the file name, because the
+        name alone is what the callers already print for themselves -- the
+        reader is the only place that knows why.
+        """
+        json_file = str(tmp_path / "block_info.json")
+        (tmp_path / "block_info.json").write_text(self._record_text(case))
+
+        assert CodeBlock.from_json_file(json_file) is None, \
+            "a record that cannot be turned into a block must read back as " \
+            "no block rather than as an exception"
+
+        out = capsys.readouterr().out
+        assert "ERROR" in out, \
+            "an unusable record must be reported: {}".format(out)
+        assert json_file in out, \
+            "the report must name the file it could not read: {}".format(out)
+        assert out.split(json_file, 1)[1].strip(" :\n"), \
+            "the report must say why the file could not be used, not only " \
+            "which file it was: {}".format(out)
 
 
 # ---------------------------------------------------------------------------

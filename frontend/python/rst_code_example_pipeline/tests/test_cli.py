@@ -15,7 +15,8 @@ Covers:
   name the compiler could not resolve
 - check-block over a single extracted example: success for one that builds,
   failure for one that does not, and failure -- with a message rather than a
-  crash -- for a block info file that cannot be read
+  crash -- for a block info file that is missing, and for one that is present
+  and unusable
 - the command lines the README says are rejected: naming neither a build
   directory nor a project list fails, and an unknown switch is rejected
   outright with the distinct status argument parsing uses
@@ -32,6 +33,8 @@ condition that lets the rest of the suite import it.
 import subprocess
 
 import pytest
+
+from rst_code_example_pipeline import constants
 
 
 # A complete Ada example that announces itself when it runs.  The course
@@ -219,6 +222,30 @@ class TestBlockInfoThatCannotBeRead:
         assert result.returncode == 1, \
             "a block info file that cannot be loaded must count as a failure"
         assert missing in result.stdout, \
+            "the message must name the file that could not be read: " \
+            "{}".format(result.stdout)
+        assert "Traceback" not in result.stderr, \
+            "the file must be reported, not crashed on: {}".format(
+                result.stderr)
+
+    def test_an_unusable_block_info_file_fails_with_a_message(self, tmp_path):
+        """A block info file that is there but cannot be turned into a block
+        must be reported the same way a missing one is.
+
+        This is the case a file damaged after it was written falls into --
+        truncated, edited, half-copied.  It used to leave the command as a
+        traceback: the status was 1 all the same, but only because that is
+        what Python gives an uncaught exception, and nothing in the output
+        told the reader which file was at fault or why.
+        """
+        unusable = tmp_path / constants.BLOCK_INFO_FILENAME
+        unusable.write_text("{ this is not a block record")
+
+        result = _run("check-block", str(unusable), cwd=tmp_path)
+
+        assert result.returncode == 1, \
+            "a block info file that cannot be loaded must count as a failure"
+        assert str(unusable) in result.stdout, \
             "the message must name the file that could not be read: " \
             "{}".format(result.stdout)
         assert "Traceback" not in result.stderr, \
