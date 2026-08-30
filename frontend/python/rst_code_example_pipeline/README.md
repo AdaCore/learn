@@ -47,22 +47,26 @@ All three entry points report the outcome of a run through their exit status,
 which is what a script driving them should gate on:
 
 - `check-code` exits `1` if any of the code blocks it checked failed a check,
-  and `0` otherwise. It also exits `1` when neither `--build-dir` nor
-  `--extracted_projects` was specified, so exit `1` on its own does not
-  distinguish a broken code block from a usage error.
+  and `0` otherwise. A `block_info.json` it cannot read counts as a failure
+  too, even though the code block it describes was never checked; the blocks
+  that could be read are still checked before the run ends. It also exits `1`
+  when neither `--build-dir` nor `--extracted_projects` was specified, so exit
+  `1` on its own does not distinguish a broken code block from a usage error.
 
 - `check-block` takes one or more `block_info.json` files and exits `1` if any
-  of them failed a check, and `0` otherwise. A JSON file that cannot be loaded
-  counts as a failure too, so exit `1` does not imply that a check ran at all.
-  Such a file is reported before the run ends, naming the file — and, when the
-  file was there but did not parse as a code block, the reason as well. One
-  case is not covered: a file that exists but cannot be opened at all, for
-  example because of its permissions, still ends the run with a traceback
-  instead of a reported failure.
+  of them failed a check, and `0` otherwise. Here too a file that cannot be
+  read counts as a failure, so exit `1` does not imply that a check ran at all.
 
 - `extract-code` exits `1` when the extraction run itself cannot proceed — for
   example, when a code block has no project name, or when neither `--build-dir`
   nor `--extracted_projects` was specified — and `0` otherwise.
+
+Both checking commands report a `block_info.json` they cannot read before the
+run ends, naming the file — and, when the file was there but did not parse as
+a code block, the reason as well. One case is not covered by either: a file
+that exists but cannot be opened at all, for example because of its
+permissions, still ends the run with a traceback instead of a reported
+failure.
 
 An invalid command line is rejected before any work is done, with exit
 status `2`.
@@ -72,10 +76,9 @@ for a code block it cannot process, but the run still exits `0`. For
 `extract-code` this affects a code block whose source cannot be split into
 individual source files, a code block whose button and language do not go
 together (a prove button on a C block), and a code block that carries no button
-indicator at all. For `check-code` it affects a `block_info.json` that cannot
-be loaded and a block that carries no project name — and if every block in a
-build directory is skipped this way, `check-code` exits `0` having checked
-nothing.
+indicator at all. For `check-code` it affects a code block that carries no
+project name — and if every block in a build directory is skipped that way,
+`check-code` exits `0` having checked nothing.
 
 Until this is fixed, a script that gates only on the exit status does not
 notice those code blocks, so read the output as well. Do not treat every
