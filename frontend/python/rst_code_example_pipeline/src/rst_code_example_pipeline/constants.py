@@ -4,7 +4,13 @@ The pipeline is three commands that talk to each other through files on
 disk: the extraction step writes an artifact, and the checking step goes
 looking for it by name.  Nothing checks that the two names match -- a
 mismatch produces no error, only a check that quietly finds nothing to do.
-Keeping the names here means the writer and the reader cannot disagree.
+Keeping the names here means the commands in this package cannot disagree.
+
+The guarantee stops at the package boundary, and one reader is outside it:
+``frontend/sphinx/code_block_info.py`` locates the block info file by its own
+copy of the name, and treats a miss as "no metadata" rather than an error.
+Renaming an artifact here is therefore safe within the package and not
+outside it -- that reader has to be changed in step, and nothing will say so.
 """
 
 # The per-block file the extraction step writes and the checking step reads.
