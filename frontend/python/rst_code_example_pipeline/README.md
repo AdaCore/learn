@@ -81,13 +81,19 @@ that carries no button indicator at all.
 
 Until this is fixed, a script that gates only on the exit status does not
 notice those code blocks, so read the output as well. Do not treat every
-`ERROR` line as a failure, though: `extract-code` also prints one when it finds
-a per-block directory left over from an earlier run whose info JSON file is
-gone, which it removes and rebuilds before carrying on, and `check-code` and
-`check-block` print one (`Failed to clean-up example`) when they cannot remove
-an example's build artifacts afterwards, which leaves the outcome of the check
-unchanged. Match on the message text of the errors listed above rather than on
-the `ERROR` prefix alone.
+`ERROR` line as a failure, though. `extract-code` prints one for each of the
+two damaged per-block records it repairs and carries on from: a directory left
+over from an earlier run whose info JSON file is gone, which it removes and
+rebuilds, and an info JSON file that is present but cannot be read, which it
+rewrites. The second is followed by a `WARNING` line naming the file as
+rebuilt and saying that the code block is still extracted and still checked.
+Look into it even so: a build directory is reused between runs, so a record
+damaged by an interrupted run survives there until something reports it.
+`check-code` and `check-block` print an `ERROR` line of their own (`Failed to
+clean-up example`) when they cannot remove an example's build artifacts
+afterwards, which leaves the outcome of the check unchanged. Match on the
+message text of the errors listed above rather than on the `ERROR` prefix
+alone.
 
 
 ## Verbose mode
