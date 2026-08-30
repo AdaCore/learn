@@ -9,6 +9,9 @@ Covers:
 - get_projects(build_dir, projects_list_file) with a valid projects-list JSON
 - cwd side effect: get_projects calls os.chdir(build_dir) — fixture saves/restores cwd
 - check_projects() returns True when a block fails to compile (requires the Ada toolchain)
+- a block dropped before it is checked -- its info file unreadable, or naming no
+  project -- fails the run, each arm pinned separately, and neither costs the
+  remaining blocks their check
 """
 import os
 
@@ -468,3 +471,195 @@ class TestCheckProjectsReturnsTrue:
         result = cp.check_projects(str(tmp_path), projects_list_file=None)
         assert result is True, \
             "check_projects() must return True when a block fails to compile"
+
+
+# ---------------------------------------------------------------------------
+# Blocks that are dropped before they are ever checked
+# ---------------------------------------------------------------------------
+
+class TestABlockThatWasNotCheckedFailsTheRun:
+    """The two ways a block info file is dropped from the gathering loop.
+
+    One is a file that cannot be turned into a block; the other is a block
+    that names no project.  Each prints an ERROR line of its own and moves on
+    to the next file, so neither reaches the checking loop and neither can
+    contribute an error from there.
+
+    What is asserted here is the outcome of the whole run, not the ERROR line
+    -- the line was already printed while the run still came back clean, and
+    a run that reports a problem and then says it went fine is the failure
+    this suite exists to catch.  A build gates on the outcome and nothing
+    else.
+
+    The two arms are pinned separately.  They reach the run's outcome through
+    the same list, so a single test would keep passing with either one of
+    them disconnected.
+    """
+
+    C_SOURCE = "int main(void) { return 0; }\n"
+
+    def _a_readable_block(self, tmp_path, project: str, subdir: str) -> str:
+        """A block info file that reads back as a block, in its own
+        directory below the build directory."""
+        return _make_minimal_block_info(project, tmp_path, subdir=subdir)
+
+    def _an_unreadable_block(self, tmp_path, subdir: str) -> str:
+        """A block info file that cannot be turned into a block.
+
+        Written by writing a real one first and then overwriting its text, so
+        that the file ends up under the name the gathering loop looks for
+        without that name being spelled out here.
+        """
+        written = _make_minimal_block_info("Unreadable", tmp_path,
+                                           subdir=subdir)
+        with open(written, "w") as f:
+            f.write("{ this is not a block record")
+        return written
+
+    def _a_block_naming_no_project(self, tmp_path, subdir: str) -> str:
+        """A block info file that reads back as a block naming no project.
+
+        The extraction step refuses to write one, so this stands for a file
+        that was edited or written by hand afterwards.
+        """
+        if not info.DEFAULT_VERSION:
+            info.init_toolchain_info()
+
+        block = _blocks_mod.CodeBlock(
+            rst_file="test.rst",
+            line_start=1,
+            line_end=5,
+            text="procedure Main is begin null; end Main;",
+            language="ada",
+            project=None,
+            main_file=None,
+            gnat_version=["default", info.DEFAULT_VERSION["gnat"]],
+            gnatprove_version=["default", info.DEFAULT_VERSION["gnatprove"]],
+            gprbuild_version=["default", info.DEFAULT_VERSION["gprbuild"]],
+            compiler_switches=["-gnata"],
+            classes=["ada-nocheck"],
+            manual_chop=False,
+            buttons=["no"],
+        )
+        return _write_block_record(block, tmp_path / subdir)
+
+    @staticmethod
+    def _recording_checker(monkeypatch, fails=()):
+        """Stand in for the per-block check and record what it was given.
+
+        Which blocks survive the gathering loop and reach the check is what
+        these tests are about; what a real check would then do to them is
+        not, and running one would need the toolchain for no gain.  Blocks
+        are recorded by their own file rather than by their project, so that
+        two blocks of one project can be told apart.  ``fails`` names the
+        block files whose check reports an error.
+        """
+        checked = []
+
+        def recording_check_block(block, json_file):
+            checked.append(json_file)
+            return json_file in fails
+
+        monkeypatch.setattr(cp, "check_block", recording_check_block)
+        return checked
+
+    def test_an_unreadable_block_info_file_fails_the_run(self, tmp_path):
+        """A build directory whose one block info file cannot be read must
+        fail the run.
+
+        Nothing was checked, so a run that came back clean would be reporting
+        success over an example no one looked at.
+        """
+        self._an_unreadable_block(tmp_path, "projects/Unreadable/hash1")
+
+        assert cp.check_projects(str(tmp_path), projects_list_file=None) \
+            is True, \
+            "a block info file that could not be read must fail the run"
+
+    def test_a_block_naming_no_project_fails_the_run(self, tmp_path):
+        """A build directory whose one block info file names no project must
+        fail the run, for the same reason: that block was never checked."""
+        self._a_block_naming_no_project(tmp_path, "projects/NoProject/hash1")
+
+        assert cp.check_projects(str(tmp_path), projects_list_file=None) \
+            is True, \
+            "a block that names no project must fail the run"
+
+    def test_a_build_directory_of_readable_blocks_still_succeeds(
+            self, tmp_path, monkeypatch):
+        """Two blocks that read back and check out must come back clean.
+
+        The control for the two tests above: without it they would still pass
+        if the run had simply started failing for everything.
+        """
+        checked = self._recording_checker(monkeypatch)
+        readable = [
+            self._a_readable_block(tmp_path, "First", "projects/First/hash1"),
+            self._a_readable_block(tmp_path, "Second", "projects/Second/hash2"),
+        ]
+
+        assert cp.check_projects(str(tmp_path), projects_list_file=None) \
+            is False, \
+            "a build directory whose blocks all read back and check out must " \
+            "not fail the run"
+        assert sorted(checked) == sorted(readable), \
+            "both blocks must have been checked: {}".format(sorted(checked))
+
+    def test_the_other_blocks_are_still_checked(self, tmp_path, monkeypatch):
+        """A block info file that cannot be read must not cost the other
+        blocks their check.
+
+        This is the property that decides whether reporting the file instead
+        of raising on it was an improvement at all.  The exception it replaced
+        left the gathering loop before a single block had been handed to the
+        checker, so a build directory like this one had none of its examples
+        checked -- and the run still stopped, which is the only part that was
+        ever visible.
+        """
+        checked = self._recording_checker(monkeypatch)
+        self._an_unreadable_block(tmp_path, "projects/Unreadable/hash1")
+        readable = [
+            self._a_readable_block(tmp_path, "First", "projects/First/hash2"),
+            self._a_readable_block(tmp_path, "Second", "projects/Second/hash3"),
+        ]
+
+        assert cp.check_projects(str(tmp_path), projects_list_file=None) \
+            is True, \
+            "the unreadable file must still fail the run"
+        assert sorted(checked) == sorted(readable), \
+            "every block that could be read must still have been checked: " \
+            "{}".format(sorted(checked))
+
+    def test_a_block_that_fails_does_not_stop_the_ones_after_it(
+            self, tmp_path, monkeypatch):
+        """A block whose check reports an error must not stop the blocks
+        after it from being checked.
+
+        The other half of the same property: three of the fixes on this
+        branch turn an exception raised from inside the check of one block
+        into a reported failure, and an exception there would have taken the
+        remaining blocks with it just as surely as one raised while gathering
+        them.
+
+        Two blocks of one project report an error and a block of another
+        project does not, so whichever of the two the check reaches first,
+        both loops it runs -- the one over a project's blocks and the one
+        over the projects -- still have a block left to visit after a
+        failure.  The order the block files are found in is the file
+        system's, so this cannot be arranged by putting the failing one
+        first.
+        """
+        failing = [
+            self._a_readable_block(tmp_path, "Shared", "projects/Shared/hash1"),
+            self._a_readable_block(tmp_path, "Shared", "projects/Shared/hash2"),
+        ]
+        passing = self._a_readable_block(tmp_path, "Other",
+                                         "projects/Other/hash3")
+        checked = self._recording_checker(monkeypatch, fails=tuple(failing))
+
+        assert cp.check_projects(str(tmp_path), projects_list_file=None) \
+            is True, \
+            "a block whose check reports an error must fail the run"
+        assert sorted(checked) == sorted(failing + [passing]), \
+            "every block must have been checked, whatever the ones before it " \
+            "reported: {}".format(sorted(checked))
