@@ -81,8 +81,11 @@ Until this is fixed, a script that gates only on the exit status does not
 notice those code blocks, so read the output as well. Do not treat every
 `ERROR` line as a failure, though: `extract-code` also prints one when it finds
 a per-block directory left over from an earlier run whose info JSON file is
-gone, which it removes and rebuilds before carrying on. Match on the message
-text of the errors listed above rather than on the `ERROR` prefix alone.
+gone, which it removes and rebuilds before carrying on, and `check-code` and
+`check-block` print one (`Failed to clean-up example`) when they cannot remove
+an example's build artifacts afterwards, which leaves the outcome of the check
+unchanged. Match on the message text of the errors listed above rather than on
+the `ERROR` prefix alone.
 
 
 ## Verbose mode
