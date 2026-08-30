@@ -340,6 +340,9 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
             def print_error(*error_args):
                 fmt_utils.error(*error_args)
 
+            def print_warning(*warning_args):
+                fmt_utils.warning(*warning_args)
+
             def chdir_project():
                 # combining path to work directory (absolute path)
                 # and current project directory
@@ -390,6 +393,21 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
                     if os.path.exists(json_file):
                         copytree_latest = False
                         ref_block = blocks.CodeBlock.from_json_file(json_file)
+                        if ref_block is None:
+                            # The file is there, so it is present but
+                            # unreadable.  Extraction rewrites the record
+                            # before the block is checked, so nothing is
+                            # skipped and the run still succeeds -- but
+                            # something damaged this file earlier, and a
+                            # kept build directory carries it between runs.
+                            # Say so where it cannot be mistaken for the
+                            # fatal case.
+                            print_warning(
+                                loc,
+                                "Block info file could not be read and is "
+                                "being rebuilt: {}. The example is still "
+                                "extracted and checked, but something "
+                                "damaged this file earlier".format(json_file))
                     else:
                         print_error(loc, "Directory exists, but no JSON info file: removing it...\n")
                         shutil.rmtree(project_block_dir,
