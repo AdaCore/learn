@@ -245,8 +245,17 @@ class CodeBlock(Block):
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:
-                block_info_json = json.load(f)
-                return CodeBlock(**block_info_json)
+                try:
+                    block_info_json = json.load(f)
+                    return CodeBlock(**block_info_json)
+                except (json.JSONDecodeError, TypeError) as e:
+                    # A file that is present but cannot be turned into a
+                    # block is reported and treated as no block at all.  The
+                    # callers already say what that means for them; only the
+                    # reason is known here, and it is the part that would
+                    # otherwise be lost.
+                    print("{}: cannot read block info from {}: {}".format(
+                        C.col("ERROR", C.Colors.RED), json_filename, e))
 
         return None
 
