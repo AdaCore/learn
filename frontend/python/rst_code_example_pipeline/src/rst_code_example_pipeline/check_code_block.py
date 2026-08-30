@@ -348,6 +348,11 @@ def check_block(block: blocks.CodeBlock,
                         check_error = True
 
                     out = str(e.output.decode("utf-8"))
+                except FileNotFoundError as e:
+                    print_error(loc, "Running of example failed: "
+                                     "no executable to run")
+                    check_error = True
+                    out = str(e)
 
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)
@@ -373,6 +378,11 @@ def check_block(block: blocks.CodeBlock,
                         print_error(loc, "Running of example failed")
                         check_error = True
                     out = str(e.output.decode("utf-8"))
+                except FileNotFoundError as e:
+                    print_error(loc, "Running of example failed: "
+                                     "no executable to run")
+                    check_error = True
+                    out = str(e)
 
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)

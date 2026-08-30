@@ -28,7 +28,7 @@ Covers:
 - the maximum-columns setting reaches the Ada syntax check, and the limit applied
   is the one that was asked for
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
-- gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
+- gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged without affecting the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
 - check_block() driven by the real extraction step rather than by a hand-built block:
   the compile, run and prove buttons an author writes in an RST directive, plus the
