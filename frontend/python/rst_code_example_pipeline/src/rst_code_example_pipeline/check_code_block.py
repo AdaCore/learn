@@ -132,6 +132,9 @@ def check_block(block: blocks.CodeBlock,
                     run("gnatprove", "-P", project_filename, "--clean")
                 except S.CalledProcessError as e:
                     out = str(e.output.decode("utf-8"))
+                    print_error(loc,
+                                "Failed to clean-up example (gnatprove --clean)")
+                    print(out)
         elif language == "c":
             try:
                 cmd = ["rm", "-f"] + glob.glob('*.o') + glob.glob('*.gch')
