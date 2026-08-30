@@ -34,8 +34,8 @@ Covers:
   the compile, run and prove buttons an author writes in an RST directive, plus the
   C run path and the ada-expect-compile-error class, each carry through to the checks
   actually performed; an extracted block that does not build is reported as an error;
-  and an extracted C block asking only for a compile is an xfail (requires the Ada
-  toolchain).  These subsume the hand-built happy-path compile, run and prove tests
+  and an extracted C block asking only for a compile is compiled without being
+  linked (requires the Ada toolchain).  These subsume the hand-built happy-path compile, run and prove tests
   that used to sit alongside them
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
@@ -2092,39 +2092,19 @@ int main(void)
         assert self._log_of(block_dir, recorded["RUN"]).strip() == self._C_RUN_OUTPUT, \
             "the program the author wrote must be the one that ran"
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="a C block asking only for a compile is never given a main file "
-               "by the extraction step, and the checker asserts it has one",
-    )
     def test_c_compile_button_block_is_built_as_extracted(self, work_dir):
         """A compile button on a C block must be compiled.
 
-        Tracking note -- this currently fails.  The extraction step resolves a
-        main file only for blocks that are also run, but the checker's C
-        compile step names the executable after that main file and asserts it
-        is set, so a C block asking only for a compile stops the check with an
-        assertion instead of compiling.  An Ada block in the same position is
-        fine, because the project builder takes the main from the generated
-        project rather than from the field.
-
-        The fix that is open is to name the C executable some other way.
-        Resolving a main file for every compiled block is not: a compile
-        button asks for a compile and not a link -- a block holding only a
-        package spec has nothing to link -- and the sibling Ada compile test
-        pins the generated project as naming no main, so that route reddens
-        it.  When the open fix lands this test passes and the marker must be
-        removed.
-
-        What the marker can absorb: it is strict, so it fails the suite if
-        the defect is fixed without the marker being removed, but it carries
-        no ``raises``, so a later break in the shared extraction helper, in
-        the button triple, or in the C chopper would keep it xfailing for a
-        different reason than the one recorded here.  ``raises`` would not
-        separate those, since the defect and a broken fixture both raise
-        AssertionError.  The mitigation is that the sibling C run test drives
-        the same extraction helper and the same chopper with no marker on it,
-        so such a break reddens there.
+        Driven by the real extraction step, so the block arrives at the
+        checker with exactly the fields extraction gives it.  The directive
+        names a main, but extraction resolves a project main file only for
+        blocks that are also run, so the checker gets none.  The C compile
+        step therefore has to build such a block without an executable to
+        name: it compiles without linking, which is what a compile button
+        asks for and the only thing a block holding no main can do at all.
+        The sibling Ada compile test pins the generated project as naming no
+        main, so resolving a main for every compiled block is not an
+        available alternative.
         """
         block_dir, info, json_file = self._extract(
             work_dir,

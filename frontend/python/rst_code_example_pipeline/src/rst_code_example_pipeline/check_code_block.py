@@ -288,9 +288,17 @@ def check_block(block: blocks.CodeBlock,
         elif block.language == "c":
             cmdline = None
             try:
-                assert block.project_main_file is not None
-                cmdline = ["gcc", "-o",
-                           P.splitext(block.project_main_file)[0]] + glob.glob('*.c')
+                sources = glob.glob('*.c')
+                if block.project_main_file is not None:
+                    cmdline = ["gcc", "-o",
+                               P.splitext(block.project_main_file)[0]] + sources
+                else:
+                    # A compile button asks for a compile and not a link, and
+                    # a block that is not also run has no main file resolved
+                    # for it -- it may hold no main at all.  Compiling without
+                    # linking is what was asked for, and needs no name for an
+                    # executable that is not being produced.
+                    cmdline = ["gcc", "-c"] + sources
                 out = run(*cmdline)
             except S.CalledProcessError as e:
                 if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
