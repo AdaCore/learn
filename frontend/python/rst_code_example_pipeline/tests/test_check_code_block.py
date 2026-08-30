@@ -57,6 +57,25 @@ from rst_code_example_pipeline import checks as _checks_mod
 import rst_code_example_pipeline.toolchain_info as info
 
 
+def _check_record(directory, block_record):
+    """The record a check wrote, found as the JSON file beside the block that
+    is not the one the check was handed.
+
+    A check names that file itself, from the package's own default, so a test
+    spelling the name out here would restate a choice the package is free to
+    change -- and would go on passing if the check stopped writing a record
+    at all, as long as a file of the expected name happened to be lying there
+    from something else.
+    """
+    handed = os.path.realpath(str(block_record))
+    written = sorted(path for path in directory.glob("*.json")
+                     if os.path.realpath(str(path)) != handed)
+    assert len(written) == 1, \
+        "expected the check to write exactly one record beside the block, " \
+        "got {}".format([path.name for path in written])
+    return written[0]
+
+
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
@@ -290,15 +309,21 @@ class TestCheckBlockCacheHitFail:
 
 @pytest.mark.toolchain
 class TestCheckBlockCorruptCache:
-    def test_corrupt_cache_file_is_ignored(self, tmp_path):
+    def test_corrupt_cache_file_is_ignored(self, work_dir):
         """A previous-check cache file that is not valid JSON must not crash
         check_block(): the read failure is caught, no cached result is used,
         and a full check runs and completes normally instead."""
         block = _make_block(buttons=["no"])
-        json_file = str(tmp_path / "block_info.json")
+        json_file = str(work_dir / "block_info.json")
         block.to_json_file(json_file)
 
-        (tmp_path / "block_checks.json").write_text("{not valid json")
+        # Let the package write the cache file, so that the corrupt one lands
+        # under the name the read is going to look for.  Named here instead,
+        # a rename would leave nothing to be read and this test would pass
+        # over a check that never met a corrupt file at all.
+        _checks_mod.BlockCheck(text_hash=block.text_hash,
+                               text_hash_short=block.text_hash_short).to_json_file()
+        _check_record(work_dir, json_file).write_text("{not valid json")
 
         result = ccb.check_block(block, json_file)
         assert result is False, \
@@ -350,7 +375,7 @@ class TestCheckBlockForceChecks:
         assert result is False, \
             "a recorded failure must not be returned when the checks are forced"
 
-        rewritten = json.loads((work_dir / "block_checks.json").read_text())
+        rewritten = json.loads(_check_record(work_dir, json_file).read_text())
         assert rewritten["status_ok"] is True, \
             "the forced run must replace the stale record with its own result"
         assert "SYNTAX" in rewritten["checks"], \
@@ -826,7 +851,7 @@ end Main;
             "A provable SPARK block must prove cleanly under a pinned legacy GNATprove version"
 
         recorded = json.loads(
-            (work_dir / "block_checks.json").read_text())["checks"]
+            _check_record(work_dir, json_file).read_text())["checks"]
         proved_with = ast.literal_eval(recorded["PROVE"]["cmdline"])
         assert "--no-axiom-guard" in proved_with, \
             "the older command line must ask for the switch only that " \
@@ -891,7 +916,7 @@ class TestCheckBlockUnrecognizedLanguage:
             "check does not know: {}".format(commands)
 
         recorded = json.loads(
-            (tmp_path / "block_checks.json").read_text())["checks"]
+            _check_record(tmp_path, json_file).read_text())["checks"]
         assert "BUILD" not in recorded, \
             "a compile was asked for, so a recorded BUILD phase means a " \
             "language branch was taken: {}".format(sorted(recorded))
@@ -1383,7 +1408,7 @@ end Main;
             "the fixture block must prove cleanly, or what the proof recorded " \
             "is not what this test is about"
         recorded = json.loads(
-            (work_dir / "block_checks.json").read_text())["checks"]
+            _check_record(work_dir, json_file).read_text())["checks"]
         assert "PROVE" in recorded, \
             "the class must have asked for a proof, or there is no command " \
             "line to look at"
@@ -1478,7 +1503,7 @@ class TestCheckBlockMissingToolchain:
         assert result is False, \
             "A missing toolchain must not crash the check, only skip real checks"
 
-        written = json.loads((tmp_path / "block_checks.json").read_text())
+        written = json.loads(_check_record(tmp_path, json_file).read_text())
         assert written["checks"]["SYNTAX"]["version"] == "<unknown>", \
             "The version lookup must have failed and recorded the fallback marker"
 
@@ -1730,8 +1755,10 @@ int main(void)
 
         The per-block directory is found by asking the extraction step where
         it puts a project, and then by which directory below it holds a block
-        info file -- the staging copy the extraction step keeps alongside does
-        not have one.
+        record -- the staging copy the extraction step keeps alongside holds
+        none.  The record is taken as the one JSON file in that directory
+        rather than by a name written down here, so that what is read back is
+        whatever the extraction step wrote.
         """
         rst_path = work_dir / "extracted.rst"
         rst_path.write_text(self._rst(directive, body, classes))
@@ -1742,12 +1769,16 @@ int main(void)
 
         project_dir = work_dir / ep.get_project_dir(project)
         block_dirs = sorted(d for d in project_dir.iterdir()
-                            if (d / "block_info.json").is_file())
+                            if d.is_dir() and list(d.glob("*.json")))
         assert len(block_dirs) == 1, \
             "expected exactly one per-block directory, got {}".format(
                 [d.name for d in block_dirs])
         block_dir = block_dirs[0]
-        json_file = block_dir / "block_info.json"
+        records = sorted(block_dir.glob("*.json"))
+        assert len(records) == 1, \
+            "expected exactly one block record, got {}".format(
+                [record.name for record in records])
+        json_file = records[0]
         return block_dir, json.loads(json_file.read_text()), str(json_file)
 
     @staticmethod
@@ -1756,14 +1787,15 @@ int main(void)
         return info["compile_it"], info["run_it"], info["prove_it"]
 
     @staticmethod
-    def _recorded_checks(block_dir) -> dict:
+    def _recorded_checks(block_dir, block_record) -> dict:
         """The per-phase results the check wrote beside the block.
 
         Read straight from the file rather than through
         checks.BlockCheck.from_json_file(), which drops the per-phase entries
         on the way back in.
         """
-        return json.loads((block_dir / "block_checks.json").read_text())["checks"]
+        return json.loads(
+            _check_record(block_dir, block_record).read_text())["checks"]
 
     @staticmethod
     def _log_of(block_dir, recorded_check) -> str:
@@ -1827,7 +1859,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         # Pins the checker's phase labels; see the class docstring for why
         # that trade is made deliberately.
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
@@ -1871,7 +1903,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
             "a run button must be syntax-checked, built and run, and not proved"
 
@@ -1917,7 +1949,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUTTONS", "PROVE", "SYNTAX"], \
             "a prove button must be syntax-checked and proved, and not built"
         assert recorded["PROVE"]["status_ok"] is True
@@ -1948,7 +1980,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is True, \
             "an extracted block that does not compile must be reported as an error"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert recorded["SYNTAX"]["status_ok"] is True, \
             "the block must be syntactically valid, or the build is not what failed"
         assert recorded["BUILD"]["status_ok"] is False, \
@@ -1983,7 +2015,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "a compile error the block declared it expects must not fail the check"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
             "an expected compile error must still be syntax-checked and built"
         assert recorded["BUILD"]["status_ok"] is True, \
@@ -2017,7 +2049,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted C block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
             "a C run button must be syntax-checked, built and run, and not proved"
         assert self._log_of(block_dir, recorded["RUN"]).strip() == self._C_RUN_OUTPUT, \
@@ -2069,7 +2101,7 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted C block as it stands"
 
-        recorded = self._recorded_checks(block_dir)
+        recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
             "a C compile button must be syntax-checked and built, and neither " \
             "run nor proved"

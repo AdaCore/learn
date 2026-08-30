@@ -618,9 +618,9 @@ Explanatory paragraph.
         rst_file = self._write_rst(work_dir, rst_content)
         ep.analyze_file(rst_file)  # first call: creates the block's info JSON
 
-        block_jsons = list(work_dir.rglob("block_info.json"))
+        block_jsons = list(work_dir.rglob("*.json"))
         assert len(block_jsons) == 1, \
-            f"Expected exactly 1 block_info.json after the first call; found {len(block_jsons)}"
+            f"Expected exactly 1 block record after the first call; found {len(block_jsons)}"
         block_jsons[0].unlink()
 
         capsys.readouterr()  # discard first-call output
@@ -664,7 +664,7 @@ Explanatory paragraph.
             "Expected the immediate failure message when chopping yields nothing"
         assert "Error while updating code for the block, continuing with next one!" in out, \
             "Expected the surrounding handler to report that it moves on"
-        assert list(work_dir.rglob("block_info.json")), \
+        assert list(work_dir.rglob("*.json")), \
             "Expected the failing block to still be logged before moving on"
 
     @pytest.mark.toolchain
@@ -761,11 +761,11 @@ Second explanatory paragraph.
         assert result is False
         # The project directory must have been created
         assert (work_dir / "projects" / "SameProject").exists()
-        # Two separate block_info.json files must exist (each block has its own
+        # Two separate block records must exist (each block has its own
         # hash-named subdirectory)
-        block_jsons = list((work_dir / "projects" / "SameProject").rglob("block_info.json"))
+        block_jsons = list((work_dir / "projects" / "SameProject").rglob("*.json"))
         assert len(block_jsons) == 2, \
-            f"Expected 2 block_info.json files; found {len(block_jsons)}"
+            f"Expected 2 block records; found {len(block_jsons)}"
 
 
 # ---------------------------------------------------------------------------
@@ -836,7 +836,18 @@ Explanatory paragraph.
 
     @staticmethod
     def _block_info(block_dir) -> dict:
-        return json.loads((block_dir / "block_info.json").read_text())
+        """The record the extraction step wrote for a block, of which there is
+        one.
+
+        Taken as the JSON file that is there rather than by a name written
+        down here: the extraction step chooses that name from the package's
+        own default, and the check step goes looking for the same default.
+        """
+        written = sorted(block_dir.glob("*.json"))
+        assert len(written) == 1, \
+            "expected exactly one block record, got {}".format(
+                [path.name for path in written])
+        return json.loads(written[0].read_text())
 
     def test_analyze_file_compile_button(self, work_dir):
         """RST with a compile_button Ada block: analyze_file() must call
