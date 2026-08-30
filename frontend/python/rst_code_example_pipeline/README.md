@@ -47,11 +47,13 @@ All three entry points report the outcome of a run through their exit status,
 which is what a script driving them should gate on:
 
 - `check-code` exits `1` if any of the code blocks it checked failed a check,
-  and `0` otherwise. A `block_info.json` it cannot read counts as a failure
-  too, even though the code block it describes was never checked; the blocks
-  that could be read are still checked before the run ends. It also exits `1`
-  when neither `--build-dir` nor `--extracted_projects` was specified, so exit
-  `1` on its own does not distinguish a broken code block from a usage error.
+  and `0` otherwise. A code block it skips without checking fails the run too:
+  one whose `block_info.json` it could not read, and one that names no project.
+  A clean exit would otherwise claim a run over an example nothing looked at.
+  The remaining code blocks are still checked before the run ends. Exit `1`
+  also covers the case where neither `--build-dir` nor `--extracted_projects`
+  was specified, so exit `1` on its own does not distinguish a broken code
+  block from a usage error.
 
 - `check-block` takes one or more `block_info.json` files and exits `1` if any
   of them failed a check, and `0` otherwise. Here too a file that cannot be
@@ -71,14 +73,11 @@ failure.
 An invalid command line is rejected before any work is done, with exit
 status `2`.
 
-`extract-code` and `check-code` share a gap here: each prints an `ERROR` line
-for a code block it cannot process, but the run still exits `0`. For
-`extract-code` this affects a code block whose source cannot be split into
-individual source files, a code block whose button and language do not go
-together (a prove button on a C block), and a code block that carries no button
-indicator at all. For `check-code` it affects a code block that carries no
-project name — and if every block in a build directory is skipped that way,
-`check-code` exits `0` having checked nothing.
+`extract-code` has a gap here: it prints an `ERROR` line for a code block it
+cannot process, but the run still exits `0`. This affects a code block whose
+source cannot be split into individual source files, a code block whose button
+and language do not go together (a prove button on a C block), and a code block
+that carries no button indicator at all.
 
 Until this is fixed, a script that gates only on the exit status does not
 notice those code blocks, so read the output as well. Do not treat every
