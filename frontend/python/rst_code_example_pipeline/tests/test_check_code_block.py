@@ -40,8 +40,9 @@ Covers:
   C run path and the ada-expect-compile-error class, each carry through to the checks
   actually performed; an extracted block that does not build is reported as an error;
   and an extracted C block asking only for a compile is compiled without being
-  linked (requires the Ada toolchain).  These subsume the hand-built happy-path compile, run and prove tests
-  that used to sit alongside them
+  linked, while one that is also run is still linked into an executable named
+  after its main (requires the Ada toolchain).  These subsume the hand-built
+  happy-path compile, run and prove tests that used to sit alongside them
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: check_block() sets the toolchain up for every block before any early return, so a
@@ -2047,6 +2048,16 @@ int main(void)
         return (block_dir / recorded_check["logfile"]).read_text()
 
     @staticmethod
+    def _command_line_of(recorded_check) -> list[str]:
+        """The argument list a recorded phase really ran.
+
+        Recorded as the printed form of the list, so it reads back as one --
+        which is what lets a test assert on the switches the checker chose
+        rather than on the fact that something was run.
+        """
+        return ast.literal_eval(recorded_check["cmdline"])
+
+    @staticmethod
     def _project_used(recorded_check) -> str:
         """The project file a recorded phase really ran against.
 
@@ -2299,6 +2310,21 @@ int main(void)
         assert self._log_of(block_dir, recorded["RUN"]).strip() == self._C_RUN_OUTPUT, \
             "the program the author wrote must be the one that ran"
 
+        # A block that is run has a main file resolved for it, and that is the
+        # arm of the C compile step which links an executable and names it.
+        # The sibling compile-button test takes the other arm, so both are
+        # pinned and neither can be made to serve the other's case unnoticed.
+        built_with = self._command_line_of(recorded["BUILD"])
+        assert built_with[:3] == ["gcc", "-o", os.path.splitext(self._C_MAIN)[0]], \
+            "a C block with a resolved main must be linked into an executable " \
+            "named after that main: {}".format(built_with)
+        assert "-c" not in built_with, \
+            "a C block with a resolved main must be linked, not merely " \
+            "compiled: {}".format(built_with)
+        assert self._C_MAIN in built_with, \
+            "the chopped source must be on the command line, or nothing was " \
+            "compiled: {}".format(built_with)
+
     def test_c_compile_button_block_is_built_as_extracted(self, work_dir):
         """A compile button on a C block must be compiled.
 
@@ -2325,8 +2351,24 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted C block as it stands"
 
+        assert info["project_main_file"] is None, \
+            "extraction must leave a compile-only block with no main file " \
+            "resolved, or this is not the arm of the compile step under test"
+
         recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
             "a C compile button must be syntax-checked and built, and neither " \
             "run nor proved"
         assert recorded["BUILD"]["status_ok"] is True
+
+        built_with = self._command_line_of(recorded["BUILD"])
+        assert "-c" in built_with, \
+            "a compile button asks for a compile and not a link: {}".format(
+                built_with)
+        assert "-o" not in built_with, \
+            "nothing is being linked, so no executable may be named -- naming " \
+            "one is what used to stop the check on an assertion: {}".format(
+                built_with)
+        assert self._C_MAIN in built_with, \
+            "the chopped source must be on the command line, or nothing was " \
+            "compiled: {}".format(built_with)
