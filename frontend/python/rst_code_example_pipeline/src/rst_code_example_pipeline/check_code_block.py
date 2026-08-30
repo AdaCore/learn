@@ -198,7 +198,7 @@ def check_block(block: blocks.CodeBlock,
     block_check.status_ok = True
 
     # Syntax check
-    if 'nosyntax-check' not in block.classes:
+    if constants.CLASS_NOSYNTAX_CHECK not in block.classes:
         check_error = False
 
         for source_file in block.source_files:

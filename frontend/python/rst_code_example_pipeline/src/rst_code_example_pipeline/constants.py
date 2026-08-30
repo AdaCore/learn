@@ -33,16 +33,15 @@ SPARK_PROJECT_PRAGMAS_FILENAME = "main_spark.adc"
 # silence, on a block that looks checked.  Naming them turns that typo into
 # an AttributeError at the point of use.
 #
-# This is not yet the whole vocabulary the checker reads: ``nosyntax-check``
-# is still compared as a bare literal in ``check_code_block.py``.  What a
-# course author may actually write is fixed elsewhere -- ``CONTRIBUTING.md``
-# documents it, and the code-block directive rejects any class it does not
-# recognize -- so read this list as the names the checker acts on, not as
-# the reference for the RST source.
+# What a course author may actually write is fixed elsewhere --
+# ``CONTRIBUTING.md`` documents it, and the code-block directive rejects any
+# class it does not recognize -- so read this list as the names the checker
+# acts on, not as the reference for the RST source.
 CLASS_ADA_NOCHECK = "ada-nocheck"
 CLASS_C_NOCHECK = "c-nocheck"
 
 CLASS_ADA_SYNTAX_ONLY = "ada-syntax-only"
+CLASS_NOSYNTAX_CHECK = "nosyntax-check"
 
 CLASS_ADA_COMPILE = "ada-compile"
 CLASS_C_COMPILE = "c-compile"
