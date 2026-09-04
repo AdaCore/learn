@@ -64,11 +64,13 @@ which is what a script driving them should gate on:
   nor `--extracted_projects` was specified — and `0` otherwise.
 
 Both checking commands report a `block_info.json` they cannot read before the
-run ends, naming the file — and, when the file was there but did not parse as
-a code block, the reason as well. One case is not covered by either: a file
-that exists but cannot be opened at all, for example because of its
-permissions, still ends the run with a traceback instead of a reported
-failure.
+run ends, naming the file — and, when the file was there but could not be
+turned into a code block, the reason as well, whether it did not decode as
+UTF-8, did not parse as JSON, or parsed into something that is not a block
+record. A file that exists but cannot be opened at all — because of its
+permissions, say — is not covered: it still ends the run with a traceback
+instead of a reported failure. `extract-code` reads these files through the
+same reader, so it ends the same way.
 
 An invalid command line is rejected before any work is done, with exit
 status `2`.
