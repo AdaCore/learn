@@ -85,12 +85,15 @@ Until this is fixed, a script that gates only on the exit status does not
 notice those code blocks, so read the output as well. Do not treat every
 `ERROR` line as a failure, though. `extract-code` prints one for each of the
 two damaged per-block records it repairs and carries on from: a directory left
-over from an earlier run whose info JSON file is gone, which it removes and
+over from an earlier run with no info JSON file in it, which it removes and
 rebuilds, and an info JSON file that is present but cannot be read, which it
 rewrites. The second is followed by a `WARNING` line naming the file as
-rebuilt and saying that the code block is still extracted and still checked.
-Look into it even so: a build directory is reused between runs, so a record
-damaged by an interrupted run survives there until something reports it.
+rebuilt and saying that the example is still extracted and the run was not cut
+short. That is as far as it goes: it does not promise the example is checked,
+which would be wrong for a code block carrying a no-check class — that one is
+extracted and then deliberately skipped. Look into it even so: a build
+directory is reused between runs, so a record damaged by an interrupted run
+survives there until something reports it.
 `check-code` and `check-block` print an `ERROR` line of their own (`Failed to
 clean-up example`) when they cannot remove an example's build artifacts
 afterwards, which leaves the outcome of the check unchanged. Match on the
