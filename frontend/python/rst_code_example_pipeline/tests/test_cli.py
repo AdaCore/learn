@@ -579,7 +579,7 @@ class TestACourseWhoseBlockRecordWasDamaged:
             "the warning must say which block it is about, or the record it " \
             "names cannot be located from the message alone: {}".format(
                 again.stdout)
-        assert "The example is still extracted and checked" in again.stdout, \
+        assert "extracted and the run was not cut short" in again.stdout, \
             "the warning must say the run was not cut short: {}".format(
                 again.stdout)
         assert "Traceback" not in again.stderr, \

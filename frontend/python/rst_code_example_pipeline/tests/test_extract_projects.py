@@ -673,8 +673,7 @@ Explanatory paragraph.
         and it used to end the run with a traceback instead.  Because the
         outcome is now a success, the only thing that tells anyone the file
         was damaged is the message, so the message is what is asserted: it
-        names the file, and it says the example is still extracted and
-        checked.
+        names the file, and it says the run was not cut short.
 
         The neighboring repair -- a block directory whose record has gone
         missing entirely -- takes a different branch with a different message
@@ -715,7 +714,7 @@ Explanatory paragraph.
         assert rst_file in out, \
             "the warning must say which block it is about, or the record it " \
             "names cannot be located from the message alone: {}".format(out)
-        assert "The example is still extracted and checked" in out, \
+        assert "extracted and the run was not cut short" in out, \
             "the warning must say the run was not cut short, or a reader " \
             "cannot tell it apart from the fatal case: {}".format(out)
 
