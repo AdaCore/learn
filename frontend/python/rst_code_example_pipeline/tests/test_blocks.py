@@ -703,6 +703,38 @@ class TestCodeBlockRecordThatCannotBeRead:
             "the report must say why the file could not be used, not only " \
             "which file it was: {}".format(out)
 
+    def test_bytes_that_are_not_valid_utf8_are_reported_as_no_block(
+            self, tmp_path, capsys):
+        """A record file holding bytes that are not valid UTF-8 must also
+        come back as no block, reported the same way, not as an exception.
+
+        Every case above is written with ``Path.write_text()``, which is
+        UTF-8 by construction and so cannot exercise this: the file it
+        produces is always decodable. This case writes raw bytes instead --
+        a lead byte with no valid meaning in UTF-8, the kind a hand edit in
+        an editor defaulting to another encoding leaves behind. Decoding it
+        raises ``UnicodeDecodeError``, which is a *sibling* of
+        ``json.JSONDecodeError`` under ``ValueError`` rather than a subclass,
+        so the reader has to name it separately or this case would escape as
+        an uncaught exception instead of the reported failure the other
+        unusable records get.
+        """
+        json_file = str(tmp_path / "block_info.json")
+        (tmp_path / "block_info.json").write_bytes(b"\xff\xfe not valid utf-8")
+
+        assert CodeBlock.from_json_file(json_file) is None, \
+            "a record that is not valid UTF-8 must read back as no block " \
+            "rather than as an exception"
+
+        out = capsys.readouterr().out
+        assert "ERROR" in out, \
+            "an unreadable record must be reported: {}".format(out)
+        assert json_file in out, \
+            "the report must name the file it could not read: {}".format(out)
+        assert out.split(json_file, 1)[1].strip(" :\n"), \
+            "the report must say why the file could not be used, not only " \
+            "which file it was: {}".format(out)
+
 
 # ---------------------------------------------------------------------------
 # T-blocks-14: ConfigBlock.__init__ and update()
