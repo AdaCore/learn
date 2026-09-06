@@ -515,7 +515,11 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
 if __name__ == "__main__":  # pragma: no cover
     import argparse
 
-    parser = argparse.ArgumentParser(description=__doc__)
+    # prog is the name this command is installed under. Without it,
+    # argparse advertises the module path instead, which is not what a
+    # user types, and which is long enough to distort the usage line.
+    parser = argparse.ArgumentParser(prog='extract-code',
+                                     description=__doc__)
     parser.add_argument('rst_files', type=str, nargs="+",
                         help="The rst file from which to extract doc")
     parser.add_argument('--build-dir', '-B', type=str, default=None,

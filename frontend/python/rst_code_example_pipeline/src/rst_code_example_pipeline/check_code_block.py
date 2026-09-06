@@ -642,7 +642,11 @@ def check_code_block_json(json_file: str) -> bool:
 
 
 if __name__ == "__main__":  # pragma: no cover
-    parser = argparse.ArgumentParser(description=__doc__)
+    # prog is the name this command is installed under. Without it,
+    # argparse advertises the module path instead, which is not what a
+    # user types, and which is long enough to distort the usage line.
+    parser = argparse.ArgumentParser(prog='check-block',
+                                     description=__doc__)
     parser.add_argument('json_files', type=str, nargs="+",
                         help="The JSON file for each code block")
     parser.add_argument('--verbose', '-v', action='store_true',
