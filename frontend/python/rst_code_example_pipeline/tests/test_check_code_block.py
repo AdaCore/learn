@@ -1158,6 +1158,35 @@ end Main;
         out = capsys.readouterr().out
         assert "Running of example expectedly failed" in out
 
+    def test_ada_run_fail_with_expect_failure_class_says_nothing_quietly(
+            self, work_dir, capsys):
+        """The expected-failure message belongs to the verbose run only.
+
+        The sibling above drives the same path with verbose enabled and
+        asserts the message; without this one, nothing says the message is
+        conditional at all, and the quiet run -- the one every real check
+        makes -- would go unexercised.  Its C counterpart is reached by the
+        extractor-driven expect-failure test further down, which runs quiet.
+        """
+        project_filename = self._setup_project(work_dir, self.FAILING_ADA_SOURCE)
+        block = self._make_run_block(classes=["ada-run-expect-failure"])
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is False, \
+            "a failure the block expects must not be reported as an error"
+        out = capsys.readouterr().out
+        assert "Running of example expectedly failed" not in out, \
+            "the expected-failure message must be held back on a quiet " \
+            "run: {}".format(out)
+        assert "Running of example failed" not in out, \
+            "an expected failure must not be reported as an unexpected one " \
+            "either: {}".format(out)
+
     def test_ada_run_fail_without_expect_failure(self, work_dir):
         """A program that exits non-zero without ada-run-expect-failure must
         return True: an unexpected run failure."""
