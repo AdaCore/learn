@@ -123,7 +123,12 @@ def check_projects(build_dir: str, projects_list_file: str | None = None) -> boo
 if __name__ == "__main__":  # pragma: no cover
     import argparse
 
-    parser = argparse.ArgumentParser(description=__doc__)
+    # prog is the name this command is installed under. Without it,
+    # argparse derives a name long enough that the usage line has to
+    # be broken after it, leaving every option on its own deeply
+    # indented line.
+    parser = argparse.ArgumentParser(prog='check-code',
+                                     description=__doc__)
     parser.add_argument('--build-dir', '-B', type=str, default=None,
                         help='Dir in which to build code')
     parser.add_argument('--extracted_projects', type=str, default=None,

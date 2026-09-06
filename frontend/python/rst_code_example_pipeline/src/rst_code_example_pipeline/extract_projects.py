@@ -1,10 +1,27 @@
 #! /usr/bin/env python3
 
 """
-This program will extract every Ada code block in an Ada source file
-The default behavior is to:
-- Split the block with ``gnatchop``
+Extract the code blocks of the ReST sources into a build directory, ready for
+the checking commands to pick up. Only Ada and C code blocks are extracted,
+and each one must name a project; a code block that names none ends the run.
+A code block is split into individual source files -- with gnatchop for Ada,
+or by a leading filename marker for C and for an Ada code block that asks to
+be chopped manually -- and those files are written to a directory of their
+own, named after a hash of the code block's text, under a directory named
+after the project. Beside them goes a record of what the code block declares,
+as block_info.json, which is what a checking command reads to decide what to
+run. A code block that asks to be compiled or run also gets a project file
+written for it, and one that asks to be proved gets a second project file in
+SPARK mode; only an Ada code block can ask to be proved. The list of the
+projects extracted can also be collected into a JSON file, so that a later
+check can be limited to exactly those projects.
 """
+
+# The text above is what argparse prints as this command's help
+# description. It is deliberately free of ReST markup and of any layout
+# worth preserving: the default help formatter re-wraps a description into a
+# single filled paragraph, so a list would arrive as a run-on sentence and
+# inline literals would arrive with their backquotes intact.
 
 from __future__ import annotations
 
