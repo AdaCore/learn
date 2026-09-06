@@ -34,11 +34,13 @@ need no marker.
 import json
 import os
 import re
+import shutil
 
 import pytest
 
 import rst_code_example_pipeline.extract_projects as ep
 from rst_code_example_pipeline import blocks as _blocks_mod
+from rst_code_example_pipeline import constants as _constants
 
 
 def _pragma_file(directory, project_filename: str):
@@ -640,6 +642,18 @@ Explanatory paragraph.
     # second unchanged.
     DAMAGED_RECORD = "{ this is not a block record"
 
+    # The two projects the file below extracts, in the order the extraction
+    # walks them.  The first one owns the record that gets damaged.  The
+    # second one exists only so that "the run was not cut short" can be
+    # settled by work that only a run continuing past the repair could have
+    # done, rather than by the wording of the message that claims it.
+    REPAIRED_PROJECT = "RebuiltProject"
+    PROJECT_AFTER_THE_REPAIR = "LaterProject"
+
+    # Both blocks carry a no-check class, which is what makes this file the
+    # right fixture rather than a convenient one: the example is extracted and
+    # then deliberately skipped, so a warning promising it is *checked* would
+    # be false here.  The test below asserts that promise is not made.
     REBUILT_RST = """\
 .. code:: ada project=RebuiltProject
    :class: ada-nocheck
@@ -650,14 +664,33 @@ Explanatory paragraph.
    end Main;
 
 Explanatory paragraph.
+
+.. code:: ada project=LaterProject
+   :class: ada-nocheck
+
+   procedure Later is
+   begin
+      null;
+   end Later;
+
+Another paragraph.
 """
 
-    def _the_block_record(self, work_dir):
-        """The one block record below the working directory."""
-        written = list(work_dir.rglob("*.json"))
+    # The single source file gnatchop writes for the damaged block's example,
+    # named after the compilation unit its text declares.
+    EXTRACTED_SOURCE = "main.adb"
+
+    def _project_dir(self, work_dir, project: str):
+        """The directory the extraction keeps one project's blocks under."""
+        return work_dir / ep.get_project_dir(project)
+
+    def _the_block_record(self, work_dir, project: str):
+        """The one block record below the given project's directory."""
+        written = list(self._project_dir(work_dir, project).rglob(
+            _constants.BLOCK_INFO_FILENAME))
         assert len(written) == 1, \
-            "expected exactly one block record, got {}".format(
-                [str(path) for path in written])
+            "expected exactly one block record under {}, got {}".format(
+                project, [str(path) for path in written])
         return written[0]
 
     @pytest.mark.toolchain
@@ -670,10 +703,22 @@ Explanatory paragraph.
         of a block extracted earlier is damaged -- by an interrupted run, an
         edit, a half-finished copy -- and the next extraction finds it there
         and unreadable.  Rewriting it and carrying on is the right outcome,
-        and it used to end the run with a traceback instead.  Because the
-        outcome is now a success, the only thing that tells anyone the file
-        was damaged is the message, so the message is what is asserted: it
-        names the file, and it says the run was not cut short.
+        and it used to end the run with a traceback instead.
+
+        The warning makes two claims, and both are checked against what the
+        run actually did rather than against its own wording: that the example
+        is still extracted -- the chopped source file is back on disk with the
+        block's code in it -- and that the run was not cut short -- the second
+        project in the file, whose output is deleted before the repair run,
+        is extracted again, which only a run continuing past the repair can
+        do.
+
+        The wording is pinned on top of that, in both directions.  The clause
+        must be present, so that a run that repaired silently cannot pass; and
+        the older, wider promise that the example is still *checked* must be
+        absent, because both blocks here carry a no-check class and are
+        extracted and then deliberately skipped, which would make that promise
+        false for exactly this input.
 
         The neighboring repair -- a block directory whose record has gone
         missing entirely -- takes a different branch with a different message
@@ -687,9 +732,16 @@ Explanatory paragraph.
         rst_file = self._write_rst(work_dir, self.REBUILT_RST)
         ep.analyze_file(rst_file)
 
-        record = self._the_block_record(work_dir)
+        record = self._the_block_record(work_dir, self.REPAIRED_PROJECT)
         original = record.read_text()
         record.write_text(self.DAMAGED_RECORD)
+
+        # Everything the second project produced is taken away again, so that
+        # finding it back after the repair run can only mean that run reached
+        # it.  Left in place, the first run's leftovers would satisfy the
+        # not-cut-short check for free.
+        shutil.rmtree(
+            self._project_dir(work_dir, self.PROJECT_AFTER_THE_REPAIR))
 
         capsys.readouterr()          # discard the first run's output
         result = ep.analyze_file(rst_file)
@@ -717,12 +769,40 @@ Explanatory paragraph.
         assert "extracted and the run was not cut short" in out, \
             "the warning must say the run was not cut short, or a reader " \
             "cannot tell it apart from the fatal case: {}".format(out)
+        assert "still extracted and checked" not in out, \
+            "the block carries a no-check class, so it is extracted and then " \
+            "deliberately skipped -- the warning must not promise it is " \
+            "checked: {}".format(out)
 
         assert "no JSON info file" not in out, \
             "the record was present, so the branch that removes a directory " \
             "with no record at all must not be the one that ran: {}".format(out)
 
-        rebuilt = self._the_block_record(work_dir)
+        # The first claim the warning makes, taken from disk rather than from
+        # the message: the example really was extracted again.
+        extracted = (self._project_dir(work_dir, self.REPAIRED_PROJECT)
+                     / "latest" / self.EXTRACTED_SOURCE)
+        assert extracted.is_file(), \
+            "the warning says the example is still extracted, so its source " \
+            "file must be on disk: {}".format(
+                [str(path) for path in
+                 self._project_dir(work_dir,
+                                   self.REPAIRED_PROJECT).rglob("*")])
+        assert "procedure Main" in extracted.read_text(), \
+            "the extracted source must hold the block's code, not an empty " \
+            "file left behind by a chop that wrote nothing: {}".format(
+                extracted.read_text())
+
+        # The second claim, likewise: the run carried on past the repair and
+        # extracted the project that follows it, whose output was removed
+        # before this run started.
+        later = self._the_block_record(work_dir,
+                                       self.PROJECT_AFTER_THE_REPAIR)
+        assert _blocks_mod.CodeBlock.from_json_file(str(later)) is not None, \
+            "the project after the repaired one must have been extracted " \
+            "again, or the run was cut short at the repair after all"
+
+        rebuilt = self._the_block_record(work_dir, self.REPAIRED_PROJECT)
         assert rebuilt.read_text() != self.DAMAGED_RECORD, \
             "the damaged record must have been rewritten, not merely reported"
         assert _blocks_mod.CodeBlock.from_json_file(str(rebuilt)) is not None, \
