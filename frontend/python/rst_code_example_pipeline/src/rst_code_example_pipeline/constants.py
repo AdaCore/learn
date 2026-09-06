@@ -63,6 +63,8 @@ CLASS_C_COMPILE = "c-compile"
 
 CLASS_ADA_RUN = "ada-run"
 CLASS_ADA_NORUN = "ada-norun"
+CLASS_C_RUN = "c-run"
+CLASS_C_NORUN = "c-norun"
 CLASS_ADA_RUN_EXPECT_FAILURE = "ada-run-expect-failure"
 CLASS_C_RUN_EXPECT_FAILURE = "c-run-expect-failure"
 
