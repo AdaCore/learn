@@ -19,8 +19,7 @@ Covers:
 - gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
 - each prove button, and each prove class an author writes, selects the gnatprove
   switches it names and no others -- read off the recorded command line, since the
-  fixture block proves cleanly under any switches at all.  The full report for the
-  ada-prove-report-all class is an xfail
+  fixture block proves cleanly under any switches at all
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
@@ -1470,40 +1469,27 @@ end Main;
     def test_ada_prove_report_all_class_is_proved(self, work_dir):
         """The class alone asks for a proof, with no prove button present.
 
-        Pins the fixture the strict xfail below depends on: that test can
-        only report on the switches of a proof that really happened, so the
-        proof itself is asserted here, where no marker can absorb its loss.
+        Pins the fixture the test below depends on: that test can only
+        report on the switches of a proof that really happened, so the proof
+        itself is asserted here, on its own.
         """
         assert self._prove(work_dir, classes=["ada-prove-report-all"])
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="the report-all arm reads the 'ada-report-all' class, so the "
-               "'ada-prove-report-all' class is proved without the switch",
-    )
     def test_ada_prove_report_all_class_asks_for_the_full_report(self, work_dir):
         """A block classed ``ada-prove-report-all`` must be proved with
         ``--report=all``.
 
-        Tracking note -- this currently fails.  Each prove button is paired
-        with the class that carries the same name: prove_flow with
-        ada-prove-flow, prove_flow_report_all with ada-prove-flow-report-all.
-        The third pairs prove_report_all with ada-report-all instead, which is
-        a class no proof-selecting list contains, so on its own it never
-        causes a proof at all.  ada-prove-report-all does cause one -- it is
-        one of the classes that select a proof -- and then never reaches the
-        switch its own name asks for.
+        Each prove button is paired with the class that carries the same
+        name: prove_flow with ada-prove-flow, prove_flow_report_all with
+        ada-prove-flow-report-all, and this one with ada-prove-report-all.
+        That third arm used to test a differently-named class instead, so a
+        block classed ada-prove-report-all was proved -- it is one of the
+        classes that select a proof -- and then never reached the switch its
+        own name asks for.
 
-        The open fix is to read ada-prove-report-all in that arm, which leaves
-        ada-report-all unused and to be dropped in the same change.  When it
-        lands this test passes and the marker must be removed.
-
-        What the marker can absorb: it is strict, so it fails the suite if the
-        defect is fixed without the marker being removed, but it carries no
-        ``raises``, so a break in the shared prove fixture would keep it
-        xfailing for a different reason than the one recorded here.  The
-        mitigation is the unmarked sibling above, which drives the same
-        fixture and reddens if the proof stops happening.
+        This test can only report on the switches of a proof that really
+        happened, so it depends on the unmarked sibling above, which drives
+        the same fixture and reddens if the proof stops happening at all.
         """
         assert "--report=all" in self._prove(
             work_dir, classes=["ada-prove-report-all"]), \

@@ -455,7 +455,7 @@ def check_block(block: blocks.CodeBlock,
                 or constants.CLASS_ADA_PROVE_FLOW_REPORT_ALL in block.classes:
                 extra_args = ["--mode=flow", "--report=all"]
             elif 'prove_report_all' in block.buttons \
-                or constants.CLASS_ADA_REPORT_ALL in block.classes:
+                or constants.CLASS_ADA_PROVE_REPORT_ALL in block.classes:
                 extra_args = ["--report=all"]
 
             # Default switches for GNATprove 14 and above
