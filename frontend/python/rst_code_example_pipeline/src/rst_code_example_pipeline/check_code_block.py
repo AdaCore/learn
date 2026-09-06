@@ -570,6 +570,16 @@ def check_block(block: blocks.CodeBlock,
             print_error(loc, "Expected compile error, got none!")
             check_error = True
 
+    # The C spelling is checked on its own rather than beside the Ada one,
+    # because only this half of the pair was missing: a C block declaring an
+    # expected compile error that compiled cleanly was reported as a success.
+    # The compile step sets the same flag for either language, so the test
+    # for an expectation that went unmet is the same test.
+    if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
+        if not compile_error:
+            print_error(loc, "Expected compile error, got none!")
+            check_error = True
+
     if constants.CLASS_ADA_EXPECT_PROVE_ERROR in block.classes:
         if not block.prove_it:
             print_error(loc, "Expected prove button, got none!")
