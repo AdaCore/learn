@@ -235,7 +235,7 @@ def check_block(block: blocks.CodeBlock,
             print("Skipping code block {}".format(loc))
         return has_error
 
-    if LOOK_FOR_PREVIOUS_CHECKS:  # pragma: no branch
+    if LOOK_FOR_PREVIOUS_CHECKS:
         ref_block_check = None
 
         try:

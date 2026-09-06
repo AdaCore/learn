@@ -55,6 +55,9 @@ Covers:
   while asking for no compile, no proof and no run is reported for that too.  The
   two core cases are covered twice over -- from a hand-built block and again
   driven through the real RST directive and the real extraction step
+- the arm of the previous-check lookup that does not read the record: with the
+  lookup switched off, a recorded failure is neither returned nor announced, and
+  the block is checked again although the checks were not forced
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: check_block() sets the toolchain up for every block before any early return, so a
@@ -400,6 +403,105 @@ class TestCheckBlockForceChecks:
             "the forced run must replace the stale record with its own result"
         assert "SYNTAX" in rewritten["checks"], \
             "the forced run must have checked the block, not skipped it"
+
+
+# ---------------------------------------------------------------------------
+# check_block() with the previous-check lookup switched off
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockPreviousCheckLookupDisabled:
+    def test_a_recorded_result_is_ignored_when_the_lookup_is_switched_off(
+            self, work_dir, monkeypatch):
+        """With the previous-check lookup switched off, a record beside the
+        block must not be consulted at all.
+
+        The module carries a switch that decides whether a block already
+        carrying a record is skipped.  It ships on, so every other test in
+        this file exercises only the arm that reads the record -- and the arm
+        that does not was never entered by anything.
+
+        The fixture is deliberately the same one TestCheckBlockCacheHitFail
+        uses: a clean, checkable block with a record beside it saying the
+        block failed, and the checks *not* forced.  That test pins the
+        recorded failure being handed straight back.  Here the answer has to
+        be the one the block earns instead, and the record left behind has to
+        carry this run's own result and the checks it performed -- because the
+        outcome alone cannot tell a re-check apart from a lookup that happened
+        to find nothing.
+        """
+        monkeypatch.setattr(ccb, "LOOK_FOR_PREVIOUS_CHECKS", False)
+
+        src = work_dir / "main.adb"
+        src.write_text(MINIMAL_ADA_SOURCE)
+
+        block = _make_block(
+            buttons=["no"],
+            no_check=False,
+            syntax_only=False,
+            source_files=["main.adb"],
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        stale = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        stale.status_ok = False
+        stale.to_json_file()
+
+        result = ccb.check_block(block, json_file, force_checks=False)
+        assert result is False, \
+            "with the lookup switched off, a recorded failure must not be " \
+            "returned even though the checks were not forced"
+
+        rewritten = json.loads(_check_record(work_dir, json_file).read_text())
+        assert rewritten["status_ok"] is True, \
+            "the run must replace the stale record with its own result"
+        assert "SYNTAX" in rewritten["checks"], \
+            "the run must have checked the block, not skipped it"
+
+    def test_the_block_is_not_announced_as_already_checked(
+            self, work_dir, monkeypatch, capsys):
+        """The message a skipped block gets must not be printed when the
+        lookup is switched off.
+
+        Asserted separately from the result above because the skip prints
+        before it returns: a lookup that still ran and still reported the
+        block as already checked, but whose result was then discarded, would
+        satisfy the assertions above and be visible only here.  Verbose mode
+        is asked for, since that is the setting under which the message is
+        produced at all -- and it has to be asked for in the call, because the
+        module global of that name is only the default the function was
+        defined with and assigning to it afterwards changes nothing.
+        """
+        monkeypatch.setattr(ccb, "LOOK_FOR_PREVIOUS_CHECKS", False)
+
+        src = work_dir / "main.adb"
+        src.write_text(MINIMAL_ADA_SOURCE)
+
+        block = _make_block(
+            buttons=["no"],
+            no_check=False,
+            syntax_only=False,
+            source_files=["main.adb"],
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        recorded = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        recorded.status_ok = True
+        recorded.to_json_file()
+
+        ccb.check_block(block, json_file, verbose=True, force_checks=False)
+        captured = capsys.readouterr()
+        assert "already checked" not in captured.out, \
+            "with the lookup switched off, no block may be announced as " \
+            "already checked: {}".format(captured.out)
 
 
 # ---------------------------------------------------------------------------
