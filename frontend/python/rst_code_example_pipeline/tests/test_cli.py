@@ -19,7 +19,9 @@ Covers:
   and unusable
 - check-block over a single extracted example declared as expecting a compile
   error whose source compiles: the run fails, says the declared error never
-  arrived, and the run log shows the example really was built and run
+  arrived, and the run log shows the example really was built and run.  Both
+  languages, since the same declaration is written in both and each is looked
+  for separately
 - check-code over a build directory holding a block info file it has to drop:
   one that cannot be read, and one that names no project.  Each fails the run
   rather than reporting success over an example nothing looked at, and an
@@ -83,25 +85,49 @@ begin
    {};
 end Main;""".format(MISSING_NAME)
 
+# The C counterpart, for the one test whose subject is a C example.  A C block
+# names its own source on a leading marker line rather than having it chopped
+# out, so the file name is part of the body here and is also what the
+# directive declares as the main.
+C_RUN_OUTPUT = "the C example ran"
+
+C_MAIN = "main.c"
+
+WORKING_C_BODY = """\
+!{}
+#include <stdio.h>
+
+int main(void)
+{{
+   printf("{}\\n");
+   return 0;
+}}""".format(C_MAIN, C_RUN_OUTPUT)
+
 
 def _write_course(directory, project: str, body: str,
-                  classes: str | None = None):
+                  classes: str | None = None,
+                  language: str = "ada", main: str = "main.adb"):
     """Write a one-block RST file the way a course author would, and return
     its name relative to the directory holding it.
 
     ``classes`` is the ``:class:`` line an author adds to declare what the
     example is for -- omitted entirely when there is none, so the common case
     stays the directive a course really carries.
+
+    ``language`` and ``main`` are the other two things the directive declares.
+    They default to the Ada example nearly every test here uses, so that the
+    call sites reading as a course of Ada say so by not mentioning it.
     """
     indented = "\n".join("   " + line for line in body.splitlines())
     declared = "" if classes is None else "   :class: {}\n".format(classes)
     (directory / "course.rst").write_text(
-        ".. code:: ada project={} main=main.adb run_button\n"
+        ".. code:: {} project={} main={} run_button\n"
         "{}"
         "\n"
         "{}\n"
         "\n"
-        "Explanatory paragraph.\n".format(project, declared, indented))
+        "Explanatory paragraph.\n".format(language, project, main,
+                                          declared, indented))
     return "course.rst"
 
 
@@ -112,9 +138,11 @@ def _run(command: str, *arguments: str, cwd) -> subprocess.CompletedProcess:
 
 
 def _extract(cwd, project: str, body: str,
-             classes: str | None = None) -> subprocess.CompletedProcess:
+             classes: str | None = None,
+             language: str = "ada",
+             main: str = "main.adb") -> subprocess.CompletedProcess:
     """Extract a one-block course into a build directory below ``cwd``."""
-    rst_file = _write_course(cwd, project, body, classes)
+    rst_file = _write_course(cwd, project, body, classes, language, main)
     return _run("extract-code", "--build-dir", "build", rst_file, cwd=cwd)
 
 
@@ -332,6 +360,36 @@ class TestCheckingASingleBlock:
             "the failure must say that the declared compile error never " \
             "arrived: {}".format(checked.stdout)
         assert RUN_OUTPUT in _the_run_log(tmp_path), \
+            "the example must really have been built and run, or the " \
+            "expectation was left unmet by nothing having happened"
+
+    def test_a_c_block_expecting_a_compile_error_that_compiles_fails(
+            self, tmp_path):
+        """check-block on a C example declared as expecting a compile error,
+        whose source compiles, must fail and say the error never arrived.
+
+        The C spelling of the test above, seen from the same place: the two
+        languages end at the same report, and only the Ada one used to be
+        made.  A C example marked "this must not compile" that the compiler
+        accepted left the command at status zero with nothing printed, so a
+        build gating on the status was told the course checked out over an
+        example asserting something untrue about the language.  Driven
+        through the installed command for the same reason its Ada twin is:
+        the author's class has to survive the RST source, the extraction step
+        and the exit-status contract to have any effect at all.
+        """
+        assert _extract(tmp_path, "CliCBlockExpectErrorThatCompiles",
+                        WORKING_C_BODY, "c-expect-compile-error",
+                        language="c", main=C_MAIN).returncode == 0
+        checked = _run("check-block", "--force", _the_extracted_block(tmp_path),
+                       cwd=tmp_path)
+        assert checked.returncode == 1, \
+            "checking a C example that declares a compile error it does not " \
+            "produce must fail: {}".format(checked.stdout)
+        assert "Expected compile error, got none!" in checked.stdout, \
+            "the failure must say that the declared compile error never " \
+            "arrived: {}".format(checked.stdout)
+        assert C_RUN_OUTPUT in _the_run_log(tmp_path), \
             "the example must really have been built and run, or the " \
             "expectation was left unmet by nothing having happened"
 
