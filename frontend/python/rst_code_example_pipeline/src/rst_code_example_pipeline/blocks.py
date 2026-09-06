@@ -397,6 +397,28 @@ class CodeBlock(Block):
 
 
 class ConfigBlock(Block):
+    """Settings read from a ReST source, held as boolean attributes
+
+    Every keyword argument becomes an attribute of the same name, whose
+    value is coerced to a boolean by a deliberately asymmetric rule: a real
+    ``bool`` is kept as it stands, and anything else is true unless it is
+    exactly the string ``"False"``. So ``"false"``, ``"0"`` and the empty
+    string are all true, and so is any value that is not a string at all.
+
+    The asymmetry follows the two kinds of caller. Settings normally arrive
+    as strings, parsed out of a ``:code-config:`` directive, where
+    ``"False"`` is the only spelling of false the directive has; that is
+    where the string comparison comes from. A caller that hands over a real
+    boolean -- as the extractor does for the settings it starts from --
+    means that boolean literally, and comparing it against a string it can
+    never equal would silently turn every such setting true.
+
+    Args:
+        rst_file (str, optional): The ReST source the settings were read
+            from.
+        **opts (Any): The settings themselves, coerced as described above.
+    """
+
     def __init__(self,
                  rst_file: str | None = None,
                  **opts: Any) -> None:
