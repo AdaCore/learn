@@ -239,6 +239,44 @@ class CodeBlock(Block):
 
     @staticmethod
     def from_json_file(json_filename: str | None = None) -> CodeBlock | None:
+        """Reads a code block back from the block info file written for it
+
+        Args:
+            json_filename (str, optional): The file to read. Defaults to
+                ``block_info.json`` in the current working directory, which
+                is the name the extraction step writes and the place the
+                checking step changes into.
+
+        Returns:
+            CodeBlock, optional: The code block the file describes, or None
+            when it does not describe one.
+
+        Note:
+            **A file that cannot be turned into a code block yields None
+            rather than an exception**, and that is the part callers build
+            on. Nothing on this side decides what an unreadable code block
+            means for a run -- the callers do, and they differ: the
+            checking commands leave the code block unchecked and fail the
+            run over it, while extraction warns and rewrites the record
+            from the ReST source. What is decided here is that the *reason*
+            is reported before it is lost, since only this side has it.
+
+            Two files reduce to None without a word: one that is not there,
+            and one whose name is not a regular file at all. Neither is a
+            complaint worth making -- the first is the ordinary way to ask
+            whether a code block has been extracted yet.
+
+            The reasons that *are* reported are a file that does not decode
+            as UTF-8, one that does not parse as JSON, and one that parses
+            into something that is not a code block record. **That list is
+            not exhaustive, and it is a list of exception types rather than
+            of intent**: it names the ways a file has actually been seen to
+            be unusable, so a file unusable in some other way still raises
+            out of here. Reading a deeply enough nested JSON array is the
+            known example, and opening the file is outside the guard
+            entirely, so a file whose permissions forbid reading raises as
+            well.
+        """
 
         if json_filename is None:
             json_filename = constants.BLOCK_INFO_FILENAME
