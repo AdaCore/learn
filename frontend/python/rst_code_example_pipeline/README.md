@@ -13,10 +13,15 @@ entry points:
 
 - `check-block` checks a single (previously extracted) code block.
 
-The package is installed in editable mode as part of the VM provisioning:
+Install the package from the repository, in editable mode:
 ```sh
 pip install -e frontend/python/rst_code_example_pipeline
 ```
+
+The entry points drive an Ada toolchain directly and expect it on `PATH`:
+`extract-code` splits an Ada code block with `gnatchop`, and the two checking
+commands syntax-check and compile with `gcc`, build with `gprbuild`, clean up
+with `gprclean`, and prove with `gnatprove`.
 
 
 ## Simple usage

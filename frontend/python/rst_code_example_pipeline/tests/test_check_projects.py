@@ -58,7 +58,7 @@ def _make_minimal_block_info(project: str,
     Write a minimal block_info.json for the given project into tmp_path (or a
     subdir of it) and return the absolute path to the JSON file.
     """
-    # Ensure toolchain_info is initialised
+    # Ensure toolchain_info is initialized
     if not info.DEFAULT_VERSION:
         info.init_toolchain_info()
 
@@ -140,7 +140,7 @@ class TestGetBlocksValid:
 class TestGetBlocksMissingProject:
     def test_missing_project_field_skipped(self, tmp_path, capsys):
         """A block_info.json whose block has project=None must be skipped."""
-        # Ensure toolchain_info is initialised
+        # Ensure toolchain_info is initialized
         if not info.DEFAULT_VERSION:
             info.init_toolchain_info()
 
@@ -350,7 +350,7 @@ class TestCheckProjectsExtended:
     def test_check_projects_skips_inactive_block(self, tmp_path, monkeypatch):
         """A block marked inactive must be skipped by check_projects()
         without being checked at all."""
-        # Build a block and serialise it with active=False
+        # Build a block and serialize it with active=False
         if not info.DEFAULT_VERSION:
             info.init_toolchain_info()
 
@@ -370,7 +370,7 @@ class TestCheckProjectsExtended:
             manual_chop=False,
             buttons=["no"],
         )
-        block.active = False  # mark inactive before serialising
+        block.active = False  # mark inactive before serializing
 
         dest_dir = tmp_path / "projects" / "InactiveProj" / "hash000"
         json_file = _write_block_record(block, dest_dir)

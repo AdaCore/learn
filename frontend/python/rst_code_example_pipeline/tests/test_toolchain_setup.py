@@ -47,7 +47,7 @@ def _make_block(gnat_version: list[str],
                 gnatprove_version: list[str] | None = None,
                 gprbuild_version: list[str] | None = None) -> CodeBlock:
     """Build a minimal CodeBlock with the given toolchain version selectors."""
-    # Ensure toolchain_info is initialised so default version strings exist
+    # Ensure toolchain_info is initialized so default version strings exist
     if not info.DEFAULT_VERSION:
         info.init_toolchain_info()
     gnatprove_version = gnatprove_version or ["default", info.DEFAULT_VERSION["gnatprove"]]
@@ -78,7 +78,7 @@ def isolated_toolchain_path(tmp_path, monkeypatch):
     creates stub target directories matching the installed toolchain versions
     so os.symlink targets exist.
     """
-    # Ensure toolchain_info is initialised
+    # Ensure toolchain_info is initialized
     if not info.TOOLCHAINS:
         info.init_toolchain_info()
 
