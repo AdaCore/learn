@@ -2,9 +2,8 @@
 
 ## Introduction
 
-The [rst_code_example_pipeline](frontend/python/rst_code_example_pipeline) package contains
-scripts to extract, build and run the code blocks from the ReST files. These are the main
-entry points:
+The `rst_code_example_pipeline` package contains scripts to extract, build and
+run the code blocks from the ReST files. These are the main entry points:
 
 - `extract-code` extracts all code blocks and stores into the specified
   build directory;
@@ -29,7 +28,7 @@ with `gprclean`, and prove with `gnatprove`.
 To build and run the source-code examples from a course, just run
 `extract-code` followed by `check-code`. For example, to test
 the source-code examples from the
-[Introduction to Ada course](content/courses/intro-to-ada), run:
+[Introduction to Ada course](../../../content/courses/intro-to-ada), run:
 
 ```sh
 extract-code                                                  \
@@ -127,7 +126,7 @@ check-code                                                    \
 It's possible to store the list of extracted projects into a JSON file and
 use that file for checking the projects. For example, to build the source-code
 examples from the
-[Introduction to Ada course](content/courses/intro-to-ada), run:
+[Introduction to Ada course](../../../content/courses/intro-to-ada), run:
 
 ```sh
 extract-code                                                  \

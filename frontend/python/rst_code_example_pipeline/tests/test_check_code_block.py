@@ -48,13 +48,14 @@ Covers:
   after its main (requires the Ada toolchain).  These subsume the hand-built
   happy-path compile, run and prove tests that used to sit alongside them
 - the other direction of every expect-error declaration: a block that declared a
-  compile error or a prove error and then produced neither is reported and fails
-  the check, with the build or the proof recorded as having succeeded so that the
-  report is known to come from the unmet expectation rather than from anything
-  going wrong; and a block declaring one of those failures, or a suppressed run,
-  while asking for no compile, no proof and no run is reported for that too.  The
-  two core cases are covered twice over -- from a hand-built block and again
-  driven through the real RST directive and the real extraction step
+  compile error -- in either language -- or a prove error and then produced none
+  is reported and fails the check, with the build or the proof recorded as having
+  succeeded so that the report is known to come from the unmet expectation rather
+  than from anything going wrong; and a block declaring one of those failures, or
+  a suppressed run, while asking for no compile, no proof and no run is reported
+  for that too.  The three core cases are covered twice over -- from a hand-built
+  block and again driven through the real RST directive and the real extraction
+  step
 - the arm of the previous-check lookup that does not read the record: with the
   lookup switched off, a recorded failure is neither returned nor announced, and
   the block is checked again although the checks were not forced
@@ -1523,6 +1524,8 @@ begin
 end Main;
 """
 
+    VALID_C_SOURCE = "int main(void) { return 0; }\n"
+
     @staticmethod
     def _reported(block, captured) -> list[str]:
         """The messages a check produced for this block, with the location
@@ -1574,6 +1577,57 @@ end Main;
         result = ccb.check_block(block, json_file, force_checks=True)
         assert result is True, \
             "a block declaring it expects a compile error must fail the " \
+            "check when the source compiles"
+
+        assert "Expected compile error, got none!" in \
+            self._reported(block, capsys.readouterr()), \
+            "the check must say that the declared compile error never arrived"
+
+        recorded = json.loads(
+            _check_record(work_dir, json_file).read_text())["checks"]
+        assert recorded["BUILD"]["status_ok"] is True, \
+            "the build must have succeeded, or the failure under test is not " \
+            "the missing compile error"
+        assert recorded["BUTTONS"]["status_ok"] is False, \
+            "the unmet expectation must be recorded against the block's " \
+            "declarations"
+
+    def test_a_c_compile_error_that_did_not_happen_is_reported(
+            self, work_dir, capsys):
+        """C source that compiles cleanly under c-expect-compile-error must
+        fail the check.
+
+        The C spelling of the test above, and for a long time the only one of
+        the expect-error declarations that bought the author nothing: a C
+        block marked "this must not compile" whose code the compiler accepted
+        was reported as a success, so an example repaired without its class
+        being taken off went on passing.  The compile step raises the same
+        flag for either language, so the question asked here is the same
+        question -- and the build is recorded as having succeeded, which is
+        what says the report comes from the expectation being unmet rather
+        than from anything having gone wrong.
+        """
+        src = work_dir / "main.c"
+        src.write_text(self.VALID_C_SOURCE)
+
+        block = _make_block(
+            language="c",
+            classes=["c-expect-compile-error"],
+            buttons=["compile"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=False,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a C block declaring it expects a compile error must fail the " \
             "check when the source compiles"
 
         assert "Expected compile error, got none!" in \
@@ -2754,6 +2808,43 @@ int main(void)
 
         assert ccb.check_code_block_json(json_file) is True, \
             "a block declaring a compile error it did not produce must be " \
+            "reported as an error"
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert recorded["BUILD"]["status_ok"] is True, \
+            "the block must really have compiled, or the failure under test " \
+            "is not the missing compile error"
+        assert recorded["BUTTONS"]["status_ok"] is False, \
+            "the unmet expectation must be recorded against the block's " \
+            "declarations"
+
+    def test_extracted_c_block_expecting_a_compile_error_that_compiles_fails(
+            self, work_dir):
+        """A C block declared as expecting a compile error must fail the check
+        when the compiler accepts it.
+
+        The C half of the promise the test above pins for Ada, driven the same
+        way.  Only the Ada half was ever enforced, so a C example marked "this
+        must not compile" that quietly started compiling was reported as a
+        success -- the one direction of the six expect-error declarations that
+        nothing watched.  The class is written in the RST source, so it has to
+        survive the directive and the extraction step to reach the checker,
+        and the build is asserted to have succeeded, since a block that failed
+        to build for some unrelated reason would also fail the check and would
+        say nothing about the expectation.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: c project=ExtractedCExpectErrorThatCompiles "
+            "main={} compile_button".format(self._C_MAIN),
+            self._C_BODY, "ExtractedCExpectErrorThatCompiles",
+            classes="c-expect-compile-error")
+
+        assert "c-expect-compile-error" in info["classes"], \
+            "the class written in the RST source must reach the checker"
+
+        assert ccb.check_code_block_json(json_file) is True, \
+            "a C block declaring a compile error it did not produce must be " \
             "reported as an error"
 
         recorded = self._recorded_checks(block_dir, json_file)

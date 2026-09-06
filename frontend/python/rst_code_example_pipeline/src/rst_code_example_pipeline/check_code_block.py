@@ -570,6 +570,16 @@ def check_block(block: blocks.CodeBlock,
             print_error(loc, "Expected compile error, got none!")
             check_error = True
 
+    # The C spelling is checked on its own rather than beside the Ada one,
+    # because only this half of the pair was missing: a C block declaring an
+    # expected compile error that compiled cleanly was reported as a success.
+    # The compile step sets the same flag for either language, so the test
+    # for an expectation that went unmet is the same test.
+    if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
+        if not compile_error:
+            print_error(loc, "Expected compile error, got none!")
+            check_error = True
+
     if constants.CLASS_ADA_EXPECT_PROVE_ERROR in block.classes:
         if not block.prove_it:
             print_error(loc, "Expected prove button, got none!")
@@ -632,7 +642,11 @@ def check_code_block_json(json_file: str) -> bool:
 
 
 if __name__ == "__main__":  # pragma: no cover
-    parser = argparse.ArgumentParser(description=__doc__)
+    # prog is the name this command is installed under. Without it,
+    # argparse advertises the module path instead, which is not what a
+    # user types, and which is long enough to distort the usage line.
+    parser = argparse.ArgumentParser(prog='check-block',
+                                     description=__doc__)
     parser.add_argument('json_files', type=str, nargs="+",
                         help="The JSON file for each code block")
     parser.add_argument('--verbose', '-v', action='store_true',
