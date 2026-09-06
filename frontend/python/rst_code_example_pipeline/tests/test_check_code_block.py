@@ -47,6 +47,17 @@ Covers:
   linked, while one that is also run is still linked into an executable named
   after its main (requires the Ada toolchain).  These subsume the hand-built
   happy-path compile, run and prove tests that used to sit alongside them
+- the other direction of every expect-error declaration: a block that declared a
+  compile error or a prove error and then produced neither is reported and fails
+  the check, with the build or the proof recorded as having succeeded so that the
+  report is known to come from the unmet expectation rather than from anything
+  going wrong; and a block declaring one of those failures, or a suppressed run,
+  while asking for no compile, no proof and no run is reported for that too.  The
+  two core cases are covered twice over -- from a hand-built block and again
+  driven through the real RST directive and the real extraction step
+- the arm of the previous-check lookup that does not read the record: with the
+  lookup switched off, a recorded failure is neither returned nor announced, and
+  the block is checked again although the checks were not forced
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: check_block() sets the toolchain up for every block before any early return, so a
@@ -392,6 +403,105 @@ class TestCheckBlockForceChecks:
             "the forced run must replace the stale record with its own result"
         assert "SYNTAX" in rewritten["checks"], \
             "the forced run must have checked the block, not skipped it"
+
+
+# ---------------------------------------------------------------------------
+# check_block() with the previous-check lookup switched off
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockPreviousCheckLookupDisabled:
+    def test_a_recorded_result_is_ignored_when_the_lookup_is_switched_off(
+            self, work_dir, monkeypatch):
+        """With the previous-check lookup switched off, a record beside the
+        block must not be consulted at all.
+
+        The module carries a switch that decides whether a block already
+        carrying a record is skipped.  It ships on, so every other test in
+        this file exercises only the arm that reads the record -- and the arm
+        that does not was never entered by anything.
+
+        The fixture is deliberately the same one TestCheckBlockCacheHitFail
+        uses: a clean, checkable block with a record beside it saying the
+        block failed, and the checks *not* forced.  That test pins the
+        recorded failure being handed straight back.  Here the answer has to
+        be the one the block earns instead, and the record left behind has to
+        carry this run's own result and the checks it performed -- because the
+        outcome alone cannot tell a re-check apart from a lookup that happened
+        to find nothing.
+        """
+        monkeypatch.setattr(ccb, "LOOK_FOR_PREVIOUS_CHECKS", False)
+
+        src = work_dir / "main.adb"
+        src.write_text(MINIMAL_ADA_SOURCE)
+
+        block = _make_block(
+            buttons=["no"],
+            no_check=False,
+            syntax_only=False,
+            source_files=["main.adb"],
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        stale = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        stale.status_ok = False
+        stale.to_json_file()
+
+        result = ccb.check_block(block, json_file, force_checks=False)
+        assert result is False, \
+            "with the lookup switched off, a recorded failure must not be " \
+            "returned even though the checks were not forced"
+
+        rewritten = json.loads(_check_record(work_dir, json_file).read_text())
+        assert rewritten["status_ok"] is True, \
+            "the run must replace the stale record with its own result"
+        assert "SYNTAX" in rewritten["checks"], \
+            "the run must have checked the block, not skipped it"
+
+    def test_the_block_is_not_announced_as_already_checked(
+            self, work_dir, monkeypatch, capsys):
+        """The message a skipped block gets must not be printed when the
+        lookup is switched off.
+
+        Asserted separately from the result above because the skip prints
+        before it returns: a lookup that still ran and still reported the
+        block as already checked, but whose result was then discarded, would
+        satisfy the assertions above and be visible only here.  Verbose mode
+        is asked for, since that is the setting under which the message is
+        produced at all -- and it has to be asked for in the call, because the
+        module global of that name is only the default the function was
+        defined with and assigning to it afterwards changes nothing.
+        """
+        monkeypatch.setattr(ccb, "LOOK_FOR_PREVIOUS_CHECKS", False)
+
+        src = work_dir / "main.adb"
+        src.write_text(MINIMAL_ADA_SOURCE)
+
+        block = _make_block(
+            buttons=["no"],
+            no_check=False,
+            syntax_only=False,
+            source_files=["main.adb"],
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        recorded = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        recorded.status_ok = True
+        recorded.to_json_file()
+
+        ccb.check_block(block, json_file, verbose=True, force_checks=False)
+        captured = capsys.readouterr()
+        assert "already checked" not in captured.out, \
+            "with the lookup switched off, no block may be announced as " \
+            "already checked: {}".format(captured.out)
 
 
 # ---------------------------------------------------------------------------
@@ -1380,6 +1490,289 @@ end Main;
 
 
 # ---------------------------------------------------------------------------
+# TestCheckBlockExpectedErrorThatNeverHappened
+# Covers the other direction of every expect-error declaration: the checker
+# has to report a block that declared a failure and then did not produce one.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockExpectedErrorThatNeverHappened:
+    """A block declaring "this must fail" that succeeds instead.
+
+    This is the direction the checker exists for.  A course example marked as
+    expecting a compile error, or a proof failure, is not being checked for
+    the failure it produces -- it is being watched in case it silently stops
+    producing one, which is what happens when the example is repaired, the
+    class is left on it, and nobody notices that the block is now asserting
+    something untrue about the language.  The suite covered only the arm where
+    the declared failure really occurs, so a checker that dropped these
+    reports entirely would have stayed green.
+
+    Each test asserts the outcome, the message a course author is given to act
+    on, and -- where the block reaches a compiler or the prover -- that the
+    phase itself was recorded as having succeeded.  That last one is what
+    distinguishes the report under test from the block having failed for some
+    other reason: the build or the proof went through, and it is the button
+    validation that objected.
+    """
+
+    CLEAN_SPARK_SOURCE = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;
+"""
+
+    @staticmethod
+    def _reported(block, captured) -> list[str]:
+        """The messages a check produced for this block, with the location
+        prefix stripped off.
+
+        Matched on the prefix the checker builds for the block under test, so
+        a message about some other block could not be mistaken for one of
+        these -- and so the wording asserted below is only the part a course
+        author reads as the explanation.
+        """
+        prefix = "at {}:{} (code block hash: {}): ".format(
+            block.rst_file, block.line_start, block.text_hash_short)
+        return [line.split(prefix, 1)[1]
+                for line in captured.out.splitlines() if prefix in line]
+
+    def test_a_compile_error_that_did_not_happen_is_reported(
+            self, work_dir, capsys):
+        """Source that compiles cleanly under ada-expect-compile-error must
+        fail the check.
+
+        The block asks for a compile and gets one; the compiler is happy, so
+        the declared error never arrives.  The build is recorded as having
+        succeeded, which is what says the report comes from the expectation
+        being unmet rather than from anything having gone wrong.
+        """
+        src = work_dir / "main.adb"
+        src.write_text(MINIMAL_ADA_SOURCE)
+        project_filename = ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=[],
+            spark_mode=False,
+        )
+
+        block = _make_block(
+            classes=["ada-expect-compile-error"],
+            buttons=["compile"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=False,
+            source_files=["main.adb"],
+        )
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a block declaring it expects a compile error must fail the " \
+            "check when the source compiles"
+
+        assert "Expected compile error, got none!" in \
+            self._reported(block, capsys.readouterr()), \
+            "the check must say that the declared compile error never arrived"
+
+        recorded = json.loads(
+            _check_record(work_dir, json_file).read_text())["checks"]
+        assert recorded["BUILD"]["status_ok"] is True, \
+            "the build must have succeeded, or the failure under test is not " \
+            "the missing compile error"
+        assert recorded["BUTTONS"]["status_ok"] is False, \
+            "the unmet expectation must be recorded against the block's " \
+            "declarations"
+
+    def test_a_prove_error_that_did_not_happen_is_reported(
+            self, work_dir, capsys):
+        """SPARK code that proves cleanly under ada-expect-prove-error must
+        fail the check.
+
+        The mirror of TestCheckBlockProveFailure.test_prove_failure_expected,
+        which pins the arm where the proof really does fail.  Here the prover
+        is satisfied, so the declared failure never arrives; the proof is
+        recorded as having succeeded, which is what says the report comes from
+        the expectation being unmet.
+        """
+        src = work_dir / "main.adb"
+        src.write_text(self.CLEAN_SPARK_SOURCE)
+        spark_project_filename = ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=True,
+        )
+
+        block = _make_block(
+            classes=["ada-expect-prove-error"],
+            buttons=["prove"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+            source_files=["main.adb"],
+        )
+        block.spark_project_filename = spark_project_filename
+        block.project_main_file = "main.adb"
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a block declaring it expects a prove error must fail the check " \
+            "when the proof succeeds"
+
+        assert "Expected prove error, got none!" in \
+            self._reported(block, capsys.readouterr()), \
+            "the check must say that the declared prove error never arrived"
+
+        recorded = json.loads(
+            _check_record(work_dir, json_file).read_text())["checks"]
+        assert recorded["PROVE"]["status_ok"] is True, \
+            "the proof must have succeeded, or the failure under test is not " \
+            "the missing prove error"
+        assert recorded["BUTTONS"]["status_ok"] is False, \
+            "the unmet expectation must be recorded against the block's " \
+            "declarations"
+
+    def test_expecting_a_compile_error_with_nothing_that_compiles_is_reported(
+            self, work_dir, capsys):
+        """A block expecting a compile error while asking for no compile must
+        be reported.
+
+        Nothing in the block gives the checker a way to produce the error it
+        declares: there is no compile and no run button, and neither of the
+        classes that ask for one.  Both objections are asserted, because both
+        are true of this block and each is a separate report -- the missing
+        button or class, and, unavoidably, the compile error that no compile
+        could have produced.
+        """
+        block = _make_block(
+            classes=["ada-expect-compile-error"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a block expecting a compile error with nothing to compile must " \
+            "fail the check"
+
+        reported = self._reported(block, capsys.readouterr())
+        assert "Expected compile or run button/class, got none!" in reported, \
+            "the check must say the block asks for no compile: {}".format(
+                reported)
+        assert "Expected compile error, got none!" in reported, \
+            "the check must also say the declared compile error never " \
+            "arrived: {}".format(reported)
+
+    def test_expecting_a_prove_error_without_a_proof_is_reported(
+            self, work_dir, capsys):
+        """A block expecting a prove error while asking for no proof must be
+        reported.
+
+        The class alone does not ask for a proof, so the block declares a
+        failure the checker is never given the chance to observe.  Only the
+        missing prove button is reported: the arm that reports the missing
+        failure itself sits behind the proof having been asked for.
+        """
+        block = _make_block(
+            classes=["ada-expect-prove-error"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+        )
+        assert block.prove_it is False, \
+            "the expect-prove-error class must not by itself ask for a " \
+            "proof, or this test is not about a block that asks for none"
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a block expecting a prove error without a proof must fail the " \
+            "check"
+
+        reported = self._reported(block, capsys.readouterr())
+        assert "Expected prove button, got none!" in reported, \
+            "the check must say the block asks for no proof: {}".format(
+                reported)
+
+    def test_declaring_no_run_without_a_run_button_is_reported(
+            self, work_dir, capsys):
+        """A block classed ada-norun with no run button must be reported.
+
+        Taking a run away is only meaningful for a block that was going to be
+        run, so the checker requires the run to have been asked for -- and
+        says so when it was not.
+        """
+        block = _make_block(
+            classes=["ada-norun"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        assert (block.run_it, block.compile_it) == (False, False), \
+            "the class must have taken the run away, or this block is being " \
+            "built and run rather than only validated"
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a block classed ada-norun with no run button must fail the check"
+
+        reported = self._reported(block, capsys.readouterr())
+        assert "Expected run button, got none!" in reported, \
+            "the check must say the block asks for no run: {}".format(reported)
+
+    def test_expecting_a_run_failure_without_a_run_button_is_reported(
+            self, work_dir, capsys):
+        """The same report is due for a block expecting its run to fail.
+
+        Written separately from the ada-norun block above rather than left to
+        it: the two class names are read as one set, so a checker that stopped
+        recognizing this one would still satisfy the other test.  The run and
+        the compile are suppressed so that the block is only validated -- what
+        is under test is the declaration, not a program.
+        """
+        block = _make_block(
+            classes=["ada-run-expect-failure"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a block expecting its run to fail with no run button must fail " \
+            "the check"
+
+        reported = self._reported(block, capsys.readouterr())
+        assert "Expected run button, got none!" in reported, \
+            "the check must say the block asks for no run: {}".format(reported)
+
+
+# ---------------------------------------------------------------------------
 # TestCheckBlockProveExtraArgs
 # Covers the gnatprove extra-arguments variants selected via the prove_flow /
 # prove_flow_report_all / prove_report_all buttons.
@@ -2334,6 +2727,80 @@ int main(void)
         assert self._MISSING_NAME in self._log_of(block_dir, recorded["BUILD"]), \
             "the compiler must really have rejected the block, or the " \
             "expectation was satisfied by nothing happening"
+
+    def test_extracted_block_expecting_a_compile_error_that_compiles_fails(
+            self, work_dir):
+        """A block declared as expecting a compile error must fail the check
+        when the compiler accepts it.
+
+        The mirror of the test above, and the one the checker exists for: an
+        example marked "this must not compile" that quietly starts compiling
+        is exactly what nobody notices by hand.  Driven through the real
+        directive and the real extraction step, so the class has to survive
+        both to reach the checker -- and the build is asserted to have
+        succeeded, since a block that failed to build for some unrelated
+        reason would also fail the check and would say nothing about the
+        expectation.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: ada project=ExtractedExpectErrorThatCompiles "
+            "main={} compile_button".format(self._MAIN),
+            self._ADA_BODY, "ExtractedExpectErrorThatCompiles",
+            classes="ada-expect-compile-error")
+
+        assert "ada-expect-compile-error" in info["classes"], \
+            "the class written in the RST source must reach the checker"
+
+        assert ccb.check_code_block_json(json_file) is True, \
+            "a block declaring a compile error it did not produce must be " \
+            "reported as an error"
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert recorded["BUILD"]["status_ok"] is True, \
+            "the block must really have compiled, or the failure under test " \
+            "is not the missing compile error"
+        assert recorded["BUTTONS"]["status_ok"] is False, \
+            "the unmet expectation must be recorded against the block's " \
+            "declarations"
+
+    def test_extracted_block_expecting_a_prove_error_that_proves_fails(
+            self, work_dir):
+        """A block declared as expecting a prove error must fail the check
+        when the prover is satisfied.
+
+        The proof half of the same promise, driven the same way.  The proof is
+        asserted to have succeeded and to have run against a project that
+        turns SPARK mode on, so a proof that was never really attempted -- or
+        one attempted against a project the prover treats as ordinary Ada --
+        cannot pass for a proof that found nothing to complain about.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: ada project=ExtractedExpectProveErrorThatProves "
+            "main={} prove_button".format(self._MAIN),
+            self._SPARK_BODY, "ExtractedExpectProveErrorThatProves",
+            classes="ada-expect-prove-error")
+
+        assert "ada-expect-prove-error" in info["classes"], \
+            "the class written in the RST source must reach the checker"
+
+        assert ccb.check_code_block_json(json_file) is True, \
+            "a block declaring a prove error it did not produce must be " \
+            "reported as an error"
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert recorded["PROVE"]["status_ok"] is True, \
+            "the proof must really have succeeded, or the failure under test " \
+            "is not the missing prove error"
+        assert recorded["BUTTONS"]["status_ok"] is False, \
+            "the unmet expectation must be recorded against the block's " \
+            "declarations"
+
+        proved_against = self._project_used(recorded["PROVE"])
+        assert self._SPARK_CONFIGURATION in \
+            self._configuration_pragmas(block_dir, proved_against), \
+            "the proof must have run against a project that turns SPARK mode on"
 
     def test_c_run_button_block_is_built_and_run_as_extracted(self, work_dir):
         """A run button on a C block carries through to the program running.
