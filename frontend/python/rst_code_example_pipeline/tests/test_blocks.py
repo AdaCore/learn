@@ -4,14 +4,16 @@ Unit tests for rst_code_example_pipeline.blocks.
 Covers:
 - Block.get_blocks_from_rst(): RST parser (all attributes, derived fields)
 - CodeBlock constructor derived fields (no_check, syntax_only, run_it, compile_it,
-  prove_it)
+  prove_it), including the C run classes, which ask for a run only on a C block
+  and are suppressed by c-norun
 - text_hash / text_hash_short: deterministic, distinct per text, usable as a
   directory name
 - CodeBlock.to_json_file() + from_json_file() round-trip
 - CodeBlock.from_json_file() on a record that is present but cannot be turned
   into a block: read back as no block, and reported with the file name and the
   reason, rather than left as an exception for the caller to trip over
-- ConfigBlock.__init__ and update()
+- ConfigBlock.__init__ and update(), for the strings a code-config directive
+  produces and for the real booleans a caller may hand over instead
 - Adversarial: empty RST, missing json file, exit(1) path
 
 NOTE: get_blocks_from_rst() calls toolchain_info.get_toolchain_default_version()
@@ -461,6 +463,71 @@ class TestCodeBlockDerivedFields:
         b = self._make_block(["ada-norun"], buttons=["run"])
         assert b.run_it is False
 
+    # The C run classes, which a course author may write and CONTRIBUTING.md
+    # documents.  They are asserted one class at a time and with no button
+    # present, because a button would make every one of these pass on its own
+    # and say nothing about the class.  Their Ada counterparts are covered
+    # above; what is new here is that the C spellings are read at all, and
+    # that they are read only on a C block.
+
+    def test_run_it_from_c_run_class_on_a_c_block(self):
+        """c-run alone must ask for a run, the way ada-run does."""
+        b = self._make_block(["c-run"], language="c")
+        assert b.run_it is True
+
+    def test_run_it_from_c_run_expect_failure_class_on_a_c_block(self):
+        """c-run-expect-failure alone must ask for a run.
+
+        Nothing can expect a run to fail without a run happening, so a class
+        that declares the expectation and does not cause the run leaves the
+        handling of that expectation unreachable.
+        """
+        b = self._make_block(["c-run-expect-failure"], language="c")
+        assert b.run_it is True
+
+    def test_run_it_false_for_a_c_block_declaring_nothing(self):
+        """A C block that asks for nothing must not be run.
+
+        The control for the two above: without it they would pass equally
+        well against a derivation that ran every C block.
+        """
+        b = self._make_block([], language="c")
+        assert b.run_it is False
+
+    def test_run_it_false_when_c_norun_suppresses_a_run_button(self):
+        """c-norun must suppress a run the button asked for, as ada-norun
+        does."""
+        b = self._make_block(["c-norun"], buttons=["run"], language="c")
+        assert b.run_it is False
+
+    def test_run_it_false_when_c_norun_suppresses_the_c_run_class(self):
+        """Asking for a run and suppressing it in the same breath must
+        suppress: the two C classes are not read independently of each
+        other."""
+        b = self._make_block(["c-run", "c-norun"], language="c")
+        assert b.run_it is False
+
+    def test_run_it_false_for_c_run_class_on_an_ada_block(self):
+        """A C run class on an Ada block must not cause a run.
+
+        The class is paired with the language the way the compile classes
+        already are, so writing the wrong language's spelling asks for
+        nothing rather than for a run of a block it does not describe.
+        """
+        b = self._make_block(["c-run"], language="ada")
+        assert b.run_it is False
+
+    def test_run_it_false_for_c_run_expect_failure_class_on_an_ada_block(self):
+        """Same pairing for the expect-failure spelling."""
+        b = self._make_block(["c-run-expect-failure"], language="ada")
+        assert b.run_it is False
+
+    def test_compile_it_true_when_a_c_block_is_run_by_class(self):
+        """A run implies a compile for the C classes too, so a C block asking
+        to be run by class alone has something to run."""
+        b = self._make_block(["c-run"], language="c")
+        assert b.compile_it is True
+
     def test_compile_it_true_when_run_it_true(self):
         b = self._make_block(["ada-run"])
         assert b.compile_it is True
@@ -774,6 +841,58 @@ class TestConfigBlock:
     def test_no_opts(self):
         cb = ConfigBlock("my.rst")
         assert cb._opts == {}
+
+    # A configuration value normally arrives as a string, written in a
+    # code-config directive, and only the string "False" means false.  The
+    # tests above cover that.  The ones below cover a caller that hands over a
+    # real boolean instead, which is what the package's own default
+    # configuration does -- and which used to be compared against a string it
+    # could never equal, so that every such value came out true whatever was
+    # asked for.
+    #
+    # Nothing in the package reads these attributes back, so no other
+    # behavior depends on them and no other test can go red for this.  These
+    # assertions are the whole of what holds it.
+
+    def test_a_real_false_is_kept_false(self):
+        cb = ConfigBlock("test.rst", run_button=False)
+        assert getattr(cb, "run_button") is False, \
+            "a caller passing a real False means false, and must not be " \
+            "given back the opposite of what it asked for"
+
+    def test_a_real_true_is_kept_true(self):
+        cb = ConfigBlock("test.rst", run_button=True)
+        assert getattr(cb, "run_button") is True
+
+    def test_real_booleans_that_differ_produce_configurations_that_differ(self):
+        """Two configurations built from opposite real booleans must not agree.
+
+        The per-value assertions above each name one attribute, so a
+        coercion that answered true for everything would need all of them to
+        catch it.  This one fails on the collapse itself: the two objects
+        were once identical and all-true, whatever was asked for.
+        """
+        asked_for_false = ConfigBlock(
+            "test.rst", run_button=False, prove_button=False,
+            accumulate_code=False)
+        asked_for_true = ConfigBlock(
+            "test.rst", run_button=True, prove_button=True,
+            accumulate_code=True)
+        for name in ("run_button", "prove_button", "accumulate_code"):
+            assert getattr(asked_for_false, name) != \
+                getattr(asked_for_true, name), \
+                "opposite requests must not produce the same value for " \
+                "{}".format(name)
+
+    def test_a_string_that_is_not_False_is_still_true(self):
+        """The string reading is unchanged: only "False" is false.
+
+        Written down because it is the reading every value coming out of a
+        directive gets, and because a fix aimed at real booleans could
+        plausibly have made a string like this one false as well.
+        """
+        cb = ConfigBlock("test.rst", run_button="no")
+        assert getattr(cb, "run_button") is True
 
 
 # ---------------------------------------------------------------------------

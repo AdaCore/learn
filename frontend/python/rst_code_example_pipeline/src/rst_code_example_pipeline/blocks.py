@@ -317,11 +317,20 @@ class CodeBlock(Block):
         self.syntax_only: bool = syntax_only if syntax_only is not None else \
             constants.CLASS_ADA_SYNTAX_ONLY in self.classes
 
+        # The C spellings are paired with the language the way compile_it
+        # pairs its own, so that asking for a run by class alone works for C
+        # as it already does for Ada.  Without them a c-run block was never
+        # run and the check still reported success, and the branch handling
+        # c-run-expect-failure could only be reached through a run button.
         self.run_it: bool = run_it if run_it is not None else \
             ((constants.CLASS_ADA_RUN in self.classes
               or constants.CLASS_ADA_RUN_EXPECT_FAILURE in self.classes
+              or ((constants.CLASS_C_RUN in self.classes
+                   or constants.CLASS_C_RUN_EXPECT_FAILURE in self.classes)
+                  and self.language == 'c')
               or 'run' in self.buttons)
-              and not constants.CLASS_ADA_NORUN in self.classes)
+              and not constants.CLASS_ADA_NORUN in self.classes
+              and not constants.CLASS_C_NORUN in self.classes)
         self.compile_it: bool = compile_it if compile_it is not None else \
             self.run_it or \
             ((constants.CLASS_ADA_COMPILE in self.classes and self.language == 'ada')
@@ -356,7 +365,11 @@ class ConfigBlock(Block):
         self.rst_file: str | None = rst_file
         self._opts: dict[str, Any] = opts
         for k, v in opts.items():
-            setattr(self, k, False if v == "False" else True)
+            # Values normally arrive as strings from a code-config directive,
+            # where only "False" means false.  A caller passing a real
+            # boolean means it literally, so pass it through instead of
+            # comparing it against a string it can never equal.
+            setattr(self, k, v if isinstance(v, bool) else v != "False")
 
     def update(self, other_config: ConfigBlock) -> None:
         self.__init__(**other_config._opts)

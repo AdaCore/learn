@@ -2,6 +2,8 @@
 Unit tests for rst_code_example_pipeline.extract_projects.
 
 Covers:
+- the configuration the module starts every run with: built from real booleans,
+  and holding what it declares rather than the opposite
 - get_project_dir(): simple and dotted project names
 - write_project_file(): all four combinations of spark_mode × main_file × compiler_switches
 - write_project_file(): the generated project points at the configuration pragma
@@ -72,6 +74,63 @@ def _configuration_pragmas(directory, project_filename: str) -> str:
         "{} names {}, which was never written".format(
             project_filename, pragma_file.name)
     return pragma_file.read_text()
+
+
+# ---------------------------------------------------------------------------
+# TestDefaultConfiguration: the module's own starting configuration
+# ---------------------------------------------------------------------------
+
+class TestDefaultConfiguration:
+    """The configuration the module starts every run with.
+
+    It is the one place in the package that builds a configuration out of
+    real booleans rather than out of the strings a code-config directive
+    produces, and those were once read by comparing them against a string
+    they could never equal -- so all three came out true and the module
+    began every run with the opposite of two of the values it declares.
+
+    Asserted against the declared call rather than against a list of values
+    repeated here, so that changing what the module declares changes what
+    this test expects, and only the reading of it is pinned.
+    """
+
+    @staticmethod
+    def _declared() -> dict:
+        """What the module asked for, taken from the configuration itself.
+
+        ConfigBlock keeps the arguments it was constructed with, so the
+        request and the answer can be compared without either being written
+        down in this file.
+        """
+        return ep.current_config._opts
+
+    def test_the_module_declares_its_configuration_with_real_booleans(self):
+        """The precondition for the test below: if these stopped being real
+        booleans the reading under test would not be the one exercised."""
+        declared = self._declared()
+        assert declared, \
+            "the module must start from a configuration that asks for something"
+        assert all(isinstance(value, bool) for value in declared.values()), \
+            "the module's own configuration is the real-boolean caller this " \
+            "reading exists for: {}".format(declared)
+
+    def test_the_starting_configuration_holds_what_the_module_asked_for(self):
+        for name, requested in self._declared().items():
+            assert getattr(ep.current_config, name) is requested, \
+                "the starting configuration must hold the value the module " \
+                "declared for {}, not its opposite".format(name)
+
+    def test_the_starting_configuration_is_not_uniformly_true(self):
+        """The control for the test above.
+
+        A reading that answered true for everything satisfied the values the
+        module happens to ask for as true, so a request that is all-true
+        would not distinguish the two readings at all.
+        """
+        assert not all(self._declared().values()), \
+            "the module's own configuration must ask for at least one false " \
+            "value, or it cannot tell a correct reading from one that " \
+            "answers true for everything"
 
 
 # ---------------------------------------------------------------------------
