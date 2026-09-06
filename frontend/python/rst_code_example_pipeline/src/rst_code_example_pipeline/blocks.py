@@ -356,7 +356,11 @@ class ConfigBlock(Block):
         self.rst_file: str | None = rst_file
         self._opts: dict[str, Any] = opts
         for k, v in opts.items():
-            setattr(self, k, False if v == "False" else True)
+            # Values normally arrive as strings from a code-config directive,
+            # where only "False" means false.  A caller passing a real
+            # boolean means it literally, so pass it through instead of
+            # comparing it against a string it can never equal.
+            setattr(self, k, v if isinstance(v, bool) else v != "False")
 
     def update(self, other_config: ConfigBlock) -> None:
         self.__init__(**other_config._opts)
