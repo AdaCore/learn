@@ -481,42 +481,6 @@ def check_block(block: blocks.CodeBlock,
             if check_error:
                 has_error = True
 
-    if False:  # pragma: no cover
-        check_error = False
-
-        for source_file in block.source_files:
-            if block.language == "ada":
-                try:
-                    out = run("gcc", "-c", "-gnatc", "-gnatyg0-s",
-                                source_file)
-                except S.CalledProcessError as e:
-                    if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
-                        compile_error = True
-                    else:
-                        print_error(loc, "Failed to compile example")
-                        check_error = True
-                    out = str(e.output.decode("utf-8"))
-
-                with open("compile.log", u"w+") as logfile:
-                    logfile.write(out)
-
-            elif block.language == "c":
-                try:
-                    out = run("gcc", "-c", source_file)
-                except S.CalledProcessError as e:
-                    if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
-                        compile_error = True
-                    else:
-                        print_error(loc, "Failed to compile example")
-                        check_error = True
-                    out = str(e.output.decode("utf-8"))
-
-                with open("compile.log", u"w+") as logfile:
-                    logfile.write(out)
-
-            if check_error:
-                has_error = True
-
     if block.prove_it:
         check_error = False
 
