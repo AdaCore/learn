@@ -726,13 +726,19 @@ Explanatory paragraph.
     # second unchanged.
     DAMAGED_RECORD = "{ this is not a block record"
 
-    # The two projects the file below extracts, in the order the extraction
-    # walks them.  The first one owns the record that gets damaged.  The
-    # second one exists only so that "the run was not cut short" can be
-    # settled by work that only a run continuing past the repair could have
-    # done, rather than by the wording of the message that claims it.
+    # The one project the file below extracts, and the two blocks it holds,
+    # in the order the extraction walks them.  The first block owns the record
+    # that gets damaged.  The second one exists only so that "the run was not
+    # cut short" can be settled by work that only a run continuing past the
+    # repair could have done, rather than by the wording of the message that
+    # claims it -- and it is put in the *same* project deliberately: blocks are
+    # walked in one loop per project, so a second block of the same project can
+    # only be reached by that loop carrying on past the repair, while a block
+    # of another project would be reached by an outer loop starting afresh and
+    # would prove nothing about the repaired block's own run.
     REPAIRED_PROJECT = "RebuiltProject"
-    PROJECT_AFTER_THE_REPAIR = "LaterProject"
+    REPAIRED_UNIT = "Main"
+    UNIT_AFTER_THE_REPAIR = "Later"
 
     # Both blocks carry a no-check class, which is what makes this file the
     # right fixture rather than a convenient one: the example is extracted and
@@ -749,7 +755,7 @@ Explanatory paragraph.
 
 Explanatory paragraph.
 
-.. code:: ada project=LaterProject
+.. code:: ada project=RebuiltProject
    :class: ada-nocheck
 
    procedure Later is
@@ -768,14 +774,28 @@ Another paragraph.
         """The directory the extraction keeps one project's blocks under."""
         return work_dir / ep.get_project_dir(project)
 
-    def _the_block_record(self, work_dir, project: str):
-        """The one block record below the given project's directory."""
-        written = list(self._project_dir(work_dir, project).rglob(
-            _constants.BLOCK_INFO_FILENAME))
-        assert len(written) == 1, \
-            "expected exactly one block record under {}, got {}".format(
-                project, [str(path) for path in written])
-        return written[0]
+    def _block_records(self, work_dir, project: str) -> dict:
+        """The block records below one project's directory, keyed by the name
+        of the compilation unit each one describes.
+
+        Keyed by what the record says rather than by where it sits, because
+        the directory holding it is named after a hash of the block's text and
+        says nothing a test could read.  A record that does not read back as a
+        block is left out: this reports what a run wrote, and a damaged record
+        describes no block at all.  Looking one up therefore *answers* rather
+        than asserting, so that a missing one is reported by the assertion
+        that names the property it was looked up for.
+        """
+        records = dict()
+        for path in sorted(self._project_dir(work_dir, project).rglob(
+                _constants.BLOCK_INFO_FILENAME)):
+            block = _blocks_mod.CodeBlock.from_json_file(str(path))
+            if block is None:
+                continue
+            for unit in (self.REPAIRED_UNIT, self.UNIT_AFTER_THE_REPAIR):
+                if "procedure {}".format(unit) in block.text:
+                    records[unit] = path
+        return records
 
     @pytest.mark.toolchain
     def test_damaged_block_record_is_rebuilt_and_the_rebuild_is_announced(
@@ -792,10 +812,10 @@ Another paragraph.
         The warning makes two claims, and both are checked against what the
         run actually did rather than against its own wording: that the example
         is still extracted -- the chopped source file is back on disk with the
-        block's code in it -- and that the run was not cut short -- the second
-        project in the file, whose output is deleted before the repair run,
-        is extracted again, which only a run continuing past the repair can
-        do.
+        block's code in it -- and that the run was not cut short -- the block
+        that follows the repaired one in the same project, whose output is
+        deleted before the repair run, is extracted again, which only a run
+        carrying on through that project's blocks past the repair can do.
 
         The wording is pinned on top of that, in both directions.  The clause
         must be present, so that a run that repaired silently cannot pass; and
@@ -816,16 +836,26 @@ Another paragraph.
         rst_file = self._write_rst(work_dir, self.REBUILT_RST)
         ep.analyze_file(rst_file)
 
-        record = self._the_block_record(work_dir, self.REPAIRED_PROJECT)
+        written = self._block_records(work_dir, self.REPAIRED_PROJECT)
+        assert set(written) == {self.REPAIRED_UNIT,
+                                self.UNIT_AFTER_THE_REPAIR}, \
+            "the first run must write one readable record per block of the " \
+            "project, or there is nothing to damage and nothing to look for " \
+            "afterwards: {}".format(
+                {unit: str(path) for unit, path in written.items()})
+
+        record = written[self.REPAIRED_UNIT]
         original = record.read_text()
         record.write_text(self.DAMAGED_RECORD)
 
-        # Everything the second project produced is taken away again, so that
+        # Everything the second block produced is taken away again -- its
+        # whole directory, record and extracted source alike -- so that
         # finding it back after the repair run can only mean that run reached
         # it.  Left in place, the first run's leftovers would satisfy the
-        # not-cut-short check for free.
-        shutil.rmtree(
-            self._project_dir(work_dir, self.PROJECT_AFTER_THE_REPAIR))
+        # not-cut-short check for free.  The staging directory the two blocks
+        # share is not a leftover either: the run empties it before the first
+        # block is extracted.
+        shutil.rmtree(written[self.UNIT_AFTER_THE_REPAIR].parent)
 
         capsys.readouterr()          # discard the first run's output
         result = ep.analyze_file(rst_file)
@@ -877,16 +907,23 @@ Another paragraph.
             "file left behind by a chop that wrote nothing: {}".format(
                 extracted.read_text())
 
-        # The second claim, likewise: the run carried on past the repair and
-        # extracted the project that follows it, whose output was removed
-        # before this run started.
-        later = self._the_block_record(work_dir,
-                                       self.PROJECT_AFTER_THE_REPAIR)
-        assert _blocks_mod.CodeBlock.from_json_file(str(later)) is not None, \
-            "the project after the repaired one must have been extracted " \
-            "again, or the run was cut short at the repair after all"
+        # The second claim, likewise: the run carried on past the repair,
+        # through the rest of the same project's blocks, and extracted the one
+        # that follows it -- whose output was removed before this run started.
+        # Looked up rather than asserted for, so that a run cut short at the
+        # repair is reported by the assertion below, which names the property,
+        # rather than by a helper counting records.
+        rebuilt_project = self._block_records(work_dir, self.REPAIRED_PROJECT)
+        assert self.UNIT_AFTER_THE_REPAIR in rebuilt_project, \
+            "the block after the repaired one, in the same project, must " \
+            "have been extracted again, or the run was cut short at the " \
+            "repair after all: {}".format(
+                {unit: str(path) for unit, path in rebuilt_project.items()})
 
-        rebuilt = self._the_block_record(work_dir, self.REPAIRED_PROJECT)
+        # The record the repair rewrote is the one that was damaged, read back
+        # from where it stood: a repair that wrote a fresh record somewhere
+        # else would leave this one exactly as it was damaged.
+        rebuilt = record
         assert rebuilt.read_text() != self.DAMAGED_RECORD, \
             "the damaged record must have been rewritten, not merely reported"
         assert _blocks_mod.CodeBlock.from_json_file(str(rebuilt)) is not None, \
