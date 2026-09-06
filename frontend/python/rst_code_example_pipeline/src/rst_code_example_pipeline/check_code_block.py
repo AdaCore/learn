@@ -64,6 +64,75 @@ def check_block(block: blocks.CodeBlock,
                 all_diagnostics: bool = all_diagnostics,
                 max_columns: int = max_columns,
                 force_checks: bool = force_checks) -> bool:
+    """Runs the checks a single code block asks for
+
+    A code block declares what is to be done with it, through its buttons
+    and its ``:class:`` values, and this function turns that declaration
+    into checks. The order below is part of the contract rather than an
+    accident of the code, because the later checks depend on the earlier
+    ones having run.
+
+    A **syntax check** comes first, over every source file of the code
+    block, and it runs for *every* code block -- including one that asks
+    for nothing else at all -- unless the code block declares
+    ``nosyntax-check``. So the weakest thing that can happen to a code
+    block is still that its sources are parsed.
+
+    A code block declared **syntax-only** returns right after that check,
+    so it never reaches the build. It is still cleaned up and its result
+    still recorded; what it skips is every check below.
+
+    A **build** follows for a code block that asks to be compiled, which
+    includes every code block that asks to be run, since asking for a run
+    implies asking for a compile.
+
+    The **run** is nested inside that build step, not placed beside it: a
+    code block cannot be run without having been built, and a build that
+    did not succeed suppresses the run. That holds for a build that failed
+    and was reported, and equally for one that failed the way the code
+    block said it would -- an expected compile error is still a program
+    that was not produced.
+
+    A **proof** is a sibling of the build rather than part of it. A code
+    block that asks only to be proved is therefore never built, and one
+    that asks for both gets both, independently of each other.
+
+    A check of the code block's **own declarations** runs last, after
+    everything that could satisfy them. It has to: what it reports is a
+    compile error, a proof error or a run failure that the code block
+    declared it expected and that then did not happen, and that is only
+    knowable once the checks above have had their turn.
+
+    Args:
+        block (blocks.CodeBlock): The code block to check.
+        json_file (str): The block info file the code block was read from.
+            Only its directory is used, as the place the extracted sources
+            and the generated project were written to.
+        verbose (bool): Reports each command as it runs, plus toolchain
+            versions and paths.
+        all_diagnostics (bool): Reports the diagnostics collected over the
+            whole check, in addition to those reported per failing check.
+        max_columns (int): Maximum source line length the syntax check
+            enforces for Ada; zero leaves the length unchecked.
+        force_checks (bool): Re-runs the checks for a code block that
+            already carries a result from an earlier run, which is
+            otherwise reused.
+
+    Returns:
+        bool: True if any check failed. Note the polarity: this is an error
+        flag, not a success flag, and the callers OR it across code blocks.
+
+    Note:
+        The outcome is written next to the code block as
+        ``block_checks.json``, and a later run reuses it instead of
+        checking again. Only the overall status survives that round trip:
+        the per-check entries recorded here are written to the file but are
+        dropped when it is read back, so nothing acts on them. They are a
+        record for whoever reads the file, not an interface -- the ReST
+        widget that renders an example's log files beside it locates them
+        by globbing the code block's directory, not by reading their names
+        from here.
+    """
 
     def run(*run_args):
         if verbose:
