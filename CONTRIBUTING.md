@@ -630,7 +630,13 @@ output.
 When the `run_button` parameter is used, the following classes are available:
 
   - `ada-norun` and `c-norun`: to explicitly deactivate the run of Ada or C
-    code, respectively, during the testing phase.
+    code, respectively, during the testing phase. These classes also take
+    precedence over a class that asks for a run, such as `ada-run` or `c-run`.
+
+    The code is built in order to be run, so deactivating the run also
+    deactivates the build unless something else asks for the code to be
+    compiled — a `compile_button`, or the `ada-compile` or `c-compile` class.
+    Without one of those, the code block is only checked for syntax errors.
 
 ## Lab exercises
 
