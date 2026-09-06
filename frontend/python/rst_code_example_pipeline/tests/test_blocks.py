@@ -4,7 +4,8 @@ Unit tests for rst_code_example_pipeline.blocks.
 Covers:
 - Block.get_blocks_from_rst(): RST parser (all attributes, derived fields)
 - CodeBlock constructor derived fields (no_check, syntax_only, run_it, compile_it,
-  prove_it)
+  prove_it), including the C run classes, which ask for a run only on a C block
+  and are suppressed by c-norun
 - text_hash / text_hash_short: deterministic, distinct per text, usable as a
   directory name
 - CodeBlock.to_json_file() + from_json_file() round-trip
@@ -460,6 +461,71 @@ class TestCodeBlockDerivedFields:
         # ada-norun overrides even when "run" is in buttons
         b = self._make_block(["ada-norun"], buttons=["run"])
         assert b.run_it is False
+
+    # The C run classes, which a course author may write and CONTRIBUTING.md
+    # documents.  They are asserted one class at a time and with no button
+    # present, because a button would make every one of these pass on its own
+    # and say nothing about the class.  Their Ada counterparts are covered
+    # above; what is new here is that the C spellings are read at all, and
+    # that they are read only on a C block.
+
+    def test_run_it_from_c_run_class_on_a_c_block(self):
+        """c-run alone must ask for a run, the way ada-run does."""
+        b = self._make_block(["c-run"], language="c")
+        assert b.run_it is True
+
+    def test_run_it_from_c_run_expect_failure_class_on_a_c_block(self):
+        """c-run-expect-failure alone must ask for a run.
+
+        Nothing can expect a run to fail without a run happening, so a class
+        that declares the expectation and does not cause the run leaves the
+        handling of that expectation unreachable.
+        """
+        b = self._make_block(["c-run-expect-failure"], language="c")
+        assert b.run_it is True
+
+    def test_run_it_false_for_a_c_block_declaring_nothing(self):
+        """A C block that asks for nothing must not be run.
+
+        The control for the two above: without it they would pass equally
+        well against a derivation that ran every C block.
+        """
+        b = self._make_block([], language="c")
+        assert b.run_it is False
+
+    def test_run_it_false_when_c_norun_suppresses_a_run_button(self):
+        """c-norun must suppress a run the button asked for, as ada-norun
+        does."""
+        b = self._make_block(["c-norun"], buttons=["run"], language="c")
+        assert b.run_it is False
+
+    def test_run_it_false_when_c_norun_suppresses_the_c_run_class(self):
+        """Asking for a run and suppressing it in the same breath must
+        suppress: the two C classes are not read independently of each
+        other."""
+        b = self._make_block(["c-run", "c-norun"], language="c")
+        assert b.run_it is False
+
+    def test_run_it_false_for_c_run_class_on_an_ada_block(self):
+        """A C run class on an Ada block must not cause a run.
+
+        The class is paired with the language the way the compile classes
+        already are, so writing the wrong language's spelling asks for
+        nothing rather than for a run of a block it does not describe.
+        """
+        b = self._make_block(["c-run"], language="ada")
+        assert b.run_it is False
+
+    def test_run_it_false_for_c_run_expect_failure_class_on_an_ada_block(self):
+        """Same pairing for the expect-failure spelling."""
+        b = self._make_block(["c-run-expect-failure"], language="ada")
+        assert b.run_it is False
+
+    def test_compile_it_true_when_a_c_block_is_run_by_class(self):
+        """A run implies a compile for the C classes too, so a C block asking
+        to be run by class alone has something to run."""
+        b = self._make_block(["c-run"], language="c")
+        assert b.compile_it is True
 
     def test_compile_it_true_when_run_it_true(self):
         b = self._make_block(["ada-run"])

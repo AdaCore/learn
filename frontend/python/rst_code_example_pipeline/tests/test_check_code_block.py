@@ -37,7 +37,10 @@ Covers:
 - check_block() driven by the real extraction step rather than by a hand-built block:
   the compile, run and prove buttons an author writes in an RST directive, plus the
   C run path and the ada-expect-compile-error class, each carry through to the checks
-  actually performed; an extracted block that does not build is reported as an error;
+  actually performed; a C block asking to be run by class alone, with no button
+  anywhere, is really built and run -- including one declaring it expects the run to
+  fail, whose handling was reachable only through a run button before -- and c-norun
+  takes a run away again; an extracted block that does not build is reported as an error;
   and an extracted C block asking only for a compile is compiled without being
   linked, while one that is also run is still linked into an executable named
   after its main (requires the Ada toolchain).  These subsume the hand-built
@@ -1965,6 +1968,22 @@ int main(void)
    return 0;
 }}""".format(_C_MAIN, _C_RUN_OUTPUT)
 
+    # The same, for a program that announces itself and then fails.  It
+    # prints before it fails so that a run which really happened can be told
+    # from one that was reported as having happened: the exit status alone
+    # would also be produced by no program running at all.
+    _C_FAIL_OUTPUT = "extracted C example ran and then failed"
+
+    _FAILING_C_BODY = """\
+!{}
+#include <stdio.h>
+
+int main(void)
+{{
+   printf("{}\\n");
+   return 1;
+}}""".format(_C_MAIN, _C_FAIL_OUTPUT)
+
     @staticmethod
     def _rst(directive: str, body: str, classes: str | None = None) -> str:
         """An RST file holding exactly one code block.
@@ -2358,3 +2377,123 @@ int main(void)
         assert self._C_MAIN in built_with, \
             "the chopped source must be on the command line, or nothing was " \
             "compiled: {}".format(built_with)
+
+    # The C run classes an author writes, driven the same way.  These are the
+    # only tests in the file that reach the run path of a C block without a
+    # run button: every other one either writes the button into the directive
+    # or hands check_block() a block with run_it already set, and a block that
+    # arrives with the decision already made cannot show how it was reached.
+    # That is why a green suite said nothing while a C block asking to be run
+    # by class alone was never run and the check reported success over it.
+
+    def test_c_run_class_block_is_built_and_run_as_extracted(self, work_dir):
+        """A C block classed ``c-run`` and carrying no button must be run.
+
+        The class is the whole of what asks for the run here -- the directive
+        declares ``no_button`` -- so the phase set below is the assertion
+        with the detection power, and the run log is what says the author's
+        own program is what executed rather than the run being recorded over
+        nothing.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: c project=ExtractedCRunClass main={} no_button".format(
+                self._C_MAIN),
+            self._C_BODY, "ExtractedCRunClass", classes="c-run")
+
+        assert info["buttons"] == ["no"], \
+            "the block must carry no button, or the class is not what asked " \
+            "for the run"
+        assert self._buttons_asked_for(info) == (True, True, False), \
+            "a c-run class must reach the checker as a run, which implies a " \
+            "compile, and not as a proof"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted C block as it stands"
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "a c-run class must be syntax-checked, built and run, and not proved"
+        assert recorded["RUN"]["status_ok"] is True
+        assert self._log_of(block_dir, recorded["RUN"]).strip() == \
+            self._C_RUN_OUTPUT, \
+            "the program the author wrote must be the one that ran"
+
+    def test_c_run_expect_failure_class_block_is_run_without_a_button(
+            self, work_dir):
+        """A C block classed ``c-run-expect-failure`` and carrying no button
+        must be run, and its failure must be the expected one.
+
+        This is the case a green suite passed over.  The checker has long
+        held a branch that absorbs a failing C run when the block declares it
+        expects one, but nothing made such a block run from the class alone,
+        so that branch was reachable only through a run button and the class
+        on its own bought the block nothing.
+
+        Three things are asserted together, because any two of them are
+        satisfied by a block that was never run: the run must be recorded,
+        the program's own output must be in the run log, and the check must
+        pass even though the program exited non-zero.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: c project=ExtractedCExpectFailure main={} no_button".format(
+                self._C_MAIN),
+            self._FAILING_C_BODY, "ExtractedCExpectFailure",
+            classes="c-run-expect-failure")
+
+        assert info["buttons"] == ["no"], \
+            "the block must carry no button, or the class is not what asked " \
+            "for the run"
+        assert self._buttons_asked_for(info) == (True, True, False), \
+            "a c-run-expect-failure class must reach the checker as a run, " \
+            "which implies a compile, and not as a proof"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "a run failure the block declared it expects must not fail the check"
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "the block must really have been run, not merely built and " \
+            "reported as passing"
+        assert recorded["RUN"]["status_ok"] is True, \
+            "a failure the block expects must be recorded as a passing run"
+        assert self._log_of(block_dir, recorded["RUN"]).strip() == \
+            self._C_FAIL_OUTPUT, \
+            "the program the author wrote must be the one that ran and failed"
+
+    def test_c_norun_class_suppresses_the_run_of_an_extracted_block(
+            self, work_dir):
+        """A C block classed ``c-norun`` must not be run, whatever the
+        directive asks for.
+
+        The mirror of the two above: the class has to be able to take a run
+        away as well as ask for one, or it is decoration on a block that was
+        going to be run anyway.  The directive carries a compile button
+        beside the run button, so that the compile survives the suppression
+        and the block is still built -- which isolates what was suppressed to
+        the run, and would catch a suppression that quietly stopped the whole
+        check instead.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: c project=ExtractedCNoRun main={} compile_button "
+            "run_button".format(self._C_MAIN),
+            self._C_BODY, "ExtractedCNoRun", classes="c-norun")
+
+        assert "run" in info["buttons"], \
+            "the block must carry the run button the class has to suppress"
+        assert self._buttons_asked_for(info) == (True, False, False), \
+            "c-norun must take the run away and leave the compile the " \
+            "directive asked for separately"
+
+        assert ccb.check_code_block_json(json_file) is False, \
+            "the checker must accept the extracted C block as it stands"
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
+            "a suppressed run must not be recorded as having happened"
+        assert recorded["BUILD"]["status_ok"] is True, \
+            "suppressing the run must not suppress the build as well"
+        assert not (block_dir / "run.log").exists(), \
+            "nothing may have been run, so no run log may have been written"
