@@ -2,9 +2,8 @@
 
 ## Introduction
 
-The [rst_code_example_pipeline](frontend/python/rst_code_example_pipeline) package contains
-scripts to extract, build and run the code blocks from the ReST files. These are the main
-entry points:
+The `rst_code_example_pipeline` package contains scripts to extract, build and
+run the code blocks from the ReST files. These are the main entry points:
 
 - `extract-code` extracts all code blocks and stores into the specified
   build directory;
