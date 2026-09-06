@@ -6,7 +6,7 @@ Covers:
 - every declared version has the release shape the provisioning script expects
 - get_toolchain_default_version() for gnat, gnatprove, gprbuild
 - the default version of each tool is one of the versions declared for it
-- Re-initialisation idempotency
+- Re-initialization idempotency
 - get_toolchain_default_version() for unknown tool raises KeyError
 - State isolation: each test that mutates module-level dicts resets them
 
@@ -90,12 +90,12 @@ class TestInitToolchainInfo:
 
 
 # ---------------------------------------------------------------------------
-# T-toolchain_info-02: get_toolchain_default_version() auto-initialises
+# T-toolchain_info-02: get_toolchain_default_version() auto-initializes
 # ---------------------------------------------------------------------------
 
 class TestGetToolchainDefaultVersion:
     def test_gnat_returns_string(self):
-        # Dicts are empty; the function must initialise and return a value
+        # Dicts are empty; the function must initialize and return a value
         result = info.get_toolchain_default_version("gnat")
         assert isinstance(result, str) and result
 
@@ -136,7 +136,7 @@ class TestGetToolchainDefaultVersion:
 
 
 # ---------------------------------------------------------------------------
-# T-toolchain_info-03: re-initialisation idempotency
+# T-toolchain_info-03: re-initialization idempotency
 # ---------------------------------------------------------------------------
 
 class TestReInitIdempotency:

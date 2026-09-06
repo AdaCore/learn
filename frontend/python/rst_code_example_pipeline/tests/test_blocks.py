@@ -18,7 +18,7 @@ Covers:
 
 NOTE: get_blocks_from_rst() calls toolchain_info.get_toolchain_default_version()
 at parse time; requires the Ada toolchain .ini
-is present and toolchain_info initialises correctly.
+is present and toolchain_info initializes correctly.
 
 NOTE: the version strings written inside the RST fixtures below, and the values
 the parser is expected to produce from them, are deliberately spelled out.  They
