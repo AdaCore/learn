@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import os
 import shutil
-import re
 import json
 
 from .chop import manual_chop, real_gnatchop
@@ -265,9 +264,6 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
             block.active = False
             if block.line_start < code_block_at < block.line_end:
                 block.active = True
-
-    def remove_string(some_text, rem):  # pragma: no cover
-        return re.sub(".*" + rem + ".*\n?","", some_text)
 
     projects = dict()
 
