@@ -245,8 +245,25 @@ class CodeBlock(Block):
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:
-                block_info_json = json.load(f)
-                return CodeBlock(**block_info_json)
+                try:
+                    block_info_json = json.load(f)
+                    return CodeBlock(**block_info_json)
+                except (json.JSONDecodeError, UnicodeDecodeError,
+                        TypeError) as e:
+                    # A file that is present but cannot be turned into a
+                    # block is reported and treated as no block at all.  The
+                    # callers already say what that means for them; only the
+                    # reason is known here, and it is the part that would
+                    # otherwise be lost.
+                    #
+                    # UnicodeDecodeError is listed separately on purpose: it
+                    # is a *sibling* of JSONDecodeError under ValueError, not
+                    # a subclass, so a record holding bytes that are not
+                    # valid UTF-8 would otherwise escape -- and a hand edit
+                    # in an editor defaulting to another encoding produces
+                    # exactly that.
+                    print("{}: cannot read block info from {}: {}".format(
+                        C.col("ERROR", C.Colors.RED), json_filename, e))
 
         return None
 

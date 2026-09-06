@@ -310,6 +310,11 @@ The following button-related parameters are available for this directive:
 | `prove_flow_report_all_button` | examine SPARK data and control flow and report all findings |
 | `submit_button`                | submit code for a lab                                       |
 
+When `compile_button` is used and nothing else asks for the code to be run —
+no `run_button`, and no class that asks for a run — the code is compiled but
+not linked. No executable is produced, so such a code block does not have to
+contain a main subprogram (in Ada) or a `main` function (in C).
+
 ### Project parameter and code accumulation
 
 A `project` parameter must be provided. For this parameter, we use the

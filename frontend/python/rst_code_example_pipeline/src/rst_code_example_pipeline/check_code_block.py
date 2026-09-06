@@ -132,6 +132,9 @@ def check_block(block: blocks.CodeBlock,
                     run("gnatprove", "-P", project_filename, "--clean")
                 except S.CalledProcessError as e:
                     out = str(e.output.decode("utf-8"))
+                    print_error(loc,
+                                "Failed to clean-up example (gnatprove --clean)")
+                    print(out)
         elif language == "c":
             try:
                 cmd = ["rm", "-f"] + glob.glob('*.o') + glob.glob('*.gch')
@@ -285,9 +288,17 @@ def check_block(block: blocks.CodeBlock,
         elif block.language == "c":
             cmdline = None
             try:
-                assert block.project_main_file is not None
-                cmdline = ["gcc", "-o",
-                           P.splitext(block.project_main_file)[0]] + glob.glob('*.c')
+                sources = glob.glob('*.c')
+                if block.project_main_file is not None:
+                    cmdline = ["gcc", "-o",
+                               P.splitext(block.project_main_file)[0]] + sources
+                else:
+                    # A compile button asks for a compile and not a link, and
+                    # a block that is not also run has no main file resolved
+                    # for it -- it may hold no main at all.  Compiling without
+                    # linking is what was asked for, and needs no name for an
+                    # executable that is not being produced.
+                    cmdline = ["gcc", "-c"] + sources
                 out = run(*cmdline)
             except S.CalledProcessError as e:
                 if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
@@ -313,8 +324,10 @@ def check_block(block: blocks.CodeBlock,
         if not compile_error and not has_error and block.run_it:
             check_error = False
             cmdline = None
+            run_attempted = False
 
             if block.language == "ada":
+                run_attempted = True
                 try:
                     assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
@@ -335,11 +348,17 @@ def check_block(block: blocks.CodeBlock,
                         check_error = True
 
                     out = str(e.output.decode("utf-8"))
+                except FileNotFoundError as e:
+                    print_error(loc, "Running of example failed: "
+                                     "no executable to run")
+                    check_error = True
+                    out = str(e)
 
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)
 
             elif block.language == "c":
+                run_attempted = True
                 try:
                     assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
@@ -359,15 +378,25 @@ def check_block(block: blocks.CodeBlock,
                         print_error(loc, "Running of example failed")
                         check_error = True
                     out = str(e.output.decode("utf-8"))
+                except FileNotFoundError as e:
+                    print_error(loc, "Running of example failed: "
+                                     "no executable to run")
+                    check_error = True
+                    out = str(e)
 
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)
 
-            code_check = checks.CodeCheck(status_ok=(not check_error),
-                                          logfile="run.log",
-                                          cmdline=str(cmdline))
+            # Only a language the checker actually runs gets a RUN phase.
+            # Recording one for any other language claimed a successful run
+            # of a command that was never built, naming a log file that was
+            # never written.
+            if run_attempted:
+                code_check = checks.CodeCheck(status_ok=(not check_error),
+                                              logfile="run.log",
+                                              cmdline=str(cmdline))
 
-            block_check.add_check("RUN", code_check)
+                block_check.add_check("RUN", code_check)
 
             if check_error:
                 has_error = True

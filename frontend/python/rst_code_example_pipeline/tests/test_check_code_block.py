@@ -24,19 +24,25 @@ Covers:
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
-- an unrecognized language value takes neither the Ada nor the C branch anywhere
+- an unrecognized language value takes neither the Ada nor the C branch anywhere,
+  and has neither a build nor a run recorded for it
 - the maximum-columns setting reaches the Ada syntax check, and the limit applied
   is the one that was asked for
 - a toolchain binary missing from PATH falls back to an unknown-version marker instead of aborting the check
-- gprclean and gnatprove --clean clean-up failures after a successful Ada compile and run are logged (or silently swallowed) without affecting the result
+- each of the three clean-up commands an Ada compile and run reaches is reported
+  separately when it fails, the gnatprove --clean one naming the command it ran,
+  and none of the failures affects the result
 - an rm -f clean-up failure after a successful C compile and run is logged without affecting the result
+- a run with no executable to run is reported as a failed run and recorded as one,
+  in both languages, and the run-expect-failure classes do not absorb it
 - check_block() driven by the real extraction step rather than by a hand-built block:
   the compile, run and prove buttons an author writes in an RST directive, plus the
   C run path and the ada-expect-compile-error class, each carry through to the checks
   actually performed; an extracted block that does not build is reported as an error;
-  and an extracted C block asking only for a compile is an xfail (requires the Ada
-  toolchain).  These subsume the hand-built happy-path compile, run and prove tests
-  that used to sit alongside them
+  and an extracted C block asking only for a compile is compiled without being
+  linked, while one that is also run is still linked into an executable named
+  after its main (requires the Ada toolchain).  These subsume the hand-built
+  happy-path compile, run and prove tests that used to sit alongside them
 - Global state: verbose, all_diagnostics, max_columns, force_checks reset before each test
 
 NOTE: check_block() sets the toolchain up for every block before any early return, so a
@@ -883,10 +889,15 @@ class TestCheckBlockUnrecognizedLanguage:
         The block asks for a compile and a run, and names the main file a
         language branch would need, so that a branch wrongly taken would have
         enough to proceed rather than tripping over missing state: the check
-        has to skip it on the language alone.  Two things then show it did.
+        has to skip it on the language alone.  Three things then show it did.
         No command but the toolchain version probes is run -- a branch taken
-        would invoke a compiler -- and the record left behind carries no BUILD
-        phase, which is only added from inside a language branch.
+        would invoke a compiler -- and the record left behind carries neither
+        a BUILD nor a RUN phase.  A BUILD phase is only added from inside a
+        language branch.  A RUN phase is only added when a run was really
+        attempted, which is also only decided inside a language branch: a
+        recorded RUN for a language the checker does not run would claim a
+        successful run of a command that was never built, and would name a
+        log file that was never written.
         """
         import subprocess as S
 
@@ -922,6 +933,11 @@ class TestCheckBlockUnrecognizedLanguage:
         assert "BUILD" not in recorded, \
             "a compile was asked for, so a recorded BUILD phase means a " \
             "language branch was taken: {}".format(sorted(recorded))
+
+        assert "RUN" not in recorded, \
+            "a run was asked for, but no language branch could attempt one, " \
+            "so a recorded RUN phase describes a run that never happened: " \
+            "{}".format(sorted(recorded))
 
         assert result is False, \
             "An unrecognized language must not raise and must not report an error"
@@ -1571,12 +1587,22 @@ class TestCheckBlockCleanupFailures:
 
     def test_gprclean_and_gnatprove_clean_failures_do_not_affect_result(
             self, work_dir, monkeypatch, capsys):
-        """A gprclean failure before compiling, a gprclean failure during
-        end-of-check clean-up, and a gnatprove --clean failure during
-        end-of-check clean-up are all logged (the first two) or silently
-        swallowed (the third) -- but none of them aborts the check or changes
-        its result: a real compile and run that succeed still make the check
-        pass."""
+        """Each of the three clean-up commands an Ada block reaches is
+        reported when it fails, and none of the failures aborts the check or
+        changes its result.
+
+        The three are a gprclean before the build, and a gprclean and a
+        gnatprove --clean during the end-of-check clean-up.  All three are
+        made to fail here, so all three have to be reported: a real compile
+        and run that succeed still make the check pass, but they do so
+        loudly.
+
+        The counts are exact rather than bounded from below, so that dropping
+        any one of the three reddens this test.  The two gprclean sites print
+        the same text, so only their number tells that both are still there;
+        the gnatprove --clean site names the command it ran, so it is
+        asserted by that name and by being the last of the three to report.
+        """
         import subprocess as S
 
         project_filename = self._setup_project(work_dir)
@@ -1616,16 +1642,29 @@ class TestCheckBlockCleanupFailures:
         assert "gnatprove" in failed_cleanups
 
         out = capsys.readouterr().out
-        # Both gprclean failures are logged and the gnatprove --clean one is
-        # not, so at least two messages must appear.  The bound is a minimum
-        # rather than an equality on purpose: adding a further clean-up step is
-        # not a regression, whereas dropping the logging from either of the two
-        # sites that have it is -- and the two messages are textually identical,
-        # so counting them is the only way to tell one has gone.
-        assert out.count("Failed to clean-up example") >= 2, \
-            "a failing clean-up must be logged rather than passed over in silence"
-        assert "simulated cleanup failure" in out, \
-            "the failing clean-up command's own output must be shown with the message"
+        shared_message = "Failed to clean-up example"
+        gnatprove_message = shared_message + " (gnatprove --clean)"
+
+        assert out.count(gnatprove_message) == 1, \
+            "the gnatprove --clean failure must be reported once, under a " \
+            "message that names the command that failed -- three reports " \
+            "spelled the same way would say that a clean-up failed and " \
+            "never which one: {}".format(out)
+
+        assert out.count(shared_message) - out.count(gnatprove_message) == 2, \
+            "both gprclean failures -- the one before the build and the one " \
+            "in the end-of-check clean-up -- must be reported, and the two " \
+            "print the same text, so only their number tells that neither " \
+            "has gone: {}".format(out)
+
+        assert out.rindex(shared_message) == out.index(gnatprove_message), \
+            "the gnatprove --clean report belongs to the end-of-check " \
+            "clean-up and must therefore come after both gprclean reports: " \
+            "{}".format(out)
+
+        assert out.count("simulated cleanup failure") == 3, \
+            "each report must carry the output of the command it is about, " \
+            "which is the part that says why the clean-up failed: {}".format(out)
 
 
 @pytest.mark.toolchain
@@ -1670,6 +1709,175 @@ class TestCheckBlockCCleanupFailure:
             "an rm -f clean-up failure must not affect the outcome of a successful compile and run"
 
         assert "Failed to clean-up example" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# A run with no executable to run
+# Covers the run step finding nothing to execute, in both languages, with and
+# without the class that declares a failing run to be expected.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockMissingExecutable:
+    """A run whose executable is gone by the time the run starts.
+
+    The build itself reports success and the executable is removed
+    afterwards, which is the state the run step has to survive.  It used to
+    escape as a bare FileNotFoundError, which is worse than a failing check
+    in two separate ways: the run is never recorded at all, and the exception
+    leaves the whole command, so every block queued behind this one goes
+    unchecked as well.
+
+    The two languages carry the same handling in two separate places, so both
+    are exercised: dropping either one has to redden something.
+    """
+
+    VALID_C_SOURCE = """\
+#include <stdio.h>
+
+int main(void)
+{
+   printf("the C example ran\\n");
+   return 0;
+}
+"""
+
+    @staticmethod
+    def _remove_after(monkeypatch, produced_by, executable):
+        """Let the build run for real, then take its executable away.
+
+        ``produced_by`` decides which command line is the one that links, so
+        that neither the toolchain version probes nor the syntax check -- which
+        invoke the same compiler -- is mistaken for it.
+        """
+        import subprocess as S
+
+        real_check_output = S.check_output
+
+        def fake_check_output(cmd, *args, **kwargs):
+            output = real_check_output(cmd, *args, **kwargs)
+            if produced_by(list(cmd)):
+                assert os.path.isfile(executable), \
+                    "the build must really have produced {}, or the run has " \
+                    "nothing to lose".format(executable)
+                os.remove(executable)
+            return output
+
+        monkeypatch.setattr(S, "check_output", fake_check_output)
+
+    def _ada_block(self, work_dir, classes):
+        (work_dir / "main.adb").write_text(MINIMAL_ADA_SOURCE)
+        project_filename = ep.write_project_file(
+            main_file="main.adb",
+            compiler_switches=["-gnata"],
+            spark_mode=False,
+        )
+        block = _make_block(
+            classes=classes,
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.adb"],
+        )
+        block.project_filename = project_filename
+        block.project_main_file = "main.adb"
+        return block
+
+    def _c_block(self, work_dir, classes):
+        (work_dir / "main.c").write_text(self.VALID_C_SOURCE)
+        block = _make_block(
+            language="c",
+            classes=classes,
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=True,
+            run_it=True,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+        return block
+
+    @pytest.mark.parametrize("language", ["ada", "c"])
+    def test_a_missing_executable_is_reported_and_recorded(
+            self, language, work_dir, monkeypatch, capsys):
+        """A run with no executable to run must be reported as a failed run,
+        and must leave a failed run recorded behind it.
+
+        Both halves matter.  Returning rather than raising is what lets the
+        command go on to the blocks after this one.  Recording the run is
+        what keeps the phase a check writes down honest: the run was
+        attempted, it failed, and the record has to say so -- a run step that
+        reported the failure but wrote no RUN phase would leave a block whose
+        record cannot be told apart from one that was never asked to run.
+        """
+        if language == "ada":
+            block = self._ada_block(work_dir, [])
+            self._remove_after(monkeypatch,
+                               lambda cmd: cmd[0] == "gprbuild", "main")
+        else:
+            block = self._c_block(work_dir, [])
+            self._remove_after(
+                monkeypatch,
+                lambda cmd: cmd[0] == "gcc" and "-o" in cmd, "main")
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "a run with no executable must be reported as a failure rather " \
+            "than leave the check as an exception"
+
+        out = capsys.readouterr().out
+        assert "no executable to run" in out, \
+            "the report must say what was missing, or it is indistinguishable " \
+            "from the example itself failing at run time: {}".format(out)
+
+        recorded = json.loads(
+            _check_record(work_dir, json_file).read_text())["checks"]
+        assert recorded["RUN"]["status_ok"] is False, \
+            "the run was attempted and failed, so it must be recorded as a " \
+            "failed run: {}".format(sorted(recorded))
+
+    @pytest.mark.parametrize("language,expect_failure_class",
+                             [("ada", "ada-run-expect-failure"),
+                              ("c", "c-run-expect-failure")])
+    def test_an_expected_run_failure_does_not_absorb_a_missing_executable(
+            self, language, expect_failure_class, work_dir, monkeypatch,
+            capsys):
+        """A block declaring that its run is expected to fail must still be
+        reported when there is no executable to run.
+
+        The class says the author expects the example to fail when it runs.
+        Nothing ran here: the checker did not produce the program it was
+        supposed to run, which is a defect on the checker's side of the line
+        and not the failure the block declared.  Absorbing it would let a
+        block carrying that class pass over an example that was never built.
+        """
+        if language == "ada":
+            block = self._ada_block(work_dir, [expect_failure_class])
+            self._remove_after(monkeypatch,
+                               lambda cmd: cmd[0] == "gprbuild", "main")
+        else:
+            block = self._c_block(work_dir, [expect_failure_class])
+            self._remove_after(
+                monkeypatch,
+                lambda cmd: cmd[0] == "gcc" and "-o" in cmd, "main")
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        result = ccb.check_block(block, json_file, force_checks=True)
+        assert result is True, \
+            "the class expects the example to fail, not the executable to be " \
+            "missing, so this must still be reported"
+
+        assert "no executable to run" in capsys.readouterr().out, \
+            "the report must name what was missing rather than read as the " \
+            "expected run failure the block declared"
 
 
 # ---------------------------------------------------------------------------
@@ -1838,6 +2046,16 @@ int main(void)
     def _log_of(block_dir, recorded_check) -> str:
         """The log a recorded phase says it wrote."""
         return (block_dir / recorded_check["logfile"]).read_text()
+
+    @staticmethod
+    def _command_line_of(recorded_check) -> list[str]:
+        """The argument list a recorded phase really ran.
+
+        Recorded as the printed form of the list, so it reads back as one --
+        which is what lets a test assert on the switches the checker chose
+        rather than on the fact that something was run.
+        """
+        return ast.literal_eval(recorded_check["cmdline"])
 
     @staticmethod
     def _project_used(recorded_check) -> str:
@@ -2092,39 +2310,34 @@ int main(void)
         assert self._log_of(block_dir, recorded["RUN"]).strip() == self._C_RUN_OUTPUT, \
             "the program the author wrote must be the one that ran"
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="a C block asking only for a compile is never given a main file "
-               "by the extraction step, and the checker asserts it has one",
-    )
+        # A block that is run has a main file resolved for it, and that is the
+        # arm of the C compile step which links an executable and names it.
+        # The sibling compile-button test takes the other arm, so both are
+        # pinned and neither can be made to serve the other's case unnoticed.
+        built_with = self._command_line_of(recorded["BUILD"])
+        assert built_with[:3] == ["gcc", "-o", os.path.splitext(self._C_MAIN)[0]], \
+            "a C block with a resolved main must be linked into an executable " \
+            "named after that main: {}".format(built_with)
+        assert "-c" not in built_with, \
+            "a C block with a resolved main must be linked, not merely " \
+            "compiled: {}".format(built_with)
+        assert self._C_MAIN in built_with, \
+            "the chopped source must be on the command line, or nothing was " \
+            "compiled: {}".format(built_with)
+
     def test_c_compile_button_block_is_built_as_extracted(self, work_dir):
         """A compile button on a C block must be compiled.
 
-        Tracking note -- this currently fails.  The extraction step resolves a
-        main file only for blocks that are also run, but the checker's C
-        compile step names the executable after that main file and asserts it
-        is set, so a C block asking only for a compile stops the check with an
-        assertion instead of compiling.  An Ada block in the same position is
-        fine, because the project builder takes the main from the generated
-        project rather than from the field.
-
-        The fix that is open is to name the C executable some other way.
-        Resolving a main file for every compiled block is not: a compile
-        button asks for a compile and not a link -- a block holding only a
-        package spec has nothing to link -- and the sibling Ada compile test
-        pins the generated project as naming no main, so that route reddens
-        it.  When the open fix lands this test passes and the marker must be
-        removed.
-
-        What the marker can absorb: it is strict, so it fails the suite if
-        the defect is fixed without the marker being removed, but it carries
-        no ``raises``, so a later break in the shared extraction helper, in
-        the button triple, or in the C chopper would keep it xfailing for a
-        different reason than the one recorded here.  ``raises`` would not
-        separate those, since the defect and a broken fixture both raise
-        AssertionError.  The mitigation is that the sibling C run test drives
-        the same extraction helper and the same chopper with no marker on it,
-        so such a break reddens there.
+        Driven by the real extraction step, so the block arrives at the
+        checker with exactly the fields extraction gives it.  The directive
+        names a main, but extraction resolves a project main file only for
+        blocks that are also run, so the checker gets none.  The C compile
+        step therefore has to build such a block without an executable to
+        name: it compiles without linking, which is what a compile button
+        asks for and the only thing a block holding no main can do at all.
+        The sibling Ada compile test pins the generated project as naming no
+        main, so resolving a main for every compiled block is not an
+        available alternative.
         """
         block_dir, info, json_file = self._extract(
             work_dir,
@@ -2138,8 +2351,24 @@ int main(void)
         assert ccb.check_code_block_json(json_file) is False, \
             "the checker must accept the extracted C block as it stands"
 
+        assert info["project_main_file"] is None, \
+            "extraction must leave a compile-only block with no main file " \
+            "resolved, or this is not the arm of the compile step under test"
+
         recorded = self._recorded_checks(block_dir, json_file)
         assert sorted(recorded) == ["BUILD", "BUTTONS", "SYNTAX"], \
             "a C compile button must be syntax-checked and built, and neither " \
             "run nor proved"
         assert recorded["BUILD"]["status_ok"] is True
+
+        built_with = self._command_line_of(recorded["BUILD"])
+        assert "-c" in built_with, \
+            "a compile button asks for a compile and not a link: {}".format(
+                built_with)
+        assert "-o" not in built_with, \
+            "nothing is being linked, so no executable may be named -- naming " \
+            "one is what used to stop the check on an assertion: {}".format(
+                built_with)
+        assert self._C_MAIN in built_with, \
+            "the chopped source must be on the command line, or nothing was " \
+            "compiled: {}".format(built_with)

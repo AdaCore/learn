@@ -15,7 +15,22 @@ Covers:
   name the compiler could not resolve
 - check-block over a single extracted example: success for one that builds,
   failure for one that does not, and failure -- with a message rather than a
-  crash -- for a block info file that cannot be read
+  crash -- for a block info file that is missing, and for one that is present
+  and unusable
+- check-code over a build directory holding a block info file it has to drop:
+  one that cannot be read, and one that names no project.  Each fails the run
+  rather than reporting success over an example nothing looked at, and an
+  unreadable one among several does not cost the others their check
+- extract-code over a course whose block names no project: the run fails and
+  no block info file is written at all, which is why a block naming no project
+  is only reachable from a file written or edited by hand
+- extract-code over a course whose block record was damaged since the last run:
+  the record is rebuilt, a warning names it as rebuilt, the run still succeeds,
+  and a check-code run over the rebuilt record still builds and runs the
+  example
+- extract-code over a build directory in which the block record's name is held
+  by a directory: the run succeeds without a traceback, the block directory is
+  extracted again, and the record is a readable file once more
 - the command lines the README says are rejected: naming neither a build
   directory nor a project list fails, and an unknown switch is rejected
   outright with the distinct status argument parsing uses
@@ -29,9 +44,14 @@ The commands under test are the console scripts the package installs, so they
 must be on PATH -- which they are wherever the package is installed, the same
 condition that lets the rest of the suite import it.
 """
+import pathlib
 import subprocess
 
 import pytest
+
+from rst_code_example_pipeline import blocks
+from rst_code_example_pipeline import constants
+from rst_code_example_pipeline import toolchain_info
 
 
 # A complete Ada example that announces itself when it runs.  The course
@@ -97,6 +117,78 @@ def _the_extracted_block(cwd) -> str:
         "expected the extraction step to write exactly one block info " \
         "file, got {}".format([str(path) for path in written])
     return str(written[0])
+
+
+def _write_course_of_several_blocks(directory, project: str,
+                                    outputs: list[str]) -> str:
+    """Write a course of several examples, each announcing itself with its
+    own line, and return its name relative to the directory.
+
+    Each example gets a project of its own, so that one of them being
+    unreadable cannot be said to have taken its neighbors down with it merely
+    by sharing a directory.  Distinct output then makes each block's run log
+    identifiable, which is what lets a test say which examples were checked.
+    """
+    blocks_rst = []
+    for number, output in enumerate(outputs, start=1):
+        body = WORKING_ADA_BODY.replace(RUN_OUTPUT, output)
+        indented = "\n".join("   " + line for line in body.splitlines())
+        blocks_rst.append(
+            ".. code:: ada project={}{} main=main.adb run_button\n"
+            "\n"
+            "{}\n"
+            "\n"
+            "Explanatory paragraph.\n".format(project, number, indented))
+    (directory / "course.rst").write_text("\n".join(blocks_rst))
+    return "course.rst"
+
+
+def _the_extracted_blocks(cwd) -> list:
+    """Every block info file the extraction step wrote, in a stable order."""
+    return sorted((cwd / "build").rglob(constants.BLOCK_INFO_FILENAME))
+
+
+def _block_info_files_written(cwd) -> list:
+    """Every block info file below the build directory, or none if the
+    extraction step did not get as far as making one."""
+    build = cwd / "build"
+    return _the_extracted_blocks(cwd) if build.is_dir() else []
+
+
+def _a_block_record_naming_no_project(directory) -> str:
+    """Write a well-formed block record that names no project.
+
+    The extraction step refuses to write one -- it stops the whole run on a
+    code block with no project name before writing anything -- so this state
+    only exists in a file written or edited by hand.  It is produced through
+    the package's own writer so that the record is right in every respect
+    except the one under test, and lands under the name the check looks for
+    without that name being restated here.
+    """
+    if not toolchain_info.DEFAULT_VERSION:
+        toolchain_info.init_toolchain_info()
+
+    versions = toolchain_info.DEFAULT_VERSION
+    block = blocks.CodeBlock(
+        rst_file="course.rst",
+        line_start=1,
+        line_end=5,
+        text="procedure Main is begin null; end Main;",
+        language="ada",
+        project=None,
+        main_file=None,
+        gnat_version=["default", versions["gnat"]],
+        gnatprove_version=["default", versions["gnatprove"]],
+        gprbuild_version=["default", versions["gprbuild"]],
+        compiler_switches=[],
+        classes=["ada-nocheck"],
+        manual_chop=False,
+        buttons=["no"],
+    )
+    directory.mkdir(parents=True, exist_ok=True)
+    written = str(directory / constants.BLOCK_INFO_FILENAME)
+    block.to_json_file(written)
+    return written
 
 
 def _the_run_log(cwd) -> str:
@@ -224,6 +316,359 @@ class TestBlockInfoThatCannotBeRead:
         assert "Traceback" not in result.stderr, \
             "the file must be reported, not crashed on: {}".format(
                 result.stderr)
+
+    def test_an_unusable_block_info_file_fails_with_a_message(self, tmp_path):
+        """A block info file that is there but cannot be turned into a block
+        must be reported the same way a missing one is.
+
+        This is the case a file damaged after it was written falls into --
+        truncated, edited, half-copied.  It used to leave the command as a
+        traceback: the status was 1 all the same, but only because that is
+        what Python gives an uncaught exception, and nothing in the output
+        told the reader which file was at fault or why.
+        """
+        unusable = tmp_path / constants.BLOCK_INFO_FILENAME
+        unusable.write_text("{ this is not a block record")
+
+        result = _run("check-block", str(unusable), cwd=tmp_path)
+
+        assert result.returncode == 1, \
+            "a block info file that cannot be loaded must count as a failure"
+        assert str(unusable) in result.stdout, \
+            "the message must name the file that could not be read: " \
+            "{}".format(result.stdout)
+        assert "Traceback" not in result.stderr, \
+            "the file must be reported, not crashed on: {}".format(
+                result.stderr)
+
+
+# ---------------------------------------------------------------------------
+# A block the check dropped instead of checking
+# ---------------------------------------------------------------------------
+
+class TestABlockTheCheckNeverLookedAt:
+    """check-code over a build directory holding a block info file it drops.
+
+    Each of the two ways in prints an ERROR line and moves on to the next
+    file, so neither block reaches the check and neither can report an error
+    from there.  What is asserted here is the status of the command, because
+    that is what a build gates on -- and both of these have printed their
+    ERROR line while the command still exited 0, which is a run reporting
+    success over an example nothing looked at.
+
+    Both files are made here rather than extracted.  One stands for a record
+    damaged after the extraction step wrote it; the other for a record
+    written or edited by hand, since the extraction step refuses to write a
+    block that names no project.
+    """
+
+    def test_an_unreadable_block_info_file_fails_the_run(self, tmp_path):
+        """A build directory whose one block info file cannot be read must
+        fail the run."""
+        block_dir = tmp_path / "build" / "projects" / "Damaged" / "hash1"
+        block_dir.mkdir(parents=True)
+        unreadable = block_dir / constants.BLOCK_INFO_FILENAME
+        unreadable.write_text("{ this is not a block record")
+
+        result = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+
+        assert result.returncode == 1, \
+            "a block info file that could not be read means an example was " \
+            "never checked, and the run must say so: {}".format(result.stdout)
+        assert str(unreadable) in result.stdout, \
+            "the run must name the file it could not read: {}".format(
+                result.stdout)
+        assert "Traceback" not in result.stderr, \
+            "the file must be reported, not crashed on: {}".format(
+                result.stderr)
+
+    def test_a_block_naming_no_project_fails_the_run(self, tmp_path):
+        """A build directory whose one block info file names no project must
+        fail the run, for the same reason: that block was never checked."""
+        written = _a_block_record_naming_no_project(
+            tmp_path / "build" / "projects" / "NoProject" / "hash1")
+
+        result = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+
+        assert result.returncode == 1, \
+            "a block that names no project is a block that was not checked, " \
+            "and the run must say so: {}".format(result.stdout)
+        assert written in result.stdout, \
+            "the run must name the file whose block it dropped: {}".format(
+                result.stdout)
+
+    def test_an_empty_build_directory_still_succeeds(self, tmp_path):
+        """A build directory with nothing in it must not fail the run.
+
+        The control for the two tests above: without it they would go on
+        passing if check-code had simply started failing for everything.
+        """
+        (tmp_path / "build").mkdir()
+
+        result = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+
+        assert result.returncode == 0, \
+            "a build directory holding no blocks has nothing to report: " \
+            "{}".format(result.stdout)
+
+
+@pytest.mark.toolchain
+class TestOneBadBlockAmongSeveral:
+    """A course whose block info files are not all readable.
+
+    The one property that decides whether reporting an unreadable file
+    instead of raising on it was an improvement: the exception it replaced
+    left the command while the block info files were still being gathered, so
+    not one example in the course was checked, whatever else was wrong with
+    it.
+    """
+
+    OUTPUTS = ["the first example ran",
+               "the second example ran",
+               "the third example ran"]
+
+    def test_the_other_examples_are_still_checked(self, tmp_path):
+        """One unreadable block info file must fail the run and must not cost
+        the other examples in the course their check.
+
+        The run logs are what shows they were checked: an example's output
+        can only reach one by being extracted, built and executed.
+        """
+        rst_file = _write_course_of_several_blocks(
+            tmp_path, "CliCourseMixed", self.OUTPUTS)
+        extracted = _run("extract-code", "--build-dir", "build", rst_file,
+                         cwd=tmp_path)
+        assert extracted.returncode == 0, \
+            "the course must extract cleanly, or the check that follows is " \
+            "not failing on the damaged file: {}".format(extracted.stdout)
+
+        written = _the_extracted_blocks(tmp_path)
+        assert len(written) == len(self.OUTPUTS), \
+            "expected one block info file per example, got {}".format(
+                [str(path) for path in written])
+
+        damaged = written[0]
+        damaged_output = [output for output in self.OUTPUTS
+                          if output in damaged.read_text()]
+        assert len(damaged_output) == 1, \
+            "the file about to be damaged must belong to exactly one of the " \
+            "examples, got {}".format(damaged_output)
+        damaged.write_text("{ this is not a block record")
+
+        checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+
+        assert checked.returncode == 1, \
+            "the damaged file means an example was never checked, and the " \
+            "run must say so: {}".format(checked.stdout)
+
+        ran = "\n".join(path.read_text()
+                        for path in (tmp_path / "build").rglob("run.log"))
+
+        for output in self.OUTPUTS:
+            if output == damaged_output[0]:
+                assert output not in ran, \
+                    "the example whose block info file was damaged cannot " \
+                    "have been run: {}".format(ran)
+            else:
+                assert output in ran, \
+                    "an example whose block info file was untouched must " \
+                    "still have been checked and run: {} is missing from " \
+                    "{}".format(output, ran)
+
+
+# ---------------------------------------------------------------------------
+# A course the extraction step refuses
+# ---------------------------------------------------------------------------
+
+class TestACourseWhoseBlockNamesNoProject:
+    def test_nothing_is_extracted_and_the_run_fails(self, tmp_path):
+        """A course with a code block that names no project must fail the
+        extraction, and must leave no block info file behind.
+
+        That is what makes the check's "block has no project" arm reachable
+        only from a file written or edited by hand: the extraction step stops
+        the whole run on such a block before it writes anything, so no file
+        it produced can carry one.  The good block is written first so that a
+        step which wrote as it went would be caught leaving the first one on
+        disk.
+        """
+        indented = "\n".join("   " + line
+                             for line in WORKING_ADA_BODY.splitlines())
+        (tmp_path / "course.rst").write_text(
+            ".. code:: ada project=CliCourseNamed main=main.adb run_button\n"
+            "\n"
+            "{}\n"
+            "\n"
+            "Explanatory paragraph.\n"
+            "\n"
+            ".. code:: ada main=main.adb run_button\n"
+            "\n"
+            "{}\n"
+            "\n"
+            "Another paragraph.\n".format(indented, indented))
+
+        result = _run("extract-code", "--build-dir", "build", "course.rst",
+                      cwd=tmp_path)
+
+        assert result.returncode == 1, \
+            "a code block with no project name must fail the extraction: " \
+            "{}".format(result.stdout)
+        assert _block_info_files_written(tmp_path) == [], \
+            "the extraction step must write no block info file at all when " \
+            "it refuses a course: {}".format(
+                [str(path) for path in _block_info_files_written(tmp_path)])
+
+
+# ---------------------------------------------------------------------------
+# A course whose block record was damaged between runs
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestACourseWhoseBlockRecordWasDamaged:
+    """extract-code finding a record it wrote earlier and cannot read now.
+
+    A build directory is reused between runs, so a record damaged by an
+    interrupted run survives into the next one.  Extraction rewrites it and
+    carries on, which is the right outcome and used to be a traceback -- and
+    because the outcome is a success, the message is the only thing that says
+    the file was ever damaged.
+
+    Asserted through the commands rather than in process, because what makes
+    the repair honest is the pair of statuses: the extraction succeeds, and
+    the example it repaired is then really checked.
+    """
+
+    DAMAGED_RECORD = "{ this is not a block record"
+
+    def test_the_record_is_rebuilt_and_the_example_is_still_checked(
+            self, tmp_path):
+        """A damaged block record must be rebuilt with a warning naming it,
+        the extraction must still succeed, and the example must still be
+        checked afterwards.
+
+        The last clause is not something the warning claims -- it says only
+        that the example is still extracted and the run was not cut short --
+        which is exactly why it is the one most likely to rot: a repair that
+        printed the line and left the record unusable would satisfy the
+        status and the message and still leave the example unchecked.  The
+        run log is what settles it -- the output below can only get there by
+        the example being built and executed.
+        """
+        assert _extract(tmp_path, "CliCourseRebuilt",
+                        WORKING_ADA_BODY).returncode == 0, \
+            "the course must extract cleanly first, or there is no record to " \
+            "damage"
+
+        written = _the_extracted_blocks(tmp_path)
+        assert len(written) == 1, \
+            "expected one block record after the first extraction, got " \
+            "{}".format([str(path) for path in written])
+        record = written[0]
+        record.write_text(self.DAMAGED_RECORD)
+
+        again = _run("extract-code", "--build-dir", "build", "course.rst",
+                     cwd=tmp_path)
+
+        assert again.returncode == 0, \
+            "rebuilding a damaged record is a recovery, so the extraction " \
+            "must still succeed: {}".format(again.stdout)
+        assert "WARNING" in again.stdout, \
+            "a rebuilt record must be announced as a warning: {}".format(
+                again.stdout)
+        # The repair runs from inside the project directory, so the record is
+        # named relative to it.  Derived from the real path rather than
+        # written out here.
+        named_as = "{}/{}".format(record.parent.name, record.name)
+        assert named_as in again.stdout, \
+            "the warning must name the record it rebuilt: {}".format(
+                again.stdout)
+        assert "course.rst" in again.stdout, \
+            "the warning must say which block it is about, or the record it " \
+            "names cannot be located from the message alone: {}".format(
+                again.stdout)
+        assert "extracted and the run was not cut short" in again.stdout, \
+            "the warning must say the run was not cut short: {}".format(
+                again.stdout)
+        assert "Traceback" not in again.stderr, \
+            "the record must be rebuilt, not crashed on: {}".format(
+                again.stderr)
+
+        assert record.read_text() != self.DAMAGED_RECORD, \
+            "the damaged record must have been rewritten, not merely reported"
+
+        checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+        assert checked.returncode == 0, \
+            "the example whose record was rebuilt must still check out: " \
+            "{}".format(checked.stdout)
+        assert RUN_OUTPUT in _the_run_log(tmp_path), \
+            "the example must really have been built and run after its " \
+            "record was rebuilt"
+
+
+# ---------------------------------------------------------------------------
+# A build directory in which the record's name is held by a directory
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.toolchain
+class TestACourseWhoseBlockRecordIsADirectory:
+    """extract-code finding a directory where a record it wrote earlier stood.
+
+    An interrupted copy into a kept build directory leaves this behind.  It is
+    not a damaged record -- it is no record at all, because nothing can open
+    it -- and the two cases end differently: a block directory with no record
+    is removed and extracted again, while a record reported as rebuilt is one
+    that was read and found unusable.
+
+    Asserted through the command because the cost of getting it wrong is paid
+    there: the run reports a repair it did not make and then ends in a
+    traceback, which is what a build driving these commands sees.
+    """
+
+    def test_the_block_directory_is_extracted_again_without_a_traceback(
+            self, tmp_path):
+        """A record name held by a directory must leave the run succeeding,
+        with the record a readable file again and no rebuild announced."""
+        assert _extract(tmp_path, "CliCourseRecordIsADirectory",
+                        WORKING_ADA_BODY).returncode == 0, \
+            "the course must extract cleanly first, or there is no record " \
+            "for a directory to stand in place of"
+
+        record = pathlib.Path(_the_extracted_block(tmp_path))
+        record.unlink()
+        record.mkdir()
+
+        again = _run("extract-code", "--build-dir", "build", "course.rst",
+                     cwd=tmp_path)
+
+        assert "Traceback" not in again.stderr, \
+            "a record name held by a directory must be extracted again, not " \
+            "crashed on: {}".format(again.stderr)
+        assert again.returncode == 0, \
+            "extracting the block again is a recovery, so the run must still " \
+            "succeed: {}".format(again.stdout)
+        assert "no JSON info file" in again.stdout, \
+            "nothing could be read, so the run must report a block directory " \
+            "with no record rather than a record it rebuilt: {}".format(
+                again.stdout)
+        assert "being rebuilt" not in again.stdout, \
+            "no record was read, so none may be announced as rebuilt: " \
+            "{}".format(again.stdout)
+
+        assert record.is_file(), \
+            "the block directory was extracted again, so its record must be " \
+            "a file once more"
+        assert blocks.CodeBlock.from_json_file(str(record)) is not None, \
+            "the record written in place of the directory must read back as " \
+            "a block: {}".format(record.read_text())
+
+        checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+        assert checked.returncode == 0, \
+            "the example extracted again must check out: {}".format(
+                checked.stdout)
+        assert RUN_OUTPUT in _the_run_log(tmp_path), \
+            "the example must really have been built and run after its block " \
+            "directory was extracted again"
 
 
 # ---------------------------------------------------------------------------

@@ -47,37 +47,58 @@ All three entry points report the outcome of a run through their exit status,
 which is what a script driving them should gate on:
 
 - `check-code` exits `1` if any of the code blocks it checked failed a check,
-  and `0` otherwise. It also exits `1` when neither `--build-dir` nor
-  `--extracted_projects` was specified, so exit `1` on its own does not
-  distinguish a broken code block from a usage error.
+  and `0` otherwise. A code block it skips without checking fails the run too:
+  one whose `block_info.json` it could not read, and one that names no project.
+  A clean exit would otherwise claim a run over an example nothing looked at.
+  The remaining code blocks are still checked before the run ends. Exit `1`
+  also covers the case where neither `--build-dir` nor `--extracted_projects`
+  was specified, so exit `1` on its own does not distinguish a broken code
+  block from a usage error.
 
 - `check-block` takes one or more `block_info.json` files and exits `1` if any
-  of them failed a check, and `0` otherwise. A JSON file that cannot be loaded
-  counts as a failure too, so exit `1` does not imply that a check ran at all.
+  of them failed a check, and `0` otherwise. Here too a file that cannot be
+  read counts as a failure, so exit `1` does not imply that a check ran at all.
 
 - `extract-code` exits `1` when the extraction run itself cannot proceed — for
   example, when a code block has no project name, or when neither `--build-dir`
   nor `--extracted_projects` was specified — and `0` otherwise.
 
+Both checking commands report a `block_info.json` they cannot read before the
+run ends, naming the file — and, when the file was there but could not be
+turned into a code block, the reason as well, whether it did not decode as
+UTF-8, did not parse as JSON, or parsed into something that is not a block
+record. A file that exists but cannot be opened at all — because of its
+permissions, say — is not covered: it still ends the run with a traceback
+instead of a reported failure. `extract-code` reads these files through the
+same reader, so it ends the same way.
+
 An invalid command line is rejected before any work is done, with exit
 status `2`.
 
-`extract-code` and `check-code` share a gap here: each prints an `ERROR` line
-for a code block it cannot process, but the run still exits `0`. For
-`extract-code` this affects a code block whose source cannot be split into
-individual source files, a code block whose button and language do not go
-together (a prove button on a C block), and a code block that carries no button
-indicator at all. For `check-code` it affects a `block_info.json` that cannot
-be loaded and a block that carries no project name — and if every block in a
-build directory is skipped this way, `check-code` exits `0` having checked
-nothing.
+`extract-code` has a gap here: it prints an `ERROR` line for a code block it
+cannot process, but the run still exits `0`. This affects a code block whose
+source cannot be split into individual source files, a code block whose button
+and language do not go together (a prove button on a C block), and a code block
+that carries no button indicator at all.
 
 Until this is fixed, a script that gates only on the exit status does not
 notice those code blocks, so read the output as well. Do not treat every
-`ERROR` line as a failure, though: `extract-code` also prints one when it finds
-a per-block directory left over from an earlier run whose info JSON file is
-gone, which it removes and rebuilds before carrying on. Match on the message
-text of the errors listed above rather than on the `ERROR` prefix alone.
+`ERROR` line as a failure, though. `extract-code` prints one for each of the
+two damaged per-block records it repairs and carries on from: a directory left
+over from an earlier run with no info JSON file in it, which it removes and
+rebuilds, and an info JSON file that is present but cannot be read, which it
+rewrites. The second is followed by a `WARNING` line naming the file as
+rebuilt and saying that the example is still extracted and the run was not cut
+short. That is as far as it goes: it does not promise the example is checked,
+which would be wrong for a code block carrying a no-check class — that one is
+extracted and then deliberately skipped. Look into it even so: a build
+directory is reused between runs, so a record damaged by an interrupted run
+survives there until something reports it.
+`check-code` and `check-block` print an `ERROR` line of their own (`Failed to
+clean-up example`) when they cannot remove an example's build artifacts
+afterwards, which leaves the outcome of the check unchanged. Match on the
+message text of the errors listed above rather than on the `ERROR` prefix
+alone.
 
 
 ## Verbose mode
