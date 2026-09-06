@@ -927,8 +927,8 @@ Another paragraph.
         assert rebuilt.read_text() != self.DAMAGED_RECORD, \
             "the damaged record must have been rewritten, not merely reported"
         assert _blocks_mod.CodeBlock.from_json_file(str(rebuilt)) is not None, \
-            "the rebuilt record must read back as a block, or the example " \
-            "the warning promises is still checked has no record to check it by"
+            "the rebuilt record must read back as a block, or the repair " \
+            "left behind a record no more usable than the damaged one"
         assert json.loads(rebuilt.read_text()) == json.loads(original), \
             "the rebuilt record must describe the same block the undamaged " \
             "run wrote"

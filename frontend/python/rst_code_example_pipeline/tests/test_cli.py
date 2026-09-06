@@ -26,7 +26,8 @@ Covers:
   is only reachable from a file written or edited by hand
 - extract-code over a course whose block record was damaged since the last run:
   the record is rebuilt, a warning names it as rebuilt, the run still succeeds,
-  and the example is still checked afterwards
+  and a check-code run over the rebuilt record still builds and runs the
+  example
 - extract-code over a build directory in which the block record's name is held
   by a directory: the run succeeds without a traceback, the block directory is
   extracted again, and the record is a readable file once more
@@ -545,11 +546,13 @@ class TestACourseWhoseBlockRecordWasDamaged:
         the extraction must still succeed, and the example must still be
         checked afterwards.
 
-        The last clause is the one the warning promises and the one most
-        likely to rot: a repair that printed the line and left the record
-        unusable would satisfy the status and the message and still leave the
-        example unchecked.  The run log is what settles it -- the output below
-        can only get there by the example being built and executed.
+        The last clause is not something the warning claims -- it says only
+        that the example is still extracted and the run was not cut short --
+        which is exactly why it is the one most likely to rot: a repair that
+        printed the line and left the record unusable would satisfy the
+        status and the message and still leave the example unchecked.  The
+        run log is what settles it -- the output below can only get there by
+        the example being built and executed.
         """
         assert _extract(tmp_path, "CliCourseRebuilt",
                         WORKING_ADA_BODY).returncode == 0, \
@@ -595,7 +598,7 @@ class TestACourseWhoseBlockRecordWasDamaged:
 
         checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
         assert checked.returncode == 0, \
-            "the example the warning says is still checked must check out: " \
+            "the example whose record was rebuilt must still check out: " \
             "{}".format(checked.stdout)
         assert RUN_OUTPUT in _the_run_log(tmp_path), \
             "the example must really have been built and run after its " \
