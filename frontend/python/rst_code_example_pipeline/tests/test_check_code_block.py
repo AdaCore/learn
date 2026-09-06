@@ -19,7 +19,9 @@ Covers:
 - gnatprove path: a pinned, genuinely installed legacy toolchain version still proves cleanly
 - each prove button, and each prove class an author writes, selects the gnatprove
   switches it names and no others -- read off the recorded command line, since the
-  fixture block proves cleanly under any switches at all
+  fixture block proves cleanly under any switches at all; the plain prove button and
+  the plain prove class select neither switch, which is what says the others were
+  selected rather than always present
 - verbose cache-skip path: status_ok=True in cache + verbose=True → "already checked" printed
 - all_diagnostics flag: a clean Ada compile announces the block, reports SUCCESS and prints no diagnostics
 - a corrupt (unparseable) cache file on disk does not crash the check
@@ -1494,9 +1496,29 @@ end Main;
         happened, so it depends on the unmarked sibling above, which drives
         the same fixture and reddens if the proof stops happening at all.
         """
-        assert "--report=all" in self._prove(
-            work_dir, classes=["ada-prove-report-all"]), \
-            "a class that names the full report must select it"
+        proved_with = self._prove(work_dir, classes=["ada-prove-report-all"])
+        assert "--report=all" in proved_with, \
+            "a class that names the full report must select it: {}".format(
+                proved_with)
+        assert "--mode=flow" not in proved_with, \
+            "the report-all class must not also restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+
+    def test_ada_prove_class_selects_neither_switch(self, work_dir):
+        """The plain prove class asks for neither the flow mode nor the full
+        report, so the proof runs on the default switches alone.
+
+        The control for the three class tests above: each of them names a
+        switch and asserts it was selected, which a proof that always
+        selected everything would satisfy.  This one fails on that.
+        """
+        proved_with = self._prove(work_dir, classes=["ada-prove"])
+        assert "--mode=flow" not in proved_with, \
+            "a plain prove class must not restrict the proof to flow " \
+            "analysis: {}".format(proved_with)
+        assert "--report=all" not in proved_with, \
+            "a plain prove class must not ask for the full report: " \
+            "{}".format(proved_with)
 
 
 # ---------------------------------------------------------------------------
