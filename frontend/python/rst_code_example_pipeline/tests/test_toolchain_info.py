@@ -3,7 +3,7 @@ Unit tests for rst_code_example_pipeline.toolchain_info.
 
 Covers:
 - init_toolchain_info() populates DEFAULT_VERSION, TOOLCHAINS, TOOLCHAIN_PATH
-- every declared version has the release shape the provisioning script expects
+- every declared version has the release shape a toolchain download URL needs
 - get_toolchain_default_version() for gnat, gnatprove, gprbuild
 - the default version of each tool is one of the versions declared for it
 - Re-initialization idempotency
@@ -65,12 +65,12 @@ class TestInitToolchainInfo:
         """Every declared version must be a non-empty release identifier of the
         form <major>.<minor>.<patch>-<release>.
 
-        That shape is not a matter of taste: the provisioning script builds the
-        download URL of each toolchain by interpolating this exact token, so a
-        malformed or missing entry produces a download failure far away from
-        its cause.  It is also stronger than merely checking the value is a
-        list: splitting an empty configuration entry on whitespace yields a
-        one-element list holding an empty string, which no other test rejects.
+        That shape is not a matter of taste: the download URL of each
+        toolchain is built by interpolating this exact token, so a malformed or
+        missing entry produces a download failure far away from its cause.  It
+        is also stronger than merely checking the value is a list: splitting an
+        empty configuration entry on whitespace yields a one-element list
+        holding an empty string, which no other test rejects.
         """
         info.init_toolchain_info()
         for tool in ("gnat", "gnatprove", "gprbuild"):
@@ -111,8 +111,8 @@ class TestGetToolchainDefaultVersion:
         """The default version of each tool must be one of the versions
         declared as installed for that tool.
 
-        The provisioning script downloads exactly the declared versions and
-        then points the default at one of them, so a default that is not in
+        Only the declared versions are downloaded and installed, and the
+        default is then pointed at one of them, so a default that is not in
         the list leaves a dangling symlink where the toolchain is expected.
         """
         for tool in ("gnat", "gnatprove", "gprbuild"):
