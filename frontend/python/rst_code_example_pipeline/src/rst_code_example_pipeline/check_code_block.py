@@ -546,55 +546,54 @@ def check_block(block: blocks.CodeBlock,
             has_error = True
 
 
-    if True:  # pragma: no cover
-        check_error = False
+    check_error = False
 
-        if len(block.buttons) == 0:
-            print_error(loc, "Expected at least 'no_button' indicator, got none!")
+    if len(block.buttons) == 0:
+        print_error(loc, "Expected at least 'no_button' indicator, got none!")
+        check_error = True
+
+    if ((block.gnat_version[0] == 'selected' or
+         block.gnatprove_version[0] == 'selected' or
+         block.gprbuild_version[0] == 'selected') and
+        block.buttons != ['no']):
+        print_error(loc, "Only 'no_button' is allowed when selecting a specific toolchain!")
+        check_error = True
+
+    if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
+        if (not (any(b in ['compile', 'run'] for b in block.buttons) or
+                 any(c in [constants.CLASS_ADA_COMPILE,
+                           constants.CLASS_ADA_RUN]
+                     for c in block.classes))):
+            print_error(loc, "Expected compile or run button/class, got none!")
+            check_error = True
+        if not compile_error:
+            print_error(loc, "Expected compile error, got none!")
             check_error = True
 
-        if ((block.gnat_version[0] == 'selected' or
-             block.gnatprove_version[0] == 'selected' or
-             block.gprbuild_version[0] == 'selected') and
-            block.buttons != ['no']):
-            print_error(loc, "Only 'no_button' is allowed when selecting a specific toolchain!")
+    if constants.CLASS_ADA_EXPECT_PROVE_ERROR in block.classes:
+        if not block.prove_it:
+            print_error(loc, "Expected prove button, got none!")
             check_error = True
 
-        if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
-            if (not (any(b in ['compile', 'run'] for b in block.buttons) or
-                     any(c in [constants.CLASS_ADA_COMPILE,
-                               constants.CLASS_ADA_RUN]
-                         for c in block.classes))):
-                print_error(loc, "Expected compile or run button/class, got none!")
-                check_error = True
-            if not compile_error:
-                print_error(loc, "Expected compile error, got none!")
-                check_error = True
-
-        if constants.CLASS_ADA_EXPECT_PROVE_ERROR in block.classes:
-            if not block.prove_it:
-                print_error(loc, "Expected prove button, got none!")
-                check_error = True
-
-        if block.prove_it:
-            if is_prove_error_class and not prove_error:
-                print_error(loc, "Expected prove error, got none!")
-                check_error = True
-
-        if (any (c in [constants.CLASS_ADA_RUN_EXPECT_FAILURE,
-                       constants.CLASS_ADA_NORUN]
-                    for c in block.classes)
-            and not ('run' in block.buttons or
-                     constants.CLASS_ADA_RUN in block.classes)):
-            print_error(loc, "Expected run button, got none!")
+    if block.prove_it:
+        if is_prove_error_class and not prove_error:
+            print_error(loc, "Expected prove error, got none!")
             check_error = True
 
-        code_check = checks.CodeCheck(status_ok=(not check_error))
+    if (any (c in [constants.CLASS_ADA_RUN_EXPECT_FAILURE,
+                   constants.CLASS_ADA_NORUN]
+                for c in block.classes)
+        and not ('run' in block.buttons or
+                 constants.CLASS_ADA_RUN in block.classes)):
+        print_error(loc, "Expected run button, got none!")
+        check_error = True
 
-        block_check.add_check("BUTTONS", code_check)
+    code_check = checks.CodeCheck(status_ok=(not check_error))
 
-        if check_error:
-            has_error = True
+    block_check.add_check("BUTTONS", code_check)
+
+    if check_error:
+        has_error = True
 
     if not has_error and verbose:
         fmt_utils.simple_success("SUCCESS")
