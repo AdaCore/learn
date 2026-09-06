@@ -613,6 +613,14 @@ must be used:
     also be proved, either through one of the prove buttons or through one of
     the `ada-prove` classes listed below.
 
+These classes state a requirement on the testing phase, not a hint about the
+generated output: the expected error has to actually occur. If it does not —
+the code compiles, runs or proves cleanly — that absence is reported as an
+error and fails the check, so one of these classes left behind after the code
+example was fixed makes the testing phase fail rather than passing quietly.
+The one exception at present is `c-expect-compile-error`: C code that compiles
+cleanly under that class is accepted without a report.
+
 When the `no_button` parameter is used, the following classes are available to
 compile or run the code examples:
 
