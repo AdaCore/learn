@@ -1,15 +1,26 @@
 #! /usr/bin/env python3
 
 """
-This program will try to compile and execute code blocks.
-The default behavior is to:
-- If the user indicated that the example should be ran (more on that later):
-   a. Run gnatmake on the unit named 'main' if there are several, or on the
-      first and only one if there is only one
-   b. Run the resulting program and check the return code
-- Else:
-   a. Run gcc on every Ada file
+Check code blocks that were previously extracted from the ReST sources, one
+block_info.json record at a time. What runs for a code block is decided by
+what the code block itself declares. Every code block is syntax-checked
+unless it declares 'nosyntax-check', and one declaring 'ada-syntax-only'
+stops there. A code block that asks to be compiled or to be run is built
+(gprbuild for Ada, gcc for C), and the resulting program is run, with its
+exit status checked, only after a build that succeeded. A code block that
+asks to be proved is proved with gnatprove independently of the build, so a
+proof needs no build and does not trigger one. A code block may also declare
+that its compilation, its run or its proof is expected to fail; the failure
+is then the passing outcome, and its absence is reported. The outcome is
+recorded next to the code block as block_checks.json, and a code block that
+already carries such a record is skipped unless --force is given.
 """
+
+# The text above is what argparse prints as this command's help
+# description. It is deliberately free of ReST markup and of any layout
+# worth preserving: the default help formatter re-wraps a description into a
+# single filled paragraph, so a list would arrive as a run-on sentence and
+# inline literals would arrive with their backquotes intact.
 
 import argparse
 import os
