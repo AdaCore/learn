@@ -12,6 +12,9 @@ Covers:
 - analyze_file(): minimal no-check / syntax-only Ada block
 - analyze_file(): a block directory left over from a prior run whose info JSON file was
   deleted is detected as stale, logged, and removed rather than reused
+- analyze_file(): a block directory left over from a prior run whose info JSON file's name
+  is held by a directory is treated as having no record at all -- removed and extracted
+  again rather than announced as a rebuilt record and then written over
 - analyze_file(): a block record left over from a prior run that is present but cannot be
   read is rebuilt, the run still succeeds, and a warning names the file as rebuilt -- while
   a record that reads back is repaired silently, because it was never damaged
@@ -636,6 +639,87 @@ Explanatory paragraph.
         out = capsys.readouterr().out
         assert "no JSON info file" in out, \
             "Expected the stale-directory message when the info JSON is missing"
+
+    # A block directory left over from an earlier run in which the record's
+    # name is taken by a directory rather than a file.  An interrupted copy
+    # leaves this behind, and it is the state that tells the caller's guard
+    # apart from a looser one: a record that is not a file is one the reader
+    # will not open, so the only honest reading of it is that there is no
+    # record here at all.
+    RECORD_IS_A_DIRECTORY_RST = """\
+.. code:: ada project=RecordIsADirectoryProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+
+    @pytest.mark.toolchain
+    def test_block_record_whose_name_is_taken_by_a_directory_is_no_record(
+            self, work_dir, capsys):
+        """A block directory whose record name is held by a directory must be
+        treated as holding no record: removed, extracted again, and left with
+        a readable record in its place.
+
+        The two repairs this code makes are told apart by whether a record is
+        there to be read.  Only a *file* can be: the reader opens the record
+        through a guard of its own that asks for one, and hands back nothing
+        for anything else without saying why.  So a directory standing where
+        the record belongs has to take the branch for a block directory with
+        no record -- the one that removes the directory and extracts the block
+        again -- and not the branch that announces a record it rebuilt.
+
+        Taking the wrong branch here is not a cosmetic mislabeling.  That
+        branch keeps the block directory, so the run goes on to write the
+        block's record into the name the directory holds, and ends in a
+        traceback about writing to a directory -- after having reported that
+        it repaired a file nothing ever read.
+        """
+        rst_file = self._write_rst(work_dir, self.RECORD_IS_A_DIRECTORY_RST)
+        ep.analyze_file(rst_file)
+
+        written = list(work_dir.rglob(_constants.BLOCK_INFO_FILENAME))
+        assert len(written) == 1, \
+            "expected exactly one block record after the first run, got " \
+            "{}".format([str(path) for path in written])
+        record = written[0]
+
+        # The name the record stood under, taken over by a directory: what an
+        # interrupted copy leaves behind, and what the record must be again
+        # once the block directory has been rebuilt.
+        record.unlink()
+        record.mkdir()
+
+        capsys.readouterr()          # discard the first run's output
+        result = ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+
+        assert result is False, \
+            "removing a block directory that holds no readable record and " \
+            "extracting the block again is a recovery, not a failure of the run"
+
+        assert "no JSON info file" in out, \
+            "a name held by a directory is no record, so the branch that " \
+            "removes the block directory and extracts it again must be the " \
+            "one that ran: {}".format(out)
+        assert "being rebuilt" not in out, \
+            "nothing was read, so nothing may be reported as rebuilt -- that " \
+            "message promises a record was read back and found damaged: " \
+            "{}".format(out)
+
+        assert record.is_file(), \
+            "the block directory was rebuilt, so the record must be a file " \
+            "again rather than the directory that stood in its place: " \
+            "{}".format([str(path) for path in
+                         self._project_dir(
+                             work_dir, "RecordIsADirectoryProject").rglob("*")])
+        assert _blocks_mod.CodeBlock.from_json_file(str(record)) is not None, \
+            "the record written in place of the directory must read back as " \
+            "a block: {}".format(record.read_text())
 
     # The block record left over from an earlier run, in the two states the
     # repair path tells apart.  The reader refuses the first and accepts the

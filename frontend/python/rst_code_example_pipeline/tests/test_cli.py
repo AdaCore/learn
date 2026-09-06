@@ -27,6 +27,9 @@ Covers:
 - extract-code over a course whose block record was damaged since the last run:
   the record is rebuilt, a warning names it as rebuilt, the run still succeeds,
   and the example is still checked afterwards
+- extract-code over a build directory in which the block record's name is held
+  by a directory: the run succeeds without a traceback, the block directory is
+  extracted again, and the record is a readable file once more
 - the command lines the README says are rejected: naming neither a build
   directory nor a project list fails, and an unknown switch is rejected
   outright with the distinct status argument parsing uses
@@ -40,6 +43,7 @@ The commands under test are the console scripts the package installs, so they
 must be on PATH -- which they are wherever the package is installed, the same
 condition that lets the rest of the suite import it.
 """
+import pathlib
 import subprocess
 
 import pytest
@@ -596,6 +600,72 @@ class TestACourseWhoseBlockRecordWasDamaged:
         assert RUN_OUTPUT in _the_run_log(tmp_path), \
             "the example must really have been built and run after its " \
             "record was rebuilt"
+
+
+# ---------------------------------------------------------------------------
+# A build directory in which the record's name is held by a directory
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.toolchain
+class TestACourseWhoseBlockRecordIsADirectory:
+    """extract-code finding a directory where a record it wrote earlier stood.
+
+    An interrupted copy into a kept build directory leaves this behind.  It is
+    not a damaged record -- it is no record at all, because nothing can open
+    it -- and the two cases end differently: a block directory with no record
+    is removed and extracted again, while a record reported as rebuilt is one
+    that was read and found unusable.
+
+    Asserted through the command because the cost of getting it wrong is paid
+    there: the run reports a repair it did not make and then ends in a
+    traceback, which is what a build driving these commands sees.
+    """
+
+    def test_the_block_directory_is_extracted_again_without_a_traceback(
+            self, tmp_path):
+        """A record name held by a directory must leave the run succeeding,
+        with the record a readable file again and no rebuild announced."""
+        assert _extract(tmp_path, "CliCourseRecordIsADirectory",
+                        WORKING_ADA_BODY).returncode == 0, \
+            "the course must extract cleanly first, or there is no record " \
+            "for a directory to stand in place of"
+
+        record = pathlib.Path(_the_extracted_block(tmp_path))
+        record.unlink()
+        record.mkdir()
+
+        again = _run("extract-code", "--build-dir", "build", "course.rst",
+                     cwd=tmp_path)
+
+        assert "Traceback" not in again.stderr, \
+            "a record name held by a directory must be extracted again, not " \
+            "crashed on: {}".format(again.stderr)
+        assert again.returncode == 0, \
+            "extracting the block again is a recovery, so the run must still " \
+            "succeed: {}".format(again.stdout)
+        assert "no JSON info file" in again.stdout, \
+            "nothing could be read, so the run must report a block directory " \
+            "with no record rather than a record it rebuilt: {}".format(
+                again.stdout)
+        assert "being rebuilt" not in again.stdout, \
+            "no record was read, so none may be announced as rebuilt: " \
+            "{}".format(again.stdout)
+
+        assert record.is_file(), \
+            "the block directory was extracted again, so its record must be " \
+            "a file once more"
+        assert blocks.CodeBlock.from_json_file(str(record)) is not None, \
+            "the record written in place of the directory must read back as " \
+            "a block: {}".format(record.read_text())
+
+        checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+        assert checked.returncode == 0, \
+            "the example extracted again must check out: {}".format(
+                checked.stdout)
+        assert RUN_OUTPUT in _the_run_log(tmp_path), \
+            "the example must really have been built and run after its block " \
+            "directory was extracted again"
 
 
 # ---------------------------------------------------------------------------
