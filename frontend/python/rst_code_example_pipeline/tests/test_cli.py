@@ -17,6 +17,9 @@ Covers:
   failure for one that does not, and failure -- with a message rather than a
   crash -- for a block info file that is missing, and for one that is present
   and unusable
+- check-block over a single extracted example declared as expecting a compile
+  error whose source compiles: the run fails, says the declared error never
+  arrived, and the run log shows the example really was built and run
 - check-code over a build directory holding a block info file it has to drop:
   one that cannot be read, and one that names no project.  Each fails the run
   rather than reporting success over an example nothing looked at, and an
@@ -81,16 +84,24 @@ begin
 end Main;""".format(MISSING_NAME)
 
 
-def _write_course(directory, project: str, body: str):
+def _write_course(directory, project: str, body: str,
+                  classes: str | None = None):
     """Write a one-block RST file the way a course author would, and return
-    its name relative to the directory holding it."""
+    its name relative to the directory holding it.
+
+    ``classes`` is the ``:class:`` line an author adds to declare what the
+    example is for -- omitted entirely when there is none, so the common case
+    stays the directive a course really carries.
+    """
     indented = "\n".join("   " + line for line in body.splitlines())
+    declared = "" if classes is None else "   :class: {}\n".format(classes)
     (directory / "course.rst").write_text(
         ".. code:: ada project={} main=main.adb run_button\n"
+        "{}"
         "\n"
         "{}\n"
         "\n"
-        "Explanatory paragraph.\n".format(project, indented))
+        "Explanatory paragraph.\n".format(project, declared, indented))
     return "course.rst"
 
 
@@ -100,9 +111,10 @@ def _run(command: str, *arguments: str, cwd) -> subprocess.CompletedProcess:
                           capture_output=True, text=True)
 
 
-def _extract(cwd, project: str, body: str) -> subprocess.CompletedProcess:
+def _extract(cwd, project: str, body: str,
+             classes: str | None = None) -> subprocess.CompletedProcess:
     """Extract a one-block course into a build directory below ``cwd``."""
-    rst_file = _write_course(cwd, project, body)
+    rst_file = _write_course(cwd, project, body, classes)
     return _run("extract-code", "--build-dir", "build", rst_file, cwd=cwd)
 
 
@@ -294,6 +306,34 @@ class TestCheckingASingleBlock:
         assert MISSING_NAME in checked.stdout, \
             "the failure must name what the compiler could not resolve: " \
             "{}".format(checked.stdout)
+
+    def test_a_block_expecting_a_compile_error_that_compiles_fails(
+            self, tmp_path):
+        """check-block on an example declared as expecting a compile error,
+        whose source compiles, must fail and say the error never arrived.
+
+        This is the check the package exists to perform, seen from where a
+        build sees it: the example is marked "this must not compile", the
+        compiler accepts it anyway, and the only thing standing between that
+        and a green build is this command's exit status.  Driven through the
+        installed command rather than in process, because an author's class
+        has to survive the RST source, the extraction step and the exit-status
+        contract to have any effect at all.
+        """
+        assert _extract(tmp_path, "CliBlockExpectErrorThatCompiles",
+                        WORKING_ADA_BODY,
+                        "ada-expect-compile-error").returncode == 0
+        checked = _run("check-block", "--force", _the_extracted_block(tmp_path),
+                       cwd=tmp_path)
+        assert checked.returncode == 1, \
+            "checking an example that declares a compile error it does not " \
+            "produce must fail: {}".format(checked.stdout)
+        assert "Expected compile error, got none!" in checked.stdout, \
+            "the failure must say that the declared compile error never " \
+            "arrived: {}".format(checked.stdout)
+        assert RUN_OUTPUT in _the_run_log(tmp_path), \
+            "the example must really have been built and run, or the " \
+            "expectation was left unmet by nothing having happened"
 
 
 class TestBlockInfoThatCannotBeRead:
