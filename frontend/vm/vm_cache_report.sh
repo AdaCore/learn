@@ -26,9 +26,12 @@ apt="${here}/vm_cache_apt.sh"
 
 case "${1:-}" in
   --orphans)
-    "${gnat}" orphans
-    "${apt}" orphans
-    exit 0
+    # Each cache is reported even if another fails, so that one broken cache
+    # does not hide the rest. The worst status is returned.
+    rc=0
+    "${gnat}" orphans || rc=$?
+    "${apt}" orphans || rc=$?
+    exit "${rc}"
     ;;
   -h|--help)
     sed -n '3,17p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
@@ -42,12 +45,16 @@ printf '%-8s %-8s %s\n' "CACHE" "SIZE" "LOCATION"
 "${gnat}" summary
 "${apt}" summary
 
+rc=0
+
 echo
 echo "GNAT toolchain cache"
 echo "--------------------"
-"${gnat}" report
+"${gnat}" report || rc=$?
 
 echo
 echo "apt package cache"
 echo "-----------------"
-"${apt}" report
+"${apt}" report || rc=$?
+
+exit "${rc}"

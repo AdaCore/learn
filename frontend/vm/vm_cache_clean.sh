@@ -32,6 +32,10 @@ case "${1:-}" in
   *)               echo "error: unknown option '$1'" >&2; exit 1 ;;
 esac
 
-"${gnat}" "${args[@]}"
+# Each cache is processed even if another fails, so that one broken cache
+# does not leave the rest uncleaned. The worst status is returned.
+rc=0
+"${gnat}" "${args[@]}" || rc=$?
 echo
-"${apt}" "${args[@]}"
+"${apt}" "${args[@]}" || rc=$?
+exit "${rc}"
