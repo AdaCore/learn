@@ -15,8 +15,8 @@
 #   vm_cache_report.sh --orphans  # just the orphan paths, one per line
 #
 # Environment:
-#   LEARN_VM_CACHE_GNAT / _NODE / _APT   override the cache locations
-#   (defaults: <repo>/.toolchains/{gnat,node,apt})
+#   LEARN_VM_CACHE_GNAT / _APT   override the cache locations
+#   (defaults: <repo>/.toolchains/{gnat,apt})
 
 set -eu
 set -o pipefail
@@ -37,7 +37,6 @@ abspath () {
 }
 
 cache_gnat=$(abspath "${LEARN_VM_CACHE_GNAT:-.toolchains/gnat}")
-cache_node=$(abspath "${LEARN_VM_CACHE_NODE:-.toolchains/node}")
 cache_apt=$(abspath "${LEARN_VM_CACHE_APT:-.toolchains/apt}")
 
 versions_of () {
@@ -88,7 +87,6 @@ fi
 
 printf '%-8s %-8s %s\n' "CACHE" "SIZE" "LOCATION"
 printf '%-8s %-8s %s\n' "gnat" "$(size_of "${cache_gnat}")" "${cache_gnat}"
-printf '%-8s %-8s %s\n' "node" "$(size_of "${cache_node}")" "${cache_node}"
 printf '%-8s %-8s %s\n' "apt"  "$(size_of "${cache_apt}")"  "${cache_apt}"
 
 echo

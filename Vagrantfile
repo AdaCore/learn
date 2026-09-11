@@ -117,11 +117,7 @@ $frontend = <<-SHELL
 
   echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
   yes | corepack enable
-  # Keep pnpm's content-addressed store on the host cache, so a destroyed VM
-  # does not take it with it. Nothing is lost by the store living on a shared
-  # folder: node_modules is on one too, so pnpm already copies rather than
-  # hardlinks.
-  sudo -u vagrant bash -c "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; cd /vagrant/frontend && pnpm config set store-dir /vagrant_cache/node && pnpm install --frozen-lockfile"
+  sudo -u vagrant bash -c "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; cd /vagrant/frontend && pnpm install --frozen-lockfile"
 
 SHELL
 
@@ -288,11 +284,7 @@ $epub = <<-SHELL
 
   echo 'export COREPACK_ENABLE_DOWNLOAD_PROMPT=0' >> /home/vagrant/.bashrc
   yes | corepack enable
-  # Keep pnpm's content-addressed store on the host cache, so a destroyed VM
-  # does not take it with it. Nothing is lost by the store living on a shared
-  # folder: node_modules is on one too, so pnpm already copies rather than
-  # hardlinks.
-  sudo -u vagrant bash -c "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; cd /vagrant/frontend && pnpm config set store-dir /vagrant_cache/node && pnpm install --frozen-lockfile"
+  sudo -u vagrant bash -c "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0; cd /vagrant/frontend && pnpm install --frozen-lockfile"
 
 SHELL
 
@@ -331,12 +323,6 @@ epub_ssh_port = Integer(ENV.fetch("LEARN_EPUB_SSH_PORT", "2200"))
 vm_cache_gnat = File.expand_path(
   ENV.fetch("LEARN_VM_CACHE_GNAT", ".toolchains/gnat"), __dir__)
 
-# Host-side pnpm store, so that `pnpm install --frozen-lockfile` does not
-# re-download half a gigabyte on every reprovision. Redirect it with
-# LEARN_VM_CACHE_NODE.
-vm_cache_node = File.expand_path(
-  ENV.fetch("LEARN_VM_CACHE_NODE", ".toolchains/node"), __dir__)
-
 # Host-side apt archive, shared by both VMs. Redirect it with
 # LEARN_VM_CACHE_APT.
 vm_cache_apt = File.expand_path(
@@ -347,7 +333,7 @@ vm_cache_apt = File.expand_path(
 #
 # Vagrant refuses to start if a synced folder's source does not exist, so the
 # cache directories have to be created before they are declared below.
-[vm_cache_gnat, vm_cache_node, vm_cache_apt].each { |d| FileUtils.mkdir_p(d) }
+[vm_cache_gnat, vm_cache_apt].each { |d| FileUtils.mkdir_p(d) }
 
 # The download caches are shared between checkouts, so a temporary file there
 # has to name the checkout as well as the machine: two "web" VMs would
@@ -373,7 +359,6 @@ Vagrant.configure("2") do |config|
     web.vm.synced_folder './frontend', '/vagrant/frontend'
     web.vm.synced_folder './content', '/vagrant/content'
     web.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
-    web.vm.synced_folder vm_cache_node, '/vagrant_cache/node'
     web.vm.synced_folder vm_cache_apt,  '/vagrant_cache/apt'
 
     web.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
@@ -392,7 +377,6 @@ Vagrant.configure("2") do |config|
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'
     epub.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
-    epub.vm.synced_folder vm_cache_node, '/vagrant_cache/node'
     epub.vm.synced_folder vm_cache_apt,  '/vagrant_cache/apt'
 
     epub.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
