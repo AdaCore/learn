@@ -27,6 +27,7 @@ apt="${here}/vm_cache_apt.sh"
 case "${1:-}" in
   --orphans)
     "${gnat}" orphans
+    "${apt}" orphans
     exit 0
     ;;
   -h|--help)
@@ -43,3 +44,6 @@ printf '%-8s %-8s %s\n' "CACHE" "SIZE" "LOCATION"
 
 echo
 "${gnat}" report
+
+echo
+"${apt}" report
