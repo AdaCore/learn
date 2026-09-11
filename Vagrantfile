@@ -63,10 +63,10 @@ $frontend = <<-SHELL
 
   # Toolchain download cache: fetch each tarball into the host-side folder
   # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
-  # The script also runs on the host -- `vm_cache_gnat_fetch.sh --all` warms
+  # The script also runs on the host -- `vm_cache_gnat.sh fetch --all` warms
   # the cache before `vagrant up`.
   export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
-  toolchain_fetch=/vagrant/frontend/vm/vm_cache_gnat_fetch.sh
+  gnat_cache=/vagrant/frontend/vm/vm_cache_gnat.sh
 
   install_toolchain () {
     local tool=$1
@@ -77,7 +77,7 @@ $frontend = <<-SHELL
     # Invoked via bash rather than directly: the repo has
     # core.fileMode disabled and the script arrives over a vboxsf
     # share, so the executable bit cannot be relied on here.
-    tarball=$(bash ${toolchain_fetch} "${tool}" "${ver}")
+    tarball=$(bash ${gnat_cache} fetch "${tool}" "${ver}")
     # Extract on the VM's own disk, never onto the shared cache folder.
     tmp=$(mktemp -d)
     tar xzf "${tarball}" -C "${tmp}"
@@ -213,10 +213,10 @@ $epub = <<-SHELL
 
   # Toolchain download cache: fetch each tarball into the host-side folder
   # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
-  # The script also runs on the host -- `vm_cache_gnat_fetch.sh --all` warms
+  # The script also runs on the host -- `vm_cache_gnat.sh fetch --all` warms
   # the cache before `vagrant up`.
   export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
-  toolchain_fetch=/vagrant/frontend/vm/vm_cache_gnat_fetch.sh
+  gnat_cache=/vagrant/frontend/vm/vm_cache_gnat.sh
 
   install_toolchain () {
     local tool=$1
@@ -227,7 +227,7 @@ $epub = <<-SHELL
     # Invoked via bash rather than directly: the repo has
     # core.fileMode disabled and the script arrives over a vboxsf
     # share, so the executable bit cannot be relied on here.
-    tarball=$(bash ${toolchain_fetch} "${tool}" "${ver}")
+    tarball=$(bash ${gnat_cache} fetch "${tool}" "${ver}")
     # Extract on the VM's own disk, never onto the shared cache folder.
     tmp=$(mktemp -d)
     tar xzf "${tarball}" -C "${tmp}"

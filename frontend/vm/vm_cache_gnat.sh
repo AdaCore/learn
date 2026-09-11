@@ -2,8 +2,8 @@
 #
 # Operate on the cache of GNAT toolchain tarballs.
 #
-# Reports the contents of the cache, identifies entries that are no longer
-# required, and removes them.
+# Downloads toolchain tarballs into the cache, reports its contents,
+# identifies entries that are no longer required, and removes them.
 #
 # An entry is no longer required when its version is not listed in
 # toolchain.ini, or when it is a .part file left behind by an interrupted
@@ -14,6 +14,9 @@
 # directly to operate on this cache alone.
 #
 # Usage:
+#   vm_cache_gnat.sh fetch <tool> <version>
+#                                     # download one toolchain into the cache
+#   vm_cache_gnat.sh fetch --all      # download every version in toolchain.ini
 #   vm_cache_gnat.sh summary          # one line for the caches table
 #   vm_cache_gnat.sh report           # versions, contents and orphans
 #   vm_cache_gnat.sh orphans          # orphan paths, one per line
@@ -42,6 +45,9 @@ abspath () {
 }
 
 cache=$(abspath "${LEARN_VM_CACHE_GNAT:-.toolchains/gnat}")
+
+# Downloading is large enough to keep in its own file.
+fetch_impl="${here}/vm_cache_gnat_fetch.sh"
 
 size_of () {
   if [ -d "$1" ]; then du -sh "$1" 2>/dev/null | cut -f1; else echo "-"; fi
@@ -150,12 +156,13 @@ do_clean () {
 }
 
 case "${1:-}" in
+  fetch)    shift; exec bash "${fetch_impl}" "$@" ;;
   summary)  do_summary ;;
   report)   do_report ;;
   orphans)  orphans ;;
   clean)    do_clean "$([ "${2:-}" = "--delete" ] && echo true || echo false)" ;;
   -h|--help|"")
-    sed -n '3,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    sed -n '3,27p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
   *)
     echo "error: unknown command '$1'" >&2; exit 1 ;;
 esac

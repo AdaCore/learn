@@ -3,6 +3,9 @@
 # Fetch a GNAT-FSF-builds toolchain tarball into the download cache and print
 # its path.
 #
+# This is the implementation of `vm_cache_gnat.sh fetch`, which is the
+# documented way to invoke it.
+#
 # The cache exists so that destroying a VM does not throw the toolchains away:
 # a full reprovision otherwise re-downloads several GB. Upstream publishes a
 # .sha256 sidecar for every asset, and it is verified on every use -- not only
@@ -47,7 +50,7 @@ tag="${LEARN_VM_NAME:-$(hostname)}"
 base_url=https://github.com/alire-project/GNAT-FSF-builds/releases/download
 
 usage () {
-  sed -n '3,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  sed -n '3,27p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
   exit "${1:-1}"
 }
 
