@@ -74,7 +74,10 @@ $frontend = <<-SHELL
     local tarball
     local tmp
 
-    tarball=$(${toolchain_fetch} "${tool}" "${ver}")
+    # Invoked via bash rather than directly: the repo has
+    # core.fileMode disabled and the script arrives over a vboxsf
+    # share, so the executable bit cannot be relied on here.
+    tarball=$(bash ${toolchain_fetch} "${tool}" "${ver}")
     # Extract on the VM's own disk, never onto the shared cache folder.
     tmp=$(mktemp -d)
     tar xzf "${tarball}" -C "${tmp}"
@@ -225,7 +228,10 @@ $epub = <<-SHELL
     local tarball
     local tmp
 
-    tarball=$(${toolchain_fetch} "${tool}" "${ver}")
+    # Invoked via bash rather than directly: the repo has
+    # core.fileMode disabled and the script arrives over a vboxsf
+    # share, so the executable bit cannot be relied on here.
+    tarball=$(bash ${toolchain_fetch} "${tool}" "${ver}")
     # Extract on the VM's own disk, never onto the shared cache folder.
     tmp=$(mktemp -d)
     tar xzf "${tarball}" -C "${tmp}"
