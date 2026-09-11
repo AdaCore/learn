@@ -302,6 +302,15 @@ require 'fileutils'
 # Set VM_APT_PIN=0 to disable it for a base-box bootstrap.
 vm_apt_pin = ENV.fetch("VM_APT_PIN", "1")
 
+# Several checkouts of this repository can run their own web/epub VMs at the
+# same time: VirtualBox names each VM after its directory, and the ports below
+# can be moved out of one another's way.
+
+# Host port for the web VM's dev server (guest 8080). Override it to run more
+# than one web VM at once. auto_correct still picks a free port if this one is
+# taken too -- `vagrant port web` then reports what was chosen.
+web_port = Integer(ENV.fetch("LEARN_WEB_PORT", "8080"))
+
 # Host-side download cache for the GNAT-FSF toolchain tarballs, so that
 # destroying a VM does not throw them away. Redirect it with
 # LEARN_VM_CACHE_GNAT -- it holds several GB and may belong on another disk.
@@ -337,7 +346,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
     web.vm.box = "bento/ubuntu-24.04"
     web.vm.box_version = "202510.26.0"
-    web.vm.network "forwarded_port", guest: 8080, host: 8080,
+    web.vm.network "forwarded_port", guest: 8080, host: web_port,
                    host_ip: "127.0.0.1", auto_correct: true
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
