@@ -1,6 +1,17 @@
 $frontend = <<-SHELL
   #!/bin/bash -eux
 
+  # Keep downloaded .deb files in a host-side cache, so a reprovision does not
+  # re-fetch them. Redirected rather than bind-mounted over
+  # /var/cache/apt/archives, so apt's lock and partial/ handling stays
+  # explicit. This must precede anything that runs apt, including the
+  # NodeSource setup script below.
+  mkdir -p /vagrant_cache/apt/partial
+  echo 'Dir::Cache::Archives "/vagrant_cache/apt";' > /etc/apt/apt.conf.d/99-learn-cache
+  # apt drops privileges to the _apt user to download, which cannot read a
+  # vboxsf share owned by vagrant; without this it warns on every invocation.
+  echo 'APT::Sandbox::User "root";' >> /etc/apt/apt.conf.d/99-learn-cache
+
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_24.x | bash -
 
@@ -113,6 +124,17 @@ SHELL
 
 $epub = <<-SHELL
   #!/bin/bash -eux
+
+  # Keep downloaded .deb files in a host-side cache, so a reprovision does not
+  # re-fetch them. Redirected rather than bind-mounted over
+  # /var/cache/apt/archives, so apt's lock and partial/ handling stays
+  # explicit. This must precede anything that runs apt, including the
+  # NodeSource setup script below.
+  mkdir -p /vagrant_cache/apt/partial
+  echo 'Dir::Cache::Archives "/vagrant_cache/apt";' > /etc/apt/apt.conf.d/99-learn-cache
+  # apt drops privileges to the _apt user to download, which cannot read a
+  # vboxsf share owned by vagrant; without this it warns on every invocation.
+  echo 'APT::Sandbox::User "root";' >> /etc/apt/apt.conf.d/99-learn-cache
 
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_22.x | bash -
@@ -286,9 +308,14 @@ vm_cache_gnat = ENV.fetch("LEARN_VM_CACHE_GNAT",
 vm_cache_node = ENV.fetch("LEARN_VM_CACHE_NODE",
                           File.expand_path(".toolchains/node", __dir__))
 
+# Host-side apt archive, shared by both VMs. Redirect it with
+# LEARN_VM_CACHE_APT.
+vm_cache_apt = ENV.fetch("LEARN_VM_CACHE_APT",
+                         File.expand_path(".toolchains/apt", __dir__))
+
 # Vagrant refuses to start if a synced folder's source does not exist, so the
 # cache directories have to be created before they are declared below.
-[vm_cache_gnat, vm_cache_node].each { |d| FileUtils.mkdir_p(d) }
+[vm_cache_gnat, vm_cache_node, vm_cache_apt].each { |d| FileUtils.mkdir_p(d) }
 
 Vagrant.configure("2") do |config|
 
@@ -307,6 +334,7 @@ Vagrant.configure("2") do |config|
     web.vm.synced_folder './content', '/vagrant/content'
     web.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
     web.vm.synced_folder vm_cache_node, '/vagrant_cache/node'
+    web.vm.synced_folder vm_cache_apt,  '/vagrant_cache/apt'
 
     web.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     web.vm.provision "file", source: "./frontend/vm/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
@@ -323,6 +351,7 @@ Vagrant.configure("2") do |config|
     epub.vm.synced_folder './content', '/vagrant/content'
     epub.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
     epub.vm.synced_folder vm_cache_node, '/vagrant_cache/node'
+    epub.vm.synced_folder vm_cache_apt,  '/vagrant_cache/apt'
 
     epub.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     epub.vm.provision "file", source: "./frontend/vm/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
