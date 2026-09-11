@@ -349,6 +349,11 @@ vm_cache_apt = File.expand_path(
 # cache directories have to be created before they are declared below.
 [vm_cache_gnat, vm_cache_node, vm_cache_apt].each { |d| FileUtils.mkdir_p(d) }
 
+# The download caches are shared between checkouts, so a temporary file there
+# has to name the checkout as well as the machine: two "web" VMs would
+# otherwise write to the same .part file.
+project = File.basename(__dir__)
+
 Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
@@ -375,7 +380,7 @@ Vagrant.configure("2") do |config|
     web.vm.provision "file", source: "./frontend/vm/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
     web.vm.provision :shell, inline: $frontend,
                      env: { "VM_APT_PIN" => vm_apt_pin,
-                            "LEARN_VM_NAME" => "web" }
+                            "LEARN_VM_NAME" => "#{project}-web" }
   end
 
   config.vm.define "epub" do |epub|
@@ -394,7 +399,7 @@ Vagrant.configure("2") do |config|
     epub.vm.provision "file", source: "./frontend/vm/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
     epub.vm.provision :shell, inline: $epub,
                       env: { "VM_APT_PIN" => vm_apt_pin,
-                             "LEARN_VM_NAME" => "epub" }
+                             "LEARN_VM_NAME" => "#{project}-epub" }
   end
 
 end
