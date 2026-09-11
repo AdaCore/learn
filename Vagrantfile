@@ -23,9 +23,15 @@ $frontend = <<-SHELL
       libjpeg-dev \
       make
 
-  # Install/check packages from list for reproducibility
-  DEBIAN_FRONTEND=noninteractive apt-get install \
-    --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  # Install/check packages from list for reproducibility.
+  # Set VM_APT_PIN=0 to skip this step. That is needed when bootstrapping a
+  # new Ubuntu base box, whose archive does not carry the pinned versions.
+  if [ "${VM_APT_PIN:-1}" = "1" ]; then
+    DEBIAN_FRONTEND=noninteractive apt-get install \
+      --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  else
+    echo "VM_APT_PIN=0 -- skipping installation of pinned packages"
+  fi
 
   # Force packages to be set as automatically installed
   apt-mark auto $(cat /vagrant/vm_apt_list.txt | grep "\\[installed,automatic\\]" | awk -F/ -v ORS=" " 'NR>1 {print $1}')
@@ -127,9 +133,15 @@ $epub = <<-SHELL
       wget \
       libc6-dev
 
-  # Install/check packages from list for reproducibility
-  DEBIAN_FRONTEND=noninteractive apt-get install \
-    --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  # Install/check packages from list for reproducibility.
+  # Set VM_APT_PIN=0 to skip this step. That is needed when bootstrapping a
+  # new Ubuntu base box, whose archive does not carry the pinned versions.
+  if [ "${VM_APT_PIN:-1}" = "1" ]; then
+    DEBIAN_FRONTEND=noninteractive apt-get install \
+      --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  else
+    echo "VM_APT_PIN=0 -- skipping installation of pinned packages"
+  fi
 
   # Force packages to be set as automatically installed
   apt-mark auto $(cat /vagrant/vm_apt_list.txt | grep "\\[installed,automatic\\]" | awk -F/ -v ORS=" " 'NR>1 {print $1}')
@@ -218,6 +230,10 @@ $epub = <<-SHELL
 
 SHELL
 
+# Installation of the pinned package versions is enabled by default.
+# Set VM_APT_PIN=0 to disable it for a base-box bootstrap.
+vm_apt_pin = ENV.fetch("VM_APT_PIN", "1")
+
 Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
@@ -236,7 +252,8 @@ Vagrant.configure("2") do |config|
 
     web.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     web.vm.provision "file", source: "./frontend/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
-    web.vm.provision :shell, inline: $frontend
+    web.vm.provision :shell, inline: $frontend,
+                     env: { "VM_APT_PIN" => vm_apt_pin }
   end
 
   config.vm.define "epub" do |epub|
@@ -248,7 +265,8 @@ Vagrant.configure("2") do |config|
 
     epub.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     epub.vm.provision "file", source: "./frontend/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
-    epub.vm.provision :shell, inline: $epub
+    epub.vm.provision :shell, inline: $epub,
+                      env: { "VM_APT_PIN" => vm_apt_pin }
   end
 
 end
