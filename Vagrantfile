@@ -311,6 +311,20 @@ vm_apt_pin = ENV.fetch("VM_APT_PIN", "1")
 # taken too -- `vagrant port web` then reports what was chosen.
 web_port = Integer(ENV.fetch("LEARN_WEB_PORT", "8080"))
 
+# SSH host ports. Vagrant forwards SSH under the reserved id "ssh", so
+# redeclaring that id overrides its default rather than adding a second rule.
+# The defaults reproduce what Vagrant picks unaided for a single checkout:
+# 2222 for the first machine, and 2200 -- the base of the auto-correct range
+# -- for the second. Pinning them keeps the numbers predictable when several
+# checkouts run at once.
+#
+# auto_correct stays on, so a clash degrades to a warning rather than a
+# refusal to boot. These are therefore a preference, not a guarantee:
+# `vagrant ssh-config <machine>` remains authoritative, and anything scripted
+# should ask rather than assume.
+web_ssh_port  = Integer(ENV.fetch("LEARN_WEB_SSH_PORT",  "2222"))
+epub_ssh_port = Integer(ENV.fetch("LEARN_EPUB_SSH_PORT", "2200"))
+
 # Host-side download cache for the GNAT-FSF toolchain tarballs, so that
 # destroying a VM does not throw them away. Redirect it with
 # LEARN_VM_CACHE_GNAT -- it holds several GB and may belong on another disk.
@@ -348,6 +362,8 @@ Vagrant.configure("2") do |config|
     web.vm.box_version = "202510.26.0"
     web.vm.network "forwarded_port", guest: 8080, host: web_port,
                    host_ip: "127.0.0.1", auto_correct: true
+    web.vm.network "forwarded_port", guest: 22, host: web_ssh_port,
+                   id: "ssh", auto_correct: true
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
     web.vm.synced_folder './content', '/vagrant/content'
@@ -365,6 +381,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "epub" do |epub|
     epub.vm.box = "bento/ubuntu-24.04"
     epub.vm.box_version = "202510.26.0"
+    epub.vm.network "forwarded_port", guest: 22, host: epub_ssh_port,
+                    id: "ssh", auto_correct: true
 
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'
