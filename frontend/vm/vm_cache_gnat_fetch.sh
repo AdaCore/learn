@@ -13,8 +13,8 @@
 # the cache before `vagrant up`, so that provisioning downloads nothing.
 #
 # Usage:
-#   vm_toolchain_fetch.sh <tool> <version>   # print the verified cached path
-#   vm_toolchain_fetch.sh --all              # every version in toolchain.ini
+#   vm_cache_gnat_fetch.sh <tool> <version>   # print the verified cached path
+#   vm_cache_gnat_fetch.sh --all              # every version in toolchain.ini
 #
 # Environment:
 #   LEARN_VM_CACHE_GNAT   cache directory
@@ -47,7 +47,7 @@ tag="${LEARN_VM_NAME:-$(hostname)}"
 base_url=https://github.com/alire-project/GNAT-FSF-builds/releases/download
 
 usage () {
-  sed -n '3,25p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  sed -n '3,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
   exit "${1:-1}"
 }
 

@@ -63,10 +63,10 @@ $frontend = <<-SHELL
 
   # Toolchain download cache: fetch each tarball into the host-side folder
   # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
-  # The script also runs on the host -- `vm_toolchain_fetch.sh --all` warms
+  # The script also runs on the host -- `vm_cache_gnat_fetch.sh --all` warms
   # the cache before `vagrant up`.
   export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
-  toolchain_fetch=/vagrant/frontend/vm/vm_toolchain_fetch.sh
+  toolchain_fetch=/vagrant/frontend/vm/vm_cache_gnat_fetch.sh
 
   install_toolchain () {
     local tool=$1
@@ -213,10 +213,10 @@ $epub = <<-SHELL
 
   # Toolchain download cache: fetch each tarball into the host-side folder
   # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
-  # The script also runs on the host -- `vm_toolchain_fetch.sh --all` warms
+  # The script also runs on the host -- `vm_cache_gnat_fetch.sh --all` warms
   # the cache before `vagrant up`.
   export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
-  toolchain_fetch=/vagrant/frontend/vm/vm_toolchain_fetch.sh
+  toolchain_fetch=/vagrant/frontend/vm/vm_cache_gnat_fetch.sh
 
   install_toolchain () {
     local tool=$1
