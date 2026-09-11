@@ -31,7 +31,17 @@ repo=$(cd "${here}/../.." && pwd)
 
 toolchain_ini="${repo}/frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini"
 
-cache="${LEARN_VM_CACHE_GNAT:-${repo}/.toolchains/gnat}"
+# Expand a cache location against the repository root, matching how the
+# Vagrantfile expands it against its own directory. An absolute value is used
+# as-is; a relative one must not depend on the caller's working directory.
+abspath () {
+  case "$1" in
+    /*) echo "$1" ;;
+    *)  echo "${repo}/$1" ;;
+  esac
+}
+
+cache=$(abspath "${LEARN_VM_CACHE_GNAT:-.toolchains/gnat}")
 tag="${LEARN_VM_NAME:-$(hostname)}"
 
 base_url=https://github.com/alire-project/GNAT-FSF-builds/releases/download

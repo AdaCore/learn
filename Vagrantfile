@@ -305,20 +305,23 @@ vm_apt_pin = ENV.fetch("VM_APT_PIN", "1")
 # Host-side download cache for the GNAT-FSF toolchain tarballs, so that
 # destroying a VM does not throw them away. Redirect it with
 # LEARN_VM_CACHE_GNAT -- it holds several GB and may belong on another disk.
-vm_cache_gnat = ENV.fetch("LEARN_VM_CACHE_GNAT",
-                          File.expand_path(".toolchains/gnat", __dir__))
+vm_cache_gnat = File.expand_path(
+  ENV.fetch("LEARN_VM_CACHE_GNAT", ".toolchains/gnat"), __dir__)
 
 # Host-side pnpm store, so that `pnpm install --frozen-lockfile` does not
 # re-download half a gigabyte on every reprovision. Redirect it with
 # LEARN_VM_CACHE_NODE.
-vm_cache_node = ENV.fetch("LEARN_VM_CACHE_NODE",
-                          File.expand_path(".toolchains/node", __dir__))
+vm_cache_node = File.expand_path(
+  ENV.fetch("LEARN_VM_CACHE_NODE", ".toolchains/node"), __dir__)
 
 # Host-side apt archive, shared by both VMs. Redirect it with
 # LEARN_VM_CACHE_APT.
-vm_cache_apt = ENV.fetch("LEARN_VM_CACHE_APT",
-                         File.expand_path(".toolchains/apt", __dir__))
+vm_cache_apt = File.expand_path(
+  ENV.fetch("LEARN_VM_CACHE_APT", ".toolchains/apt"), __dir__)
 
+# Expanded against this file's directory, so that a relative override still
+# names one place: the helper scripts in frontend/vm/ resolve it the same way.
+#
 # Vagrant refuses to start if a synced folder's source does not exist, so the
 # cache directories have to be created before they are declared below.
 [vm_cache_gnat, vm_cache_node, vm_cache_apt].each { |d| FileUtils.mkdir_p(d) }
