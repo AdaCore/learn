@@ -129,14 +129,14 @@ You can download the toolchains before creating any VM, so that provisioning
 fetches nothing. This runs on the host:
 
 ```
-$ frontend/vm/vm_toolchain_fetch.sh --all
+$ frontend/vm/vm_cache_gnat.sh fetch --all
 ```
 
 This is useful when you expect to rebuild a VM several times, or want the
 download out of the way before going offline. To fetch a single version:
 
 ```
-$ frontend/vm/vm_toolchain_fetch.sh gnat 15.1.0-2
+$ frontend/vm/vm_cache_gnat.sh fetch gnat 15.1.0-2
 ```
 
 Each tarball is checked against the SHA-256 published alongside it upstream,
@@ -177,12 +177,12 @@ lists name, so it never asks for a file that was removed — but the next
 first, so that the cache remains useful.
 
 Both commands are entry points covering every cache. The work is done by one
-script per cache — `vm_cache_gnat.sh` and `vm_cache_apt.sh` — which take the
-same verbs and can be run directly when you only care about one of them:
+script per cache — `vm_cache_gnat.sh` and `vm_cache_apt.sh` — which can be
+run directly when you only care about one of them:
 
 ```
 $ frontend/vm/vm_cache_gnat.sh report
-$ frontend/vm/vm_cache_gnat.sh clean --delete
+$ frontend/vm/vm_cache_apt.sh clean --delete
 ```
 
 ## The pinned package lists
