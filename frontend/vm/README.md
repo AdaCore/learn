@@ -151,9 +151,11 @@ To see what the caches currently hold, run:
 $ frontend/vm/vm_cache_report.sh
 ```
 
-This shows where each cache is, how large it is, and which toolchain
-tarballs are no longer listed in `toolchain.ini` — those accumulate whenever
-a version is dropped, and nothing removes them on its own.
+This shows where each cache is, how large it is, and which of its entries
+are no longer required. Both caches accumulate those on their own: the
+toolchain cache keeps tarballs whose version has been dropped from
+`toolchain.ini`, and the apt cache keeps package files superseded by a
+later capture of the pinned lists.
 
 To get rid of those leftovers, run:
 
@@ -163,6 +165,16 @@ $ frontend/vm/vm_cache_clean.sh --delete    # removes it
 ```
 
 The first form changes nothing, so it is safe to run to see the list.
+
+One caveat for the apt cache: a package file counts as required only if one
+of the pinned lists names it. Immediately after a bootstrap with
+`VM_APT_PIN=0`, or after upgrading a VM in place, the lists do not yet
+describe the VM, so almost the whole cache is reported as removable. The
+report prints a warning whenever most of the cache is no longer required.
+Nothing breaks if you delete anyway — provisioning only installs what the
+lists name, so it never asks for a file that was removed — but the next
+`vagrant up` re-downloads what it needs. Therefore, regenerate the lists
+first, so that the cache remains useful.
 
 Both commands are entry points covering every cache. The work is done by one
 script per cache — `vm_cache_gnat.sh` and `vm_cache_apt.sh` — which take the
