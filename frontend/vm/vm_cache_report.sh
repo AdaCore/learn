@@ -43,7 +43,11 @@ printf '%-8s %-8s %s\n' "CACHE" "SIZE" "LOCATION"
 "${apt}" summary
 
 echo
+echo "GNAT toolchain cache"
+echo "--------------------"
 "${gnat}" report
 
 echo
+echo "apt package cache"
+echo "-----------------"
 "${apt}" report
