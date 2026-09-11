@@ -3,6 +3,7 @@
 env
 .idea
 .vagrant*
+.toolchains/
 .vscode
 .yarn
 *.bkp

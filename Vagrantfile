@@ -1,6 +1,17 @@
 $frontend = <<-SHELL
   #!/bin/bash -eux
 
+  # Keep downloaded .deb files in a host-side cache, so a reprovision does not
+  # re-fetch them. Redirected rather than bind-mounted over
+  # /var/cache/apt/archives, so apt's lock and partial/ handling stays
+  # explicit. This must precede anything that runs apt, including the
+  # NodeSource setup script below.
+  mkdir -p /vagrant_cache/apt/partial
+  echo 'Dir::Cache::Archives "/vagrant_cache/apt";' > /etc/apt/apt.conf.d/99-learn-cache
+  # apt drops privileges to the _apt user to download, which cannot read a
+  # vboxsf share owned by vagrant; without this it warns on every invocation.
+  echo 'APT::Sandbox::User "root";' >> /etc/apt/apt.conf.d/99-learn-cache
+
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_24.x | bash -
 
@@ -23,9 +34,15 @@ $frontend = <<-SHELL
       libjpeg-dev \
       make
 
-  # Install/check packages from list for reproducibility
-  DEBIAN_FRONTEND=noninteractive apt-get install \
-    --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  # Install/check packages from list for reproducibility.
+  # Set VM_APT_PIN=0 to skip this step. That is needed when bootstrapping a
+  # new Ubuntu base box, whose archive does not carry the pinned versions.
+  if [ "${VM_APT_PIN:-1}" = "1" ]; then
+    DEBIAN_FRONTEND=noninteractive apt-get install \
+      --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  else
+    echo "VM_APT_PIN=0 -- skipping installation of pinned packages"
+  fi
 
   # Force packages to be set as automatically installed
   apt-mark auto $(cat /vagrant/vm_apt_list.txt | grep "\\[installed,automatic\\]" | awk -F/ -v ORS=" " 'NR>1 {print $1}')
@@ -44,6 +61,30 @@ $frontend = <<-SHELL
   echo default_version_gnat:         $default_version_gnat
   echo toolchain_versions_gnat:      $toolchain_versions_gnat
 
+  # Toolchain download cache: fetch each tarball into the host-side folder
+  # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
+  # The script also runs on the host -- `vm_cache_gnat.sh fetch --all` warms
+  # the cache before `vagrant up`.
+  export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
+  gnat_cache=/vagrant/frontend/vm/vm_cache_gnat.sh
+
+  install_toolchain () {
+    local tool=$1
+    local ver=$2
+    local tarball
+    local tmp
+
+    # Invoked via bash rather than directly: the repo has
+    # core.fileMode disabled and the script arrives over a vboxsf
+    # share, so the executable bit cannot be relied on here.
+    tarball=$(bash ${gnat_cache} fetch "${tool}" "${ver}")
+    # Extract on the VM's own disk, never onto the shared cache folder.
+    tmp=$(mktemp -d)
+    tar xzf "${tarball}" -C "${tmp}"
+    mv "${tmp}"/${tool}-* ${path_ada_toolchain_root}/${tool}/${ver}
+    rm -rf "${tmp}"
+  }
+
   # Install FSF GNAT
   # (Required tool: gnatchop)
   mkdir -p ${path_ada_toolchain_root}
@@ -54,10 +95,7 @@ $frontend = <<-SHELL
   mkdir ${path_ada_toolchain_root}/gnat
   for tool_version in ${gnat_version[@]}; do
     echo Installing GNAT $tool_version
-    wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gnat.tar.gz && \
-    mv gnat-* ${path_ada_toolchain_root}/gnat/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gnat ${tool_version}
   done
 
   ln -sf ${path_ada_toolchain_root}/gnat/${default_version_gnat}            ${path_ada_toolchain_default}/gnat
@@ -85,6 +123,17 @@ SHELL
 
 $epub = <<-SHELL
   #!/bin/bash -eux
+
+  # Keep downloaded .deb files in a host-side cache, so a reprovision does not
+  # re-fetch them. Redirected rather than bind-mounted over
+  # /var/cache/apt/archives, so apt's lock and partial/ handling stays
+  # explicit. This must precede anything that runs apt, including the
+  # NodeSource setup script below.
+  mkdir -p /vagrant_cache/apt/partial
+  echo 'Dir::Cache::Archives "/vagrant_cache/apt";' > /etc/apt/apt.conf.d/99-learn-cache
+  # apt drops privileges to the _apt user to download, which cannot read a
+  # vboxsf share owned by vagrant; without this it warns on every invocation.
+  echo 'APT::Sandbox::User "root";' >> /etc/apt/apt.conf.d/99-learn-cache
 
   # Enable the NodeSource repository
   curl -sL https://deb.nodesource.com/setup_22.x | bash -
@@ -127,9 +176,15 @@ $epub = <<-SHELL
       wget \
       libc6-dev
 
-  # Install/check packages from list for reproducibility
-  DEBIAN_FRONTEND=noninteractive apt-get install \
-    --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  # Install/check packages from list for reproducibility.
+  # Set VM_APT_PIN=0 to skip this step. That is needed when bootstrapping a
+  # new Ubuntu base box, whose archive does not carry the pinned versions.
+  if [ "${VM_APT_PIN:-1}" = "1" ]; then
+    DEBIAN_FRONTEND=noninteractive apt-get install \
+      --allow-downgrades -y $(cat /home/vagrant/vm_apt.txt)
+  else
+    echo "VM_APT_PIN=0 -- skipping installation of pinned packages"
+  fi
 
   # Force packages to be set as automatically installed
   apt-mark auto $(cat /vagrant/vm_apt_list.txt | grep "\\[installed,automatic\\]" | awk -F/ -v ORS=" " 'NR>1 {print $1}')
@@ -156,6 +211,30 @@ $epub = <<-SHELL
   echo toolchain_versions_gnatprove  $toolchain_versions_gnatprove
   echo toolchain_versions_gprbuild   $toolchain_versions_gprbuild
 
+  # Toolchain download cache: fetch each tarball into the host-side folder
+  # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
+  # The script also runs on the host -- `vm_cache_gnat.sh fetch --all` warms
+  # the cache before `vagrant up`.
+  export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
+  gnat_cache=/vagrant/frontend/vm/vm_cache_gnat.sh
+
+  install_toolchain () {
+    local tool=$1
+    local ver=$2
+    local tarball
+    local tmp
+
+    # Invoked via bash rather than directly: the repo has
+    # core.fileMode disabled and the script arrives over a vboxsf
+    # share, so the executable bit cannot be relied on here.
+    tarball=$(bash ${gnat_cache} fetch "${tool}" "${ver}")
+    # Extract on the VM's own disk, never onto the shared cache folder.
+    tmp=$(mktemp -d)
+    tar xzf "${tarball}" -C "${tmp}"
+    mv "${tmp}"/${tool}-* ${path_ada_toolchain_root}/${tool}/${ver}
+    rm -rf "${tmp}"
+  }
+
   # Install FSF GNAT
   mkdir -p ${path_ada_toolchain_root}
   mkdir -p ${path_ada_toolchain_default}
@@ -165,30 +244,21 @@ $epub = <<-SHELL
   mkdir ${path_ada_toolchain_root}/gnat
   for tool_version in ${gnat_version[@]}; do
     echo Installing GNAT $tool_version
-    wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gnat.tar.gz && \
-    mv gnat-* ${path_ada_toolchain_root}/gnat/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gnat ${tool_version}
   done
 
   gnat_prove_version=(${toolchain_versions_gnatprove})
   mkdir ${path_ada_toolchain_root}/gnatprove
   for tool_version in ${gnat_prove_version[@]}; do
     echo Installing GNATprove $tool_version
-    wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-${tool_version}/gnatprove-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gnatprove.tar.gz && \
-    mv gnatprove-* ${path_ada_toolchain_root}/gnatprove/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gnatprove ${tool_version}
   done
 
   gprbuild_version=(${toolchain_versions_gprbuild})
   mkdir ${path_ada_toolchain_root}/gprbuild
   for tool_version in ${gprbuild_version[@]}; do
     echo Installing GPRbuild $tool_version
-    wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-${tool_version}/gprbuild-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gprbuild.tar.gz && \
-    mv gprbuild-* ${path_ada_toolchain_root}/gprbuild/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gprbuild ${tool_version}
   done
 
   rm -f ${path_ada_toolchain_default}/*
@@ -218,6 +288,58 @@ $epub = <<-SHELL
 
 SHELL
 
+require 'fileutils'
+
+# Installation of the pinned package versions is enabled by default.
+# Set VM_APT_PIN=0 to disable it for a base-box bootstrap.
+vm_apt_pin = ENV.fetch("VM_APT_PIN", "1")
+
+# Several checkouts of this repository can run their own web/epub VMs at the
+# same time: VirtualBox names each VM after its directory, and the ports below
+# can be moved out of one another's way.
+
+# Host port for the web VM's dev server (guest 8080). Override it to run more
+# than one web VM at once. auto_correct still picks a free port if this one is
+# taken too -- `vagrant port web` then reports what was chosen.
+web_port = Integer(ENV.fetch("LEARN_WEB_PORT", "8080"))
+
+# SSH host ports. Vagrant forwards SSH under the reserved id "ssh", so
+# redeclaring that id overrides its default rather than adding a second rule.
+# The defaults reproduce what Vagrant picks unaided for a single checkout:
+# 2222 for the first machine, and 2200 -- the base of the auto-correct range
+# -- for the second. Pinning them keeps the numbers predictable when several
+# checkouts run at once.
+#
+# auto_correct stays on, so a clash degrades to a warning rather than a
+# refusal to boot. These are therefore a preference, not a guarantee:
+# `vagrant ssh-config <machine>` remains authoritative, and anything scripted
+# should ask rather than assume.
+web_ssh_port  = Integer(ENV.fetch("LEARN_WEB_SSH_PORT",  "2222"))
+epub_ssh_port = Integer(ENV.fetch("LEARN_EPUB_SSH_PORT", "2200"))
+
+# Host-side download cache for the GNAT-FSF toolchain tarballs, so that
+# destroying a VM does not throw them away. Redirect it with
+# LEARN_VM_CACHE_GNAT -- it holds several GB and may belong on another disk.
+vm_cache_gnat = File.expand_path(
+  ENV.fetch("LEARN_VM_CACHE_GNAT", ".toolchains/gnat"), __dir__)
+
+# Host-side apt archive, shared by both VMs. Redirect it with
+# LEARN_VM_CACHE_APT.
+vm_cache_apt = File.expand_path(
+  ENV.fetch("LEARN_VM_CACHE_APT", ".toolchains/apt"), __dir__)
+
+# Expanded against this file's directory, so that a relative override still
+# names one place: the helper scripts in frontend/vm/ resolve it the same way.
+#
+# Vagrant refuses to start if a synced folder's source does not exist, so the
+# cache directories have to be created before they are declared below.
+[vm_cache_gnat, vm_cache_apt].each { |d| FileUtils.mkdir_p(d) }
+
+# The download caches are shared between checkouts, so a temporary file there
+# has to name the checkout as well as the machine: two "web" VMs would
+# otherwise write to the same .part file.
+project = File.basename(__dir__)
+
 Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
@@ -229,26 +351,39 @@ Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
     web.vm.box = "bento/ubuntu-24.04"
     web.vm.box_version = "202510.26.0"
-    web.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
+    web.vm.network "forwarded_port", guest: 8080, host: web_port,
+                   host_ip: "127.0.0.1", auto_correct: true
+    web.vm.network "forwarded_port", guest: 22, host: web_ssh_port,
+                   id: "ssh", auto_correct: true
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
     web.vm.synced_folder './content', '/vagrant/content'
+    web.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
+    web.vm.synced_folder vm_cache_apt,  '/vagrant_cache/apt'
 
     web.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
-    web.vm.provision "file", source: "./frontend/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
-    web.vm.provision :shell, inline: $frontend
+    web.vm.provision "file", source: "./frontend/vm/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
+    web.vm.provision :shell, inline: $frontend,
+                     env: { "VM_APT_PIN" => vm_apt_pin,
+                            "LEARN_VM_NAME" => "#{project}-web" }
   end
 
   config.vm.define "epub" do |epub|
     epub.vm.box = "bento/ubuntu-24.04"
     epub.vm.box_version = "202510.26.0"
+    epub.vm.network "forwarded_port", guest: 22, host: epub_ssh_port,
+                    id: "ssh", auto_correct: true
 
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'
+    epub.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
+    epub.vm.synced_folder vm_cache_apt,  '/vagrant_cache/apt'
 
     epub.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
-    epub.vm.provision "file", source: "./frontend/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
-    epub.vm.provision :shell, inline: $epub
+    epub.vm.provision "file", source: "./frontend/vm/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
+    epub.vm.provision :shell, inline: $epub,
+                      env: { "VM_APT_PIN" => vm_apt_pin,
+                             "LEARN_VM_NAME" => "#{project}-epub" }
   end
 
 end
