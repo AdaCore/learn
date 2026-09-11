@@ -164,6 +164,15 @@ $ frontend/vm/vm_cache_clean.sh --delete    # removes it
 
 The first form changes nothing, so it is safe to run to see the list.
 
+Both commands are entry points covering every cache. The work is done by one
+script per cache — `vm_cache_gnat.sh` and `vm_cache_apt.sh` — which take the
+same verbs and can be run directly when you only care about one of them:
+
+```
+$ frontend/vm/vm_cache_gnat.sh report
+$ frontend/vm/vm_cache_gnat.sh clean --delete
+```
+
 ## The pinned package lists
 
 Both VMs run Ubuntu, so their system software is installed with `apt`, the
