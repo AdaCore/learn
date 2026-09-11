@@ -50,6 +50,27 @@ $frontend = <<-SHELL
   echo default_version_gnat:         $default_version_gnat
   echo toolchain_versions_gnat:      $toolchain_versions_gnat
 
+  # Toolchain download cache: fetch each tarball into the host-side folder
+  # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
+  # The script also runs on the host -- `vm_toolchain_fetch.sh --all` warms
+  # the cache before `vagrant up`.
+  export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
+  toolchain_fetch=/vagrant/frontend/vm/vm_toolchain_fetch.sh
+
+  install_toolchain () {
+    local tool=$1
+    local ver=$2
+    local tarball
+    local tmp
+
+    tarball=$(${toolchain_fetch} "${tool}" "${ver}")
+    # Extract on the VM's own disk, never onto the shared cache folder.
+    tmp=$(mktemp -d)
+    tar xzf "${tarball}" -C "${tmp}"
+    mv "${tmp}"/${tool}-* ${path_ada_toolchain_root}/${tool}/${ver}
+    rm -rf "${tmp}"
+  }
+
   # Install FSF GNAT
   # (Required tool: gnatchop)
   mkdir -p ${path_ada_toolchain_root}
@@ -60,10 +81,7 @@ $frontend = <<-SHELL
   mkdir ${path_ada_toolchain_root}/gnat
   for tool_version in ${gnat_version[@]}; do
     echo Installing GNAT $tool_version
-    wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gnat.tar.gz && \
-    mv gnat-* ${path_ada_toolchain_root}/gnat/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gnat ${tool_version}
   done
 
   ln -sf ${path_ada_toolchain_root}/gnat/${default_version_gnat}            ${path_ada_toolchain_default}/gnat
@@ -168,6 +186,27 @@ $epub = <<-SHELL
   echo toolchain_versions_gnatprove  $toolchain_versions_gnatprove
   echo toolchain_versions_gprbuild   $toolchain_versions_gprbuild
 
+  # Toolchain download cache: fetch each tarball into the host-side folder
+  # mounted at /vagrant_cache/gnat, verified against its upstream .sha256.
+  # The script also runs on the host -- `vm_toolchain_fetch.sh --all` warms
+  # the cache before `vagrant up`.
+  export LEARN_VM_CACHE_GNAT=/vagrant_cache/gnat
+  toolchain_fetch=/vagrant/frontend/vm/vm_toolchain_fetch.sh
+
+  install_toolchain () {
+    local tool=$1
+    local ver=$2
+    local tarball
+    local tmp
+
+    tarball=$(${toolchain_fetch} "${tool}" "${ver}")
+    # Extract on the VM's own disk, never onto the shared cache folder.
+    tmp=$(mktemp -d)
+    tar xzf "${tarball}" -C "${tmp}"
+    mv "${tmp}"/${tool}-* ${path_ada_toolchain_root}/${tool}/${ver}
+    rm -rf "${tmp}"
+  }
+
   # Install FSF GNAT
   mkdir -p ${path_ada_toolchain_root}
   mkdir -p ${path_ada_toolchain_default}
@@ -177,30 +216,21 @@ $epub = <<-SHELL
   mkdir ${path_ada_toolchain_root}/gnat
   for tool_version in ${gnat_version[@]}; do
     echo Installing GNAT $tool_version
-    wget -O gnat.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-${tool_version}/gnat-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gnat.tar.gz && \
-    mv gnat-* ${path_ada_toolchain_root}/gnat/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gnat ${tool_version}
   done
 
   gnat_prove_version=(${toolchain_versions_gnatprove})
   mkdir ${path_ada_toolchain_root}/gnatprove
   for tool_version in ${gnat_prove_version[@]}; do
     echo Installing GNATprove $tool_version
-    wget -O gnatprove.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-${tool_version}/gnatprove-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gnatprove.tar.gz && \
-    mv gnatprove-* ${path_ada_toolchain_root}/gnatprove/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gnatprove ${tool_version}
   done
 
   gprbuild_version=(${toolchain_versions_gprbuild})
   mkdir ${path_ada_toolchain_root}/gprbuild
   for tool_version in ${gprbuild_version[@]}; do
     echo Installing GPRbuild $tool_version
-    wget -O gprbuild.tar.gz https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-${tool_version}/gprbuild-x86_64-linux-${tool_version}.tar.gz && \
-    tar xzf gprbuild.tar.gz && \
-    mv gprbuild-* ${path_ada_toolchain_root}/gprbuild/${tool_version} && \
-    rm *.tar.gz
+    install_toolchain gprbuild ${tool_version}
   done
 
   rm -f ${path_ada_toolchain_default}/*
@@ -230,9 +260,21 @@ $epub = <<-SHELL
 
 SHELL
 
+require 'fileutils'
+
 # Installation of the pinned package versions is enabled by default.
 # Set VM_APT_PIN=0 to disable it for a base-box bootstrap.
 vm_apt_pin = ENV.fetch("VM_APT_PIN", "1")
+
+# Host-side download cache for the GNAT-FSF toolchain tarballs, so that
+# destroying a VM does not throw them away. Redirect it with
+# LEARN_VM_CACHE_GNAT -- it holds several GB and may belong on another disk.
+vm_cache_gnat = ENV.fetch("LEARN_VM_CACHE_GNAT",
+                          File.expand_path(".toolchains/gnat", __dir__))
+
+# Vagrant refuses to start if a synced folder's source does not exist, so the
+# cache directory has to be created before it is declared below.
+FileUtils.mkdir_p(vm_cache_gnat)
 
 Vagrant.configure("2") do |config|
 
@@ -249,11 +291,13 @@ Vagrant.configure("2") do |config|
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
     web.vm.synced_folder './content', '/vagrant/content'
+    web.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
 
     web.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     web.vm.provision "file", source: "./frontend/vm/vm_apt_web.txt", destination: "/home/vagrant/vm_apt.txt"
     web.vm.provision :shell, inline: $frontend,
-                     env: { "VM_APT_PIN" => vm_apt_pin }
+                     env: { "VM_APT_PIN" => vm_apt_pin,
+                            "LEARN_VM_NAME" => "web" }
   end
 
   config.vm.define "epub" do |epub|
@@ -262,11 +306,13 @@ Vagrant.configure("2") do |config|
 
     epub.vm.synced_folder './frontend', '/vagrant/frontend'
     epub.vm.synced_folder './content', '/vagrant/content'
+    epub.vm.synced_folder vm_cache_gnat, '/vagrant_cache/gnat'
 
     epub.vm.provision "file", source: "./frontend/python/rst_code_example_pipeline/src/rst_code_example_pipeline/data/toolchain.ini", destination: "/home/vagrant/toolchain.ini"
     epub.vm.provision "file", source: "./frontend/vm/vm_apt_epub.txt", destination: "/home/vagrant/vm_apt.txt"
     epub.vm.provision :shell, inline: $epub,
-                      env: { "VM_APT_PIN" => vm_apt_pin }
+                      env: { "VM_APT_PIN" => vm_apt_pin,
+                             "LEARN_VM_NAME" => "epub" }
   end
 
 end
