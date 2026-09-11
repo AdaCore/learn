@@ -337,7 +337,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "web" do |web|
     web.vm.box = "bento/ubuntu-24.04"
     web.vm.box_version = "202510.26.0"
-    web.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
+    web.vm.network "forwarded_port", guest: 8080, host: 8080,
+                   host_ip: "127.0.0.1", auto_correct: true
 
     web.vm.synced_folder './frontend', '/vagrant/frontend'
     web.vm.synced_folder './content', '/vagrant/content'
