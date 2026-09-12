@@ -13,11 +13,11 @@ on:
 jobs:
   pyright:
 
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     strategy:
       matrix:
-        python-version: ['3.12']
+        python-version: ['3.14']
 
     steps:
     - uses: actions/checkout@v4
