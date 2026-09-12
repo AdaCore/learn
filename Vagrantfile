@@ -349,8 +349,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
   config.vm.define "web" do |web|
-    web.vm.box = "bento/ubuntu-24.04"
-    web.vm.box_version = "202510.26.0"
+    web.vm.box = "bento/ubuntu-26.04"
+    web.vm.box_version = "202606.01.0"
     web.vm.network "forwarded_port", guest: 8080, host: web_port,
                    host_ip: "127.0.0.1", auto_correct: true
     web.vm.network "forwarded_port", guest: 22, host: web_ssh_port,
@@ -369,8 +369,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "epub" do |epub|
-    epub.vm.box = "bento/ubuntu-24.04"
-    epub.vm.box_version = "202510.26.0"
+    epub.vm.box = "bento/ubuntu-26.04"
+    epub.vm.box_version = "202606.01.0"
     epub.vm.network "forwarded_port", guest: 22, host: epub_ssh_port,
                     id: "ssh", auto_correct: true
 
