@@ -136,7 +136,7 @@ $epub = <<-SHELL
   echo 'APT::Sandbox::User "root";' >> /etc/apt/apt.conf.d/99-learn-cache
 
   # Enable the NodeSource repository
-  curl -sL https://deb.nodesource.com/setup_22.x | bash -
+  curl -sL https://deb.nodesource.com/setup_24.x | bash -
 
   # Generate list of installed packages
   dpkg -l | awk '$1 == "ii" { printf "%s\\n", $2 }' > /vagrant/vm_apt_installed.txt
