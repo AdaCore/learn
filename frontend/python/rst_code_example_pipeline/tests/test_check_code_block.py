@@ -56,6 +56,21 @@ Covers:
   for that too.  The three core cases are covered twice over -- from a hand-built
   block and again driven through the real RST directive and the real extraction
   step
+- a run class that names the language the block is not written in: each of the
+  six spellings is reported, by name, and fails the check -- including on a
+  block that a run button separately gets built and run, which is the case a
+  report read off what the checker decided to do, rather than off what the
+  block declared, would pass over.  The message and the returned value are
+  asserted by separate tests, so a report that prints and leaves the run at
+  success reddens the second alone.  The controls: the same six classes on the
+  language they name, the classes that name a language and are deliberately not
+  paired with one (ada-syntax-only, the two no-check spellings), the class that
+  names none, and a proof asked for on a C block, which has its own report
+  already and must not draw a second.  The three returns that come before the
+  declaration checks are pinned as not reporting, since the report sits with
+  those checks.  Driven through the real extraction step as well: a C block
+  classed ada-run with no button is neither built nor run and fails the check,
+  and an Ada block classed c-norun keeps the run its button asked for
 - the arm of the previous-check lookup that does not read the record: with the
   lookup switched off, a recorded failure is neither returned nor announced, and
   the block is checked again although the checks were not forced
@@ -98,6 +113,21 @@ def _check_record(directory, block_record):
         "expected the check to write exactly one record beside the block, " \
         "got {}".format([path.name for path in written])
     return written[0]
+
+
+def _reported(block, captured) -> list[str]:
+    """The messages a check produced for this block, with the location prefix
+    stripped off.
+
+    Matched on the prefix the checker builds for the block under test, so a
+    message about some other block could not be mistaken for one of these --
+    and so the wording asserted against it is only the part a course author
+    reads as the explanation.
+    """
+    prefix = "at {}:{} (code block hash: {}): ".format(
+        block.rst_file, block.line_start, block.text_hash_short)
+    return [line.split(prefix, 1)[1]
+            for line in captured.out.splitlines() if prefix in line]
 
 
 # ---------------------------------------------------------------------------
@@ -1526,21 +1556,6 @@ end Main;
 
     VALID_C_SOURCE = "int main(void) { return 0; }\n"
 
-    @staticmethod
-    def _reported(block, captured) -> list[str]:
-        """The messages a check produced for this block, with the location
-        prefix stripped off.
-
-        Matched on the prefix the checker builds for the block under test, so
-        a message about some other block could not be mistaken for one of
-        these -- and so the wording asserted below is only the part a course
-        author reads as the explanation.
-        """
-        prefix = "at {}:{} (code block hash: {}): ".format(
-            block.rst_file, block.line_start, block.text_hash_short)
-        return [line.split(prefix, 1)[1]
-                for line in captured.out.splitlines() if prefix in line]
-
     def test_a_compile_error_that_did_not_happen_is_reported(
             self, work_dir, capsys):
         """Source that compiles cleanly under ada-expect-compile-error must
@@ -1580,7 +1595,7 @@ end Main;
             "check when the source compiles"
 
         assert "Expected compile error, got none!" in \
-            self._reported(block, capsys.readouterr()), \
+            _reported(block, capsys.readouterr()), \
             "the check must say that the declared compile error never arrived"
 
         recorded = json.loads(
@@ -1631,7 +1646,7 @@ end Main;
             "check when the source compiles"
 
         assert "Expected compile error, got none!" in \
-            self._reported(block, capsys.readouterr()), \
+            _reported(block, capsys.readouterr()), \
             "the check must say that the declared compile error never arrived"
 
         recorded = json.loads(
@@ -1683,7 +1698,7 @@ end Main;
             "when the proof succeeds"
 
         assert "Expected prove error, got none!" in \
-            self._reported(block, capsys.readouterr()), \
+            _reported(block, capsys.readouterr()), \
             "the check must say that the declared prove error never arrived"
 
         recorded = json.loads(
@@ -1723,7 +1738,7 @@ end Main;
             "a block expecting a compile error with nothing to compile must " \
             "fail the check"
 
-        reported = self._reported(block, capsys.readouterr())
+        reported = _reported(block, capsys.readouterr())
         assert "Expected compile or run button/class, got none!" in reported, \
             "the check must say the block asks for no compile: {}".format(
                 reported)
@@ -1761,7 +1776,7 @@ end Main;
             "a block expecting a prove error without a proof must fail the " \
             "check"
 
-        reported = self._reported(block, capsys.readouterr())
+        reported = _reported(block, capsys.readouterr())
         assert "Expected prove button, got none!" in reported, \
             "the check must say the block asks for no proof: {}".format(
                 reported)
@@ -1791,7 +1806,7 @@ end Main;
         assert result is True, \
             "a block classed ada-norun with no run button must fail the check"
 
-        reported = self._reported(block, capsys.readouterr())
+        reported = _reported(block, capsys.readouterr())
         assert "Expected run button, got none!" in reported, \
             "the check must say the block asks for no run: {}".format(reported)
 
@@ -1821,9 +1836,449 @@ end Main;
             "a block expecting its run to fail with no run button must fail " \
             "the check"
 
-        reported = self._reported(block, capsys.readouterr())
+        reported = _reported(block, capsys.readouterr())
         assert "Expected run button, got none!" in reported, \
             "the check must say the block asks for no run: {}".format(reported)
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockRunClassNamingTheOtherLanguage
+# Covers the report for a run class that names a language the block is not
+# written in -- the declaration whose consequence is that nothing happens.
+# ---------------------------------------------------------------------------
+
+# The six run classes, each paired with a block of the language it does not
+# name.  Kept as one table so that the firing cases and the silent controls
+# below are driven by the same list and cannot drift apart.
+RUN_CLASSES_AND_THEIR_LANGUAGE = [
+    ("ada-run", "ada"),
+    ("ada-norun", "ada"),
+    ("ada-run-expect-failure", "ada"),
+    ("c-run", "c"),
+    ("c-norun", "c"),
+    ("c-run-expect-failure", "c"),
+]
+
+# The other language, for a table of two.
+THE_OTHER_LANGUAGE = {"ada": "c", "c": "ada"}
+
+WRONG_LANGUAGE_REPORT = "Wrong language selected for run class '{}'"
+
+
+def _no_run_class_report(reported: list[str]) -> bool:
+    """Whether none of the messages is the wrong-language run-class report.
+
+    Matched on the part of the wording that is common to all six spellings,
+    so that a report firing for a class this test did not name is caught as
+    well as one firing for the class it did.
+    """
+    return not any("Wrong language selected for run class" in message
+                   for message in reported)
+
+
+@pytest.mark.toolchain
+class TestCheckBlockRunClassNamingTheOtherLanguage:
+    """A block carrying a run class that names the language it is not written
+    in.
+
+    The class does nothing for such a block -- that is the point of pairing
+    each class with its language -- and "does nothing" is exactly the outcome
+    this checker exists to prevent from passing quietly.  A C block tagged
+    ada-run asks for no run, and therefore for no build, so without a report
+    it is checked by nothing and recorded as a success.
+
+    The messages and the exit status are asserted by separate tests here,
+    rather than together, because they are separately losable: this package
+    already carries a report that prints and leaves the status at zero, so a
+    new one that did the same is a real possibility rather than a
+    hypothetical, and it must redden the status tests on its own.
+    """
+
+    # A C program that announces itself, for the one test whose block is
+    # really built and really run.
+    C_RUN_OUTPUT = "the mis-classed example ran"
+
+    C_SOURCE_THAT_ANNOUNCES_ITSELF = """\
+#include <stdio.h>
+
+int main(void)
+{{
+   printf("{}\\n");
+   return 0;
+}}
+""".format(C_RUN_OUTPUT)
+
+    @staticmethod
+    def _checked(block, work_dir, json_file, **kwargs) -> bool:
+        """Write the block out and check it, with the checks forced.
+
+        Forced because a recorded result would otherwise decide the outcome
+        on a second run in the same directory, which says nothing about the
+        declaration under test.
+        """
+        block.to_json_file(json_file)
+        return ccb.check_block(block, json_file, force_checks=True, **kwargs)
+
+    @pytest.mark.parametrize("code_class,class_language",
+                             RUN_CLASSES_AND_THEIR_LANGUAGE)
+    def test_a_run_class_naming_the_other_language_is_reported(
+            self, code_class, class_language, work_dir, capsys):
+        """Each of the six run classes, on a block of the other language,
+        must be reported by name.
+
+        One case per class rather than one test over all six: a checker that
+        recognized five of them would otherwise still pass.  The message
+        names the offending class, so the author is told which word to fix
+        rather than only that something is wrong with the block.
+
+        Only the message is asserted.  That the report also fails the check
+        is the separate claim held by the tests below, and keeping the two
+        apart is what makes a report that prints and returns success redden
+        those and not these.
+        """
+        block = _make_block(
+            language=THE_OTHER_LANGUAGE[class_language],
+            classes=[code_class],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+
+        self._checked(block, work_dir, json_file)
+
+        reported = _reported(block, capsys.readouterr())
+        assert WRONG_LANGUAGE_REPORT.format(code_class) in reported, \
+            "the report must name the offending class: {}".format(reported)
+
+    @pytest.mark.parametrize("code_class,class_language",
+                             RUN_CLASSES_AND_THEIR_LANGUAGE)
+    def test_a_run_class_on_the_language_it_names_is_not_reported(
+            self, code_class, class_language, work_dir, capsys):
+        """The control for the six above.
+
+        Without it, a report that fired on every run class whatsoever would
+        satisfy all six and take every correctly tagged block in the material
+        down with it.
+
+        Only the absence of this report is asserted, and deliberately not the
+        block's overall result: two of these six classes separately draw the
+        pre-existing "Expected run button, got none!" objection, which is a
+        behavior recorded as it stands rather than one this test should
+        fasten itself to.
+
+        The compile and the run are switched off rather than derived.  On the
+        language it names, a run class really does ask for a run, and this
+        block has no project and no source behind it -- what is under test is
+        the declaration the checker reads, and the derivation it reads it
+        through is covered where the derivation lives.
+        """
+        block = _make_block(
+            language=class_language,
+            classes=[code_class],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+
+        self._checked(block, work_dir, json_file)
+
+        reported = _reported(block, capsys.readouterr())
+        assert _no_run_class_report(reported), \
+            "a run class on the language it names must draw no report: " \
+            "{}".format(reported)
+
+    def test_a_c_block_declaring_ada_syntax_only_passes_and_stops_there(
+            self, work_dir):
+        """The class/language mismatch the material really carries.
+
+        A C block declaring ada-syntax-only sits in the Ada course material
+        today.  The syntax-only class names no language as far as the checker
+        is concerned, so the block is syntax-checked and stops -- and it must
+        go on doing that, or a content build fails on an example that is
+        written the way it is on purpose.
+        """
+        source = work_dir / "main.c"
+        source.write_text(self.C_SOURCE_THAT_ANNOUNCES_ITSELF)
+
+        block = _make_block(
+            language="c",
+            classes=["ada-syntax-only"],
+            buttons=["no"],
+            no_check=False,
+            source_files=["main.c"],
+        )
+        assert block.syntax_only is True, \
+            "the class must still make the block syntax-only, or this is not " \
+            "the block the material carries"
+
+        json_file = str(work_dir / "block_info.json")
+        assert self._checked(block, work_dir, json_file) is False, \
+            "the C block the material carries must pass the check"
+
+        recorded = json.loads(
+            _check_record(work_dir, json_file).read_text())["checks"]
+        assert sorted(recorded) == ["SYNTAX"], \
+            "a syntax-only block must be syntax-checked and nothing else"
+
+    @pytest.mark.parametrize("code_class,language", [
+        ("ada-syntax-only", "c"),
+        ("ada-nocheck", "c"),
+        ("c-nocheck", "ada"),
+        ("nosyntax-check", "ada"),
+    ])
+    def test_a_class_that_is_not_a_run_class_is_never_reported(
+            self, code_class, language, work_dir, capsys):
+        """The classes that name a language in their spelling and are
+        deliberately not paired with one, plus the one that names none.
+
+        This is the control that a report written as a scan over class names
+        beginning with "ada-" or "c-" fails.  Two of these are not idle
+        worries: the syntax-only case is a block the material carries, and
+        the two no-check spellings are documented as the Ada one and the C
+        one while being read for either language -- a difference that was
+        looked at and deliberately left alone, so a report firing here would
+        quietly take the opposite decision.
+
+        The block is built with the two early returns switched off, so that
+        it reaches the declaration checks and the report is really consulted.
+        A block declaring one of these classes would otherwise return before
+        the report could fire, and this control would hold nothing.
+        """
+        block = _make_block(
+            language=language,
+            classes=[code_class],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+
+        self._checked(block, work_dir, json_file)
+
+        reported = _reported(block, capsys.readouterr())
+        assert _no_run_class_report(reported), \
+            "a class that is not a run class must draw no report: {}".format(
+                reported)
+
+    def test_a_prove_class_on_a_c_block_draws_only_the_prove_report(
+            self, work_dir, capsys):
+        """A proof asked for on a C block is already reported, and must not
+        be reported twice.
+
+        The prove classes name a language in their spelling too, and the
+        checker has objected to a proof on a non-Ada block all along.  A
+        second report saying the same thing in different words would leave an
+        author looking for two mistakes where there is one.
+        """
+        block = _make_block(
+            language="c",
+            classes=["ada-prove"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+            compile_it=False,
+            run_it=False,
+        )
+        assert block.prove_it is True, \
+            "the class must ask for a proof, or the existing report is not " \
+            "the one being reached"
+
+        json_file = str(work_dir / "block_info.json")
+        self._checked(block, work_dir, json_file)
+
+        reported = _reported(block, capsys.readouterr())
+        assert "Wrong language selected for prove button" in reported, \
+            "the existing report must still be made: {}".format(reported)
+        assert _no_run_class_report(reported), \
+            "the same mistake must not be reported a second time: {}".format(
+                reported)
+
+    def test_a_mis_classed_block_that_a_run_button_rescues_is_still_reported(
+            self, work_dir, capsys):
+        """A C block classed ada-run that also carries a run button.
+
+        This is the case that separates a report read off the block's
+        declarations from one read off what the checker decided to do with
+        them.  The button asks for the run the class failed to ask for, so
+        the block really is built and really is run, and nothing about the
+        outcome is wrong -- yet the class still names a language the block is
+        not written in, and the author still has a word to fix.
+
+        A report derived from "a run class is present and the block is not
+        being run" passes every other test in this file and fails this one.
+
+        The build and the run are asserted as having happened, with the
+        program's own output read back out of the run log, so that the report
+        is known to come from a block the checker fully processed rather than
+        from one it quietly skipped.
+
+        Like its siblings above this asserts the message and not the returned
+        value; the status side of this same case is held through the
+        installed command, where a block with a run button is checked end to
+        end.
+        """
+        source = work_dir / "main.c"
+        source.write_text(self.C_SOURCE_THAT_ANNOUNCES_ITSELF)
+
+        block = _make_block(
+            language="c",
+            classes=["ada-run"],
+            buttons=["run"],
+            syntax_only=False,
+            no_check=False,
+            source_files=["main.c"],
+        )
+        block.project_main_file = "main.c"
+        assert (block.run_it, block.compile_it) == (True, True), \
+            "the button must have asked for the run the class did not, or " \
+            "this is not the case under test"
+
+        json_file = str(work_dir / "block_info.json")
+        self._checked(block, work_dir, json_file)
+
+        reported = _reported(block, capsys.readouterr())
+        assert WRONG_LANGUAGE_REPORT.format("ada-run") in reported, \
+            "the class must be reported although the block was run: " \
+            "{}".format(reported)
+
+        recorded = json.loads(
+            _check_record(work_dir, json_file).read_text())["checks"]
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "the block must really have been built and run"
+        assert recorded["RUN"]["status_ok"] is True, \
+            "the run itself must have succeeded, or the report cannot be " \
+            "attributed to the declaration"
+        assert (work_dir / recorded["RUN"]["logfile"]).read_text().strip() == \
+            self.C_RUN_OUTPUT, \
+            "the program the author wrote must be the one that ran"
+
+    # The three returns that come before the declaration checks.  The report
+    # sits with those checks, so a block in any of these three states is not
+    # reported at all -- a decision that was taken rather than fallen into,
+    # since all three are cases where the block asked for less checking.
+    # Pinned here so that moving the report earlier reddens a test naming the
+    # path it was moved past, instead of passing unnoticed.
+
+    def test_a_mis_classed_block_declaring_no_check_is_not_reported(
+            self, work_dir, capsys):
+        """A block declaring a no-check class is skipped before the report.
+
+        Nothing is checked and nothing is recorded, so the mis-classed run
+        class beside it goes unmentioned.
+        """
+        block = _make_block(
+            language="c",
+            classes=["ada-nocheck", "ada-run"],
+            buttons=["no"],
+        )
+        assert block.no_check is True, \
+            "the block must be the one the checker skips outright"
+
+        json_file = str(work_dir / "block_info.json")
+        assert self._checked(block, work_dir, json_file) is False, \
+            "a block declaring no check must still pass"
+
+        assert _no_run_class_report(_reported(block, capsys.readouterr())), \
+            "a block the checker never looks at cannot be reported"
+
+    def test_a_mis_classed_block_declaring_syntax_only_is_not_reported(
+            self, work_dir, capsys):
+        """A block declaring itself syntax-only returns after the syntax
+        check, which is also before the report."""
+        source = work_dir / "main.c"
+        source.write_text(self.C_SOURCE_THAT_ANNOUNCES_ITSELF)
+
+        block = _make_block(
+            language="c",
+            classes=["ada-syntax-only", "ada-run"],
+            buttons=["no"],
+            no_check=False,
+            source_files=["main.c"],
+        )
+        assert block.syntax_only is True, \
+            "the block must be the one the checker stops after the syntax " \
+            "check"
+
+        json_file = str(work_dir / "block_info.json")
+        assert self._checked(block, work_dir, json_file) is False, \
+            "a syntax-only block whose syntax is good must pass"
+
+        assert _no_run_class_report(_reported(block, capsys.readouterr())), \
+            "a block that returns before the declaration checks cannot be " \
+            "reported"
+
+    def test_a_mis_classed_block_with_a_recorded_result_is_not_reported(
+            self, work_dir, capsys):
+        """A block whose result is already recorded is handed that result
+        back, without the declaration checks running again.
+
+        The recorded result says the block passed, so the check passes and
+        the mis-classed run class is not mentioned -- until --force asks for
+        the checks to be re-run, which the rest of this class does.
+        """
+        block = _make_block(
+            language="c",
+            classes=["ada-run"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        recorded = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        recorded.status_ok = True
+        recorded.to_json_file()  # beside the block, under the package's name
+
+        assert ccb.check_block(block, json_file) is False, \
+            "the recorded result must be handed back as it stands"
+
+        assert _no_run_class_report(_reported(block, capsys.readouterr())), \
+            "checks that did not run cannot report anything"
+
+
+# ---------------------------------------------------------------------------
+# TestCheckBlockRunClassNamingTheOtherLanguageFailsTheRun
+# The exit status of the report above, held apart from its wording.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestCheckBlockRunClassNamingTheOtherLanguageFailsTheRun:
+    """The report has to fail the check, not merely print.
+
+    Kept apart from the wording tests above on purpose.  This package already
+    holds a report that prints and leaves the run at success -- the
+    wrong-language prove button reported by the extraction step, whose flag
+    never reaches that function's return value, recorded in this suite as a
+    known defect.  A new report that took the same shape would satisfy every
+    message test written above while telling a build that the course checked
+    out.  These tests assert the returned value and nothing else, so that
+    exact defect reddens them alone.
+    """
+
+    def test_check_block_returns_an_error_for_a_mis_classed_block(
+            self, work_dir):
+        """check_block() itself must return the error, with no reference to
+        what it printed."""
+        block = _make_block(
+            language="c",
+            classes=["ada-run"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        assert ccb.check_block(block, json_file, force_checks=True) is True, \
+            "a run class naming the other language must fail the check"
 
 
 # ---------------------------------------------------------------------------
@@ -3106,3 +3561,110 @@ int main(void)
             "suppressing the run must not suppress the build as well"
         assert not (block_dir / "run.log").exists(), \
             "nothing may have been run, so no run log may have been written"
+
+    def test_a_c_block_classed_ada_run_is_neither_built_nor_run(
+            self, work_dir):
+        """A C block classed ``ada-run``, with no button anywhere, must not be
+        built, must not be run, and must fail the check.
+
+        This is the whole shape of the problem, driven from the directive an
+        author would really write.  The class names Ada, so it asks this
+        block for nothing; the block carries no button to ask instead; and
+        the source is never handed to a compiler.
+
+        What the check then does about it is the subject of the test below,
+        deliberately separated: this one would pass just as well if the block
+        were quietly accepted, and saying so is the point -- it is about what
+        was and was not done to the block, and nothing else.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: c project=ExtractedCAdaRunClass main={} no_button".format(
+                self._C_MAIN),
+            self._C_BODY, "ExtractedCAdaRunClass", classes="ada-run")
+
+        assert info["buttons"] == ["no"], \
+            "the block must carry no button, or something other than the " \
+            "class is deciding whether it is run"
+        assert self._buttons_asked_for(info) == (False, False, False), \
+            "a class naming the other language must ask for nothing"
+
+        ccb.check_code_block_json(json_file)
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert sorted(recorded) == ["BUTTONS", "SYNTAX"], \
+            "the block must have been syntax-checked and nothing more"
+        assert not (block_dir / "build.log").exists(), \
+            "nothing was compiled, so no build log may have been written"
+        assert not (block_dir / "run.log").exists(), \
+            "nothing was run, so no run log may have been written"
+
+    def test_a_c_block_classed_ada_run_fails_the_check_and_the_record(
+            self, work_dir):
+        """The same extracted block must fail the check, and must be recorded
+        as having failed.
+
+        The wrapper level, and the one place the on-disk record is read as
+        evidence.  Neither is covered by asserting what was printed: a report
+        that printed and handed back success is a defect this package has
+        already shipped once, in the extraction step's own wrong-language
+        report, so it is a live possibility rather than a hypothetical.
+
+        The record matters on its own account.  It is what the next run reads
+        to decide the block can be skipped, so a run that fails while
+        recording success does not merely mislead once -- it tells every
+        later run that the block was checked and passed.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: c project=ExtractedCAdaRunStatus main={} no_button".format(
+                self._C_MAIN),
+            self._C_BODY, "ExtractedCAdaRunStatus", classes="ada-run")
+
+        assert ccb.check_code_block_json(json_file) is True, \
+            "a block nothing was done to must not be reported as checked"
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert recorded["BUTTONS"]["status_ok"] is False, \
+            "the objection must be recorded against the block's declarations"
+        record = json.loads(
+            _check_record(block_dir, json_file).read_text())
+        assert record["status_ok"] is False, \
+            "the record left beside the block is read back by the next run " \
+            "as a result to skip on, so it must not say the block passed"
+
+    def test_an_ada_block_classed_c_norun_is_still_built_and_run(
+            self, work_dir):
+        """An Ada block classed ``c-norun`` and carrying a run button must
+        still be run.
+
+        The mirror direction, and the one where the unpaired reading used to
+        take something away: a stray C norun canceled the run, and with it
+        the build, leaving an Ada example that was never compiled.  The run
+        log is what says the author's own program executed rather than a run
+        being recorded over nothing.
+        """
+        block_dir, info, json_file = self._extract(
+            work_dir,
+            ".. code:: ada project=ExtractedAdaCNoRun main={} run_button".format(
+                self._MAIN),
+            self._ADA_BODY, "ExtractedAdaCNoRun", classes="c-norun")
+
+        assert "run" in info["buttons"], \
+            "the block must carry the run button the class must not suppress"
+        assert self._buttons_asked_for(info) == (True, True, False), \
+            "a norun class naming the other language must take nothing away"
+
+        # The check is run for its effects, and its returned value is
+        # deliberately not asserted: the stray class is separately reported,
+        # so the value says something about the report rather than about the
+        # run this test is here for.
+        ccb.check_code_block_json(json_file)
+
+        recorded = self._recorded_checks(block_dir, json_file)
+        assert sorted(recorded) == ["BUILD", "BUTTONS", "RUN", "SYNTAX"], \
+            "the block must have been built and run"
+        assert recorded["RUN"]["status_ok"] is True
+        assert self._log_of(block_dir, recorded["RUN"]).strip() == \
+            self._RUN_OUTPUT, \
+            "the program the author wrote must be the one that ran"
