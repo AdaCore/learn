@@ -28,6 +28,9 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
+        # Pinned like the packages it installs; the action applies it as an
+        # exact `pip==` requirement.
+        pip-version: '26.2.1'
         cache: 'pip'
         # Named explicitly: the default pattern matches `requirements.txt`,
         # which is not the file the workflow installs, so the key would not
@@ -47,7 +50,6 @@ jobs:
         sudo sysctl -p
     - name: Install Python dependencies
       run: |
-        python -m pip install --upgrade pip
         pip install -r requirements_frozen.txt
         pip install -e python/rst_code_example_pipeline
     - name: Test Sphinx Widget Parser Plugin
