@@ -15,16 +15,29 @@ on: [pull_request]
 
 jobs:
   analyze:
-    name: Analyze
+    name: Analyze (${{ matrix.language }})
+    # The other workflows pin the runner image to match the VMs. This one
+    # does not need to: the analysis reads the sources without building
+    # or running them, so the image cannot influence the findings.
     runs-on: ubuntu-latest
+
+    # Stated here rather than inherited from the repository default, so
+    # that tightening that default cannot silently stop the results from
+    # being uploaded.
+    permissions:
+      contents: read
+      # Required to upload the analysis results.
+      security-events: write
 
     strategy:
       fail-fast: false
       matrix:
         language: [ 'javascript', 'python' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+        # CodeQL supports [ 'actions', 'cpp', 'csharp', 'go', 'java',
+        # 'javascript', 'python', 'ruby', 'rust', 'swift' ]. 'javascript'
+        # covers TypeScript as well.
         # Learn more:
-        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
+        # https://docs.github.com/en/code-security/reference/code-scanning/workflow-configuration-options
 
     steps:
     - name: Checkout repository
@@ -35,26 +48,18 @@ jobs:
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
+        # Both languages are interpreted, so the database is built from the
+        # sources and nothing has to be compiled first. A compiled language
+        # added to the matrix would need `autobuild` or `manual` instead.
+        build-mode: none
         # If you wish to specify custom queries, you can do so here or in a config file.
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v4
-
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
-
-    #- run: |
-    #   make bootstrap
-    #   make release
-
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
+      with:
+        # Names the analysis the results belong to, so the two matrix legs
+        # are matched separately instead of by job identity alone.
+        category: "/language:${{ matrix.language }}"
