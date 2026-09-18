@@ -1,0 +1,29 @@
+# The workflows pin actions to a moving major tag, which only advances
+# when someone goes looking. Dependabot opens the pull request instead,
+# so a new major is a decision to take rather than a discovery to make.
+
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    # For Actions this is the documented value rather than a literal
+    # path: Dependabot searches `.github/workflows` and a root
+    # `action.yml`.
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      # Dependabot appends the colon, giving `CI: bump ...`, which is
+      # the subject convention for infrastructure changes here.
+      prefix: "CI"
+    groups:
+      # Minor and patch updates need no migration, so they travel
+      # together. Major updates deliberately match no group: each one
+      # gets its own pull request, and can be reviewed, held back or
+      # reverted without disturbing the others.
+      actions-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
