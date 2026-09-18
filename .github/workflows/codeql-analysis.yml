@@ -15,7 +15,7 @@ on: [pull_request]
 
 jobs:
   analyze:
-    name: Analyze
+    name: Analyze (${{ matrix.language }})
     # The other workflows pin the runner image to match the VMs. This one
     # does not need to: the analysis reads the sources without building
     # or running them, so the image cannot influence the findings.
@@ -33,9 +33,11 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'javascript', 'python' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+        # CodeQL supports [ 'actions', 'cpp', 'csharp', 'go', 'java',
+        # 'javascript', 'python', 'ruby', 'rust', 'swift' ]. 'javascript'
+        # covers TypeScript as well.
         # Learn more:
-        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
+        # https://docs.github.com/en/code-security/reference/code-scanning/workflow-configuration-options
 
     steps:
     - name: Checkout repository
