@@ -344,6 +344,13 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+
+    # Several machines run at once (one pair per worktree), all created from
+    # the same box. A linked clone shares one base disk image instead of
+    # giving each machine its own full copy, so the host page cache serves
+    # the blocks they read in common rather than reading each copy
+    # separately.
+    vb.linked_clone = true
   end
 
   config.vm.synced_folder '.', '/vagrant', disabled: true
