@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-26.04
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Check Ruby syntax
       run: ruby -c Vagrantfile
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-26.04
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     # Ubuntu's archive carries no `vagrant` package, so the release is
     # fetched from HashiCorp and pinned, the way the box version is.

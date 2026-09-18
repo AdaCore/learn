@@ -52,7 +52,7 @@ jobs:
         github-token: ${{ secrets.LEARN_READ_TOKEN }}
 
     - name: Checkout learn-latest-html-pages
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: AdaCore/learn-latest-html-pages
         ref: gh-pages
