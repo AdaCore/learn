@@ -361,14 +361,17 @@ class CodeBlock(Block):
         # run and the check still reported success, and the branch handling
         # c-run-expect-failure could only be reached through a run button.
         self.run_it: bool = run_it if run_it is not None else \
-            ((constants.CLASS_ADA_RUN in self.classes
-              or constants.CLASS_ADA_RUN_EXPECT_FAILURE in self.classes
+            ((((constants.CLASS_ADA_RUN in self.classes
+                or constants.CLASS_ADA_RUN_EXPECT_FAILURE in self.classes)
+               and self.language == 'ada')
               or ((constants.CLASS_C_RUN in self.classes
                    or constants.CLASS_C_RUN_EXPECT_FAILURE in self.classes)
                   and self.language == 'c')
               or 'run' in self.buttons)
-              and not constants.CLASS_ADA_NORUN in self.classes
-              and not constants.CLASS_C_NORUN in self.classes)
+              and not (constants.CLASS_ADA_NORUN in self.classes
+                       and self.language == 'ada')
+              and not (constants.CLASS_C_NORUN in self.classes
+                       and self.language == 'c'))
         self.compile_it: bool = compile_it if compile_it is not None else \
             self.run_it or \
             ((constants.CLASS_ADA_COMPILE in self.classes and self.language == 'ada')
