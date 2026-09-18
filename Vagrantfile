@@ -348,6 +348,24 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
+  # The box ships a leftover /etc/netplan/01-netcfg.yaml declaring an `eth0`
+  # that does not exist here (the NIC is enp0s3, configured by
+  # 00-installer-config.yaml). netplan feeds every declared interface into the
+  # generated systemd-networkd-wait-online drop-in, and that unit is invoked
+  # without --any, so it waits for eth0 until its 120 s timeout expires and
+  # then fails. network-online.target -- and therefore ssh.service -- is
+  # blocked for that whole time, which is what Vagrant's "Connection reset.
+  # Retrying..." loop waits out.
+  #
+  # run: "always" because existing VMs report "Machine already provisioned"
+  # and would otherwise never run this; the guard makes it a no-op once done.
+  config.vm.provision "netplan-cleanup", type: :shell, run: "always", inline: <<-SHELL
+    if [ -f /etc/netplan/01-netcfg.yaml ]; then
+      rm -f /etc/netplan/01-netcfg.yaml
+      netplan generate
+    fi
+  SHELL
+
   config.vm.define "web" do |web|
     web.vm.box = "bento/ubuntu-26.04"
     web.vm.box_version = "202606.01.0"
