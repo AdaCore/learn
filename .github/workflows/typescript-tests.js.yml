@@ -37,7 +37,6 @@ jobs:
         # which is not the file the workflow installs, so the key would not
         # change when a pinned version does.
         cache-dependency-path: 'frontend/requirements_frozen.txt'
-    - uses: actions/checkout@v7
     - name: Enable Corepack
       run: corepack enable
     - name: Use Node.js ${{ matrix.node-version }}
