@@ -16,6 +16,9 @@ on: [pull_request]
 jobs:
   analyze:
     name: Analyze
+    # The other workflows pin the runner image to match the VMs. This one
+    # does not need to: the analysis reads the sources without building
+    # or running them, so the image cannot influence the findings.
     runs-on: ubuntu-latest
 
     # Stated here rather than inherited from the repository default, so
