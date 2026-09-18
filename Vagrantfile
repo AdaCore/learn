@@ -423,6 +423,17 @@ Vagrant.configure("2") do |config|
     fi
   SHELL
 
+  # snapd.apparmor.service and snapd.socket sit on the critical chain to
+  # basic.target, and therefore to ssh.service -- the unit Vagrant waits for
+  # when it prints "Connection reset. Retrying...". Nothing in these build
+  # VMs uses snap, so the units are masked rather than removed: masking is
+  # idempotent and `systemctl unmask` puts it back.
+  config.vm.provision "snapd-mask", type: :shell, run: "always", inline: <<-SHELL
+    systemctl mask --quiet \
+      snapd.service snapd.socket snapd.seeded.service snapd.apparmor.service \
+      2>/dev/null || true
+  SHELL
+
   config.vm.define "web" do |web|
     web.vm.box = "bento/ubuntu-26.04"
     web.vm.box_version = "202606.01.0"
