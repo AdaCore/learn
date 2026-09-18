@@ -28,6 +28,11 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+        # Named explicitly: the default pattern matches `requirements.txt`,
+        # which is not the file the workflow installs, so the key would not
+        # change when a pinned version does.
+        cache-dependency-path: 'frontend/requirements_frozen.txt'
     - name: Install OS Deps
       run: |
         sudo apt-get update && \
