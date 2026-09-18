@@ -351,6 +351,56 @@ Vagrant.configure("2") do |config|
     # the blocks they read in common rather than reading each copy
     # separately.
     vb.linked_clone = true
+
+    # VirtualBox creates this controller with host I/O caching off
+    # (useHostIOCache="false"), so every guest read goes to the physical
+    # disk. Turning caching on lets the host page cache absorb those reads,
+    # which is worth a lot at boot.
+    #
+    # It is nevertheless left **off** by default, because of durability:
+    # with caching on, guest writes may sit in host RAM, so a host crash or
+    # power loss can corrupt a guest file system. Opt in per invocation
+    # when a fast boot is worth that exposure.
+    #
+    # Two related knobs: LEARN_VM_STORAGE_CONTROLLER picks *which*
+    # controller to act on, LEARN_VM_HOST_IO_CACHE picks *what to set* on
+    # it. The controller name therefore applies to both directions -- it is
+    # needed to turn caching on just as much as to turn it off -- and
+    # clearing it skips the customization altogether, which makes the cache
+    # setting irrelevant.
+    #
+    #   vagrant up
+    #       the default: caching off, controller "VirtIO Controller"
+    #   LEARN_VM_HOST_IO_CACHE=on vagrant up
+    #       caching on -- much faster boot, at the durability cost above
+    #   LEARN_VM_STORAGE_CONTROLLER="SATA Controller" vagrant up
+    #       a box whose controller is named differently; find the name with
+    #       VBoxManage showvminfo --machinereadable <uuid> \
+    #         | grep -i '^storagecontroller'
+    #   LEARN_VM_STORAGE_CONTROLLER="SATA Controller" \
+    #     LEARN_VM_HOST_IO_CACHE=on vagrant up
+    #       both together: caching on for a differently-named controller
+    #   LEARN_VM_STORAGE_CONTROLLER= vagrant up
+    #       skip the customization entirely, leaving the controller at
+    #       whatever it is already set to. LEARN_VM_HOST_IO_CACHE is
+    #       ignored in this case. An escape hatch for when a wrong name
+    #       makes `VBoxManage storagectl` fail the boot.
+    host_io_cache = ENV.fetch("LEARN_VM_HOST_IO_CACHE", "off")
+    unless ["on", "off"].include?(host_io_cache)
+      # Refuse rather than silently skip: an unrecognized value would
+      # otherwise leave the controller at whatever it already is, so a
+      # typo such as "true" or "0" would quietly do nothing while looking
+      # like it complied -- misleading in either direction.
+      raise "LEARN_VM_HOST_IO_CACHE must be \"on\" or \"off\", " \
+            "got #{host_io_cache.inspect}"
+    end
+    storage_controller =
+      ENV.fetch("LEARN_VM_STORAGE_CONTROLLER", "VirtIO Controller")
+    unless storage_controller.empty?
+      vb.customize ["storagectl", :id,
+                    "--name", storage_controller,
+                    "--hostiocache", host_io_cache]
+    end
   end
 
   config.vm.synced_folder '.', '/vagrant', disabled: true
