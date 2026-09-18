@@ -1,0 +1,95 @@
+name: Vagrantfile Validation
+
+on:
+  push:
+    paths:
+      - 'Vagrantfile'
+      - '.github/workflows/vagrantfile-validation.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Vagrantfile'
+      - '.github/workflows/vagrantfile-validation.yml'
+
+jobs:
+
+  # Parsing only, and free: Ruby is already on the runner. Runs on every
+  # push so a broken Vagrantfile is reported within seconds.
+  syntax:
+
+    runs-on: ubuntu-26.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check Ruby syntax
+      run: ruby -c Vagrantfile
+
+  # Loads the Vagrantfile, which `ruby -c` does not: the configuration
+  # executes `ENV.fetch`, the `on`/`off` validation and the port parsing at
+  # load time, and Vagrant additionally rejects settings that are valid Ruby
+  # but not valid configuration.
+  #
+  # Installing Vagrant costs an 87 MB download, so this is restricted to
+  # pull requests rather than every push, and gated on the syntax job so a
+  # file that does not parse never triggers the download.
+  validate:
+
+    needs: syntax
+    if: github.event_name == 'pull_request'
+
+    runs-on: ubuntu-26.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # Ubuntu's archive carries no `vagrant` package, so the release is
+    # fetched from HashiCorp and pinned, the way the box version is.
+    - name: Install Vagrant
+      env:
+        VAGRANT_VERSION: 2.4.9
+      run: |
+        curl -fsSLo /tmp/vagrant.deb \
+          "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}-1_amd64.deb"
+        sudo apt-get update
+        sudo apt-get install -y /tmp/vagrant.deb
+        vagrant --version
+
+    # No provider is installed here, so --ignore-provider is required: the
+    # goal is to load and validate the Vagrantfile itself, not to talk to
+    # VirtualBox. A wrong storage controller name therefore still passes;
+    # only a real boot can catch that.
+    - name: Default configuration must load
+      run: vagrant validate --ignore-provider
+
+    - name: Accepted values for the tuning knobs must load
+      run: |
+        LEARN_VM_HOST_IO_CACHE=on  vagrant validate --ignore-provider
+        LEARN_VM_HOST_IO_CACHE=off vagrant validate --ignore-provider
+        LEARN_VM_STORAGE_CONTROLLER="SATA Controller" \
+          vagrant validate --ignore-provider
+        LEARN_VM_STORAGE_CONTROLLER= vagrant validate --ignore-provider
+
+    # The Vagrantfile refuses a cache value it does not recognize, so that a
+    # typo cannot silently leave the controller in a state the caller did
+    # not ask for. Assert the refusal, otherwise deleting the check would
+    # still leave this workflow green.
+    - name: An unrecognized cache value must be refused
+      run: |
+        for value in true false 0 1 ON yes ""; do
+          if output=$(LEARN_VM_HOST_IO_CACHE="$value" \
+                        vagrant validate --ignore-provider 2>&1); then
+            echo "LEARN_VM_HOST_IO_CACHE='$value' was accepted; expected refusal"
+            exit 1
+          fi
+          # Match the message, not just a non-zero exit: validation can fail
+          # for unrelated reasons, and a test that accepts any failure would
+          # pass even if the guard were deleted.
+          case "$output" in
+            *'LEARN_VM_HOST_IO_CACHE must be'*) ;;
+            *) echo "LEARN_VM_HOST_IO_CACHE='$value' failed for another reason:"
+               echo "$output"
+               exit 1 ;;
+          esac
+        done
