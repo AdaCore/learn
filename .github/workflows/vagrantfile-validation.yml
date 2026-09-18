@@ -13,7 +13,10 @@ on:
       - '.github/workflows/vagrantfile-validation.yml'
 
 jobs:
-  validate:
+
+  # Parsing only, and free: Ruby is already on the runner. Runs on every
+  # push so a broken Vagrantfile is reported within seconds.
+  syntax:
 
     runs-on: ubuntu-26.04
 
@@ -22,6 +25,24 @@ jobs:
 
     - name: Check Ruby syntax
       run: ruby -c Vagrantfile
+
+  # Loads the Vagrantfile, which `ruby -c` does not: the configuration
+  # executes `ENV.fetch`, the `on`/`off` validation and the port parsing at
+  # load time, and Vagrant additionally rejects settings that are valid Ruby
+  # but not valid configuration.
+  #
+  # Installing Vagrant costs an 87 MB download, so this is restricted to
+  # pull requests rather than every push, and gated on the syntax job so a
+  # file that does not parse never triggers the download.
+  validate:
+
+    needs: syntax
+    if: github.event_name == 'pull_request'
+
+    runs-on: ubuntu-26.04
+
+    steps:
+    - uses: actions/checkout@v4
 
     # Ubuntu's archive carries no `vagrant` package, so the release is
     # fetched from HashiCorp and pinned, the way the box version is.
