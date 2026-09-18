@@ -23,10 +23,17 @@ jobs:
     - name: Check Ruby syntax
       run: ruby -c Vagrantfile
 
+    # Ubuntu's archive carries no `vagrant` package, so the release is
+    # fetched from HashiCorp and pinned, the way the box version is.
     - name: Install Vagrant
+      env:
+        VAGRANT_VERSION: 2.4.9
       run: |
+        curl -fsSLo /tmp/vagrant.deb \
+          "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}-1_amd64.deb"
         sudo apt-get update
-        sudo apt-get install -y vagrant
+        sudo apt-get install -y /tmp/vagrant.deb
+        vagrant --version
 
     # No provider is installed here, so --ignore-provider is required: the
     # goal is to load and validate the Vagrantfile itself, not to talk to
