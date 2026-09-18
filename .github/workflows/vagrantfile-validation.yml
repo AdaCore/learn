@@ -1,0 +1,58 @@
+name: Vagrantfile Validation
+
+on:
+  push:
+    paths:
+      - 'Vagrantfile'
+      - '.github/workflows/vagrantfile-validation.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Vagrantfile'
+      - '.github/workflows/vagrantfile-validation.yml'
+
+jobs:
+  validate:
+
+    runs-on: ubuntu-26.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check Ruby syntax
+      run: ruby -c Vagrantfile
+
+    - name: Install Vagrant
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y vagrant
+
+    # No provider is installed here, so --ignore-provider is required: the
+    # goal is to load and validate the Vagrantfile itself, not to talk to
+    # VirtualBox. A wrong storage controller name therefore still passes;
+    # only a real boot can catch that.
+    - name: Default configuration must load
+      run: vagrant validate --ignore-provider
+
+    - name: Accepted values for the tuning knobs must load
+      run: |
+        LEARN_VM_HOST_IO_CACHE=on  vagrant validate --ignore-provider
+        LEARN_VM_HOST_IO_CACHE=off vagrant validate --ignore-provider
+        LEARN_VM_STORAGE_CONTROLLER="SATA Controller" \
+          vagrant validate --ignore-provider
+        LEARN_VM_STORAGE_CONTROLLER= vagrant validate --ignore-provider
+
+    # The Vagrantfile refuses a cache value it does not recognize, so that a
+    # typo cannot silently leave the controller in a state the caller did
+    # not ask for. Assert the refusal, otherwise deleting the check would
+    # still leave this workflow green.
+    - name: An unrecognized cache value must be refused
+      run: |
+        for value in true false 0 1 ON yes ""; do
+          if LEARN_VM_HOST_IO_CACHE="$value" \
+               vagrant validate --ignore-provider >/dev/null 2>&1; then
+            echo "LEARN_VM_HOST_IO_CACHE='$value' was accepted; expected refusal"
+            exit 1
+          fi
+        done
