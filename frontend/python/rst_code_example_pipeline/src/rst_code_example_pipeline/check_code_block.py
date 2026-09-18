@@ -3,17 +3,22 @@
 """
 Check code blocks that were previously extracted from the ReST sources, one
 block_info.json record at a time. What runs for a code block is decided by
-what the code block itself declares. Every code block is syntax-checked
-unless it declares 'nosyntax-check', and one declaring 'ada-syntax-only'
-stops there. A code block that asks to be compiled or to be run is built
-(gprbuild for Ada, gcc for C), and the resulting program is run, with its
-exit status checked, only after a build that succeeded. A code block that
-asks to be proved is proved with gnatprove independently of the build, so a
-proof needs no build and does not trigger one. A code block may also declare
-that its compilation, its run or its proof is expected to fail; the failure
-is then the passing outcome, and its absence is reported. The outcome is
-recorded next to the code block as block_checks.json, and a code block that
-already carries such a record is skipped unless --force is given.
+what the code block itself declares. A code block declaring 'ada-nocheck' or
+'c-nocheck' is skipped entirely, before anything runs, and so is one that
+already carries a recorded result, unless --force is given. Every other code
+block is syntax-checked unless it declares 'nosyntax-check', and one
+declaring 'ada-syntax-only' stops there; the syntax check invokes a compiler
+for Ada and for C only, so a record naming any other language passes it
+having parsed nothing. A code block that asks to be compiled or to be run is
+built (gprbuild for Ada, gcc for C), and the resulting program is run, with
+its exit status checked, only after a build that succeeded. A code block
+that asks to be proved is proved with gnatprove independently of the build,
+so a proof needs no build and does not trigger one. A code block may also
+declare that its compilation, its run or its proof is expected to fail; the
+failure is then the passing outcome, and its absence is reported. A run
+class names a language and applies only to a code block written in that
+language; one naming the other language is reported and fails the check. The
+outcome is recorded next to the code block as block_checks.json.
 """
 
 # The text above is what argparse prints as this command's help
@@ -72,11 +77,18 @@ def check_block(block: blocks.CodeBlock,
     accident of the code, because the later checks depend on the earlier
     ones having run.
 
-    A **syntax check** comes first, over every source file of the code
-    block, and it runs for *every* code block -- including one that asks
-    for nothing else at all -- unless the code block declares
-    ``nosyntax-check``. So the weakest thing that can happen to a code
-    block is still that its sources are parsed.
+    Two returns come before any check at all, and they are part of that
+    order too. A code block declaring ``ada-nocheck`` or ``c-nocheck``
+    returns first, with nothing done to it and nothing recorded. A code
+    block that already carries a recorded result returns next, handing back
+    that result, unless ``force_checks`` asks for the checks to be re-run.
+
+    A **syntax check** comes first among the checks themselves, over every
+    source file of the code block, and it runs for every code block that
+    got past those two returns -- including one that asks for nothing else
+    at all -- unless the code block declares ``nosyntax-check``. It invokes
+    a compiler for ``ada`` and for ``c`` only, so a code block whose record
+    names any other language reaches the end of it having parsed nothing.
 
     A code block declared **syntax-only** returns right after that check,
     so it never reaches the build. It is still cleaned up and its result
@@ -102,6 +114,14 @@ def check_block(block: blocks.CodeBlock,
     compile error, a proof error or a run failure that the code block
     declared it expected and that then did not happen, and that is only
     knowable once the checks above have had their turn.
+
+    The same check also reports a **run class that names the other
+    language** -- ``ada-run`` on a C code block, say. Unlike the reports
+    beside it, this one is knowable from the declaration alone; it is
+    reported here because it too is a declaration that was not honored, not
+    because it had to wait. A run class naming the other language has no
+    effect at all, so a code block asking for a run that way would otherwise
+    be neither built nor run and still recorded as a success.
 
     Args:
         block (blocks.CodeBlock): The code block to check.
