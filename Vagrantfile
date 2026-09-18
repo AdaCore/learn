@@ -344,9 +344,95 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+
+    # Several machines run at once (one pair per worktree), all created from
+    # the same box. A linked clone shares one base disk image instead of
+    # giving each machine its own full copy, so the host page cache serves
+    # the blocks they read in common rather than reading each copy
+    # separately.
+    vb.linked_clone = true
+
+    # VirtualBox creates this controller with host I/O caching off
+    # (useHostIOCache="false"), so every guest read goes to the physical
+    # disk. Turning caching on lets the host page cache absorb those reads,
+    # which is worth a lot at boot.
+    #
+    # It is nevertheless left **off** by default, because of durability:
+    # with caching on, guest writes may sit in host RAM, so a host crash or
+    # power loss can corrupt a guest file system. Opt in per invocation
+    # when a fast boot is worth that exposure.
+    #
+    # Two related knobs: LEARN_VM_STORAGE_CONTROLLER picks *which*
+    # controller to act on, LEARN_VM_HOST_IO_CACHE picks *what to set* on
+    # it. The controller name therefore applies to both directions -- it is
+    # needed to turn caching on just as much as to turn it off -- and
+    # clearing it skips the customization altogether, which makes the cache
+    # setting irrelevant.
+    #
+    #   vagrant up
+    #       the default: caching off, controller "VirtIO Controller"
+    #   LEARN_VM_HOST_IO_CACHE=on vagrant up
+    #       caching on -- much faster boot, at the durability cost above
+    #   LEARN_VM_STORAGE_CONTROLLER="SATA Controller" vagrant up
+    #       a box whose controller is named differently; find the name with
+    #       VBoxManage showvminfo --machinereadable <uuid> \
+    #         | grep -i '^storagecontroller'
+    #   LEARN_VM_STORAGE_CONTROLLER="SATA Controller" \
+    #     LEARN_VM_HOST_IO_CACHE=on vagrant up
+    #       both together: caching on for a differently-named controller
+    #   LEARN_VM_STORAGE_CONTROLLER= vagrant up
+    #       skip the customization entirely, leaving the controller at
+    #       whatever it is already set to. LEARN_VM_HOST_IO_CACHE is
+    #       ignored in this case. An escape hatch for when a wrong name
+    #       makes `VBoxManage storagectl` fail the boot.
+    host_io_cache = ENV.fetch("LEARN_VM_HOST_IO_CACHE", "off")
+    unless ["on", "off"].include?(host_io_cache)
+      # Refuse rather than silently skip: an unrecognized value would
+      # otherwise leave the controller at whatever it already is, so a
+      # typo such as "true" or "0" would quietly do nothing while looking
+      # like it complied -- misleading in either direction.
+      raise "LEARN_VM_HOST_IO_CACHE must be \"on\" or \"off\", " \
+            "got #{host_io_cache.inspect}"
+    end
+    storage_controller =
+      ENV.fetch("LEARN_VM_STORAGE_CONTROLLER", "VirtIO Controller")
+    unless storage_controller.empty?
+      vb.customize ["storagectl", :id,
+                    "--name", storage_controller,
+                    "--hostiocache", host_io_cache]
+    end
   end
 
   config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  # The box ships a leftover /etc/netplan/01-netcfg.yaml declaring an `eth0`
+  # that does not exist here (the NIC is enp0s3, configured by
+  # 00-installer-config.yaml). netplan feeds every declared interface into the
+  # generated systemd-networkd-wait-online drop-in, and that unit is invoked
+  # without --any, so it waits for eth0 until its 120 s timeout expires and
+  # then fails. network-online.target -- and therefore ssh.service -- is
+  # blocked for that whole time, which is what Vagrant's "Connection reset.
+  # Retrying..." loop waits out.
+  #
+  # run: "always" because existing VMs report "Machine already provisioned"
+  # and would otherwise never run this; the guard makes it a no-op once done.
+  config.vm.provision "netplan-cleanup", type: :shell, run: "always", inline: <<-SHELL
+    if [ -f /etc/netplan/01-netcfg.yaml ]; then
+      rm -f /etc/netplan/01-netcfg.yaml
+      netplan generate
+    fi
+  SHELL
+
+  # snapd.apparmor.service and snapd.socket sit on the critical chain to
+  # basic.target, and therefore to ssh.service -- the unit Vagrant waits for
+  # when it prints "Connection reset. Retrying...". Nothing in these build
+  # VMs uses snap, so the units are masked rather than removed: masking is
+  # idempotent and `systemctl unmask` puts it back.
+  config.vm.provision "snapd-mask", type: :shell, run: "always", inline: <<-SHELL
+    systemctl mask --quiet \
+      snapd.service snapd.socket snapd.seeded.service snapd.apparmor.service \
+      2>/dev/null || true
+  SHELL
 
   config.vm.define "web" do |web|
     web.vm.box = "bento/ubuntu-26.04"
