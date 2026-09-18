@@ -598,6 +598,18 @@ def check_block(block: blocks.CodeBlock,
         print_error(loc, "Expected run button, got none!")
         check_error = True
 
+    # A run class names a language, and is honored only for a code block
+    # written in it.  Reported rather than passed over: the code block would
+    # otherwise be built by nothing and still recorded as a success, which is
+    # the one outcome this checker exists to prevent.
+    for code_class in block.classes:
+        class_language = constants.RUN_CLASS_LANGUAGES.get(code_class)
+        if class_language is not None and class_language != block.language:
+            print_error(loc,
+                        "Wrong language selected for run class '{}'".format(
+                            code_class))
+            check_error = True
+
     code_check = checks.CodeCheck(status_ok=(not check_error))
 
     block_check.add_check("BUTTONS", code_check)
