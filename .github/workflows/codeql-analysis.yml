@@ -18,6 +18,14 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
 
+    # Stated here rather than inherited from the repository default, so
+    # that tightening that default cannot silently stop the results from
+    # being uploaded.
+    permissions:
+      contents: read
+      # Required to upload the analysis results.
+      security-events: write
+
     strategy:
       fail-fast: false
       matrix:
