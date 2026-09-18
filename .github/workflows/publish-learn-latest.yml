@@ -28,7 +28,7 @@ jobs:
         echo "content_run_id=$content_run_id" >> $GITHUB_OUTPUT
 
     - name: Download HTML artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: learn-html
         path: unzipped_html
@@ -36,7 +36,7 @@ jobs:
         github-token: ${{ secrets.LEARN_READ_TOKEN }}
 
     - name: Download PDF books artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: learn-pdf-books
         path: unzipped_pdf_books
@@ -44,7 +44,7 @@ jobs:
         github-token: ${{ secrets.LEARN_READ_TOKEN }}
 
     - name: Download EPUB books artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: learn-epub-books
         path: unzipped_epub_books
