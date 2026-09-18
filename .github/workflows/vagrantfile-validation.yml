@@ -57,9 +57,18 @@ jobs:
     - name: An unrecognized cache value must be refused
       run: |
         for value in true false 0 1 ON yes ""; do
-          if LEARN_VM_HOST_IO_CACHE="$value" \
-               vagrant validate --ignore-provider >/dev/null 2>&1; then
+          if output=$(LEARN_VM_HOST_IO_CACHE="$value" \
+                        vagrant validate --ignore-provider 2>&1); then
             echo "LEARN_VM_HOST_IO_CACHE='$value' was accepted; expected refusal"
             exit 1
           fi
+          # Match the message, not just a non-zero exit: validation can fail
+          # for unrelated reasons, and a test that accepts any failure would
+          # pass even if the guard were deleted.
+          case "$output" in
+            *'LEARN_VM_HOST_IO_CACHE must be'*) ;;
+            *) echo "LEARN_VM_HOST_IO_CACHE='$value' failed for another reason:"
+               echo "$output"
+               exit 1 ;;
+          esac
         done
