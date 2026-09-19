@@ -255,6 +255,31 @@ def check_block(block: blocks.CodeBlock,
             print("Skipping code block {}".format(loc))
         return has_error
 
+    # A run class names a language, and is honored only for a code block
+    # written in it.  Reported rather than passed over: the code block would
+    # otherwise be built by nothing and still recorded as a success, which is
+    # the one outcome this checker exists to prevent.
+    #
+    # Read from the declaration before the recorded result below is consulted,
+    # because that record is keyed on a hash of the code block's text alone.
+    # Editing only the class leaves the text, and so the key, unchanged, so a
+    # mis-declared code block would otherwise reuse the success recorded for
+    # the declaration it had before the edit.
+    #
+    # Reporting here and carrying the failure to each return separately,
+    # rather than setting has_error now: has_error also decides whether the
+    # code block is run at all, and a code block whose run button asks for
+    # the run its class did not is still to be built and run.
+    wrong_language_classes = [
+        code_class for code_class in block.classes
+        if constants.RUN_CLASS_LANGUAGES.get(code_class) not in (
+            None, block.language)]
+
+    for code_class in wrong_language_classes:
+        print_error(loc,
+                    "Wrong language selected for run class '{}'".format(
+                        code_class))
+
     if LOOK_FOR_PREVIOUS_CHECKS:
         ref_block_check = None
 
@@ -273,7 +298,7 @@ def check_block(block: blocks.CodeBlock,
                 print_error(
                     loc, "Previous check of example has failed"
                 )
-            return has_error
+            return has_error or bool(wrong_language_classes)
 
     if verbose:
         print(fmt_utils.header("Checking code block {}".format(loc)))
@@ -336,6 +361,9 @@ def check_block(block: blocks.CodeBlock,
         cleanup_project(block.language,
                         block.project_filename,
                         block.project_main_file)
+        # Reported above; carried into the result here, because this
+        # return comes before the declaration checks that would carry it.
+        has_error = has_error or bool(wrong_language_classes)
         block_check.status_ok = not has_error
         block_check.to_json_file()
         return has_error
@@ -618,17 +646,10 @@ def check_block(block: blocks.CodeBlock,
         print_error(loc, "Expected run button, got none!")
         check_error = True
 
-    # A run class names a language, and is honored only for a code block
-    # written in it.  Reported rather than passed over: the code block would
-    # otherwise be built by nothing and still recorded as a success, which is
-    # the one outcome this checker exists to prevent.
-    for code_class in block.classes:
-        class_language = constants.RUN_CLASS_LANGUAGES.get(code_class)
-        if class_language is not None and class_language != block.language:
-            print_error(loc,
-                        "Wrong language selected for run class '{}'".format(
-                            code_class))
-            check_error = True
+    # Already reported above, before the recorded result was consulted; this
+    # only carries it into the record the code block leaves behind.
+    if wrong_language_classes:
+        check_error = True
 
     code_check = checks.CodeCheck(status_ok=(not check_error))
 
