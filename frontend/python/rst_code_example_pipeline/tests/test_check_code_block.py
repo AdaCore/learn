@@ -2156,12 +2156,22 @@ int main(void)
             self.C_RUN_OUTPUT, \
             "the program the author wrote must be the one that ran"
 
-    # The three returns that come before the declaration checks.  The report
-    # sits with those checks, so a block in any of these three states is not
-    # reported at all -- a decision that was taken rather than fallen into,
-    # since all three are cases where the block asked for less checking.
-    # Pinned here so that moving the report earlier reddens a test naming the
-    # path it was moved past, instead of passing unnoticed.
+    # The three returns that used to come before the report, each now a
+    # decision of its own rather than one rule applied to all three.
+    #
+    # The report is read off the declaration, so it is made before the
+    # recorded result is consulted, and only the block that asked for no
+    # checking at all escapes it.  A block declaring a no-check class asked
+    # for exactly that and is still skipped in silence.  A syntax-only block
+    # asked for less checking, not for none, and is reported.  A block with a
+    # recorded result asked for nothing less at all -- the record is a cache,
+    # and it is keyed on a hash of the block's text, so editing only the
+    # class leaves the key untouched and hands back the success recorded for
+    # the declaration the block had before the edit.  That is the one outcome
+    # this report exists to prevent, so it is made before the record is read.
+    #
+    # Each of the three is pinned below, so that moving the report past one
+    # of them reddens a test naming the path it was moved past.
 
     def test_a_mis_classed_block_declaring_no_check_is_not_reported(
             self, work_dir, capsys):
@@ -2185,10 +2195,19 @@ int main(void)
         assert _no_run_class_report(_reported(block, capsys.readouterr())), \
             "a block the checker never looks at cannot be reported"
 
-    def test_a_mis_classed_block_declaring_syntax_only_is_not_reported(
+    def test_a_mis_classed_block_declaring_syntax_only_is_reported(
             self, work_dir, capsys):
-        """A block declaring itself syntax-only returns after the syntax
-        check, which is also before the report."""
+        """A block declaring itself syntax-only is reported.
+
+        Such a block asked for less checking, not for none: its syntax is
+        checked and the check stops there.  The class it carries is still a
+        word the author has to fix, and it is knowable from the declaration
+        without anything being built, so the reduced checking the block asked
+        for is no reason to withhold it.
+
+        Only the message is asserted; that the report also fails the check is
+        held separately, as it is for every other message test here.
+        """
         source = work_dir / "main.c"
         source.write_text(self.C_SOURCE_THAT_ANNOUNCES_ITSELF)
 
@@ -2204,21 +2223,27 @@ int main(void)
             "check"
 
         json_file = str(work_dir / "block_info.json")
-        assert self._checked(block, work_dir, json_file) is False, \
-            "a syntax-only block whose syntax is good must pass"
+        self._checked(block, work_dir, json_file)
 
-        assert _no_run_class_report(_reported(block, capsys.readouterr())), \
-            "a block that returns before the declaration checks cannot be " \
-            "reported"
+        reported = _reported(block, capsys.readouterr())
+        assert WRONG_LANGUAGE_REPORT.format("ada-run") in reported, \
+            "a block that stops after the syntax check must still be told " \
+            "about the class it carries: {}".format(reported)
 
-    def test_a_mis_classed_block_with_a_recorded_result_is_not_reported(
+    def test_a_mis_classed_block_with_a_recorded_result_is_reported(
             self, work_dir, capsys):
-        """A block whose result is already recorded is handed that result
-        back, without the declaration checks running again.
+        """A block whose result is already recorded is reported all the same.
 
-        The recorded result says the block passed, so the check passes and
-        the mis-classed run class is not mentioned -- until --force asks for
-        the checks to be re-run, which the rest of this class does.
+        The record is a cache and its key is a hash of the block's text, so
+        a class edited without the text being touched hands back the success
+        recorded for the declaration the block had before the edit -- which
+        is how a mis-classed block comes into existence in the first place.
+        The report is read off the declaration and needs nothing the record
+        holds, so it is made before the record is consulted.
+
+        The recorded result here says the block passed, so nothing but the
+        declaration can account for the report.  Only the message is
+        asserted; the status side is held separately.
         """
         block = _make_block(
             language="c",
@@ -2237,11 +2262,38 @@ int main(void)
         recorded.status_ok = True
         recorded.to_json_file()  # beside the block, under the package's name
 
-        assert ccb.check_block(block, json_file) is False, \
-            "the recorded result must be handed back as it stands"
+        ccb.check_block(block, json_file)
 
-        assert _no_run_class_report(_reported(block, capsys.readouterr())), \
-            "checks that did not run cannot report anything"
+        reported = _reported(block, capsys.readouterr())
+        assert WRONG_LANGUAGE_REPORT.format("ada-run") in reported, \
+            "a recorded success must not absorb the report: {}".format(
+                reported)
+
+    def test_a_mis_classed_block_is_reported_exactly_once(
+            self, work_dir, capsys):
+        """The report is made once, on the path that makes every report.
+
+        The class is read at the top of the check and carried to the end,
+        where it joins the other declaration objections in the record the
+        block leaves behind.  Carrying it as a second print instead would
+        tell an author of two mistakes where there is one, and the wording is
+        the same both times, so nothing in the message would give the
+        duplication away.
+        """
+        block = _make_block(
+            language="c",
+            classes=["ada-run"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+
+        self._checked(block, work_dir, json_file)
+
+        reported = _reported(block, capsys.readouterr())
+        assert reported.count(WRONG_LANGUAGE_REPORT.format("ada-run")) == 1, \
+            "one mistake must draw one report: {}".format(reported)
 
 
 # ---------------------------------------------------------------------------
@@ -2279,6 +2331,114 @@ class TestCheckBlockRunClassNamingTheOtherLanguageFailsTheRun:
 
         assert ccb.check_block(block, json_file, force_checks=True) is True, \
             "a run class naming the other language must fail the check"
+
+    @staticmethod
+    def _recording_a_success(block) -> None:
+        """Leave a record of a successful check beside the block.
+
+        Written through the package's own writer, so that the record is right
+        in every respect and lands under the name the check looks for without
+        that name being restated here.
+        """
+        recorded = _checks_mod.BlockCheck(
+            text_hash=block.text_hash,
+            text_hash_short=block.text_hash_short,
+        )
+        recorded.status_ok = True
+        recorded.to_json_file()
+
+    def test_a_recorded_success_does_not_absorb_the_error(self, work_dir):
+        """A recorded success must not decide the outcome for a block whose
+        declaration has gone wrong since it was written.
+
+        This is the case a course author actually meets.  The per-block
+        directory is named after a hash of the block's text, the record
+        beside it is never compared against the declaration, and nothing
+        removes it -- so editing only the class of an example whose body was
+        not touched hands back the result of the run before the edit.  The
+        default local driver keeps that directory between runs by design, so
+        a stale record is the ordinary state there rather than an unusual
+        one.
+
+        Asserted on the returned value alone, and with no --force: a report
+        that printed and left the value at success would satisfy the message
+        test of this same case while telling a build the course checked out.
+        """
+        block = _make_block(
+            language="c",
+            classes=["ada-run"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+        self._recording_a_success(block)
+
+        assert ccb.check_block(block, json_file) is True, \
+            "a recorded success must not stand in for a check the block " \
+            "can no longer pass"
+
+    def test_a_recorded_success_is_still_handed_back_for_a_sound_block(
+            self, work_dir):
+        """The control for the test above.
+
+        Reusing a recorded result is what the record is for, and the report
+        must not cost every block that has one its reuse.  The same block
+        with the class of its own language keeps the recorded success -- and
+        keeps it without a compiler being reached, which is the whole point
+        of the record.
+        """
+        block = _make_block(
+            language="c",
+            classes=["c-run"],
+            buttons=["no"],
+            syntax_only=False,
+            no_check=False,
+        )
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+        self._recording_a_success(block)
+
+        assert ccb.check_block(block, json_file) is False, \
+            "a block whose declaration is sound must keep its recorded result"
+
+    def test_a_syntax_only_block_fails_the_check_and_the_record(
+            self, work_dir):
+        """A syntax-only block carrying the class must fail, and be recorded
+        as having failed.
+
+        The block stops after the syntax check, so the report is the only
+        objection it can draw, and the returned value is the only thing
+        carrying it.  The record is asserted beside it because it is the
+        record the next run reads: one saying the block passed would hand the
+        failure straight back as a success the moment the check is run again.
+        """
+        source = work_dir / "main.c"
+        source.write_text(
+            TestCheckBlockRunClassNamingTheOtherLanguage
+            .C_SOURCE_THAT_ANNOUNCES_ITSELF)
+
+        block = _make_block(
+            language="c",
+            classes=["ada-syntax-only", "ada-run"],
+            buttons=["no"],
+            no_check=False,
+            source_files=["main.c"],
+        )
+        assert block.syntax_only is True, \
+            "the block must be the one the checker stops after the syntax " \
+            "check"
+
+        json_file = str(work_dir / "block_info.json")
+        block.to_json_file(json_file)
+
+        assert ccb.check_block(block, json_file, force_checks=True) is True, \
+            "a syntax-only block carrying the class must fail the check"
+
+        record = json.loads(_check_record(work_dir, json_file).read_text())
+        assert record["status_ok"] is False, \
+            "the record the next run reads must say the block failed"
 
 
 # ---------------------------------------------------------------------------
