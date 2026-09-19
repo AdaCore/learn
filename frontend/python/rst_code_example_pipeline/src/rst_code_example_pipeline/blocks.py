@@ -227,14 +227,6 @@ class CodeBlock(Block):
         and never on a literal digest: pinning one turns a correct change of
         algorithm into a test failure, which is the opposite of what such a
         test is for.
-
-        One constraint does come from outside the package, and it is easy to
-        miss because nothing fails loudly when it is broken:
-        ``frontend/sphinx/widget_extension.py`` recomputes the same MD5 over
-        the same block text and uses it to locate the per-block directory
-        whose log files it renders beside the example. Change the algorithm
-        on one side only and the boxes simply come out empty. The two sides
-        have to move together.
     """
 
     @staticmethod

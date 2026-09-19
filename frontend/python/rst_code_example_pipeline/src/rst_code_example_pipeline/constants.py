@@ -8,12 +8,11 @@ Keeping the names here means the commands in this package cannot disagree.
 
 Two limits are worth knowing before renaming anything here.
 
-The guarantee stops at the package boundary.
-``frontend/sphinx/code_block_info.py`` locates the block info file by its own
-copy of the name and treats a miss as "no metadata" rather than an error, so
-it has to be changed in step and nothing will say so.  The browser-side
-download code writes its own copies of the four project-file names, and of
-the project template that refers to them.
+The guarantee stops at the package boundary.  These names are part of an
+on-disk contract: whatever reads the artifacts this package writes carries
+its own copy of the names, and a reader that misses a file may well treat it
+as absent metadata rather than as an error.  Renaming one is therefore not a
+local change, and nothing here will say so.
 
 And the two project file names are not free even inside the package: the
 templates below name the project units ``Main`` and ``Main_Spark``, which

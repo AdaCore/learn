@@ -148,10 +148,9 @@ def check_block(block: blocks.CodeBlock,
         checking again. Only the overall status survives that round trip:
         the per-check entries recorded here are written to the file but are
         dropped when it is read back, so nothing acts on them. They are a
-        record for whoever reads the file, not an interface -- the ReST
-        widget that renders an example's log files beside it locates them
-        by globbing the code block's directory, not by reading their names
-        from here.
+        record for whoever reads the file, not an interface: a reader
+        wanting an example's log files finds them by globbing the code
+        block's directory, not by reading their names from here.
     """
 
     def run(*run_args):
