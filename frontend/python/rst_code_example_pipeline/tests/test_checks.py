@@ -1,0 +1,279 @@
+"""
+Unit tests for rst_code_example_pipeline.checks.
+
+Covers:
+- CodeCheck construction and defaults
+- BlockCheck.__init__ stores fields; checks dict initially empty
+- BlockCheck.add_check() accumulates CodeCheck entries
+- BlockCheck.to_json_file() + from_json_file() round-trip
+- BlockCheck.from_json_file() with nonexistent file → None
+- BlockCheck.from_json_file() with explicit filename
+- Adversarial: overwrite, empty JSON {}, TypeError on bad args
+"""
+import json
+import os
+import time
+
+import pytest
+
+from rst_code_example_pipeline.checks import BlockCheck, CodeCheck
+
+
+# ---------------------------------------------------------------------------
+# T-checks-01: CodeCheck defaults
+# ---------------------------------------------------------------------------
+
+class TestCodeCheckDefaults:
+    def test_default_version_is_none(self):
+        c = CodeCheck()
+        assert c.version is None
+
+    def test_default_status_ok_is_none(self):
+        c = CodeCheck()
+        assert c.status_ok is None
+
+    def test_default_logfile_is_none(self):
+        c = CodeCheck()
+        assert c.logfile is None
+
+    def test_default_cmdline_is_none(self):
+        c = CodeCheck()
+        assert c.cmdline is None
+
+    def test_default_timestamp_is_recent_float(self):
+        before = time.time()
+        c = CodeCheck()
+        after = time.time()
+        assert isinstance(c.timestamp, float)
+        assert before <= c.timestamp <= after
+
+    def test_explicit_timestamp(self):
+        c = CodeCheck(timestamp=1234567890.0)
+        assert c.timestamp == 1234567890.0
+
+    def test_all_fields_set(self):
+        c = CodeCheck(timestamp=1.0, version="v1.2", status_ok=True,
+                      logfile="out.log", cmdline="gcc main.c")
+        assert c.timestamp == 1.0
+        assert c.version == "v1.2"
+        assert c.status_ok is True
+        assert c.logfile == "out.log"
+        assert c.cmdline == "gcc main.c"
+
+
+# ---------------------------------------------------------------------------
+# T-checks-02: BlockCheck construction
+# ---------------------------------------------------------------------------
+
+class TestBlockCheckInit:
+    def test_stores_text_hash(self):
+        bc = BlockCheck(text_hash="abc", text_hash_short="a")
+        assert bc.text_hash == "abc"
+
+    def test_stores_text_hash_short(self):
+        bc = BlockCheck(text_hash="abc", text_hash_short="a")
+        assert bc.text_hash_short == "a"
+
+    def test_checks_initially_empty(self):
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        assert bc.checks == {}
+
+    def test_checks_empty_even_when_none_passed(self):
+        bc = BlockCheck(text_hash="h", text_hash_short="s", checks=None)
+        assert bc.checks == {}
+
+    def test_status_ok_default_none(self):
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        assert bc.status_ok is None
+
+    def test_timestamp_recent(self):
+        before = time.time()
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        after = time.time()
+        assert before <= bc.timestamp <= after
+
+    def test_explicit_timestamp(self):
+        bc = BlockCheck(text_hash="h", text_hash_short="s", timestamp=999.0)
+        assert bc.timestamp == 999.0
+
+
+# ---------------------------------------------------------------------------
+# T-checks-03: add_check()
+# ---------------------------------------------------------------------------
+
+class TestBlockCheckAddCheck:
+    def test_add_single_check(self):
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        cc = CodeCheck(status_ok=True)
+        bc.add_check("syntax", cc)
+        assert "syntax" in bc.checks
+        assert bc.checks["syntax"] is cc
+
+    def test_add_multiple_checks(self):
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        bc.add_check("syntax", CodeCheck(status_ok=True))
+        bc.add_check("compile", CodeCheck(status_ok=False))
+        assert len(bc.checks) == 2
+        assert "syntax" in bc.checks
+        assert "compile" in bc.checks
+
+    def test_overwrite_check(self):
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        cc1 = CodeCheck(status_ok=True)
+        cc2 = CodeCheck(status_ok=False)
+        bc.add_check("run", cc1)
+        bc.add_check("run", cc2)
+        assert bc.checks["run"] is cc2
+
+
+# ---------------------------------------------------------------------------
+# T-checks-04: to_json_file / from_json_file round-trip
+# ---------------------------------------------------------------------------
+
+class TestBlockCheckJsonRoundTrip:
+    def test_round_trip_top_level_fields(self, tmp_path):
+        bc = BlockCheck(
+            text_hash="deadbeef",
+            text_hash_short="dead",
+            timestamp=1000.0,
+            status_ok=True,
+        )
+        f = str(tmp_path / "block_checks.json")
+        bc.to_json_file(f)
+        bc2 = BlockCheck.from_json_file(f)
+        assert bc2 is not None
+        assert bc2.text_hash == "deadbeef"
+        assert bc2.text_hash_short == "dead"
+        assert bc2.timestamp == 1000.0
+        assert bc2.status_ok is True
+
+    def test_to_json_file_writes_the_per_phase_checks(self, tmp_path):
+        """A saved BlockCheck must carry its per-phase checks into the JSON.
+
+        Reloading them is covered by the companion ``xfail`` test below; the
+        two are kept apart so that losing the written detail fails the suite
+        on its own."""
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        cc = CodeCheck(timestamp=1.0, version="v1", status_ok=True,
+                       logfile="x.log", cmdline="cmd")
+        bc.add_check("syntax", cc)
+        assert "syntax" in bc.checks
+
+        f = str(tmp_path / "bc.json")
+        bc.to_json_file(f)
+
+        with open(f) as json_file:
+            written = json.load(json_file)
+        assert "syntax" in written["checks"], \
+            "Expected the saved JSON to record the per-phase check"
+
+        fields = written["checks"]["syntax"]
+        assert fields["timestamp"] == 1.0
+        assert fields["version"] == "v1"
+        assert fields["status_ok"] is True
+        assert fields["logfile"] == "x.log"
+        assert fields["cmdline"] == "cmd"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="BlockCheck.__init__ discards the checks argument, so a JSON "
+               "round-trip loses every per-phase CodeCheck entry",
+    )
+    def test_round_trip_preserves_the_per_phase_checks(self, tmp_path):
+        """A saved BlockCheck must come back carrying its per-phase checks.
+
+        What ``to_json_file()`` writes out is covered by the companion test
+        above; this one covers only what comes back.
+
+        Tracking note — this currently fails. ``BlockCheck.__init__`` accepts a
+        ``checks`` argument but then unconditionally assigns
+        ``self.checks = dict()``, so ``from_json_file()`` (which reconstructs
+        the object with ``BlockCheck(**json_data)``) silently drops every
+        ``CodeCheck`` entry that ``to_json_file()`` had written out. Nothing
+        warns: a reloaded block simply looks like one that was never checked,
+        which defeats the point of persisting the checks at all. A fix would
+        make ``__init__`` honor the argument and rebuild the ``CodeCheck``
+        values from their serialized form; this test then passes and the
+        ``xfail`` marker must be removed."""
+        bc = BlockCheck(text_hash="h", text_hash_short="s")
+        cc = CodeCheck(timestamp=1.0, version="v1", status_ok=True,
+                       logfile="x.log", cmdline="cmd")
+        bc.add_check("syntax", cc)
+
+        f = str(tmp_path / "bc.json")
+        bc.to_json_file(f)
+
+        bc2 = BlockCheck.from_json_file(f)
+        assert bc2 is not None
+        assert "syntax" in bc2.checks
+
+        # Accept either a rebuilt CodeCheck or its plain-dict form: the point
+        # is that the recorded detail survived, not how it is represented.
+        reloaded = bc2.checks["syntax"]
+        fields = reloaded if isinstance(reloaded, dict) else vars(reloaded)
+        assert fields["timestamp"] == 1.0
+        assert fields["version"] == "v1"
+        assert fields["status_ok"] is True
+        assert fields["logfile"] == "x.log"
+        assert fields["cmdline"] == "cmd"
+
+    def test_explicit_filename(self, tmp_path):
+        bc = BlockCheck(text_hash="abc", text_hash_short="a")
+        f = str(tmp_path / "custom.json")
+        bc.to_json_file(f)
+        bc2 = BlockCheck.from_json_file(f)
+        assert bc2 is not None
+        assert bc2.text_hash == "abc"
+
+    def test_default_filename(self, tmp_path, monkeypatch):
+        """to_json_file() and from_json_file() with default filename work when
+        cwd is set to tmp_path."""
+        monkeypatch.chdir(tmp_path)
+        bc = BlockCheck(text_hash="xyz", text_hash_short="x")
+        bc.to_json_file()
+        bc2 = BlockCheck.from_json_file()
+        assert bc2 is not None
+        assert bc2.text_hash == "xyz"
+
+
+# ---------------------------------------------------------------------------
+# T-checks-05: from_json_file() with nonexistent file
+# ---------------------------------------------------------------------------
+
+class TestBlockCheckFromJsonMissing:
+    def test_nonexistent_file_returns_none(self, tmp_path):
+        f = str(tmp_path / "does_not_exist.json")
+        assert BlockCheck.from_json_file(f) is None
+
+    def test_nonexistent_default_returns_none(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        assert BlockCheck.from_json_file() is None
+
+
+# ---------------------------------------------------------------------------
+# T-checks-06: Adversarial
+# ---------------------------------------------------------------------------
+
+class TestBlockCheckAdversarial:
+    def test_overwrite_existing_file(self, tmp_path):
+        f = str(tmp_path / "bc.json")
+        bc1 = BlockCheck(text_hash="first", text_hash_short="f")
+        bc1.to_json_file(f)
+        bc2 = BlockCheck(text_hash="second", text_hash_short="s")
+        bc2.to_json_file(f)
+        bc_loaded = BlockCheck.from_json_file(f)
+        assert bc_loaded is not None
+        assert bc_loaded.text_hash == "second"
+
+    def test_empty_json_raises_type_error(self, tmp_path):
+        """from_json_file() with '{}' should raise TypeError because __init__
+        requires text_hash and text_hash_short."""
+        f = tmp_path / "empty.json"
+        f.write_text("{}")
+        with pytest.raises(TypeError):
+            BlockCheck.from_json_file(str(f))
+
+    def test_from_json_file_none_argument_uses_default(self, tmp_path, monkeypatch):
+        """Passing None explicitly is equivalent to omitting the argument."""
+        monkeypatch.chdir(tmp_path)
+        assert BlockCheck.from_json_file(None) is None

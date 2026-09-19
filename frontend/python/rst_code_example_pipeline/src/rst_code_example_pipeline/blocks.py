@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 from . import colors as C
+from . import constants
 from . import toolchain_info
 
 class Block(object):
@@ -197,21 +198,102 @@ class Block(object):
         block_info = vars(self)
 
         if json_filename is None:
-            json_filename = "block_info.json"
+            json_filename = constants.BLOCK_INFO_FILENAME
         with open(json_filename, u'w') as f:
             json.dump(block_info, f, indent=4)
 
 class CodeBlock(Block):
+    """A single code block extracted from a ReST file
+
+    Note:
+        ``text_hash`` and ``text_hash_short`` are derived from the block's
+        text whenever the constructor is not handed them. What this package
+        asks of them is exactly three things:
+
+        * **determinism** -- the same text hashes the same way in every run,
+          or a block's directory moves and the result cached in it is never
+          found again;
+        * **distinctness** -- two different texts do not collide, or one
+          block's extracted project overwrites another's and one of the two
+          silently stops being checked;
+        * **hexadecimal shape** -- the short hash is used verbatim as a
+          directory name, so it must hold nothing a path would have to
+          escape.
+
+        What this package does **not** ask of them is any particular digest.
+        Neither hash is compared against a value computed anywhere else in
+        the package, so SHA-512 and MD5 are a choice made here, not a
+        promise made to a caller. Tests belong on the three properties above
+        and never on a literal digest: pinning one turns a correct change of
+        algorithm into a test failure, which is the opposite of what such a
+        test is for.
+    """
+
     @staticmethod
     def from_json_file(json_filename: str | None = None) -> CodeBlock | None:
+        """Reads a code block back from the block info file written for it
+
+        Args:
+            json_filename (str, optional): The file to read. Defaults to
+                ``block_info.json`` in the current working directory, which
+                is the name the extraction step writes and the place the
+                checking step changes into.
+
+        Returns:
+            CodeBlock, optional: The code block the file describes, or None
+            when it does not describe one.
+
+        Note:
+            **A file that cannot be turned into a code block yields None
+            rather than an exception**, and that is the part callers build
+            on. Nothing on this side decides what an unreadable code block
+            means for a run -- the callers do, and they differ: the
+            checking commands leave the code block unchecked and fail the
+            run over it, while extraction warns and rewrites the record
+            from the ReST source. What is decided here is that the *reason*
+            is reported before it is lost, since only this side has it.
+
+            Two files reduce to None without a word: one that is not there,
+            and one whose name is not a regular file at all. Neither is a
+            complaint worth making -- the first is the ordinary way to ask
+            whether a code block has been extracted yet.
+
+            The reasons that *are* reported are a file that does not decode
+            as UTF-8, one that does not parse as JSON, and one that parses
+            into something that is not a code block record. **That list is
+            not exhaustive, and it is a list of exception types rather than
+            of intent**: it names the ways a file has actually been seen to
+            be unusable, so a file unusable in some other way still raises
+            out of here. Reading a deeply enough nested JSON array is the
+            known example, and opening the file is outside the guard
+            entirely, so a file whose permissions forbid reading raises as
+            well.
+        """
 
         if json_filename is None:
-            json_filename = "block_info.json"
+            json_filename = constants.BLOCK_INFO_FILENAME
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:
-                block_info_json = json.load(f)
-                return CodeBlock(**block_info_json)
+                try:
+                    block_info_json = json.load(f)
+                    return CodeBlock(**block_info_json)
+                except (json.JSONDecodeError, UnicodeDecodeError,
+                        TypeError) as e:
+                    # A file that is present but cannot be turned into a
+                    # block is reported and treated as no block at all.  The
+                    # callers already say what that means for them; only the
+                    # reason is known here, and it is the part that would
+                    # otherwise be lost.
+                    #
+                    # UnicodeDecodeError is listed separately on purpose: it
+                    # is a *sibling* of JSONDecodeError under ValueError, not
+                    # a subclass, so a record holding bytes that are not
+                    # valid UTF-8 would otherwise escape -- and a hand edit
+                    # in an editor defaulting to another encoding produces
+                    # exactly that.
+                    print("{}: cannot read block info from {}: {}".format(
+                        C.col("ERROR", C.Colors.RED), json_filename, e))
 
         return None
 
@@ -259,30 +341,40 @@ class CodeBlock(Block):
         self.active: bool = active if active is not None else True
 
         self.no_check: bool = no_check if no_check is not None else \
-            any(sphinx_class in ["ada-nocheck", "c-nocheck"]
+            any(sphinx_class in [constants.CLASS_ADA_NOCHECK, constants.CLASS_C_NOCHECK]
                 for sphinx_class in self.classes)
 
         self.syntax_only: bool = syntax_only if syntax_only is not None else \
-            'ada-syntax-only' in self.classes
+            constants.CLASS_ADA_SYNTAX_ONLY in self.classes
 
+        # The C spellings are paired with the language the way compile_it
+        # pairs its own, so that asking for a run by class alone works for C
+        # as it already does for Ada.  Without them a c-run block was never
+        # run and the check still reported success, and the branch handling
+        # c-run-expect-failure could only be reached through a run button.
         self.run_it: bool = run_it if run_it is not None else \
-            (('ada-run' in self.classes
-              or 'ada-run-expect-failure' in self.classes
+            ((((constants.CLASS_ADA_RUN in self.classes
+                or constants.CLASS_ADA_RUN_EXPECT_FAILURE in self.classes)
+               and self.language == 'ada')
+              or ((constants.CLASS_C_RUN in self.classes
+                   or constants.CLASS_C_RUN_EXPECT_FAILURE in self.classes)
+                  and self.language == 'c')
               or 'run' in self.buttons)
-              and not 'ada-norun' in self.classes)
+              and not (constants.CLASS_ADA_NORUN in self.classes
+                       and self.language == 'ada')
+              and not (constants.CLASS_C_NORUN in self.classes
+                       and self.language == 'c'))
         self.compile_it: bool = compile_it if compile_it is not None else \
             self.run_it or \
-            (('ada-compile' in self.classes and self.language == 'ada')
-             or ('c-compile' in self.classes and self.language == 'c')
+            ((constants.CLASS_ADA_COMPILE in self.classes and self.language == 'ada')
+             or (constants.CLASS_C_COMPILE in self.classes and self.language == 'c')
              or 'compile' in self.buttons)
 
         prove_buttons: list[str] = ["prove", "prove_flow", "prove_flow_report_all",
                          "prove_report_all"]
-        prove_classes: list[str] = ["ada-prove", "ada-prove-flow", "ada-prove-flow-report-all",
-                         "ada-prove-report-all"]
 
         self.prove_it: bool = prove_it if prove_it is not None else \
-            (any(b in prove_classes for b in self.classes)
+            (any(b in constants.PROVE_CLASSES for b in self.classes)
              or any(b in prove_buttons for b in self.buttons))
 
         self.source_files: list[str] = source_files if source_files is not None else \
@@ -300,13 +392,39 @@ class CodeBlock(Block):
 
 
 class ConfigBlock(Block):
+    """Settings read from a ReST source, held as boolean attributes
+
+    Every keyword argument becomes an attribute of the same name, whose
+    value is coerced to a boolean by a deliberately asymmetric rule: a real
+    ``bool`` is kept as it stands, and anything else is true unless it is
+    exactly the string ``"False"``. So ``"false"``, ``"0"`` and the empty
+    string are all true, and so is any value that is not a string at all.
+
+    The asymmetry follows the two kinds of caller. Settings normally arrive
+    as strings, parsed out of a ``:code-config:`` directive, where
+    ``"False"`` is the only spelling of false the directive has; that is
+    where the string comparison comes from. A caller that hands over a real
+    boolean -- as the extractor does for the settings it starts from --
+    means that boolean literally, and comparing it against a string it can
+    never equal would silently turn every such setting true.
+
+    Args:
+        rst_file (str, optional): The ReST source the settings were read
+            from.
+        **opts (Any): The settings themselves, coerced as described above.
+    """
+
     def __init__(self,
                  rst_file: str | None = None,
                  **opts: Any) -> None:
         self.rst_file: str | None = rst_file
         self._opts: dict[str, Any] = opts
         for k, v in opts.items():
-            setattr(self, k, False if v == "False" else True)
+            # Values normally arrive as strings from a code-config directive,
+            # where only "False" means false.  A caller passing a real
+            # boolean means it literally, so pass it through instead of
+            # comparing it against a string it can never equal.
+            setattr(self, k, v if isinstance(v, bool) else v != "False")
 
     def update(self, other_config: ConfigBlock) -> None:
         self.__init__(**other_config._opts)

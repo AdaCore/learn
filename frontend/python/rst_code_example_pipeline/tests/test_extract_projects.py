@@ -1,0 +1,1480 @@
+"""
+Unit tests for rst_code_example_pipeline.extract_projects.
+
+Covers:
+- the configuration the module starts every run with: built from real booleans,
+  and holding what it declares rather than the opposite
+- get_project_dir(): simple and dotted project names
+- write_project_file(): all four combinations of spark_mode × main_file × compiler_switches
+- write_project_file(): the generated project points at the configuration pragma
+  file the same call wrote, in both plain and SPARK mode
+- write_project_file(): the plain and SPARK modes write separate project and
+  pragma files, so a block that is both proved and run keeps both
+- ProjectsList: init, add(), to_json_file(), from_json_file() round-trip, missing file
+- analyze_file(): minimal no-check / syntax-only Ada block
+- analyze_file(): a block directory left over from a prior run whose info JSON file was
+  deleted is detected as stale, logged, and removed rather than reused
+- analyze_file(): a block directory left over from a prior run whose info JSON file's name
+  is held by a directory is treated as having no record at all -- removed and extracted
+  again rather than announced as a rebuilt record and then written over
+- analyze_file(): a block record left over from a prior run that is present but cannot be
+  read is rebuilt, the run still succeeds, and a warning names the file as rebuilt -- while
+  a record that reads back is repaired silently, because it was never damaged
+- analyze_file() integration: compile_button / run_button / prove_button Ada blocks --
+  the extracted source, the per-block directory name and the generated project files
+  (requires the Ada toolchain — real gnatchop and write_project_file calls)
+- analyze_file(): a block whose source text chops into zero source files is logged and
+  skipped rather than crashing the whole analysis
+- Global state (verbose, code_block_at, current_config) reset before each test
+
+NOTE: a no-check block does not spare analyze_file() the toolchain.  The chop step runs
+before the no-check test, and every block reaching it goes through the toolchain setup,
+which writes into the toolchain installation tree.  Every analyze_file() test that
+reaches the block loop therefore carries the `toolchain` marker; the only unmarked
+analyze_file() tests are the two that return before that loop (a block without a
+project, and a file whose blocks are all inactive).  The get_project_dir(),
+write_project_file(), ProjectsList and Diag tests never call analyze_file() at all and
+need no marker.
+"""
+import json
+import os
+import re
+import shutil
+
+import pytest
+
+import rst_code_example_pipeline.extract_projects as ep
+from rst_code_example_pipeline import blocks as _blocks_mod
+from rst_code_example_pipeline import constants as _constants
+
+
+def _pragma_file(directory, project_filename: str):
+    """The configuration pragma file a generated project points at.
+
+    Located through the project's own reference rather than through a name
+    written down here, so that a test says what a build against that project
+    would pick up instead of restating a name the package was free to choose.
+    """
+    project_text = (directory / project_filename).read_text()
+    named = re.search(r'for Global_Configuration_Pragmas use "([^"]+)"',
+                      project_text)
+    assert named is not None, \
+        "the generated project must name a configuration pragma file"
+    return directory / named.group(1)
+
+
+def _configuration_pragmas(directory, project_filename: str) -> str:
+    """The configuration pragmas a generated project pulls in.
+
+    A project naming a file nobody wrote is caught here, by name, instead of
+    surfacing much later as a build that quietly used none of them.
+    """
+    pragma_file = _pragma_file(directory, project_filename)
+    assert pragma_file.is_file(), \
+        "{} names {}, which was never written".format(
+            project_filename, pragma_file.name)
+    return pragma_file.read_text()
+
+
+# ---------------------------------------------------------------------------
+# TestDefaultConfiguration: the module's own starting configuration
+# ---------------------------------------------------------------------------
+
+class TestDefaultConfiguration:
+    """The configuration the module starts every run with.
+
+    It is the one place in the package that builds a configuration out of
+    real booleans rather than out of the strings a code-config directive
+    produces, and those were once read by comparing them against a string
+    they could never equal -- so all three came out true and the module
+    began every run with the opposite of two of the values it declares.
+
+    Asserted against the declared call rather than against a list of values
+    repeated here, so that changing what the module declares changes what
+    this test expects, and only the reading of it is pinned.
+    """
+
+    @staticmethod
+    def _declared() -> dict:
+        """What the module asked for, taken from the configuration itself.
+
+        ConfigBlock keeps the arguments it was constructed with, so the
+        request and the answer can be compared without either being written
+        down in this file.
+        """
+        return ep.current_config._opts
+
+    def test_the_module_declares_its_configuration_with_real_booleans(self):
+        """The precondition for the test below: if these stopped being real
+        booleans the reading under test would not be the one exercised."""
+        declared = self._declared()
+        assert declared, \
+            "the module must start from a configuration that asks for something"
+        assert all(isinstance(value, bool) for value in declared.values()), \
+            "the module's own configuration is the real-boolean caller this " \
+            "reading exists for: {}".format(declared)
+
+    def test_the_starting_configuration_holds_what_the_module_asked_for(self):
+        for name, requested in self._declared().items():
+            assert getattr(ep.current_config, name) is requested, \
+                "the starting configuration must hold the value the module " \
+                "declared for {}, not its opposite".format(name)
+
+    def test_the_starting_configuration_is_not_uniformly_true(self):
+        """The control for the test above.
+
+        A reading that answered true for everything satisfied the values the
+        module happens to ask for as true, so a request that is all-true
+        would not distinguish the two readings at all.
+        """
+        assert not all(self._declared().values()), \
+            "the module's own configuration must ask for at least one false " \
+            "value, or it cannot tell a correct reading from one that " \
+            "answers true for everything"
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-01: get_project_dir()
+# ---------------------------------------------------------------------------
+
+class TestGetProjectDir:
+    def test_simple_name(self):
+        assert ep.get_project_dir("Simple") == "projects/Simple"
+
+    def test_dotted_name_two_parts(self):
+        assert ep.get_project_dir("Foo.Bar") == "projects/Foo/Bar"
+
+    def test_dotted_name_three_parts(self):
+        assert ep.get_project_dir("A.B.C") == "projects/A/B/C"
+
+    def test_base_prefix_always_present(self):
+        result = ep.get_project_dir("X")
+        assert result.startswith("projects/")
+
+    def test_no_trailing_slash(self):
+        result = ep.get_project_dir("Foo")
+        assert not result.endswith("/")
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-02: write_project_file()
+# ---------------------------------------------------------------------------
+
+class TestWriteProjectFile:
+    def test_no_main_no_switches_not_spark_creates_gpr(self, work_dir):
+        ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        assert list(work_dir.glob("*.gpr")), "a project file must be written"
+
+    def test_no_main_no_switches_not_spark_creates_adc(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        assert _pragma_file(work_dir, result).is_file(), \
+            "the pragma file the project points at must be written"
+
+    def test_returns_gpr_filename_not_spark(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        assert (work_dir / result).is_file(), \
+            "the name returned must be the project file that was written"
+
+    def test_no_main_placeholder_absent_when_none(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        content = (work_dir / result).read_text()
+        assert "for Main use" not in content
+
+    def test_with_main_file_gpr_contains_main_use(self, work_dir):
+        result = ep.write_project_file(main_file="main.adb", compiler_switches=[],
+                                       spark_mode=False)
+        content = (work_dir / result).read_text()
+        assert 'for Main use ("main.adb")' in content
+
+    def test_with_compiler_switch_gpr_contains_switch(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=["-gnatwa"],
+                                       spark_mode=False)
+        content = (work_dir / result).read_text()
+        assert '"-gnatwa"' in content
+
+    def test_multiple_switches_all_present(self, work_dir):
+        result = ep.write_project_file(
+            main_file=None, compiler_switches=["-gnatwa", "-gnatwe"], spark_mode=False
+        )
+        content = (work_dir / result).read_text()
+        assert '"-gnatwa"' in content
+        assert '"-gnatwe"' in content
+
+    def test_spark_mode_creates_main_spark_gpr(self, work_dir):
+        ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
+        assert list(work_dir.glob("*.gpr")), \
+            "a project file must be written in SPARK mode too"
+
+    def test_spark_mode_creates_main_spark_adc(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
+        assert _pragma_file(work_dir, result).is_file(), \
+            "the pragma file the SPARK project points at must be written"
+
+    def test_spark_mode_returns_spark_gpr_filename(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
+        assert (work_dir / result).is_file(), \
+            "the name returned must be the project file that was written"
+
+    def test_the_two_modes_write_separate_projects(self, work_dir):
+        """A SPARK project and a plain one can sit side by side.
+
+        The two modes are asked for one after the other for the same block --
+        a block that is both proved and run gets both -- so they have to write
+        to different places.  Were they to share a name the second call would
+        overwrite the first, and the block would be built against whichever
+        project happened to be written last.
+        """
+        plain = ep.write_project_file(main_file=None, compiler_switches=[],
+                                      spark_mode=False)
+        spark = ep.write_project_file(main_file=None, compiler_switches=[],
+                                      spark_mode=True)
+        assert plain != spark, \
+            "the two modes must not write to the same project file"
+        assert (work_dir / plain).is_file() and (work_dir / spark).is_file(), \
+            "both project files must survive the other being written"
+        assert _pragma_file(work_dir, plain) != _pragma_file(work_dir, spark), \
+            "the two projects must not share a configuration pragma file"
+
+    def test_spark_adc_contains_spark_mode_pragma(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=True)
+        assert "pragma SPARK_Mode (On);" in _configuration_pragmas(work_dir, result)
+
+    def test_non_spark_adc_does_not_contain_spark_pragma(self, work_dir):
+        result = ep.write_project_file(main_file=None, compiler_switches=[], spark_mode=False)
+        assert "pragma SPARK_Mode" not in _configuration_pragmas(work_dir, result)
+
+    @pytest.mark.parametrize("spark_mode", [False, True], ids=["plain", "spark"])
+    def test_project_names_the_pragma_file_the_same_call_wrote(
+            self, work_dir, spark_mode):
+        """The pragma file a generated project points at is the one written
+        beside it.
+
+        The project text and the pragma file are produced by two separate
+        parts of one call, and nothing in the generator checks that the two
+        agree on the name.  A disagreement leaves both files on disk and is
+        invisible here; only a later build against the project would meet it.
+        """
+        result = ep.write_project_file(
+            main_file=None, compiler_switches=[], spark_mode=spark_mode
+        )
+        assert _configuration_pragmas(work_dir, result).strip(), \
+            "the pragma file the project names must have something in it"
+
+    def test_full_combo_main_switches_spark(self, work_dir):
+        result = ep.write_project_file(
+            main_file="main.adb", compiler_switches=["-gnatwa"], spark_mode=True
+        )
+        gpr = (work_dir / result).read_text()
+        assert 'for Main use ("main.adb")' in gpr
+        assert '"-gnatwa"' in gpr
+        # Says the project really is the SPARK one, by what it configures
+        # rather than by what it is called.
+        assert "pragma SPARK_Mode (On);" in _configuration_pragmas(work_dir, result)
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-03: ProjectsList
+# ---------------------------------------------------------------------------
+
+class TestProjectsList:
+    def test_init_no_args_empty_projects(self):
+        pl = ep.ProjectsList()
+        assert pl.projects == {}
+
+    def test_init_with_projects_arg(self):
+        pl = ep.ProjectsList(projects={"Foo": True})
+        assert pl.projects == {"Foo": True}
+
+    def test_add_project_appears_in_dict(self):
+        pl = ep.ProjectsList()
+        pl.add("MyProject")
+        assert "MyProject" in pl.projects
+        assert pl.projects["MyProject"] is True
+
+    def test_add_multiple_projects(self):
+        pl = ep.ProjectsList()
+        pl.add("A")
+        pl.add("B")
+        assert set(pl.projects.keys()) == {"A", "B"}
+
+    def test_to_json_file_creates_file(self, tmp_path):
+        pl = ep.ProjectsList()
+        pl.add("Foo")
+        dest = str(tmp_path / "projects.json")
+        pl.to_json_file(dest)
+        assert os.path.isfile(dest)
+
+    def test_to_json_file_content_is_valid_json(self, tmp_path):
+        pl = ep.ProjectsList()
+        pl.add("Bar")
+        dest = str(tmp_path / "projects.json")
+        pl.to_json_file(dest)
+        with open(dest) as f:
+            data = json.load(f)
+        assert "projects" in data
+        assert data["projects"]["Bar"] is True
+
+    def test_round_trip_preserves_projects(self, tmp_path):
+        pl = ep.ProjectsList()
+        pl.add("Alpha")
+        pl.add("Beta")
+        dest = str(tmp_path / "roundtrip.json")
+        pl.to_json_file(dest)
+        pl2 = ep.ProjectsList.from_json_file(dest)
+        assert pl2 is not None
+        assert set(pl2.projects.keys()) == {"Alpha", "Beta"}
+
+    def test_from_json_file_nonexistent_returns_none(self, tmp_path):
+        result = ep.ProjectsList.from_json_file(str(tmp_path / "no_such.json"))
+        assert result is None
+
+    def test_to_json_file_overwrites_silently(self, tmp_path):
+        pl1 = ep.ProjectsList()
+        pl1.add("First")
+        dest = str(tmp_path / "over.json")
+        pl1.to_json_file(dest)
+
+        pl2 = ep.ProjectsList()
+        pl2.add("Second")
+        pl2.to_json_file(dest)
+
+        pl_loaded = ep.ProjectsList.from_json_file(dest)
+        assert pl_loaded is not None
+        assert "Second" in pl_loaded.projects
+        assert "First" not in pl_loaded.projects
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-04: analyze_file() — minimal no-check block
+# ---------------------------------------------------------------------------
+
+class TestAnalyzeFile:
+    # A minimal RST file with a single Ada block marked as no-check.
+    # The no-check class keeps analyze_file() from compiling or running the
+    # block, but it is still chopped and still goes through the toolchain
+    # setup, so these tests need the Ada toolchain all the same.
+    # NOTE: analyze_file() requires every code block to have a project attribute;
+    # blocks without one cause exit(1).  Always include project=... here.
+    NOCHECK_RST = """\
+.. code:: ada project=NoCheckProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+
+    # A single Ada block whose chopping is made to yield nothing, so no source
+    # file is ever written out for it.
+    EMPTY_CHOP_RST = """\
+.. code:: ada project=EmptyChopProject main=main.adb compile_button
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+
+    def _write_rst(self, tmp_path, content: str) -> str:
+        rst_path = tmp_path / "test_nocheck.rst"
+        rst_path.write_text(content)
+        return str(rst_path)
+
+    @pytest.mark.toolchain
+    def test_no_crash_on_nocheck_block(self, work_dir):
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        # analyze_file() must return without raising
+        result = ep.analyze_file(rst_file)
+        assert result is False
+
+    @pytest.mark.toolchain
+    def test_no_crash_on_nocheck_block_with_project(self, work_dir):
+        rst_content = """\
+.. code:: ada project=TestProj
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+
+    @pytest.mark.toolchain
+    def test_analyze_file_creates_project_dirs(self, work_dir):
+        rst_content = """\
+.. code:: ada project=MyProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file)
+        project_dir = work_dir / "projects" / "MyProject"
+        assert project_dir.exists(), \
+            f"Expected project directory {project_dir} to be created"
+
+    @pytest.mark.toolchain
+    def test_analyze_file_with_projects_list_file(self, work_dir):
+        rst_content = """\
+.. code:: ada project=ListedProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        prj_list_file = str(work_dir / "projects.json")
+        ep.analyze_file(rst_file, prj_list_file)
+        # The projects list JSON file must have been created
+        assert os.path.isfile(prj_list_file), \
+            "analyze_file() must write the projects list JSON file"
+        with open(prj_list_file) as f:
+            data = json.load(f)
+        assert "projects" in data
+        assert "ListedProject" in data["projects"]
+
+    @pytest.mark.toolchain
+    def test_analyze_file_verbose_existing_projects_list_file(self, work_dir, capsys):
+        """verbose=True + extracted_projects_list_file pointing at a file that
+        already exists prints the 'Extracted list of projects...' message."""
+        prj_list = work_dir / "projects.json"
+        prj_list.write_text('{"projects": {}}')
+        ep.verbose = True
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file, str(prj_list))
+        assert result is False
+        assert "Extracted list" in capsys.readouterr().out
+
+    @pytest.mark.toolchain
+    def test_analyze_file_verbose_missing_projects_list_file(self, work_dir, capsys):
+        """verbose=True + extracted_projects_list_file pointing at a file that
+        does not exist yet prints the 'will be created' message."""
+        prj_list = work_dir / "new_projects.json"
+        ep.verbose = True
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file, str(prj_list))
+        assert result is False
+        assert "will be created" in capsys.readouterr().out
+
+    @pytest.mark.toolchain
+    def test_analyze_file_existing_projects_list_loaded(self, work_dir):
+        # Pre-create a projects list JSON with an existing entry
+        prj_list_file = str(work_dir / "projects.json")
+        existing = ep.ProjectsList()
+        existing.add("ExistingProject")
+        existing.to_json_file(prj_list_file)
+
+        rst_content = """\
+.. code:: ada project=NewProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file, prj_list_file)
+
+        with open(prj_list_file) as f:
+            data = json.load(f)
+        # Both the pre-existing and the new project must be in the file
+        assert "NewProject" in data["projects"], \
+            "New project must be added to the existing projects list"
+
+    @pytest.mark.toolchain
+    def test_analyze_file_syntax_only_block(self, work_dir):
+        rst_content = """\
+.. code:: ada project=SyntaxProject
+   :class: ada-syntax-only
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        # syntax_only blocks are still processed (no toolchain invocation needed
+        # inside analyze_file for the project extraction phase)
+        assert result is False
+
+    def test_analyze_file_no_project_raises_system_exit(self, work_dir):
+        """analyze_file() calls exit(1) when a block has no project attribute."""
+        rst_content = """\
+.. code:: ada
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        with pytest.raises(SystemExit):
+            ep.analyze_file(rst_file)
+
+    @pytest.mark.toolchain
+    def test_analyze_file_no_button_block(self, work_dir):
+        """A non-no-check, non-syntax-only block with buttons=["no"] reaches
+        the project extraction path and writes block_info.json without error."""
+        rst_content = """\
+.. code:: ada project=NoBtnProject no_button
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+
+    @pytest.mark.toolchain
+    def test_analyze_file_config_block(self, work_dir):
+        """A :code-config: line produces a ConfigBlock; analyze_file() must handle
+        it (via isinstance check) without crashing."""
+        rst_content = """\
+:code-config:`run_button=False;prove_button=True;accumulate_code=False`
+
+.. code:: ada project=CfgProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+
+    @pytest.mark.toolchain
+    def test_analyze_file_manual_chop_block(self, work_dir):
+        """A C block uses manual_chop=True; analyze_file() must call manual_chop
+        (not real_gnatchop) and succeed."""
+        rst_content = """\
+.. code:: c project=CProject no_button
+
+   !main.c
+   int main(void) { return 0; }
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+
+    @pytest.mark.toolchain
+    def test_code_block_at_matches_one_block(self, work_dir):
+        """A block whose line range contains the requested line must stay
+        active and be extracted."""
+        ep.code_block_at = 4
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        # The block stayed active, so its project directory must exist.
+        assert (work_dir / "projects" / "NoCheckProject").exists()
+
+    def test_code_block_at_sets_inactive(self, work_dir, capsys):
+        """A requested line that falls inside no block must leave every block
+        inactive, so that nothing is extracted."""
+        # code_block_at=9999 is far beyond any line in the small RST fixture
+        ep.code_block_at = 9999
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        # No project directory should have been created (all blocks inactive)
+        assert not (work_dir / "projects" / "NoCheckProject").exists(), \
+            "No project dir expected when all blocks are inactive"
+
+    @pytest.mark.toolchain
+    def test_verbose_prints_headers(self, work_dir, capsys):
+        """Set verbose=True and confirm that project header lines are printed."""
+        ep.verbose = True
+        rst_content = """\
+.. code:: ada project=VerboseProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+        # The verbose header and block count line should appear
+        assert "VerboseProject" in out, \
+            "Expected project name in verbose output"
+
+    @pytest.mark.toolchain
+    def test_second_call_same_project_logs_exists(self, work_dir, capsys):
+        """Call analyze_file() twice with the same project; the second call
+        must print 'already exists' when verbose=True."""
+        ep.verbose = True
+        rst_content = """\
+.. code:: ada project=RepeatedProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file)  # first call: creates the project dir
+        # reset verbose (it gets cleared by the autouse fixture between tests,
+        # but we are in one test so set it again for the second call)
+        ep.verbose = True
+        capsys.readouterr()  # discard first-call output
+        ep.analyze_file(rst_file)  # second call: dir already exists
+        out = capsys.readouterr().out
+        assert "already exists" in out, \
+            "Expected 'already exists' in verbose output on second call"
+
+    @pytest.mark.toolchain
+    def test_stale_block_dir_missing_json_is_removed_and_recreated(self, work_dir, capsys):
+        """If a code block's per-block directory already exists from a prior
+        run but its info JSON file has since been deleted, the directory must
+        be treated as stale: logged and removed rather than reused, and the
+        analysis must complete without crashing."""
+        rst_content = """\
+.. code:: ada project=StaleProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+        rst_file = self._write_rst(work_dir, rst_content)
+        ep.analyze_file(rst_file)  # first call: creates the block's info JSON
+
+        block_jsons = list(work_dir.rglob("*.json"))
+        assert len(block_jsons) == 1, \
+            f"Expected exactly 1 block record after the first call; found {len(block_jsons)}"
+        block_jsons[0].unlink()
+
+        capsys.readouterr()  # discard first-call output
+        result = ep.analyze_file(rst_file)  # second call: block dir is stale
+        assert result is False
+
+        out = capsys.readouterr().out
+        assert "no JSON info file" in out, \
+            "Expected the stale-directory message when the info JSON is missing"
+
+    # A block directory left over from an earlier run in which the record's
+    # name is taken by a directory rather than a file.  An interrupted copy
+    # leaves this behind, and it is the state that tells the caller's guard
+    # apart from a looser one: a record that is not a file is one the reader
+    # will not open, so the only honest reading of it is that there is no
+    # record here at all.
+    RECORD_IS_A_DIRECTORY_RST = """\
+.. code:: ada project=RecordIsADirectoryProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+
+    @pytest.mark.toolchain
+    def test_block_record_whose_name_is_taken_by_a_directory_is_no_record(
+            self, work_dir, capsys):
+        """A block directory whose record name is held by a directory must be
+        treated as holding no record: removed, extracted again, and left with
+        a readable record in its place.
+
+        The two repairs this code makes are told apart by whether a record is
+        there to be read.  Only a *file* can be: the reader opens the record
+        through a guard of its own that asks for one, and hands back nothing
+        for anything else without saying why.  So a directory standing where
+        the record belongs has to take the branch for a block directory with
+        no record -- the one that removes the directory and extracts the block
+        again -- and not the branch that announces a record it rebuilt.
+
+        Taking the wrong branch here is not a cosmetic mislabeling.  That
+        branch keeps the block directory, so the run goes on to write the
+        block's record into the name the directory holds, and ends in a
+        traceback about writing to a directory -- after having reported that
+        it repaired a file nothing ever read.
+        """
+        rst_file = self._write_rst(work_dir, self.RECORD_IS_A_DIRECTORY_RST)
+        ep.analyze_file(rst_file)
+
+        written = list(work_dir.rglob(_constants.BLOCK_INFO_FILENAME))
+        assert len(written) == 1, \
+            "expected exactly one block record after the first run, got " \
+            "{}".format([str(path) for path in written])
+        record = written[0]
+
+        # The name the record stood under, taken over by a directory: what an
+        # interrupted copy leaves behind, and what the record must be again
+        # once the block directory has been rebuilt.
+        record.unlink()
+        record.mkdir()
+
+        capsys.readouterr()          # discard the first run's output
+        result = ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+
+        assert result is False, \
+            "removing a block directory that holds no readable record and " \
+            "extracting the block again is a recovery, not a failure of the run"
+
+        assert "no JSON info file" in out, \
+            "a name held by a directory is no record, so the branch that " \
+            "removes the block directory and extracts it again must be the " \
+            "one that ran: {}".format(out)
+        assert "being rebuilt" not in out, \
+            "nothing was read, so nothing may be reported as rebuilt -- that " \
+            "message promises a record was read back and found damaged: " \
+            "{}".format(out)
+
+        assert record.is_file(), \
+            "the block directory was rebuilt, so the record must be a file " \
+            "again rather than the directory that stood in its place: " \
+            "{}".format([str(path) for path in
+                         self._project_dir(
+                             work_dir, "RecordIsADirectoryProject").rglob("*")])
+        assert _blocks_mod.CodeBlock.from_json_file(str(record)) is not None, \
+            "the record written in place of the directory must read back as " \
+            "a block: {}".format(record.read_text())
+
+    # The block record left over from an earlier run, in the two states the
+    # repair path tells apart.  The reader refuses the first and accepts the
+    # second unchanged.
+    DAMAGED_RECORD = "{ this is not a block record"
+
+    # The one project the file below extracts, and the two blocks it holds,
+    # in the order the extraction walks them.  The first block owns the record
+    # that gets damaged.  The second one exists only so that "the run was not
+    # cut short" can be settled by work that only a run continuing past the
+    # repair could have done, rather than by the wording of the message that
+    # claims it -- and it is put in the *same* project deliberately: blocks are
+    # walked in one loop per project, so a second block of the same project can
+    # only be reached by that loop carrying on past the repair, while a block
+    # of another project would be reached by an outer loop starting afresh and
+    # would prove nothing about the repaired block's own run.
+    REPAIRED_PROJECT = "RebuiltProject"
+    REPAIRED_UNIT = "Main"
+    UNIT_AFTER_THE_REPAIR = "Later"
+
+    # Both blocks carry a no-check class, which is what makes this file the
+    # right fixture rather than a convenient one: the example is extracted and
+    # then deliberately skipped, so a warning promising it is *checked* would
+    # be false here.  The test below asserts that promise is not made.
+    REBUILT_RST = """\
+.. code:: ada project=RebuiltProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+
+.. code:: ada project=RebuiltProject
+   :class: ada-nocheck
+
+   procedure Later is
+   begin
+      null;
+   end Later;
+
+Another paragraph.
+"""
+
+    # The single source file gnatchop writes for the damaged block's example,
+    # named after the compilation unit its text declares.
+    EXTRACTED_SOURCE = "main.adb"
+
+    def _project_dir(self, work_dir, project: str):
+        """The directory the extraction keeps one project's blocks under."""
+        return work_dir / ep.get_project_dir(project)
+
+    def _block_records(self, work_dir, project: str) -> dict:
+        """The block records below one project's directory, keyed by the name
+        of the compilation unit each one describes.
+
+        Keyed by what the record says rather than by where it sits, because
+        the directory holding it is named after a hash of the block's text and
+        says nothing a test could read.  A record that does not read back as a
+        block is left out: this reports what a run wrote, and a damaged record
+        describes no block at all.  Looking one up therefore *answers* rather
+        than asserting, so that a missing one is reported by the assertion
+        that names the property it was looked up for.
+        """
+        records = dict()
+        for path in sorted(self._project_dir(work_dir, project).rglob(
+                _constants.BLOCK_INFO_FILENAME)):
+            block = _blocks_mod.CodeBlock.from_json_file(str(path))
+            if block is None:
+                continue
+            for unit in (self.REPAIRED_UNIT, self.UNIT_AFTER_THE_REPAIR):
+                if "procedure {}".format(unit) in block.text:
+                    records[unit] = path
+        return records
+
+    @pytest.mark.toolchain
+    def test_damaged_block_record_is_rebuilt_and_the_rebuild_is_announced(
+            self, work_dir, capsys):
+        """A block record that is present but cannot be read must be rebuilt,
+        must not fail the run, and must say so.
+
+        This is the repair a kept build directory makes necessary: the record
+        of a block extracted earlier is damaged -- by an interrupted run, an
+        edit, a half-finished copy -- and the next extraction finds it there
+        and unreadable.  Rewriting it and carrying on is the right outcome,
+        and it used to end the run with a traceback instead.
+
+        The warning makes two claims, and both are checked against what the
+        run actually did rather than against its own wording: that the example
+        is still extracted -- the chopped source file is back on disk with the
+        block's code in it -- and that the run was not cut short -- the block
+        that follows the repaired one in the same project, whose output is
+        deleted before the repair run, is extracted again, which only a run
+        carrying on through that project's blocks past the repair can do.
+
+        The wording is pinned on top of that, in both directions.  The clause
+        must be present, so that a run that repaired silently cannot pass; and
+        the older, wider promise that the example is still *checked* must be
+        absent, because both blocks here carry a no-check class and are
+        extracted and then deliberately skipped, which would make that promise
+        false for exactly this input.
+
+        The neighboring repair -- a block directory whose record has gone
+        missing entirely -- takes a different branch with a different message
+        and removes the directory.  Its message is asserted absent, so this
+        test cannot pass by having taken that path instead.
+
+        That the record is genuinely rebuilt is asserted last and matters
+        most: it is what the message promises, and a repair that printed the
+        line without rewriting the file would satisfy everything above it.
+        """
+        rst_file = self._write_rst(work_dir, self.REBUILT_RST)
+        ep.analyze_file(rst_file)
+
+        written = self._block_records(work_dir, self.REPAIRED_PROJECT)
+        assert set(written) == {self.REPAIRED_UNIT,
+                                self.UNIT_AFTER_THE_REPAIR}, \
+            "the first run must write one readable record per block of the " \
+            "project, or there is nothing to damage and nothing to look for " \
+            "afterwards: {}".format(
+                {unit: str(path) for unit, path in written.items()})
+
+        record = written[self.REPAIRED_UNIT]
+        original = record.read_text()
+        record.write_text(self.DAMAGED_RECORD)
+
+        # Everything the second block produced is taken away again -- its
+        # whole directory, record and extracted source alike -- so that
+        # finding it back after the repair run can only mean that run reached
+        # it.  Left in place, the first run's leftovers would satisfy the
+        # not-cut-short check for free.  The staging directory the two blocks
+        # share is not a leftover either: the run empties it before the first
+        # block is extracted.
+        shutil.rmtree(written[self.UNIT_AFTER_THE_REPAIR].parent)
+
+        capsys.readouterr()          # discard the first run's output
+        result = ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+
+        assert result is False, \
+            "repairing the record is a recovery, not a failure of the run"
+
+        assert "WARNING" in out, \
+            "a rebuilt record must be announced as a warning, not left to be " \
+            "inferred from the reader's error line: {}".format(out)
+        assert "Block info file could not be read and is being rebuilt" in out, \
+            "the warning must say what was done to the file: {}".format(out)
+        # The repair runs from inside the project directory, so the record is
+        # named relative to it -- the block directory and the file within it.
+        # Taken from the real path rather than written out, and paired with
+        # the location prefix below, which is what makes a relative path
+        # enough to find the block again.
+        named_as = os.path.join(record.parent.name, record.name)
+        assert named_as in out, \
+            "the warning must name the record it rebuilt: {}".format(out)
+        assert rst_file in out, \
+            "the warning must say which block it is about, or the record it " \
+            "names cannot be located from the message alone: {}".format(out)
+        assert "extracted and the run was not cut short" in out, \
+            "the warning must say the run was not cut short, or a reader " \
+            "cannot tell it apart from the fatal case: {}".format(out)
+        assert "still extracted and checked" not in out, \
+            "the block carries a no-check class, so it is extracted and then " \
+            "deliberately skipped -- the warning must not promise it is " \
+            "checked: {}".format(out)
+
+        assert "no JSON info file" not in out, \
+            "the record was present, so the branch that removes a directory " \
+            "with no record at all must not be the one that ran: {}".format(out)
+
+        # The first claim the warning makes, taken from disk rather than from
+        # the message: the example really was extracted again.
+        extracted = (self._project_dir(work_dir, self.REPAIRED_PROJECT)
+                     / "latest" / self.EXTRACTED_SOURCE)
+        assert extracted.is_file(), \
+            "the warning says the example is still extracted, so its source " \
+            "file must be on disk: {}".format(
+                [str(path) for path in
+                 self._project_dir(work_dir,
+                                   self.REPAIRED_PROJECT).rglob("*")])
+        assert "procedure Main" in extracted.read_text(), \
+            "the extracted source must hold the block's code, not an empty " \
+            "file left behind by a chop that wrote nothing: {}".format(
+                extracted.read_text())
+
+        # The second claim, likewise: the run carried on past the repair,
+        # through the rest of the same project's blocks, and extracted the one
+        # that follows it -- whose output was removed before this run started.
+        # Looked up rather than asserted for, so that a run cut short at the
+        # repair is reported by the assertion below, which names the property,
+        # rather than by a helper counting records.
+        rebuilt_project = self._block_records(work_dir, self.REPAIRED_PROJECT)
+        assert self.UNIT_AFTER_THE_REPAIR in rebuilt_project, \
+            "the block after the repaired one, in the same project, must " \
+            "have been extracted again, or the run was cut short at the " \
+            "repair after all: {}".format(
+                {unit: str(path) for unit, path in rebuilt_project.items()})
+
+        # The record the repair rewrote is the one that was damaged, read back
+        # from where it stood: a repair that wrote a fresh record somewhere
+        # else would leave this one exactly as it was damaged.
+        rebuilt = record
+        assert rebuilt.read_text() != self.DAMAGED_RECORD, \
+            "the damaged record must have been rewritten, not merely reported"
+        assert _blocks_mod.CodeBlock.from_json_file(str(rebuilt)) is not None, \
+            "the rebuilt record must read back as a block, or the repair " \
+            "left behind a record no more usable than the damaged one"
+        assert json.loads(rebuilt.read_text()) == json.loads(original), \
+            "the rebuilt record must describe the same block the undamaged " \
+            "run wrote"
+
+    @pytest.mark.toolchain
+    def test_a_block_record_that_reads_back_is_not_announced_as_rebuilt(
+            self, work_dir, capsys):
+        """A second extraction over an undamaged record must say nothing
+        about rebuilding it.
+
+        The control for the test above.  A warning that fires whenever a
+        block directory is reused would satisfy every assertion there and
+        would tell a reader that a healthy build directory is damaged, which
+        is worse than saying nothing at all.
+        """
+        rst_file = self._write_rst(work_dir, self.REBUILT_RST)
+        ep.analyze_file(rst_file)
+
+        capsys.readouterr()          # discard the first run's output
+        ep.analyze_file(rst_file)    # the record is reused exactly as written
+        out = capsys.readouterr().out
+
+        assert "being rebuilt" not in out, \
+            "nothing was damaged, so nothing may be reported as rebuilt: " \
+            "{}".format(out)
+        assert "WARNING" not in out, \
+            "a reused build directory in good order must produce no warning " \
+            "at all: {}".format(out)
+
+    @pytest.mark.toolchain
+    def test_no_check_verbose_skip(self, work_dir, capsys):
+        """With verbose=True a no-check block must print a 'Skipping' message."""
+        ep.verbose = True
+        rst_file = self._write_rst(work_dir, self.NOCHECK_RST)
+        ep.analyze_file(rst_file)
+        out = capsys.readouterr().out
+        assert "Skipping" in out, \
+            "Expected 'Skipping' message for no-check block in verbose mode"
+
+    @pytest.mark.toolchain
+    def test_chopper_returning_no_source_files_is_reported(
+            self, work_dir, monkeypatch, capsys):
+        """A block whose source text chops to nothing must be reported.
+
+        Two distinct messages are printed, one from the immediate failure site
+        and one from the surrounding handler that moves on to the next block,
+        and the block itself is still logged so the remaining blocks get their
+        turn.
+
+        The overall result the same run must report is covered by the
+        companion ``xfail`` test below; the two are kept apart so that losing
+        these messages fails the suite on its own."""
+        monkeypatch.setattr(ep, "real_gnatchop", lambda *a, **kw: [])
+
+        rst_file = self._write_rst(work_dir, self.EMPTY_CHOP_RST)
+        ep.analyze_file(rst_file)
+
+        out = capsys.readouterr().out
+        assert "Failed to chop example" in out, \
+            "Expected the immediate failure message when chopping yields nothing"
+        assert "Error while updating code for the block, continuing with next one!" in out, \
+            "Expected the surrounding handler to report that it moves on"
+        assert list(work_dir.rglob("*.json")), \
+            "Expected the failing block to still be logged before moving on"
+
+    @pytest.mark.toolchain
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the error flag raised when a block cannot be chopped is set on "
+               "a nested function's local, so analyze_file() still reports success",
+    )
+    def test_chopper_returning_no_source_files_fails_the_run(
+            self, work_dir, monkeypatch):
+        """A block whose source text chops to nothing must fail the analysis.
+
+        Chopping producing no source files at all means the block's code was
+        never written out, so the run cannot be called successful. The block
+        itself is still logged and skipped so the remaining blocks get their
+        turn, and the companion test above covers the diagnostics printed
+        along the way; the overall result, though, must report an error.
+
+        Tracking note — this currently fails. The failure site assigns the
+        analysis-error flag inside a nested helper function, which makes it a
+        fresh local of that helper instead of updating the flag
+        ``analyze_file()`` eventually returns, so the run reports success and
+        the caller's exit code stays zero. The same site also re-raises with no
+        exception in flight, which turns the real diagnostic into Python's
+        ``No active exception to reraise`` message. A fix would declare the
+        flag ``nonlocal`` (and raise a real exception carrying the reason);
+        this test then passes and the ``xfail`` marker must be removed."""
+        monkeypatch.setattr(ep, "real_gnatchop", lambda *a, **kw: [])
+
+        rst_file = self._write_rst(work_dir, self.EMPTY_CHOP_RST)
+        assert ep.analyze_file(rst_file) is True, \
+            "a per-block chopping failure must surface as an overall error"
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-05: Diag class
+# ---------------------------------------------------------------------------
+
+class TestDiag:
+    def test_fields_stored(self):
+        d = ep.Diag("f.adb", 3, 7, "error message")
+        assert d.file == "f.adb"
+        assert d.line == 3
+        assert d.col == 7
+        assert d.msg == "error message"
+
+    def test_repr_format(self):
+        d = ep.Diag("f.adb", 3, 7, "error message")
+        assert repr(d) == "f.adb:3:7: error message"
+
+    def test_repr_edge_case_zero_and_empty(self):
+        d = ep.Diag("", 0, 0, "")
+        assert repr(d) == ":0:0: "
+
+
+# ---------------------------------------------------------------------------
+# T-extract_projects-06: same-project second block
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestAnalyzeFileSameProjectTwoBlocks:
+    TWO_BLOCKS_RST = """\
+.. code:: ada project=SameProject
+   :class: ada-nocheck
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+First explanatory paragraph.
+
+.. code:: ada project=SameProject
+   :class: ada-nocheck
+
+   procedure Helper is
+   begin
+      null;
+   end Helper;
+
+Second explanatory paragraph.
+"""
+
+    def _write_rst(self, tmp_path, content: str) -> str:
+        rst_path = tmp_path / "two_blocks.rst"
+        rst_path.write_text(content)
+        return str(rst_path)
+
+    def test_two_blocks_same_project(self, work_dir):
+        """Two no-check Ada blocks declaring the same project= attribute must
+        both be extracted under that one project."""
+        rst_file = self._write_rst(work_dir, self.TWO_BLOCKS_RST)
+        result = ep.analyze_file(rst_file)
+        assert result is False
+        # The project directory must have been created
+        assert (work_dir / "projects" / "SameProject").exists()
+        # Two separate block records must exist (each block has its own
+        # hash-named subdirectory)
+        block_jsons = list((work_dir / "projects" / "SameProject").rglob("*.json"))
+        assert len(block_jsons) == 2, \
+            f"Expected 2 block records; found {len(block_jsons)}"
+
+
+# ---------------------------------------------------------------------------
+# C4 — TestAnalyzeFileIntegration
+# analyze_file() with compile_button / run_button / prove_button Ada blocks.
+# Requires the Ada toolchain (real gnatchop called for non-no-check blocks).
+# ---------------------------------------------------------------------------
+
+@pytest.mark.toolchain
+class TestAnalyzeFileIntegration:
+    """Integration tests for analyze_file() with real Ada compilation paths.
+
+    Each RST fixture uses a valid Ada ``procedure Main`` body so that
+    real_gnatchop can parse it into exactly one source file.  The block
+    attributes (compile_button / run_button / prove_button) set compile_it /
+    run_it / prove_it on the parsed CodeBlock.
+    """
+
+    # A minimal but valid Ada procedure that gnatchop can chop into one file.
+    _ADA_BODY = """\
+procedure Main is
+begin
+   null;
+end Main;"""
+
+    # A C block asking for a prove button: proving is Ada-only, so this is a
+    # malformed example.
+    _C_PROVE_RST = (
+        ".. code:: c project=TestCProve prove_button\n\n"
+        "   !main.c\n"
+        "   int main(void) { return 0; }\n\n"
+        "Explanatory paragraph.\n"
+    )
+
+    # A compile/run-eligible Ada block declaring no button indicator at all,
+    # not even no_button.
+    _NO_BUTTONS_RST = """\
+.. code:: ada project=TestNoBtns main=main.adb
+
+   procedure Main is
+   begin
+      null;
+   end Main;
+
+Explanatory paragraph.
+"""
+
+    @staticmethod
+    def _write_rst(work_dir, content: str, name: str = "test_integration.rst") -> str:
+        rst_path = work_dir / name
+        rst_path.write_text(content)
+        return str(rst_path)
+
+    @staticmethod
+    def _block_dir(work_dir, project: str):
+        """Return the single per-block directory written for ``project``.
+
+        Every block gets its own directory below the project, named after the
+        short hash of its text so that two blocks cannot collide; ``latest``
+        is the staging copy and is not one of them."""
+        project_dir = work_dir / "projects" / project
+        block_dirs = sorted(d for d in project_dir.iterdir()
+                            if d.is_dir() and d.name != "latest")
+        assert len(block_dirs) == 1, \
+            "expected exactly one per-block directory, got {}".format(
+                [d.name for d in block_dirs])
+        return block_dirs[0]
+
+    @staticmethod
+    def _block_info(block_dir) -> dict:
+        """The record the extraction step wrote for a block, of which there is
+        one.
+
+        Taken as the JSON file that is there rather than by a name written
+        down here: the extraction step chooses that name from the package's
+        own default, and the check step goes looking for the same default.
+        """
+        written = sorted(block_dir.glob("*.json"))
+        assert len(written) == 1, \
+            "expected exactly one block record, got {}".format(
+                [path.name for path in written])
+        return json.loads(written[0].read_text())
+
+    def test_analyze_file_compile_button(self, work_dir):
+        """RST with a compile_button Ada block: analyze_file() must call
+        real_gnatchop, write the project file, write block_info.json, and
+        return False (no error)."""
+        rst_content = (
+            ".. code:: ada project=TestCompile main=main.adb compile_button\n"
+            "\n"
+            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid compile_button block"
+
+        block_dir = self._block_dir(work_dir, "TestCompile")
+        info = self._block_info(block_dir)
+        assert block_dir.name == info["text_hash_short"], \
+            "the block directory must be named after the block's short hash"
+        # The chopped source is what the compiler will see, so it must be the
+        # author's code, unchanged and un-reindented.
+        assert (block_dir / "main.adb").read_text() == self._ADA_BODY
+        assert info["source_files"] == ["main.adb"]
+        # The project file the record names must be the one on disk, or the
+        # check step goes looking for a project that is not there.
+        assert info["project_filename"] is not None and \
+            (block_dir / info["project_filename"]).is_file(), \
+            "the recorded project file must be the one that was written"
+        assert info["spark_project_filename"] is None, \
+            "no SPARK project may be written for a block that is not proved"
+        # A compile button alone is not runnable, so no main is selected and
+        # the generated project must not name one.
+        assert info["project_main_file"] is None
+        assert "for Main use" not in \
+            (block_dir / info["project_filename"]).read_text()
+
+    def test_analyze_file_run_button(self, work_dir):
+        """RST with a run_button Ada block: analyze_file() must call
+        real_gnatchop, write the project file, write block_info.json, and
+        return False (no error)."""
+        rst_content = (
+            ".. code:: ada project=TestRun main=main.adb run_button\n"
+            "\n"
+            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid run_button block"
+
+        block_dir = self._block_dir(work_dir, "TestRun")
+        info = self._block_info(block_dir)
+        assert (block_dir / "main.adb").read_text() == self._ADA_BODY
+        assert info["source_files"] == ["main.adb"]
+        assert info["project_filename"] is not None and \
+            (block_dir / info["project_filename"]).is_file(), \
+            "the recorded project file must be the one that was written"
+        assert info["spark_project_filename"] is None
+        # A runnable block selects a main, and the project must name it or
+        # there is nothing for the builder to link.
+        assert info["project_main_file"] == "main.adb"
+        assert 'for Main use ("main.adb");' in \
+            (block_dir / info["project_filename"]).read_text()
+
+    def test_analyze_file_prove_button(self, work_dir):
+        """RST with a prove_button SPARK Ada block: analyze_file() must call
+        real_gnatchop, write the SPARK project file, write block_info.json, and
+        return False (no error)."""
+        spark_body = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;"""
+        rst_content = (
+            ".. code:: ada project=TestProve main=main.adb prove_button\n"
+            "\n"
+            + "\n".join("   " + line for line in spark_body.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid prove_button block"
+
+        block_dir = self._block_dir(work_dir, "TestProve")
+        info = self._block_info(block_dir)
+        assert (block_dir / "main.adb").read_text() == spark_body
+        assert info["source_files"] == ["main.adb"]
+        # A prove button alone builds only the SPARK project.
+        assert info["spark_project_filename"] is not None and \
+            (block_dir / info["spark_project_filename"]).is_file(), \
+            "the recorded SPARK project file must be the one that was written"
+        assert info["project_filename"] is None
+        assert [p.name for p in block_dir.glob("*.gpr")] == \
+            [info["spark_project_filename"]], \
+            "the SPARK project must be the only project file written"
+        # GNATprove only treats the unit as SPARK because of this pragma.
+        assert "pragma SPARK_Mode (On);" in \
+            _configuration_pragmas(block_dir, info["spark_project_filename"])
+
+    def test_analyze_file_run_button_no_main(self, work_dir):
+        """RST with run_button and no main= attribute: get_main_filename()
+        falls back to using the chopped source file as the main file."""
+        rst_content = (
+            ".. code:: ada project=TestRunNoMain run_button\n"
+            "\n"
+            + "\n".join("   " + line for line in self._ADA_BODY.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a run_button block with no main="
+
+        block_dir = self._block_dir(work_dir, "TestRunNoMain")
+        info = self._block_info(block_dir)
+        assert info["main_file"] is None, \
+            "the fixture must not declare a main= attribute, or the fallback " \
+            "this test exists for is never taken"
+        # With nothing declared, the last chopped source becomes the main file.
+        assert info["source_files"] == ["main.adb"]
+        assert info["project_main_file"] == "main.adb"
+        assert info["project_filename"] is not None and \
+            (block_dir / info["project_filename"]).is_file(), \
+            "the recorded project file must be the one that was written"
+        assert 'for Main use ("main.adb");' in \
+            (block_dir / info["project_filename"]).read_text()
+
+    def test_analyze_file_prove_and_run_button(self, work_dir):
+        """RST with both prove_button and run_button: the main file is
+        resolved via get_main_filename() inside the prove_it handling as well
+        as the compile_it handling, and both project files are written."""
+        spark_body = """\
+procedure Main with SPARK_Mode is
+begin
+   null;
+end Main;"""
+        rst_content = (
+            ".. code:: ada project=TestProveRun prove_button run_button\n\n"
+            + "\n".join("   " + line for line in spark_body.splitlines())
+            + "\n\nExplanatory paragraph.\n"
+        )
+        rst_file = self._write_rst(work_dir, rst_content)
+        result = ep.analyze_file(rst_file)
+        assert result is False, \
+            "analyze_file() must return False for a valid prove_button+run_button block"
+
+        block_dir = self._block_dir(work_dir, "TestProveRun")
+        info = self._block_info(block_dir)
+        assert (block_dir / "main.adb").read_text() == spark_body
+        # Both projects are written, and both must name the resolved main file.
+        assert info["main_file"] is None
+        assert info["project_main_file"] == "main.adb"
+        for gpr in (info["project_filename"], info["spark_project_filename"]):
+            assert gpr is not None and (block_dir / gpr).is_file(), \
+                "both recorded project files must be the ones that were written"
+            assert 'for Main use ("main.adb");' in (block_dir / gpr).read_text(), \
+                "{} must name the main file".format(gpr)
+        assert "pragma SPARK_Mode (On);" in \
+            _configuration_pragmas(block_dir, info["spark_project_filename"])
+
+    def test_analyze_file_c_prove_button_reports_the_wrong_language(
+            self, work_dir, capsys):
+        """A prove button on a C block must be reported as a wrong language.
+
+        Proving is Ada-only, so a C block asking for a prove button is a
+        malformed example, and the run must name the problem.
+
+        The overall result the same run must report is covered by the
+        companion ``xfail`` test below; the two are kept apart so that losing
+        this message fails the suite on its own."""
+        rst_file = self._write_rst(work_dir, self._C_PROVE_RST)
+        ep.analyze_file(rst_file)
+        assert "Wrong language selected for prove button" in capsys.readouterr().out, \
+            "Expected the wrong-language message for a prove button on a C block"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the per-block error flag is never merged into analyze_file()'s "
+               "return value, so a prove button on a non-Ada block reports success",
+    )
+    def test_analyze_file_c_prove_button_fails_the_run(self, work_dir):
+        """A prove button on a C block must fail the analysis.
+
+        Proving is Ada-only, so a C block asking for a prove button is a
+        malformed example: the message is printed — the companion test above
+        covers that — and the run must report an error so the caller's exit
+        code reflects it.
+
+        Tracking note — this currently fails, and so does the sibling
+        ``xfail`` test covering a block that carries no button indicator at
+        all: both paths set the same per-block error flag, which is written
+        but never read. Nothing merges it into the value ``analyze_file()``
+        returns, so the run reports success and a broken example passes
+        unnoticed. One fix — folding the per-block flag into the overall
+        analysis result — closes both; when it lands, both tests pass and
+        both ``xfail`` markers must be removed."""
+        rst_file = self._write_rst(work_dir, self._C_PROVE_RST)
+        assert ep.analyze_file(rst_file) is True, \
+            "a prove button on a non-Ada block must surface as an overall error"
+
+    def test_analyze_file_no_buttons_block_is_reported(self, work_dir, capsys):
+        """A compile/run-eligible block with no button indicator must be
+        reported.
+
+        Every such block is expected to declare at least a no_button
+        indicator, so a block declaring none is a malformed example, and the
+        run must name the problem.
+
+        The overall result the same run must report is covered by the
+        companion ``xfail`` test below; the two are kept apart so that losing
+        this message fails the suite on its own."""
+        rst_file = self._write_rst(work_dir, self._NO_BUTTONS_RST)
+        ep.analyze_file(rst_file)
+        assert "Expected at least" in capsys.readouterr().out, \
+            "Expected the missing-indicator message for a block with no buttons"
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="the per-block error flag is never merged into analyze_file()'s "
+               "return value, so a block carrying no button indicator reports success",
+    )
+    def test_analyze_file_no_buttons_block_fails_the_run(self, work_dir):
+        """A compile/run-eligible block with no button indicator must fail the
+        analysis.
+
+        Every such block is expected to declare at least a no_button
+        indicator, so a block declaring none is a malformed example: the
+        message is printed — the companion test above covers that — and the
+        run must report an error so the caller's exit code reflects it.
+
+        Tracking note — this currently fails, for the same reason as the
+        sibling ``xfail`` test covering a prove button on a C block. Both
+        paths set the same per-block error flag, which is written but never
+        read: nothing merges it into the value ``analyze_file()`` returns, so
+        the run reports success and a broken example passes unnoticed. One
+        fix — folding the per-block flag into the overall analysis result —
+        closes both; when it lands, both tests pass and both ``xfail``
+        markers must be removed."""
+        rst_file = self._write_rst(work_dir, self._NO_BUTTONS_RST)
+        assert ep.analyze_file(rst_file) is True, \
+            "a block with no button indicator must surface as an overall error"

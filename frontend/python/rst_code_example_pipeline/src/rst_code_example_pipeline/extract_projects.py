@@ -1,21 +1,38 @@
 #! /usr/bin/env python3
 
 """
-This program will extract every Ada code block in an Ada source file
-The default behavior is to:
-- Split the block with ``gnatchop``
+Extract the code blocks of the ReST sources into a build directory, ready for
+the checking commands to pick up. Only Ada and C code blocks are extracted,
+and each one must name a project; a code block that names none ends the run.
+A code block is split into individual source files -- with gnatchop for Ada,
+or by a leading filename marker for C and for an Ada code block that asks to
+be chopped manually -- and those files are written to a directory of their
+own, named after a hash of the code block's text, under a directory named
+after the project. Beside them goes a record of what the code block declares,
+as block_info.json, which is what a checking command reads to decide what to
+run. A code block that asks to be compiled or run also gets a project file
+written for it, and one that asks to be proved gets a second project file in
+SPARK mode; only an Ada code block can ask to be proved. The list of the
+projects extracted can also be collected into a JSON file, so that a later
+check can be limited to exactly those projects.
 """
+
+# The text above is what argparse prints as this command's help
+# description. It is deliberately free of ReST markup and of any layout
+# worth preserving: the default help formatter re-wraps a description into a
+# single filled paragraph, so a list would arrive as a run-on sentence and
+# inline literals would arrive with their backquotes intact.
 
 from __future__ import annotations
 
 import os
 import shutil
-import re
 import json
 
 from .chop import manual_chop, real_gnatchop
 
 from . import blocks
+from . import constants
 from . import fmt_utils
 from . import toolchain_setup
 
@@ -79,11 +96,11 @@ project Main is
 
    package Builder is
       for Default_Switches ("Ada") use ("-g");
-      for Global_Configuration_Pragmas use "main.adc";
+      for Global_Configuration_Pragmas use "{}";
    end Builder;
 
 end Main;
-"""
+""".format(constants.PROJECT_PRAGMAS_FILENAME)
 
 MAIN_SPARK_GPR="""
 project Main_Spark is
@@ -97,22 +114,50 @@ project Main_Spark is
 
    package Builder is
       for Default_Switches ("Ada") use ("-g");
-      for Global_Configuration_Pragmas use "main_spark.adc";
+      for Global_Configuration_Pragmas use "{}";
    end Builder;
 
 end Main_Spark;
-"""
+""".format(constants.SPARK_PROJECT_PRAGMAS_FILENAME)
 
 def write_project_file(main_file: str | None,
                        compiler_switches: list[str],
                        spark_mode: bool) -> str:
-    gpr_filename = "main.gpr"
-    adc_filename = "main.adc"
+    """Writes the project file for a code block, and its pragmas file
+
+    Both files are written into the current working directory, which the
+    caller has already changed to the block's own directory.
+
+    Args:
+        main_file (str, optional): The source file holding the main
+            procedure, or None to generate a project that names no main.
+        compiler_switches (list[str]): Switches added to the ``Compiler``
+            package of the generated project.
+        spark_mode (bool): Selects the SPARK variants of the project file
+            and of the configuration pragmas file.
+
+    Returns:
+        str: The name of the project file that was written.
+
+    Note:
+        The project gets a ``for Main use`` attribute only when a main file
+        is passed, and the caller passes one only for a code block that is
+        meant to be run. That restriction is deliberate rather than
+        incidental: a code block that is only compiled may legitimately have
+        no main procedure at all -- a package spec and body on their own are
+        a complete example -- and naming a main for such a block would send
+        the builder looking for something to link that the block does not
+        contain. The extraction tests pin both halves of the distinction:
+        the attribute is present for a runnable code block and absent
+        otherwise.
+    """
+    gpr_filename = constants.PROJECT_FILENAME
+    adc_filename = constants.PROJECT_PRAGMAS_FILENAME
     main_gpr = MAIN_GPR
 
     if spark_mode:
-        gpr_filename = "main_spark.gpr"
-        adc_filename = "main_spark.adc"
+        gpr_filename = constants.SPARK_PROJECT_FILENAME
+        adc_filename = constants.SPARK_PROJECT_PRAGMAS_FILENAME
         main_gpr = MAIN_SPARK_GPR
 
     adc_content = COMMON_ADC
@@ -171,6 +216,48 @@ class ProjectsList(object):
 
 
 def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None) -> bool:
+    """Extracts the code blocks of a single ReST file
+
+    Each active code block is written to its own project directory below the
+    current working directory, together with the ``block_info.json`` file that
+    describes it for the checking stage.
+
+    Args:
+        rst_file (str): The ReST file to extract the code blocks from
+        extracted_projects_list_file (str, optional): JSON file the names of
+            the extracted projects are added to. Defaults to None.
+
+    Returns:
+        bool: The error flag for this file. The extraction command turns a
+            true value into a non-zero exit status.
+
+    Note:
+        That flag is effectively the constant ``False`` today, so the exit
+        status derived from it never becomes non-zero:
+
+        * The single assignment that would set it sits in the nested
+          ``expand_source_files()``. Without a ``nonlocal`` declaration it
+          binds a fresh local there rather than the flag defined in this
+          function, so the chopping failure it records dies with the nested
+          scope.
+        * The remaining per-block errors printed here never touch the flag at
+          all: a block whose button and language do not go together, and a
+          block with no button indicator.
+        * The one condition this function treats as fatal for the whole run,
+          a code block with no project name, calls ``exit(1)`` directly and so
+          bypasses the flag too.
+
+        A caller that inspects only the returned value therefore always
+        concludes the file was extracted cleanly. In the extraction command
+        this leaves the failure branch unreachable; that branch also announces
+        ``TEST ERROR`` through ``fmt_utils.simple_success()``, the formatter
+        for success messages.
+
+        Not every ``ERROR`` line printed here marks a failure either. Removing
+        a per-block directory left over from an earlier run whose info JSON
+        file has gone missing is reported the same way, and that is a recovery
+        on the success path.
+    """
 
     analysis_error = False
 
@@ -189,9 +276,6 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
             block.active = False
             if block.line_start < code_block_at < block.line_end:
                 block.active = True
-
-    def remove_string(some_text, rem):
-        return re.sub(".*" + rem + ".*\n?","", some_text)
 
     projects = dict()
 
@@ -248,7 +332,7 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
             print("Number of code blocks: {}".format(len(projects[project])))
 
         for i, block in projects[project]:
-            if isinstance(block, blocks.ConfigBlock):
+            if isinstance(block, blocks.ConfigBlock):  # pragma: no cover
                 current_config.update(block)
                 toolchain_setup.reset_toolchain()
                 continue
@@ -263,6 +347,9 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
 
             def print_error(*error_args):
                 fmt_utils.error(*error_args)
+
+            def print_warning(*warning_args):
+                fmt_utils.warning(*warning_args)
 
             def chdir_project():
                 # combining path to work directory (absolute path)
@@ -309,11 +396,34 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
                 copytree_latest = True
 
                 if os.path.exists(project_block_dir):
-                    json_filename = "block_info.json"
+                    json_filename = constants.BLOCK_INFO_FILENAME
                     json_file = project_block_dir + "/" + json_filename
-                    if os.path.exists(json_file):
+                    # isfile, not exists, to match the guard the reader uses:
+                    # anything else here would trip the warning below over a
+                    # file the reader never attempted and could not report on.
+                    if os.path.isfile(json_file):
                         copytree_latest = False
                         ref_block = blocks.CodeBlock.from_json_file(json_file)
+                        if ref_block is None:
+                            # The file is there, so it is present but
+                            # unreadable.  Extraction rewrites the record, so
+                            # nothing is dropped and the run still succeeds
+                            # -- but something damaged this file earlier, and
+                            # a kept build directory carries it between runs.
+                            # Say so where it cannot be mistaken for the
+                            # fatal case.
+                            #
+                            # The message does not promise the block is
+                            # checked: a block carrying a no-check class is
+                            # extracted and then deliberately skipped, so
+                            # that would be false for it.
+                            print_warning(
+                                loc,
+                                "Block info file could not be read and is "
+                                "being rebuilt: {}. The example is still "
+                                "extracted and the run was not cut short, "
+                                "but something damaged this file "
+                                "earlier".format(json_file))
                     else:
                         print_error(loc, "Directory exists, but no JSON info file: removing it...\n")
                         shutil.rmtree(project_block_dir,
@@ -397,10 +507,14 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
 
     return analysis_error
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     import argparse
 
-    parser = argparse.ArgumentParser(description=__doc__)
+    # prog is the name this command is installed under. Without it,
+    # argparse advertises the module path instead, which is not what a
+    # user types, and which is long enough to distort the usage line.
+    parser = argparse.ArgumentParser(prog='extract-code',
+                                     description=__doc__)
     parser.add_argument('rst_files', type=str, nargs="+",
                         help="The rst file from which to extract doc")
     parser.add_argument('--build-dir', '-B', type=str, default=None,

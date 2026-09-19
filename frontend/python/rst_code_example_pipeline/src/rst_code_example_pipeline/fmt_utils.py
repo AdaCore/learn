@@ -8,6 +8,9 @@ def header(strn: str) -> str:
 def error(loc: str, strn: str) -> None:
     print("{} {}: {}".format(C.col("ERROR", C.Colors.RED), loc, strn))
 
+def warning(loc: str, strn: str) -> None:
+    print("{} {}: {}".format(C.col("WARNING", C.Colors.YELLOW), loc, strn))
+
 def simple_error(msg: str) -> None:
     print(C.col(msg, C.Colors.RED))
 

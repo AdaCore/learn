@@ -1,15 +1,31 @@
 #! /usr/bin/env python3
 
 """
-This program will try to compile and execute code blocks.
-The default behavior is to:
-- If the user indicated that the example should be ran (more on that later):
-   a. Run gnatmake on the unit named 'main' if there are several, or on the
-      first and only one if there is only one
-   b. Run the resulting program and check the return code
-- Else:
-   a. Run gcc on every Ada file
+Check code blocks that were previously extracted from the ReST sources, one
+block_info.json record at a time. What runs for a code block is decided by
+what the code block itself declares. A code block declaring 'ada-nocheck' or
+'c-nocheck' is skipped entirely, before anything runs, and so is one that
+already carries a recorded result, unless --force is given. Every other code
+block is syntax-checked unless it declares 'nosyntax-check', and one
+declaring 'ada-syntax-only' stops there; the syntax check invokes a compiler
+for Ada and for C only, so a record naming any other language passes it
+having parsed nothing. A code block that asks to be compiled or to be run is
+built (gprbuild for Ada, gcc for C), and the resulting program is run, with
+its exit status checked, only after a build that succeeded. A code block
+that asks to be proved is proved with gnatprove independently of the build,
+so a proof needs no build and does not trigger one. A code block may also
+declare that its compilation, its run or its proof is expected to fail; the
+failure is then the passing outcome, and its absence is reported. A run
+class names a language and applies only to a code block written in that
+language; one naming the other language is reported and fails the check. The
+outcome is recorded next to the code block as block_checks.json.
 """
+
+# The text above is what argparse prints as this command's help
+# description. It is deliberately free of ReST markup and of any layout
+# worth preserving: the default help formatter re-wraps a description into a
+# single filled paragraph, so a list would arrive as a run-on sentence and
+# inline literals would arrive with their backquotes intact.
 
 import argparse
 import os
@@ -20,6 +36,7 @@ import re
 
 from . import blocks
 from . import checks
+from . import constants
 from . import fmt_utils
 from . import toolchain_setup
 
@@ -52,6 +69,89 @@ def check_block(block: blocks.CodeBlock,
                 all_diagnostics: bool = all_diagnostics,
                 max_columns: int = max_columns,
                 force_checks: bool = force_checks) -> bool:
+    """Runs the checks a single code block asks for
+
+    A code block declares what is to be done with it, through its buttons
+    and its ``:class:`` values, and this function turns that declaration
+    into checks. The order below is part of the contract rather than an
+    accident of the code, because the later checks depend on the earlier
+    ones having run.
+
+    Two returns come before any check at all, and they are part of that
+    order too. A code block declaring ``ada-nocheck`` or ``c-nocheck``
+    returns first, with nothing done to it and nothing recorded. A code
+    block that already carries a recorded result returns next, handing back
+    that result, unless ``force_checks`` asks for the checks to be re-run.
+
+    A **syntax check** comes first among the checks themselves, over every
+    source file of the code block, and it runs for every code block that
+    got past those two returns -- including one that asks for nothing else
+    at all -- unless the code block declares ``nosyntax-check``. It invokes
+    a compiler for ``ada`` and for ``c`` only, so a code block whose record
+    names any other language reaches the end of it having parsed nothing.
+
+    A code block declared **syntax-only** returns right after that check,
+    so it never reaches the build. It is still cleaned up and its result
+    still recorded; what it skips is every check below.
+
+    A **build** follows for a code block that asks to be compiled, which
+    includes every code block that asks to be run, since asking for a run
+    implies asking for a compile.
+
+    The **run** is nested inside that build step, not placed beside it: a
+    code block cannot be run without having been built, and a build that
+    did not succeed suppresses the run. That holds for a build that failed
+    and was reported, and equally for one that failed the way the code
+    block said it would -- an expected compile error is still a program
+    that was not produced.
+
+    A **proof** is a sibling of the build rather than part of it. A code
+    block that asks only to be proved is therefore never built, and one
+    that asks for both gets both, independently of each other.
+
+    A check of the code block's **own declarations** runs last, after
+    everything that could satisfy them. It has to: what it reports is a
+    compile error, a proof error or a run failure that the code block
+    declared it expected and that then did not happen, and that is only
+    knowable once the checks above have had their turn.
+
+    The same check also reports a **run class that names the other
+    language** -- ``ada-run`` on a C code block, say. Unlike the reports
+    beside it, this one is knowable from the declaration alone; it is
+    reported here because it too is a declaration that was not honored, not
+    because it had to wait. A run class naming the other language has no
+    effect at all, so a code block asking for a run that way would otherwise
+    be neither built nor run and still recorded as a success.
+
+    Args:
+        block (blocks.CodeBlock): The code block to check.
+        json_file (str): The block info file the code block was read from.
+            Only its directory is used, as the place the extracted sources
+            and the generated project were written to.
+        verbose (bool): Reports each command as it runs, plus toolchain
+            versions and paths.
+        all_diagnostics (bool): Reports the diagnostics collected over the
+            whole check, in addition to those reported per failing check.
+        max_columns (int): Maximum source line length the syntax check
+            enforces for Ada; zero leaves the length unchecked.
+        force_checks (bool): Re-runs the checks for a code block that
+            already carries a result from an earlier run, which is
+            otherwise reused.
+
+    Returns:
+        bool: True if any check failed. Note the polarity: this is an error
+        flag, not a success flag, and the callers OR it across code blocks.
+
+    Note:
+        The outcome is written next to the code block as
+        ``block_checks.json``, and a later run reuses it instead of
+        checking again. Only the overall status survives that round trip:
+        the per-check entries recorded here are written to the file but are
+        dropped when it is read back, so nothing acts on them. They are a
+        record for whoever reads the file, not an interface: a reader
+        wanting an example's log files finds them by globbing the code
+        block's directory, not by reading their names from here.
+    """
 
     def run(*run_args):
         if verbose:
@@ -131,6 +231,9 @@ def check_block(block: blocks.CodeBlock,
                     run("gnatprove", "-P", project_filename, "--clean")
                 except S.CalledProcessError as e:
                     out = str(e.output.decode("utf-8"))
+                    print_error(loc,
+                                "Failed to clean-up example (gnatprove --clean)")
+                    print(out)
         elif language == "c":
             try:
                 cmd = ["rm", "-f"] + glob.glob('*.o') + glob.glob('*.gch')
@@ -140,7 +243,6 @@ def check_block(block: blocks.CodeBlock,
             except S.CalledProcessError as e:
                 print_error(loc, "Failed to clean-up example")
                 print(e.output)
-                has_error = True
 
     toolchain_setup.set_toolchain(block)
 
@@ -151,6 +253,31 @@ def check_block(block: blocks.CodeBlock,
         if verbose:
             print("Skipping code block {}".format(loc))
         return has_error
+
+    # A run class names a language, and is honored only for a code block
+    # written in it.  Reported rather than passed over: the code block would
+    # otherwise be built by nothing and still recorded as a success, which is
+    # the one outcome this checker exists to prevent.
+    #
+    # Read from the declaration before the recorded result below is consulted,
+    # because that record is keyed on a hash of the code block's text alone.
+    # Editing only the class leaves the text, and so the key, unchanged, so a
+    # mis-declared code block would otherwise reuse the success recorded for
+    # the declaration it had before the edit.
+    #
+    # Reporting here and carrying the failure to each return separately,
+    # rather than setting has_error now: has_error also decides whether the
+    # code block is run at all, and a code block whose run button asks for
+    # the run its class did not is still to be built and run.
+    wrong_language_classes = [
+        code_class for code_class in block.classes
+        if constants.RUN_CLASS_LANGUAGES.get(code_class) not in (
+            None, block.language)]
+
+    for code_class in wrong_language_classes:
+        print_error(loc,
+                    "Wrong language selected for run class '{}'".format(
+                        code_class))
 
     if LOOK_FOR_PREVIOUS_CHECKS:
         ref_block_check = None
@@ -164,13 +291,13 @@ def check_block(block: blocks.CodeBlock,
             has_error = not ref_block_check.status_ok
             if verbose:
                 print("Code block {} already checked. Skipping...".format(loc))
-            if __name__ == '__main__':
+            if __name__ == '__main__':  # pragma: no cover
                 print("WARNING: Code block {} already checked: use '--force' to re-run the check. Skipping...".format(loc))
             if has_error:
                 print_error(
                     loc, "Previous check of example has failed"
                 )
-            return has_error
+            return has_error or bool(wrong_language_classes)
 
     if verbose:
         print(fmt_utils.header("Checking code block {}".format(loc)))
@@ -198,7 +325,7 @@ def check_block(block: blocks.CodeBlock,
     block_check.status_ok = True
 
     # Syntax check
-    if 'nosyntax-check' not in block.classes:
+    if constants.CLASS_NOSYNTAX_CHECK not in block.classes:
         check_error = False
 
         for source_file in block.source_files:
@@ -233,6 +360,9 @@ def check_block(block: blocks.CodeBlock,
         cleanup_project(block.language,
                         block.project_filename,
                         block.project_main_file)
+        # Reported above; carried into the result here, because this
+        # return comes before the declaration checks that would carry it.
+        has_error = has_error or bool(wrong_language_classes)
         block_check.status_ok = not has_error
         block_check.to_json_file()
         return has_error
@@ -260,7 +390,7 @@ def check_block(block: blocks.CodeBlock,
                 out = run(*cmdline)
 
             except S.CalledProcessError as e:
-                if 'ada-expect-compile-error' in block.classes:
+                if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
                     compile_error = True
                 else:
                     print_error(loc, "Failed to compile example")
@@ -285,12 +415,20 @@ def check_block(block: blocks.CodeBlock,
         elif block.language == "c":
             cmdline = None
             try:
-                assert block.project_main_file is not None
-                cmdline = ["gcc", "-o",
-                           P.splitext(block.project_main_file)[0]] + glob.glob('*.c')
+                sources = glob.glob('*.c')
+                if block.project_main_file is not None:
+                    cmdline = ["gcc", "-o",
+                               P.splitext(block.project_main_file)[0]] + sources
+                else:
+                    # A compile button asks for a compile and not a link, and
+                    # a block that is not also run has no main file resolved
+                    # for it -- it may hold no main at all.  Compiling without
+                    # linking is what was asked for, and needs no name for an
+                    # executable that is not being produced.
+                    cmdline = ["gcc", "-c"] + sources
                 out = run(*cmdline)
             except S.CalledProcessError as e:
-                if 'c-expect-compile-error' in block.classes:
+                if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
                     compile_error = True
                 else:
                     print_error(loc, "Failed to compile example")
@@ -313,21 +451,23 @@ def check_block(block: blocks.CodeBlock,
         if not compile_error and not has_error and block.run_it:
             check_error = False
             cmdline = None
+            run_attempted = False
 
             if block.language == "ada":
+                run_attempted = True
                 try:
                     assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
                     out = run(*cmdline)
 
-                    if 'ada-run-expect-failure' in block.classes:
+                    if constants.CLASS_ADA_RUN_EXPECT_FAILURE in block.classes:
                         print_error(
                             loc, "Running of example should have failed"
                         )
                         check_error = True
 
                 except S.CalledProcessError as e:
-                    if 'ada-run-expect-failure' in block.classes:
+                    if constants.CLASS_ADA_RUN_EXPECT_FAILURE in block.classes:
                         if verbose:
                             print("Running of example expectedly failed")
                     else:
@@ -335,75 +475,55 @@ def check_block(block: blocks.CodeBlock,
                         check_error = True
 
                     out = str(e.output.decode("utf-8"))
+                except FileNotFoundError as e:
+                    print_error(loc, "Running of example failed: "
+                                     "no executable to run")
+                    check_error = True
+                    out = str(e)
 
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)
 
             elif block.language == "c":
+                run_attempted = True
                 try:
                     assert block.project_main_file is not None
                     cmdline = ["./{}".format(P.splitext(block.project_main_file)[0])]
                     out = run(*cmdline)
 
-                    if 'c-run-expect-failure' in block.classes:
+                    if constants.CLASS_C_RUN_EXPECT_FAILURE in block.classes:
                         print_error(
                             loc, "Running of example should have failed"
                         )
                         check_error = True
 
                 except S.CalledProcessError as e:
-                    if 'c-run-expect-failure' in block.classes:
+                    if constants.CLASS_C_RUN_EXPECT_FAILURE in block.classes:
                         if verbose:
                             print("Running of example expectedly failed")
                     else:
                         print_error(loc, "Running of example failed")
                         check_error = True
                     out = str(e.output.decode("utf-8"))
+                except FileNotFoundError as e:
+                    print_error(loc, "Running of example failed: "
+                                     "no executable to run")
+                    check_error = True
+                    out = str(e)
 
                 with open("run.log", u"w") as logfile:
                     logfile.write(out)
 
-            code_check = checks.CodeCheck(status_ok=(not check_error),
-                                          logfile="run.log",
-                                          cmdline=str(cmdline))
+            # Only a language the checker actually runs gets a RUN phase.
+            # Recording one for any other language claimed a successful run
+            # of a command that was never built, naming a log file that was
+            # never written.
+            if run_attempted:
+                code_check = checks.CodeCheck(status_ok=(not check_error),
+                                              logfile="run.log",
+                                              cmdline=str(cmdline))
 
-            block_check.add_check("RUN", code_check)
-
-            if check_error:
-                has_error = True
-
-    if False:
-        check_error = False
-
-        for source_file in block.source_files:
-            if block.language == "ada":
-                try:
-                    out = run("gcc", "-c", "-gnatc", "-gnatyg0-s",
-                                source_file)
-                except S.CalledProcessError as e:
-                    if 'ada-expect-compile-error' in block.classes:
-                        compile_error = True
-                    else:
-                        print_error(loc, "Failed to compile example")
-                        check_error = True
-                    out = str(e.output.decode("utf-8"))
-
-                with open("compile.log", u"w+") as logfile:
-                    logfile.write(out)
-
-            elif block.language == "c":
-                try:
-                    out = run("gcc", "-c", source_file)
-                except S.CalledProcessError as e:
-                    if 'c-expect-compile-error' in block.classes:
-                        compile_error = True
-                    else:
-                        print_error(loc, "Failed to compile example")
-                        check_error = True
-                    out = str(e.output.decode("utf-8"))
-
-                with open("compile.log", u"w+") as logfile:
-                    logfile.write(out)
+                block_check.add_check("RUN", code_check)
 
             if check_error:
                 has_error = True
@@ -413,20 +533,20 @@ def check_block(block: blocks.CodeBlock,
 
         if block.language == "ada":
 
-            is_prove_error_class = any(c in ['ada-expect-prove-error',
-                                'ada-expect-compile-error',
-                                'ada-run-expect-failure']
+            is_prove_error_class = any(c in [constants.CLASS_ADA_EXPECT_PROVE_ERROR,
+                                constants.CLASS_ADA_EXPECT_COMPILE_ERROR,
+                                constants.CLASS_ADA_RUN_EXPECT_FAILURE]
                         for c in block.classes)
             extra_args = []
 
             if 'prove_flow' in block.buttons \
-                or 'ada-prove-flow' in block.classes:
+                or constants.CLASS_ADA_PROVE_FLOW in block.classes:
                 extra_args = ["--mode=flow"]
             elif 'prove_flow_report_all' in block.buttons \
-                or 'ada-prove-flow-report-all' in block.classes:
+                or constants.CLASS_ADA_PROVE_FLOW_REPORT_ALL in block.classes:
                 extra_args = ["--mode=flow", "--report=all"]
             elif 'prove_report_all' in block.buttons \
-                or 'ada-report-all' in block.classes:
+                or constants.CLASS_ADA_PROVE_REPORT_ALL in block.classes:
                 extra_args = ["--report=all"]
 
             # Default switches for GNATprove 14 and above
@@ -473,52 +593,69 @@ def check_block(block: blocks.CodeBlock,
             has_error = True
 
 
-    if True:
-        check_error = False
+    check_error = False
 
-        if len(block.buttons) == 0:
-            print_error(loc, "Expected at least 'no_button' indicator, got none!")
+    if len(block.buttons) == 0:
+        print_error(loc, "Expected at least 'no_button' indicator, got none!")
+        check_error = True
+
+    if ((block.gnat_version[0] == 'selected' or
+         block.gnatprove_version[0] == 'selected' or
+         block.gprbuild_version[0] == 'selected') and
+        block.buttons != ['no']):
+        print_error(loc, "Only 'no_button' is allowed when selecting a specific toolchain!")
+        check_error = True
+
+    if constants.CLASS_ADA_EXPECT_COMPILE_ERROR in block.classes:
+        if (not (any(b in ['compile', 'run'] for b in block.buttons) or
+                 any(c in [constants.CLASS_ADA_COMPILE,
+                           constants.CLASS_ADA_RUN]
+                     for c in block.classes))):
+            print_error(loc, "Expected compile or run button/class, got none!")
+            check_error = True
+        if not compile_error:
+            print_error(loc, "Expected compile error, got none!")
             check_error = True
 
-        if ((block.gnat_version[0] == 'selected' or
-             block.gnatprove_version[0] == 'selected' or
-             block.gprbuild_version[0] == 'selected') and
-            block.buttons != ['no']):
-            print_error(loc, "Only 'no_button' is allowed when selecting a specific toolchain!")
+    # The C spelling is checked on its own rather than beside the Ada one,
+    # because only this half of the pair was missing: a C block declaring an
+    # expected compile error that compiled cleanly was reported as a success.
+    # The compile step sets the same flag for either language, so the test
+    # for an expectation that went unmet is the same test.
+    if constants.CLASS_C_EXPECT_COMPILE_ERROR in block.classes:
+        if not compile_error:
+            print_error(loc, "Expected compile error, got none!")
             check_error = True
 
-        if 'ada-expect-compile-error' in block.classes:
-            if (not (any(b in ['compile', 'run'] for b in block.buttons) or
-                     any(c in ['ada-compile', 'ada-run'] for c in block.classes))):
-                print_error(loc, "Expected compile or run button/class, got none!")
-                check_error = True
-            if not compile_error:
-                print_error(loc, "Expected compile error, got none!")
-                check_error = True
-
-        if 'ada-expect-prove-error' in block.classes:
-            if not block.prove_it:
-                print_error(loc, "Expected prove button, got none!")
-                check_error = True
-
-        if block.prove_it:
-            if is_prove_error_class and not prove_error:
-                print_error(loc, "Expected prove error, got none!")
-                check_error = True
-
-        if (any (c in ['ada-run-expect-failure','ada-norun'] for
-                    c in block.classes)
-            and not ('run' in block.buttons or
-                     'ada-run' in block.classes)):
-            print_error(loc, "Expected run button, got none!")
+    if constants.CLASS_ADA_EXPECT_PROVE_ERROR in block.classes:
+        if not block.prove_it:
+            print_error(loc, "Expected prove button, got none!")
             check_error = True
 
-        code_check = checks.CodeCheck(status_ok=(not check_error))
+    if block.prove_it:
+        if is_prove_error_class and not prove_error:
+            print_error(loc, "Expected prove error, got none!")
+            check_error = True
 
-        block_check.add_check("BUTTONS", code_check)
+    if (any (c in [constants.CLASS_ADA_RUN_EXPECT_FAILURE,
+                   constants.CLASS_ADA_NORUN]
+                for c in block.classes)
+        and not ('run' in block.buttons or
+                 constants.CLASS_ADA_RUN in block.classes)):
+        print_error(loc, "Expected run button, got none!")
+        check_error = True
 
-        if check_error:
-            has_error = True
+    # Already reported above, before the recorded result was consulted; this
+    # only carries it into the record the code block leaves behind.
+    if wrong_language_classes:
+        check_error = True
+
+    code_check = checks.CodeCheck(status_ok=(not check_error))
+
+    block_check.add_check("BUTTONS", code_check)
+
+    if check_error:
+        has_error = True
 
     if not has_error and verbose:
         fmt_utils.simple_success("SUCCESS")
@@ -556,8 +693,12 @@ def check_code_block_json(json_file: str) -> bool:
     return has_error
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
+if __name__ == "__main__":  # pragma: no cover
+    # prog is the name this command is installed under. Without it,
+    # argparse advertises the module path instead, which is not what a
+    # user types, and which is long enough to distort the usage line.
+    parser = argparse.ArgumentParser(prog='check-block',
+                                     description=__doc__)
     parser.add_argument('json_files', type=str, nargs="+",
                         help="The JSON file for each code block")
     parser.add_argument('--verbose', '-v', action='store_true',

@@ -2,9 +2,8 @@
 
 ## Introduction
 
-The [rst_code_example_pipeline](frontend/python/rst_code_example_pipeline) package contains
-scripts to extract, build and run the code blocks from the ReST files. These are the main
-entry points:
+The `rst_code_example_pipeline` package contains scripts to extract, build and
+run the code blocks from the ReST files. These are the main entry points:
 
 - `extract-code` extracts all code blocks and stores into the specified
   build directory;
@@ -13,10 +12,15 @@ entry points:
 
 - `check-block` checks a single (previously extracted) code block.
 
-The package is installed in editable mode as part of the VM provisioning:
+Install the package from the repository, in editable mode:
 ```sh
 pip install -e frontend/python/rst_code_example_pipeline
 ```
+
+The entry points drive an Ada toolchain directly and expect it on `PATH`:
+`extract-code` splits an Ada code block with `gnatchop`, and the two checking
+commands syntax-check and compile with `gcc`, build with `gprbuild`, clean up
+with `gprclean`, and prove with `gnatprove`.
 
 
 ## Simple usage
@@ -24,7 +28,7 @@ pip install -e frontend/python/rst_code_example_pipeline
 To build and run the source-code examples from a course, just run
 `extract-code` followed by `check-code`. For example, to test
 the source-code examples from the
-[Introduction to Ada course](content/courses/intro-to-ada), run:
+[Introduction to Ada course](../../../content/courses/intro-to-ada), run:
 
 ```sh
 extract-code                                                  \
@@ -39,6 +43,26 @@ When `extract-code` runs, it creates a JSON file called `block_info.json`
 for each code block (source-code example) that is extracted from the ReST files.
 `check-code` looks for all `block_info.json` files in the build directory
 and checks the source-code example described in each of those JSON files.
+
+
+## Exit status
+
+All three entry points report the outcome of a run through their exit status:
+
+- `check-code` and `check-block` exit `1` if any checked code block failed a
+  check, and `0` otherwise. A code block that could not be read or checked
+  also counts as a failure.
+
+- `extract-code` exits `1` when it cannot run at all — for example, a code
+  block has no project name, or neither `--build-dir` nor
+  `--extracted_projects` was given — and `0` otherwise.
+
+An invalid command line is rejected before any work is done, with exit
+status `2`.
+
+Some malformed code blocks are reported only through an `ERROR` line in the
+output, while `extract-code` itself still exits `0`. Check the output, not
+only the exit code, to catch these.
 
 
 ## Verbose mode
@@ -62,7 +86,7 @@ check-code                                                    \
 It's possible to store the list of extracted projects into a JSON file and
 use that file for checking the projects. For example, to build the source-code
 examples from the
-[Introduction to Ada course](content/courses/intro-to-ada), run:
+[Introduction to Ada course](../../../content/courses/intro-to-ada), run:
 
 ```sh
 extract-code                                                  \
@@ -167,4 +191,36 @@ For example, using `check-block`:
 check-block                                                   \
   --max-columns 80                                            \
   test_output/projects/Courses/Intro_To_Ada/Imperative_Language/Greet/cba89a34b87c9dfa71533d982d05e6ab/block_info.json
+```
+
+
+## Development
+
+### Installing with test dependencies
+
+The package declares an optional `test` extras group that installs
+[pytest](https://docs.pytest.org/) and
+[pytest-cov](https://pytest-cov.readthedocs.io/).
+Install the package in editable mode together with those extras:
+
+```sh
+pip install -e ".[test]"
+```
+
+### Running the unit tests
+
+Coverage options and test paths are configured in `pyproject.toml`, so a plain
+`pytest` invocation from the package root is enough:
+
+```sh
+pytest
+```
+
+Some modules require an Ada toolchain (GNAT) to be on `PATH`; run the full
+suite in an environment where GNAT is available.
+
+To pass coverage options explicitly:
+
+```sh
+pytest --cov=rst_code_example_pipeline --cov-report=term-missing tests/
 ```
