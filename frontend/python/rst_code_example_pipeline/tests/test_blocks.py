@@ -6,6 +6,13 @@ Covers:
 - CodeBlock constructor derived fields (no_check, syntax_only, run_it, compile_it,
   prove_it), including the C run classes, which ask for a run only on a C block
   and are suppressed by c-norun
+- every run class is honored only for a block written in the language it names:
+  the Ada run classes ask for no run, and therefore no build, on a C block, and
+  neither norun class takes a run away from a block of the other language --
+  with the controls that say so, since a derivation refusing every run, or
+  suppressing nothing anywhere, satisfies those on its own.  The run button, the
+  syntax-only class and the two no-check classes are deliberately not paired
+  with any language, and are pinned as such
 - text_hash / text_hash_short: deterministic, distinct per text, usable as a
   directory name
 - CodeBlock.to_json_file() + from_json_file() round-trip
@@ -521,6 +528,154 @@ class TestCodeBlockDerivedFields:
         """Same pairing for the expect-failure spelling."""
         b = self._make_block(["c-run-expect-failure"], language="ada")
         assert b.run_it is False
+
+    # The Ada run classes read on a block of the other language, and the two
+    # norun classes read on a block they do not describe.  The C positives
+    # above were already paired with their language; these are the remaining
+    # four spellings, so that every class naming a language is honored only
+    # for a block written in it.
+    #
+    # The compile is asserted beside the run wherever the run is taken away,
+    # because it is the consequence that matters: compile_it is derived as
+    # "run_it or ...", so a class that stops asking for a run also stops the
+    # block from being built, and a block that is never built is checked by
+    # nothing at all.
+
+    def test_ada_run_class_on_a_c_block_asks_for_no_run_and_no_compile(self):
+        """ada-run on a C block must ask for nothing.
+
+        The class names Ada, so it does not describe this block.  Before the
+        pairing it asked for a run, and the build dispatches on the block's
+        own language, so the block really was built with gcc and run -- a
+        visible mistake rather than a silent one.
+        """
+        b = self._make_block(["ada-run"], language="c")
+        assert b.run_it is False
+        assert b.compile_it is False
+
+    def test_ada_run_expect_failure_class_on_a_c_block_asks_for_nothing(self):
+        """Same pairing for the expect-failure spelling.
+
+        Written separately from the plain spelling rather than left to it:
+        the two class names are read as one set, so a derivation that stopped
+        pairing this one would still satisfy the test above.
+        """
+        b = self._make_block(["ada-run-expect-failure"], language="c")
+        assert b.run_it is False
+        assert b.compile_it is False
+
+    @pytest.mark.parametrize("code_class",
+                             ["ada-run", "ada-run-expect-failure"])
+    def test_the_ada_run_classes_still_ask_for_a_run_on_an_ada_block(
+            self, code_class):
+        """The control for the two tests above.
+
+        Without it they are equally well satisfied by a derivation that
+        refused every run, which would take the Ada classes away from the
+        blocks they do describe.
+        """
+        b = self._make_block([code_class], language="ada")
+        assert b.run_it is True
+
+    def test_a_c_compile_class_on_an_ada_block_asks_for_no_compile(self):
+        """The control for "no compile" above.
+
+        The compile classes have been paired with the block's language all
+        along, so this is the shape the run classes now follow.  It says that
+        a compile_it of False is attributable to the class naming the other
+        language, rather than to some other route through the derivation that
+        would leave every block of this shape unbuilt.
+        """
+        b = self._make_block(["c-compile"], language="ada")
+        assert b.compile_it is False
+
+    def test_ada_norun_on_a_c_block_does_not_suppress_a_run_button(self):
+        """ada-norun must not take a run away from a C block.
+
+        Suppressing a run is the direction where the old, unpaired reading
+        was itself the silent skip: a stray Ada norun on a C block took away
+        a run the author had asked for, and nothing said so.
+        """
+        b = self._make_block(["ada-norun"], buttons=["run"], language="c")
+        assert b.run_it is True
+
+    def test_ada_norun_on_a_c_block_does_not_suppress_the_c_run_class(self):
+        """The same, where the run was asked for by a class rather than by a
+        button -- the two are separate terms of the derivation."""
+        b = self._make_block(["ada-norun", "c-run"], language="c")
+        assert b.run_it is True
+
+    def test_c_norun_on_an_ada_block_does_not_suppress_a_run_button(self):
+        """The mirror of the ada-norun case, on an Ada block."""
+        b = self._make_block(["c-norun"], buttons=["run"], language="ada")
+        assert b.run_it is True
+
+    def test_c_norun_on_an_ada_block_does_not_suppress_ada_run(self):
+        """c-norun must leave ada-run alone, and the block must still be
+        built.
+
+        This is the combination in which the unpaired reading did the most
+        damage: the run was canceled, so the compile went with it, and an
+        Ada example nobody built was recorded as having passed.
+        """
+        b = self._make_block(["ada-run", "c-norun"], language="ada")
+        assert b.run_it is True
+        assert b.compile_it is True
+
+    def test_c_norun_on_an_ada_block_does_not_suppress_the_expect_failure_class(
+            self):
+        """The same for the expect-failure spelling of the Ada run class."""
+        b = self._make_block(["ada-run-expect-failure", "c-norun"],
+                             language="ada")
+        assert b.run_it is True
+
+    def test_the_norun_classes_still_suppress_on_their_own_language(self):
+        """The control for the four tests above.
+
+        Asserted as one test over both spellings so that a pairing widened
+        until it never suppresses anything reddens something that names the
+        property, rather than only the C case or only the Ada one.
+        """
+        ada = self._make_block(["ada-norun"], buttons=["run"], language="ada")
+        c = self._make_block(["c-norun"], buttons=["run"], language="c")
+        assert (ada.run_it, c.run_it) == (False, False)
+
+    def test_a_run_button_asks_for_a_run_whatever_the_language_is(self):
+        """A run button is not paired with any language, deliberately.
+
+        Only the classes name a language; the button says "run this" about
+        whatever the block happens to be written in.  Pinned here so that a
+        later completion of the pairing, applied to the button as well,
+        cannot silently stop running every block of a language the classes do
+        not spell.
+        """
+        b = self._make_block([], buttons=["run"], language="cpp")
+        assert b.run_it is True
+
+    def test_ada_syntax_only_on_a_c_block_is_still_syntax_only(self):
+        """The syntax-only class is not paired with a language either.
+
+        It is the one class/language mismatch the material really carries: a
+        C block declaring ada-syntax-only, which stops at the syntax check
+        and is meant to.  Pinned so that a pairing widened to this class is
+        caught here rather than by a content build.
+        """
+        b = self._make_block(["ada-syntax-only"], language="c")
+        assert b.syntax_only is True
+
+    def test_the_nocheck_classes_are_not_paired_with_a_language(self):
+        """Either spelling of the no-check class suppresses the check on
+        either language.
+
+        Also deliberate, and asserted over both spellings at once for the
+        same reason the norun control is.  The two names are documented as
+        the Ada one and the C one, and that difference is recorded rather
+        than acted on -- so a pairing applied here would quietly take the
+        opposite decision.
+        """
+        ada_on_c = self._make_block(["ada-nocheck"], language="c")
+        c_on_ada = self._make_block(["c-nocheck"], language="ada")
+        assert (ada_on_c.no_check, c_on_ada.no_check) == (True, True)
 
     def test_compile_it_true_when_a_c_block_is_run_by_class(self):
         """A run implies a compile for the C classes too, so a C block asking

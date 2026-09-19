@@ -77,6 +77,19 @@ CLASS_ADA_PROVE_FLOW = "ada-prove-flow"
 CLASS_ADA_PROVE_FLOW_REPORT_ALL = "ada-prove-flow-report-all"
 CLASS_ADA_PROVE_REPORT_ALL = "ada-prove-report-all"
 
+# The run classes paired with the language each one names.  A run class is
+# honored only for a code block written in that language; one naming the
+# other language is reported rather than quietly doing nothing, so that a
+# mis-typed class cannot leave a code block unbuilt and still passing.
+RUN_CLASS_LANGUAGES = {
+    CLASS_ADA_RUN: "ada",
+    CLASS_ADA_NORUN: "ada",
+    CLASS_ADA_RUN_EXPECT_FAILURE: "ada",
+    CLASS_C_RUN: "c",
+    CLASS_C_NORUN: "c",
+    CLASS_C_RUN_EXPECT_FAILURE: "c",
+}
+
 # The classes that ask for a proof.  Grouped here because the check that
 # reads them treats them as one set rather than testing each in turn.
 PROVE_CLASSES = [
