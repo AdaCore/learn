@@ -257,11 +257,6 @@ def analyze_file(rst_file: str, extracted_projects_list_file: str | None = None)
         a per-block directory left over from an earlier run whose info JSON
         file has gone missing is reported the same way, and that is a recovery
         on the success path.
-
-        Repairing this means declaring ``nonlocal analysis_error`` in the
-        nested scope and setting the flag at the remaining per-block error
-        sites. Both are behavior changes: ReST files that pass today would
-        start failing.
     """
 
     analysis_error = False
