@@ -112,7 +112,8 @@ int main(void)
 
 def _write_course(directory, project: str, body: str,
                   classes: str | None = None,
-                  language: str = "ada", main: str = "main.adb"):
+                  language: str = "ada", main: str = "main.adb",
+                  button: str = "run_button"):
     """Write a one-block RST file the way a course author would, and return
     its name relative to the directory holding it.
 
@@ -123,16 +124,20 @@ def _write_course(directory, project: str, body: str,
     ``language`` and ``main`` are the other two things the directive declares.
     They default to the Ada example nearly every test here uses, so that the
     call sites reading as a course of Ada say so by not mentioning it.
+
+    ``button`` is the indicator the directive carries.  It defaults to the
+    run button nearly every test here wants; a test whose subject is an
+    example that nothing builds asks for ``no_button`` instead.
     """
     indented = "\n".join("   " + line for line in body.splitlines())
     declared = "" if classes is None else "   :class: {}\n".format(classes)
     (directory / "course.rst").write_text(
-        ".. code:: {} project={} main={} run_button\n"
+        ".. code:: {} project={} main={} {}\n"
         "{}"
         "\n"
         "{}\n"
         "\n"
-        "Explanatory paragraph.\n".format(language, project, main,
+        "Explanatory paragraph.\n".format(language, project, main, button,
                                           declared, indented))
     return "course.rst"
 
@@ -146,9 +151,11 @@ def _run(command: str, *arguments: str, cwd) -> subprocess.CompletedProcess:
 def _extract(cwd, project: str, body: str,
              classes: str | None = None,
              language: str = "ada",
-             main: str = "main.adb") -> subprocess.CompletedProcess:
+             main: str = "main.adb",
+             button: str = "run_button") -> subprocess.CompletedProcess:
     """Extract a one-block course into a build directory below ``cwd``."""
-    rst_file = _write_course(cwd, project, body, classes, language, main)
+    rst_file = _write_course(cwd, project, body, classes, language, main,
+                             button)
     return _run("extract-code", "--build-dir", "build", rst_file, cwd=cwd)
 
 
@@ -452,6 +459,75 @@ class TestCheckingASingleBlock:
             in checked.stdout, \
             "the failure must name the class the author has to fix: " \
             "{}".format(checked.stdout)
+
+    def test_a_class_only_edit_is_not_absorbed_by_the_recorded_result(
+            self, tmp_path):
+        """The whole defect, and the whole fix, through the installed
+        command and over a build directory that was not thrown away.
+
+        A course author writes an example, checks it, and it passes.  Later
+        they change only its ``:class:`` line -- the source text of the
+        example is not touched -- and check again without deleting anything.
+        The per-block directory is named after a hash of the example's text,
+        so the same directory is reused, and the record of the earlier
+        successful check is still sitting in it.
+
+        Without --force, that record is what the second run would otherwise
+        hand back.  The example is now tagged with the other language's run
+        class, so it asks for no run and therefore for no build, and a run
+        reporting success over it would be reporting success over an example
+        nothing compiled.  This is the shape the continuous-integration run
+        is protected from only by deleting the build directory first, and the
+        shape the documented local loop meets, because the local driver keeps
+        that directory between runs on purpose.
+
+        The example carries no run button, so nothing else can ask for the
+        build the class stopped asking for.
+        """
+        assert _extract(tmp_path, "CliStaleRecord", WORKING_C_BODY,
+                        "c-run", language="c", main=C_MAIN,
+                        button="no_button").returncode == 0
+        first = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+        assert first.returncode == 0, \
+            "the example must check out before its class is edited: " \
+            "{}".format(first.stdout)
+
+        extracted = _the_extracted_blocks(tmp_path)
+        assert _extract(tmp_path, "CliStaleRecord", WORKING_C_BODY,
+                        "ada-run", language="c", main=C_MAIN,
+                        button="no_button").returncode == 0, \
+            "the extraction step must accept the edited example, or the " \
+            "failure below is not the check's"
+        assert _the_extracted_blocks(tmp_path) == extracted, \
+            "the edit must land in the same block directory, or the stale " \
+            "record this test is about was never reached"
+
+        checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+        assert checked.returncode == 1, \
+            "an example whose class now names the other language must fail, " \
+            "although a successful check of it is on record: {}".format(
+                checked.stdout)
+        assert "Wrong language selected for run class 'ada-run'" \
+            in checked.stdout, \
+            "the failure must name the class the author has to fix: " \
+            "{}".format(checked.stdout)
+
+    def test_an_unchanged_example_keeps_its_recorded_result(self, tmp_path):
+        """The control for the test above.
+
+        Reusing the record of an earlier successful check is what the record
+        is for, and the report above must not cost every example that has one
+        its reuse.  The same example checked twice, with nothing edited in
+        between, checks out both times.
+        """
+        assert _extract(tmp_path, "CliUnchangedRecord", WORKING_C_BODY,
+                        "c-run", language="c", main=C_MAIN,
+                        button="no_button").returncode == 0
+        for attempt in ("first", "second"):
+            checked = _run("check-code", "--build-dir", "build", cwd=tmp_path)
+            assert checked.returncode == 0, \
+                "the {} check of an unedited example must succeed: " \
+                "{}".format(attempt, checked.stdout)
 
     def test_a_c_block_classed_for_c_succeeds(self, tmp_path):
         """The control for the two above.
