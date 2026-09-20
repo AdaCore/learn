@@ -310,6 +310,11 @@ The following button-related parameters are available for this directive:
 | `prove_flow_report_all_button` | examine SPARK data and control flow and report all findings |
 | `submit_button`                | submit code for a lab                                       |
 
+When `compile_button` is used and nothing else asks for the code to be run —
+no `run_button`, and no class that asks for a run — the code is compiled but
+not linked. No executable is produced, so such a code block does not have to
+contain a main subprogram (in Ada) or a `main` function (in C).
+
 ### Project parameter and code accumulation
 
 A `project` parameter must be provided. For this parameter, we use the
@@ -586,7 +591,8 @@ block in the generated HTML or e-book output.
 
 The following classes are available for the testing phase:
 
-  - `ada-nocheck`: testing of this specific code block is completely skipped.
+  - `ada-nocheck` and `c-nocheck`: testing of this specific code block is
+    completely skipped, for Ada or C code respectively.
 
   - `nosyntax-check`: code must not be checked for syntax errors. (Note that
     the code block is still compiled in the testing phase.)
@@ -597,9 +603,21 @@ The following classes are available for the testing phase:
 If an error is expected during the testing phase, one of the following classes
 must be used:
 
-  - `ada-expect-compile-error`: a compilation error is expected.
+  - `ada-expect-compile-error` and `c-expect-compile-error`: a compilation
+    error is expected, in Ada or C code respectively.
 
-  - `ada-run-expect-failure`: a run-time error is expected.
+  - `ada-run-expect-failure` and `c-run-expect-failure`: a run-time error is
+    expected, in Ada or C code respectively.
+
+  - `ada-expect-prove-error`: a proof error is expected. The code block must
+    also be proved, either through one of the prove buttons or through one of
+    the `ada-prove` classes listed below.
+
+These classes state a requirement on the testing phase, not a hint about the
+generated output: the expected error has to actually occur. If it does not —
+the code compiles, runs or proves cleanly — that absence is reported as an
+error and fails the check, so one of these classes left behind after the code
+example was fixed makes the testing phase fail rather than passing quietly.
 
 When the `no_button` parameter is used, the following classes are available to
 compile or run the code examples:
@@ -618,7 +636,13 @@ output.
 When the `run_button` parameter is used, the following classes are available:
 
   - `ada-norun` and `c-norun`: to explicitly deactivate the run of Ada or C
-    code, respectively, during the testing phase.
+    code, respectively, during the testing phase. These classes also take
+    precedence over a class that asks for a run, such as `ada-run` or `c-run`.
+
+    The code is built in order to be run, so deactivating the run also
+    deactivates the build unless something else asks for the code to be
+    compiled — a `compile_button`, or the `ada-compile` or `c-compile` class.
+    Without one of those, the code block is only checked for syntax errors.
 
 ## Lab exercises
 

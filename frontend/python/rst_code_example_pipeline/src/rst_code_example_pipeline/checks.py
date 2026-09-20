@@ -6,6 +6,8 @@ import hashlib
 import json
 import time
 
+from . import constants
+
 class CodeCheck(object):
     def __init__(self,
                  timestamp: float | None = None,
@@ -26,7 +28,7 @@ class BlockCheck(object):
     def from_json_file(json_filename: str | None = None) -> BlockCheck | None:
 
         if json_filename is None:
-            json_filename = "block_checks.json"
+            json_filename = constants.BLOCK_CHECKS_FILENAME
 
         if os.path.isfile(json_filename):
             with open(json_filename, u'r') as f:
@@ -52,7 +54,7 @@ class BlockCheck(object):
         block_checks = self.__dict__
 
         if json_filename is None:
-            json_filename = "block_checks.json"
+            json_filename = constants.BLOCK_CHECKS_FILENAME
         with open(json_filename, u'w') as f:
             json.dump(block_checks, f, indent=4, default=lambda __o: __o.__dict__)
 

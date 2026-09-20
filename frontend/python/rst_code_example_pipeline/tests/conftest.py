@@ -1,0 +1,100 @@
+"""
+Fixtures shared by the whole rst_code_example_pipeline test suite.
+
+The package keeps its settings in module-level globals, and its entry points
+change the process working directory without changing it back.  Whatever a
+test does to either one is therefore still in place when the next test runs,
+and containing that is not specific to any one test module -- so it is done
+here once instead of being re-implemented, differently, in each of them.
+
+- ``restore_cwd`` puts the working directory back after every test.  Several
+  entry points chdir and never chdir back: check_block() moves into the block
+  directory it is checking, and get_projects() moves into the build directory
+  it is scanning.  A test that reaches either one would otherwise leave the
+  whole session pointing at a temporary directory that is deleted soon
+  afterwards, and every later test that uses a relative path would fail for
+  reasons that have nothing to do with what it is testing.
+- ``reset_pipeline_globals`` puts the settings globals of the three entry-point
+  modules back to the values their modules declare, around every test.  Those
+  globals are what the command-line switches assign to, so a test that sets one
+  is changing the setting for the rest of the session.  The values are read
+  back from the modules rather than written down here, so that a default which
+  changes in the source is followed instead of being quietly overridden with a
+  stale copy of it for the whole suite.
+- ``restore_color_state`` puts ``Colors._enabled`` back after every test, so a
+  test that turns colors on or off cannot change what a later test finds in its
+  captured output.
+- ``work_dir`` is opt-in rather than autouse: it enters a fresh temporary
+  directory for the duration of the test and hands it back, for the many tests
+  whose subject reads or writes relative to the working directory.
+"""
+import copy
+import os
+
+import pytest
+
+from rst_code_example_pipeline import check_code_block
+from rst_code_example_pipeline import check_projects
+from rst_code_example_pipeline import extract_projects
+from rst_code_example_pipeline.colors import Colors
+
+
+@pytest.fixture(autouse=True)
+def restore_cwd():
+    """Restore the working directory after each test."""
+    original = os.getcwd()
+    yield
+    os.chdir(original)
+
+
+# The settings globals of each entry-point module, captured as those modules
+# declare them.  A conftest is imported before any test module, so nothing has
+# had the chance to assign to one of these yet and what is captured here is the
+# declared value.
+_DECLARED_SETTINGS = {
+    module: {name: getattr(module, name) for name in names}
+    for module, names in (
+        (check_code_block,
+         ("verbose", "all_diagnostics", "max_columns", "force_checks")),
+        (check_projects,
+         ("verbose", "all_diagnostics", "max_columns", "force_checks")),
+        (extract_projects,
+         ("verbose", "code_block_at", "current_config")),
+    )
+}
+
+
+def _reset_pipeline_globals() -> None:
+    """Assign the settings globals the values their own modules declare.
+
+    Each value is handed out as a copy.  One of them is a configuration block
+    the package updates in place, so assigning the captured object itself would
+    give every test the same one to mutate and lose the declared value with the
+    first test that did.
+    """
+    for module, declared in _DECLARED_SETTINGS.items():
+        for name, value in declared.items():
+            setattr(module, name, copy.deepcopy(value))
+
+
+@pytest.fixture(autouse=True)
+def reset_pipeline_globals():
+    """Reset the entry-point modules' settings globals around each test."""
+    _reset_pipeline_globals()
+    yield
+    _reset_pipeline_globals()
+
+
+@pytest.fixture(autouse=True)
+def restore_color_state():
+    """Restore Colors._enabled after each test."""
+    original = Colors._enabled
+    yield
+    Colors._enabled = original
+
+
+@pytest.fixture()
+def work_dir(tmp_path, monkeypatch):
+    """Change to a fresh temporary directory and restore cwd on teardown."""
+    monkeypatch.chdir(tmp_path)
+    return tmp_path

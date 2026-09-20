@@ -10,6 +10,7 @@ import glob
 
 from . import blocks
 from . import check_code_block
+from . import constants
 from . import extract_projects
 from . import fmt_utils
 
@@ -19,7 +20,8 @@ max_columns: int = 0 # no check for max. columns
 force_checks: bool = False
 
 
-def get_blocks(json_files_regex_list: list[str]) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
+def get_blocks(json_files_regex_list: list[str],
+               skipped: list[str] | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
     projects: dict[str, list[tuple[blocks.CodeBlock, str]]] = dict()
 
     for json_regex in json_files_regex_list:
@@ -29,10 +31,14 @@ def get_blocks(json_files_regex_list: list[str]) -> dict[str, list[tuple[blocks.
 
             if b is None:
                 print("ERROR: Could not load block info from {}".format(json_file_path))
+                if skipped is not None:
+                    skipped.append(json_file_path)
                 continue
 
             if b.project is None:
                 print("ERROR: Block has no project in {}".format(json_file_path))
+                if skipped is not None:
+                    skipped.append(json_file_path)
                 continue
 
             if not b.project in projects:
@@ -42,7 +48,8 @@ def get_blocks(json_files_regex_list: list[str]) -> dict[str, list[tuple[blocks.
     return projects
 
 
-def get_projects(build_dir: str, projects_list_file: str | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
+def get_projects(build_dir: str, projects_list_file: str | None = None,
+                 skipped: list[str] | None = None) -> dict[str, list[tuple[blocks.CodeBlock, str]]]:
     json_files_regex_list: list[str] = list()
 
     os.chdir(build_dir)
@@ -54,13 +61,13 @@ def get_projects(build_dir: str, projects_list_file: str | None = None) -> dict[
         if extracted_projects:
             for prj in extracted_projects.projects:
                 json_files_regex_list.append(extract_projects.get_project_dir(prj) +
-                                            "/**/block_info.json")
+                                            "/**/" + constants.BLOCK_INFO_FILENAME)
         else:
             print("WARNING: no projects found in file: " + projects_list_file)
     else:
-        json_files_regex_list.append("./**/block_info.json")
+        json_files_regex_list.append("./**/" + constants.BLOCK_INFO_FILENAME)
 
-    projects = get_blocks(json_files_regex_list)
+    projects = get_blocks(json_files_regex_list, skipped)
 
     return projects
 
@@ -79,7 +86,16 @@ def check_projects(build_dir: str, projects_list_file: str | None = None) -> boo
 
     work_dir = os.getcwd()
 
-    projects = get_projects(build_dir, projects_list_file)
+    # Every skip above describes a block that was not checked -- one whose
+    # info file could not be read, and one that names no project.  Reporting
+    # either and then exiting 0 would claim a clean run over an example
+    # nothing looked at.
+    skipped: list[str] = []
+
+    projects = get_projects(build_dir, projects_list_file, skipped)
+
+    if skipped:
+        check_error = True
 
     for project in projects:
 
@@ -104,10 +120,15 @@ def check_projects(build_dir: str, projects_list_file: str | None = None) -> boo
     return check_error
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     import argparse
 
-    parser = argparse.ArgumentParser(description=__doc__)
+    # prog is the name this command is installed under. Without it,
+    # argparse derives a name long enough that the usage line has to
+    # be broken after it, leaving every option on its own deeply
+    # indented line.
+    parser = argparse.ArgumentParser(prog='check-code',
+                                     description=__doc__)
     parser.add_argument('--build-dir', '-B', type=str, default=None,
                         help='Dir in which to build code')
     parser.add_argument('--extracted_projects', type=str, default=None,

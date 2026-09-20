@@ -224,3 +224,71 @@ check-code                                         \
 
 For more examples and alternative configurations, please refer to the
 [README of the rst_code_example_pipeline package](frontend/python/rst_code_example_pipeline/README.md)
+
+#### Running the package's unit tests
+
+The package also has its own pytest-based unit test suite.  Run the whole
+suite with `make test_rst_pipeline`, from the `frontend/` directory:
+
+```sh
+# Full suite -- the validation run, and the only one
+make test_rst_pipeline
+```
+
+This needs an Ada toolchain *installation*, not merely a compiler on `PATH`.
+The package exists to extract, build and run source-code examples, so the
+tests covering that work invoke the toolchain for real -- and some of them
+create and remove symlinks under the installation tree configured in the
+package's `src/rst_code_example_pipeline/data/toolchain.ini` (`/opt/ada` and
+below).  A distribution-packaged GNAT on `PATH`, without that tree, is not
+enough: the suite goes red.  This is the only run that validates the
+module (the `rst_code_example_pipeline` package).  The epub VM has such an
+installation; so does the `pytest` job in
+`.github/workflows/rst-code-example-pipeline-ci.yml`, which provisions one
+and then runs this same target on a GitHub runner.
+
+For developers working on a machine without an Ada toolchain, a second
+target runs just the subset of tests that need no toolchain:
+
+```sh
+# Toolchain-free subset -- does not validate the module
+make test_rst_pipeline_smoke
+```
+
+**This smoke run does not validate the module.**  It compiles nothing, so it
+proves nothing about the module's actual job.  Its reach is narrower than
+"every test that does not need a toolchain" may suggest: it executes roughly
+half of the module's lines and leaves `check_code_block.py`, the file that
+drives the toolchain, almost entirely unexecuted.  Ordinary Python inside
+the toolchain-facing files -- diagnostic parsing, message formatting,
+writing the JSON check report -- is deselected wholesale along with the
+tests that cover it, so breaking any of that still leaves the smoke run
+green.  A green smoke run must never be mistaken for a passing suite.
+Coverage is switched off for it, because a coverage figure measured from a
+subset would invite the same misreading.
+
+So before considering a change tested, run the full suite where a toolchain
+installation exists: on the epub VM, or on a machine provisioned the way the
+CI runner is.  `.github/workflows/install_toolchain.sh` is the specification
+for that provisioning -- it reads every path and version from the package's
+`toolchain.ini` and unpacks the GNAT FSF builds into that tree.  It is
+written for the CI runner (it expects `GITHUB_WORKSPACE`, needs `crudini`,
+and exports the `bin` directories through `GITHUB_PATH`), so read it rather
+than run it unchanged on a workstation.
+
+Both targets are thin wrappers around `pytest`.  `make` itself runs from
+`frontend/`, where the `Makefile` lives -- there is no `Makefile` in the
+package directory.  It is the recipes that `cd` into
+`frontend/python/rst_code_example_pipeline`; `pytest` runs there.  Without
+the Makefile, run the equivalent commands from that directory:
+
+```sh
+# Full suite -- the validation run, and the only one
+pytest
+
+# Smoke subset -- does not validate the module
+pytest -m "not toolchain" --no-cov
+```
+
+See the "Development" section of the package README for installation and
+usage details.
