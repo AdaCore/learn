@@ -361,6 +361,9 @@ class Widget:
                              'c-run-expect-failure']:
                     # this is for testing, nothing to do here
                     continue
+                elif opt == 'ada-run-expect-variable-output':
+                    # Output variability is metadata, with no effect on the widget.
+                    continue
                 elif opt in ['ada-prove', 'ada-prove-flow',
                              'ada-prove-flow-report-all',
                              'ada-prove-report-all']:
