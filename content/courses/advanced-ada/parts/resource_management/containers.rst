@@ -153,8 +153,7 @@ two scenarios:
 
 Let's see a complete code example:
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty switches=Compiler(-gnat2022);
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -250,8 +249,7 @@ needed.
 In addition to this, we can specify a signed integer parameter |mdash| which
 indicates the number of components |mdash| for the :ada:`Empty` function:
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty switches=Compiler(-gnat2022);
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -336,8 +334,7 @@ of these elements: :ada:`Add_Unnamed`, :ada:`New_Indexed` or
 :ada:`Assign_Indexed`. In other words, when we specify the :ada:`Add_Named`
 element, we can only use the :ada:`Empty` element in the same declaration.
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Named switches=Compiler(-gnat2022);
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Named switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -441,8 +438,7 @@ procedure that is called when we have a positional container aggregate.
 
 Let's look at an example:
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed switches=Compiler(-gnat2022);
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -534,8 +530,7 @@ that, when we specify the :ada:`Assign_Indexed` element, we must also use the
 
 Let's look at an example:
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Indexed switches=Compiler(-gnat2022);
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Indexed switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -684,8 +679,7 @@ As mentioned previously, we may specify both :ada:`Add_Named` and
 :ada:`Assign_Indexed` elements together in the same aspect declaration. For
 example:
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed_Indexed switches=Compiler(-gnat2022);
-    :class: ada-run
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Unnamed_Indexed switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
