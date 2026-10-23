@@ -25,10 +25,9 @@ for the internal representation:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.User_Defined_Literals switches=Compiler(-gnat2022);
 
-   with Ada.Wide_Wide_Text_IO;
    with Ada.Characters.Conversions;
 
-   procedure Main is
+   package My_Types is
 
       type My_Type (Length : Natural) is record
          Value : Wide_Wide_String (1 .. Length);
@@ -45,6 +44,13 @@ for the internal representation:
            Value  => Ada.Characters.Conversions.To_Wide_Wide_String (Value)));
 
       function From_Integer (Value : String) return My_Type renames From_Real;
+
+   end My_Types;
+
+   with Ada.Wide_Wide_Text_IO;
+   with My_Types; use My_Types;
+
+   procedure Main is
 
       procedure Print (Self : My_Type) is
       begin
@@ -79,10 +85,9 @@ define a custom :ada:`+` operator:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.User_Defined_Literals_JS switches=Compiler(-gnat2022);
 
-   with Ada.Wide_Wide_Text_IO;
    with Ada.Characters.Conversions;
 
-   procedure Main is
+   package My_Types is
 
       type My_Type (Length : Natural) is record
          Value : Wide_Wide_String (1 .. Length);
@@ -102,6 +107,13 @@ define a custom :ada:`+` operator:
            Value  => Ada.Characters.Conversions.To_Wide_Wide_String (Value)));
 
       function From_Integer (Value : String) return My_Type renames From_Real;
+
+   end My_Types;
+
+   with Ada.Wide_Wide_Text_IO;
+   with My_Types; use My_Types;
+
+   procedure Main is
 
       procedure Print (Self : My_Type) is
       begin
