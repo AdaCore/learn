@@ -25,6 +25,7 @@ The :ada:`Ada.Calendar` package supports handling of dates and times. Let's
 look at a simple example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Current_Time
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Calendar; use Ada.Calendar;
@@ -243,6 +244,7 @@ benchmarking. We've used that package before in a previous section when
 discussing tasking. Let's look at an example of benchmarking:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -282,6 +284,7 @@ using the :ada:`Execution_Time` package. Let's modify the previous example
 to measure CPU time:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_CPU_Time
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;
@@ -322,6 +325,7 @@ different if we change the implementation of
 loop. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Display_Benchmarking_Math
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;        use Ada.Text_IO;
     with Ada.Real_Time;      use Ada.Real_Time;

@@ -58,6 +58,7 @@ actually passed. In fact, an :ada:`in out` parameter could be passed by copy.
 For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
+    :class: ada-run-expect-variable-output
 
     with System;
 
@@ -196,6 +197,7 @@ more detail :ref:`in another chapter <Adv_Ada_Limited_Types_As_Parameters>`.
 Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
+    :class: ada-run-expect-variable-output
 
     with System;
 
@@ -328,6 +330,7 @@ parameter. This situation could lead to undefined behavior or to a program
 error. Consider the following code example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
+    :class: ada-run-expect-variable-output
 
     with System;
 
@@ -421,6 +424,7 @@ Let's rewrite a previous code example that has a parameter of elementary type
 and change it to *aliased*:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Control_Flow.Subprograms.Parameter_Modes_Associations.By_Copy_By_Ref_Params
+    :class: ada-run-expect-variable-output
 
     with System;
 

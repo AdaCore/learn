@@ -1500,6 +1500,7 @@ scalar types, but it isn't restricted to those types. In fact, we can also use
 this attribute when dealing with non-scalar types. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Non_Scalar_Image switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     package Simple_Records is
 
@@ -1662,6 +1663,7 @@ object of :ada:`Rec'Class` type. Also, we display the contents of the
 We can also apply the :ada:`Image` attribute to protected objects and tasks:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Strings.Image_Attribute.Protected_Task_Image switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     package Simple_Tasking is
 
