@@ -377,7 +377,7 @@ Let's look at this example.
     package Configuration with
       Initializes => External_Variable
     is
-       External_Variable : Positive with Volatile;
+       External_Variable : Positive := 1 with Volatile;
     end Configuration;
 
     with Configuration;
