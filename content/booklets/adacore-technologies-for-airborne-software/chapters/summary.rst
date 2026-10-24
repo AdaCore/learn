@@ -35,9 +35,9 @@ Mapping of AdaCore's Technologies to DO-178C/ED-12C Objectives
    Programming Language, "SPARK (GNATprove)", "3, 5", "3, 4, 5, 6, 7", "FM 14, 15, 16, 17"
    GNAT Pro Toolchain, GNAT Pro Assurance, 3, 7
    GNAT Pro Toolchain, GNATstack, "3, 4", |blankcell|, |blankcell|
-   |gnatsas|, Defects & Vulnerability Analysis, "3, 4", |blankcell|, |blankcell|
-   |gnatsas|, GNATmetric, 3, |blankcell|, |blankcell|
-   |gnatsas|, GNATcheck, "3, 4, 5", |blankcell|, |blankcell|
+   |codesonar-for-ada|, Defects & Vulnerability Analysis, "3, 4", |blankcell|, |blankcell|
+   |codesonar-for-ada|, GNATmetric, 3, |blankcell|, |blankcell|
+   |codesonar-for-ada|, GNATcheck, "3, 4, 5", |blankcell|, |blankcell|
    |gnatdas|, GNATtest, "3, 4", |blankcell|, |blankcell|
    |gnatdas|, GNATemulator, 3, |blankcell|, |blankcell|
    |gnatdas|, GNATcoverage, "3, 4", |blankcell|, |blankcell|
@@ -54,9 +54,9 @@ Mapping of AdaCore's Technologies to DO-178C/ED-12C Objectives
    Programming Language, "SPARK (GNATprove)", "FM 10, 11, 12, 13", "3, 4", "FM 1-10"
    GNAT Pro Toolchain, GNAT Pro Assurance, 7, |blankcell|, |blankcell|
    GNAT Pro Toolchain, GNATstack, 6, |blankcell|, |blankcell|
-   |gnatsas|, Defects & Vulnerability Analysis, "3, 4, 6", |blankcell|, |blankcell|
-   |gnatsas|, GNATmetric, 4, |blankcell|, |blankcell|
-   |gnatsas|, GNATcheck, 4, |blankcell|, |blankcell|
+   |codesonar-for-ada|, Defects & Vulnerability Analysis, "3, 4, 6", |blankcell|, |blankcell|
+   |codesonar-for-ada|, GNATmetric, 4, |blankcell|, |blankcell|
+   |codesonar-for-ada|, GNATcheck, 4, |blankcell|, |blankcell|
    |gnatdas|, GNATtest, |blankcell|, "3, 4", "1, 2"
    |gnatdas|, GNATemulator, "3, 4", |blankcell|, |blankcell|
    |gnatdas|, GNATcoverage, |blankcell|, |blankcell|, "5, 6, 7, 8"
@@ -177,7 +177,7 @@ Table A-5 Verification of Outputs of Software Requirement Process
    3, "Source Code is verifiable.", 6.3.4, "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`", "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`",  "See :ref:`Airborn_SW_Contributions_to_source_code_reviews`"
    4, "Source Code conforms to standards.", 6.3.4, "See :ref:`Airborn_SW_Defining_and_Verifying_a_Code_Standard_with_GNATcheck`", |blankcell|
    5, "Source Code is traceable to low-level requirements.", 6.3.4, "See :ref:`Airborn_SW_Using_Ada_during_the_design_process`", |blankcell|, "See :ref:`Airborn_SW_Contributions_to_source_code_reviews`"
-   6, "Source Code is accurate and consistent.", 6.3.4, "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`, :ref:`Airborn_SW_Robustness_defensive_programming`, :ref:`Airborn_SW_Checking_worst-case_stack_consumption_with_GNATstack`, :ref:`Airborn_SW_Checking_source_code_accuracy_and_consistency_with_GNAT_SAS`", "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`, :ref:`Airborn_SW_Robustness_defensive_programming`, :ref:`Airborn_SW_Checking_worst-case_stack_consumption_with_GNATstack`, :ref:`Airborn_SW_Checking_source_code_accuracy_and_consistency_with_GNAT_SAS`, :ref:`Airborn_SW_Overloading_and_type_conversion_vulnerabilities`, :ref:`Airborn_SW_Accounting_for_dispatching_in_performing_resource_ analysis`", "See :ref:`Airborn_SW_Checking_worst-case_stack_consumption_with_GNATstack`"
+   6, "Source Code is accurate and consistent.", 6.3.4, "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`, :ref:`Airborn_SW_Robustness_defensive_programming`, :ref:`Airborn_SW_Checking_worst-case_stack_consumption_with_GNATstack`, :ref:`Airborn_SW_Checking_source_code_accuracy_and_consistency_with_CodeSonar_for_Ada`", "See :ref:`Airborn_SW_Benefits_of_the_Ada_language`, :ref:`Airborn_SW_Robustness_defensive_programming`, :ref:`Airborn_SW_Checking_worst-case_stack_consumption_with_GNATstack`, :ref:`Airborn_SW_Checking_source_code_accuracy_and_consistency_with_CodeSonar_for_Ada`, :ref:`Airborn_SW_Overloading_and_type_conversion_vulnerabilities`, :ref:`Airborn_SW_Accounting_for_dispatching_in_performing_resource_ analysis`", "See :ref:`Airborn_SW_Checking_worst-case_stack_consumption_with_GNATstack`"
    7, "Output of software integration process is complete and correct.", 6.3.5, "See :ref:`Airborn_SW_Compiling_with_the_GNAT_Pro_compiler`", "Same as #1a", "Same as #1a"
    8, "Parameter Data Item File is complete and correct.", 6.6, "See :ref:`Airborn_SW_Parameter_Data_Items`", "Same as #1a", "Same as #1a"
    9, "Verification of Parameter Data Item File is achieved.", 6.6, "See :ref:`Airborn_SW_Parameter_Data_Items`", "Same as #1a", "Same as #1a"

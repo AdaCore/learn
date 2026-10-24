@@ -134,8 +134,7 @@ document.
 This revised booklet reflects the evolution of and enhancements to
 AdaCore's products since the earlier edition.  Among other updates,
 the static analysis tools supplementing the GNAT Pro development
-environment have been integrated into a cohesive toolset (the *GNAT
-Static Analysis Suite*).  The dynamic analysis tools have likewise
+environment have been integrated into a cohesive toolset (*CodeSonar for Ada*).  The dynamic analysis tools have likewise
 been consolidated, and the resulting *GNAT Dynamic Analysis Suite* has
 introduced a fuzzing tool |mdash| *GNATfuzz* |mdash| which exercises
 the software with invalid input and checks for failsafe behavior.
