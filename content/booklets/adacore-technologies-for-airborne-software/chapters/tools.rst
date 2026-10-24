@@ -726,7 +726,7 @@ TQL-5 qualification material can be made available for GNATstack.
 CodeSonar for Ada
 -----------------
 
-CodeSonar for Ada is a stand-alone tool that runs on Windows and Linux
+CodeSonar for Ada is a static analysis toolset that runs on Windows and Linux
 platforms and may be used with any standard Ada compiler or fully
 integrated into the GNAT Pro development environment.
 

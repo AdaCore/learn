@@ -74,9 +74,8 @@ toolchains, including support for Ada, C, C++, and Rust.
 Complementary tools support several verification activities for Ada:
 
 * GNATstack for stack checking (which also supports C),
-* CodeSonar for Ada for defect and
-  vulnerability detection, code standard checking (GNATcheck), and
-  code metrics generation (GNATmetric)
+* CodeSonar for Ada, providing defect and vulnerability detection, code
+  standard checking (GNATcheck), and code metrics generation (GNATmetric)
 * the GNAT Dynamic Analysis Suite, or GNAT DAS, for testing (GNATtest,
   TGen), structural code coverage analysis (GNATcoverage, which also
   supports C and C++), processor emulation (GNATemulator), and fuzzing
@@ -1233,8 +1232,8 @@ possible activities:
   requirements should define the expected behavior in case a pre- or
   postcondition is violated, for example to reset the application to a
   known safe state as soon as an inconsistency is detected.
-* **Static analysis or formal proof**. The :ref:`CodeSonar for Ada technology<Airborn_SW_CodeSonar_for_Ada>`) takes
-  preconditions into account as part of its analysis in detecting
+* **Static analysis or formal proof**. :ref:`Airborn_SW_CodeSonar_for_Ada`
+  takes preconditions into account as part of its analysis in detecting
   potential errors. It can be tuned based on whether the priority is
   on finding as many errors as possible, at the expense of false
   positives, or on "picking the low-hanging fruit": detecting defects
@@ -1375,8 +1374,7 @@ Checking source code accuracy and consistency with CodeSonar for Ada
 identifying a range of development errors that need to be
 prevented. Satisfying this objective requires a combination of
 reviews, analyses and tests, and tools may be used for some of these
-activities. The :ref:`CodeSonar for Ada
-<Airborn_SW_CodeSonar_for_Ada>` specifically targets issues
+activities. :ref:`Airborn_SW_CodeSonar_for_Ada` specifically targets issues
 that correspond to Ada exceptions, such as scalar overflow, range
 constraint violations, and array indexing errors. It also detects
 other errors including reads of uninitialized variables, useless

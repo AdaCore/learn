@@ -131,13 +131,14 @@ document.
 
 .. rubric:: Foreword to V2.1
 
-This revised booklet reflects the evolution of and enhancements to
-AdaCore's products since the earlier edition.  Among other updates,
-the static analysis tools supplementing the GNAT Pro development
-environment have been integrated into a cohesive toolset (*CodeSonar for Ada*).  The dynamic analysis tools have likewise
-been consolidated, and the resulting *GNAT Dynamic Analysis Suite* has
-introduced a fuzzing tool |mdash| *GNATfuzz* |mdash| which exercises
-the software with invalid input and checks for failsafe behavior.
+This revised booklet reflects the evolution of and enhancements to AdaCore's
+products since the earlier edition.  Among other updates, the static
+analysis tools supplementing the GNAT Pro development environment have been
+integrated into a cohesive toolset (*CodeSonar for Ada*).  The dynamic
+analysis tools have likewise been consolidated, and the resulting *GNAT
+Dynamic Analysis Suite* has introduced a fuzzing tool |mdash| *GNATfuzz*
+|mdash| which exercises the software with invalid input and checks for
+failsafe behavior.
 
 I would like to express my appreciation to Olivier Appere (AdaCore)
 for his detailed and helpful review of the content for the revised
