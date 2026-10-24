@@ -175,7 +175,12 @@ class Block(object):
 
             if cb_start != -1:
                 process_block(i, line, indent)
-            else:
+            # Not `else`: the line that ends a block (the first one indented
+            # less than its body) may itself start the next one.  A
+            # ``.. code::`` directly following a code block, with no prose
+            # between them, was otherwise consumed as the terminator and
+            # never seen as a directive, so the second block vanished.
+            if cb_start == -1:
                 if line[indent:].startswith(".. code::"):
                     start_code_block(i, line, indent)
                 elif line[indent:].startswith(":code-config:"):
