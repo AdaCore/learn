@@ -26,6 +26,7 @@ Tasks are declared using the keyword :ada:`task`. The task implementation
 is specified in a :ada:`task body` block. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -68,6 +69,7 @@ Note that:
     both task :ada:`T` and the main task. For example:
 
     .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Multiple_Simple_Task
+        :class: ada-run-expect-variable-output
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -176,6 +178,7 @@ current task to sleep for the length of time (in seconds) specified in the delay
 statement. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Delay
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -225,6 +228,7 @@ This synchronization between tasks is called a *rendezvous*. Let's see an
 example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -278,6 +282,7 @@ automatically terminate the subtask when the master construct reaches its end.  
 example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Rendezvous_Loop
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -432,6 +437,7 @@ Using this auxiliary package, we're now ready to write our time-drifting
 application:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Time
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -470,6 +476,7 @@ the drift introduced by :ada:`Computational_Intensive_App`. Using the
 and have a regular interval of exactly one second:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Time
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;   use Ada.Text_IO;
     with Ada.Real_Time; use Ada.Real_Time;
@@ -613,6 +620,7 @@ operation. It also contains two concurrent subprograms (main task and task
 :ada:`T`) that try to access the protected object.
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Protected_Objects_Entries
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -707,6 +715,7 @@ objects are only created by variable definitions, not type definitions.
 To illustrate this, we repeat our first example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -726,6 +735,7 @@ declare a task (:ada:`A_Task`) based on the task type :ada:`TT` after its
 definition:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Simple_Task_Type
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -749,6 +759,7 @@ to the individual tasks by defining a :ada:`Start` entry. Here's the updated
 example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Tasking.Show_Task_Type_Array
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 

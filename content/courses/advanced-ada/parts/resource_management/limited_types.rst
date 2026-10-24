@@ -2444,6 +2444,7 @@ For example, we can see this when looking at the address of the object
 type :ada:`Simple_Rec`:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Initialization_Return_Do
+    :class: ada-run-expect-variable-output
 
     package Limited_Types is
 
@@ -2523,6 +2524,7 @@ procedure are the same object.
    nonlimited:
 
        .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Extended_Return_Statements_Limited_Types.Initialization_Return_Copy
+        :class: ada-run-expect-variable-output
 
         package Non_Limited_Types is
 
@@ -2837,6 +2839,7 @@ We can run the :ada:`Test` application below and compare the address of the
 not:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Limited_Types.Limited_Types_Parameters.Explicitly_Limited_Types
+    :class: ada-run-expect-variable-output
 
     with System;
 

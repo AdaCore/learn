@@ -2464,6 +2464,7 @@ Here, we're assigning the address of the :ada:`I` object to the :ada:`A` address
     example:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Show_Address_Attribute
+        :class: ada-run-expect-variable-output
 
         with Ada.Text_IO; use Ada.Text_IO;
         with System.Address_Image;
@@ -2493,6 +2494,7 @@ select an address automatically, but use the address that we're specifying. For
 example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Address_Aspect
+    :class: ada-run-expect-variable-output
 
     with System; use System;
     with System.Address_Image;
@@ -2594,6 +2596,7 @@ Address comparison
 We can compare addresses using the common comparison operators. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Address_Aspect
+    :class: ada-run-expect-variable-output
 
     with System; use System;
     with System.Address_Image;
@@ -2644,6 +2647,7 @@ using the :ada:`To_Address` and :ada:`To_Integer` functions. Let's see an
 example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Pointer_Arith_Ada
+    :class: ada-run-expect-variable-output
 
     with System;      use System;
 
@@ -2698,6 +2702,7 @@ a code example where we iterate over an array by incrementing an address that
 *points* to each component in memory:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Pointer_Arith_Ada
+    :class: ada-run-expect-variable-output
 
     with System;      use System;
 
@@ -2768,6 +2773,7 @@ see the section on
     The code example above corresponds (more or less) to the following C code:
 
     .. code:: c manual_chop run_button main=main.c project=Courses.Advanced_Ada.Data_Types.Type_Representation.Addresses.Pointer_Arith_C
+        :class: ada-run-expect-variable-output
 
         !main.c
         #include <stdio.h>

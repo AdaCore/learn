@@ -283,6 +283,7 @@ type conversion is allowed is when both types have a common ancestor.
 Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Pool_Specific_Access_Types switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -356,6 +357,7 @@ the :ada:`A1 := A2` or the :ada:`A1 := Integer_Access_1 (A2)` assignment.)
     For example:
 
     .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Array_Allocation switches=Compiler(-gnat2022);
+        :class: ada-run-expect-variable-output
 
         with Ada.Text_IO; use Ada.Text_IO;
 
@@ -419,6 +421,7 @@ syntactic sugar is available to simplify the code that performs this
 allocation. For example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Integer_Access_Array switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -467,6 +470,7 @@ designated objects with zero.)
 Let's see another code example, this time with task types:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Types_Allocation.Workers
+    :class: ada-run-expect-variable-output
 
     package Workers is
 
@@ -6072,6 +6076,7 @@ convert between access types and addresses. This might be useful for specific
 low-level operations. Let's see an example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Address_Conversion
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -6130,6 +6135,7 @@ is available to convert from an address to an object of access type. For
 example:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Address_Conversion
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
     with System;      use System;
@@ -6187,6 +6193,7 @@ Let's adapt the previous code example and replace the :ada:`Integer`
 type by the (unbounded) :ada:`String` type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Resource_Management.Access_Types.Access_Address.Address_Conversion
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
     with System;      use System;

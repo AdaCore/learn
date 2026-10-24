@@ -214,8 +214,7 @@ Using ``Effective_Reads`` / ``Effective_Writes``
          Effective_Reads;
 
        procedure Set with
-          Depends => (X => Y,
-                      Y => Y);
+          Depends => (Ext => Ext);
     end Volatile_Vars;
 
     package body Volatile_Vars is

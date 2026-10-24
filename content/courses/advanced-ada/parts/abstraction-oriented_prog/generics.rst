@@ -1821,7 +1821,8 @@ Let's briefly recapitulate these approaches:
 
           generic
              type T is private;
-             with package SP is new Sig_Pkg (T, <>);
+             with package SP is new
+               Sig_Pkg (T, P => <>);
           package Pkg is
           end Pkg;
 
@@ -1974,7 +1975,7 @@ package:
        generic
           type T is private;
           with package T_Hashable is new
-            Hashable_Signature (T, <>);
+            Hashable_Signature (T, Hash => <>);
        package Hash_Tables is
           --  Missing implementation
        end Hash_Tables;

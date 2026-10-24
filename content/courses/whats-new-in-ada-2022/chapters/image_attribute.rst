@@ -38,6 +38,7 @@ this works. We'll define array, record, and access types and corresponding
 objects and then convert these objects to strings and print them:
 
 .. code:: ada run_button project=Courses.Ada_2022_Whats_New.Image_Attribute switches=Compiler(-gnat2022);
+   :class: ada-run-expect-variable-output
 
    with Ada.Text_IO;
 
