@@ -164,6 +164,56 @@ class TestMinimalAdaBlock:
 # T-blocks-02: project and main_file attributes
 # ---------------------------------------------------------------------------
 
+class TestConsecutiveBlocks:
+    """A code block directly followed by another one, with no prose line
+    between them: both are parsed.  The line that terminates the first block
+    is the second block's directive, and it used to be consumed as the
+    terminator only, so the second block was silently dropped."""
+
+    RST = textwrap.dedent("""\
+        Intro.
+
+        .. code:: ada compile_button project=P.First
+
+            procedure First is begin null; end First;
+
+        .. code:: ada run_button project=P.Second
+
+            procedure Second is begin null; end Second;
+
+        Closing paragraph.
+        """)
+
+    def test_both_blocks_parsed(self):
+        blocks = [b for b in Block.get_blocks_from_rst(RST_FILE, self.RST)
+                  if isinstance(b, CodeBlock)]
+        assert [b.project for b in blocks] == ["P.First", "P.Second"]
+
+    def test_second_block_keeps_its_own_attributes(self):
+        blocks = [b for b in Block.get_blocks_from_rst(RST_FILE, self.RST)
+                  if isinstance(b, CodeBlock)]
+        assert blocks[1].buttons == ["run"]
+        assert blocks[1].text.strip() == "procedure Second is begin null; end Second;"
+
+    def test_block_after_an_indented_block(self):
+        rst = textwrap.dedent("""\
+            - item
+
+              .. code:: ada compile_button project=P.Nested
+
+                  procedure Nested is begin null; end Nested;
+
+            .. code:: ada compile_button project=P.Outer
+
+                procedure Outer is begin null; end Outer;
+
+            Closing paragraph.
+            """)
+        blocks = [b for b in Block.get_blocks_from_rst(RST_FILE, rst)
+                  if isinstance(b, CodeBlock)]
+        assert [b.project for b in blocks] == ["P.Nested", "P.Outer"]
+
+
 class TestProjectAndMainFile:
     RST = minimal_rst("""\
 .. code:: ada project=MyProject main=main.adb
