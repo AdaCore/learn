@@ -352,7 +352,7 @@ define build_complete_book
 	$(eval TARGET_TYPE_LC := $(call lowercase_word,$(TARGET_TYPE)))
 	@rm -rf "$(BUILDDIR)/doctrees"
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
-	$(call build_book_complete_preps_$(TARGET_TYPE_LC))
+	$(call build_complete_book_preps_$(TARGET_TYPE_LC))
 	$(call build_book_generic,$(TARGET_NAME),$(TARGET_TYPE),$(SPHINX_CONTENT_DIR))
 endef
 
