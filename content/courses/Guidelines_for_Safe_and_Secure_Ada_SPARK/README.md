@@ -29,7 +29,7 @@ please see the Sphinx documentation
 
 ### GNATcheck
 
-`GNATcheck` is part of the Static Analysis Suite provided by **AdaCore**.
+`GNATcheck` is part of CodeSonar for Ada, provided by **AdaCore**.
 It is designed as a coding standards checker, and comes with many
 pre-defined rules to use in validating standards conformance. In
 addition, it uses the **Langkit Query Language** to allow users to
