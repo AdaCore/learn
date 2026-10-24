@@ -25,7 +25,7 @@ rules."
 features to improve program analysis, such as type ranges, parameter modes, \
 and encapsulation. Tools such as GNATmetric and GNATcheck can help monitor \
 the complexity of the code and prevent the use of overly complex code. \
-GNAT SAS allows making an assessment of program analyzability during its \
+CodeSonar for Ada allows making an assessment of program analyzability during its \
 development. For higher SILs, the use of SPARK ensures that the subset \
 of the language used is suitable for most the rigorous analysis."
  Strongly Typed Programming Language,D.49,HR,HR,Yes,"Ada is a strongly typed \

@@ -184,14 +184,14 @@ The following technologies will be presented:
   language development environments that is oriented towards projects with
   long maintenance cycles or certification requirements
 
-.. index:: GNAT Static Analysis Suite (GNAT SAS)
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); Defects and vulnerability analysis
+.. index:: CodeSonar for Ada
+.. index:: single: CodeSonar for Ada; Defects and vulnerability analysis
 .. index:: GNATmetric
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATmetric
+.. index:: single: CodeSonar for Ada; GNATmetric
 .. index:: GNATcheck
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATcheck
+.. index:: single: CodeSonar for Ada; GNATcheck
 
-* The *GNAT Static Analysis Suite* ("GNAT SAS"), comprising several tools:
+* *CodeSonar for Ada*, comprising several tools:
 
   - A "bug finder" engine that identifies potential defects and
     vulnerabilities in Ada code

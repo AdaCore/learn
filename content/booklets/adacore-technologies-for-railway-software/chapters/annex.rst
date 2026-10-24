@@ -139,10 +139,10 @@ implementation of the following techniques:
 * D.38 Modular Approach
 * D.57 Object Oriented Programming
 
-GNAT Static Analysis Suite
---------------------------
+CodeSonar for Ada
+-----------------
 
-See :ref:`Railway_SW_GNAT_Static_Analysis_Suite`.
+See :ref:`Railway_SW_CodeSonar_for_Ada`.
 
 Defects and Vulnerability Analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -154,7 +154,7 @@ Defects and Vulnerability Analysis
 Qualification
 ^^^^^^^^^^^^^
 
-GNAT SAS's defects and vulnerability analysis tool can be qualified at
+CodeSonar for Ada's defects and vulnerability analysis tool can be qualified at
 class T2.
 It has a long cross-industry track record and has been qualified under other
 standards in the past, such as DO-178B/C as a verification tool/TQL5.
@@ -164,7 +164,7 @@ standards in the past, such as DO-178B/C as a verification tool/TQL5.
 Annex D References
 ^^^^^^^^^^^^^^^^^^
 
-GNAT SAS's defects and vulnerability analysis tool can contribute to the
+CodeSonar for Ada's defects and vulnerability analysis tool can contribute to the
 deployment or implementation of the following techniques:
 
 * D.2 Analyzable Programs
