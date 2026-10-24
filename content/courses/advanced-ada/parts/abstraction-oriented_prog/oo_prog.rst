@@ -250,7 +250,7 @@ All types implementing the :ada:`Animal` interface have to override the
 
     end Animals.Cats;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Extending_Interfaces
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Interfaces.Extending_Interfaces
 
     with Animals.Cats; use Animals.Cats;
 
@@ -726,7 +726,7 @@ Here is a full example:
 
     end Geo_Forms.Squares;
 
-.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Call_Inherited_Subprograms_2
+.. code:: ada run_button project=Courses.Advanced_Ada.Abstraction-Oriented_Prog.OO_Prog.Calling_Inherited_Subprograms.Geometric_Forms_2
 
     with Ada.Text_IO;       use Ada.Text_IO;
     with Geo_Forms.Squares; use Geo_Forms.Squares;

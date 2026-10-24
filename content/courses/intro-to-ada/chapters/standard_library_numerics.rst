@@ -91,6 +91,7 @@ number generator for the range between 0.0 and 1.0. To use it, declare a
 generator :ada:`G`, which you pass to :ada:`Random`. For example:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Float_Random_Num
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;  use Ada.Text_IO;
 
@@ -124,6 +125,7 @@ following example, we create an application that displays random integers
 between 1 and 10:
 
 .. code:: ada run_button project=Courses.Intro_To_Ada.Standard_Library.Show_Discrete_Random_Num
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO;  use Ada.Text_IO;
     with Ada.Numerics.Discrete_Random;

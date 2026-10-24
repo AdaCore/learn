@@ -1161,8 +1161,8 @@ Example #2
 Instead of using a ghost function, :ada:`Get_Model`, to retrieve the contents
 of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
 
-.. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
-    :class: ada-expect-compile-error, ada-expect-prove-error
+.. code:: ada no_button gnat=15.1.0-2 gnatprove=15.1.0-1 gprbuild=25.0.0-1 project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
+    :class: ada-expect-compile-error, ada-expect-prove-error, ada-compile, ada-prove
 
     package Ring_Buffer is
 
@@ -1282,8 +1282,8 @@ Example #4
 We're now modifying :ada:`Push_Last` to share the computation of the new
 length between the operational and ghost code.
 
-.. code:: ada compile_button prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
-    :class: ada-expect-prove-error
+.. code:: ada no_button gnat=15.1.0-2 gnatprove=15.1.0-1 gprbuild=25.0.0-1 project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
+    :class: ada-expect-prove-error, ada-compile, ada-prove
 
     package Ring_Buffer is
 

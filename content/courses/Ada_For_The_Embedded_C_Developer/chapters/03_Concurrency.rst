@@ -62,6 +62,7 @@ of control in any of the examples, the output may be interspersed.
 [Ada]
 
 .. code:: ada run_button ada project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -105,6 +106,7 @@ the underlying implementation of the task scheduling algorithm.
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task_Type
+    :class: ada-run-expect-variable-output
 
     package My_Tasks is
 
@@ -141,6 +143,7 @@ and terminates when its work is completed.
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.My_Task_Type
+    :class: ada-run-expect-variable-output
 
     with My_Tasks; use My_Tasks;
 
@@ -161,6 +164,7 @@ data and coordinate execution. Let's consider the following example:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Rendezvous
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -199,6 +203,7 @@ and executes some code:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Rendezvous_Params
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
 
@@ -266,6 +271,7 @@ is modified by other tasks that call :ada:`Increment`, :ada:`Decrement`, and
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Selective_Rendezvous
+    :class: ada-run-expect-variable-output
 
     package Counters is
 
@@ -498,6 +504,7 @@ a binary semaphore / persistent signal.
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Protected_Binary_Semaphore
+    :class: ada-run-expect-variable-output
 
     package Binary_Semaphores is
 
@@ -645,6 +652,7 @@ in the main application:
 [Ada]
 
 .. code:: ada run_button project=Courses.Ada_For_Embedded_C_Dev.Concurrency.Ravenscar
+    :class: ada-run-expect-variable-output
 
     with My_Tasks; use My_Tasks;
 

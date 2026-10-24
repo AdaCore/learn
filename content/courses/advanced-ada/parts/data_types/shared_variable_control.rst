@@ -1370,6 +1370,7 @@ important to ensure that no :wikipedia:`race conditions <Race_condition>`
 occur:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Exchange switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     with System.Atomic_Operations.Exchange;
 
@@ -1514,6 +1515,7 @@ we'll use to generate random numbers in the expected range
 Let's use this package in the :ada:`Show_Lazy_Initialization` procedure:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Compare_And_Exchange switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     with Ada.Text_IO; use Ada.Text_IO;
     with Ada.Numerics.Discrete_Random;
@@ -1664,6 +1666,7 @@ We can use these functions to implement an application similar to the
 we've seen before:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Test_And_Set switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     with System.Atomic_Operations.Test_And_Set;
     use  System.Atomic_Operations.Test_And_Set;
@@ -1789,6 +1792,7 @@ use the atomic operations from the
 :ada:`System.Atomic_Operations.Integer_Arithmetic` package:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Integer_Arithmetic switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     with System.Atomic_Operations.Integer_Arithmetic;
 
@@ -1855,6 +1859,7 @@ Let's reuse the
 but replace the atomic integer type by an atomic modular type:
 
 .. code:: ada run_button project=Courses.Advanced_Ada.Data_Types.Shared_Variable_Control.Atomic_Operations.Modular_Arithmetic switches=Compiler(-gnat2022);
+    :class: ada-run-expect-variable-output
 
     with System.Atomic_Operations.Modular_Arithmetic;
 
