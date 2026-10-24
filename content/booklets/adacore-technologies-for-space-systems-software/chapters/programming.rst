@@ -564,13 +564,13 @@ problematic features. Several techniques are available:
   that comprise the Ravenscar tasking subset.
 
 .. index:: GNATcheck
-.. index: GNAT Static Analysis Suite; GNATcheck
+.. index: CodeSonar for Ada; GNATcheck
 
 * Static analysis tool (coding standard enforcer)
 
   Other restrictions on Ada features can be detected by AdaCore's
   automated GNATcheck tool (see :ref:`Space_Systems_SW_GNATcheck`)
-  that is included with the GNAT Pro Ada Static Analysis Suite. The
+  that is included with CodeSonar for Ada. The
   developer can configure this rule-based and tailorable tool to flag
   violations of the project's coding standard, such as usage of
   specific prohibited types or subprograms defined in

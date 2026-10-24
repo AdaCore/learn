@@ -50,11 +50,11 @@ of the *V*. In summary:
   variety of supplemental libraries (including some for which
   qualification material is available for |E-ST-40C| and |Q-ST-80C|.)
 
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); Software life cycle
-.. index:: single: Software life cycle; GNAT Static Analysis Suite (GNAT SAS)
+.. index:: single: CodeSonar for Ada; Software life cycle
+.. index:: single: Software life cycle; CodeSonar for Ada
 
-* The GNAT Static Analysis Suite (see
-  :ref:`Space_Systems_SW_Static_Verification_GNAT_Static_Analysis_Suite_GNAT_SAS`)
+* CodeSonar for Ada (see
+  :ref:`Space_Systems_SW_Static_Verification_CodeSonar_for_Ada`)
   applies during Software Development. It contains a variety of tools
   for Ada, including a vulnerability detector that can be used
   retrospectively to detect issues in existing codebases and/or during
@@ -814,26 +814,26 @@ Footprint) QUAL run-time library (superseded by the Light-Tasking
 run-time) on LEON2 and LEON3 boards have been qualified at criticality
 category B (see :footcite:p:`Space_SW_AdaCore_Web_2019b`).
 
-.. index:: GNAT Static Analysis Suite (GNAT SAS)
+.. index:: CodeSonar for Ada
 
-.. _Space_Systems_SW_Static_Verification_GNAT_Static_Analysis_Suite_GNAT_SAS:
+.. _Space_Systems_SW_Static_Verification_CodeSonar_for_Ada:
 
-Static Verification: GNAT Static Analysis Suite (GNAT SAS)
-----------------------------------------------------------
+Static Verification: CodeSonar for Ada
+--------------------------------------
 
-GNAT SAS is a set of Ada static analysis tools that complement |gnatpro|
+CodeSonar for Ada is a set of Ada static analysis tools that complement |gnatpro|
 for Ada. These tools can save time and effort in general during software
 development and verification, and they are useful in particular in
 supporting compliance with ECSS standards.
 
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); Defects and Vulnerability Analyzer
+.. index:: single: CodeSonar for Ada; Defects and Vulnerability Analyzer
 
 .. _Space_Systems_SW_Defects_and_Vulnerability_Analyzer:
 
 Defects and Vulnerability Analyzer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-One of the main tools in GNAT SAS is an Ada source code analyzer that detects
+One of the main tools in CodeSonar for Ada is an Ada source code analyzer that detects
 run-time and logic errors that can cause safety or security vulnerabilities
 in a codebase.
 This tool inspects the code for potential bugs before program execution,
@@ -927,7 +927,7 @@ these are the relevant sections of the two standards:
 
     * §7.1.3 Assurance activities for product quality requirements
 
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATmetric
+.. index:: single: CodeSonar for Ada; GNATmetric
 .. index:: GNATmetric
 
 .. _Space_Systems_SW_GNATmetric:
@@ -974,7 +974,7 @@ summary:
     * §7.1.5 Basic metrics
 
 .. index:: GNATcheck
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATcheck
+.. index:: single: CodeSonar for Ada; GNATcheck
 
 .. _Space_Systems_SW_GNATcheck:
 
