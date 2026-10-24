@@ -126,15 +126,13 @@
         Introduction to Ada: Laboratories <labs/intro-to-ada/index>
         Bug Free Coding <labs/bug-free-coding/index>
 
-    .. only:: no_hidden_books
+    .. toctree::
+        :maxdepth: 1
+        :caption: AdaCore Technologies Booklets
 
-        .. toctree::
-            :maxdepth: 1
-            :caption: AdaCore Technologies Booklets
-
-            AdaCore Technologies For Airborne Software <booklets/adacore-technologies-for-airborne-software/index>
-            AdaCore Technologies For Railway Software <booklets/adacore-technologies-for-railway-software/index>
-            AdaCore Technologies For Space Systems Software <booklets/adacore-technologies-for-space-systems-software/index>
+        AdaCore Technologies For Airborne Software <booklets/adacore-technologies-for-airborne-software/index>
+        AdaCore Technologies For Railway Software <booklets/adacore-technologies-for-railway-software/index>
+        AdaCore Technologies For Space Systems Software <booklets/adacore-technologies-for-space-systems-software/index>
 
 .. only:: builder_html
 

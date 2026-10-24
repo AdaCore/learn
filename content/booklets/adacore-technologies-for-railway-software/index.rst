@@ -139,6 +139,8 @@ software, please visit :footcite:`Railway_SW_AdaCore_Web_Rail`.
 | Ben Brosgol, AdaCore
 | September 2025
 
+.. footbibliography::
+
 .. toctree::
    :maxdepth: 4
    :numbered:

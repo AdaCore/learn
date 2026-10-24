@@ -104,6 +104,7 @@ extensions = [
     'sphinx.ext.graphviz',
     'sphinx.ext.extlinks',
     'widget_extension',
+    'footnote_checks',
     'sphinx_reredirects',
     'sphinxcontrib.plantuml',
 ]

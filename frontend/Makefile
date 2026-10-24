@@ -212,7 +212,7 @@ test_engine: webpack-production                                                #
 	@echo ""
 
 test_parser:                                                                   ## Test the parser.
-	@coverage run --source=widget,rst_code_example_pipeline.chop,rst_code_example_pipeline.resource -m unittest discover --start-directory sphinx
+	@coverage run --source=widget,footnote_checks,rst_code_example_pipeline.chop,rst_code_example_pipeline.resource -m unittest discover --start-directory sphinx
 	@coverage report --fail-under=90 -m
 
 test_rst_pipeline:                                                             ## Test the rst_code_example_pipeline package (epub VM).
@@ -352,7 +352,7 @@ define build_complete_book
 	$(eval TARGET_TYPE_LC := $(call lowercase_word,$(TARGET_TYPE)))
 	@rm -rf "$(BUILDDIR)/doctrees"
 	$(eval SPHINX_CONTENT_DIR := $(CONTENT_DIR))
-	$(call build_book_complete_preps_$(TARGET_TYPE_LC))
+	$(call build_complete_book_preps_$(TARGET_TYPE_LC))
 	$(call build_book_generic,$(TARGET_NAME),$(TARGET_TYPE),$(SPHINX_CONTENT_DIR))
 endef
 
