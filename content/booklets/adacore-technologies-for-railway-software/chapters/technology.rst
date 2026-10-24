@@ -39,11 +39,12 @@ cyclomatic complexity computation, and coupling analysis.
 
 .. index:: single: CodeSonar for Ada; Support for Analyzable Programs (D.2)
 
-CodeSonar for Ada identifies potential run-time errors in the code. The number of
-false positive results depends on the code complexity. A high number of
-false positives is often a symptom of overly-complicated code. Using CodeSonar for Ada
-during development allows finding locations in the code that are
-overly complex and provides information on what needs to be improved.
+CodeSonar for Ada identifies potential run-time errors in the code. The
+number of false positive results depends on the code complexity. A high
+number of false positives is often a symptom of overly-complicated code.
+Using CodeSonar for Ada during development allows finding locations in the
+code that are overly complex and provides information on what needs to be
+improved.
 
 .. index:: single: SPARK technology; Support for Analyzable Programs (D.2)
 
@@ -105,23 +106,24 @@ partitioning can be found in the context of
 
 .. index:: single: CodeSonar for Ada; Support for Boundary Value Analysis (D.4)
 
-Another possibility is to use CodeSonar for Ada to identify possible values for
-variables, and propagate those values from call to call, constructing
-lists and/or ranges of potential values for each variable at each point
-of the program. These are used as the input to run-time error analysis.
-When used in full-soundness mode, CodeSonar for Ada provides guarantees that the
+Another possibility is to use CodeSonar for Ada to identify possible values
+for variables, and propagate those values from call to call, constructing
+lists and/or ranges of potential values for each variable at each point of
+the program. These are used as the input to run-time error analysis. When
+used in full-soundness mode, CodeSonar for Ada provides guarantees that the
 locations it reports on the code are the only ones that may have run-time
-errors, thus allowing a reduction of the scope of testing and review to
-only these places.
+errors, thus allowing a reduction of the scope of testing and review to only
+these places.
 
-However, it's important to stress that CodeSonar for Ada is only performing this
-boundary value analysis with respect to potential exceptions and robustness.
-No information is provided regarding the correctness of the values
-produced by subprograms.
+However, it's important to stress that CodeSonar for Ada is only performing
+this boundary value analysis with respect to potential exceptions and
+robustness. No information is provided regarding the correctness of the
+values produced by subprograms.
 
-CodeSonar for Ada also has the capacity to display the possible values of variables
-and parameters. This can be used as a mechanism to increase confidence
-that testing has taken into account all possible boundaries for values.
+CodeSonar for Ada also has the capacity to display the possible values of
+variables and parameters. This can be used as a mechanism to increase
+confidence that testing has taken into account all possible boundaries for
+values.
 
 .. index:: single: SPARK technology; Support for Boundary Value Analysis (D.4)
 .. index:: Absence of Run-Time Errors (AORTE)
@@ -148,11 +150,11 @@ visualization and analysis of control flow in the application.
 
 .. index:: single: CodeSonar for Ada; Support for Control Flow Analysis (D.8)
 
-CodeSonar for Ada contributes to control flow analysis by identifying unreachable code,
-as well as conditions being always true or always false. This analysis is
-partial and needs to be completed with other techniques such as code review or
-code coverage analysis, which together will allow reaching higher levels of
-confidence.
+CodeSonar for Ada contributes to control flow analysis by identifying
+unreachable code, as well as conditions being always true or always false.
+This analysis is partial and needs to be completed with other techniques
+such as code review or code coverage analysis, which together will allow
+reaching higher levels of confidence.
 
 .. index:: single: GNATmetric; Support for Control Flow Analysis (D.8)
 
@@ -284,8 +286,8 @@ an element of an array. In this case, Ada allows expressing constraints in the
 specification, through preconditions, postconditions or predicates.
 
 Beyond this, Ada provides specific support for a subset of what's specified
-in the D.14 annex. CodeSonar for Ada and SPARK will allow the development of defensive
-programming in places where it makes the most sense.
+in the D.14 annex. CodeSonar for Ada and SPARK will allow the development of
+defensive programming in places where it makes the most sense.
 
 .. index:: single: GNATcheck; Support for Defensive Programming (D.14)
 
@@ -424,9 +426,9 @@ the literal :ada:`"Hello"` is immutable.
 Using CodeSonar for Ada and SPARK to drive defensive programming
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-CodeSonar for Ada and SPARK identify locations where there are potential run-time
-errors |mdash| in other words, places where code is either wrong or where
-defensive programming should be deployed. This helps guide the writing
+CodeSonar for Ada and SPARK identify locations where there are potential
+run-time errors |mdash| in other words, places where code is either wrong or
+where defensive programming should be deployed. This helps guide the writing
 of defensive code. For example:
 
 .. code-block:: ada
@@ -439,10 +441,10 @@ of defensive code. For example:
        ...
     end P;
 
-In the above code, there's a use of :ada:`V` as an index into the
-String :ada:`S`.
-CodeSonar for Ada and SPARK will detect the potential for a run-time error. Protection
-of the code to prevent the error can take several forms:
+In the above code, there's a use of :ada:`V` as an index into the String
+:ada:`S`. CodeSonar for Ada and SPARK will detect the potential for a
+run-time error. Protection of the code to prevent the error can take several
+forms:
 
 .. rubric:: Explicit test
 
@@ -481,11 +483,11 @@ is raised.
       ...
    end P;
 
-The main difference between CodeSonar for Ada and SPARK is that CodeSonar for Ada may miss some
-potential run-time errors (except when run only on small pieces of code if
-configured in "sound" mode), while SPARK requires the use of the appropriate
-Ada subset but is a sound technology (i.e., it will detect all potential
-run-time errors).
+The main difference between CodeSonar for Ada and SPARK is that
+CodeSonar for Ada may miss some potential run-time errors (except when run
+only on small pieces of code if configured in "sound" mode), while SPARK
+requires the use of the appropriate Ada subset but is a sound technology
+(i.e., it will detect all potential run-time errors).
 
 In general, the recommended Ada style is to use contracts instead of defensive
 code.
@@ -682,10 +684,11 @@ Impact Analysis (D.32)
 
 Identifying the effect of a change on an entire software component requires
 the combination of various techniques, including reviews, testing and static
-analysis. CodeSonar for Ada has specific features to identify the impact of a change
-from the perspective of potential run-time errors. It can establish a baseline
-with regard to potential failure analysis and filter only the potential
-defects that have been introduced or repaired following a change in the code.
+analysis. CodeSonar for Ada has specific features to identify the impact of
+a change from the perspective of potential run-time errors. It can establish
+a baseline with regard to potential failure analysis and filter only the
+potential defects that have been introduced or repaired following a change
+in the code.
 
 .. index:: single: GNAT Studio IDE; Support for Impact Analysis (D.32)
 

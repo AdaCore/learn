@@ -154,8 +154,8 @@ Defects and Vulnerability Analysis
 Qualification
 ^^^^^^^^^^^^^
 
-CodeSonar for Ada's defects and vulnerability analysis tool can be qualified at
-class T2.
+The defects and vulnerability analysis tool in CodeSonar for Ada can be
+qualified at class T2.
 It has a long cross-industry track record and has been qualified under other
 standards in the past, such as DO-178B/C as a verification tool/TQL5.
 
@@ -164,8 +164,8 @@ standards in the past, such as DO-178B/C as a verification tool/TQL5.
 Annex D References
 ^^^^^^^^^^^^^^^^^^
 
-CodeSonar for Ada's defects and vulnerability analysis tool can contribute to the
-deployment or implementation of the following techniques:
+The defects and vulnerability analysis tool in CodeSonar for Ada can
+contribute to the deployment or implementation of the following techniques:
 
 * D.2 Analyzable Programs
 * D.4 Boundary Value Analysis

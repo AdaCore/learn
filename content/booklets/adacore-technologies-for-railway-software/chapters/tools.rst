@@ -758,12 +758,11 @@ CodeSonar for Ada
 Defects and Vulnerability Analyzer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-CodeSonar for Ada features an Ada source code analyzer that detects run-time and logic
-errors. It assesses potential bugs and vulnerabilities before program
-execution, serving as an automated peer reviewer, helping to find errors
-easily at any stage of the development life-cycle. It helps improve code
-quality and makes it easier to perform safety and/or security
-analysis.
+CodeSonar for Ada features an Ada source code analyzer that detects run-time
+and logic errors. It assesses potential bugs and vulnerabilities before
+program execution, serving as an automated peer reviewer, helping to find
+errors easily at any stage of the development life-cycle. It helps improve
+code quality and makes it easier to perform safety and/or security analysis.
 
 The defects and vulnerability analyzer can detect several of the
 "Top 25 Most Dangerous Software Errors" in the Common Weakness Enumeration.

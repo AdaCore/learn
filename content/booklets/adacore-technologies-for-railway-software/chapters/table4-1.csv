@@ -4,7 +4,7 @@ component or a programming activity than an architecture activity per se, \
 but as it is recorded in this table, it's worth mentioning that the Ada \
 language provides several features addressing various objectives of \
 defensive programming techniques (e.g., exception handling). In addition, \
-CodeSonar for Ada and SPARK tools help identify pieces of code \
+CodeSonar for Ada and the SPARK tools help identify pieces of code \
 that should be protected by defensive code."
  Fault Detection & Diagnosis,D.26,R,R,No,
  Error Correcting Codes,D.19,|mdash|,|mdash|,No,
