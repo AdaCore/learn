@@ -226,9 +226,8 @@ Detailed design of real-time software {§5.5.2.5}
     pragma :ada:`Restrictions` produces a run-time check that detects
     attempts to perform allocations from a standard storage pool after
     elaboration (initialization). Depending on the program structure,
-    static analysis by CodeSonar for Ada's Defects and
-    Vulnerability Analyzer may be able to determine that this check
-    will never fail.
+    static analysis by the Defects and Vulnerability Analyzer in CodeSonar
+    for Ada may be able to determine that this check will never fail.
 
 Utilization of description techniques for the software behaviour {§5.5.2.6}
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -430,8 +429,9 @@ Verification of code {§5.8.3.5}
   * For criterion 3, the Defects and Vulnerability Analyzer (see
     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
     CodeSonar for Ada and/or SPARK Pro can help verify
-    correctness, and the GNATcheck utility included in CodeSonar for Ada (see :ref:`Space_Systems_SW_GNATcheck`)
-    can enforce conformance with a coding standard.
+    correctness, and the GNATcheck utility included in CodeSonar for Ada
+    (see :ref:`Space_Systems_SW_GNATcheck`) can enforce conformance with a
+    coding standard.
   * For criterion 5, Ada's strong typing and interface checks, as well as
     SPARK and GNATprove, can help show consistent interfaces and correct
     data flow.
@@ -640,8 +640,9 @@ Invoking of software engineering processes for modification implementation {§5.
     GNAT Pro for Ada and SPARK Pro, the developer
     can localize the impact of maintenance changes.
 
-  * CodeSonar for Ada and the GNAT Dynamic Analysis Suite can ensure that any modifications
-    meet the verification criteria applicable to the original software.
+  * CodeSonar for Ada and the GNAT Dynamic Analysis Suite can ensure that
+    any modifications meet the verification criteria applicable to the
+    original software.
 
 .. index:: single: ECSS-E-ST-40C compliance; §5.11 Software security process
 
@@ -654,7 +655,8 @@ Process implementation {|sect| 5.11.2}
 * "A software security management plan shall be produced documenting: ...
   7. the tools, methods and procedures to be used...." {|sect| 5.11.2a}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada and the GNAT Dynamic Analysis Suite, and the SPARK Pro toolset support the
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset support the
     software security management plan.
 
 .. _Space_Systems_SW_Software_security_analysis:
@@ -665,14 +667,16 @@ Software security analysis {|sect| 5.11.3}
 * "The methods to be used for the security analysis shall be identified
   as part of the planning of the project." {|sect| 5.11.3b}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada and the GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
     requirement. For example:
 
     * Ada's compile-time checks prevent unsafe practices such as
       treating an integer value as a pointer.
 
-    * The Defects and Vulnerability Analyzer in CodeSonar for Ada can detect a number of dangerous software errors in the
-      MITRE Corporation's Common Weakness Enumeration.
+    * The Defects and Vulnerability Analyzer in CodeSonar for Ada can detect
+      a number of dangerous software errors in the MITRE Corporation's
+      Common Weakness Enumeration.
 
     * The SPARK language and SPARK Pro can enforce security-related
       properties such as correct information flows and absence of
@@ -692,7 +696,8 @@ Security in the requirements baseline {|sect| 5.11.5.1}
   to be conducted.... Security verification and validation activities can
   include, for example, fuzzing tests...." {|sect| 5.11.5.1c}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada and the GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
     requirement.
 
 Security in the detailed design and implementation engineering {|sect| 5.11.5.3}
@@ -702,8 +707,9 @@ Security in the detailed design and implementation engineering {|sect| 5.11.5.3}
   validation activities to evaluate iteratively residual vulnerabilities and
   to reassess security risks." {|sect| 5.11.5.3b}
 
-  * The Ada and SPARK languages, CodeSonar for Ada and the GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this requirement. For
-    examples, see :ref:`Space_Systems_SW_Software_security_analysis`.
+  * The Ada and SPARK languages, CodeSonar for Ada, the GNAT Dynamic Analysis
+    Suite, and the SPARK Pro toolset help meet this requirement. For examples,
+    see :ref:`Space_Systems_SW_Software_security_analysis`.
 
 .. index:: single: ECSS-E-ST-40C compliance; Annex U: Software code verification
 

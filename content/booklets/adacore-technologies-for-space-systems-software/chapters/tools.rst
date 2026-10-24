@@ -821,9 +821,9 @@ category B (see :footcite:p:`Space_SW_AdaCore_Web_2019b`).
 Static Verification: CodeSonar for Ada
 --------------------------------------
 
-CodeSonar for Ada is a set of Ada static analysis tools that complement |gnatpro|
-for Ada. These tools can save time and effort in general during software
-development and verification, and they are useful in particular in
+CodeSonar for Ada is a set of Ada static analysis tools that complement
+|gnatpro| for Ada. These tools can save time and effort in general during
+software development and verification, and they are useful in particular in
 supporting compliance with ECSS standards.
 
 .. index:: single: CodeSonar for Ada; Defects and Vulnerability Analyzer
@@ -833,9 +833,9 @@ supporting compliance with ECSS standards.
 Defects and Vulnerability Analyzer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-One of the main tools in CodeSonar for Ada is an Ada source code analyzer that detects
-run-time and logic errors that can cause safety or security vulnerabilities
-in a codebase.
+One of the main tools in CodeSonar for Ada is an Ada source code analyzer
+that detects run-time and logic errors that can cause safety or security
+vulnerabilities in a codebase.
 This tool inspects the code for potential bugs before program execution,
 serving as an automated peer reviewer.
 It can be used on existing codebases, thereby

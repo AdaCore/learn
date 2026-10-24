@@ -44,7 +44,7 @@ Methods and tools {§5.6.1}
    {§5.6.1.1a}
 
   * The GNAT Pro for Ada environment and any supplemental tools that are
-    selected (e.g., CodeSonar for Ada and the GNAT Dynamic Analysis Suite, SPARK Pro)
+    selected (e.g., CodeSonar for Ada, GNAT Dynamic Analysis Suite, SPARK Pro)
     should be listed.
 
 * "The choice of development methods and tools shall be justified by
@@ -126,7 +126,7 @@ Handling of critical software {§6.2.3}
   {§6.2.3.2a}
 
   * Ada's pragma :ada:`Restrictions` and pragma :ada:`Profile`,
-    together with CodeSonar for Ada tool GNATcheck, can
+    together with GNATcheck from CodeSonar for Ada, can
     enforce a coding standard for Ada (in effect a 'safe
     subset'). See :ref:`Space_Systems_SW_GNAT_Pro_Enterprise` and
     :ref:`Space_Systems_SW_GNATcheck`.
@@ -168,7 +168,9 @@ Software security {§6.2.9}
 * "The supplier shall identify the methods and techniques for the software
   security analysis." {|sect| 6.2.9.3a}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada and the GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this requirement.
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
+    requirement.
 
 * "Based on the results of the software security analysis, the supplier shall
   apply engineering measures to reduce the number of security sensitive
