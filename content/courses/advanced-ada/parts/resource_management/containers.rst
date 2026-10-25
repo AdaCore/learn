@@ -216,8 +216,7 @@ can confirm this by running this example and seeing the
 
 An :ada:`Empty` function can also return a stored constant:
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty_Const switches=Compiler(-gnat2022);
-    :class: ada-compile
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty_Const switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
@@ -247,9 +246,22 @@ An :ada:`Empty` function can also return a stored constant:
 
     end Custom_Container_Aggregates;
 
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Container_Aggregates;
+    use  Custom_Container_Aggregates;
+
+    procedure Show_Container_Aggregate_Empty_Const is
+       A : constant T := [];
+    begin
+       Put_Line ("A = Empty_Const: " & Boolean'Image (A = Empty_Const));
+    end Show_Container_Aggregate_Empty_Const;
+
 Here, :ada:`Empty_Const` stores the empty value, and :ada:`Empty_Func` is an
 expression function that returns it. We complete the function in the private
 part, after the full declaration of the constant, so no package body is needed.
+Initializing :ada:`A` with :ada:`[]` calls :ada:`Empty_Func`; the program prints
+``A = Empty_Const: TRUE``.
 
 In addition to this, we can specify a signed integer parameter |mdash| which
 indicates the number of components |mdash| for the :ada:`Empty` function:
