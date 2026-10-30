@@ -214,19 +214,20 @@ can confirm this by running this example and seeing the
 :ada:`Calling Empty_Func` message, which we included in the body of the
 :ada:`Empty_Func` function.)
 
-We can also use a constant for the :ada:`Empty` element instead of a function:
+An :ada:`Empty` function can also return a stored constant:
 
-.. code:: ada no_button gnat=14.2.0-1 project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty_Const switches=Compiler(-gnat2022);
-    :class: ada-compile
+.. code:: ada run_button project=Courses.Advanced_Ada.Aggregates.Container_Aggregate_Empty_Const switches=Compiler(-gnat2022);
 
     package Custom_Container_Aggregates is
 
        type T is private
          with Aggregate =>
-           (Empty     => Empty_Const,
+           (Empty     => Empty_Func,
             Add_Named => Add_Named_Proc);
 
        Empty_Const : constant T;
+
+       function Empty_Func return T;
 
        procedure Add_Named_Proc
          (Cont  : in out T;
@@ -241,10 +242,27 @@ We can also use a constant for the :ada:`Empty` element instead of a function:
 
         Empty_Const : constant T := (Cnt => 0);
 
+        function Empty_Func return T is (Empty_Const);
+
     end Custom_Container_Aggregates;
 
-Here, we simply assign :ada:`Empty_Const` when an actual :ada:`Empty` is
-needed.
+    with Ada.Text_IO; use Ada.Text_IO;
+
+    with Custom_Container_Aggregates;
+    use  Custom_Container_Aggregates;
+
+    procedure Show_Container_Aggregate_Empty_Const is
+       A : constant T := [];
+    begin
+       Put_Line ("A = Empty_Const: "
+                 & Boolean'Image (A = Empty_Const));
+    end Show_Container_Aggregate_Empty_Const;
+
+Here, :ada:`Empty_Const` stores the empty value, and :ada:`Empty_Func` is an
+expression function that returns it. We complete the function in the private
+part, after the full declaration of the constant, so no package body is needed.
+Initializing :ada:`A` with :ada:`[]` calls :ada:`Empty_Func`; the program prints
+``A = Empty_Const: TRUE``.
 
 In addition to this, we can specify a signed integer parameter |mdash| which
 indicates the number of components |mdash| for the :ada:`Empty` function:
