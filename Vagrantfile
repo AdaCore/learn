@@ -110,7 +110,7 @@ $frontend = <<-SHELL
   source /vagrant/venv/bin/activate
   # Pinned like CI's setup-python pip-version input: pip itself is the one
   # tool that resolves the pinned packages below, so it needs a pin too.
-  pip3 install --upgrade pip==26.2.1
+  pip3 install --upgrade pip==26.2.2
   pip3 install -r /vagrant/frontend/requirements_frozen.txt
   pip3 install -e /vagrant/frontend/python/rst_code_example_pipeline
 
@@ -280,7 +280,7 @@ $epub = <<-SHELL
   source /vagrant/venv/bin/activate
   # Pinned like CI's setup-python pip-version input: pip itself is the one
   # tool that resolves the pinned packages below, so it needs a pin too.
-  pip3 install --upgrade pip==26.2.1
+  pip3 install --upgrade pip==26.2.2
   pip3 install -r /vagrant/frontend/requirements_frozen.txt
   pip3 install -e /vagrant/frontend/python/rst_code_example_pipeline
 
