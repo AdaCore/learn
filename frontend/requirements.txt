@@ -1,4 +1,4 @@
-coverage==7.15.2
+coverage==7.17.0
 docutils==0.23
 furo==2025.12.19
 graphviz==0.21
@@ -8,7 +8,7 @@ pillow==13.0.0
 pydot-ng==2.0.0
 Pygments==2.21.0
 pyparsing==3.3.3
-pyright==1.1.411
+pyright==1.1.414
 Sphinx==9.2.0
 sphinx-reredirects==1.1.0
 sphinxcontrib-bibtex==2.7.0
