@@ -254,7 +254,8 @@ An :ada:`Empty` function can also return a stored constant:
     procedure Show_Container_Aggregate_Empty_Const is
        A : constant T := [];
     begin
-       Put_Line ("A = Empty_Const: " & Boolean'Image (A = Empty_Const));
+       Put_Line ("A = Empty_Const: "
+                 & Boolean'Image (A = Empty_Const));
     end Show_Container_Aggregate_Empty_Const;
 
 Here, :ada:`Empty_Const` stores the empty value, and :ada:`Empty_Func` is an
