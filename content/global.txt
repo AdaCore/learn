@@ -46,7 +46,7 @@
 .. |do-331|   replace:: DO |nbhyphen| 331/ED  |nbhyphen| 218
 .. |do-332|   replace:: DO |nbhyphen| 332/ED  |nbhyphen| 217
 .. |do-333|   replace:: DO |nbhyphen| 333/ED  |nbhyphen| 216
-.. |gnatsas|  replace:: GNAT SAS
+.. |codesonar-for-ada|  replace:: CodeSonar for Ada
 .. |gnatdas|  replace:: GNAT DAS
 .. |gnatpro|  replace:: GNAT\ |nbsp|\ Pro
 

@@ -745,25 +745,24 @@ such as the potential targets for indirect calls, the stack requirements for
 external calls, and the maximal size for unbounded frames.
 
 
-.. index:: GNAT Static Analysis Suite (GNAT SAS)
+.. index:: CodeSonar for Ada
 
-.. _Railway_SW_GNAT_Static_Analysis_Suite:
+.. _Railway_SW_CodeSonar_for_Ada:
 
-GNAT Static Analysis Suite (GNAT SAS)
--------------------------------------
+CodeSonar for Ada
+-----------------
 
-.. index:: Defects and vulnerability analysis (in GNAT SAS)
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); Defects and vulnerability analysis
+.. index:: Defects and vulnerability analysis (in CodeSonar for Ada)
+.. index:: single: CodeSonar for Ada; Defects and vulnerability analysis
 
 Defects and Vulnerability Analyzer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GNAT SAS features an Ada source code analyzer that detects run-time and logic
-errors. It assesses potential bugs and vulnerabilities before program
-execution, serving as an automated peer reviewer, helping to find errors
-easily at any stage of the development life-cycle. It helps improve code
-quality and makes it easier to perform safety and/or security
-analysis.
+CodeSonar for Ada features an Ada source code analyzer that detects run-time
+and logic errors. It assesses potential bugs and vulnerabilities before
+program execution, serving as an automated peer reviewer, helping to find
+errors easily at any stage of the development life-cycle. It helps improve
+code quality and makes it easier to perform safety and/or security analysis.
 
 The defects and vulnerability analyzer can detect several of the
 "Top 25 Most Dangerous Software Errors" in the Common Weakness Enumeration.
@@ -773,7 +772,7 @@ GNAT Pro development environment.
 
 
 .. index:: GNATmetric
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATmetric
+.. index:: single: CodeSonar for Ada; GNATmetric
 
 GNATmetric
 ~~~~~~~~~~
@@ -785,7 +784,7 @@ facilitates satisfying the requirements of certain software development
 frameworks.
 
 .. index:: GNATcheck
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATcheck
+.. index:: single: CodeSonar for Ada; GNATcheck
 
 .. _Railway_SW_GNATcheck:
 

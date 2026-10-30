@@ -60,7 +60,7 @@ with two technology supplements (Object-Oriented Technology and Formal
 Methods).
 
 .. index:: GNATcheck
-.. index:: GNAT Static Analysis Suite (GNAT SAS)
+.. index:: CodeSonar for Ada
 .. index:: GNATcheck
 .. index:: GNATstack
 .. index:: GNAT Dynamic Analysis Suite (GNAT DAS)
@@ -74,9 +74,8 @@ toolchains, including support for Ada, C, C++, and Rust.
 Complementary tools support several verification activities for Ada:
 
 * GNATstack for stack checking (which also supports C),
-* the GNAT Static Analysis Suite, or GNAT SAS, for defect and
-  vulnerability detection, code standard checking (GNATcheck), and
-  code metrics generation (GNATmetric)
+* CodeSonar for Ada, providing defect and vulnerability detection, code
+  standard checking (GNATcheck), and code metrics generation (GNATmetric)
 * the GNAT Dynamic Analysis Suite, or GNAT DAS, for testing (GNATtest,
   TGen), structural code coverage analysis (GNATcoverage, which also
   supports C and C++), processor emulation (GNATemulator), and fuzzing
@@ -1233,9 +1232,8 @@ possible activities:
   requirements should define the expected behavior in case a pre- or
   postcondition is violated, for example to reset the application to a
   known safe state as soon as an inconsistency is detected.
-* **Static analysis or formal proof**. The :ref:`GNAT Static Analysis
-  Suite technology<Airborn_SW_GNAT_Static_Analysis_Suite>`) takes
-  preconditions into account as part of its analysis in detecting
+* **Static analysis or formal proof**. :ref:`Airborn_SW_CodeSonar_for_Ada`
+  takes preconditions into account as part of its analysis in detecting
   potential errors. It can be tuned based on whether the priority is
   on finding as many errors as possible, at the expense of false
   positives, or on "picking the low-hanging fruit": detecting defects
@@ -1352,12 +1350,12 @@ justification would then appear in the tool's report.
 
 .. index:: single: Use Case 1a: Traditional development process
            excluding OOT; Checking source code accuracy and
-           consistency with GNAT SAS
+           consistency with CodeSonar for Ada
 
-.. _Airborn_SW_Checking_source_code_accuracy_and_consistency_with_GNAT_SAS:
+.. _Airborn_SW_Checking_source_code_accuracy_and_consistency_with_CodeSonar_for_Ada:
 
-Checking source code accuracy and consistency with GNAT SAS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Checking source code accuracy and consistency with CodeSonar for Ada
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
@@ -1376,8 +1374,7 @@ Checking source code accuracy and consistency with GNAT SAS
 identifying a range of development errors that need to be
 prevented. Satisfying this objective requires a combination of
 reviews, analyses and tests, and tools may be used for some of these
-activities. The :ref:`GNAT Static Analysis Suite (GNAT SAS)
-<Airborn_SW_GNAT_Static_Analysis_Suite>` specifically targets issues
+activities. :ref:`Airborn_SW_CodeSonar_for_Ada` specifically targets issues
 that correspond to Ada exceptions, such as scalar overflow, range
 constraint violations, and array indexing errors. It also detects
 other errors including reads of uninitialized variables, useless

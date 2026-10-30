@@ -719,35 +719,35 @@ unbounded frames.
 
 TQL-5 qualification material can be made available for GNATstack.
 
-.. index:: GNAT Static Analysis Suite (GNAT SAS)
+.. index:: CodeSonar for Ada
 
-.. _Airborn_SW_GNAT_Static_Analysis_Suite:
+.. _Airborn_SW_CodeSonar_for_Ada:
 
-GNAT Static Analysis Suite (GNAT SAS)
--------------------------------------
+CodeSonar for Ada
+-----------------
 
-GNAT SAS is a stand-alone tool that runs on Windows and Linux
+CodeSonar for Ada is a static analysis toolset that runs on Windows and Linux
 platforms and may be used with any standard Ada compiler or fully
 integrated into the GNAT Pro development environment.
 
-.. index:: Defects and vulnerability analysis (in GNAT SAS)
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); Defects and
+.. index:: Defects and vulnerability analysis (in CodeSonar for Ada)
+.. index:: single: CodeSonar for Ada; Defects and
            vulnerability analysis
 
 Defects and vulnerability analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GNAT SAS features an Ada source code analyzer that detects run-time
+CodeSonar for Ada features an Ada source code analyzer that detects run-time
 and logic errors. It assesses potential bugs and vulnerabilities
 before program execution, serving as an automated peer reviewer,
 helping to find errors easily at any stage of the development
 life-cycle. It helps improve code quality and makes it easier to
-perform safety and/or security analysis. GNAT SAS can detect several
+perform safety and/or security analysis. CodeSonar for Ada can detect several
 of the "Top 25 Most Dangerous Software Errors" in the Common Weakness
 Enumeration.
 
 .. index:: GNATmetric
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATmetric
+.. index:: single: CodeSonar for Ada; GNATmetric
 
 GNATmetric
 ~~~~~~~~~~
@@ -759,7 +759,7 @@ information also facilitates satisfying the requirements of certain
 software development frameworks.
 
 .. index:: GNATcheck
-.. index:: single: GNAT Static Analysis Suite (GNAT SAS); GNATcheck
+.. index:: single: CodeSonar for Ada; GNATcheck
 
 .. _Airborn_SW_GNATcheck:
 

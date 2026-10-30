@@ -5,6 +5,6 @@ A.14."
  Cause Consequence Diagrams,D.6,R,R,No,
  Event Tree Analysis,D.22,R,R,No,
  Software Error Effect Analysis,D.25,R,HR,Yes,"GNAT Studio supports code \
-display and navigation. GNAT SAS can identify likely error locations in the \
+display and navigation. CodeSonar for Ada can identify likely error locations in the \
 code. These tools support both detection of potential software errors and \
 analysis throughout the code."

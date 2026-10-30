@@ -273,8 +273,8 @@ The entries in Tables A.4 and A.15 show that Ada is a Highly Recommended
 language at |sil1| through |sil4| and a Recommended language at the
 Basic Integrity level.
 Features that should be avoided can be detected and prevented by using
-AdaCore's GNATcheck tool in the GNAT Static Analysis Suite;
-see :ref:`Railway_SW_GNAT_Static_Analysis_Suite`.
+AdaCore's GNATcheck tool in CodeSonar for Ada;
+see :ref:`Railway_SW_CodeSonar_for_Ada`.
 
 .. index:: single: EN 50128; Annex B (Key software roles and responsibilities)
 

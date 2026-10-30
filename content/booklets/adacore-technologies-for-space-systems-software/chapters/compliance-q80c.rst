@@ -26,7 +26,7 @@ Quality requirements and quality models {§5.2.7}
   requirements" {§5.2.7.1a}
 
   * The GNATmetric tool (see :ref:`Space_Systems_SW_GNATmetric`) in
-    the GNAT Static Analysis Suite can show quality metrics related
+    CodeSonar for Ada can show quality metrics related
     to the source code structure.
 
   * The GNATdashboard IDE tool (see
@@ -44,7 +44,7 @@ Methods and tools {§5.6.1}
    {§5.6.1.1a}
 
   * The GNAT Pro for Ada environment and any supplemental tools that are
-    selected (e.g., GNAT Static and Dynamic Analysis Suites, SPARK Pro)
+    selected (e.g., CodeSonar for Ada, GNAT Dynamic Analysis Suite, SPARK Pro)
     should be listed.
 
 * "The choice of development methods and tools shall be justified by
@@ -100,7 +100,7 @@ Development environment selection {§5.6.2}
     *sustained branch* service for GNAT Pro for Ada Assurance supports
     criteria 4, 7 and 10. AdaCore tools come with source code and
     flexible licensing, mitigating the issues noted in criteria 11 and 12.
-    The GNAT Static Analysis Suite, SPARK, and the GNATfuzz tool in
+    CodeSonar for Ada, SPARK, and the GNATfuzz tool in
     the GNAT Dynamic Analysis Suite facilitate
     demonstrating the relevant security properties (criteria 13 and 14).
 
@@ -126,7 +126,7 @@ Handling of critical software {§6.2.3}
   {§6.2.3.2a}
 
   * Ada's pragma :ada:`Restrictions` and pragma :ada:`Profile`,
-    together with the GNAT Static Analysis Suite tool GNATcheck, can
+    together with GNATcheck from CodeSonar for Ada, can
     enforce a coding standard for Ada (in effect a 'safe
     subset'). See :ref:`Space_Systems_SW_GNAT_Pro_Enterprise` and
     :ref:`Space_Systems_SW_GNATcheck`.
@@ -139,7 +139,7 @@ Handling of critical software {§6.2.3}
 
   * GNATcoverage can report code coverage up to MC/DC at the source level.
 
-  * The Defects and Vulnerability Analyzer in the GNAT Static Analysis Suite
+  * The Defects and Vulnerability Analyzer in CodeSonar for Ada
     can detect unreachable code, including deactivated code.
 
   * The Ada language and the GNAT Pro Ada development environment allow
@@ -159,7 +159,7 @@ Verification {§6.2.6}
   ensure that the deactivated code cannot be activated or that its accidental
   activation cannot harm the operation of the system." {§6.2.6.5a}
 
-  * The Defects and Vulnerability Analyzer in the GNAT Static Analysis Suite
+  * The Defects and Vulnerability Analyzer in CodeSonar for Ada
     can detect unreachable code, including deactivated code.
 
 Software security {§6.2.9}
@@ -168,8 +168,9 @@ Software security {§6.2.9}
 * "The supplier shall identify the methods and techniques for the software
   security analysis." {|sect| 6.2.9.3a}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, the GNAT Static and Dynamic
-    Analysis Suites, and the SPARK Pro toolset help meet this requirement.
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
+    requirement.
 
 * "Based on the results of the software security analysis, the supplier shall
   apply engineering measures to reduce the number of security sensitive
@@ -423,7 +424,7 @@ AdaCore's technologies support the requirements in ECSS-Q-ST-80C:
     +-----------------------------+-------------+-------------+-------------+-------------+-------------+-------------+
     | SPARK Pro                   | |blankcell| | |check|     | |check|     | |blankcell| | |check|     | |check|     |
     +-----------------------------+-------------+-------------+-------------+-------------+-------------+-------------+
-    | GNAT Static Analysis Suite  | |blankcell| | |check|     | |check|     | |check|     | |check|     | |blankcell| |
+    | CodeSonar for Ada           | |blankcell| | |check|     | |check|     | |check|     | |check|     | |blankcell| |
     +-----------------------------+-------------+-------------+-------------+-------------+-------------+-------------+
     | GNAT Dynamic Analysis Suite | |blankcell| | |check|     | |check|     | |check|     | |check|     | |check|     |
     +-----------------------------+-------------+-------------+-------------+-------------+-------------+-------------+

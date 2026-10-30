@@ -9,7 +9,7 @@ code size, comment percentage, cyclomatic complexity, unit nesting, and \
 loop nesting. These can then be compared with standards."
  Traceability,D.58,HR,M,No,
  Software Error Effect Analysis,D.25,R,HR,Yes,"GNAT Studio supports code \
-display and navigation. GNAT SAS can identify likely error locations in the \
+display and navigation. CodeSonar for Ada can identify likely error locations in the \
 code. This supports potential software error detection and analysis \
 throughout the code."
  Test Coverage for code,Table A.21,HR,HR,Yes,See Table A.21

@@ -63,7 +63,7 @@ it.  Verification uses tools that perform static analysis.  These can take
 various forms. They include tools that check types and enforce visibility
 rules, such as the compiler, in addition to those that perform more complex
 reasoning, such as abstract interpretation, as done by a tool like the
-`GNAT Static Analysis Suite <https://www.adacore.com/static-analysis-suite>`_
+`CodeSonar for Ada <https://www.adacore.com/codesonar-for-ada>`_
 from AdaCore. The tools that come with SPARK perform two different forms
 of static analysis:
 

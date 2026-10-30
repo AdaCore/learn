@@ -5,7 +5,7 @@
    SPARK language,     |blankcell|,  |check|  , |check|
    GNAT Pro for Ada,   |check|    ,  |check|  , |check|
    SPARK Pro,          |check|    ,  |check|  , |check|
-   GNAT SAS,           |check|    ,  |check|  , |check|
+   CodeSonar for Ada,  |check|    ,  |check|  , |check|
    GNAT DAS,           |check|    ,  |check|  , |check|
    GNAT Pro Assurance, |check|    ,  |check|  , |check|
    IDE,                |check|    ,  |check|  , |check|

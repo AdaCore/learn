@@ -204,7 +204,7 @@ Detailed design of real-time software {§5.5.2.5}
     cannot change between the time that a task evaluates the state
     condition and when it executes the code based on that state.
     Other race conditions can be detected by the Defects and Vulnerability
-    Analyzer in the GNAT Static Analysis Suite.
+    Analyzer in CodeSonar for Ada.
 
 * "The supplier shall document and justify the use of dynamic allocation
   of resources." {§5.5.2.5d}
@@ -226,9 +226,8 @@ Detailed design of real-time software {§5.5.2.5}
     pragma :ada:`Restrictions` produces a run-time check that detects
     attempts to perform allocations from a standard storage pool after
     elaboration (initialization). Depending on the program structure,
-    static analysis by the GNAT Static Analysis Suite's Defects and
-    Vulnerability Analyzer may be able to determine that this check
-    will never fail.
+    static analysis by the Defects and Vulnerability Analyzer in CodeSonar
+    for Ada may be able to determine that this check will never fail.
 
 Utilization of description techniques for the software behaviour {§5.5.2.6}
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -329,7 +328,7 @@ Development and documentation of a software validation specification with respec
 
   * The Defects and Vulnerability Analyzer (see
     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
-    the GNAT Static Analysis Suite and/or SPARK Pro may be able to
+    CodeSonar for Ada and/or SPARK Pro may be able to
     show that a run-time check will always succeed and that no test
     case will trigger a failure.
 
@@ -360,7 +359,7 @@ Development and documentation of a software validation specification with respec
 
   * The Defects and Vulnerability Analyzer (see
     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
-    the GNAT Static Analysis Suite and/or SPARK Pro may be able to
+    CodeSonar for Ada and/or SPARK Pro may be able to
     show that a run-time check will always succeed and that no test
     case will trigger a failure.
 
@@ -429,19 +428,19 @@ Verification of code {§5.8.3.5}
     help meet criterion 2.
   * For criterion 3, the Defects and Vulnerability Analyzer (see
     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
-    the GNAT Static Analysis Suite and/or SPARK Pro can help verify
-    correctness, and the GNATcheck utility included in the GNAT
-    Static Analysis Suite (see :ref:`Space_Systems_SW_GNATcheck`)
-    can enforce conformance with a coding standard.
+    CodeSonar for Ada and/or SPARK Pro can help verify
+    correctness, and the GNATcheck utility included in CodeSonar for Ada
+    (see :ref:`Space_Systems_SW_GNATcheck`) can enforce conformance with a
+    coding standard.
   * For criterion 5, Ada's strong typing and interface checks, as well as
     SPARK and GNATprove, can help show consistent interfaces and correct
     data flow.
   * The Defects and Vulnerability Analyzer (see
     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
-    the GNAT Static Analysis Suite, SPARK Pro, and the standard
+    CodeSonar for Ada, SPARK Pro, and the standard
     semantic checks performed by the GNAT Pro compiler can help meet
     criterion 6.
-  * The GNAT Static Analysis Suite and SPARK / GNATprove can statically
+  * CodeSonar for Ada and SPARK / GNATprove can statically
     detect potential run-time errors and thereby help meet criterion 7.
   * Ada's exception handling facility can help meet criterion 8.
 
@@ -509,7 +508,7 @@ Verification of code {§5.8.3.5}
 
   * The Defects and Vulnerability Analyzer (see
     :ref:`Space_Systems_SW_Defects_and_Vulnerability_Analyzer`) in
-    the GNAT Static Analysis Suite will detect such errors as well as
+    CodeSonar for Ada will detect such errors as well as
     many others, including suspicious constructs that, although
     legitimate Ada, are likely logic errors.
 
@@ -641,8 +640,9 @@ Invoking of software engineering processes for modification implementation {§5.
     GNAT Pro for Ada and SPARK Pro, the developer
     can localize the impact of maintenance changes.
 
-  * The GNAT Static and Dynamic Analysis Suites can ensure that any modifications
-    meet the verification criteria applicable to the original software.
+  * CodeSonar for Ada and the GNAT Dynamic Analysis Suite can ensure that
+    any modifications meet the verification criteria applicable to the
+    original software.
 
 .. index:: single: ECSS-E-ST-40C compliance; §5.11 Software security process
 
@@ -655,8 +655,8 @@ Process implementation {|sect| 5.11.2}
 * "A software security management plan shall be produced documenting: ...
   7. the tools, methods and procedures to be used...." {|sect| 5.11.2a}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, the GNAT Static and
-    Dynamic Analysis Suites, and the SPARK Pro toolset support the
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset support the
     software security management plan.
 
 .. _Space_Systems_SW_Software_security_analysis:
@@ -667,16 +667,16 @@ Software security analysis {|sect| 5.11.3}
 * "The methods to be used for the security analysis shall be identified
   as part of the planning of the project." {|sect| 5.11.3b}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, the GNAT Static and
-    Dynamic Analysis Suites, and the SPARK Pro toolset help meet this
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
     requirement. For example:
 
     * Ada's compile-time checks prevent unsafe practices such as
       treating an integer value as a pointer.
 
-    * The Defects and Vulnerability Analyzer in the GNAT Static Analysis
-      Suite can detect a number of dangerous software errors in the
-      MITRE Corporation's Common Weakness Enumeration.
+    * The Defects and Vulnerability Analyzer in CodeSonar for Ada can detect
+      a number of dangerous software errors in the MITRE Corporation's
+      Common Weakness Enumeration.
 
     * The SPARK language and SPARK Pro can enforce security-related
       properties such as correct information flows and absence of
@@ -696,8 +696,8 @@ Security in the requirements baseline {|sect| 5.11.5.1}
   to be conducted.... Security verification and validation activities can
   include, for example, fuzzing tests...." {|sect| 5.11.5.1c}
 
-  * The Ada and SPARK languages, GNAT Pro for Ada, the GNAT Static and
-    Dynamic Analysis Suites, and the SPARK Pro toolset help meet this
+  * The Ada and SPARK languages, GNAT Pro for Ada, CodeSonar for Ada, the
+    GNAT Dynamic Analysis Suite, and the SPARK Pro toolset help meet this
     requirement.
 
 Security in the detailed design and implementation engineering {|sect| 5.11.5.3}
@@ -707,9 +707,9 @@ Security in the detailed design and implementation engineering {|sect| 5.11.5.3}
   validation activities to evaluate iteratively residual vulnerabilities and
   to reassess security risks." {|sect| 5.11.5.3b}
 
-  * The Ada and SPARK languages, the GNAT Static and Dynamic Analysis
-    Suites, and the SPARK Pro toolset help meet this requirement. For
-    examples, see :ref:`Space_Systems_SW_Software_security_analysis`.
+  * The Ada and SPARK languages, CodeSonar for Ada, the GNAT Dynamic Analysis
+    Suite, and the SPARK Pro toolset help meet this requirement. For examples,
+    see :ref:`Space_Systems_SW_Software_security_analysis`.
 
 .. index:: single: ECSS-E-ST-40C compliance; Annex U: Software code verification
 
@@ -772,32 +772,32 @@ technologies help meet these requirements:
     |                         | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 2                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check [#rtcheck]_             |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 3                       | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | GNATcheck (in GNAT Static Analysis Suite)                     | User-defined rule                      |
+    |                         | GNATcheck (in CodeSonar for Ada)                              | User-defined rule                      |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | SPARK language, SPARK Pro                                     | Static check                           |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 4                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Static check                           |
     |                         | SPARK language, SPARK Pro                                     |                                        |
     |                         +---------------------------------------------------------------+----------------------------------------+
-    |                         | GNATcheck (in GNAT Static Analysis Suite)                     | User-defined rule                      |
+    |                         | GNATcheck (in CodeSonar for Ada)                              | User-defined rule                      |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 5                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Static check                           |
     |                         | SPARK language, SPARK Pro                                     |                                        |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 6                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Static check                           |
     |                         | SPARK language, SPARK Pro                                     |                                        |
@@ -806,25 +806,25 @@ technologies help meet these requirements:
     |                         | SPARK language, SPARK Pro                                     |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 8                       | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 9                       | Ada language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check [#rtcheck]_             |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 10                      | SPARK language, SPARK Pro                                     | Static check                           |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 11                      | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 12                      | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     |                         +---------------------------------------------------------------+----------------------------------------+
     |                         | Ada Language, GNAT Pro for Ada, GNAT Pro Assurance            | Run-time check [#memleak]_             |
     |                         +---------------------------------------------------------------+----------------------------------------+
@@ -834,7 +834,7 @@ technologies help meet these requirements:
     |                         | SPARK language, SPARK Pro                                     |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
     | 14                      | Defects and Vulnerability Analyzer                            | Static check [#stcheck]_               |
-    |                         | (in GNAT Static Analysis Suite)                               |                                        |
+    |                         | (in CodeSonar for Ada)                                        |                                        |
     +-------------------------+---------------------------------------------------------------+----------------------------------------+
 
 .. [#rtcheck] Depending on the source code, the GNAT Pro compiler may be
@@ -884,7 +884,7 @@ AdaCore's technologies support the requirements in ECSS-E-ST-40C:
     +-----------------------------+-------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+---------+
     | SPARK Pro                   | |check|     | |check|    | |check|     |             | |check|     |             | |check|      | |check|      | |check| |
     +-----------------------------+-------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+---------+
-    | GNAT Static Analysis Suite  |             | |check|    | |check|     |             | |check|     |             | |check|      | |check|      | |check| |
+    | CodeSonar for Ada           |             | |check|    | |check|     |             | |check|     |             | |check|      | |check|      | |check| |
     +-----------------------------+-------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+---------+
     | GNAT Dynamic Analysis Suite |             | |check|    | |check|     |             | |check|     |             | |check|      | |check|      |         |
     +-----------------------------+-------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+---------+

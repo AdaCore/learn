@@ -180,7 +180,7 @@ reflects the current (2025) versions of |E-ST-40C|, |Q-ST-80C|, and AdaCore's
 offerings.
 Among other updates and enhancements to the company's products, the static
 analysis tools supplementing the |gnatpro| development environment have been
-integrated into a cohesive toolset (the *GNAT Static Analysis Suite*).
+integrated into a cohesive toolset (*CodeSonar for Ada*).
 The dynamic analysis tools have likewise been consolidated, and the resulting
 *GNAT Dynamic Analysis Suite* has introduced a fuzzing tool |mdash| *GNATfuzz*
 |mdash| which exercises the software with invalid input and checks for
