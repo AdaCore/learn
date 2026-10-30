@@ -31,7 +31,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
         # Pinned like the packages it installs; the action applies it as an
         # exact `pip==` requirement.
-        pip-version: '26.2.1'
+        pip-version: '26.2.2'
         cache: 'pip'
         # Named explicitly: the default pattern matches `requirements.txt`,
         # which is not the file the workflow installs, so the key would not
