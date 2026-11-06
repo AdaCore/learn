@@ -243,8 +243,8 @@ blocks of statements have explicit :ada:`begin` and :ada:`end` markers, which
 prevents mistakes that are possible in C. The SPARK (also Ada) version of the
 above C code is as follows:
 
-.. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
-    :class: ada-compile, ada-prove-flow-report-all
+.. code:: ada prove_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
+    :class: ada-expect-prove-error
 
     function Func return Integer;
 
@@ -258,6 +258,33 @@ above C code is as follows:
        end loop;
        return 0;
     end Func;
+
+This code compiles successfully, but GNATprove cannot prove that :ada:`Func`
+terminates. It reports that the loop might be nonterminating, even though
+:ada:`return 0` exits the function during the first iteration.
+
+We can help GNATprove by adding a :ada:`Loop_Variant` pragma. A decreasing
+loop variant must have a smaller value on each subsequent iteration. Here,
+we can use the constant :ada:`1` because the loop never reaches a second
+iteration on which its value would have to decrease:
+
+.. code:: ada prove_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon_With_Loop_Variant
+
+    function Func return Integer;
+
+    function Func return Integer is
+    begin
+       if False then
+          return 1;
+       end if;
+       while True loop
+          pragma Loop_Variant (Decreases => 1);
+          return 0;
+       end loop;
+       return 0;
+    end Func;
+
+GNATprove can now prove that :ada:`Func` terminates.
 
 Avoiding Complex Switch Statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
