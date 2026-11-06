@@ -1158,11 +1158,25 @@ not using ``-gnata``) that ensure assertions are ignored.
 Example #2
 ~~~~~~~~~~
 
-Instead of using a ghost function, :ada:`Get_Model`, to retrieve the contents
-of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
+Instead of constructing a model each time we call :ada:`Get_Model`, let's
+store one in a global ghost variable, :ada:`Model`. This record holds the
+buffer's elements and their number. When the buffer changes, we must update
+:ada:`Model` too.
 
-.. code:: ada no_button gnat=15.1.0-2 gnatprove=15.1.0-1 gprbuild=25.0.0-1 project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
-    :class: ada-expect-compile-error, ada-expect-prove-error, ada-compile, ada-prove
+Here we'll focus on the length. The function :ada:`Valid_Model` checks that
+the model's length agrees with the buffer's internal :ada:`Length`. Since
+this function reads ghost data and is used in contracts, we mark it as
+:ada:`Ghost`.
+
+We require this agreement before and after :ada:`Push_Last`. The
+postcondition also requires the model's length to increase by one. Keeping
+:ada:`Valid_Model` true after the call lets us use the model again for a
+later push, provided the buffer still has room.
+
+Our first attempt updates only the buffer:
+
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_02
+    :class: ada-expect-prove-error
 
     package Ring_Buffer is
 
@@ -1179,12 +1193,13 @@ of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
 
        Model : Model_Type with Ghost;
 
-       function Valid_Model return Boolean;
+       function Valid_Model return Boolean with Ghost;
 
        procedure Push_Last (E : Natural) with
          Pre  => Valid_Model
            and then Model.Length < Max_Size,
-         Post => Model.Length = Model.Length'Old + 1;
+         Post => Valid_Model
+           and then Model.Length = Model.Length'Old + 1;
 
     end Ring_Buffer;
 
@@ -1209,18 +1224,17 @@ of the ring buffer, we're now using a global ghost variable, :ada:`Model`.
 
     end Ring_Buffer;
 
-This example isn't correct. :ada:`Model`, which is a ghost variable, must not
-influence the return value of the normal function :ada:`Valid_Model`. Since
-:ada:`Valid_Model` is only used in specifications, we should have marked it as
-:ada:`Ghost`. Another problem is that :ada:`Model` needs to be updated inside
-:ada:`Push_Last` to reflect the changes to the ring buffer.
+GNATprove can't prove the postcondition because :ada:`Model` hasn't been
+updated. For example, after pushing an element into an empty buffer,
+:ada:`Length` is one, but the model's length is still zero. The two lengths
+no longer agree, so :ada:`Valid_Model` is false.
 
 
 Example #3
 ~~~~~~~~~~
 
-Let's mark :ada:`Valid_Model` as :ada:`Ghost` and update :ada:`Model` inside
-:ada:`Push_Last`.
+Let's update :ada:`Model` after updating the buffer. We increase its length
+and append :ada:`E` to its contents:
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_03
 
@@ -1244,7 +1258,8 @@ Let's mark :ada:`Valid_Model` as :ada:`Ghost` and update :ada:`Model` inside
        procedure Push_Last (E : Natural) with
          Pre  => Valid_Model
            and then Model.Length < Max_Size,
-         Post => Model.Length = Model.Length'Old + 1;
+         Post => Valid_Model
+           and then Model.Length = Model.Length'Old + 1;
 
     end Ring_Buffer;
 
@@ -1271,19 +1286,24 @@ Let's mark :ada:`Valid_Model` as :ada:`Ghost` and update :ada:`Model` inside
 
     end Ring_Buffer;
 
-This example is correct. The ghost variable :ada:`Model` can be referenced
-both from the body of the ghost function :ada:`Valid_Model` and the non-ghost
-procedure :ada:`Push_Last` as long as it's only used in ghost statements.
+GNATprove can now prove the postcondition. The model's length has increased
+by one and agrees with the buffer's length after the push.
+
+The assignment to :ada:`Model` is a ghost statement. We can read ghost data
+inside this statement even though :ada:`Push_Last` is a normal procedure.
+The assignment changes only the ghost model; the code updating the buffer
+uses normal data.
 
 
 Example #4
 ~~~~~~~~~~
 
-We're now modifying :ada:`Push_Last` to share the computation of the new
-length between the operational and ghost code.
+We now try to share the computation of the new length between the buffer
+and its model. We compute :ada:`New_Length` from :ada:`Model.Length`, so we
+mark this constant as :ada:`Ghost`. We then try to use it for both updates:
 
-.. code:: ada no_button gnat=15.1.0-2 gnatprove=15.1.0-1 gprbuild=25.0.0-1 project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
-    :class: ada-expect-prove-error, ada-compile, ada-prove
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_04
+    :class: ada-expect-prove-error
 
     package Ring_Buffer is
 
@@ -1305,7 +1325,8 @@ length between the operational and ghost code.
        procedure Push_Last (E : Natural) with
          Pre  => Valid_Model
            and then Model.Length < Max_Size,
-         Post => Model.Length = Model.Length'Old + 1;
+         Post => Valid_Model
+           and then Model.Length = Model.Length'Old + 1;
 
     end Ring_Buffer;
 
@@ -1319,7 +1340,7 @@ length between the operational and ghost code.
           (Model.Content'Length = Length);
 
        procedure Push_Last (E : Natural) is
-          New_Length : constant Length_Range := Model.Length + 1;
+          New_Length : constant Length_Range := Model.Length + 1 with Ghost;
        begin
           if First + Length <= Max_Size then
              Content (First + Length) := E;
@@ -1333,20 +1354,19 @@ length between the operational and ghost code.
 
     end Ring_Buffer;
 
-This example isn't correct. We didn't mark local constant :ada:`New_Length` as
-:ada:`Ghost`, so it can't be computed from the value of ghost variable
-:ada:`Model`. If we made :ada:`New_Length` a ghost constant, the compiler would
-report the problem on the assignment from :ada:`New_Length` to :ada:`Length`. The
-correct solution here is to compute :ada:`New_Length` from the value of the
-non-ghost variable :ada:`Length`.
+GNATprove rejects the assignment :ada:`Length := New_Length`. The constant
+is ghost, but :ada:`Length` is a normal variable: the buffer's normal state
+must not depend on ghost data. We can use :ada:`New_Length` to update
+:ada:`Model`, but not to update :ada:`Length`.
 
 
 Example #5
 ~~~~~~~~~~
 
-Let's move the code updating :ada:`Model` inside a local ghost procedure,
-:ada:`Update_Model`, but still using a local variable, :ada:`New_Length`, to
-compute the length.
+We can share the computation by starting from normal data. Let's compute
+:ada:`New_Length` from :ada:`Length` and remove the :ada:`Ghost` aspect from
+the constant. Both the normal assignment and the ghost assignment can use
+this value:
 
 .. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_05
 
@@ -1370,7 +1390,75 @@ compute the length.
        procedure Push_Last (E : Natural) with
          Pre  => Valid_Model
            and then Model.Length < Max_Size,
-         Post => Model.Length = Model.Length'Old + 1;
+         Post => Valid_Model
+           and then Model.Length = Model.Length'Old + 1;
+
+    end Ring_Buffer;
+
+    package body Ring_Buffer is
+
+       Content : Nat_Array (1 .. Max_Size) := (others => 0);
+       First   : Index_Range               := 1;
+       Length  : Length_Range              := 0;
+
+       function Valid_Model return Boolean is
+          (Model.Content'Length = Length);
+
+       procedure Push_Last (E : Natural) is
+          New_Length : constant Length_Range := Length + 1;
+       begin
+          if First + Length <= Max_Size then
+             Content (First + Length) := E;
+          else
+             Content (Length - Max_Size + First) := E;
+          end if;
+          Length := New_Length;
+          Model := (Length  => New_Length,
+                    Content => Model.Content & E);
+       end Push_Last;
+
+    end Ring_Buffer;
+
+This version is correct, and GNATprove can prove the postcondition. The
+buffer and its model use the same new length, computed from normal state.
+
+
+Example #6
+~~~~~~~~~~
+
+Another way to organize the updates from Example #3 is to place the model
+maintenance in a local ghost procedure. :ada:`Push_Last` updates the buffer's
+length, then calls :ada:`Update_Model` to update the ghost model.
+
+Here the normal code and the ghost procedure each compute their own new
+length. The constant :ada:`New_Length` is local to :ada:`Update_Model`;
+since the procedure is ghost, the constant doesn't need its own
+:ada:`Ghost` aspect:
+
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_06
+
+    package Ring_Buffer is
+
+       Max_Size : constant := 100;
+       subtype Length_Range is Natural range 0 .. Max_Size;
+       subtype Index_Range  is Natural range 1 .. Max_Size;
+
+       type Nat_Array is array (Positive range <>) of Natural;
+
+       type Model_Type (Length : Length_Range := 0) is record
+          Content : Nat_Array (1 .. Length);
+       end record
+         with Ghost;
+
+       Model : Model_Type with Ghost;
+
+       function Valid_Model return Boolean with Ghost;
+
+       procedure Push_Last (E : Natural) with
+         Pre  => Valid_Model
+           and then Model.Length < Max_Size,
+         Post => Valid_Model
+           and then Model.Length = Model.Length'Old + 1;
 
     end Ring_Buffer;
 
@@ -1404,21 +1492,22 @@ compute the length.
 
     end Ring_Buffer;
 
-Everything's fine here. :ada:`Model` is only accessed inside :ada:`Update_Model`,
-itself a ghost procedure, so it's fine to declare local variable
-:ada:`New_Length` without the :ada:`Ghost` aspect: everything inside a ghost
-procedure body is ghost. Moreover, we don't need to add any contract to
-:ada:`Update_Model`: it's inlined by GNATprove because it's a local procedure
-without a contract.
+GNATprove can prove the postcondition with this organization too. The
+assignment updating :ada:`Model` is inside the ghost procedure
+:ada:`Update_Model`, and the normal code updates :ada:`Length` independently.
 
-Example #6
+We don't need to add a contract to :ada:`Update_Model`: GNATprove inlines
+this local procedure because it has no contract, analyzing its body in the
+context of the call.
+
+Example #7
 ~~~~~~~~~~
 
 The function :ada:`Max_Array` takes two arrays of the same length (but not
 necessarily with the same bounds) as arguments and returns an array with
 each entry being the maximum values of both arguments at that index.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_06
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_07
     :class: ada-expect-prove-error
 
     package Array_Util is
@@ -1458,14 +1547,14 @@ iterations. To get more precise results, we need to provide a loop
 invariant.
 
 
-Example #7
+Example #8
 ~~~~~~~~~~
 
 Let's add a loop invariant that states that :ada:`J` stays in the index range
 of :ada:`B` and let's protect the increment to :ada:`J` by checking that it's not
 already the maximal integer value.
 
-.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_07
+.. code:: ada prove_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_08
     :class: ada-expect-prove-error
 
     package Array_Util is
@@ -1509,14 +1598,14 @@ need a more precise invariant, linking :ada:`J` to the value of the loop index
 :ada:`I`, like :ada:`J = I - A'First + B'First`.
 
 
-Example #8
+Example #9
 ~~~~~~~~~~
 
 We now consider a version of :ada:`Max_Array` which takes arguments that have
 the same bounds. We want to prove that :ada:`Max_Array` returns an array of
 the maximum values of both its arguments at each index.
 
-.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_08
+.. code:: ada prove_button run_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_09
     :class: ada-expect-prove-error, ada-run-expect-failure
 
     package Array_Util is
@@ -1567,15 +1656,15 @@ iteration, :ada:`R` contains the maximum of :ada:`A` and :ada:`B` only until
 :ada:`I - 1` because the :ada:`I`'th index wasn't yet handled.
 
 
-Example #9
-~~~~~~~~~~
+Example #10
+~~~~~~~~~~~
 
 We now consider a procedural version of :ada:`Max_Array` which updates its
 first argument instead of returning a new array. We want to prove that
 :ada:`Max_Array` sets the maximum values of both its arguments into each index
 in its first argument.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_09
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_10
 
     package Array_Util is
 
@@ -1614,12 +1703,12 @@ Everything is proved. The first loop invariant states that the values of
 entry.  This is the frame condition of the loop.
 
 
-Example #10
+Example #11
 ~~~~~~~~~~~
 
 Let's remove the frame condition from the previous example.
 
-.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_10
+.. code:: ada prove_report_all_button project=Courses.Intro_To_Spark.Proof_of_Functional_Correctness.Example_11
 
     package Array_Util is
 
