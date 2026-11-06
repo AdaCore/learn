@@ -1026,10 +1026,12 @@ can be computed by GNATprove.
 Example #6
 ~~~~~~~~~~
 
-Let's consider yet another version of our abstract stack unit.
+Let's return to our :ada:`Stack` package. We want :ada:`Push` to leave the
+stack unchanged if it is full, and to put :ada:`E` on top otherwise. We
+might try to express this directly using the state abstraction
+:ada:`The_Stack`:
 
-.. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.Intro_To_Spark.State_Abstraction.Example_06
-    :class: ada-compile, ada-prove-flow, ada-expect-compile-error, ada-expect-prove-error
+.. code:: ada no_button project=Courses.Intro_To_Spark.State_Abstraction.Example_06
 
     package Stack with
       Abstract_State => The_Stack
@@ -1069,9 +1071,14 @@ Let's consider yet another version of our abstract stack unit.
        function  Is_Empty return Boolean is (Top = 0);
     end Stack;
 
-This example isn't correct. There's a compilation error in :ada:`Push`'s
-postcondition: :ada:`The_Stack` is a state abstraction, not a variable, and
-therefore can't be used in an expression.
+This example isn't correct. :ada:`The_Stack` is a state abstraction, not a
+variable, so it can't be used in an expression. In particular, we can't
+compare its current value with :ada:`The_Stack'Old` in :ada:`Push`'s
+postcondition.
+
+The body of :ada:`Push` also needs to handle the full-stack case: it
+currently increments :ada:`Top` unconditionally. We'll correct both
+problems in the next example.
 
 
 Example #7
