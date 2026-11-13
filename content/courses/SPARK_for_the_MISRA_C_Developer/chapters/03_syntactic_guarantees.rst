@@ -244,7 +244,6 @@ prevents mistakes that are possible in C. The SPARK (also Ada) version of the
 above C code is as follows:
 
 .. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
-    :class: ada-expect-prove-error
 
     function Func return Integer;
 
@@ -254,14 +253,15 @@ above C code is as follows:
           return 1;
        end if;
        while True loop
+          pragma Loop_Variant (Decreases => 1);
           return 0;
        end loop;
        return 0;
     end Func;
 
-(Note that GNATprove cannot prove that the loop terminates. Adding
-:ada:`pragma Loop_Variant (Decreases => 1)` in the :ada:`while True loop`
-solves the problem.)
+Note that the :ada:`Loop_Variant` pragma allows GNATprove to prove that the
+loop terminates, as it requires its value to decrease between iterations,
+which rules out a second iteration for the constant value :ada:`1`.
 
 
 Avoiding Complex Switch Statements
