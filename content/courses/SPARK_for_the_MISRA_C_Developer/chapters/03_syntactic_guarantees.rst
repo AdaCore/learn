@@ -259,6 +259,11 @@ above C code is as follows:
        return 0;
     end Func;
 
+(Note that GNATprove cannot prove that the loop terminates. Adding
+:ada:`pragma Loop_Variant (Decreases => 1)` in the :ada:`while True loop`
+solves the problem.)
+
+
 Avoiding Complex Switch Statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
