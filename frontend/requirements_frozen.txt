@@ -39,7 +39,7 @@ PyYAML==6.0.3
 requests==2.34.2
 roman-numerals==4.1.0
 snowballstemmer==3.1.1
-soupsieve==3.0.4
+soupsieve==4.0
 Sphinx==9.2.0
 sphinx-basic-ng==1.0.0b2
 sphinx-reredirects==1.1.0
