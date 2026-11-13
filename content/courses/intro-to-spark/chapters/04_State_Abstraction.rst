@@ -1028,8 +1028,8 @@ Example #6
 
 Let's consider yet another version of our abstract stack unit.
 
-.. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.Intro_To_Spark.State_Abstraction.Example_06
-    :class: ada-compile, ada-prove-flow, ada-expect-compile-error, ada-expect-prove-error
+.. code:: ada compile_button prove_flow_button project=Courses.Intro_To_Spark.State_Abstraction.Example_06
+    :class: ada-expect-compile-error, ada-expect-prove-error
 
     package Stack with
       Abstract_State => The_Stack
@@ -1045,7 +1045,9 @@ Let's consider yet another version of our abstract stack unit.
        procedure Push (E : Element) with
          Post =>
            not Is_Empty and
-           (if Is_Full'Old then The_Stack = The_Stack'Old else Peek = E);
+           (if Is_Full'Old then
+              Element_Array'(The_Stack) = Element_Array'(The_Stack)'Old
+            else Peek = E);
 
        function Peek     return Element with Pre => not Is_Empty;
        function Is_Full  return Boolean;
