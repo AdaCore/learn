@@ -243,8 +243,7 @@ blocks of statements have explicit :ada:`begin` and :ada:`end` markers, which
 prevents mistakes that are possible in C. The SPARK (also Ada) version of the
 above C code is as follows:
 
-.. code:: ada no_button gnat=12.2.0-1 gnatprove=12.1.0-1 project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
-    :class: ada-compile, ada-prove-flow-report-all
+.. code:: ada prove_flow_report_all_button compile_button project=Courses.SPARK_For_The_MISRA_C_Dev.Syntactic_Guarantees.Semicolon
 
     function Func return Integer;
 
@@ -254,10 +253,16 @@ above C code is as follows:
           return 1;
        end if;
        while True loop
+          pragma Loop_Variant (Decreases => 1);
           return 0;
        end loop;
        return 0;
     end Func;
+
+Note that the :ada:`Loop_Variant` pragma allows GNATprove to prove that the
+loop terminates, as it requires its value to decrease between iterations,
+which rules out a second iteration for the constant value :ada:`1`.
+
 
 Avoiding Complex Switch Statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
